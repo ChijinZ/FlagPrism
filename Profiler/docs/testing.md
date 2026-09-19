@@ -1,5 +1,7 @@
 # FlagTree Profiler 测试指南
 
+日常跨后端批量算子验收统一使用根目录 `test.py`，见 [统一测试说明](../../docs/TESTING.md)。以下保留组件专项测试和使用说明。
+
 本文说明如何测试 FlagTree Profiler 的 CANN 后端。当前后端只接入昇腾 CANN。
 
 ## 环境准备
