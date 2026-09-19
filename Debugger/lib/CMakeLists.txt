@@ -1,3 +1,4 @@
+include(${CMAKE_CURRENT_SOURCE_DIR}/Runtime/Enflame.cmake)
 include(${CMAKE_CURRENT_SOURCE_DIR}/Runtime/CoreX.cmake)
 if(NOT FLAGPRISM_BACKEND STREQUAL "tianshu")
   include(${CMAKE_CURRENT_SOURCE_DIR}/Runtime/CANN.cmake)

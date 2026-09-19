@@ -31,7 +31,8 @@ def parse_arguments():
                         choices=[
                             "cupti", "cupti_pcsampling", "roctracer",
                             "instrumentation", "cann", "mthreads", "musa",
-                            "tianshu", "corex", "iluvatar"
+                            "tianshu", "corex", "iluvatar", "enflame", "gcu",
+                            "tops"
                         ])
     parser.add_argument("-c",
                         "--context",

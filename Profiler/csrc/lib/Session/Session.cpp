@@ -694,7 +694,8 @@ void Session::finalize(const std::string &outputFormat) {
     auto hostFallbackCount =
         countAssociationsBySource(vendorArtifact, "runtime_base_fallback");
     auto nativeBaseCount = countAssociationsBySources(
-        vendorArtifact, {"aclprof_op_summary", "aclprof_task_time"});
+        vendorArtifact,
+        {"aclprof_op_summary", "aclprof_task_time", "topspti_activity"});
     metadata.config["vendor_runtime_metric_overlays"] =
         std::to_string(overlayCount);
     metadata.config["vendor_association_collected"] =
@@ -903,10 +904,12 @@ size_t SessionManager::addSession(const std::string &path,
     return sessionId;
   }
   auto sessionId = nextSessionId++;
+  // Failed construction (for example a rejected overlapping vendor session)
+  // must not leave a path pointing to a nonexistent session.
+  auto session = makeSession(sessionId, path, profilerName, profilerPath,
+                             contextSourceName, dataName, mode, hookName);
   sessionPaths[path] = sessionId;
-  sessions[sessionId] =
-      makeSession(sessionId, path, profilerName, profilerPath,
-                  contextSourceName, dataName, mode, hookName);
+  sessions[sessionId] = std::move(session);
   return sessionId;
 }
 

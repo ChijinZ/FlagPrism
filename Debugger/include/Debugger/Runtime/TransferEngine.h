@@ -64,6 +64,7 @@ struct DebugRuntimeMetadata {
   std::vector<LaunchTensorInfo> tensors;
   std::string recordLayout;
   std::vector<DebugRecordPlanEntry> recordPlan;
+  std::vector<uint32_t> inactiveRecordSlots;
   std::vector<FullDumpArtifactInfo> fullDumpArtifacts;
   bool hasLaunchGrid = false;
   uint32_t gridX = 1;
@@ -77,6 +78,7 @@ enum class TransferDriverKind : uint16_t {
   CANN = 2,
   COREX = 3,
   MUSA = 4,
+  TOPS = 5,
 };
 
 TransferDriverKind resolveTransferDriverKind(BackendKind backendKind);
