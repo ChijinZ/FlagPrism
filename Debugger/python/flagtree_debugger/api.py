@@ -11,6 +11,7 @@ from pathlib import Path
 import pprint
 import re
 import sys
+import struct
 import time
 from typing import Any, Callable, Mapping, Optional, Sequence
 
@@ -826,6 +827,69 @@ def _inject_precision_diagnostics(report: str,
     return json.dumps(document, indent=2, sort_keys=True)
 
 
+def _fill_summary_bundles_from_full_dump(exported_run, decoded, metadata,
+                                         artifacts):
+    """Derive L2 summaries from actual device payloads, retaining the record ABI."""
+    import numpy as np
+
+    by_value = {
+        (a["op_id"], a["logical_instance_id"]): a
+        for a in artifacts if a["kind"] == "value"
+    }
+    raw = bytearray(exported_run["raw_buffer"])
+    record_size = int(metadata["debug_record_size"])
+    computed = {}
+    device_summary_ops = set()
+    host_summary_ops = {
+        int(entry["op_id"])
+        for entry in metadata.get("debug_full_dump_plan", [])
+        if entry["kind"] == "value"
+    }
+    inactive_slots = set(exported_run["runtime_metadata"].get(
+        "inactive_record_slots", []))
+    for slot, record in enumerate(decoded["records"]):
+        if slot in inactive_slots:
+            continue
+        kind = record["record_kind"]
+        if kind not in {
+                "SUMMARY_COUNT_BUNDLE_U64", "SUMMARY_VALUE_BUNDLE_F32"
+        }:
+            continue
+        if record["op_id"] not in host_summary_ops:
+            device_summary_ops.add(record["op_id"])
+            continue
+        key = (record["op_id"], record["logical_instance_id"])
+        if key not in computed:
+            if key not in by_value:
+                raise RuntimeError(
+                    f"Missing L2 value payload for summary {key}")
+            values = np.load(by_value[key]["path"],
+                             allow_pickle=False).astype(np.float32).reshape(-1)
+            finite = values[np.isfinite(values)]
+            counts = (int(np.isnan(values).sum()), int(np.isinf(values).sum()),
+                      int((values == 0).sum()), int(values.size))
+            with np.errstate(over="ignore", invalid="ignore"):
+                metrics = (float(finite.mean()) if finite.size else 0.0,
+                           float(finite.min()) if finite.size else 0.0,
+                           float(finite.max()) if finite.size else 0.0,
+                           float(
+                               np.sqrt(
+                                   np.sum(finite * finite, dtype=np.float32))))
+            computed[key] = counts, metrics
+        counts, metrics = computed[key]
+        offset = 32 + slot * record_size + 16
+        if kind == "SUMMARY_COUNT_BUNDLE_U64":
+            struct.pack_into("<4Q", raw, offset, *counts)
+        else:
+            struct.pack_into("<4f", raw, offset, *metrics)
+    exported_run["raw_buffer"] = bytes(raw)
+    exported_run["runtime_metadata"]["host_summary_op_ids"] = sorted(
+        host_summary_ops)
+    exported_run["runtime_metadata"]["summary_source"] = (
+        "mixed_device_and_host_from_device_full_dump"
+        if device_summary_ops else "host_from_device_full_dump")
+
+
 def _finalize_exported_run(exported_run: dict[str, Any],
                            metadata_dict: dict[str, Any]) -> dict[str, Any]:
     exported_run["debug_kernel_name"] = str(
@@ -855,6 +919,9 @@ def _finalize_exported_run(exported_run: dict[str, Any],
                 "level-2 debugger full dump requires debugger output_dir")
         artifacts = _write_full_dump_artifacts(report_path, exported_run,
                                                decoded, metadata_dict)
+        if metadata_dict.get("debug_host_summary_bundles"):
+            _fill_summary_bundles_from_full_dump(exported_run, decoded,
+                                                 metadata_dict, artifacts)
         decoded = binding.decode_exported_run(exported_run)
         exported_run["decoded"] = decoded
         precision_diagnostics = _build_precision_diagnostics(
@@ -919,6 +986,21 @@ def _finalize_exported_run(exported_run: dict[str, Any],
             op_log_json_report = _inject_precision_diagnostics(
                 op_log_json_report, precision_diagnostics, op_log=True)
             exported_run["op_log_json_report"] = op_log_json_report
+
+    summary_source = exported_run.get("runtime_metadata",
+                                      {}).get("summary_source")
+    if summary_source:
+        summary += f"\nsummary_source: {summary_source}"
+        for key in ("json_report", "op_log_json_report"):
+            if exported_run.get(key):
+                document = json.loads(exported_run[key])
+                document["summary_source"] = summary_source
+                exported_run[key] = json.dumps(document,
+                                               indent=2,
+                                               sort_keys=True)
+        json_report = exported_run.get("json_report", json_report)
+        op_log_json_report = exported_run.get("op_log_json_report",
+                                              op_log_json_report)
 
     report_text = summary
     if report:
@@ -1529,6 +1611,10 @@ def launch_context(
                 import torch
 
                 torch.cuda.synchronize()
+            elif backend in {"gcu", "enflame"}:
+                import torch
+
+                torch.gcu.synchronize()
             elif backend in {"mthreads", "musa"}:
                 import torch
 

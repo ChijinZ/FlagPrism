@@ -78,6 +78,7 @@ enum class TransferDriverKind : uint16_t {
   CANN = 2,
   COREX = 3,
   MUSA = 4,
+  TOPS = 5,
 };
 
 TransferDriverKind resolveTransferDriverKind(BackendKind backendKind);

@@ -373,6 +373,137 @@ def test_ascend_options_hash_includes_instrumentation_mode():
     assert plain.hash() != instrumented.hash()
 
 
+@pytest.mark.parametrize("mode,requested,expected", [
+    ("", False, False),
+    ("", True, True),
+    ('debugger|config={"debug_record_level":1}', False, False),
+    ('debugger|config={"debug_record_level":1}', True, True),
+    ('debugger|config={"debug_record_level":2}', False, True),
+    ('debugger|config={"debug_record_level":2}', True, True),
+    ('profiler|config={"debug_record_level":2}', False, False),
+])
+def test_enflame_l2_requires_i64_lowering(monkeypatch, mode, requested,
+                                          expected):
+    compiler = pytest.importorskip("triton.backends.enflame.compiler")
+    # Exercise option precedence without opening a device. FlagGems explicitly
+    # passes ENABLE_I64=False for f32 operators, but L2 adds i64 payloads.
+    fields = compiler.GCUOptions.__dataclass_fields__
+
+    class Options:
+        __dataclass_fields__ = fields
+
+        def __init__(self, **kwargs):
+            self.__dict__.update(kwargs)
+
+    monkeypatch.setattr(compiler, "GCUOptions", Options)
+    options = compiler._GCUBackend.parse_options(None, {
+        "ENABLE_I64": requested,
+        "instrumentation_mode": mode,
+    })
+    assert options.enable_i64 is expected
+
+
+def test_l2_host_summary_uses_device_payload(tmp_path):
+    import numpy as np
+    from flagtree.debugger.api import _fill_summary_bundles_from_full_dump
+
+    payload = tmp_path / "values.npy"
+    np.save(payload,
+            np.array([0, 3, 4, np.nan, np.inf, -np.inf], dtype=np.float32))
+    run = {"raw_buffer": bytes(32 + 2 * 64), "runtime_metadata": {}}
+    decoded = {
+        "records": [
+            {
+                "record_kind": "SUMMARY_COUNT_BUNDLE_U64",
+                "op_id": 7,
+                "logical_instance_id": 0
+            },
+            {
+                "record_kind": "SUMMARY_VALUE_BUNDLE_F32",
+                "op_id": 7,
+                "logical_instance_id": 0
+            },
+        ]
+    }
+    artifacts = [{
+        "op_id": 7,
+        "logical_instance_id": 0,
+        "kind": "value",
+        "path": str(payload)
+    }]
+    _fill_summary_bundles_from_full_dump(
+        run, decoded, {
+            "debug_record_size": 64,
+            "debug_full_dump_plan": [{
+                "kind": "value",
+                "op_id": 7
+            }]
+        }, artifacts)
+    assert struct.unpack_from("<4Q", run["raw_buffer"], 48) == (1, 2, 1, 6)
+    assert struct.unpack_from("<4f", run["raw_buffer"], 112) == pytest.approx(
+        (7 / 3, 0, 4, 5))
+    assert run["runtime_metadata"][
+        "summary_source"] == "host_from_device_full_dump"
+    with pytest.raises(RuntimeError, match="Missing L2 value payload"):
+        _fill_summary_bundles_from_full_dump(
+            run, decoded, {
+                "debug_record_size": 64,
+                "debug_full_dump_plan": [{
+                    "kind": "value",
+                    "op_id": 7
+                }]
+            }, [])
+
+
+def test_enflame_l2_integer_payload_roundtrip(tmp_path):
+    import os
+    import numpy as np
+    import torch
+    pytest.importorskip("torch_gcu")
+    import triton
+    import triton.language as tl
+    from flagtree import debugger
+
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+    device = int(os.environ.get("FLAGPRISM_TEST_DEVICE", "0"))
+    torch.gcu.set_device(device)
+
+    @triton.jit
+    def integer_payload(X, Y, BLOCK: tl.constexpr):
+        offsets = tl.arange(0, BLOCK)
+        values = tl.load(X + offsets)
+        positive = values > 0
+        tl.store(Y + offsets, positive)
+
+    values = np.array([-2147483648, -2, -1, 0, 1, 2, 2147483647, 0],
+                      dtype=np.int32)
+    x = torch.from_numpy(values.copy()).to(f"gcu:{device}")
+    y = torch.empty(8, dtype=torch.bool, device=f"gcu:{device}")
+    debugger.activate(auto_collect=True,
+                      level=2,
+                      addr_level=0,
+                      output_dir=tmp_path)
+    try:
+        integer_payload[(1, )](x, y, 8)
+        torch.gcu.synchronize()
+        np.testing.assert_array_equal(y.cpu().numpy(), values > 0)
+        artifacts = [
+            a for run in debugger.take_exported_runs()
+            for a in run["runtime_metadata"]["full_dump_artifacts"]
+            if a["kind"] == "value" and a["artifact_dtype"] == "int64"
+        ]
+        arrays = [
+            np.load(a["path"], allow_pickle=False).reshape(-1)
+            for a in artifacts
+        ]
+        assert any(np.array_equal(v, values.astype(np.int64)) for v in arrays)
+        assert any(
+            np.array_equal(v, (values > 0).astype(np.int64)) for v in arrays)
+    finally:
+        debugger.deactivate()
+
+
 @pytest.mark.parametrize("conditional,offset,length,expected", [
     (True, 0, 0, None),
     (False, 0, 0, "empty full-dump"),
@@ -432,6 +563,88 @@ def test_l2_inactive_slots_are_not_missing_capture(tmp_path, conditional,
             "op_id"] == 2
 
 
+def test_enflame_l2_branch_and_zero_trip_loop(tmp_path):
+    import os
+    import numpy as np
+    import torch
+    pytest.importorskip("torch_gcu")
+    import triton
+    import triton.language as tl
+    from flagtree import debugger
+
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+    device = int(os.environ.get("FLAGPRISM_TEST_DEVICE", "0"))
+    torch.gcu.set_device(device)
+
+    @triton.jit
+    def branched(X, Y, N, BLOCK: tl.constexpr):
+        pid = tl.program_id(0)
+        offsets = tl.arange(0, BLOCK)
+        if pid == 0:
+            value = tl.load(X + offsets) + 3.0
+            tl.store(Y + offsets, value)
+        else:
+            for start in range(BLOCK, N, BLOCK):
+                value = tl.load(X + offsets) * 2.0
+                tl.store(Y + offsets, value)
+
+    x = torch.arange(8, dtype=torch.float32, device="cpu").to(f"gcu:{device}")
+    y = torch.empty_like(x)
+    debugger.activate(auto_collect=True,
+                      level=2,
+                      addr_level=0,
+                      output_dir=tmp_path)
+    try:
+        branched[(2, )](x, y, 8, 8)
+        torch.gcu.synchronize()
+        np.testing.assert_array_equal(y.cpu().numpy(), np.arange(8) + 3)
+        runs = debugger.take_exported_runs()
+        assert runs
+        inactive_count = 0
+        for run in runs:
+            inactive = run["runtime_metadata"]["inactive_full_dump_records"]
+            inactive_count += len(inactive)
+            inactive_keys = {(r["op_id"], r["logical_instance_id"])
+                             for r in inactive}
+            assert all(
+                (r["op_id"], r["logical_instance_id"]) not in inactive_keys
+                for r in run["decoded"]["records"])
+            assert all(r["payload_length"] > 0
+                       for r in run["decoded"]["records"]
+                       if r["record_kind"] == "FULL_VALUE")
+        assert inactive_count > 0
+    finally:
+        debugger.deactivate()
+
+
+@pytest.mark.parametrize("level", [1, 2])
+@pytest.mark.parametrize("capacity,grid,records,payload,message", [
+    (64, (2, 1, 1), 40, 16, "debug_record_capacity"),
+    (64, (1, 1, 1), 1, 2**32, "32-bit payload offsets"),
+])
+def test_l2_host_launch_rejects_unsafe_buffer(capacity, grid, records, payload,
+                                              message, level):
+    from flagtree.debugger.native import runtime_binding
+    binding = runtime_binding()
+    assert binding is not None
+    metadata = {
+        "name": "capacity_guard",
+        "debug_enabled": True,
+        "debug_backend_name": "enflame",
+        "debug_record_level": level,
+        "debug_record_capacity": capacity,
+        "debug_record_size": 64,
+        "debug_full_dump_payload_bytes_per_instance": payload
+    }
+    # These validations run before opening a device or allocating a buffer.
+    with pytest.raises(ValueError, match=message):
+        binding.prepare_launch(metadata, 0, {
+            "grid": grid,
+            "records_per_instance": records
+        })
+
+
 def _instrument_scalar_pair(tmp_path, first_type, first_level):
     from triton._C.libtriton import ir
     from flagtree.debugger.native import compiler_binding
@@ -474,6 +687,116 @@ def test_l2_program_stride_preserves_entry_alignment(tmp_path):
                     entry["payload_offset"]) % entry["element_bytes"] == 0
 
 
+def test_l2_host_summary_preserves_l1_records(tmp_path):
+    import numpy as np
+    from flagtree.debugger.api import _fill_summary_bundles_from_full_dump
+
+    payload = tmp_path / "values.npy"
+    np.save(payload, np.array([2, 4], dtype=np.float32))
+    raw = bytes([17]) * (32 + 4 * 64)
+    run = {"raw_buffer": raw, "runtime_metadata": {}}
+    records = [{
+        "record_kind": kind,
+        "op_id": op,
+        "logical_instance_id": 0
+    } for op in (1, 2) for kind in ("SUMMARY_COUNT_BUNDLE_U64",
+                                    "SUMMARY_VALUE_BUNDLE_F32")]
+    metadata = {
+        "debug_record_size": 64,
+        "debug_full_dump_plan": [{
+            "kind": "value",
+            "op_id": 2
+        }]
+    }
+    artifacts = [{
+        "op_id": 2,
+        "logical_instance_id": 0,
+        "kind": "value",
+        "path": str(payload)
+    }]
+    _fill_summary_bundles_from_full_dump(run, {"records": records}, metadata,
+                                         artifacts)
+    assert run["raw_buffer"][:160] == raw[:160]
+    assert run["runtime_metadata"][
+        "summary_source"] == "mixed_device_and_host_from_device_full_dump"
+    assert struct.unpack_from("<4Q", run["raw_buffer"], 176) == (0, 0, 0, 2)
+
+
+@pytest.mark.parametrize("global_level", [1, 2])
+@pytest.mark.parametrize("mixed", [False, True])
+def test_enflame_l2_scalar_payload_content(tmp_path, mixed, global_level):
+    import numpy as np
+    import torch
+    pytest.importorskip("torch_gcu")
+    import triton
+    import triton.language as tl
+    import flagtree.language as fl
+    from flagtree import debugger
+
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+
+    @triton.jit
+    def scalar_pair(A, B, C, D, MIXED: tl.constexpr):
+        p = tl.program_id(0)
+        if MIXED:
+            fl.debug_collect_start(level=1, addr_level=0)
+        else:
+            fl.debug_collect_start(level=2, addr_level=0)
+        a = tl.load(A + p)
+        fl.debug_collect_end()
+        fl.debug_collect_start(level=2, addr_level=0)
+        b = tl.load(B + p)
+        fl.debug_collect_end()
+        tl.store(C + p, a)
+        tl.store(D + p, b)
+
+    # torch_gcu represents torch.int64 with 32-bit device storage. Transport
+    # genuine i64 bits in an i32 tensor and give Triton the explicit pointer
+    # type so this regression exercises an actual eight-byte payload.
+    expected_a = np.array([2., 5.] if mixed else [12345678901, -9876543210],
+                          dtype=np.float32 if mixed else np.int64)
+    a = torch.from_numpy(
+        expected_a if mixed else expected_a.view(np.int32)).to("gcu")
+    b = torch.tensor([1.25, -3.5], device="gcu")
+    c, d = torch.empty_like(a), torch.empty_like(b)
+    debugger.activate(auto_collect=False,
+                      level=global_level,
+                      addr_level=0,
+                      output_dir=tmp_path)
+    try:
+        scalar_pair[(2, )](a if mixed else triton.reinterpret(a, tl.int64), b,
+                           c if mixed else triton.reinterpret(c, tl.int64), d,
+                           mixed)
+        torch.gcu.synchronize()
+        torch.testing.assert_close(c.cpu(), a.cpu())
+        torch.testing.assert_close(d.cpu(), b.cpu())
+        runs = debugger.take_exported_runs()
+        assert runs
+        artifacts = [
+            entry for run in runs
+            for entry in run["runtime_metadata"]["full_dump_artifacts"]
+            if entry["kind"] == "value"
+        ]
+        for instance in (0, 1):
+            values = [
+                np.load(e["path"]).item() for e in artifacts
+                if e["logical_instance_id"] == instance
+            ]
+            assert b.cpu()[instance].item() in values
+            if not mixed:
+                assert expected_a[instance].item() in values
+        if mixed:
+            records = [r for run in runs for r in run["decoded"]["records"]]
+            assert sum(r["record_kind"] == "SUMMARY_VALUE_BUNDLE_F32"
+                       for r in records) == 4
+            means = sorted(r["mean"] for r in records
+                           if r["record_kind"] == "SUMMARY_VALUE_BUNDLE_F32")
+            assert means == pytest.approx([-3.5, 1.25, 2.0, 5.0])
+    finally:
+        debugger.deactivate()
+
+
 def test_native_decoder_accepts_unsorted_inactive_slots():
     from flagtree.debugger.native import runtime_binding
     binding = runtime_binding()
@@ -492,3 +815,107 @@ def test_native_decoder_accepts_unsorted_inactive_slots():
     }
     assert [r["op_id"]
             for r in binding.decode_exported_run(run)["records"]] == [2]
+
+
+@pytest.mark.parametrize("programs", [1, 64])
+def test_enflame_l1_summary_values_and_capacity(tmp_path, programs):
+    import torch
+    pytest.importorskip("torch_gcu")
+    import triton
+    import triton.language as tl
+    from flagtree import debugger
+
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+
+    @triton.jit
+    def copy_summary(X, Y):
+        i = tl.arange(0, 8)
+        x = tl.load(X + i)
+        tl.store(Y + tl.program_id(0) * 8 + i, x)
+
+    x = torch.tensor(
+        [float('nan'),
+         float('inf'), -float('inf'), 0., 3., 4., -2., 0.],
+        device="gcu")
+    y = torch.empty(programs * 8, device="gcu")
+    debugger.activate(auto_collect=True,
+                      level=1,
+                      addr_level=0,
+                      record_capacity=64,
+                      output_dir=tmp_path)
+    try:
+        copy_summary[(programs, )](x, y)
+        torch.gcu.synchronize()
+        runs = debugger.take_exported_runs()
+        assert len(runs) == 1
+        decoded = runs[0]["decoded"]
+        counts = [
+            r for r in decoded["records"]
+            if r["record_kind"] == "SUMMARY_COUNT_BUNDLE_U64"
+        ]
+        values = [
+            r for r in decoded["records"]
+            if r["record_kind"] == "SUMMARY_VALUE_BUNDLE_F32"
+        ]
+        assert counts and values
+        for r in counts:
+            assert (r["nan_count"], r["inf_count"], r["zero_count"],
+                    r["element_count"]) == (1, 2, 2, 8)
+        for r in values:
+            assert (r["mean"], r["min"], r["max"],
+                    r["l2_norm"]) == pytest.approx((1., -2., 4., 29.**0.5))
+        assert (decoded["header"]["overflow_count"] > 0) == (programs == 64)
+    finally:
+        debugger.deactivate()
+
+
+@pytest.mark.parametrize("true_count", [0, 4, 8])
+def test_enflame_boolean_float_summary_is_exact(tmp_path, true_count):
+    import torch
+    pytest.importorskip("torch_gcu")
+    import triton
+    import triton.language as tl
+    from flagtree import debugger
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+
+    @triton.jit
+    def binary_summary(X, Y):
+        i = tl.arange(0, 8)
+        x = tl.load(X + i)
+        y = (x > 0).to(tl.float32)
+        tl.store(Y + i, y)
+
+    x = torch.cat((torch.ones(true_count, dtype=torch.int32),
+                   torch.zeros(8 - true_count, dtype=torch.int32))).to('gcu')
+    y = torch.empty(8, device='gcu')
+    debugger.activate(auto_collect=True,
+                      level=1,
+                      addr_level=0,
+                      output_dir=tmp_path)
+    try:
+        binary_summary[(1, )](x, y)
+        torch.gcu.synchronize()
+        records = [
+            r for run in debugger.take_exported_runs()
+            for r in run['decoded']['records']
+        ]
+        counts = [
+            r for r in records
+            if r['record_kind'] == 'SUMMARY_COUNT_BUNDLE_U64'
+        ]
+        values = [
+            r for r in records
+            if r['record_kind'] == 'SUMMARY_VALUE_BUNDLE_F32'
+        ]
+        assert len(counts) == len(values) == 1
+        r = counts[0]
+        assert (r['nan_count'], r['inf_count'], r['zero_count'],
+                r['element_count']) == (0, 0, 8 - true_count, 8)
+        r = values[0]
+        assert (r['mean'], r['min'], r['max'], r['l2_norm']) == pytest.approx(
+            (true_count / 8, float(true_count == 8), float(true_count > 0),
+             true_count**0.5))
+    finally:
+        debugger.deactivate()

@@ -91,6 +91,8 @@ def _debug_launch_hidden_arg_enabled(metadata: dict) -> bool:
             "iluvatar",
             "mthreads",
             "musa",
+            "gcu",
+            "enflame",
     }:
         return False
     # Keep the environment variable as a compatibility hook for subprocesses
@@ -245,6 +247,9 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
         fd.get_debug_full_dump_payload_bytes_per_instance(mod))
     metadata["debug_full_dump_plan"] = json.loads(
         fd.get_debug_full_dump_plan_json(mod))
+    metadata["debug_host_summary_bundles"] = (
+        _target_backend(metadata) in {"gcu", "enflame"}
+        and metadata["debug_full_dump_payload_bytes_per_instance"] > 0)
     if metadata["debug_records_per_instance"] <= 0:
         # The user may request dynamic debugger collection, but the IR pass is
         # the source of truth for whether a hidden-arg ABI was actually added.

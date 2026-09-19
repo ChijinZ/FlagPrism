@@ -694,7 +694,8 @@ void Session::finalize(const std::string &outputFormat) {
     auto hostFallbackCount =
         countAssociationsBySource(vendorArtifact, "runtime_base_fallback");
     auto nativeBaseCount = countAssociationsBySources(
-        vendorArtifact, {"aclprof_op_summary", "aclprof_task_time"});
+        vendorArtifact,
+        {"aclprof_op_summary", "aclprof_task_time", "topspti_activity"});
     metadata.config["vendor_runtime_metric_overlays"] =
         std::to_string(overlayCount);
     metadata.config["vendor_association_collected"] =

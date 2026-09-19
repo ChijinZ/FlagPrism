@@ -67,6 +67,8 @@ std::string toString(BackendKind value) {
     return "MUSA";
   case BackendKind::CANN:
     return "CANN";
+  case BackendKind::ENFLAME:
+    return "ENFLAME";
   case BackendKind::TIANSHU:
     return "TIANSHU";
   }
