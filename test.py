@@ -215,6 +215,22 @@ def worker(args):
     if stage == "debugger":
         result["debug_level"] = args.level
     try:
+        tool = None
+        if stage in ("debugger", "profiler"):
+            try:
+                tool = importlib.import_module(f"flagtree.{stage}")
+                if stage == "debugger":
+                    if not tool.is_available():
+                        raise RuntimeError(
+                            "Debugger native bindings unavailable")
+                else:
+                    importlib.import_module(
+                        "flagtree.profiler.native").runtime_binding()
+            except Exception as error:
+                result.update(status="UNAVAILABLE",
+                              error=str(error),
+                              traceback=traceback.format_exc())
+                return result
         import torch
 
         if args.torch_extension:
@@ -246,16 +262,7 @@ def worker(args):
                     moved[id(value)] = value.to(device)
                 namespace[name] = moved[id(value)]
         namespace["device"] = device
-        tool = None
-        if stage in ("debugger", "profiler"):
-            module = f"flagtree.{stage}"
-            if importlib.util.find_spec(module) is None:
-                result.update(status="UNAVAILABLE",
-                              error=f"{module} is absent from this wheel")
-                return result
-            tool = importlib.import_module(module)
         if stage == "debugger":
-            assert tool.is_available(), "Debugger native bindings unavailable"
             tool.activate(
                 auto_collect=True,
                 level=args.level,
@@ -549,20 +556,25 @@ def main():
     for stage in args.stages:
         if stage == "execute":
             continue
-        probe = subprocess.run(
-            [
-                sys.executable,
-                "-c",
-                "import importlib.util; print(bool(importlib.util.find_spec('flagtree') and importlib.util.find_spec('flagtree."
-                + stage_tools[stage] + "')))",
-            ],
-            capture_output=True,
-            text=True,
-            timeout=args.timeout or 180,
-        )
-        if probe.returncode == 0 and probe.stdout.strip() == "False":
+        try:
+            probe = subprocess.run(
+                [
+                    sys.executable,
+                    "-c",
+                    "import importlib.util; print(bool(importlib.util.find_spec('flagtree') and importlib.util.find_spec('flagtree."
+                    + stage_tools[stage] + "')))",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=args.timeout or 180,
+            )
+        except subprocess.TimeoutExpired:
+            unavailable_stages[stage] = "Instrumentation preflight timed out"
+            continue
+        if probe.returncode != 0 or probe.stdout.strip() != "True":
+            detail = (probe.stderr or probe.stdout).strip()
             unavailable_stages[stage] = (
-                f"flagtree.{stage_tools[stage]} is absent from this wheel")
+                f"flagtree.{stage_tools[stage]} preflight failed: {detail}")
     results = []
 
     def summarize():
@@ -743,13 +755,17 @@ def main():
             if code != 0:
                 log_text = (out / "worker.log").read_text(errors="replace")
                 failure_details += "\n" + log_text
-                if any(marker in failure_details for marker in (
-                        "Detected context error",
-                        "Sip exception",
-                        "Receive Sip error",
+                if any(marker in failure_details.lower() for marker in (
+                        "detected context error",
+                        "sip exception",
+                        "receive sip error",
                         "device is out of service",
-                        "topsErrorInvalidDevice",
+                        "topserrorinvaliddevice",
                         "printf_display detected the buffer is corrupted",
+                        "npu function error",
+                        "vector core exception",
+                        "illegal memory access",
+                        "device-side assert",
                 )):
                     device_fault.set()
                     data["device_fault"] = True
@@ -763,7 +779,12 @@ def main():
             if stage != "execute" and data["status"] not in ("PASS",
                                                              "BLOCKED"):
                 data["capture_status"] = data["status"]
-                if device_fault.is_set():
+                if data["status"] == "UNAVAILABLE":
+                    data.update(
+                        status="ERROR",
+                        severity="error",
+                        diagnosis="Required instrumentation is unavailable")
+                elif device_fault.is_set():
                     # A failed retry on a poisoned context cannot establish operator support.
                     data.update(
                         status="ERROR",
@@ -781,7 +802,8 @@ def main():
                             diagnosis=
                             "Uninstrumented execution passed; capture failed",
                         )
-                    elif baseline["status"] == "BLOCKED" or baseline.get(
+                    elif device_fault.is_set(
+                    ) or baseline["status"] == "BLOCKED" or baseline.get(
                             "device_fault"):
                         data.update(
                             status="ERROR",

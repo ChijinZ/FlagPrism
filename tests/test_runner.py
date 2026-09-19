@@ -4,6 +4,7 @@ import importlib.util
 import json
 from pathlib import Path
 import sys
+import threading
 from types import SimpleNamespace
 
 import pytest
@@ -11,9 +12,19 @@ import pytest
 
 @pytest.mark.parametrize("fault_at", ["capture", "baseline"])
 @pytest.mark.parametrize("source", ["error", "traceback", "log"])
+@pytest.mark.parametrize("message", [
+    "topsErrorInvalidDevice: device is out of service", "NPU function error",
+    "VECTOR CORE EXCEPTION",
+    "CUDA error: an illegal memory access was encountered",
+    "HIP error: device-side assert triggered"
+])
 def test_device_fault_never_becomes_warning(tmp_path, monkeypatch, fault_at,
-                                            source):
-    code, summary, calls = _run(tmp_path, monkeypatch, fault_at, source)
+                                            source, message):
+    code, summary, calls = _run(tmp_path,
+                                monkeypatch,
+                                fault_at,
+                                source,
+                                message=message)
     assert code == 1
     assert summary["status"] != "PASS"
     assert summary["counts"] == {"ERROR": 1, "BLOCKED": 1}
@@ -41,16 +52,32 @@ def _run(tmp_path,
          monkeypatch,
          fault_at=None,
          source=None,
-         baseline_passes=False):
+         baseline_passes=False,
+         message="topsErrorInvalidDevice",
+         unavailable=False,
+         concurrent_fault=False):
     path = Path(__file__).resolve().parents[1] / "test.py"
     spec = importlib.util.spec_from_file_location("operator_runner", path)
     runner = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(runner)
     calls = []
+    original_event = threading.Event
+    shared_event = original_event()
+    events = []
+
+    def make_event():
+        event = original_event() if events else shared_event
+        events.append(event)
+        return event
+
+    if concurrent_fault:
+        monkeypatch.setattr(threading, "Event", make_event)
 
     def command(argv, log, timeout):
         stage = argv[argv.index("--stage") + 1]
         calls.append(stage)
+        if concurrent_fault and stage == "execute":
+            shared_event.set()
         result_path = Path(argv[argv.index("--result") + 1])
         case = json.loads(Path(argv[argv.index("--worker") + 1]).read_text())
         passed = stage == "execute" and baseline_passes
@@ -63,7 +90,6 @@ def _run(tmp_path,
             data["error"] = "Unsupported operator"
         if ((fault_at == "capture" and stage != "execute")
                 or (fault_at == "baseline" and stage == "execute")):
-            message = "topsErrorInvalidDevice: device is out of service"
             if source == "log":
                 log.write_text(message)
             else:
@@ -73,9 +99,16 @@ def _run(tmp_path,
 
     monkeypatch.setattr(runner, "command", command)
     monkeypatch.setattr(runner, "git_revision", lambda path: "test")
-    monkeypatch.setattr(
-        runner.subprocess, "run",
-        lambda *args, **kwargs: SimpleNamespace(returncode=0, stdout="True\n"))
+
+    def probe(*args, **kwargs):
+        if unavailable == "timeout":
+            raise runner.subprocess.TimeoutExpired("probe", 1)
+        return SimpleNamespace(
+            returncode=1 if unavailable == "error" else 0,
+            stdout="False\n" if unavailable else "True\n",
+            stderr="Import failed" if unavailable == "error" else "")
+
+    monkeypatch.setattr(runner.subprocess, "run", probe)
     monkeypatch.setattr(sys, "argv", [
         str(path), "--out",
         str(tmp_path), "--ops", "abs", "--min-ops", "1", "--stages",
@@ -84,3 +117,47 @@ def _run(tmp_path,
     code = runner.main()
     summary = json.loads(next(tmp_path.glob("*/summary.json")).read_text())
     return code, summary, calls
+
+
+@pytest.mark.parametrize("unavailable", [True, "error", "timeout"])
+def test_missing_instrumentation_is_error(tmp_path, monkeypatch, unavailable):
+    code, summary, calls = _run(tmp_path, monkeypatch, unavailable=unavailable)
+    assert code == 1
+    assert summary["counts"] == {"ERROR": 2}
+    assert calls == []
+
+
+def test_fault_during_baseline_is_error(tmp_path, monkeypatch):
+    code, summary, calls = _run(tmp_path, monkeypatch, concurrent_fault=True)
+    assert code == 1
+    assert summary["counts"] == {"ERROR": 1, "BLOCKED": 1}
+    assert calls == ["debugger", "execute"]
+
+
+@pytest.mark.parametrize("stage", ["debugger", "profiler"])
+@pytest.mark.parametrize("broken_import", [False, True])
+def test_worker_checks_tool_before_operator_setup(tmp_path, monkeypatch, stage,
+                                                  broken_import):
+    path = Path(__file__).resolve().parents[1] / "test.py"
+    spec = importlib.util.spec_from_file_location("operator_runner", path)
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+    case = tmp_path / "case.json"
+    case.write_text(
+        json.dumps(dict(op="abs", case_id="small", body_sha256="test")))
+
+    def load(name):
+        if broken_import:
+            raise ImportError("Broken tool installation")
+        if name.endswith(".native"):
+            raise RuntimeError("Native binding unavailable")
+        return SimpleNamespace(is_available=lambda: False)
+
+    monkeypatch.setattr(runner.importlib, "import_module", load)
+    result = runner.worker(
+        SimpleNamespace(worker=case,
+                        stage=stage,
+                        level=1,
+                        result=tmp_path / "result.json"))
+    assert result["status"] == "UNAVAILABLE"
+    assert result["error"]
