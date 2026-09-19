@@ -55,7 +55,8 @@ def _run(tmp_path,
          baseline_passes=False,
          message="topsErrorInvalidDevice",
          unavailable=False,
-         concurrent_fault=False):
+         concurrent_fault=False,
+         extra_args=()):
     path = Path(__file__).resolve().parents[1] / "test.py"
     spec = importlib.util.spec_from_file_location("operator_runner", path)
     runner = importlib.util.module_from_spec(spec)
@@ -112,7 +113,7 @@ def _run(tmp_path,
     monkeypatch.setattr(sys, "argv", [
         str(path), "--out",
         str(tmp_path), "--ops", "abs", "--min-ops", "1", "--stages",
-        "debugger", "profiler", "--level", "1"
+        "debugger", "profiler", "--level", "1", *extra_args
     ])
     code = runner.main()
     summary = json.loads(next(tmp_path.glob("*/summary.json")).read_text())
@@ -161,3 +162,29 @@ def test_worker_checks_tool_before_operator_setup(tmp_path, monkeypatch, stage,
                         result=tmp_path / "result.json"))
     assert result["status"] == "UNAVAILABLE"
     assert result["error"]
+
+
+@pytest.mark.parametrize("args,message", [
+    (("--jobs", "2"), "requires explicit --devices"),
+    (("--jobs", "0"), "--jobs must be positive"),
+    (("--devices", "0,0"), "unique non-negative"),
+    (("--devices", "-1"), "unique non-negative"),
+    (("--devices", "0,x"), "integer indices"),
+])
+def test_invalid_device_scheduling_fails_before_work(tmp_path, monkeypatch,
+                                                     capsys, args, message):
+    with pytest.raises(SystemExit) as error:
+        _run(tmp_path, monkeypatch, extra_args=args)
+    assert error.value.code == 2
+    assert message in capsys.readouterr().err
+    assert not list(tmp_path.iterdir())
+
+
+def test_parallel_workers_with_explicit_device_are_allowed(
+        tmp_path, monkeypatch):
+    code, summary, calls = _run(tmp_path,
+                                monkeypatch,
+                                extra_args=("--jobs", "2", "--devices", "0"))
+    assert code == 0
+    assert summary["counts"] == {"WARNING": 2}
+    assert all(row["device_index"] == 0 for row in summary["results"])

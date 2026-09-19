@@ -65,7 +65,8 @@ python3 test.py --torch-extension torch_gcu --profiler-backend enflame
 ```
 
 通过 Triton active driver 选择设备与同步接口，可显式指定 PyTorch 扩展和 profiler 后端。
-多卡模式每张卡同一时间只运行一个 case；默认单进程串行。并行耗时不用于性能比较。
+多卡模式每张卡同一时间只运行一个 case；默认单进程串行。`--jobs > 1` 必须显式指定
+`--devices`，实际并发数不超过指定设备数量。并行耗时不用于性能比较。
 后端名称映射不是跨芯片验证结论，各厂商仍须真机运行。
 
 默认 `addr_level=0`、记录容量 65536，可通过 `--addr-level`、`--record-capacity` 修改。

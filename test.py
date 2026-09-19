@@ -288,6 +288,7 @@ def worker(args):
                 "iluvatar": "tianshu",
                 "corex": "tianshu",
                 "gcu": "enflame",
+                "tops": "enflame",
                 "enflame": "enflame",
             }.get(target.backend)
             assert backend, "Specify --profiler-backend for this backend"
@@ -376,10 +377,11 @@ def main():
         "--devices",
         help="Comma-separated device indices; at most one case per device")
     parser.add_argument("--device", type=int, help=argparse.SUPPRESS)
-    parser.add_argument("--jobs",
-                        type=int,
-                        default=1,
-                        help="Concurrent isolated workers (default: 1)")
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=1,
+        help="Concurrent workers; --jobs > 1 requires --devices (default: 1)")
     parser.add_argument("--out", type=Path, default=ROOT / "test-results")
     parser.add_argument("--ops",
                         help="Comma-separated operator IDs; diagnostic subset")
@@ -435,6 +437,25 @@ def main():
     if (args.min_ops < 1 or (args.timeout is not None and args.timeout < 1)
             or args.record_capacity < 1):
         parser.error("min-ops, timeout, and record-capacity must be positive")
+    if args.jobs < 1:
+        parser.error("--jobs must be positive")
+    if args.jobs > 1 and not args.devices:
+        parser.error(
+            "--jobs > 1 requires explicit --devices (for example --devices 0,1)"
+        )
+    selected_devices = None
+    if args.devices:
+        try:
+            selected_devices = [
+                int(value) for value in args.devices.split(",")
+            ]
+        except ValueError:
+            parser.error(
+                "--devices must contain comma-separated integer indices")
+        if len(set(selected_devices)) != len(selected_devices) or any(
+                d < 0 for d in selected_devices):
+            parser.error(
+                "--devices must contain unique non-negative device indices")
     debug_levels = [args.level] if args.level is not None else [1, 2]
     args.stages = [
         expanded for stage in args.stages for expanded in (
@@ -635,22 +656,11 @@ def main():
     from threading import Event, Lock
     from queue import Queue
 
-    if args.jobs < 1:
-        parser.error("--jobs must be positive")
     summary_lock = Lock()
     device_fault = Event()
     device_queue = Queue()
-    if args.devices:
-        selected_devices = [int(value) for value in args.devices.split(",")]
-        if len(set(selected_devices)) != len(selected_devices) or any(
-                d < 0 for d in selected_devices):
-            parser.error(
-                "--devices must contain unique non-negative device indices")
-        for value in selected_devices:
-            device_queue.put(value)
-    else:
-        for _ in range(args.jobs):
-            device_queue.put(None)
+    for value in selected_devices if selected_devices is not None else [None]:
+        device_queue.put(value)
 
     def run_case(index, case, device_id):
         case_dir = (
