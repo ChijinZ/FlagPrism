@@ -563,13 +563,64 @@ def test_l2_inactive_slots_are_not_missing_capture(tmp_path, conditional,
             "op_id"] == 2
 
 
-def test_enflame_l2_branch_and_zero_trip_loop(tmp_path):
+@pytest.mark.parametrize("instances", [1, 4])
+@pytest.mark.parametrize("missing",
+                         [None, "all", "plan", "instance", "active"])
+def test_l2_all_inactive_requires_complete_plan(tmp_path, instances, missing):
+    from flagtree.debugger.api import _write_full_dump_artifacts
+
+    plans = [{
+        "record_index": slot,
+        "op_id": slot + 1,
+        "payload_length": 4,
+        "conditional": missing != "active" or slot == 0,
+    } for slot in range(2)]
+    records = [{
+        "record_kind": "FULL_VALUE",
+        "op_id": slot + 1,
+        "logical_instance_id": instance,
+        "payload_offset": 0,
+        "payload_length": 0,
+    } for instance in range(instances) for slot in range(2)]
+    if missing == "all":
+        records = []
+    elif missing == "plan":
+        records[-1]["record_kind"] = "SUMMARY"
+    elif missing == "instance":
+        records = records[:-2]
+    run = {
+        "raw_buffer": b"",
+        "runtime_metadata": {
+            "records_per_instance": 2,
+            "grid": (2, 2, 1) if instances == 4 else (1, 1, 1)
+        }
+    }
+    decoded = {"header": {}, "records": records}
+    metadata = {"debug_full_dump_plan": plans}
+    if missing:
+        with pytest.raises(RuntimeError,
+                           match="empty full-dump|did not produce"):
+            _write_full_dump_artifacts(tmp_path / "run.txt", run, decoded,
+                                       metadata)
+        return
+    assert _write_full_dump_artifacts(tmp_path / "run.txt", run, decoded,
+                                      metadata) == []
+    assert run["runtime_metadata"]["inactive_record_slots"] == list(
+        range(2 * instances))
+    index = json.loads(Path(run["full_dump_index_path"]).read_text())
+    assert index["artifacts"] == []
+    assert len(index["inactive_records"]) == 2 * instances
+
+
+@pytest.mark.parametrize("execute_first", [True, False])
+def test_enflame_l2_branch_and_zero_trip_loop(tmp_path, execute_first):
     import os
     import numpy as np
     import torch
     pytest.importorskip("torch_gcu")
     import triton
     import triton.language as tl
+    import flagtree.language as fl
     from flagtree import debugger
 
     if triton.runtime.driver.active.get_current_target().backend != "gcu":
@@ -578,31 +629,44 @@ def test_enflame_l2_branch_and_zero_trip_loop(tmp_path):
     torch.gcu.set_device(device)
 
     @triton.jit
-    def branched(X, Y, N, BLOCK: tl.constexpr):
+    def branched(X, Y, N, EXECUTE_FIRST, BLOCK: tl.constexpr):
         pid = tl.program_id(0)
         offsets = tl.arange(0, BLOCK)
-        if pid == 0:
+        if (pid == 0) & EXECUTE_FIRST:
+            fl.debug_collect_start(level=2, addr_level=0)
             value = tl.load(X + offsets) + 3.0
             tl.store(Y + offsets, value)
+            fl.debug_collect_end()
         else:
             for start in range(BLOCK, N, BLOCK):
+                fl.debug_collect_start(level=2, addr_level=0)
                 value = tl.load(X + offsets) * 2.0
                 tl.store(Y + offsets, value)
+                fl.debug_collect_end()
 
     x = torch.arange(8, dtype=torch.float32, device="cpu").to(f"gcu:{device}")
-    y = torch.empty_like(x)
-    debugger.activate(auto_collect=True,
+    y = torch.full_like(x, -1)
+    debugger.activate(auto_collect=False,
                       level=2,
                       addr_level=0,
                       output_dir=tmp_path)
     try:
-        branched[(2, )](x, y, 8, 8)
+        branched[(2, )](x, y, 8, execute_first, 8)
         torch.gcu.synchronize()
-        np.testing.assert_array_equal(y.cpu().numpy(), np.arange(8) + 3)
+        np.testing.assert_array_equal(
+            y.cpu().numpy(),
+            np.arange(8) + 3 if execute_first else np.full(8, -1))
         runs = debugger.take_exported_runs()
         assert runs
         inactive_count = 0
         for run in runs:
+            if not execute_first:
+                assert run["runtime_metadata"]["full_dump_artifacts"] == []
+                assert run["decoded"]["records"] == []
+                index = json.loads(
+                    Path(run["full_dump_index_path"]).read_text())
+                assert index["artifacts"] == []
+                assert index["inactive_records"]
             inactive = run["runtime_metadata"]["inactive_full_dump_records"]
             inactive_count += len(inactive)
             inactive_keys = {(r["op_id"], r["logical_instance_id"])

@@ -6,6 +6,7 @@ from datetime import datetime
 import hashlib
 import inspect
 import json
+import math
 import os
 from pathlib import Path
 import pprint
@@ -548,10 +549,18 @@ def _write_full_dump_artifacts(
             "path": str(artifact_path),
         })
 
-    expected_records = len(plan_by_record)
-    if expected_records and not artifacts:
-        raise RuntimeError(
-            "level-2 debugger did not produce any full-dump artifacts")
+    if plan_by_record and not artifacts:
+        # Empty output is valid only if every planned capture in every program
+        # instance was explicitly classified as unexecuted control flow.
+        instance_count = math.prod(runtime_metadata.get("grid") or (1, ))
+        expected = {(record_index, instance)
+                    for instance in range(instance_count)
+                    for record_index in plan_by_record}
+        inactive_records = {(r["record_index"], r["logical_instance_id"])
+                            for r in inactive}
+        if not expected or inactive_records != expected:
+            raise RuntimeError(
+                "level-2 debugger did not produce any full-dump artifacts")
 
     inactive_keys = {(r["op_id"], r["logical_instance_id"]) for r in inactive}
     active_keys = {(a["op_id"], a["logical_instance_id"]) for a in artifacts}
