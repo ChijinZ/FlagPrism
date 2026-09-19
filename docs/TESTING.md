@@ -83,11 +83,11 @@ L2 默认超时 600 秒，其余阶段及普通执行补跑为 180 秒；`--time
 
 `passed_api_ids` / `passed_operator_families` 包含按政策放行的 WARNING；实际采集成功请查看 PASS 数量。
 
-## 专项回归与历史工具
+## 专项回归
 
 `Debugger/test/` 和 `Profiler/test/` 保留编译器、协议与厂商边界测试，包括混合宽度 payload、
 L1/L2 混合级别和 TOPSPTI 暂停/恢复及会话拒绝后的重试。这些测试不依赖 FlagGems。
-历史 `Debugger/tools/flaggems_*` 与 Profiler 的外部算子库 benchmark 仍是可选兼容工具，
-根入口不导入或调用它们。examples 仅演示 API。
+旧批量算子 runner、FlagGems 样例及其专属文档已移除。
+厂商专项诊断、报告工具和 examples 保留；examples 仅演示 API。
 
 燧原构建说明见 [Enflame 后端](enflame.md)，实际验证范围以对应运行的清单和结果为准。
