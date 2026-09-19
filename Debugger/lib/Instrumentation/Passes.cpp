@@ -2892,6 +2892,7 @@ struct FullDumpPlanEntry {
   uint32_t elementBytes = 0;
   uint64_t payloadOffset = 0;
   uint64_t payloadLength = 0;
+  bool conditional = false;
 };
 
 std::string serializeRecordPlanToJson(ArrayRef<RecordPlanEntry> entries) {
@@ -2985,6 +2986,7 @@ std::string serializeFullDumpPlanToJson(ArrayRef<FullDumpPlanEntry> entries) {
         {"element_bytes", static_cast<int64_t>(entry.elementBytes)},
         {"payload_offset", static_cast<int64_t>(entry.payloadOffset)},
         {"payload_length", static_cast<int64_t>(entry.payloadLength)},
+        {"conditional", entry.conditional},
     });
   }
 
@@ -3002,6 +3004,13 @@ appendFullDumpPlanEntry(llvm::SmallVectorImpl<FullDumpPlanEntry> &fullDumpPlan,
   uint64_t alignedOffset = alignTo(nextPayloadOffset, spec.elementBytes);
   uint64_t payloadLength =
       spec.elementCount * static_cast<uint64_t>(spec.elementBytes);
+  // A static slot inside a branch or a zero-trip loop need not be written.
+  // Keep this distinction in the plan: an empty unconditional slot is still
+  // a capture error, never an implicitly successful export.
+  bool conditional = false;
+  for (Operation *parent = target.op->getParentOp(); parent;
+       parent = parent->getParentOp())
+    conditional |= isa<scf::IfOp, scf::ForOp, scf::WhileOp>(parent);
   fullDumpPlan.push_back(FullDumpPlanEntry{
       recordIndex,
       target.opId,
@@ -3013,6 +3022,7 @@ appendFullDumpPlanEntry(llvm::SmallVectorImpl<FullDumpPlanEntry> &fullDumpPlan,
       spec.elementBytes,
       alignedOffset,
       payloadLength,
+      conditional,
   });
   return alignedOffset + payloadLength;
 }
@@ -3700,6 +3710,14 @@ struct InsertInstrumentationPass
       for (const InstrumentationTarget &target : targets)
         insertRecordOps(opBuilder, target, recordsPerInstance, recordPlan,
                         fullDumpPlan, payloadBytesPerInstance);
+      // Local entry alignment is insufficient: every program's payload base
+      // must preserve it too, including a final four-byte scalar entry.
+      uint64_t payloadAlignment = 1;
+      for (const FullDumpPlanEntry &entry : fullDumpPlan)
+        payloadAlignment = std::max(payloadAlignment,
+                                    static_cast<uint64_t>(entry.elementBytes));
+      payloadBytesPerInstance =
+          alignTo(payloadBytesPerInstance, payloadAlignment);
     }
 
     // Mark module as instrumented before annotating functions so that the

@@ -124,6 +124,52 @@ def test_debugger_binding_decodes_and_reports_summary_record():
     assert '"summary"' in json_report
 
 
+@pytest.mark.parametrize("result_type", [2, 3])
+@pytest.mark.parametrize("raw_value,expected", [
+    (3.5, 3.5),
+    (float("inf"), "Infinity"),
+    (float("-inf"), "-Infinity"),
+    (float("nan"), "NaN"),
+])
+def test_debugger_summary_json_preserves_nonfinite_values(
+        result_type, raw_value, expected):
+    from flagtree.debugger.native import runtime_binding
+    dbg = runtime_binding()
+    assert dbg is not None
+    header = struct.pack("<8I", 1, 1, 0, 0, 32, 64, 0, 0)
+    record = struct.pack("<HHIQHHI", 1, 0, 1, 42, 8, result_type, 0)
+    record += struct.pack("<f4x" if result_type == 2 else "<d", raw_value)
+    exported = {"meta": {"protocol_version": 1}, "raw_buffer": header + record}
+    metadata = json.dumps({
+        "debugKernelId": 7,
+        "kernelName": "nonfinite_summary",
+        "backendName": "host",
+        "targetName": "host",
+        "scopeCount": 0,
+        "trackedOpCount": 0,
+        "trackedOps": [],
+    })
+
+    def cells(node):
+        if isinstance(node, dict):
+            if node.get("result_type") in ("F32", "F64") and "value" in node:
+                yield node["value"]
+            for value in node.values():
+                yield from cells(value)
+        elif isinstance(node, list):
+            for value in node:
+                yield from cells(value)
+
+    for render in (dbg.render_json_report, dbg.render_json_op_log_report):
+        document = json.loads(
+            render(exported, metadata),
+            parse_constant=lambda value: pytest.fail(
+                f"Non-standard JSON token: {value}"),
+        )
+        values = list(cells(document))
+        assert values and all(value == expected for value in values)
+
+
 def test_debugger_binding_decodes_deterministic_compact_bundle_records():
     from flagtree.debugger.native import runtime_binding
     dbg = runtime_binding()
@@ -325,3 +371,124 @@ def test_ascend_options_hash_includes_instrumentation_mode():
     )
 
     assert plain.hash() != instrumented.hash()
+
+
+@pytest.mark.parametrize("conditional,offset,length,expected", [
+    (True, 0, 0, None),
+    (False, 0, 0, "empty full-dump"),
+    (True, 1, 0, "empty full-dump"),
+    (True, 1024, 2, "size differs"),
+])
+def test_l2_inactive_slots_are_not_missing_capture(tmp_path, conditional,
+                                                   offset, length, expected):
+    from flagtree.debugger.api import _write_full_dump_artifacts
+
+    run = {
+        "raw_buffer": bytes(2048),
+        "runtime_metadata": {
+            "records_per_instance": 4
+        }
+    }
+
+    def rec(kind, op, off=0, size=0):
+        return {
+            "record_kind": kind,
+            "op_id": op,
+            "logical_instance_id": 0,
+            "payload_offset": off,
+            "payload_length": size
+        }
+
+    decoded = {
+        "header": {},
+        "records": [
+            rec("FULL_VALUE", 1, 1024, 4),
+            rec("SUMMARY_COUNT_BUNDLE_U64", 2),
+            rec("SUMMARY_VALUE_BUNDLE_F32", 2),
+            rec("FULL_VALUE", 2, offset, length),
+        ]
+    }
+    metadata = {
+        "debug_full_dump_plan": [{
+            "record_index": slot,
+            "op_id": op,
+            "artifact_dtype": "float32",
+            "shape": [1],
+            "kind": "value",
+            "payload_length": 4,
+            "conditional": cond
+        } for slot, op, cond in [(0, 1, False), (3, 2, conditional)]]
+    }
+    if expected:
+        with pytest.raises(RuntimeError, match=expected):
+            _write_full_dump_artifacts(tmp_path / "run.txt", run, decoded,
+                                       metadata)
+    else:
+        artifacts = _write_full_dump_artifacts(tmp_path / "run.txt", run,
+                                               decoded, metadata)
+        assert len(artifacts) == 1
+        assert run["runtime_metadata"]["inactive_record_slots"] == [1, 2, 3]
+        assert run["runtime_metadata"]["inactive_full_dump_records"][0][
+            "op_id"] == 2
+
+
+def _instrument_scalar_pair(tmp_path, first_type, first_level):
+    from triton._C.libtriton import ir
+    from flagtree.debugger.native import compiler_binding
+
+    binding = compiler_binding()
+    context = ir.context()
+    ir.load_dialects(context)
+    binding.load_dialects(context)
+    source = f'''module attributes {{
+      flagtree.debug.addr_level = 0 : i32,
+      flagtree.debug.enable_hidden_arg_abi = true,
+      flagtree.debug.record_level = 2 : i32
+    }} {{
+      tt.func @payload(%a: !tt.ptr<{first_type}>, %b: !tt.ptr<f32>) {{
+        %x = tt.load %a {{flagtree.debug.op_id = 1 : i32,
+                          flagtree.debug.record_level = {first_level} : i32}} : !tt.ptr<{first_type}>
+        %y = tt.load %b {{flagtree.debug.op_id = 2 : i32}} : !tt.ptr<f32>
+        tt.return
+      }}
+    }}'''
+    path = tmp_path / "payload.mlir"
+    path.write_text(source)
+    module = ir.parse_mlir_module(str(path), context)
+    passes = ir.pass_manager(context)
+    binding.add_insert_instrumentation(passes)
+    passes.run(module, "payload_regression")
+    return binding, module, context
+
+
+def test_l2_program_stride_preserves_entry_alignment(tmp_path):
+    binding, module, context = _instrument_scalar_pair(tmp_path, "i64", 2)
+    stride = binding.get_debug_full_dump_payload_bytes_per_instance(module)
+    plan = json.loads(binding.get_debug_full_dump_plan_json(module))
+    assert stride == 16
+    assert [(p["payload_offset"], p["payload_length"])
+            for p in plan] == [(0, 8), (8, 4)]
+    for program in range(3):
+        for entry in plan:
+            assert (program * stride +
+                    entry["payload_offset"]) % entry["element_bytes"] == 0
+
+
+def test_native_decoder_accepts_unsorted_inactive_slots():
+    from flagtree.debugger.native import runtime_binding
+    binding = runtime_binding()
+    header = struct.pack("<8I", 3, 3, 0, 0, 32, 128, 0, 0)
+    records = b"".join(
+        struct.pack("<HHIQHHId", 1, 0, op, 0, 6, 3, 0, float(op))
+        for op in (1, 2, 3))
+    run = {
+        "meta": {
+            "protocol_version": 1
+        },
+        "runtime_metadata": {
+            "inactive_record_slots": [2, 0]
+        },
+        "raw_buffer": header + records
+    }
+    assert [r["op_id"]
+            for r in binding.decode_exported_run(run)["records"]] == [2]

@@ -64,6 +64,7 @@ struct DebugRuntimeMetadata {
   std::vector<LaunchTensorInfo> tensors;
   std::string recordLayout;
   std::vector<DebugRecordPlanEntry> recordPlan;
+  std::vector<uint32_t> inactiveRecordSlots;
   std::vector<FullDumpArtifactInfo> fullDumpArtifacts;
   bool hasLaunchGrid = false;
   uint32_t gridX = 1;

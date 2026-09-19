@@ -903,10 +903,12 @@ size_t SessionManager::addSession(const std::string &path,
     return sessionId;
   }
   auto sessionId = nextSessionId++;
+  // Failed construction (for example a rejected overlapping vendor session)
+  // must not leave a path pointing to a nonexistent session.
+  auto session = makeSession(sessionId, path, profilerName, profilerPath,
+                             contextSourceName, dataName, mode, hookName);
   sessionPaths[path] = sessionId;
-  sessions[sessionId] =
-      makeSession(sessionId, path, profilerName, profilerPath,
-                  contextSourceName, dataName, mode, hookName);
+  sessions[sessionId] = std::move(session);
   return sessionId;
 }
 

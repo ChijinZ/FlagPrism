@@ -333,7 +333,7 @@ def _render_raw_records(exported_run: dict[str, Any], decoded: dict[str, Any],
 
 
 def _is_full_dump_run(metadata_dict: dict[str, Any]) -> bool:
-    return (int(metadata_dict.get("debug_record_level", 1)) == 2 and int(
+    return (int(
         metadata_dict.get("debug_full_dump_payload_bytes_per_instance", 0)) > 0
             and bool(metadata_dict.get("debug_full_dump_plan")))
 
@@ -486,6 +486,7 @@ def _write_full_dump_artifacts(
     artifact_dir.mkdir(parents=True, exist_ok=True)
 
     artifacts: list[dict[str, Any]] = []
+    inactive: list[dict[str, Any]] = []
     records = decoded.get("records", [])
     for slot_index, record in enumerate(records):
         if not isinstance(
@@ -499,8 +500,25 @@ def _write_full_dump_artifacts(
         payload_offset = int(record.get("payload_offset", 0))
         payload_length = int(record.get("payload_length", 0))
         if payload_length <= 0:
+            if payload_length == 0 and payload_offset == 0 and plan.get(
+                    "conditional"):
+                inactive.append({
+                    "op_id":
+                    int(record["op_id"]),
+                    "logical_instance_id":
+                    int(record["logical_instance_id"]),
+                    "record_index":
+                    record_index,
+                    "reason":
+                    "unexecuted_control_flow"
+                })
+                continue
             raise RuntimeError(
                 f"empty full-dump payload for record_index={record_index}")
+        if payload_length != int(plan["payload_length"]):
+            raise RuntimeError(
+                f"full-dump payload size differs from plan for record_index={record_index}"
+            )
         if payload_offset < 0 or payload_offset + payload_length > len(
                 raw_buffer):
             raise RuntimeError(
@@ -534,6 +552,16 @@ def _write_full_dump_artifacts(
         raise RuntimeError(
             "level-2 debugger did not produce any full-dump artifacts")
 
+    inactive_keys = {(r["op_id"], r["logical_instance_id"]) for r in inactive}
+    active_keys = {(a["op_id"], a["logical_instance_id"]) for a in artifacts}
+    if inactive_keys & active_keys:
+        raise RuntimeError(
+            "Partially missing L2 payloads for an executed operation")
+    runtime_metadata["inactive_record_slots"] = [
+        slot for slot, record in enumerate(records)
+        if (record["op_id"], record["logical_instance_id"]) in inactive_keys
+    ]
+    runtime_metadata["inactive_full_dump_records"] = inactive
     index_path = artifact_dir / "tensor_index.json"
     index = {
         "kernel_name":
@@ -545,6 +573,8 @@ def _write_full_dump_artifacts(
         _exported_run_meta(exported_run).get("run_id", 0),
         "artifacts":
         artifacts,
+        "inactive_records":
+        inactive,
     }
     index_path.write_text(json.dumps(index, indent=2, sort_keys=True))
     runtime_metadata["full_dump_artifacts"] = artifacts
@@ -825,6 +855,8 @@ def _finalize_exported_run(exported_run: dict[str, Any],
                 "level-2 debugger full dump requires debugger output_dir")
         artifacts = _write_full_dump_artifacts(report_path, exported_run,
                                                decoded, metadata_dict)
+        decoded = binding.decode_exported_run(exported_run)
+        exported_run["decoded"] = decoded
         precision_diagnostics = _build_precision_diagnostics(
             metadata_dict, artifacts)
         if precision_diagnostics:
@@ -1332,6 +1364,7 @@ def current_compile_config() -> dict[str, Any]:
 
 def activate(
     *,
+    auto_collect: bool = False,
     level: int | None = None,
     addr_level: int = _DEFAULT_ADDR_LEVEL,
     record_level: int | None = None,
@@ -1386,7 +1419,8 @@ def activate(
 
     from .compiler import set_instrumentation_mode
 
-    set_instrumentation_mode("debugger")
+    set_instrumentation_mode(
+        "debugger_auto_numeric" if auto_collect else "debugger")
 
 
 def deactivate() -> None:

@@ -248,6 +248,10 @@ DebugRuntimeMetadata parseRuntimeMetadata(py::handle value) {
   runtimeMetadata.recordsPerInstance =
       getUInt32Or(dict, "records_per_instance", 0);
   runtimeMetadata.recordLayout = getStringOr(dict, "record_layout", "");
+  py::handle inactiveSlots = lookup(dict, "inactive_record_slots");
+  if (inactiveSlots && !inactiveSlots.is_none())
+    runtimeMetadata.inactiveRecordSlots =
+        py::cast<std::vector<uint32_t>>(inactiveSlots);
   py::handle recordPlan = lookup(dict, "record_plan");
   if (recordPlan && !recordPlan.is_none()) {
     for (py::handle item : py::cast<py::list>(recordPlan)) {
@@ -294,6 +298,7 @@ BufferMeta parseBufferMeta(const py::dict &dict) {
 
 py::dict toPyRuntimeMetadata(const DebugRuntimeMetadata &runtimeMetadata) {
   py::dict dict;
+  dict["inactive_record_slots"] = runtimeMetadata.inactiveRecordSlots;
 
   py::list buffers;
   for (const auto &buffer : runtimeMetadata.buffers) {
@@ -554,8 +559,7 @@ public:
         metadata, "debug_record_size", artifacts.bufferPlan.recordSize);
     uint64_t fullDumpPayloadBytesPerInstance =
         getUInt64Or(metadata, "debug_full_dump_payload_bytes_per_instance", 0);
-    if (compileRequest.options.recordLevel == RecordLevel::LEVEL_TENSOR_FULL &&
-        fullDumpPayloadBytesPerInstance != 0) {
+    if (fullDumpPayloadBytesPerInstance != 0) {
       uint64_t gridProduct = launchGridProduct(runtimeMetadata);
       uint64_t requiredRecords =
           checkedMulU64(gridProduct, runtimeMetadata.recordsPerInstance,
