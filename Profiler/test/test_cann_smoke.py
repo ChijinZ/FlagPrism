@@ -171,7 +171,7 @@ def test_finalize_preserves_data_specific_default_format(monkeypatch):
 @pytest.fixture(scope="session")
 def real_cann_direct_run(tmp_path_factory):
     _require_real_cann_environment()
-    repo = pathlib.Path(__file__).resolve().parents[4]
+    repo = pathlib.Path(__file__).resolve().parents[2]
     out = tmp_path_factory.mktemp("flagtree_profiler_cann_direct_real")
     profile_base = out / "profile"
     msprof_out = out / "msprof"
@@ -181,16 +181,11 @@ def real_cann_direct_run(tmp_path_factory):
     env.setdefault("FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY", "1")
     cmd = [
         sys.executable,
-        str(repo /
-            "third_party/FlagPrism/Profiler/scripts/cann_operator_profile_suite.py"
-            ),
-        "--workload",
+        str(pathlib.Path(__file__).with_name("cann_smoke_workload.py")),
         "--name",
         str(profile_base),
         "--vendor-output",
         str(msprof_out),
-        "--operator",
-        "triton_vector_add_fp32",
         "--device",
         env.get("FLAGTREE_PROFILER_CANN_TEST_DEVICE", "0"),
         "--iters",
