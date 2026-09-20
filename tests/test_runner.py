@@ -56,7 +56,8 @@ def _run(tmp_path,
          message="topsErrorInvalidDevice",
          unavailable=False,
          concurrent_fault=False,
-         extra_args=()):
+         extra_args=(),
+         setup_at=None):
     path = Path(__file__).resolve().parents[1] / "test.py"
     spec = importlib.util.spec_from_file_location("operator_runner", path)
     runner = importlib.util.module_from_spec(spec)
@@ -86,6 +87,9 @@ def _run(tmp_path,
                     case_id=case["case_id"],
                     stage=stage,
                     status="PASS" if passed else "FAIL")
+        if setup_at == stage:
+            data.update(status="SETUP_ERROR",
+                        error="Runtime initialization failed")
         log.write_text("")
         if not passed:
             data["error"] = "Unsupported operator"
@@ -188,3 +192,64 @@ def test_parallel_workers_with_explicit_device_are_allowed(
     assert code == 0
     assert summary["counts"] == {"WARNING": 2}
     assert all(row["device_index"] == 0 for row in summary["results"])
+
+
+@pytest.mark.parametrize("stage", ["debugger", "execute"])
+def test_setup_failure_is_never_accepted(tmp_path, monkeypatch, stage):
+    code, summary, calls = _run(tmp_path, monkeypatch, setup_at=stage)
+    assert code == 1
+    assert summary["results"][0]["status"] == "ERROR"
+    assert not summary["results"][0]["accepted"]
+    if stage == "debugger":
+        assert "baseline_result" not in summary["results"][0]
+
+
+@pytest.mark.parametrize("failure",
+                         ["torch", "triton", "extension", "driver", "device"])
+def test_worker_runtime_setup_errors(tmp_path, monkeypatch, failure):
+    import builtins
+    path = Path(__file__).resolve().parents[1] / "test.py"
+    spec = importlib.util.spec_from_file_location("operator_runner", path)
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    def fail(*args, **kwargs):
+        raise RuntimeError("broken " + failure)
+
+    interface = SimpleNamespace(
+        set_device=fail if failure == "device" else lambda d: None)
+    driver = SimpleNamespace(get_device_interface=fail
+                             if failure == "driver" else lambda: interface,
+                             get_active_torch_device=lambda: "gcu:0",
+                             get_current_target=lambda: "gcu")
+    modules = {
+        "torch":
+        SimpleNamespace(device=lambda d: SimpleNamespace(type="gcu")),
+        "triton":
+        SimpleNamespace(runtime=SimpleNamespace(driver=SimpleNamespace(
+            active=driver)))
+    }
+    original_import = builtins.__import__
+
+    def load(name, *args, **kwargs):
+        if name in modules:
+            if name == failure:
+                raise ImportError("broken " + name)
+            return modules[name]
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", load)
+    monkeypatch.setattr(runner.importlib, "import_module",
+                        fail if failure == "extension" else lambda n: None)
+    case = tmp_path / "case.json"
+    case.write_text(
+        json.dumps(dict(op="abs", case_id="small", body_sha256="test")))
+    result = runner.worker(
+        SimpleNamespace(worker=case,
+                        stage="execute",
+                        level=1,
+                        torch_extension="device_extension",
+                        device=0,
+                        result=tmp_path / "result.json"))
+    assert result["status"] == "SETUP_ERROR"
+    assert "broken " + failure in result["error"]

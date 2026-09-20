@@ -43,6 +43,7 @@ python3 test.py --ops abs,add,addmm,sum --min-ops 1
 采集失败后，在同一卡的独立进程中补跑无 debugger/profiler 的同一算子：
 普通执行也失败 → **WARNING，按约定放行**；普通执行成功 → **ERROR，不放行**。
 WARNING 不代表实际采集成功，结果保留两次执行的错误、日志和退出码。
+PyTorch/Triton/设备扩展导入或驱动、设备初始化失败（包括 baseline）为 ERROR。
 工具缺失、导入失败、原生绑定不可用或预检查失败为 ERROR，不适用算子补跑放行规则。
 设备 context/Sip/离线、NPU core 异常及 CUDA/HIP 非法内存访问或 device-side assert 为 ERROR，并阻止后续测试；不能用损坏设备上的补跑失败作 WARNING。
 

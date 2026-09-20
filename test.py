@@ -231,29 +231,35 @@ def worker(args):
                               error=str(error),
                               traceback=traceback.format_exc())
                 return result
-        import torch
+        try:
+            import torch
 
-        if args.torch_extension:
-            importlib.import_module(args.torch_extension)
-        else:
-            for module in ("torch_npu", "torch_gcu", "torch_musa"):
-                if importlib.util.find_spec(module):
-                    importlib.import_module(module)
+            if args.torch_extension:
+                importlib.import_module(args.torch_extension)
+            else:
+                for module in ("torch_npu", "torch_gcu", "torch_musa"):
+                    if importlib.util.find_spec(module):
+                        importlib.import_module(module)
+            import triton
+
+            driver = triton.runtime.driver.active
+            interface = driver.get_device_interface()
+            if args.device is not None:
+                interface.set_device(args.device)
+            device = driver.get_active_torch_device()
+            target = driver.get_current_target()
+            assert torch.device(device).type != "cpu", "Accelerator required"
+            result.update(target=str(target), device=str(device))
+        except Exception as error:
+            result.update(status="SETUP_ERROR",
+                          error=str(error),
+                          traceback=traceback.format_exc())
+            return result
         # Independent native CPU reference, with deterministic inputs.
         reference = cpu_namespace(case, torch)
         exec(compile(case["operation"], "<cpu-reference>", "exec"), reference)
         expected = to_cpu(reference["result"], torch)
         namespace = cpu_namespace(case, torch)
-        import triton
-
-        driver = triton.runtime.driver.active
-        interface = driver.get_device_interface()
-        if args.device is not None:
-            interface.set_device(args.device)
-        device = driver.get_active_torch_device()
-        target = driver.get_current_target()
-        assert torch.device(device).type != "cpu", "Accelerator required"
-        result.update(target=str(target), device=str(device))
         # Preserve repeated tensor references within the input namespace.
         moved = {}
         for name, value in list(namespace.items()):
@@ -789,11 +795,11 @@ def main():
             if stage != "execute" and data["status"] not in ("PASS",
                                                              "BLOCKED"):
                 data["capture_status"] = data["status"]
-                if data["status"] == "UNAVAILABLE":
+                if data["status"] in ("UNAVAILABLE", "SETUP_ERROR"):
                     data.update(
                         status="ERROR",
                         severity="error",
-                        diagnosis="Required instrumentation is unavailable")
+                        diagnosis="Required tooling or runtime setup failed")
                 elif device_fault.is_set():
                     # A failed retry on a poisoned context cannot establish operator support.
                     data.update(
@@ -805,7 +811,14 @@ def main():
                 else:
                     baseline = run_stage("execute", out / "baseline")
                     data["baseline_result"] = baseline
-                    if baseline["status"] == "PASS":
+                    if baseline["status"] in ("UNAVAILABLE", "SETUP_ERROR"):
+                        data.update(
+                            status="ERROR",
+                            severity="error",
+                            diagnosis=
+                            "Baseline runtime setup failed; operator support cannot be determined"
+                        )
+                    elif baseline["status"] == "PASS":
                         data.update(
                             status="ERROR",
                             severity="error",
