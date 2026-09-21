@@ -1,4 +1,4 @@
-"""Offline TOPSPTI analysis. Run directly with Python; no device or native module needed."""
+"""Offline accelerator activity analysis. Run directly with Python; no device or native module needed."""
 
 import argparse
 from collections import Counter, defaultdict
@@ -26,36 +26,37 @@ def percentile(values, fraction):
 
 def analyze(path):
     document = json.loads(Path(path).read_text())
-    if document.get("backend") != "enflame":
+    backend = document.get("backend")
+    if not isinstance(backend, str) or not backend:
+        raise ValueError("Activity artifacts must identify their backend")
+    rows = document.get("associations", [])
+    if rows and not any("activity.kind" in row.get("metrics", {})
+                        for row in rows):
         raise ValueError(
-            "This report currently accepts Enflame .vendor.json artifacts")
+            "Artifact has no normalized activity.kind fields; update the backend collector"
+        )
     events = []
     rejected = Counter()
     for index, row in enumerate(document.get("associations", [])):
         raw = row["runtime_event"]
         metrics = row.get("metrics", {})
-        kind = metrics.get(
-            "enflame.kind",
-            "kernel" if row.get("source") == "topspti_activity" else "unknown")
+        kind = metrics.get("activity.kind")
+        if kind not in ("kernel", "runtime", "driver", "memcpy", "memset"):
+            rejected["missing or unsupported activity.kind"] += 1
+            continue
         start, end = int(raw["start_time_ns"]), int(raw["end_time_ns"])
         if row.get("state") != "collected" or start <= 0 or end < start:
             rejected[row.get("note") or row.get("state", "invalid")] += 1
             continue
         host = kind in ("runtime", "driver")
         lane = (
-            f'{kind} PID {metrics.get("enflame.process_id", "?")} / TID {metrics.get("enflame.thread_id", "?")}'
+            f'{kind} PID {metrics.get("activity.process_id", "?")} / TID {metrics.get("activity.thread_id", "?")}'
             if host else
-            f'Device {raw["device_id"]} / Context {metrics.get("enflame.context_id", "?")} / Stream {raw["stream_id"]}'
+            f'PID {metrics.get("activity.process_id", "?")} / Device {raw["device_id"]} / Context {metrics.get("activity.context_id", "?")} / Stream {raw["stream_id"]}'
         )
         name = raw["op_name"]
         if kind == "memcpy":
-            direction = {
-                1: "H2D",
-                2: "D2H",
-                8: "D2D",
-                9: "H2H",
-                10: "P2P"
-            }.get(metrics.get("enflame.copy_kind"), "unknown")
+            direction = metrics.get("activity.copy_direction", "unknown")
             name = f"memcpy {direction}"
         events.append(
             dict(id=index,
@@ -66,6 +67,13 @@ def analyze(path):
                  duration_us=(end - start) / 1000,
                  device=None if host else raw["device_id"],
                  correlation_id=raw["correlation_id"],
+                 correlation_key=(json.dumps([
+                     metrics.get("activity.process_id"),
+                     metrics.get("activity.correlation_domain", "default"),
+                     raw["correlation_id"]
+                 ]) if raw["correlation_id"]
+                                  and "activity.process_id" in metrics else
+                                  None),
                  scope_id=raw["scope_id"],
                  lane=lane,
                  metrics=metrics,
@@ -81,6 +89,8 @@ def analyze(path):
     hotspots = []
     for (kind, name), rows in groups.items():
         times = [r["duration_us"] for r in rows]
+        byte_count = (sum(r["metrics"]["activity.bytes"] for r in rows) if all(
+            "activity.bytes" in r["metrics"] for r in rows) else None)
         hotspots.append(
             dict(kind=kind,
                  name=name,
@@ -91,12 +101,10 @@ def analyze(path):
                  p95_us=percentile(times, .95),
                  p99_us=percentile(times, .99),
                  max_us=max(times),
-                 effective_gbps=(sum(r["metrics"].get("enflame.bytes", 0)
-                                     for r in rows) / (sum(times) * 1000)
+                 effective_gbps=(byte_count / (sum(times) * 1000)
                                  if kind in ("memcpy", "memset") and sum(times)
-                                 else None),
-                 bytes=sum(r["metrics"].get("enflame.bytes", 0)
-                           for r in rows)))
+                                 and byte_count is not None else None),
+                 bytes=byte_count))
     hotspots.sort(key=lambda r: -r["total_us"])
     devices = []
     for device in sorted(
@@ -124,14 +132,14 @@ def analyze(path):
     unmatched_frees = 0
     for event in sorted(events, key=lambda e: (e["end_ns"], e["id"])):
         m = event["metrics"]
-        if event["kind"] != "runtime" or "enflame.memory_action" not in m:
+        if event["kind"] != "runtime" or "activity.memory_action" not in m:
             continue
-        space = m["enflame.memory_space"]
-        key = (m.get("enflame.process_id"), m.get("enflame.context_id"), space,
-               m["enflame.address"])
-        if m["enflame.memory_action"] == "allocate":
+        space = m["activity.memory_space"]
+        key = (m.get("activity.process_id"), m.get("activity.context_id"),
+               space, m["activity.address"])
+        if m["activity.memory_action"] == "allocate":
             current[space] -= live.get(key, 0)
-            live[key] = m["enflame.allocation_bytes"]
+            live[key] = m["activity.allocation_bytes"]
             current[space] += live[key]
         elif key in live:
             current[space] -= live.pop(key)
@@ -141,13 +149,13 @@ def analyze(path):
         memory.append(
             dict(time_us=event["end_us"], space=space, bytes=current[space]))
     api_errors = [
-        e for e in events if e["kind"] == "runtime"
-        and e["metrics"].get("enflame.return_value", 0) != 0
+        e for e in events if e["kind"] in ("runtime", "driver")
+        and e["metrics"].get("activity.api_success") == 0
     ]
     return dict(
         schema_version=1,
         source=str(path),
-        backend="enflame",
+        backend=backend,
         origin_ns=origin,
         events=events,
         hotspots=hotspots,
@@ -155,6 +163,9 @@ def analyze(path):
         memory=memory,
         counts=dict(Counter(e["kind"] for e in events)),
         api_error_count=len(api_errors),
+        api_unknown_status_count=sum(e["kind"] in (
+            "runtime", "driver") and "activity.api_success" not in e["metrics"]
+                                     for e in events),
         rejected=dict(rejected),
         degrade_reasons=document.get("degrade_reasons", []),
         observed_peak_bytes=dict(peak),
@@ -162,8 +173,7 @@ def analyze(path):
         limitations=[
             "Coverage describes captured device activity, not hardware utilization.",
             "Observed allocation bytes exclude allocations before capture and caching allocator tensor lifetimes.",
-            "No hardware counters, cache statistics, or intra-kernel warp/Core timing are collected.",
-            "Driver activity is requested but may produce no records with the installed SDK.",
+            "Missing activity categories or fields mean unreported data, not zero hardware activity.",
             "Effective transfer GB/s uses recorded bytes divided by summed activity duration, not measured HBM bandwidth.",
             "Runtime and driver API durations may nest; do not add them to device elapsed time.",
             "Synchronization and allocator API timings are available only when called during capture."
@@ -218,10 +228,10 @@ def chrome_trace(report):
     # Link actual correlated API/device records; never infer a link by name.
     apis = {}
     for event in report["events"]:
-        if event["kind"] == "runtime" and event["correlation_id"]:
-            apis[event["correlation_id"]] = event
+        if event["kind"] in ("runtime", "driver") and event["correlation_key"]:
+            apis.setdefault(event["correlation_key"], event)
     for event in report["events"]:
-        api = apis.get(event["correlation_id"])
+        api = apis.get(event["correlation_key"])
         if event["device"] is None or api is None or api["start_us"] > event[
                 "start_us"]:
             continue
@@ -268,7 +278,9 @@ def render(report):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("input", type=Path, help="Enflame .vendor.json")
+    parser.add_argument("input",
+                        type=Path,
+                        help="Normalized activity .vendor.json")
     parser.add_argument("--out",
                         type=Path,
                         required=True,
@@ -288,9 +300,9 @@ def main():
 
 
 HTML = r'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>FlagPrism · Enflame profile</title><style>
+<title>FlagPrism · Activity profile</title><style>
 :root{color-scheme:dark;font:14px system-ui;background:#101622;color:#dce4f1}body{margin:24px;max-width:1500px}h1{font-size:27px;margin-bottom:4px}h2{font-size:19px;margin-top:30px}.muted{color:#9eafc5}button,input,select{background:#1d2a3c;color:inherit;border:1px solid #49617d;border-radius:5px;padding:7px}button{cursor:pointer}.cards{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.card{padding:15px;background:#1b2739;border-radius:8px;min-width:115px}.card strong{display:block;font-size:25px;color:#77d9d0}table{border-collapse:collapse;width:100%}td,th{padding:9px;text-align:left;border-bottom:1px solid #2e3f55}th{position:sticky;top:0;background:#1b2739;cursor:pointer}td:first-child{max-width:420px;overflow-wrap:anywhere}.scroll{max-height:430px;overflow:auto;border:1px solid #2e3f55;border-radius:6px}canvas{display:block;background:#142032;width:100%;cursor:crosshair}pre{max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#1b2739;padding:12px}.legend span{margin-right:18px}a{color:#77d9d0}.warn{color:#f1c17d}#timeline{overflow:auto;max-height:440px}label{margin-right:12px}details{margin:10px 0}</style>
-<h1>FlagPrism <span class="muted">/ Enflame</span></h1><div class="muted">Device and host activity · TOPSPTI · offline report</div>
+<h1>FlagPrism <span class="muted" id="backend"></span></h1><div class="muted">Device and host activity · offline report</div>
 <div id="cards" class="cards"></div><details><summary>Capture quality & interpretation</summary><div id="quality"></div></details>
 <h2>Activity timeline</h2><div><label>Search <input id="search" placeholder="Kernel or API name"></label><select id="kind"><option value="">All categories</option><option>kernel</option><option>memcpy</option><option>memset</option><option>runtime</option><option>driver</option></select> <button id="zoomIn">Zoom in</button> <button id="zoomOut">Zoom out</button> <button id="left">←</button> <button id="right">→</button> <button id="reset">Reset</button></div>
 <p class="legend" id="legend"></p><div id="range" class="muted"></div><div id="timeline"><canvas id="canvas"></canvas></div><pre id="detail">Click an event to inspect timestamps, correlation, launch dimensions and metadata. Double-click to focus its duration.</pre>
@@ -309,6 +321,7 @@ const r = JSON.parse(document.getElementById('data').textContent),
     runtime: '#72adf3',
     driver: '#a7b5ce'
   };
+$('backend').textContent = '/ ' + r.backend;
 const fmt = x => typeof x === 'number' ? (Number.isInteger(x) ? x.toLocaleString() : x.toLocaleString(undefined, {
   maximumFractionDigits: 3
 })) : (x ?? '—');
@@ -354,6 +367,7 @@ function table(id, rows, cols) {
 for (const [name, value] of Object.entries({
     ...r.counts,
     'API errors': r.api_error_count,
+    'API status unknown': r.api_unknown_status_count,
     'Rejected events': Object.values(r.rejected).reduce((a, b) => a + b, 0)
   })) {
   let d = el('div', name);
@@ -438,7 +452,7 @@ function pick(ev) {
 $('canvas').onclick = ev => {
   let e = pick(ev);
   if (e) {
-    let related = r.events.filter(x => x.correlation_id === e.correlation_id);
+    let related = r.events.filter(x => e.correlation_key !== null && x.correlation_key === e.correlation_key);
     $('detail').textContent = JSON.stringify({
       event: e,
       correlated_events: related.map(x => ({

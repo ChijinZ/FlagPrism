@@ -9,6 +9,7 @@
 #include <tops/tops_runtime.h>
 #include <topspti_activity.h>
 #include <topspti_callbacks.h>
+#include <unistd.h>
 #include <unordered_map>
 
 namespace proton {
@@ -40,9 +41,11 @@ public:
       if (it == launches.end() ||
           !it->second.sessions.count(metadata.sessionName))
         continue;
+      association.metrics["activity.process_id"] =
+          it->second.metrics.at("activity.process_id");
       if (it->second.scope.scopeId) {
         event.scopeId = it->second.scope.scopeId;
-        association.metrics["enflame.scope_name"] = it->second.scope.opName;
+        association.metrics["activity.scope_name"] = it->second.scope.opName;
       }
       if (association.source == "topspti_runtime" ||
           association.source == "topspti_driver") {
@@ -106,37 +109,40 @@ private:
       if (name == "topsMalloc") {
         auto *p = static_cast<const topsMalloc_params *>(data->functionParams);
         if (p->ptr) {
-          m["enflame.memory_action"] = std::string("allocate");
-          m["enflame.memory_space"] = std::string("device");
-          m["enflame.address"] = uint64_t(reinterpret_cast<uintptr_t>(*p->ptr));
-          m["enflame.allocation_bytes"] = uint64_t(p->size);
+          m["activity.memory_action"] = std::string("allocate");
+          m["activity.memory_space"] = std::string("device");
+          m["activity.address"] =
+              uint64_t(reinterpret_cast<uintptr_t>(*p->ptr));
+          m["activity.allocation_bytes"] = uint64_t(p->size);
         }
       } else if (name == "topsFree") {
         auto *p = static_cast<const topsFree_params *>(data->functionParams);
-        m["enflame.memory_action"] = std::string("free");
-        m["enflame.memory_space"] = std::string("device");
-        m["enflame.address"] = uint64_t(reinterpret_cast<uintptr_t>(p->ptr));
+        m["activity.memory_action"] = std::string("free");
+        m["activity.memory_space"] = std::string("device");
+        m["activity.address"] = uint64_t(reinterpret_cast<uintptr_t>(p->ptr));
       } else if (name == "topsHostMalloc") {
         auto *p =
             static_cast<const topsHostMalloc_params *>(data->functionParams);
         if (p->ptr) {
-          m["enflame.memory_action"] = std::string("allocate");
-          m["enflame.memory_space"] = std::string("host");
-          m["enflame.address"] = uint64_t(reinterpret_cast<uintptr_t>(*p->ptr));
-          m["enflame.allocation_bytes"] = uint64_t(p->size);
+          m["activity.memory_action"] = std::string("allocate");
+          m["activity.memory_space"] = std::string("host");
+          m["activity.address"] =
+              uint64_t(reinterpret_cast<uintptr_t>(*p->ptr));
+          m["activity.allocation_bytes"] = uint64_t(p->size);
         }
       } else if (name == "topsHostFree") {
         auto *p =
             static_cast<const topsHostFree_params *>(data->functionParams);
-        m["enflame.memory_action"] = std::string("free");
-        m["enflame.memory_space"] = std::string("host");
-        m["enflame.address"] = uint64_t(reinterpret_cast<uintptr_t>(p->ptr));
+        m["activity.memory_action"] = std::string("free");
+        m["activity.memory_space"] = std::string("host");
+        m["activity.address"] = uint64_t(reinterpret_cast<uintptr_t>(p->ptr));
       }
       return;
     }
     Launch launch;
+    launch.metrics["activity.process_id"] = uint64_t(getpid());
     launch.name = data->functionName ? data->functionName : "unknown_api";
-    launch.metrics["enflame.context_id"] = uint64_t(data->contextUid);
+    launch.metrics["activity.context_id"] = uint64_t(data->contextUid);
     if (!activeScopes.empty())
       launch.scope = activeScopes.back();
     {
@@ -181,15 +187,15 @@ private:
         event.streamId = r->streamId;
         event.correlationId = r->correlationId;
         event.taskId = r->gridId;
-        m["enflame.kind"] = std::string("kernel");
-        m["enflame.completed_ns"] = uint64_t(r->completed);
-        m["enflame.context_id"] = uint64_t(r->contextId);
-        m["enflame.grid_x"] = int64_t(r->gridX);
-        m["enflame.grid_y"] = int64_t(r->gridY);
-        m["enflame.grid_z"] = int64_t(r->gridZ);
-        m["enflame.block_x"] = int64_t(r->blockX);
-        m["enflame.block_y"] = int64_t(r->blockY);
-        m["enflame.block_z"] = int64_t(r->blockZ);
+        m["activity.kind"] = std::string("kernel");
+        m["activity.completed_ns"] = uint64_t(r->completed);
+        m["activity.context_id"] = uint64_t(r->contextId);
+        m["activity.grid_x"] = int64_t(r->gridX);
+        m["activity.grid_y"] = int64_t(r->gridY);
+        m["activity.grid_z"] = int64_t(r->gridZ);
+        m["activity.block_x"] = int64_t(r->blockX);
+        m["activity.block_y"] = int64_t(r->blockY);
+        m["activity.block_z"] = int64_t(r->blockZ);
       } else if (record->kind == TOPSPTI_ACTIVITY_KIND_MEMCPY) {
         auto *r = reinterpret_cast<Topspti_ActivityMemcpy *>(record);
         association.source = "topspti_memcpy";
@@ -199,13 +205,35 @@ private:
         event.deviceId = r->deviceId;
         event.streamId = r->streamId;
         event.correlationId = r->correlationId;
-        m["enflame.kind"] = std::string("memcpy");
-        m["enflame.bytes"] = uint64_t(r->bytes);
+        m["activity.kind"] = std::string("memcpy");
+        m["activity.bytes"] = uint64_t(r->bytes);
         m["enflame.copy_kind"] = uint64_t(r->copyKind);
+        // Translate SDK enum values at the backend boundary, not in the UI.
+        const char *direction = "unknown";
+        switch (r->copyKind) {
+        case TOPSPTI_ACTIVITY_MEMCPY_KIND_HTOD:
+          direction = "H2D";
+          break;
+        case TOPSPTI_ACTIVITY_MEMCPY_KIND_DTOH:
+          direction = "D2H";
+          break;
+        case TOPSPTI_ACTIVITY_MEMCPY_KIND_DTOD:
+          direction = "D2D";
+          break;
+        case TOPSPTI_ACTIVITY_MEMCPY_KIND_HTOH:
+          direction = "H2H";
+          break;
+        case TOPSPTI_ACTIVITY_MEMCPY_KIND_PTOP:
+          direction = "P2P";
+          break;
+        default:
+          break;
+        }
+        m["activity.copy_direction"] = std::string(direction);
         m["enflame.src_kind"] = uint64_t(r->srcKind);
         m["enflame.dst_kind"] = uint64_t(r->dstKind);
         m["enflame.flags"] = uint64_t(r->flags);
-        m["enflame.context_id"] = uint64_t(r->contextId);
+        m["activity.context_id"] = uint64_t(r->contextId);
       } else if (record->kind == TOPSPTI_ACTIVITY_KIND_MEMSET) {
         auto *r = reinterpret_cast<Topspti_ActivityMemset *>(record);
         association.source = "topspti_memset";
@@ -215,12 +243,12 @@ private:
         event.deviceId = r->deviceId;
         event.streamId = r->streamId;
         event.correlationId = r->correlationId;
-        m["enflame.kind"] = std::string("memset");
-        m["enflame.bytes"] = uint64_t(r->bytes);
+        m["activity.kind"] = std::string("memset");
+        m["activity.bytes"] = uint64_t(r->bytes);
         m["enflame.value"] = uint64_t(r->value);
         m["enflame.memory_kind"] = uint64_t(r->memoryKind);
         m["enflame.flags"] = uint64_t(r->flags);
-        m["enflame.context_id"] = uint64_t(r->contextId);
+        m["activity.context_id"] = uint64_t(r->contextId);
       } else if (record->kind == TOPSPTI_ACTIVITY_KIND_RUNTIME ||
                  record->kind == TOPSPTI_ACTIVITY_KIND_DRIVER) {
         auto *r = reinterpret_cast<Topspti_ActivityAPI *>(record);
@@ -229,11 +257,13 @@ private:
         event.startTimeNs = r->start;
         event.endTimeNs = r->end;
         event.correlationId = r->correlationId;
-        m["enflame.kind"] = std::string(runtime ? "runtime" : "driver");
-        m["enflame.process_id"] = uint64_t(r->processId);
-        m["enflame.thread_id"] = uint64_t(r->threadId);
+        m["activity.kind"] = std::string(runtime ? "runtime" : "driver");
+        m["activity.process_id"] = uint64_t(r->processId);
+        m["activity.thread_id"] = uint64_t(r->threadId);
         m["enflame.callback_id"] = uint64_t(r->cbid);
         m["enflame.return_value"] = uint64_t(r->returnValue);
+        if (runtime)
+          m["activity.api_success"] = uint64_t(r->returnValue == topsSuccess);
       } else {
         continue;
       }

@@ -126,14 +126,14 @@ def test_enflame_detailed_memory_and_api_capture(tmp_path):
         profiler.finalize(session)
     associations = json.loads(
         path.with_suffix(".vendor.json").read_text())["associations"]
-    kinds = {a["metrics"]["enflame.kind"] for a in associations}
+    kinds = {a["metrics"]["activity.kind"] for a in associations}
     assert {"runtime", "memcpy", "memset"} <= kinds
     # Finalization synchronization belongs to the profiler, not this workload.
     assert not any(a["runtime_event"]["op_name"] == "topsDeviceSynchronize"
                    for a in associations)
     transfers = [a for a in associations if a["source"] == "topspti_memcpy"]
     assert {a["metrics"]["enflame.copy_kind"] for a in transfers} >= {1, 2}
-    assert all(a["metrics"]["enflame.bytes"] == 4096 for a in transfers)
+    assert all(a["metrics"]["activity.bytes"] == 4096 for a in transfers)
     api = {
         a["runtime_event"]["correlation_id"]: a
         for a in associations
@@ -141,9 +141,9 @@ def test_enflame_detailed_memory_and_api_capture(tmp_path):
     }
     assert all(a["runtime_event"]["correlation_id"] in api for a in transfers)
     memory = [
-        a for a in associations if "enflame.memory_action" in a["metrics"]
+        a for a in associations if "activity.memory_action" in a["metrics"]
     ]
-    assert {a["metrics"]["enflame.memory_action"]
+    assert {a["metrics"]["activity.memory_action"]
             for a in memory} == {"allocate", "free"}
-    assert all(a["metrics"]["enflame.address"] == pointer.value
+    assert all(a["metrics"]["activity.address"] == pointer.value
                for a in memory)

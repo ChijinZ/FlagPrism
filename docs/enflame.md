@@ -114,21 +114,9 @@ correlation ID、API 线程/返回码、拷贝方向/字节数和 memset 参数�
 新增 API 和内存 activity 不计入原有 Hatchet kernel 时间，profiler 自身 flush
 引发的同步不归入用户 API。用户主动调用的同步仍正常采集。
 
-生成可直接在浏览器打开、无需联网的交互报告：
-
-```bash
-python3 Profiler/python/flagtree_profiler/report.py profile.vendor.json --out profile-report
-# 同等工作负载的前后对比：
-python3 Profiler/python/flagtree_profiler/report.py profile.vendor.json \
-    --baseline baseline.vendor.json --out profile-comparison
-```
-
-安装后也可使用 `flagtree-profiler-report`。上述直接运行脚本的方式仅依赖 Python
-标准库，查看报告的机器无需安装 FlagTree 或具备加速卡。
-
-`index.html` 提供类别/名称筛选、时间线缩放、事件详情与 correlation 关联、
-热点排序、P50/P95/P99、有效拷贝吞吐、设备活动覆盖、已观测分配曲线和基线对比。
-`report.json` 保存分析结果；`trace.json` 可导入 Perfetto。
+采集器输出通用 `activity.*` 字段，TOPSPTI 原始枚举/flags/返回码保留在
+`enflame.*` 命名空间。交互报告、命令、数据约定与其他芯片接入方式见
+[通用活动报告](../Profiler/docs/activity_report.md)。报告层不解释 TOPSPTI 枚举。
 
 解释数据时请注意：
 
@@ -162,3 +150,31 @@ python3 test.py --jobs 8 --devices 0,1,2,3,4,5,6,7
 
 历史 FlagGems 清单的测试记录仅代表当时版本；当前自带算子清单与结果见运行生成的
 `manifest.json` 和 `summary.json`，不能直接沿用旧清单的通过率。首次 L2 编译默认允许 600 秒。
+
+## TOPSPTI 接口覆盖与后续价值
+
+以下核对以当前机器 SDK 的 TOPSPTI API v4 头文件为准，不代表所有 SDK 版本。
+本机实际调用 `topsptiGetVersion` 返回 4，`topsptiGetThreadIdType` 返回 0（默认 pthread ID）。
+五类 activity 中有文档意义的字段已基本保存；reserved/pad 不应采集。
+`completed` 虽已保存，但本次 kernel 记录为 0，按 SDK 定义表示未知，不能计算子 kernel 等待时间。
+
+| 可获取但尚未使用的信息 | 入口 | 价值与约束 |
+| --- | --- | --- |
+| 启动请求的共享内存、扩展启动属性、函数/流句柄、symbolName | launch callback 的 `functionParams`、`topsLaunchConfig_t`、`symbolName` | 高：解释同名 kernel 的配置差异；是请求值，不是实际占用率或寄存器使用量 |
+| stream/event 创建、记录、等待、同步和销毁参数 | Stream/Event callbacks | 高：建立主机提交的依赖图，定位同步阻塞；句柄生命周期需跟踪，不能把 API 时间等同于设备等待时间 |
+| 拷贝源/目标地址、异步 stream、symbol offset | Memcpy callbacks | 高：关联缓冲区、拷贝与分配生命周期；地址不解引用，需覆盖不同 memcpy 参数结构 |
+| SDK/运行时版本与更多设备属性 | 版本接口、Device callbacks/TOPS Runtime 查询 | 高：已有 Device.cpp 查询架构、频率、位宽和处理器数量；仍可补充版本、名称/总显存等并接入报告。静态属性不是动态计数器，避免在 SDK 回调内重入查询 |
+| 实际可用/总显存查询结果、host registration 与映射 | `topsMemGetInfo`、HostRegister/Unregister、HostGetDevicePointer callbacks | 中高：补充采样点和 pinned/mapped memory；仅捕获用户查询会稀疏，主动轮询有开销；注册不等于分配 |
+| Graph 实例化/执行/销毁句柄 | Graph callbacks | 中高（Graph 工作负载）：可关联重复 graph launch；当前 activity 没有 node ID，不能据此完整重建节点执行 DAG |
+| 系统线程 ID | `topsptiSetThreadIdType` / `topsptiGetThreadIdType` | 高：默认 pthread ID，系统 TID 便于和 CPU trace 对齐；SDK 可能不支持，必须在采集前设置并处理恢复 |
+| 对齐的时间戳与采集边界 | `topsptiGetTimestamp` / timestamp callback | 高：记录会话/采集窗口，改善首末事件之间覆盖率的解释；暂停区间需单独处理，换时钟必须在启用 activity 前 |
+| API 版本、支持的 callback domain、callback 名称 | `topsptiGetVersion` / `topsptiSupportedDomains` / `topsptiGetCallbackName` | 高：能力发现与降级诊断；不保证 domain 内存在实际可采的 API |
+| 周期性 flush | `topsptiActivityFlushPeriod` | 中：降低延迟与 SDK buffer 压力；本地事件容器也需流式输出，单独开启不会限制总内存 |
+
+已采集但尚未深入分析的还有 grid/block 配置、memory kind 和 flags；
+目前保留在事件详情，后续可增加配置分组、pinned/pageable 等类型解码。
+已使用 `topsptiActivityGetNumDroppedRecords` 检测丢失，不能列为未接入功能。
+`correlationData` 是客户端保存 ENTER/EXIT 状态的空间，不是新的硬件信息。
+当前公开头文件未提供 PMU counter、cache hit、实际 occupancy、指令/warp 采样接口。
+优先补启动配置、stream/event 依赖和版本/时钟元数据；它们可在 FlagPrism 的 Enflame
+采集器内实现，无需编译器插桩。kernel 内部区域计时仍需另外评估 SDK 或 FlagTree 插桩能力。

@@ -39,6 +39,13 @@ FLAGTREE_BACKEND=mthreads FLAGPRISM_BACKEND=mthreads \
 TRITON_BUILD_FLAGPRISM=ON python -m pip install . --no-build-isolation
 ```
 
+## Detailed activity reports
+
+Collectors can emit the shared `activity.*` contract to reuse the offline timeline,
+hotspot, memory and comparison views. Enflame is the first validated producer;
+other backends can implement the contract without changing the report UI.
+See [activity reports and the collector contract](docs/activity_report.md).
+
 ## Usage
 
 ### Basic usage
