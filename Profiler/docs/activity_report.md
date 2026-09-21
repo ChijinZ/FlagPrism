@@ -107,3 +107,24 @@ no Playwright, JavaScript package, network, or browser-server dependency. Wide t
 timeline scroll within their panels on narrow screens. The event selector shows at most 500
 visible records; use search, category filters or zoom to narrow larger captures. This limit does
 not discard data from the report or trace exports.
+
+## Counter aggregates
+
+A producer may add `counter_groups` independently of timestamped `associations`. Each group has
+`name`, `source`, `scope`, optional `invocations`, and a `metrics` list. Each metric has `name`,
+`unit`, `value` (finite number, or null when unavailable), optional `description`, and `instances`.
+Instances have a backend-provided display `instance` label and numerical `minimum`, `maximum`,
+`mean`, `count` statistics. The common UI does not interpret vendor metric names or aggregate
+values further. Preserve SDK units and missing values; do not sum efficiencies or average averages
+without a defined weighting. Producer-supplied descriptions explain the scope and denominator.
+
+Optional `kernel_summaries` contain `name`, `count`, `total_us`, `mean_us`, `min_us`, `max_us`.
+These are aggregate instrumented timings, not per-launch samples; percentiles and timestamps
+cannot be reconstructed. Optional `capture` metadata records the source tool, version, command,
+requested metrics and replay policy. Optional `capture_notes` explain tool-specific collection
+semantics; `degrade_reasons` remains reserved for degraded collection. Counter-only captures render aggregate views without an
+invented timeline or an empty Perfetto download. Their analyzed JSON export includes all counters.
+
+TCU is the first validated external counter producer; see [Enflame TCU usage](../../docs/enflame.md).
+Adding another vendor's importer should populate the same contract and provenance, without adding
+vendor-specific logic to the report renderer. No cross-capture or name-only joins are performed.

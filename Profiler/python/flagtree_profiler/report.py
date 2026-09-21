@@ -25,6 +25,42 @@ def percentile(values, fraction):
                                                                          low)
 
 
+def validate_counters(groups):
+    """Counter aggregates are separate from timed events; never infer a join."""
+    if not isinstance(groups, list):
+        raise ValueError("counter_groups must be a list")
+
+    def numeric(value):
+        return type(value) in (int, float) and math.isfinite(value)
+
+    for group in groups:
+        if not isinstance(group, dict) or not all(
+                isinstance(group.get(k), str)
+                for k in ("name", "scope", "source")):
+            raise ValueError(
+                "Counter groups require name, scope and source strings")
+        if not isinstance(group.get("metrics"), list):
+            raise ValueError("Counter groups require a metrics list")
+        for metric in group["metrics"]:
+            if not isinstance(metric, dict) or not all(
+                    isinstance(metric.get(k), str) for k in ("name", "unit")):
+                raise ValueError("Counters require name and unit strings")
+            if metric.get("value") is not None and not numeric(
+                    metric["value"]):
+                raise ValueError(
+                    "Counter values must be finite numbers or null (unavailable)"
+                )
+            if not isinstance(metric.get("instances", []), list):
+                raise ValueError("Counter instances must be a list")
+            for instance in metric.get("instances", []):
+                if not isinstance(instance, dict) or not isinstance(
+                        instance.get("instance"), str) or not all(
+                            numeric(instance.get(k))
+                            for k in ("minimum", "maximum", "mean", "count")):
+                    raise ValueError("Invalid counter instance statistics")
+    return groups
+
+
 def analyze(path):
 
     def finite_number(value):
@@ -42,6 +78,19 @@ def analyze(path):
     backend = document.get("backend")
     if not isinstance(backend, str) or not backend:
         raise ValueError("Activity artifacts must identify their backend")
+    counter_groups = validate_counters(document.get("counter_groups", []))
+    capture = document.get("capture", {})
+    summaries = document.get("kernel_summaries", [])
+    if not isinstance(capture, dict) or not isinstance(summaries, list):
+        raise ValueError("Invalid capture metadata or kernel_summaries")
+    for summary in summaries:
+        if not isinstance(summary, dict) or not isinstance(
+                summary.get("name"), str) or any(
+                    type(summary.get(k)) not in (int, float)
+                    or not math.isfinite(summary[k]) or summary[k] < 0
+                    for k in ("count", "total_us", "mean_us", "min_us",
+                              "max_us")):
+            raise ValueError("Invalid kernel timing summary")
     rows = document.get("associations", [])
     if not isinstance(rows, list) or any(
             not isinstance(row, dict)
@@ -212,6 +261,9 @@ def analyze(path):
         schema_version=1,
         source=str(path),
         backend=backend,
+        counter_groups=counter_groups,
+        capture=capture,
+        kernel_summaries=summaries,
         origin_ns=origin,
         events=events,
         hotspots=hotspots,
@@ -224,6 +276,7 @@ def analyze(path):
                                      for e in events),
         rejected=dict(rejected),
         degrade_reasons=document.get("degrade_reasons", []),
+        capture_notes=document.get("capture_notes", []),
         observed_peak_bytes=dict(peak),
         unmatched_frees=unmatched_frees,
         invalid_memory_events=invalid_memory_events,
@@ -376,7 +429,7 @@ HTML = r'''<!doctype html>
 <style>
 :root{color-scheme:dark;font:14px/1.5 system-ui,sans-serif;background:#0b1220;color:#e4ecf7;--muted:#99abc2;--line:#2a3850;--accent:#71e4d3}
 
-*{box-sizing:border-box}
+*{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0}
 main{max-width:1560px;margin:auto;padding:32px}
 
@@ -398,7 +451,7 @@ h3{font-size:14px;margin:0 0 12px}
 .panel{background:#121d2d;border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}
 .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0}
-.toolbar label{display:flex;align-items:center;gap:8px}
+.toolbar label{display:flex;align-items:center;gap:8px;max-width:100%;min-width:0}select{min-width:0;max-width:100%}#counterGroup{width:min(620px,65vw)}#counters .timeline-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#counterSummary table{min-width:650px}#counterInstances table{min-width:470px}#kernelSummaryTable table{min-width:600px}@media(max-width:1100px){#counters .timeline-grid{grid-template-columns:1fr}}
 .toolbar input{width:230px}
 .spacer{flex:1}
 
@@ -463,11 +516,13 @@ header{align-items:flex-start}
 <header><div class="brand"><div class="mark" aria-hidden="true">F</div><div><h1>FlagPrism</h1><div class="muted">Single-capture activity report</div></div></div><span class="pill" id="backend"></span></header>
 <div id="cards" class="cards"></div>
 <details class="quality" id="qualityBox"><summary id="qualitySummary">Capture quality & interpretation</summary><div id="quality"></div></details>
-<section class="panel"><div class="panel-head"><h2>Activity timeline</h2><span class="caption">Select an event to inspect · double-click to focus</span></div>
+<section class="panel" id="counters" hidden><h2>Hardware counter observations</h2><p class="caption">Tool-reported aggregates. Scope and sample counts are preserved; these values are not joined to timeline events.</p><div class="toolbar"><label>Kernel group <select id="counterGroup"></select></label><label>Metric <select id="counterMetric"></select></label></div><p class="caption" id="counterScope"></p><div class="scroll" id="counterSummary"></div><p id="counterDescription" class="caption"></p><div class="timeline-grid"><div id="counterBars" class="scroll" style="padding:14px"></div><div id="counterInstances" class="scroll"></div></div></section>
+<section class="panel" id="kernelSummaries" hidden><h2>Kernel timing summaries</h2><p class="caption">Tool-reported aggregates; invocation counts may include replays. No per-launch timing or percentile distribution is inferred.</p><div class="scroll" id="kernelSummaryTable"></div></section>
+<section class="panel" id="activityPanel"><div class="panel-head"><h2>Activity timeline</h2><span class="caption">Select an event to inspect · double-click to focus</span></div>
 <div class="toolbar"><label>Search <input id="search" type="search" placeholder="Kernel or API name"></label><label>Category <select id="kind"><option value="">All categories</option><option>kernel</option><option>memcpy</option><option>memset</option><option>runtime</option><option>driver</option></select></label><span class="spacer"></span><button id="zoomIn" aria-label="Zoom in">+</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="left" aria-label="Pan left">←</button><button id="right" aria-label="Pan right">→</button><button id="reset">Reset</button></div>
 <div class="legend" id="legend"></div><div id="range" class="muted"></div>
 <div class="timeline-grid"><div id="timeline"><canvas id="canvas" aria-label="Activity timeline; use the event selector for keyboard access"></canvas></div><aside class="inspector"><label for="eventSelect" class="caption">INSPECT EVENT</label><select id="eventSelect"></select><div id="detail" class="muted">Select an event to view its timing and launch details.</div><details><summary>Raw record & correlated events</summary><pre id="rawDetail">No event selected.</pre></details></aside></div></section>
-<section class="panel"><div class="panel-head"><h2>Hotspots</h2><span class="caption">Whole capture · matching filters · sort by column</span></div><p class="caption">CPU API time can overlap device execution. Totals are sums of event durations, not elapsed time.</p><div class="scroll" id="hotspots"></div></section>
+<section class="panel" id="hotspotPanel"><div class="panel-head"><h2>Hotspots</h2><span class="caption">Whole capture · matching filters · sort by column</span></div><p class="caption">CPU API time can overlap device execution. Totals are sums of event durations, not elapsed time.</p><div class="scroll" id="hotspots"></div></section>
 <div class="bottom-grid"><section class="panel"><h2>Device activity coverage</h2><p class="caption">Interval union within each device's captured window. Not hardware utilization.</p><div id="devices" class="scroll"></div></section>
 <section class="panel"><h2>Observed allocations</h2><p class="caption">Successful captured allocations only; excludes pre-capture memory and tensor lifetimes.</p><canvas id="memory" height="180"></canvas><div class="legend"><span style="color:#65d2c5">● Device</span><span style="color:#edbc71">● Host</span></div></section></div>
 <div id="compare"></div><footer><a href="trace.json" download>Export Perfetto trace ↗</a><a href="report.json" download>Download analysis JSON ↗</a><span class="muted" id="source"></span></footer>
@@ -488,9 +543,15 @@ for (const link of document.querySelectorAll('a[download]')) {
   const name = link.getAttribute('href');
   link.onclick = event => {
     event.preventDefault();
-    const url = URL.createObjectURL(new Blob([exports[name]], {type: 'application/json'}));
-    const download = document.createElement('a'); download.href = url; download.download = name;
-    document.body.append(download); download.click(); download.remove();
+    const url = URL.createObjectURL(new Blob([exports[name]], {
+      type: 'application/json'
+    }));
+    const download = document.createElement('a');
+    download.href = url;
+    download.download = name;
+    document.body.append(download);
+    download.click();
+    download.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 }
@@ -507,6 +568,7 @@ function el(tag, text) {
 }
 
 function table(id, rows, cols) {
+  rows = [...rows]; // Sorting a view must not reorder metric selector identities.
   const t = document.createElement('table'),
     head = document.createElement('tr');
   let reverse = false;
@@ -546,24 +608,32 @@ function table(id, rows, cols) {
 const rejectedCount = Object.values(r.rejected).reduce((a, b) => a + b, 0);
 const spanUs = r.events.reduce((m, e) => Math.max(m, e.end_us), 0);
 const kernelUs = r.events.filter(e => e.kind === 'kernel').reduce((n, e) => n + e.duration_us, 0);
-for (const [name, value, hint] of [
-    ['Capture window', fmt(spanUs / 1000) + ' ms', 'First to last recorded event'],
-    ['Kernel duration sum', fmt(kernelUs / 1000) + ' ms', `${r.counts.kernel || 0} captured kernels · may overlap`],
-    ['Recorded activities', fmt(r.events.length), `${r.counts.runtime || 0} runtime APIs · ${r.counts.memcpy || 0} copies`],
-    ['API errors / rejected', `${r.api_error_count} / ${rejectedCount}`, `${r.api_unknown_status_count} API results unknown`]
-  ]) {
+const overview = [
+  ['Capture window', r.events.length ? fmt(spanUs / 1000) + ' ms' : 'Not recorded', 'First to last timed event'],
+  ['Kernel duration sum', r.counts.kernel ? fmt(kernelUs / 1000) + ' ms' : 'Not recorded', `${r.counts.kernel || 0} captured kernels · may overlap`],
+  ['Recorded activities', fmt(r.events.length), `${r.counter_groups.reduce((n,g)=>n+g.metrics.length,0)} counter metrics · ${r.counts.memcpy || 0} copies`],
+  ['API errors / rejected', `${r.api_error_count} / ${rejectedCount}`, `${r.api_unknown_status_count} API results unknown`]
+];
+const counterOnly = !r.events.length && r.counter_groups.length > 0;
+const cards = counterOnly ? [
+  ['Kernel groups', fmt(r.counter_groups.length), 'Configuration-level aggregates'],
+  ['Counter metrics', fmt(r.counter_groups.reduce((n, g) => n + g.metrics.length, 0)), 'Original units and reported values'],
+  ['Instance observations', fmt(r.counter_groups.reduce((n, g) => n + g.metrics.reduce((s, m) => s + (m.instances || []).length, 0), 0)), 'Across metrics; passes may differ'],
+  ['Replay policy', r.capture.replay_mode ?? 'Unknown', 'No per-launch timing inferred']
+] : overview;
+for (const [name, value, hint] of cards) {
   const card = el('div', name);
   card.className = 'card';
   card.prepend(el('strong', value));
   card.append(el('small', hint));
   $('cards').append(card);
 }
-$('qualitySummary').textContent = `Capture notes · ${r.events.length} records · ${rejectedCount} rejected · ${r.degrade_reasons.length} backend notices`;
+$('qualitySummary').textContent = `Capture notes · ${r.events.length} timed records · ${rejectedCount} rejected · ${r.degrade_reasons.length} backend notices · ${r.capture_notes.length} capture notes`;
 if (rejectedCount || r.api_error_count || r.degrade_reasons.length || r.invalid_memory_events) {
   $('qualityBox').open = true;
   $('qualitySummary').className = 'warn';
 }
-for (const text of [...r.limitations, ...r.degrade_reasons, ...Object.entries(r.rejected).map(([k, v]) => `${k}: ${v}`), `Ignored invalid memory records: ${r.invalid_memory_events}; unmatched frees: ${r.unmatched_frees}; observed peaks: ${JSON.stringify(r.observed_peak_bytes)}`]) $('quality').append(el('p', text));
+for (const text of [...(counterOnly ? [] : r.limitations), ...r.capture_notes, ...r.degrade_reasons, ...Object.entries(r.rejected).map(([k, v]) => `${k}: ${v}`), `Ignored invalid memory records: ${r.invalid_memory_events}; unmatched frees: ${r.unmatched_frees}; observed peaks: ${JSON.stringify(r.observed_peak_bytes)}`]) $('quality').append(el('p', text));
 for (const [k, c] of Object.entries(colors)) {
   let s = el('span', '● ' + k + ' · ' + (r.counts[k] ?? 'not recorded'));
   s.style.color = c;
@@ -790,6 +860,82 @@ function drawMemory() {
   }
 }
 drawMemory();
+if (r.counter_groups.length) {
+  $('counters').hidden = false;
+  if (!r.events.length) {
+    $('activityPanel').hidden = true;
+    $('hotspotPanel').hidden = true;
+    document.querySelector('.bottom-grid').hidden = true;
+    document.querySelector('a[href="trace.json"]').hidden = true;
+  }
+  for (const [i, group] of r.counter_groups.entries()) {
+    const option = el('option', group.name);
+    option.value = i;
+    $('counterGroup').append(option);
+  }
+
+  function drawCounter() {
+    const group = r.counter_groups[Number($('counterGroup').value)];
+    const metric = group.metrics[Number($('counterMetric').value)];
+    if (!metric) return;
+    $('counterScope').textContent = `Source: ${group.source} · Scope: ${group.scope} · Reported invocations: ${fmt(group.invocations)} · Replay: ${r.capture.replay_mode ?? 'unknown'}`;
+    table('counterSummary', group.metrics, [
+      ['name', 'Metric'],
+      ['unit', 'Unit'],
+      ['value', 'Tool-reported value']
+    ]);
+    $('counterDescription').textContent = metric.description || 'No metric interpretation supplied by the backend.';
+    const instances = metric.instances || [];
+    table('counterInstances', [...instances], [
+      ['instance', 'Instance'],
+      ['minimum', 'Min'],
+      ['maximum', 'Max'],
+      ['mean', 'Mean'],
+      ['count', 'Samples']
+    ]);
+    const bars = $('counterBars');
+    bars.replaceChildren();
+    const max = instances.reduce((n, x) => Math.max(n, Number(x.mean)), 0);
+    bars.append(el('p', 'Per-instance mean · ' + metric.unit));
+    if (!instances.length) bars.append(el('p', 'No per-instance measurements.'));
+    for (const sample of instances) {
+      const row = el('div', '');
+      row.style.cssText = 'display:grid;grid-template-columns:110px 1fr 85px;gap:10px;align-items:center;margin:8px 0;font-size:12px';
+      const track = el('div', ''),
+        fill = el('div', '');
+      track.style.cssText = 'height:9px;background:#24374c;border-radius:3px';
+      fill.style.cssText = `height:9px;border-radius:3px;background:#65d2c5;width:${max>0?Math.max(0,Number(sample.mean))/max*100:0}%`;
+      track.append(fill);
+      row.append(el('span', sample.instance), track, el('span', fmt(sample.mean)));
+      bars.append(row);
+    }
+  }
+
+  function chooseGroup() {
+    const group = r.counter_groups[Number($('counterGroup').value)];
+    $('counterMetric').replaceChildren();
+    for (const [i, metric] of group.metrics.entries()) {
+      const option = el('option', metric.name);
+      option.value = i;
+      $('counterMetric').append(option);
+    }
+    drawCounter();
+  }
+  $('counterGroup').onchange = chooseGroup;
+  $('counterMetric').onchange = drawCounter;
+  chooseGroup();
+}
+if (r.kernel_summaries.length) {
+  $('kernelSummaries').hidden = false;
+  table('kernelSummaryTable', r.kernel_summaries, [
+    ['name', 'Kernel'],
+    ['count', 'Reported calls'],
+    ['total_us', 'Total µs'],
+    ['mean_us', 'Mean µs'],
+    ['min_us', 'Min µs'],
+    ['max_us', 'Max µs']
+  ]);
+}
 if (r.comparison) {
   $('compare').className = 'panel';
   $('compare').append(el('h2', 'Baseline comparison · grouped by category and name'));

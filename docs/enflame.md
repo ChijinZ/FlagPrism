@@ -178,3 +178,53 @@ python3 test.py --jobs 8 --devices 0,1,2,3,4,5,6,7
 当前公开头文件未提供 PMU counter、cache hit、实际 occupancy、指令/warp 采样接口。
 优先补启动配置、stream/event 依赖和版本/时钟元数据；它们可在 FlagPrism 的 Enflame
 采集器内实现，无需编译器插桩。kernel 内部区域计时仍需另外评估 SDK 或 FlagTree 插桩能力。
+
+## TCU 硬件计数器
+
+`topsprof` 软件包提供的 `/opt/tops/bin/tcu` 可以采集 TOPSPTI activity API 之外的指标。
+已在 GCU300 / TCU 1.9.29 上验证 `SIP/BUSY`、三类 instruction efficiency、
+L1 instruction-cache miss 和两类 prefetch，共 7 项。它们不包括数据 cache 命中率或 HBM 流量。
+
+单次命令采集并生成独立 profiling 文件与报告：
+
+```bash
+python3 Profiler/python/flagtree_profiler/tcu.py --out capture-busy \
+  --kernel vector_add --metrics SIP/BUSY -- python3 workload.py
+```
+
+安装后可使用 `flagtree-profiler-tcu`。工作负载执行普通算子，不要在同一进程同时启动
+FlagPrism TOPSPTI profiler；两者联合订阅/计数器采集尚未验证。
+`--out` 必须是新目录，避免覆盖其他 profiling 结果。输出包括 `profile.vendor.json`、
+原始 CSV/TCD、工具日志及 `report/index.html`。JSON 文件内包含全部导入观测与采集来源，
+无需旁边的 CSV 就能再次生成报告。应用命令按参数执行，不经过 shell，不自动重试。
+
+默认 `--replay-mode none`，不会静默重跑应用。不同计数器分组可能不能同时采集，TCU 会报错。
+对可以安全重跑的工作负载，显式开启 application replay：
+
+```bash
+python3 Profiler/python/flagtree_profiler/tcu.py --out capture-counters \
+  --kernel vector_add --metrics SIP/BUSY,SIP/1D_EFFICIENCY,SIP/L1_ICACHE_MISS \
+  --replay-mode application -- python3 workload.py
+```
+
+TCU 可以在这一次外部 profiling 调用内多次执行应用，故不要用于会产生不可重复副作用的工作负载。
+采集参数与 replay 模式保存在文件中；当前 CSV 不提供精确的 pass 标识或 launch correlation ID。
+统计中的 invocation 总数可能包含 replay，各指标的实际 sample count 也可能不同。
+原始工具数据按实际值保留，不除以估计的 replay 次数。
+
+已有 CSV 可离线导入：
+
+```bash
+python3 Profiler/python/flagtree_profiler/tcu.py --import-csv capture.csv --out imported-capture
+```
+
+导入模式将版本/replay 来源标为未知，不从文件名推断。当前解析器针对实测的 1.9.29
+summary CSV，未知记录结构会拒绝导入，避免只导入一部分而误报完整成功。
+工具失败时保留日志，但不生成成功的 profiling 文件。
+
+报告新增通用 counter 分组、指标值/单位与逐实例 min/max/mean/sample count 展示。
+TCU 数据的 scope 是 kernel 配置聚合；kernel 名称不能用于将它强行绑定到其他 capture 的某次 launch。
+该 CSV 没有设备标识，Die/SIP 只是工具内实例编号；不能推断全局设备 ID。
+无时间戳时页面只展示聚合观测，不制造时间线。计数器采集影响执行时间，耗时不是无 profiler 基准。
+`BUSY` 包括等待；`1D/2D/MSF_EFFICIENCY` 按工具定义展示，不能直接等同于硬件峰值计算利用率；
+`L1_ICACHE_MISS` 是指令缓存 miss 请求次数，没有总请求分母，不能计算 cache 命中率。

@@ -284,6 +284,51 @@ def test_report_browser(tmp_path):
                     page.get_by_role("link", name=label, exact=False).click()
                 exported = json.loads(Path(info.value.path()).read_text())
                 assert exported[key] == []
+            counter = tmp_path / "counter.vendor.json"
+            counter.write_text(
+                json.dumps(
+                    dict(backend="test_vendor",
+                         counter_groups=[
+                             dict(name="kernel config",
+                                  scope="kernel_config_aggregate",
+                                  source="test_tool",
+                                  invocations=2,
+                                  metrics=[
+                                      dict(name="cycles",
+                                           unit="cycles",
+                                           value=12,
+                                           instances=[
+                                               dict(instance="unit 0",
+                                                    minimum=10,
+                                                    maximum=14,
+                                                    mean=12,
+                                                    count=1)
+                                           ])
+                                  ])
+                         ],
+                         capture=dict(replay_mode="none"))))
+            counter_document = json.loads(counter.read_text())
+            counter_document["counter_groups"][0]["metrics"].append(
+                dict(name="z_other",
+                     unit="events",
+                     value=99,
+                     description="second metric",
+                     instances=[]))
+            counter.write_text(json.dumps(counter_document))
+            page_html = tmp_path / "counter.html"
+            page_html.write_text(report.render(report.analyze(counter)))
+            page.goto(page_html.as_uri())
+            assert page.locator("#counters").is_visible()
+            assert page.locator("#activityPanel").is_hidden()
+            assert page.locator('a[href="trace.json"]').is_hidden()
+            assert page.locator("#counterSummary tbody tr").count() == 2
+            assert page.locator("#counterInstances tbody tr").count() == 1
+            page.locator("#counterSummary th button").first.click()
+            page.select_option("#counterMetric", "1")
+            assert page.locator(
+                "#counterDescription").inner_text() == "second metric"
+            assert page.evaluate(
+                "document.documentElement.scrollWidth <= innerWidth")
             assert not errors, errors
         finally:
             browser.close()
@@ -316,3 +361,34 @@ def test_embedded_download_preserves_large_integer_types(tmp_path):
     assert isinstance(exported["events"][0]["metrics"]["activity.address"],
                       int)
     assert exported["events"][0]["name"] == "__DATA____EXPORTS__"
+
+
+def test_counter_aggregates_do_not_invent_timeline(tmp_path):
+    path = tmp_path / "counter.json"
+    group = dict(name="kernel config",
+                 source="test_tool",
+                 scope="kernel_config_aggregate",
+                 invocations=2,
+                 metrics=[
+                     dict(name="test_counter",
+                          unit="cycles",
+                          value=12,
+                          instances=[
+                              dict(instance="unit 0",
+                                   minimum=10,
+                                   maximum=14,
+                                   mean=12,
+                                   count=1)
+                          ])
+                 ])
+    path.write_text(
+        json.dumps(dict(backend="future_vendor", counter_groups=[group])))
+    result = report.analyze(path)
+    assert result["events"] == [] and result["hotspots"] == []
+    assert result["counter_groups"] == [group]
+    assert report.chrome_trace(result)["traceEvents"] == []
+    group["metrics"][0]["value"] = "not a number"
+    path.write_text(
+        json.dumps(dict(backend="future_vendor", counter_groups=[group])))
+    with pytest.raises(ValueError, match="Counter values"):
+        report.analyze(path)
