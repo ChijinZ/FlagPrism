@@ -3,6 +3,7 @@
 import argparse
 from collections import Counter, defaultdict
 import json
+import math
 from pathlib import Path
 
 
@@ -25,11 +26,28 @@ def percentile(values, fraction):
 
 
 def analyze(path):
-    document = json.loads(Path(path).read_text())
+
+    def finite_number(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError(
+                "Non-finite JSON numbers must be encoded as strings")
+        return number
+
+    document = json.loads(Path(path).read_text(),
+                          parse_float=finite_number,
+                          parse_constant=finite_number)
+    if not isinstance(document, dict):
+        raise ValueError("Activity artifact must be a JSON object")
     backend = document.get("backend")
     if not isinstance(backend, str) or not backend:
         raise ValueError("Activity artifacts must identify their backend")
     rows = document.get("associations", [])
+    if not isinstance(rows, list) or any(
+            not isinstance(row, dict)
+            or not isinstance(row.get("metrics", {}), dict) for row in rows):
+        raise ValueError(
+            "associations must be a list of records with metric objects")
     if rows and not any("activity.kind" in row.get("metrics", {})
                         for row in rows):
         raise ValueError(
@@ -38,15 +56,39 @@ def analyze(path):
     events = []
     rejected = Counter()
     for index, row in enumerate(document.get("associations", [])):
-        raw = row["runtime_event"]
+        raw = row.get("runtime_event", {})
         metrics = row.get("metrics", {})
         kind = metrics.get("activity.kind")
         if kind not in ("kernel", "runtime", "driver", "memcpy", "memset"):
             rejected["missing or unsupported activity.kind"] += 1
             continue
-        start, end = int(raw["start_time_ns"]), int(raw["end_time_ns"])
-        if row.get("state") != "collected" or start <= 0 or end < start:
-            rejected[row.get("note") or row.get("state", "invalid")] += 1
+        if row.get("state") != "collected":
+            rejected[row.get("note") or row.get("state", "missing state")] += 1
+            continue
+        if not isinstance(raw, dict) or not isinstance(raw.get("op_name"),
+                                                       str):
+            rejected["invalid runtime event"] += 1
+            continue
+        required = ("start_time_ns", "end_time_ns", "device_id", "stream_id",
+                    "correlation_id", "scope_id")
+        if any(
+                type(raw.get(key)) is not int or raw[key] < 0
+                for key in required):
+            rejected["missing or invalid integer event fields"] += 1
+            continue
+        start, end = raw["start_time_ns"], raw["end_time_ns"]
+        if start <= 0 or end < start:
+            rejected["unknown or invalid timestamps"] += 1
+            continue
+        if "activity.bytes" in metrics and (type(
+                metrics["activity.bytes"]) is not int
+                                            or metrics["activity.bytes"] < 0):
+            rejected["invalid activity.bytes"] += 1
+            continue
+        if "activity.api_success" in metrics and (
+                type(metrics["activity.api_success"]) is not int
+                or metrics["activity.api_success"] not in (0, 1)):
+            rejected["invalid activity.api_success"] += 1
             continue
         host = kind in ("runtime", "driver")
         lane = (
@@ -130,10 +172,24 @@ def analyze(path):
     peak = Counter()
     memory = []
     unmatched_frees = 0
+    invalid_memory_events = 0
     for event in sorted(events, key=lambda e: (e["end_ns"], e["id"])):
         m = event["metrics"]
         if event["kind"] != "runtime" or "activity.memory_action" not in m:
             continue
+        action = m["activity.memory_action"]
+        if (action not in ("allocate", "free")
+                or m.get("activity.memory_space") not in ("host", "device")
+                or type(m.get("activity.address")) is not int
+                or m["activity.address"] < 0
+                or m.get("activity.api_success", 1) != 1
+                or (action == "allocate" and
+                    (type(m.get("activity.allocation_bytes")) is not int
+                     or m["activity.allocation_bytes"] < 0))):
+            invalid_memory_events += 1
+            continue
+        if m["activity.address"] == 0:
+            continue  # Successful free(NULL) does not represent a live allocation.
         space = m["activity.memory_space"]
         key = (m.get("activity.process_id"), m.get("activity.context_id"),
                space, m["activity.address"])
@@ -170,6 +226,7 @@ def analyze(path):
         degrade_reasons=document.get("degrade_reasons", []),
         observed_peak_bytes=dict(peak),
         unmatched_frees=unmatched_frees,
+        invalid_memory_events=invalid_memory_events,
         limitations=[
             "Coverage describes captured device activity, not hardware utilization.",
             "Observed allocation bytes exclude allocations before capture and caching allocator tensor lifetimes.",
@@ -273,7 +330,18 @@ def render(report):
 
     data = json.dumps(safe_numbers(report), ensure_ascii=True).replace(
         "<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
-    return HTML.replace("__DATA__", data)
+    # Keep exact integer literals in downloadable JSON; the UI uses safe strings.
+    # Embedded exports also work when opening a standalone HTML via file://.
+    exports = json.dumps(
+        {
+            "report.json": json.dumps(report),
+            "trace.json": json.dumps(chrome_trace(report))
+        },
+        ensure_ascii=True)
+    exports = exports.replace("<", "\\u003c").replace(">", "\\u003e").replace(
+        "&", "\\u0026")
+    before, after = HTML.split("__DATA__", 1)
+    return before + data + after.replace("__EXPORTS__", exports, 1)
 
 
 def main():
@@ -289,9 +357,12 @@ def main():
                         type=Path,
                         help="Optional baseline .vendor.json")
     args = parser.parse_args()
-    report = analyze(args.input)
-    if args.baseline:
-        report["comparison"] = comparison(report, analyze(args.baseline))
+    try:
+        report = analyze(args.input)
+        if args.baseline:
+            report["comparison"] = comparison(report, analyze(args.baseline))
+    except (OSError, ValueError) as error:
+        parser.error(str(error))
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "report.json").write_text(json.dumps(report, indent=2))
     (args.out / "trace.json").write_text(json.dumps(chrome_trace(report)))
@@ -299,18 +370,109 @@ def main():
     print(args.out / "index.html")
 
 
-HTML = r'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
-<title>FlagPrism · Activity profile</title><style>
-:root{color-scheme:dark;font:14px system-ui;background:#101622;color:#dce4f1}body{margin:24px;max-width:1500px}h1{font-size:27px;margin-bottom:4px}h2{font-size:19px;margin-top:30px}.muted{color:#9eafc5}button,input,select{background:#1d2a3c;color:inherit;border:1px solid #49617d;border-radius:5px;padding:7px}button{cursor:pointer}.cards{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.card{padding:15px;background:#1b2739;border-radius:8px;min-width:115px}.card strong{display:block;font-size:25px;color:#77d9d0}table{border-collapse:collapse;width:100%}td,th{padding:9px;text-align:left;border-bottom:1px solid #2e3f55}th{position:sticky;top:0;background:#1b2739;cursor:pointer}td:first-child{max-width:420px;overflow-wrap:anywhere}.scroll{max-height:430px;overflow:auto;border:1px solid #2e3f55;border-radius:6px}canvas{display:block;background:#142032;width:100%;cursor:crosshair}pre{max-height:320px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#1b2739;padding:12px}.legend span{margin-right:18px}a{color:#77d9d0}.warn{color:#f1c17d}#timeline{overflow:auto;max-height:440px}label{margin-right:12px}details{margin:10px 0}</style>
-<h1>FlagPrism <span class="muted" id="backend"></span></h1><div class="muted">Device and host activity · offline report</div>
-<div id="cards" class="cards"></div><details><summary>Capture quality & interpretation</summary><div id="quality"></div></details>
-<h2>Activity timeline</h2><div><label>Search <input id="search" placeholder="Kernel or API name"></label><select id="kind"><option value="">All categories</option><option>kernel</option><option>memcpy</option><option>memset</option><option>runtime</option><option>driver</option></select> <button id="zoomIn">Zoom in</button> <button id="zoomOut">Zoom out</button> <button id="left">←</button> <button id="right">→</button> <button id="reset">Reset</button></div>
-<p class="legend" id="legend"></p><div id="range" class="muted"></div><div id="timeline"><canvas id="canvas"></canvas></div><pre id="detail">Click an event to inspect timestamps, correlation, launch dimensions and metadata. Double-click to focus its duration.</pre>
-<h2>Hotspots <span class="muted">· whole capture, matching filters · click a header to sort</span></h2><div class="scroll" id="hotspots"></div>
-<h2>Device activity coverage</h2><p class="muted">Union of recorded intervals within each device's first-to-last captured activity; not SM/Core utilization or whole-session utilization.</p><div id="devices"></div>
-<h2>Observed allocations</h2><p class="muted">Only successful runtime allocations/frees observed during capture. Not total VRAM usage or PyTorch tensor memory. Unmatched frees indicate incomplete history.</p><canvas id="memory" height="180"></canvas>
-<div id="compare"></div><p><a href="trace.json" download>Download Perfetto-compatible trace</a> · <a href="report.json" download>Download analyzed data</a></p>
-<script id="data" type="application/json">__DATA__</script><script>
+HTML = r'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FlagPrism · Activity profile</title>
+<style>
+:root{color-scheme:dark;font:14px/1.5 system-ui,sans-serif;background:#0b1220;color:#e4ecf7;--muted:#99abc2;--line:#2a3850;--accent:#71e4d3}
+
+*{box-sizing:border-box}
+body{margin:0}
+main{max-width:1560px;margin:auto;padding:32px}
+
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:26px}
+.brand{display:flex;gap:14px;align-items:center}
+.mark{display:grid;place-items:center;width:44px;height:44px;border:1px solid #438378;border-radius:12px;color:var(--accent);font-size:24px;font-weight:750;background:#163331}
+h1{font-size:25px;letter-spacing:-.6px;margin:0}
+h2{font-size:17px;margin:0 0 6px}
+h3{font-size:14px;margin:0 0 12px}
+.muted,.caption{color:var(--muted)}
+.caption{font-size:12px;margin:0 0 16px}
+.pill{border:1px solid var(--line);border-radius:20px;padding:5px 12px;color:var(--accent)}
+
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.card{padding:18px 20px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,#18273b,#111c2c);color:var(--muted);font-size:12px}
+.card strong{display:block;color:#edf6ff;font-size:27px;letter-spacing:-.6px;margin-bottom:3px}
+.card small{display:block;margin-top:8px}
+
+.panel{background:#121d2d;border:1px solid var(--line);border-radius:12px;padding:20px;margin:18px 0}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.toolbar label{display:flex;align-items:center;gap:8px}
+.toolbar input{width:230px}
+.spacer{flex:1}
+
+button,input,select{font:inherit;background:#1a293e;color:inherit;border:1px solid #42536c;border-radius:7px;padding:7px 10px}
+button{cursor:pointer}
+button:hover{background:#294059}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;margin:12px 0}
+.timeline-grid{display:grid;grid-template-columns:minmax(0,1fr) 310px;gap:18px;align-items:start}
+#timeline{overflow:auto;max-height:390px;border:1px solid var(--line);border-radius:8px}
+canvas{display:block;background:#0d1726;max-width:100%}
+#canvas{max-width:none;width:auto;min-width:100%;cursor:crosshair}
+#memory{width:100%}
+.inspector{background:#0d1726;border:1px solid var(--line);border-radius:8px;padding:16px;min-width:0;max-height:360px;overflow:auto}
+.inspector select{width:100%;margin-bottom:14px}
+.inspector h3{overflow-wrap:anywhere;color:var(--accent)}
+dl{margin:0;display:grid;grid-template-columns:85px minmax(0,1fr);gap:8px}
+dt{font-size:11px;color:var(--muted);margin:0}
+dd{margin:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+pre{font-size:11px;max-height:240px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+details{color:var(--muted)}
+summary{cursor:pointer}
+#quality p{margin:8px 0;font-size:12px}
+.quality{padding:12px 16px;border:1px solid var(--line);border-radius:9px;background:#101a29}
+.warn{color:#ffc477}
+
+.scroll{max-height:420px;overflow:auto;border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:12px}
+td,th{padding:11px 12px;text-align:right;border-bottom:1px solid #253449;white-space:nowrap;font-variant-numeric:tabular-nums}
+td:first-child,th:first-child{text-align:left}
+td:first-child{max-width:320px;white-space:normal;overflow-wrap:anywhere}
+th{position:sticky;top:0;background:#1b2a40;color:var(--muted);font-weight:500}
+th button{border:0;padding:0;background:transparent;font-size:inherit;color:inherit}
+tbody tr:hover{background:#1b2c43}
+tbody tr:last-child td{border-bottom:0}
+#hotspots table{min-width:1050px}
+#devices table{min-width:600px}
+.empty{padding:24px;color:var(--muted);text-align:center}
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.bottom-grid .panel{min-width:0;margin-top:0}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+footer{display:flex;gap:20px;flex-wrap:wrap;padding:8px 0 20px;font-size:12px}
+#source{max-width:620px;overflow-wrap:anywhere}
+#range{font-size:12px;margin:8px 0}
+
+@media(max-width:1100px){.timeline-grid{grid-template-columns:1fr}
+.bottom-grid{grid-template-columns:1fr}
+.cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media(max-width:600px){main{padding:16px}
+.panel{padding:14px}
+header{align-items:flex-start}
+.card{padding:14px}
+.card strong{font-size:22px}
+.toolbar input{width:170px}
+.spacer{display:none}
+}
+
+</style></head><body><main>
+<header><div class="brand"><div class="mark" aria-hidden="true">F</div><div><h1>FlagPrism</h1><div class="muted">Single-capture activity report</div></div></div><span class="pill" id="backend"></span></header>
+<div id="cards" class="cards"></div>
+<details class="quality" id="qualityBox"><summary id="qualitySummary">Capture quality & interpretation</summary><div id="quality"></div></details>
+<section class="panel"><div class="panel-head"><h2>Activity timeline</h2><span class="caption">Select an event to inspect · double-click to focus</span></div>
+<div class="toolbar"><label>Search <input id="search" type="search" placeholder="Kernel or API name"></label><label>Category <select id="kind"><option value="">All categories</option><option>kernel</option><option>memcpy</option><option>memset</option><option>runtime</option><option>driver</option></select></label><span class="spacer"></span><button id="zoomIn" aria-label="Zoom in">+</button><button id="zoomOut" aria-label="Zoom out">−</button><button id="left" aria-label="Pan left">←</button><button id="right" aria-label="Pan right">→</button><button id="reset">Reset</button></div>
+<div class="legend" id="legend"></div><div id="range" class="muted"></div>
+<div class="timeline-grid"><div id="timeline"><canvas id="canvas" aria-label="Activity timeline; use the event selector for keyboard access"></canvas></div><aside class="inspector"><label for="eventSelect" class="caption">INSPECT EVENT</label><select id="eventSelect"></select><div id="detail" class="muted">Select an event to view its timing and launch details.</div><details><summary>Raw record & correlated events</summary><pre id="rawDetail">No event selected.</pre></details></aside></div></section>
+<section class="panel"><div class="panel-head"><h2>Hotspots</h2><span class="caption">Whole capture · matching filters · sort by column</span></div><p class="caption">CPU API time can overlap device execution. Totals are sums of event durations, not elapsed time.</p><div class="scroll" id="hotspots"></div></section>
+<div class="bottom-grid"><section class="panel"><h2>Device activity coverage</h2><p class="caption">Interval union within each device's captured window. Not hardware utilization.</p><div id="devices" class="scroll"></div></section>
+<section class="panel"><h2>Observed allocations</h2><p class="caption">Successful captured allocations only; excludes pre-capture memory and tensor lifetimes.</p><canvas id="memory" height="180"></canvas><div class="legend"><span style="color:#65d2c5">● Device</span><span style="color:#edbc71">● Host</span></div></section></div>
+<div id="compare"></div><footer><a href="trace.json" download>Export Perfetto trace ↗</a><a href="report.json" download>Download analysis JSON ↗</a><span class="muted" id="source"></span></footer>
+<script id="data" type="application/json">__DATA__</script>
+<script id="exports" type="application/json">__EXPORTS__</script><script>
 'use strict';
 const r = JSON.parse(document.getElementById('data').textContent),
   $ = id => document.getElementById(id),
@@ -321,7 +483,19 @@ const r = JSON.parse(document.getElementById('data').textContent),
     runtime: '#72adf3',
     driver: '#a7b5ce'
   };
-$('backend').textContent = '/ ' + r.backend;
+const exports = JSON.parse(document.getElementById('exports').textContent);
+for (const link of document.querySelectorAll('a[download]')) {
+  const name = link.getAttribute('href');
+  link.onclick = event => {
+    event.preventDefault();
+    const url = URL.createObjectURL(new Blob([exports[name]], {type: 'application/json'}));
+    const download = document.createElement('a'); download.href = url; download.download = name;
+    document.body.append(download); download.click(); download.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+}
+$('backend').textContent = r.backend;
+$('source').textContent = 'Source: ' + r.source.split(/[\\/]/).pop();
 const fmt = x => typeof x === 'number' ? (Number.isInteger(x) ? x.toLocaleString() : x.toLocaleString(undefined, {
   maximumFractionDigits: 3
 })) : (x ?? '—');
@@ -337,13 +511,17 @@ function table(id, rows, cols) {
     head = document.createElement('tr');
   let reverse = false;
   for (const [key, title] of cols) {
-    let th = el('th', title);
-    th.onclick = () => {
+    let th = el('th', '');
+    const sortButton = el('button', title);
+    th.append(sortButton);
+    sortButton.onclick = () => {
       reverse = !reverse;
       rows.sort((a, b) => {
         let x = a[key],
           y = b[key];
-        return (typeof x === 'number' ? x - y : String(x ?? '').localeCompare(String(y ?? ''))) * (reverse ? -1 : 1)
+        if (x == null) return y == null ? 0 : 1;
+        if (y == null) return -1;
+        return (typeof x === 'number' ? x - y : String(x).localeCompare(String(y))) * (reverse ? -1 : 1)
       });
       body()
     };
@@ -362,22 +540,32 @@ function table(id, rows, cols) {
     }
   }
   body();
-  $(id).replaceChildren(t)
+  $(id).replaceChildren(rows.length ? t : el('div', 'No matching records.'));
+  if (!rows.length) $(id).firstChild.className = 'empty'
 }
-for (const [name, value] of Object.entries({
-    ...r.counts,
-    'API errors': r.api_error_count,
-    'API status unknown': r.api_unknown_status_count,
-    'Rejected events': Object.values(r.rejected).reduce((a, b) => a + b, 0)
-  })) {
-  let d = el('div', name);
-  d.className = 'card';
-  d.prepend(el('strong', fmt(value)));
-  $('cards').append(d)
+const rejectedCount = Object.values(r.rejected).reduce((a, b) => a + b, 0);
+const spanUs = r.events.reduce((m, e) => Math.max(m, e.end_us), 0);
+const kernelUs = r.events.filter(e => e.kind === 'kernel').reduce((n, e) => n + e.duration_us, 0);
+for (const [name, value, hint] of [
+    ['Capture window', fmt(spanUs / 1000) + ' ms', 'First to last recorded event'],
+    ['Kernel duration sum', fmt(kernelUs / 1000) + ' ms', `${r.counts.kernel || 0} captured kernels · may overlap`],
+    ['Recorded activities', fmt(r.events.length), `${r.counts.runtime || 0} runtime APIs · ${r.counts.memcpy || 0} copies`],
+    ['API errors / rejected', `${r.api_error_count} / ${rejectedCount}`, `${r.api_unknown_status_count} API results unknown`]
+  ]) {
+  const card = el('div', name);
+  card.className = 'card';
+  card.prepend(el('strong', value));
+  card.append(el('small', hint));
+  $('cards').append(card);
 }
-for (const text of [...r.limitations, ...r.degrade_reasons, ...Object.entries(r.rejected).map(([k, v]) => `${k}: ${v}`), `Unmatched frees: ${r.unmatched_frees}; observed peaks: ${JSON.stringify(r.observed_peak_bytes)}`]) $('quality').append(el('p', text));
+$('qualitySummary').textContent = `Capture notes · ${r.events.length} records · ${rejectedCount} rejected · ${r.degrade_reasons.length} backend notices`;
+if (rejectedCount || r.api_error_count || r.degrade_reasons.length || r.invalid_memory_events) {
+  $('qualityBox').open = true;
+  $('qualitySummary').className = 'warn';
+}
+for (const text of [...r.limitations, ...r.degrade_reasons, ...Object.entries(r.rejected).map(([k, v]) => `${k}: ${v}`), `Ignored invalid memory records: ${r.invalid_memory_events}; unmatched frees: ${r.unmatched_frees}; observed peaks: ${JSON.stringify(r.observed_peak_bytes)}`]) $('quality').append(el('p', text));
 for (const [k, c] of Object.entries(colors)) {
-  let s = el('span', '● ' + k);
+  let s = el('span', '● ' + k + ' · ' + (r.counts[k] ?? 'not recorded'));
   s.style.color = c;
   $('legend').append(s)
 }
@@ -396,27 +584,39 @@ function draw() {
   const events = selected(),
     lanes = [...new Set(events.map(e => e.lane))].sort(),
     c = $('canvas'),
-    w = Math.max(700, $('timeline').clientWidth);
+    w = Math.max(600, $('timeline').clientWidth);
   c.width = w;
-  c.height = Math.max(70, lanes.length * 30 + 25);
+  c.height = Math.max(70, lanes.length * 30 + 55);
   const g = c.getContext('2d');
   g.font = '11px system-ui';
   hits = [];
-  const pad = 275,
+  const pad = w < 700 ? 170 : 285,
     scale = (w - pad - 15) / (hi - lo);
+  for (let tick = 0; tick <= 4; tick++) {
+    const x = pad + (w - pad - 15) * tick / 4;
+    g.fillStyle = '#99abc2';
+    g.textAlign = tick === 4 ? 'right' : 'left';
+    g.fillText(fmt(lo + (hi - lo) * tick / 4) + ' µs', x, 17);
+  }
+  g.textAlign = 'left';
+  if (!events.length) {
+    g.fillStyle = '#99abc2';
+    g.fillText('No matching activity. Clear the filters to see the capture.', 16, 50);
+  }
   lanes.forEach((lane, i) => {
     g.fillStyle = '#adbed3';
-    g.fillText(lane, 8, i * 30 + 23, pad - 16);
+    const label = w < 700 ? lane.replace(/PID \d+ \/ /, "").replace(/Context \d+ \/ /, "") : lane;
+    g.fillText(label, 8, i * 30 + 53, pad - 16);
     g.strokeStyle = '#26384e';
     g.beginPath();
-    g.moveTo(pad, i * 30 + 30);
-    g.lineTo(w, i * 30 + 30);
+    g.moveTo(pad, i * 30 + 60);
+    g.lineTo(w, i * 30 + 60);
     g.stroke()
   });
   for (const e of events) {
     if (e.end_us < lo || e.start_us > hi) continue;
     let x = pad + (Math.max(lo, e.start_us) - lo) * scale,
-      y = lanes.indexOf(e.lane) * 30 + 7,
+      y = lanes.indexOf(e.lane) * 30 + 37,
       bw = Math.max(2, (Math.min(hi, e.end_us) - Math.max(lo, e.start_us)) * scale);
     g.fillStyle = colors[e.kind] || '#888';
     g.fillRect(x, y, bw, 17);
@@ -426,6 +626,26 @@ function draw() {
       w: bw,
       e
     })
+  }
+  const visible = events.filter(e => e.end_us >= lo && e.start_us <= hi);
+  const selector = $('eventSelect'),
+    previous = selector.value;
+  selector.replaceChildren(el('option', visible.length ? 'Select a visible event…' : 'No visible events'));
+  selector.firstChild.value = '';
+  for (const e of visible.slice(0, 500)) {
+    const option = el('option', `${fmt(e.start_us)} µs · ${e.name}`);
+    option.value = String(e.id);
+    selector.append(option);
+  }
+  if (visible.length > 500) {
+    const option = el('option', 'First 500 shown — narrow filters or zoom');
+    option.disabled = true;
+    selector.append(option);
+  }
+  if (visible.some(e => String(e.id) === previous)) selector.value = previous;
+  else {
+    $('detail').textContent = 'Select an event to view its timing and launch details.';
+    $('rawDetail').textContent = 'No event selected.';
   }
   $('range').textContent = `${fmt(lo)} – ${fmt(hi)} µs since first captured event · ${events.length} matching events`;
   table('hotspots', r.hotspots.filter(e => (!$('kind').value || e.kind === $('kind').value) && e.name.toLowerCase().includes($('search').value.toLowerCase())), [
@@ -449,21 +669,43 @@ function pick(ev) {
     y = (ev.clientY - rect.top) * $('canvas').height / rect.height;
   return hits.findLast(h => x >= h.x && x <= h.x + h.w && y >= h.y && y <= h.y + 17)?.e
 }
-$('canvas').onclick = ev => {
-  let e = pick(ev);
-  if (e) {
-    let related = r.events.filter(x => e.correlation_key !== null && x.correlation_key === e.correlation_key);
-    $('detail').textContent = JSON.stringify({
-      event: e,
-      correlated_events: related.map(x => ({
-        kind: x.kind,
-        name: x.name,
-        start_us: x.start_us,
-        duration_us: x.duration_us
-      }))
-    }, null, 2)
+
+function inspect(e) {
+  if (!e) return;
+  $('eventSelect').value = String(e.id);
+  const related = r.events.filter(x => e.correlation_key !== null && x.correlation_key === e.correlation_key);
+  const detail = $('detail');
+  detail.replaceChildren(el('h3', e.name));
+  const fields = [
+    ['Category', e.kind],
+    ['Duration', fmt(e.duration_us) + ' µs'],
+    ['Start', fmt(e.start_us) + ' µs'],
+    ['Lane', e.lane],
+    ['Correlation ID', e.correlation_id],
+    ['Scope', e.metrics['activity.scope_name'] ?? e.scope_id]
+  ];
+  for (const key of ['grid', 'block']) {
+    const values = ['x', 'y', 'z'].map(axis => e.metrics[`activity.${key}_${axis}`]);
+    if (values.every(v => v != null)) fields.push([key === 'grid' ? 'Grid' : 'Block', values.join(' × ')]);
   }
-};
+  if (e.metrics['activity.bytes'] != null) fields.push(['Transfer bytes', fmt(e.metrics['activity.bytes'])]);
+  const list = document.createElement('dl');
+  for (const [label, value] of fields) {
+    list.append(el('dt', label), el('dd', fmt(value)));
+  }
+  detail.append(list);
+  $('rawDetail').textContent = JSON.stringify({
+    event: e,
+    correlated_events: related.map(x => ({
+      kind: x.kind,
+      name: x.name,
+      start_us: x.start_us,
+      duration_us: x.duration_us
+    }))
+  }, null, 2);
+}
+$('eventSelect').onchange = () => inspect(r.events.find(e => String(e.id) === $('eventSelect').value));
+$('canvas').onclick = ev => inspect(pick(ev));
 $('canvas').ondblclick = ev => {
   let e = pick(ev);
   if (e) {
@@ -498,7 +740,10 @@ for (const [id, d] of [
 };
 $('search').oninput = draw;
 $('kind').onchange = draw;
-window.onresize = draw;
+window.onresize = () => {
+  draw();
+  drawMemory();
+};
 table('devices', r.devices, [
   ['device', 'Device'],
   ['window_us', 'Window µs'],
@@ -507,30 +752,46 @@ table('devices', r.devices, [
   ['uncovered_us', 'Uncovered µs'],
   ['activity_coverage', 'Coverage fraction']
 ]);
-const mc = $('memory');
-mc.width = 1100;
-const mg = mc.getContext('2d'),
-  max = r.memory.reduce((m, p) => Math.max(m, p.bytes), 1);
-mg.font = '12px system-ui';
-mg.fillStyle = '#cdd8e8';
-mg.fillText(r.memory.length ? `Observed peak scale ${fmt(max)} bytes` : 'No allocation lifecycle events in this capture', 10, 18);
-for (const [space, color] of [
-    ['device', '#65d2c5'],
-    ['host', '#edbc71']
-  ]) {
-  mg.strokeStyle = color;
-  mg.beginPath();
-  let y = 160;
-  mg.moveTo(45, y);
-  for (const p of r.memory.filter(p => p.space === space)) {
-    let x = 45 + p.time_us / full * 1040;
-    mg.lineTo(x, y);
-    y = 160 - p.bytes / max * 125;
-    mg.lineTo(x, y)
+
+function drawMemory() {
+  const canvas = $('memory'),
+    width = Math.max(280, canvas.parentElement.clientWidth - 40);
+  canvas.width = width;
+  const g = canvas.getContext('2d'),
+    peak = r.memory.reduce((m, p) => Math.max(m, p.bytes), 1);
+  g.font = '11px system-ui';
+  g.fillStyle = '#99abc2';
+  if (!r.memory.length) {
+    g.fillText('No allocation lifecycle events recorded', 12, 30);
+    return;
   }
-  mg.stroke()
+  g.fillText(`Observed peak ${fmt(peak/1048576)} MiB`, 12, 18);
+  g.fillText('0', 12, 158);
+  g.textAlign = 'right';
+  g.fillText(fmt(full / 1000) + ' ms', width - 12, 176);
+  for (const [space, color] of [
+      ['device', '#65d2c5'],
+      ['host', '#edbc71']
+    ]) {
+    const points = r.memory.filter(p => p.space === space);
+    if (!points.length) continue;
+    g.strokeStyle = color;
+    g.beginPath();
+    let y = 155;
+    g.moveTo(35, y);
+    for (const p of points) {
+      const x = 35 + p.time_us / full * (width - 50);
+      g.lineTo(x, y);
+      y = 155 - p.bytes / peak * 120;
+      g.lineTo(x, y);
+    }
+    g.lineTo(width - 15, y);
+    g.stroke();
+  }
 }
+drawMemory();
 if (r.comparison) {
+  $('compare').className = 'panel';
   $('compare').append(el('h2', 'Baseline comparison · grouped by category and name'));
   $('compare').append(el('p', 'Compare only equivalent inputs, launch configurations, devices and profiling settings.'));
   let d = el('div', '');
@@ -547,7 +808,7 @@ if (r.comparison) {
   ])
 }
 draw();
-</script></html>'''
+</script></main></body></html>'''
 
 if __name__ == "__main__":
     main()

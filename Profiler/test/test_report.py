@@ -1,6 +1,7 @@
 """Offline report semantics, independent of an installed FlagTree or accelerator."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -188,3 +189,130 @@ def test_missing_transfer_size_is_not_zero_bandwidth(tmp_path):
     result = load(tmp_path, [event("runtime", 100, 200)])
     assert result["api_error_count"] == 0
     assert result["api_unknown_status_count"] == 1
+
+
+@pytest.mark.parametrize("field,value", [("start_time_ns", "bad"),
+                                         ("device_id", None),
+                                         ("end_time_ns", 99)])
+def test_malformed_event_keeps_valid_records(tmp_path, field, value):
+    broken = event("kernel", 100, 200)
+    broken["runtime_event"][field] = value
+    result = load(tmp_path, [broken, event("kernel", 300, 400)])
+    assert result["counts"] == {"kernel": 1}
+    assert sum(result["rejected"].values()) == 1
+    assert "collected" not in result["rejected"]
+
+
+def test_invalid_memory_metadata_does_not_invent_free(tmp_path):
+    common = {"activity.address": 42, "activity.memory_space": "device"}
+    result = load(tmp_path, [
+        event(
+            "runtime", 100, 200, **common, **{
+                "activity.memory_action": "allocate",
+                "activity.allocation_bytes": 4096
+            }),
+        event("runtime", 300, 400, **common, **
+              {"activity.memory_action": "unsupported_action"}),
+        event("runtime", 500, 600, **common, **{
+            "activity.memory_action": "free",
+            "activity.api_success": 0
+        }),
+        event("runtime", 700, 800, **{"activity.memory_action": "allocate"}),
+    ])
+    assert result["invalid_memory_events"] == 3
+    assert result["memory"][-1]["bytes"] == 4096
+    assert result["unmatched_frees"] == 0
+
+
+@pytest.mark.skipif(os.environ.get("FLAGPRISM_TEST_BROWSER") != "1",
+                    reason="Opt-in Playwright browser regression")
+def test_report_browser(tmp_path):
+    from playwright.sync_api import sync_playwright
+    rows = [
+        event("kernel",
+              100,
+              200,
+              name="vector kernel",
+              **{
+                  "activity.grid_x": 2,
+                  "activity.grid_y": 1,
+                  "activity.grid_z": 1
+              }),
+        event("runtime", 50, 120, name="launch")
+    ]
+    result = load(tmp_path, rows)
+    path = tmp_path / "index.html"
+    path.write_text(report.render(result))
+    with sync_playwright() as p:
+        browser = p.chromium.launch(args=["--no-sandbox"])
+        try:
+            page = browser.new_page(viewport={"width": 1440, "height": 1000})
+            errors = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(path.as_uri())
+            assert page.locator("#backend").inner_text() == "test_vendor"
+            assert page.locator("#cards .card").count() == 4
+            assert not page.locator("#compare").inner_text()
+            page.select_option("#kind", "kernel")
+            page.select_option("#eventSelect", index=1)
+            assert "Grid" in page.locator("#detail").inner_text()
+            page.locator(".inspector summary").click()
+            assert "launch" in page.locator("#rawDetail").inner_text()
+            before = page.locator("#range").inner_text()
+            page.click("#zoomIn")
+            assert before != page.locator("#range").inner_text()
+            page.click("#reset")
+            page.fill("#search", "missing")
+            assert "No matching records" in page.locator(
+                "#hotspots").inner_text()
+            assert "Select an event" in page.locator("#detail").inner_text()
+            page.fill("#search", "")
+            page.select_option("#kind", "")
+            page.locator("#hotspots th button").nth(3).click()
+            page.set_viewport_size({"width": 390, "height": 844})
+            assert page.evaluate(
+                "document.documentElement.scrollWidth <= innerWidth")
+            empty = tmp_path / "empty.html"
+            empty.write_text(report.render(load(tmp_path, [])))
+            page.goto(empty.as_uri())
+            assert "No matching records" in page.locator(
+                "#hotspots").inner_text()
+            assert page.locator("#eventSelect option").count() == 1
+            for label, key in [("Download analysis JSON", "events"),
+                               ("Export Perfetto trace", "traceEvents")]:
+                with page.expect_download() as info:
+                    page.get_by_role("link", name=label, exact=False).click()
+                exported = json.loads(Path(info.value.path()).read_text())
+                assert exported[key] == []
+            assert not errors, errors
+        finally:
+            browser.close()
+
+
+@pytest.mark.parametrize("number", ["NaN", "Infinity", "1e999"])
+def test_nonfinite_json_has_actionable_error(tmp_path, number):
+    path = tmp_path / "bad.json"
+    path.write_text('{"backend":"test","extra":' + number +
+                    ',"associations":[]}')
+    with pytest.raises(ValueError, match="Non-finite JSON numbers"):
+        report.analyze(path)
+
+
+def test_embedded_download_preserves_large_integer_types(tmp_path):
+    address = 2**55 + 1
+    result = load(tmp_path, [
+        event("runtime",
+              100,
+              200,
+              name="__DATA____EXPORTS__",
+              **{"activity.address": address})
+    ])
+    embedded = report.render(result).split(
+        '<script id="exports" type="application/json">')[1].split(
+            '</script>')[0]
+    downloads = json.loads(embedded)
+    exported = json.loads(downloads["report.json"])
+    assert exported["events"][0]["metrics"]["activity.address"] == address
+    assert isinstance(exported["events"][0]["metrics"]["activity.address"],
+                      int)
+    assert exported["events"][0]["name"] == "__DATA____EXPORTS__"

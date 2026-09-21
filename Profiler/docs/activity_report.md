@@ -13,7 +13,10 @@ python3 Profiler/python/flagtree_profiler/report.py profile.vendor.json \
 
 After installation, `flagtree-profiler-report` provides the same CLI. Direct script execution
 requires only the Python standard library; no accelerator or native FlagTree module is needed.
+One capture is the default unit: no second run or baseline is required.
 Outputs are self-contained `index.html`, analyzed `report.json`, and Perfetto `trace.json`.
+The HTML embeds exact export data so its download buttons work without adjacent files or a web
+server, including when opened via `file://`. This increases HTML size but preserves integer precision.
 The UI includes searchable activity lanes, zoom, correlated event details, hotspot sorting,
 P50/P95/P99, effective transfer throughput, observed allocation history, and baseline comparison.
 
@@ -76,3 +79,31 @@ To add a chip, implement SDK normalization in its collector, preserve raw vendor
 correlation, session isolation, and existing kernel summaries. The report needs no backend branch.
 New concepts such as counters or instruction-level samples should extend the common contract and
 visualization explicitly instead of encoding backend semantics in the HTML layer.
+
+## Report validation
+
+Malformed timed records are excluded with a reason, while valid records remain visible. Invalid
+allocation metadata is counted separately and does not mutate the observed memory curve. Missing
+byte counts or API status remain unknown. Non-finite JSON numbers must be encoded as strings.
+
+The offline regressions run without a device:
+
+```bash
+python3 -m pytest Profiler/test/test_report.py -q
+```
+
+An opt-in browser regression uses Playwright and Chromium. Install them in a test environment,
+including Chromium's system dependencies, then run:
+
+```bash
+python3 -m pip install playwright
+python3 -m playwright install --with-deps chromium
+FLAGPRISM_TEST_BROWSER=1 python3 -m pytest Profiler/test/test_report.py -q
+```
+
+The browser regression checks category/search filters, keyboard-accessible event selection,
+event details, sorting, zoom, empty captures and narrow-screen overflow. The report itself has
+no Playwright, JavaScript package, network, or browser-server dependency. Wide tables and the
+timeline scroll within their panels on narrow screens. The event selector shows at most 500
+visible records; use search, category filters or zoom to narrow larger captures. This limit does
+not discard data from the report or trace exports.
