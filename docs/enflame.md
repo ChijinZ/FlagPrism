@@ -98,7 +98,8 @@ kernel activities 提供设备 start/end（ns）、device ID、stream ID 和 ker
 同一 vendor 暂不支持重叠会话；拒绝创建不会残留无效会话路径。
 flush 会同步当前 GCU 并检查 dropped records；无效时间戳或丢失记录报错。
 
-输出使用公共 Hatchet、timeline、meta、vendor 格式。基础 kernel 时间来自设备，
+`finalize()` 直接输出以会话名称命名的目录，包含 `ai/`、`report/` 和 `manifest.json`，
+不需要额外报告命令。TCU 默认关闭。基础 kernel 时间来自设备，
 没有 host timing fallback。此实现没有声明支持硬件性能计数器：必需但未支持的
 指标报错，可选指标记录 unsupported 原因。
 
@@ -108,7 +109,7 @@ Enflame 采集器默认请求 TOPSPTI kernel、runtime、driver、memcpy 和 mem
 activity。无需修改算子或追加编译插桩；在现有 FlagTree 联合构建基础上重新编译
 FlagPrism 即可。建议先完成编译和设备初始化，再开始性能采集。
 
-原始 `profile.vendor.json` 保留设备时间戳、kernel 名称、grid/block、context/stream、
+`ai/events.jsonl` 保留设备时间戳、kernel 名称、grid/block、context/stream、
 correlation ID、API 线程/返回码、拷贝方向/字节数和 memset 参数。成功的
 `topsMalloc/topsFree/topsHostMalloc/topsHostFree` 回调补充地址和分配/释放事件。
 新增 API 和内存 activity 不计入原有 Hatchet kernel 时间，profiler 自身 flush
@@ -185,42 +186,26 @@ python3 test.py --jobs 8 --devices 0,1,2,3,4,5,6,7
 已在 GCU300 / TCU 1.9.29 上验证 `SIP/BUSY`、三类 instruction efficiency、
 L1 instruction-cache miss 和两类 prefetch，共 7 项。它们不包括数据 cache 命中率或 HBM 流量。
 
-单次命令采集并生成独立 profiling 文件与报告：
+TCU 默认关闭。正常使用 `profiler.start()` / `finalize()` 即可采集活动并自动生成完整目录，
+无需改变启动方式。只有需要额外硬件计数器时，才使用已有 profiler 命令行入口显式开启：
 
 ```bash
-python3 Profiler/python/flagtree_profiler/tcu.py --out capture-busy \
-  --kernel vector_add --metrics SIP/BUSY -- python3 workload.py
+flagtree-profiler --backend enflame --name profile-run --counters --hook triton workload.py
 ```
 
-安装后可使用 `flagtree-profiler-tcu`。工作负载执行普通算子，不要在同一进程同时启动
-FlagPrism TOPSPTI profiler；两者联合订阅/计数器采集尚未验证。
-`--out` 必须是新目录，避免覆盖其他 profiling 结果。输出包括 `profile.vendor.json`、
-原始 CSV/TCD、工具日志及 `report/index.html`。JSON 文件内包含全部导入观测与采集来源，
-无需旁边的 CSV 就能再次生成报告。应用命令按参数执行，不经过 shell，不自动重试。
-
-默认 `--replay-mode none`，不会静默重跑应用。不同计数器分组可能不能同时采集，TCU 会报错。
-对可以安全重跑的工作负载，显式开启 application replay：
+该路径在同一次进程运行中启动 TCU 和 TOPSPTI，结束后直接输出统一目录。
+默认只请求 `SIP/BUSY`，`--replay-mode none`，不会静默重跑应用。
+不同分组的计数器可能需要重放；仅对可安全重跑的程序显式设置，例如：
 
 ```bash
-python3 Profiler/python/flagtree_profiler/tcu.py --out capture-counters \
-  --kernel vector_add --metrics SIP/BUSY,SIP/1D_EFFICIENCY,SIP/L1_ICACHE_MISS \
-  --replay-mode application -- python3 workload.py
+flagtree-profiler --backend enflame --name profile-counters --counters \
+  --counter-metrics SIP/BUSY,SIP/1D_EFFICIENCY,SIP/L1_ICACHE_MISS \
+  --replay-mode application --hook triton workload.py
 ```
 
-TCU 可以在这一次外部 profiling 调用内多次执行应用，故不要用于会产生不可重复副作用的工作负载。
-采集参数与 replay 模式保存在文件中；当前 CSV 不提供精确的 pass 标识或 launch correlation ID。
-统计中的 invocation 总数可能包含 replay，各指标的实际 sample count 也可能不同。
-原始工具数据按实际值保留，不除以估计的 replay 次数。
-
-已有 CSV 可离线导入：
-
-```bash
-python3 Profiler/python/flagtree_profiler/tcu.py --import-csv capture.csv --out imported-capture
-```
-
-导入模式将版本/replay 来源标为未知，不从文件名推断。当前解析器针对实测的 1.9.29
-summary CSV，未知记录结构会拒绝导入，避免只导入一部分而误报完整成功。
-工具失败时保留日志，但不生成成功的 profiling 文件。
+TCU 的 CSV/TCD 和日志保留在 `raw/`；结构化计数保存在 `ai/counters.json`。
+它覆盖启动的进程，可能包含 activity 会话外的初始化或预热，不与单次执行强制关联。
+应用重放时，activity 文件来自最终执行，计数器可能来自多次执行；不作为同一次 launch 的联合观测。
 
 报告新增通用 counter 分组、指标值/单位与逐实例 min/max/mean/sample count 展示。
 TCU 数据的 scope 是 kernel 配置聚合；kernel 名称不能用于将它强行绑定到其他 capture 的某次 launch。

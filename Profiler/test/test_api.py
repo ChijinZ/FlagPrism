@@ -22,17 +22,18 @@ def _uses_cann_runtime():
     return backend in {"ascend", "npu"}
 
 
-def test_profile_single_session(tmp_path: pathlib.Path):
-    temp_file0 = tmp_path / "test_profile0.hatchet"
-    session_id0 = profiler.start(str(temp_file0.with_suffix("")))
+def test_profile_single_session(tmp_path: pathlib.Path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    temp_file0 = tmp_path / "test_profile0" / "ai/call_tree.json"
+    session_id0 = profiler.start(str(temp_file0.parent.parent))
     profiler.activate()
     profiler.deactivate()
     profiler.finalize()
     assert session_id0 == 0
     assert temp_file0.exists()
 
-    temp_file1 = tmp_path / "test_profile1.hatchet"
-    session_id1 = profiler.start(str(temp_file1.with_suffix("")))
+    temp_file1 = tmp_path / "test_profile1" / "ai/call_tree.json"
+    session_id1 = profiler.start(str(temp_file1.parent.parent))
     profiler.activate(session_id1)
     profiler.deactivate(session_id1)
     profiler.finalize(session_id1)
@@ -44,27 +45,27 @@ def test_profile_single_session(tmp_path: pathlib.Path):
     profiler.deactivate(session_id2)
     profiler.finalize()
     assert session_id2 == session_id1 + 1
-    assert pathlib.Path("test.hatchet").exists()
-    pathlib.Path("test.hatchet").unlink()
+    assert pathlib.Path("test/ai/call_tree.json").exists()
+    pathlib.Path("test/ai/call_tree.json").unlink()
 
 
 @pytest.mark.skipif(_uses_cann_runtime(),
                     reason="CANN sessions cannot overlap")
 def test_profile_multiple_sessions(tmp_path: pathlib.Path):
-    temp_file0 = tmp_path / "test_profile0.hatchet"
-    profiler.start(str(temp_file0.with_suffix("")))
-    temp_file1 = tmp_path / "test_profile1.hatchet"
-    profiler.start(str(temp_file1.with_suffix("")))
+    temp_file0 = tmp_path / "test_profile0" / "ai/call_tree.json"
+    profiler.start(str(temp_file0.parent.parent))
+    temp_file1 = tmp_path / "test_profile1" / "ai/call_tree.json"
+    profiler.start(str(temp_file1.parent.parent))
     profiler.activate()
     profiler.deactivate()
     profiler.finalize()
     assert temp_file0.exists()
     assert temp_file1.exists()
 
-    temp_file2 = tmp_path / "test_profile2.hatchet"
-    session_id2 = profiler.start(str(temp_file2.with_suffix("")))
-    temp_file3 = tmp_path / "test_profile3.hatchet"
-    session_id3 = profiler.start(str(temp_file3.with_suffix("")))
+    temp_file2 = tmp_path / "test_profile2" / "ai/call_tree.json"
+    session_id2 = profiler.start(str(temp_file2.parent.parent))
+    temp_file3 = tmp_path / "test_profile3" / "ai/call_tree.json"
+    session_id3 = profiler.start(str(temp_file3.parent.parent))
     profiler.deactivate(session_id2)
     profiler.deactivate(session_id3)
     profiler.finalize()
@@ -72,10 +73,11 @@ def test_profile_multiple_sessions(tmp_path: pathlib.Path):
     assert temp_file3.exists()
 
 
-def test_profile_decorator(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_profile_decorator.hatchet"
+def test_profile_decorator(tmp_path: pathlib.Path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    temp_file = tmp_path / "test_profile_decorator" / "ai/call_tree.json"
 
-    @profiler.profile(name=str(temp_file.with_suffix("")))
+    @profiler.profile(name=str(temp_file.parent.parent))
     def foo0(a, b):
         return a + b
 
@@ -89,7 +91,8 @@ def test_profile_decorator(tmp_path: pathlib.Path):
 
     foo1(1, 2)
     profiler.finalize()
-    default_file = pathlib.Path(profiler.DEFAULT_PROFILE_NAME + ".hatchet")
+    default_file = pathlib.Path(
+        profiler.DEFAULT_PROFILE_NAME) / "ai/call_tree.json"
     assert default_file.exists()
     default_file.unlink()
 
@@ -99,8 +102,8 @@ def test_scope(tmp_path: pathlib.Path):
     with profiler.scope("test"):
         pass
 
-    temp_file = tmp_path / "test_scope.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     with profiler.scope("test"):
         pass
 
@@ -121,8 +124,8 @@ def test_scope(tmp_path: pathlib.Path):
 
 
 def test_hook(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_hook.hatchet"
-    session_id0 = profiler.start(str(temp_file.with_suffix("")), hook="triton")
+    temp_file = tmp_path / "test_hook" / "ai/call_tree.json"
+    session_id0 = profiler.start(str(temp_file.parent.parent), hook="triton")
     profiler.activate(session_id0)
     profiler.activate(session_id0)
     assert len(HookManager.active_hooks) == 1, (
@@ -169,8 +172,8 @@ def test_hook_manager(tmp_path: pathlib.Path):
 
 
 def test_scope_metrics(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_scope_metrics.hatchet"
-    session_id = profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope_metrics" / "ai/call_tree.json"
+    session_id = profiler.start(str(temp_file.parent.parent))
     # Test different scope creation methods
     with profiler.scope("test0", {"a": 1.0}):
         pass
@@ -211,8 +214,8 @@ def test_scope_metrics(tmp_path: pathlib.Path):
 
 
 def test_scope_properties(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_scope_properties.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope_properties" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     # Test different scope creation methods
     # Different from metrics, properties could be str
     with profiler.scope("test0", {"a (pty)": "1"}):
@@ -243,8 +246,8 @@ def test_scope_properties(tmp_path: pathlib.Path):
 
 
 def test_scope_exclusive(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_scope_exclusive.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope_exclusive" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     # metric a only appears in the outermost scope
     # metric b only appears in the innermost scope
     # both metrics do not appear in the root scope
@@ -269,8 +272,8 @@ def test_scope_exclusive(tmp_path: pathlib.Path):
 
 
 def test_state(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_state.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_state" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     profiler.enter_scope("test0")
     profiler.enter_state("state")
     profiler.enter_scope("test1", metrics={"a": 1.0})
@@ -295,8 +298,8 @@ def test_state(tmp_path: pathlib.Path):
 
 
 def test_context_depth(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_context_depth.hatchet"
-    session_id = profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_context_depth" / "ai/call_tree.json"
+    session_id = profiler.start(str(temp_file.parent.parent))
     assert profiler.context.depth(session_id) == 0
     profiler.enter_scope("test0")
     assert profiler.context.depth(session_id) == 1
@@ -312,10 +315,10 @@ def test_context_depth(tmp_path: pathlib.Path):
 def test_throw(tmp_path: pathlib.Path):
     # Catch an exception thrown by c++
     session_id = 100
-    temp_file = tmp_path / "test_throw.hatchet"
+    temp_file = tmp_path / "test_throw" / "ai/call_tree.json"
     activate_error = ""
     try:
-        session_id = profiler.start(str(temp_file.with_suffix("")))
+        session_id = profiler.start(str(temp_file.parent.parent))
         profiler.activate(session_id + 1)
     except Exception as e:
         activate_error = str(e)
@@ -326,7 +329,7 @@ def test_throw(tmp_path: pathlib.Path):
 
     deactivate_error = ""
     try:
-        session_id = profiler.start(str(temp_file.with_suffix("")))
+        session_id = profiler.start(str(temp_file.parent.parent))
         profiler.deactivate(session_id + 1)
     except Exception as e:
         deactivate_error = str(e)

@@ -1,17 +1,11 @@
-"""Capture or import TCU counters as a standalone FlagPrism profiling artifact.
-
-Run directly with Python; requires no native FlagTree module for CSV import.
-"""
-import argparse
+"""Internal Enflame TCU launcher and counter importer (explicit opt-in only)."""
 import csv
 from datetime import datetime, timezone
-import json
 import math
 from pathlib import Path
 import re
 import shutil
 import subprocess
-import sys
 
 DESCRIPTIONS = {
     "SIP/BUSY":
@@ -143,6 +137,7 @@ def import_csv(path):
         kernel_summaries=summaries,
         degrade_reasons=[],
         capture_notes=[
+            "TCU counters cover the launched process; activity sessions may cover a narrower region. Configuration aggregates are not joined to individual activity events. Under application replay, activities describe the final execution while counters may combine executions.",
             "TCU CSV contains configuration-level aggregates, not per-launch timestamps or correlation IDs. No timeline association is inferred.",
             "Invocation totals may include application replays. Per-metric sample counts may differ; counters from different passes are not simultaneous observations.",
             "Counter collection perturbs execution. TCU timings are instrumented measurements, not an unprofiled performance baseline.",
@@ -150,114 +145,53 @@ def import_csv(path):
         ])
 
 
-def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out",
-                        type=Path,
-                        required=True,
-                        help="New capture directory")
-    parser.add_argument(
-        "--import-csv",
-        type=Path,
-        help="Import an existing TCU CSV without running an application")
-    parser.add_argument("--tcu", default="tcu", help="TCU executable")
-    parser.add_argument("--metrics",
-                        default="SIP/BUSY",
-                        help="Comma-separated TCU metrics")
-    parser.add_argument("--kernel", help="TCU kernel-name filter")
-    parser.add_argument(
-        "--replay-mode",
-        choices=("none", "application"),
-        default="none",
-        help=
-        "Application replay reruns your command; use only for replay-safe workloads"
-    )
-    parser.add_argument("command",
-                        nargs=argparse.REMAINDER,
-                        help="-- executable arguments")
-    args = parser.parse_args()
-    command = args.command[1:] if args.command[:1] == ["--"] else args.command
-    if bool(args.import_csv) == bool(command):
-        parser.error(
-            "Provide either --import-csv or an application command after --")
-    if not args.import_csv and not shutil.which(args.tcu):
-        parser.error(f"TCU executable not found: {args.tcu}")
-    try:
-        args.out.mkdir(parents=True, exist_ok=False)
-        provenance = dict(tool="tcu",
-                          captured_at=datetime.now(timezone.utc).isoformat())
-        csv_path = args.out / "capture.csv"
-        if args.import_csv:
-            shutil.copyfile(args.import_csv, csv_path)
-            provenance.update(mode="import",
-                              version="unknown",
-                              replay_mode="unknown",
-                              original_path=str(args.import_csv))
-        else:
-            version = subprocess.run([args.tcu, "--version"],
-                                     capture_output=True,
-                                     text=True,
-                                     check=True).stdout.strip()
-            invocation = [
-                args.tcu, "--enable-metrics", args.metrics, "--replay-mode",
-                args.replay_mode, "--export-csv",
-                str(csv_path.resolve()), "--export",
-                str((args.out / "capture").resolve())
-            ]
-            if args.kernel:
-                invocation += ["--kernel-name", args.kernel]
-            invocation += command
-            provenance.update(mode="capture",
-                              version=version,
-                              command=command,
-                              cwd=str(Path.cwd()),
-                              requested_metrics=args.metrics.split(","),
-                              replay_mode=args.replay_mode)
-            # Never use a shell, silently enable replay, or retry application execution.
-            with (args.out / "capture.log").open("w") as log:
-                result = subprocess.run(invocation,
-                                        stdout=log,
-                                        stderr=subprocess.STDOUT)
-            if result.returncode:
-                raise ValueError(
-                    f"TCU exited {result.returncode}; see {args.out / 'capture.log'}. No profiling artifact was generated."
-                )
-        artifact = import_csv(csv_path)
-        artifact["enabled_metrics"] = sorted({
-            m["name"]
-            for group in artifact["counter_groups"]
-            for m in group["metrics"]
-        })
-        if not args.import_csv:
-            requested = {
-                name.strip()
-                for name in args.metrics.split(",") if name.strip()
-            }
-            for group in artifact["counter_groups"]:
-                missing = requested - {
-                    metric["name"]
-                    for metric in group["metrics"]
-                }
-                if missing:
-                    raise ValueError(
-                        f"TCU omitted requested metrics {sorted(missing)} for {group['name']}"
-                    )
-        artifact["capture"] = provenance
-        output = args.out / "profile.vendor.json"
-        output.write_text(
-            json.dumps(artifact, indent=2, allow_nan=False) + "\n")
-        print(output, flush=True)
-        # Run the device-independent reporter without importing native package init.
-        subprocess.run([
-            sys.executable,
-            str(Path(__file__).with_name("report.py")),
-            str(output), "--out",
-            str(args.out / "report")
-        ],
-                       check=True)
-    except (OSError, ValueError, subprocess.CalledProcessError) as error:
-        parser.error(str(error))
-
-
-if __name__ == "__main__":
-    main()
+def collect(command,
+            output,
+            *,
+            metrics="SIP/BUSY",
+            replay_mode="none",
+            env=None):
+    """Launch once under TCU; replay requires an explicit caller option."""
+    executable = shutil.which("tcu")
+    if not executable:
+        raise RuntimeError(
+            "TCU not found; install topsprof or omit --counters")
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    version = subprocess.run([executable, "--version"],
+                             capture_output=True,
+                             text=True,
+                             check=True).stdout.strip()
+    csv_path = output / "counters.csv"
+    invocation = [
+        executable, "--enable-metrics", metrics, "--replay-mode", replay_mode,
+        "--export-csv",
+        str(csv_path.resolve()), "--export",
+        str((output / "counters").resolve()), *command
+    ]
+    with (output / "collector.log").open("w") as log:
+        result = subprocess.run(invocation,
+                                env=env,
+                                stdout=log,
+                                stderr=subprocess.STDOUT)
+    if result.returncode:
+        raise RuntimeError(
+            f"TCU/application exited {result.returncode}; see {output / 'collector.log'}"
+        )
+    artifact = import_csv(csv_path)
+    requested = {name.strip() for name in metrics.split(",") if name.strip()}
+    for group in artifact["counter_groups"]:
+        missing = requested - {metric["name"] for metric in group["metrics"]}
+        if missing:
+            raise ValueError(
+                f"TCU omitted requested metrics {sorted(missing)} for {group['name']}"
+            )
+    artifact["capture"] = dict(tool="tcu",
+                               version=version,
+                               command=command,
+                               cwd=str(Path.cwd()),
+                               requested_metrics=sorted(requested),
+                               replay_mode=replay_mode,
+                               captured_at=datetime.now(
+                                   timezone.utc).isoformat())
+    return artifact

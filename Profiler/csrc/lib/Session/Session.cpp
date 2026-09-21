@@ -15,6 +15,7 @@
 #include "nlohmann/json.hpp"
 
 #include <algorithm>
+#include <cctype>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -494,6 +495,26 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
          std::get<std::string>(kind->second) != "kernel"))
       continue;
     auto event = association.runtimeEvent;
+    // Normalized collectors must never gain synthetic timing from the legacy
+    // overlay. Unknown identity stays in the original artifact for export.
+    if (kind != association.metrics.end()) {
+      if (!event.startTimeNs || event.endTimeNs <= event.startTimeNs)
+        continue;
+      const auto unknown = association.metrics.find("activity.unknown_fields");
+      if (unknown != association.metrics.end() &&
+          std::holds_alternative<std::string>(unknown->second)) {
+        auto fields = "," + std::get<std::string>(unknown->second) + ",";
+        fields.erase(
+            std::remove_if(fields.begin(), fields.end(),
+                           [](unsigned char c) { return std::isspace(c); }),
+            fields.end());
+        if (fields.find(",device_id,") != std::string::npos ||
+            fields.find(",stream_id,") != std::string::npos ||
+            fields.find(",start_time_ns,") != std::string::npos ||
+            fields.find(",end_time_ns,") != std::string::npos)
+          continue;
+      }
+    }
     bool syntheticTimelineEvent = false;
 
     auto scopeId = event.scopeId;

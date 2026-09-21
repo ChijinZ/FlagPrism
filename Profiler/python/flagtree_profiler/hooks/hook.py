@@ -112,24 +112,37 @@ class HookManager:
     def unregister(session: Optional[int] = None) -> None:
         if session is not None and session not in HookManager.session_hooks:
             return
-
         if session is None:
-            for hook in HookManager.active_hooks:
-                hook.deactivate()
-            HookManager.active_hooks.clear()
+            removed = list(HookManager.active_hooks)
             HookManager.session_hooks.clear()
         else:
-            popped_hooks = HookManager.session_hooks.pop(session)
-            # Deactivate hooks that are not used by any other session
-            for hook, active in popped_hooks.items():
-                if not active:
-                    continue
-                if not any(session_hooks[hook] for session_hooks in
-                           HookManager.session_hooks.values()):
-                    hook.deactivate()
+            popped = HookManager.session_hooks.pop(session)
+            removed = [
+                hook for hook, active in popped.items() if active and not any(
+                    hooks.get(hook, False)
+                    for hooks in HookManager.session_hooks.values())
+            ]
+        errors = []
+        for hook in removed:
+            try:
+                hook.deactivate()
+            except Exception as error:
+                errors.append(error)
+            finally:
+                if hook in HookManager.active_hooks:
                     HookManager.active_hooks.remove(hook)
-        # Unregister the heads
         if not HookManager.active_hooks:
-            knobs.runtime.kernel_load_end_hook.remove(HookManager.init_handle)
-            knobs.runtime.launch_enter_hook.remove(HookManager.enter)
-            knobs.runtime.launch_exit_hook.remove(HookManager.exit)
+            for dispatcher, callback in ((knobs.runtime.kernel_load_end_hook,
+                                          HookManager.init_handle),
+                                         (knobs.runtime.launch_enter_hook,
+                                          HookManager.enter),
+                                         (knobs.runtime.launch_exit_hook,
+                                          HookManager.exit)):
+                try:
+                    dispatcher.remove(callback)
+                except Exception as error:
+                    errors.append(error)
+        if errors:
+            raise RuntimeError("Hook cleanup failed: " +
+                               "; ".join(str(error)
+                                         for error in errors)) from errors[0]

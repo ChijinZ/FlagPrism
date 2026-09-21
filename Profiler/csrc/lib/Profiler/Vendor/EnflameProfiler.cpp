@@ -258,6 +258,8 @@ private:
         event.endTimeNs = r->end;
         event.correlationId = r->correlationId;
         m["activity.kind"] = std::string(runtime ? "runtime" : "driver");
+        m["activity.unknown_fields"] =
+            std::string("device_id,stream_id,task_id");
         m["activity.process_id"] = uint64_t(r->processId);
         m["activity.thread_id"] = uint64_t(r->threadId);
         m["enflame.callback_id"] = uint64_t(r->cbid);
@@ -268,7 +270,8 @@ private:
         continue;
       }
       if (!event.startTimeNs || event.endTimeNs < event.startTimeNs) {
-        association.state = VendorMetricState::Unavailable;
+        // Preserve the observed activity; reports keep untimed records without
+        // using them in timing statistics or synthesizing timestamps.
         association.note = "TOPSPTI activity has unknown or invalid timestamps";
       }
       self.events.push_back(std::move(association));

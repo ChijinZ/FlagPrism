@@ -44,6 +44,9 @@ TRITON_BUILD_FLAGPRISM=ON python -m pip install . --no-build-isolation
 Collectors can emit the shared `activity.*` contract to reuse the offline timeline,
 hotspot, memory and comparison views. Enflame is the first validated producer;
 other backends can implement the contract without changing the report UI.
+`finalize()` directly produces a directory containing `report/index.html`, Perfetto
+`report/timeline.json` when available, machine-readable `ai/` data and `manifest.json`.
+No separate report script is required. TCU is off by default.
 See [activity reports and the collector contract](docs/activity_report.md).
 
 ## Usage

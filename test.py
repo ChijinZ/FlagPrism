@@ -167,7 +167,7 @@ def check_reports(stage, tool, base, launched, level=1):
             "summary_sources": sorted(summary_sources),
         }
     if stage == "profiler":
-        roots = json.loads(base.with_suffix(".hatchet").read_text())
+        roots = json.loads((base / "ai/call_tree.json").read_text())
         matches = []
 
         def visit(node):
@@ -191,9 +191,11 @@ def check_reports(stage, tool, base, launched, level=1):
             if not any(kernel in item["name"] for item in matches)
         })
         assert not missing, f"Missing device timings for Triton kernels: {missing}"
-        meta = base.with_suffix(".meta.json")
+        meta = base / "ai/context.json"
         if meta.exists():
-            config = json.loads(meta.read_text()).get("config", {})
+            config = json.loads(meta.read_text()).get(
+                "producer_metadata", {}).get("session_metadata",
+                                             {}).get("config", {})
             assert (
                 str(config.get("runtime_host_timing_fallback",
                                "false")).lower()

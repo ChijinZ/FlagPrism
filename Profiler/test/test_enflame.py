@@ -36,6 +36,12 @@ def test_enflame_session_launch_membership(tmp_path):
         data="tree",
         mode="runtime_base:runtime_host_timing_fallback=false",
     )
+    assert profiler.start(
+        str(paths[0]),
+        backend="enflame",
+        context="shadow",
+        data="tree",
+        mode="runtime_base:runtime_host_timing_fallback=false") == first
     second = None
     try:
         session_probe[(1, )](x, y, 0)  # first only
@@ -71,9 +77,15 @@ def test_enflame_session_launch_membership(tmp_path):
         profiler.finalize(second)
     events = []
     for path in paths:
-        document = json.loads(path.with_suffix(".vendor.json").read_text())
+        assert (path / "manifest.json").exists()
+        assert not (path / "ai/counters.json").exists()
+        assert not (path / "raw").exists()
+        assert not path.with_suffix(".vendor.json").exists()
+        associations = [
+            json.loads(line)["original_record"]
+            for line in (path / "ai/events.jsonl").read_text().splitlines()
+        ]
         # Assert exact launch membership, not merely a nonempty timing report.
-        associations = document["associations"]
         events.append({
             a["runtime_event"]["correlation_id"]
             for a in associations
@@ -124,8 +136,10 @@ def test_enflame_detailed_memory_and_api_capture(tmp_path):
             assert runtime.topsFree(pointer) == 0
     finally:
         profiler.finalize(session)
-    associations = json.loads(
-        path.with_suffix(".vendor.json").read_text())["associations"]
+    associations = [
+        json.loads(line)["original_record"]
+        for line in (path / "ai/events.jsonl").read_text().splitlines()
+    ]
     kinds = {a["metrics"]["activity.kind"] for a in associations}
     assert {"runtime", "memcpy", "memset"} <= kinds
     # Finalization synchronization belongs to the profiler, not this workload.
@@ -147,3 +161,88 @@ def test_enflame_detailed_memory_and_api_capture(tmp_path):
             for a in memory} == {"allocate", "free"}
     assert all(a["metrics"]["activity.address"] == pointer.value
                for a in memory)
+
+
+def test_prewarmed_kernel_source_and_arguments(tmp_path):
+    torch = pytest.importorskip("torch")
+    pytest.importorskip("torch_gcu")
+    triton = pytest.importorskip("triton")
+    import triton.language as tl
+    from flagtree import profiler
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+
+    @triton.jit
+    def metadata_probe(X, Y, N: tl.constexpr):
+        i = tl.arange(0, N)
+        tl.store(Y + i, tl.load(X + i) + 1)
+
+    inputs = [torch.ones(size, device="gcu") for size in (32, 64)]
+    outputs = [torch.empty_like(x) for x in inputs]
+    for x, y in zip(inputs, outputs):
+        metadata_probe[(1, )](x, y, x.numel())
+    torch.gcu.synchronize()
+    folder = tmp_path / "metadata"
+    session = profiler.start(
+        str(folder),
+        backend="enflame",
+        hook="triton",
+        metadata={"software": {
+            "test_marker": "retained"
+        }})
+    validation = {"status": "not_checked"}
+    try:
+        for x, y in zip(inputs, outputs):
+            metadata_probe[(1, )](x, y, x.numel())
+        torch.gcu.synchronize()
+        profiler.deactivate(session)
+        for y in outputs:
+            assert torch.equal(y.cpu(), torch.full(y.shape, 2.))
+        validation = {"status": "passed", "reference": "CPU torch.full"}
+    finally:
+        profiler.finalize(session,
+                          metadata={
+                              "workload": {
+                                  "operator": "metadata_probe",
+                                  "parameters": {},
+                                  "warmup": {
+                                      "iterations_per_shape": 1
+                                  },
+                                  "measurement": {
+                                      "iterations_per_shape": 1
+                                  },
+                                  "validation": validation
+                              }
+                          })
+    context = json.loads((folder / "ai/context.json").read_text())
+    assert context["supplied"]["software"]["test_marker"] == "retained"
+    assert context["supplied"]["workload"]["validation"]["status"] == "passed"
+    assert context["sections"]["workload"]["missing"] == []
+    launches = json.loads((folder / "ai/launches.json").read_text())
+    binaries = json.loads((folder / "ai/binaries.json").read_text())
+    arguments = json.loads((folder / "ai/arguments.json").read_text())
+    assert {
+        tuple(arguments[row["argument_id"]]["X"]["shape"])
+        for row in launches
+    } == {(32, ), (64, )}
+    assert len(binaries) == 2
+    assert all(
+        (folder /
+         row["source"]["text_file"]).read_text() and row["source"]["sha256"]
+        for row in binaries)
+    assert all(row["binary_sha256"] and row["compiler_metadata"]["num_warps"]
+               for row in binaries)
+    kernels = json.loads((folder / "ai/kernels.json").read_text())["groups"]
+    assert len(kernels) == 2
+    assert all(row["count"] == 1 for row in kernels)
+    tree = json.loads((folder / "ai/call_tree.json").read_text())
+
+    def check(node):
+        assert not any(
+            key.startswith(("activity.", "runtime.", "vendor."))
+            for key in node.get("metrics", {}))
+        for child in node.get("children", []):
+            check(child)
+
+    for root in tree:
+        check(root)

@@ -27,8 +27,8 @@ def is_hip():
 
 @pytest.mark.parametrize("context", ["shadow", "python"])
 def test_torch(context, tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_torch.hatchet"
-    profiler.start(str(temp_file.with_suffix("")), context=context)
+    temp_file = tmp_path / "test_torch" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent), context=context)
     profiler.enter_scope("test")
     torch.ones((2, 2), device="cuda")
     profiler.exit_scope()
@@ -61,8 +61,8 @@ def test_triton(tmp_path: pathlib.Path):
 
     x = torch.tensor([2], device="cuda")
     y = torch.zeros_like(x)
-    temp_file = tmp_path / "test_triton.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_triton" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     with profiler.scope("test0"):
         with profiler.scope("test1"):
             foo[(1, )](x, y)
@@ -92,8 +92,8 @@ def test_cudagraph(tmp_path: pathlib.Path):
         c = a + b
         foo[(1, )](a, b, c)
 
-    temp_file = tmp_path / "test_cudagraph.hatchet"
-    profiler.start(str(temp_file.with_suffix("")), context="shadow")
+    temp_file = tmp_path / "test_cudagraph" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent), context="shadow")
 
     # warmup
     # four kernels
@@ -140,8 +140,8 @@ def test_metrics(tmp_path: pathlib.Path):
 
     x = torch.tensor([2], device="cuda")
     y = torch.zeros_like(x)
-    temp_file = tmp_path / "test_metrics.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_metrics" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     with profiler.scope("test0", {"foo": 1.0}):
         foo[(1, )](x, y)
     profiler.finalize()
@@ -153,8 +153,8 @@ def test_metrics(tmp_path: pathlib.Path):
 
 
 def test_scope_backward(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_scope_backward.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope_backward" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     with profiler.scope("ones1"):
         a = torch.ones((100, 100), device="cuda", requires_grad=True)
     with profiler.scope("plus"):
@@ -172,8 +172,8 @@ def test_scope_backward(tmp_path: pathlib.Path):
 
 
 def test_cpu_timed_scope(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_cpu_timed_scope.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_cpu_timed_scope" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
     with profiler.cpu_timed_scope("test0"):
         with profiler.cpu_timed_scope("test1"):
             torch.ones((100, 100), device="cuda")
@@ -206,8 +206,8 @@ def test_hook_launch(tmp_path: pathlib.Path):
 
     x = torch.tensor([2], device="cuda", dtype=torch.float32)
     y = torch.zeros_like(x)
-    temp_file = tmp_path / "test_hook_triton.hatchet"
-    profiler.start(str(temp_file.with_suffix("")), hook="triton")
+    temp_file = tmp_path / "test_hook_triton" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent), hook="triton")
     with profiler.scope("test0"):
         foo[(1, )](x, 1, y, num_warps=4)
     profiler.finalize()
@@ -236,8 +236,8 @@ def test_hook_launch_context(tmp_path: pathlib.Path, context: str):
 
     x = torch.tensor([2], device="cuda", dtype=torch.float32)
     y = torch.zeros_like(x)
-    temp_file = tmp_path / "test_hook.hatchet"
-    profiler.start(str(temp_file.with_suffix("")),
+    temp_file = tmp_path / "test_hook" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent),
                    hook="triton",
                    context=context)
     with profiler.scope("test0"):
@@ -280,8 +280,8 @@ def test_hook_with_third_party(tmp_path: pathlib.Path):
 
     x = torch.tensor([2], device="cuda", dtype=torch.float32)
     y = torch.zeros_like(x)
-    temp_file = tmp_path / "test_hook_with_third_party.hatchet"
-    profiler.start(str(temp_file.with_suffix("")), hook="triton")
+    temp_file = tmp_path / "test_hook_with_third_party" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent), hook="triton")
     foo[(1, )](x, 1, y, num_warps=4)
     profiler.finalize()
     triton.knobs.runtime.launch_enter_hook.remove(third_party_hook)
@@ -315,8 +315,8 @@ def test_hook_multiple_threads(tmp_path: pathlib.Path):
     x_bar = torch.tensor([2], device="cuda", dtype=torch.float32)
     y_bar = torch.zeros_like(x_bar)
 
-    temp_file = tmp_path / "test_hook.hatchet"
-    profiler.start(str(temp_file.with_suffix("")), hook="triton")
+    temp_file = tmp_path / "test_hook" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent), hook="triton")
 
     all_ids = set()
 
@@ -365,8 +365,8 @@ def test_pcsampling(tmp_path: pathlib.Path):
         for _ in range(1000):
             tl.store(y + offs, tl.load(x + offs))
 
-    temp_file = tmp_path / "test_pcsampling.hatchet"
-    profiler.start(str(temp_file.with_suffix("")),
+    temp_file = tmp_path / "test_pcsampling" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent),
                    hook="triton",
                    backend="cupti",
                    mode="pcsampling")
@@ -391,8 +391,8 @@ def test_pcsampling(tmp_path: pathlib.Path):
 
 
 def test_deactivate(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_deactivate.hatchet"
-    session_id = profiler.start(str(temp_file.with_suffix("")), hook="triton")
+    temp_file = tmp_path / "test_deactivate" / "ai/call_tree.json"
+    session_id = profiler.start(str(temp_file.parent.parent), hook="triton")
     profiler.deactivate(session_id)
     torch.randn((10, 10), device="cuda")
     profiler.activate(session_id)
@@ -408,10 +408,10 @@ def test_deactivate(tmp_path: pathlib.Path):
 
 
 def test_multiple_sessions(tmp_path: pathlib.Path):
-    temp_file0 = tmp_path / "test_multiple_sessions0.hatchet"
-    temp_file1 = tmp_path / "test_multiple_sessions1.hatchet"
-    session_id0 = profiler.start(str(temp_file0.with_suffix("")))
-    session_id1 = profiler.start(str(temp_file1.with_suffix("")))
+    temp_file0 = tmp_path / "test_multiple_sessions0" / "ai/call_tree.json"
+    temp_file1 = tmp_path / "test_multiple_sessions1" / "ai/call_tree.json"
+    session_id0 = profiler.start(str(temp_file0.parent.parent))
+    session_id1 = profiler.start(str(temp_file1.parent.parent))
     with profiler.scope("scope0"):
         torch.randn((10, 10), device="cuda")
         torch.randn((10, 10), device="cuda")
@@ -435,8 +435,8 @@ def test_multiple_sessions(tmp_path: pathlib.Path):
 
 
 def test_trace(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_trace.chrome_trace"
-    profiler.start(str(temp_file.with_suffix("")), data="trace")
+    temp_file = tmp_path / "test_trace" / "report/timeline.json"
+    profiler.start(str(temp_file.parent.parent), data="trace")
 
     @triton.jit
     def foo(x, y, size: tl.constexpr):
@@ -463,8 +463,8 @@ def test_trace(tmp_path: pathlib.Path):
 
 
 def test_scope_multiple_threads(tmp_path: pathlib.Path):
-    temp_file = tmp_path / "test_scope_threads.hatchet"
-    profiler.start(str(temp_file.with_suffix("")))
+    temp_file = tmp_path / "test_scope_threads" / "ai/call_tree.json"
+    profiler.start(str(temp_file.parent.parent))
 
     N = 50
     thread_names = ["threadA", "threadB"]

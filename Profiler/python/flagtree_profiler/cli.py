@@ -57,6 +57,17 @@ def parse_arguments():
                         help="Profiling hook",
                         default=None,
                         choices=["triton", "instrumentation"])
+    parser.add_argument(
+        "--counters",
+        action="store_true",
+        help=
+        "Enable external hardware counters (TCU on Enflame; off by default)")
+    parser.add_argument("--counter-metrics", default=None)
+    parser.add_argument("--replay-mode",
+                        choices=("none", "application"),
+                        default="none")
+    parser.add_argument("--metadata",
+                        help="Workload/environment JSON metadata")
     parser.add_argument("--ixkn",
                         action="store_true",
                         help="Wrap the target process with Tianshu ixKN")
@@ -139,13 +150,20 @@ def do_setup_and_execute(target_args):
     script_args = target_args[1:] if len(target_args) > 1 else []
     if is_pytest(script):
         import pytest
-        pytest.main(script_args)
+        result = pytest.main(script_args)
+        if result:
+            raise SystemExit(result)
     else:
         execute_as_main(script, script_args)
 
 
 def run_profiling(args, target_args):
     backend = args.backend if args.backend else _select_backend()
+    # The outer launcher owns collection and exports a single capture directory.
+    from ._capture import INTERNAL_ENV, run_capture
+    if not os.environ.get(INTERNAL_ENV):
+        args.backend = backend
+        return run_capture(args, target_args, run_profiling)
 
     if getattr(args, "mcu", False):
         if not MCU_INTEGRATION_ENABLED:
@@ -285,9 +303,22 @@ def run_profiling(args, target_args):
         hook=args.hook,
     )
 
-    do_setup_and_execute(target_args)
-
-    finalize()
+    try:
+        do_setup_and_execute(target_args)
+    except BaseException as error:
+        # A failed workload may still have valuable activities buffered in the
+        # native collector. Flush them and release hooks before propagating it.
+        try:
+            finalize()
+        except Exception as final_error:
+            message = f"Profiling finalization also failed: {final_error}"
+            if isinstance(error, Exception) and hasattr(error, "add_note"):
+                error.add_note(message)
+            else:
+                print(message, file=sys.stderr)
+        raise
+    else:
+        finalize()
 
 
 def main():

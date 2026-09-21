@@ -19,8 +19,8 @@ def is_hip():
 def test_exec(mode, tmp_path: pathlib.Path):
     file_path = __file__
     helper_file = file_path.replace("test_cmd.py", "helper.py")
-    temp_file = tmp_path / "test_exec.hatchet"
-    name = str(temp_file.with_suffix(""))
+    temp_file = tmp_path / "test_exec" / "ai/call_tree.json"
+    name = str(temp_file.parent.parent)
     if mode == "script":
         subprocess.check_call(
             ["flagtree-profiler", "-n", name, helper_file, "test"],

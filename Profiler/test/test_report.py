@@ -6,11 +6,17 @@ from pathlib import Path
 
 import pytest
 
-spec = importlib.util.spec_from_file_location(
-    "offline_report",
-    Path(__file__).parents[1] / "python/flagtree_profiler/report.py")
-report = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(report)
+# Load the pure-Python report package without importing the native runtime.
+import importlib
+import sys
+import types
+
+package = types.ModuleType("offline_profiler")
+package.__path__ = [
+    str(Path(__file__).parents[1] / "python/flagtree_profiler")
+]
+sys.modules[package.__name__] = package
+report = importlib.import_module("offline_profiler._report")
 
 
 def event(kind, start, end, name="probe", **metrics):
@@ -19,6 +25,13 @@ def event(kind, start, end, name="probe", **metrics):
                 metrics={
                     "activity.kind": kind,
                     "activity.process_id": 1,
+                    "activity.context_id": 0,
+                    "activity.thread_id": 1,
+                    **{
+                        f"activity.{dim}_{axis}": 1
+                        for dim in ("grid", "block")
+                        for axis in "xyz"
+                    },
                     **metrics
                 },
                 runtime_event=dict(op_name=name,
@@ -58,17 +71,23 @@ def test_bad_time_and_unknown_preexisting_allocation(tmp_path):
         event(
             "runtime", 100, 200, **{
                 "activity.memory_action": "free",
+                "activity.api_success": 1,
                 "activity.address": 42,
                 "activity.memory_space": "device"
             })
     ])
-    assert sum(result["rejected"].values()) == 2
+    assert len(result["untimed_events"]) == 2
+    assert not result["rejected"]
     assert result["unmatched_frees"] == 1
     assert result["observed_peak_bytes"] == {"device": 0}
 
 
 def test_allocations_and_free_are_observed_not_total_memory(tmp_path):
-    common = {"activity.address": 42, "activity.memory_space": "device"}
+    common = {
+        "activity.address": 42,
+        "activity.memory_space": "device",
+        "activity.api_success": 1
+    }
     result = load(tmp_path, [
         event(
             "runtime", 100, 200, **common, **{
@@ -198,13 +217,17 @@ def test_malformed_event_keeps_valid_records(tmp_path, field, value):
     broken = event("kernel", 100, 200)
     broken["runtime_event"][field] = value
     result = load(tmp_path, [broken, event("kernel", 300, 400)])
-    assert result["counts"] == {"kernel": 1}
-    assert sum(result["rejected"].values()) == 1
-    assert "collected" not in result["rejected"]
+    assert result["counts"] == {"kernel": 2}
+    assert len(result["events"]) == (2 if field == "device_id" else 1)
+    assert not result["rejected"]
 
 
 def test_invalid_memory_metadata_does_not_invent_free(tmp_path):
-    common = {"activity.address": 42, "activity.memory_space": "device"}
+    common = {
+        "activity.address": 42,
+        "activity.memory_space": "device",
+        "activity.api_success": 1
+    }
     result = load(tmp_path, [
         event(
             "runtime", 100, 200, **common, **{
@@ -213,13 +236,15 @@ def test_invalid_memory_metadata_does_not_invent_free(tmp_path):
             }),
         event("runtime", 300, 400, **common, **
               {"activity.memory_action": "unsupported_action"}),
-        event("runtime", 500, 600, **common, **{
-            "activity.memory_action": "free",
-            "activity.api_success": 0
-        }),
+        event(
+            "runtime", 500, 600, **{
+                **common, "activity.memory_action": "free",
+                "activity.api_success": 0
+            }),
         event("runtime", 700, 800, **{"activity.memory_action": "allocate"}),
     ])
-    assert result["invalid_memory_events"] == 3
+    assert result["invalid_memory_events"] == 2
+    assert result["unknown_memory_events"] == 1
     assert result["memory"][-1]["bytes"] == 4096
     assert result["unmatched_frees"] == 0
 
@@ -278,10 +303,12 @@ def test_report_browser(tmp_path):
             assert "No matching records" in page.locator(
                 "#hotspots").inner_text()
             assert page.locator("#eventSelect option").count() == 1
-            for label, key in [("Download analysis JSON", "events"),
-                               ("Export Perfetto trace", "traceEvents")]:
+            assert page.locator('a[href="timeline.json"]').is_hidden()
+            for label, key in [("Download analysis JSON", "events")]:
                 with page.expect_download() as info:
                     page.get_by_role("link", name=label, exact=False).click()
+                assert info.value.suggested_filename == (
+                    "timeline.json" if key == "traceEvents" else "report.json")
                 exported = json.loads(Path(info.value.path()).read_text())
                 assert exported[key] == []
             counter = tmp_path / "counter.vendor.json"
@@ -320,7 +347,7 @@ def test_report_browser(tmp_path):
             page.goto(page_html.as_uri())
             assert page.locator("#counters").is_visible()
             assert page.locator("#activityPanel").is_hidden()
-            assert page.locator('a[href="trace.json"]').is_hidden()
+            assert page.locator('a[href="timeline.json"]').is_hidden()
             assert page.locator("#counterSummary tbody tr").count() == 2
             assert page.locator("#counterInstances tbody tr").count() == 1
             page.locator("#counterSummary th button").first.click()
@@ -392,3 +419,164 @@ def test_counter_aggregates_do_not_invent_timeline(tmp_path):
         json.dumps(dict(backend="future_vendor", counter_groups=[group])))
     with pytest.raises(ValueError, match="Counter values"):
         report.analyze(path)
+
+
+def test_bundle_preserves_evidence_and_unknown_context(tmp_path):
+    result = load(tmp_path, [
+        event("kernel", 100, 200, **{
+            "activity.grid_x": 8,
+            "test_vendor.extra": 2**60 + 1
+        }),
+        event("kernel", 0, 200)
+    ])
+    source = tmp_path / "profile.vendor.json"
+    out = tmp_path / "bundle"
+    report.write_bundle(result, source, out)
+    manifest = json.loads((out / "manifest.json").read_text())
+    import hashlib
+    for name, metadata in manifest["files"].items():
+        data = (out / name).read_bytes()
+        assert metadata["sha256"] == hashlib.sha256(data).hexdigest()
+        assert metadata["bytes"] == len(data)
+    assert not (out / "raw/profile.vendor.json").exists()
+    assert not (out / "ai/rejected.jsonl").exists()
+    events = [
+        json.loads(line)
+        for line in (out / "ai/events.jsonl").read_text().splitlines()
+    ]
+    kernels = json.loads((out / "ai/kernels.json").read_text())
+    assert kernels["groups"][0]["event_ids"] == [events[0]["id"]]
+    assert events[0]["metrics"]["test_vendor.extra"] == 2**60 + 1
+    context = json.loads((out / "ai/context.json").read_text())
+    assert "workload" in context["missing_sections"]
+    summary = json.loads((out / "ai/summary.json").read_text())
+    assert not summary["rejected"]
+    assert summary["untimed_counts"] == {"kernel": 1}
+    assert summary["availability"]["counters"]["status"] == "unknown"
+    assert not (out / "ai/counters.json").exists()
+    assert not (out / "ai/findings.json").exists()
+    assert (out / "report/timeline.json").exists()
+    with pytest.raises(ValueError, match="already contains"):
+        report.write_bundle(result, source, out)
+
+
+def test_bundle_context_and_empty_capture(tmp_path):
+    result = load(tmp_path, [])
+    source = tmp_path / "profile.vendor.json"
+    context = {"workload": {"shape": [256], "dtype": "float32"}}
+    out = tmp_path / "bundle"
+    report.write_bundle(result, source, out, context)
+    saved = json.loads((out / "ai/context.json").read_text())
+    assert saved["supplied"]["workload"]["shape"] == [256]
+    assert "workload" not in saved["missing_sections"]
+    assert not (out / "ai/events.jsonl").exists()
+    assert not (out / "report/timeline.json").exists()
+
+
+def test_automatic_export_retains_legacy_evidence_without_legacy_files(
+        tmp_path, monkeypatch):
+    import sys
+    import types
+    import importlib
+    package = types.ModuleType("capture_export_test")
+    package.__path__ = [
+        str(Path(__file__).parents[1] / "python/flagtree_profiler")
+    ]
+    monkeypatch.setitem(sys.modules, "capture_export_test", package)
+    capture = importlib.import_module("capture_export_test._capture")
+    base = tmp_path / "native"
+    original = {
+        "source": "legacy",
+        "metrics": {
+            "vendor.value": 17
+        },
+        "state": "collected"
+    }
+    base.with_suffix(".vendor.json").write_text(
+        json.dumps({
+            "backend": "other",
+            "associations": [original]
+        }))
+    tree = [{"frame": {"name": "scope"}, "metrics": {"time (ns)": 123}}]
+    base.with_suffix(".hatchet").write_text(json.dumps(tree))
+    native_trace = {
+        "traceEvents": [{
+            "ph": "X",
+            "name": "kernel",
+            "ts": 1,
+            "dur": 2
+        }]
+    }
+    base.with_suffix(".chrome_trace").write_text(json.dumps(native_trace))
+    output = tmp_path / "bundle"
+    with pytest.raises(RuntimeError, match="no profiling data"):
+        capture.export_capture(tmp_path / "missing", output)
+    assert not output.exists()
+    capture.export_capture(base, output)
+    assert json.loads((output / "ai/call_tree.json").read_text()) == tree
+    assert json.loads(
+        (output / "report/timeline.json").read_text()) == native_trace
+    assert json.loads(
+        (output /
+         "ai/rejected.jsonl").read_text())["original_record"] == original
+    assert not list(output.rglob("*.vendor.json"))
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert "ai/call_tree.json" in manifest["files"]
+    assert manifest["availability"]["producer"]["counters"][
+        "status"] == "unknown"
+
+
+def test_kernel_groups_split_launch_configuration_and_arguments(tmp_path):
+    rows = [
+        event("kernel", 100 + i * 100, 150 + i * 100, **{
+            "activity.grid_x": grid,
+            "activity.block_x": 4
+        }) for i, grid in enumerate((1, 4, 4))
+    ]
+    for i, row in enumerate(rows):
+        row["runtime_event"]["scope_id"] = i + 1
+    document = dict(
+        backend="test",
+        associations=rows,
+        launches=[
+            dict(id=f"launch-{i+1}",
+                 scope_id=i + 1,
+                 name="probe",
+                 binary_id="binary",
+                 arguments={"x": {
+                     "shape": [size],
+                     "dtype": "float16"
+                 }}) for i, size in enumerate((128, 512, 1024))
+        ])
+    result = report.analyze(document)
+    assert len(result["hotspots"]) == 3
+    assert all(row["count"] == 1 for row in result["hotspots"])
+    assert len({row["group_id"] for row in result["events"]}) == 3
+    report.write_bundle(result, document, tmp_path / "bundle")
+    kernels = json.loads((tmp_path / "bundle/ai/kernels.json").read_text())
+    assert all(len(row["event_ids"]) == 1 for row in kernels["groups"])
+
+
+def test_context_partial_hardware_and_explicit_counter_state(tmp_path):
+    document = dict(
+        backend="test",
+        associations=[],
+        availability={
+            "counters": {
+                "status": "not_enabled",
+                "reason": "opt-in"
+            }
+        },
+        session_metadata={"device": {
+            "arch": "example",
+            "clock_rate": 123
+        }})
+    report.write_bundle(report.analyze(document), document,
+                        tmp_path / "bundle")
+    folder = tmp_path / "bundle"
+    context = json.loads((folder / "ai/context.json").read_text())
+    assert "hardware" not in context["missing_sections"]
+    assert context["sections"]["hardware"]["status"] == "partial"
+    for filename in ("manifest.json", "ai/summary.json"):
+        assert json.loads((folder / filename).read_text(
+        ))["availability"]["counters"]["status"] == "not_enabled"

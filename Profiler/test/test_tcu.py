@@ -1,8 +1,6 @@
 """TCU CSV import is testable without the SDK, device, or native FlagTree."""
 import importlib.util
-import json
 from pathlib import Path
-import sys
 from types import SimpleNamespace
 
 import pytest
@@ -59,11 +57,6 @@ def test_invalid_counter_value_rejected(value):
 
 
 def test_failed_capture_does_not_retry_or_emit_artifact(tmp_path, monkeypatch):
-    output = tmp_path / "result"
-    monkeypatch.setattr(
-        sys, "argv",
-        ["tcu.py", "--out",
-         str(output), "--", "python3", "workload.py"])
     monkeypatch.setattr(tcu.shutil, "which", lambda _: "/tool/tcu")
     invocations = []
 
@@ -73,45 +66,26 @@ def test_failed_capture_does_not_retry_or_emit_artifact(tmp_path, monkeypatch):
                                returncode=0 if "--version" in command else 1)
 
     monkeypatch.setattr(tcu.subprocess, "run", run)
-    with pytest.raises(SystemExit) as error:
-        tcu.main()
-    assert error.value.code == 2
+    with pytest.raises(RuntimeError, match="exited 1"):
+        tcu.collect(["python3", "workload.py"], tmp_path)
     assert len(invocations) == 2
     assert invocations[1][invocations[1].index("--replay-mode") + 1] == "none"
-    assert not (output / "profile.vendor.json").exists()
+    assert not (tmp_path / "manifest.json").exists()
 
 
-def test_import_cli_outputs_one_self_contained_artifact(tmp_path, monkeypatch):
-    path, output = tmp_path / "capture.csv", tmp_path / "result"
-    path.write_text(CSV)
-    monkeypatch.setattr(
-        sys, "argv",
-        ["tcu.py", "--out",
-         str(output), "--import-csv",
-         str(path)])
-    tcu.main()
-    document = json.loads((output / "profile.vendor.json").read_text())
-    assert document["capture"]["replay_mode"] == "unknown"
-    assert (output / "report/index.html").exists()
-
-
-def test_omitted_requested_metric_is_not_reported_as_success(
-        tmp_path, monkeypatch):
-    output = tmp_path / "result"
-    monkeypatch.setattr(sys, "argv", [
-        "tcu.py", "--out",
-        str(output), "--metrics", "SIP/1D_EFFICIENCY", "--", "python3",
-        "workload.py"
-    ])
+def test_collect_preserves_metrics_and_provenance(tmp_path, monkeypatch):
     monkeypatch.setattr(tcu.shutil, "which", lambda _: "/tool/tcu")
 
     def run(command, **kwargs):
         if "--version" not in command:
-            (output / "capture.csv").write_text(CSV)
+            Path(command[command.index("--export-csv") + 1]).write_text(CSV)
         return SimpleNamespace(stdout="Build number: test", returncode=0)
 
     monkeypatch.setattr(tcu.subprocess, "run", run)
-    with pytest.raises(SystemExit) as error:
-        tcu.main()
-    assert error.value.code == 2
-    assert not (output / "profile.vendor.json").exists()
+    result = tcu.collect(["python3", "workload.py"], tmp_path)
+    assert result["capture"]["replay_mode"] == "none"
+    assert len(result["counter_groups"][0]["metrics"]) == 2
+    with pytest.raises(ValueError, match="omitted requested"):
+        tcu.collect(["python3", "workload.py"],
+                    tmp_path,
+                    metrics="SIP/2D_EFFICIENCY")

@@ -4,14 +4,17 @@ import os
 import json
 from pathlib import Path
 import pathlib
+import tempfile
+import shutil
 
 from .native import runtime_binding
+from ._metadata import snapshot as metadata_snapshot
 from .hooks import HookManager, InstrumentationHook, LaunchHook
 from .flags import set_profiling_off, set_profiling_on, is_command_line
 from .mode import BaseMode
 from typing import Optional, Union
 
-DEFAULT_PROFILE_NAME = "flagtree_profiler"
+DEFAULT_PROFILE_NAME = "profile-run"
 _CANN_TRITON_LEGACY_ENV = "FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY"
 _IR_RECORD_BUFFER_MB_ENV = "FLAGTREE_PROFILER_IR_RECORD_BUFFER_MB"
 _IR_RECORD_SIZE_BYTES = 64
@@ -91,8 +94,17 @@ def _activate_instrumentation(backend: Optional[str] = None) -> None:
 def _deactivate_instrumentation() -> None:
     import flagtree.debugger as debugger
 
-    debugger.deactivate()
-    _set_instrumentation_mode("")
+    errors = []
+    for operation in (debugger.deactivate,
+                      lambda: _set_instrumentation_mode("")):
+        try:
+            operation()
+        except Exception as error:
+            errors.append(error)
+    if errors:
+        raise RuntimeError("Instrumentation cleanup failed: " +
+                           "; ".join(str(error)
+                                     for error in errors)) from errors[0]
 
 
 def _take_instrumentation_runs() -> list[dict]:
@@ -1080,29 +1092,65 @@ def _augment_instrumentation_artifacts(
                        ir_default_for_triton)
 
 
-def _drop_session(session: Optional[int]) -> None:
-    session_state = _active_sessions.pop(session, None)
-    if session_state:
-        HookManager.unregister(session)
-    if session_state and session_state.get("instrumentation_hook", False):
-        still_active = any(
-            state.get("instrumentation_hook", False)
-            for state in _active_sessions.values())
-        if not still_active:
-            _deactivate_instrumentation()
+def _snapshot_session(state):
+    if state.get("name"):
+        from ._capture import capture_software
+        Path(state["name"]).with_suffix(".launches.json").write_text(
+            json.dumps(dict(LaunchHook.snapshot(state["session"]),
+                            software=capture_software(state.get("backend")),
+                            context=state.get("metadata"),
+                            metadata_rejections=state.get(
+                                "metadata_rejections", [])),
+                       allow_nan=False))
+
+
+def _export_session(state):
+    if state.get("bundle_output") is not None:
+        from ._capture import export_capture
+        export_capture(state["name"],
+                       state["bundle_output"],
+                       context=state.get("metadata"))
+
+
+def _drop_sessions(session=None):
+    states = list(_active_sessions.values()) if session is None else [
+        _active_sessions.get(session, {})
+    ]
+    if session is None:
+        _active_sessions.clear()
+    else:
+        _active_sessions.pop(session, None)
+    operations = [lambda: HookManager.unregister(session)]
+    if any(state.get("instrumentation_hook") for state in states) and not any(
+            state.get("instrumentation_hook")
+            for state in _active_sessions.values()):
+        operations.append(_deactivate_instrumentation)
     if not _active_sessions:
-        set_profiling_off()
+        operations.append(set_profiling_off)
+    errors = []
+    for operation in operations:
+        try:
+            operation()
+        except Exception as error:
+            errors.append(error)
+    for state in states:
+        if state.get("staging") and state.get("exported"):
+            try:
+                shutil.rmtree(state["staging"])
+            except OSError as error:
+                errors.append(error)
+    if errors:
+        raise RuntimeError("Profiling cleanup failed: " +
+                           "; ".join(str(error)
+                                     for error in errors)) from errors[0]
+
+
+def _drop_session(session: Optional[int]) -> None:
+    _drop_sessions(session)
 
 
 def _drop_all_sessions() -> None:
-    has_instrumentation_session = any(
-        state.get("instrumentation_hook", False)
-        for state in _active_sessions.values())
-    _active_sessions.clear()
-    set_profiling_off()
-    HookManager.unregister()
-    if has_instrumentation_session:
-        _deactivate_instrumentation()
+    _drop_sessions()
 
 
 def _select_backend() -> str:
@@ -1160,6 +1208,7 @@ def start(
     backend: Optional[str] = None,
     mode: Optional[Union[str, BaseMode]] = None,
     hook: Optional[str] = None,
+    metadata: Optional[dict] = None,
 ):
     """
     Start profiling with the given name and backend.
@@ -1174,7 +1223,7 @@ def start(
 
     Args:
         name (str, optional): The name (with path) of the profiling session.
-                              If not provided, the default name is "~/profiler.hatchet".
+                              If not provided, the output directory is "profile-run".
         backend (str, optional): The backend to use for profiling.
         Available options are [None, "cupti", "cupti_pcsampling", "roctracer", "cann", "mthreads", "tianshu"].
                                  Defaults to None, which automatically selects the backend matching the current active runtime.
@@ -1190,6 +1239,11 @@ def start(
                       For "mthreads", vendor metrics use the MUPTI activity API.
                       For "tianshu", vendor metrics are imported from an
                       ixKN CSV export when `ixkn_import_path` is provided.
+        metadata (dict, optional): Finite JSON context; tuples convert to arrays.
+            Recommended workload keys: operator, parameters, warmup, measurement,
+            validation. Unknown facts may be null. Optional structure issues are
+            exported in ai/context.json without interrupting capture. Values are
+            snapshotted now; later caller mutations do not change them.
         hook (str, optional): The hook to use for profiling.
                               Available options are [None, "triton", "instrumentation"].
                               Defaults to None.
@@ -1206,6 +1260,11 @@ def start(
     if backend is None:
         backend = _select_backend()
 
+    # Native collection exports automatically; external counter tools are opt-in.
+    from ._capture import INTERNAL_ENV
+    internal = bool(os.environ.get(INTERNAL_ENV))
+    if metadata is not None:
+        metadata = metadata_snapshot(metadata)
     _check_env(backend)
 
     use_triton_hook = (
@@ -1221,6 +1280,8 @@ def start(
         and not (_is_cann_backend(backend) or _is_tianshu_backend(backend)))
     effective_mode = (_mode_with_ir_triton_overrides(mode, backend) if
                       ir_default_for_triton else _get_mode_str(backend, mode))
+    if not _active_sessions:
+        LaunchHook.reset_capture()
     set_profiling_on()
     instrumentation_was_active = any(
         state.get("instrumentation_hook", False)
@@ -1229,7 +1290,20 @@ def start(
     if instrumentation_activated:
         _activate_instrumentation(backend)
     session = None
+    staging = None
+    bundle_output = None
     try:
+        if not internal:
+            bundle_output = Path(name).expanduser().resolve()
+            existing = next((state for state in _active_sessions.values()
+                             if state.get("bundle_output") == bundle_output),
+                            None)
+            if existing:
+                name = existing["name"]
+            else:
+                bundle_output.mkdir(parents=True, exist_ok=False)
+                staging = tempfile.mkdtemp(prefix="flagprism-session-")
+                name = str(Path(staging) / "capture")
         session = profiler_native.start(
             name,
             context,
@@ -1244,6 +1318,13 @@ def start(
         if use_native_instrumentation_hook:
             HookManager.register(InstrumentationHook(mode), session)
     except Exception:
+        if staging is not None:
+            shutil.rmtree(staging)
+            if bundle_output is not None:
+                try:
+                    bundle_output.rmdir()
+                except OSError:
+                    pass
         if session is not None:
             HookManager.unregister(session)
         if instrumentation_activated:
@@ -1252,6 +1333,11 @@ def start(
             set_profiling_off()
         raise
     if session in _active_sessions:
+        if metadata is not None:
+            _active_sessions[session]["metadata"] = {
+                **(_active_sessions[session].get("metadata") or {}),
+                **metadata
+            }
         if use_triton_hook:
             _active_sessions[session]["triton_hook"] = True
         if use_instrumentation_hook:
@@ -1262,11 +1348,16 @@ def start(
                 or ir_default_for_triton)
         return session
     _active_sessions[session] = {
+        "session": session,
+        "backend": backend,
         "triton_hook": use_triton_hook,
         "instrumentation_hook": use_instrumentation_hook,
         "native_instrumentation_hook": use_native_instrumentation_hook,
         "ir_default_for_triton": ir_default_for_triton,
         "name": name,
+        "staging": staging,
+        "bundle_output": bundle_output,
+        "metadata": metadata,
     }
     return session
 
@@ -1312,12 +1403,18 @@ def deactivate(session: Optional[int] = 0) -> None:
 
 
 def finalize(session: Optional[int] = None,
-             output_format: Optional[str] = "") -> None:
+             output_format: Optional[str] = "",
+             *,
+             metadata: Optional[dict] = None) -> None:
     """
     Finalizes a profiling session.
     Flush and write the profiling data to the file specified by the session name.
 
     Args:
+        metadata (dict, optional): Final context, replacing matching top-level
+            start-time sections. Supply actual validation outcomes after checks.
+            Invalid JSON updates are rejected after saving the capture and cleanup;
+            serializable structure issues are preserved as metadata diagnostics.
         session (int, optional): The session ID to finalize. If None, all sessions are finalized. Defaults to None.
         output_format (str, optional): The output format for the profiling results.
                                        Available options are ["hatchet", "chrome_trace"].
@@ -1325,41 +1422,124 @@ def finalize(session: Optional[int] = None,
     Returns:
         None
     """
-    if session is None:
-        session_states = list(_active_sessions.values())
+    metadata_error = None
+    if metadata is not None:
+        if session is None and len(_active_sessions) > 1:
+            raise ValueError(
+                "Select a session when attaching final metadata to multiple sessions"
+            )
+        states = list(_active_sessions.values()) if session is None else [
+            _active_sessions.get(session, {})
+        ]
         try:
-            profiler_native.finalize_all(output_format)
-            instrumentation_states = [
-                state for state in session_states
-                if state.get("instrumentation_hook", False)
-            ]
-            if instrumentation_states:
-                runs = _take_instrumentation_runs()
-                for state in instrumentation_states:
+            metadata = metadata_snapshot(metadata)
+        except (ValueError, TypeError, RecursionError) as error:
+            metadata_error = error
+            rejection = dict(phase="finalize",
+                             applied=False,
+                             raw_preserved=False,
+                             reason=str(error),
+                             actual_type=type(metadata).__name__)
+            try:
+                rejection["value"] = metadata_snapshot(metadata,
+                                                       require_object=False)
+                rejection["raw_preserved"] = True
+            except (ValueError, TypeError, RecursionError):
+                pass
+            for state in states:
+                state.setdefault("metadata_rejections", []).append(rejection)
+        else:
+            for state in states:
+                state["metadata"] = {
+                    **(state.get("metadata") or {}),
+                    **metadata
+                }
+    if is_command_line() and session is not None and session != 0:
+        raise ValueError(
+            "Only one session can be finalized when running from the command line."
+        )
+    states = list(_active_sessions.values()) if session is None else [
+        _active_sessions.get(session, {})
+    ]
+    errors = []
+
+    def attempt(phase, operation, state=None):
+        try:
+            operation()
+            return True
+        except Exception as error:
+            errors.append(
+                (state.get("session") if state else None, phase, error))
+            return False
+
+    try:
+        stopped = session is not None or attempt(
+            "deactivate", profiler_native.deactivate_all)
+        runs = []
+
+        def take_runs():
+            runs.extend(_take_instrumentation_runs())
+
+        have_runs = not any(
+            state.get("instrumentation_hook") for state in states) or attempt(
+                "instrumentation snapshot", take_runs)
+        if not states:
+            attempt("native finalize",
+                    lambda: profiler_native.finalize_all(output_format))
+        for state in states:
+            if state.get("instrumentation_hook") and have_runs and state.get(
+                    "name"):
+                attempt(
+                    "instrumentation recovery snapshot",
+                    lambda: Path(state["name"]).with_suffix(
+                        ".instrumentation.json").write_text(json.dumps(runs)),
+                    state)
+            snapshot_ok = attempt("launch snapshot",
+                                  lambda: _snapshot_session(state), state)
+            native_ok = attempt(
+                "native finalize", lambda: profiler_native.finalize(
+                    state.get("session", session), output_format), state)
+            if not (native_ok and snapshot_ok and stopped and
+                    (have_runs or not state.get("instrumentation_hook"))):
+                continue
+
+            def export():
+                if state.get("instrumentation_hook"):
                     _augment_instrumentation_artifacts(
                         str(state.get("name") or DEFAULT_PROFILE_NAME),
                         runs,
                         ir_default_for_triton=bool(
-                            state.get("ir_default_for_triton", False)),
-                    )
-        finally:
-            _drop_all_sessions()
-    else:
-        if is_command_line() and session != 0:
-            raise ValueError(
-                "Only one session can be finalized when running from the command line."
-            )
-        session_state = _active_sessions.get(session, {})
-        try:
-            profiler_native.finalize(session, output_format)
-            if session_state.get("instrumentation_hook", False):
-                _augment_instrumentation_artifacts(
-                    str(session_state.get("name") or DEFAULT_PROFILE_NAME),
-                    ir_default_for_triton=bool(
-                        session_state.get("ir_default_for_triton", False)),
-                )
-        finally:
-            _drop_session(session)
+                            state.get("ir_default_for_triton", False)))
+                _export_session(state)
+                state["exported"] = True
+
+            attempt("export", export, state)
+    finally:
+        attempt(
+            "cleanup", _drop_all_sessions
+            if session is None else lambda: _drop_session(session))
+    if errors:
+        retained = [
+            state["staging"] for state in states
+            if state.get("staging") and not state.get("exported")
+        ]
+        if metadata_error is not None:
+            errors.append((session, "metadata rejected", metadata_error))
+        detail = "; ".join(
+            f"session {sid} {phase}: {type(error).__name__}: {error}"
+            for sid, phase, error in errors)
+        raise RuntimeError(
+            f"Profiling finalization failed: {detail}. "
+            f"Capture intermediates retained at: {retained}") from errors[0][2]
+
+    if metadata_error is not None:
+        outputs = [
+            str(state.get("bundle_output") or state.get("name"))
+            for state in states
+        ]
+        raise ValueError(
+            f"Final metadata was not applied: {metadata_error}. Capture finalized and saved at {outputs}"
+        ) from metadata_error
 
 
 def _profiling(
