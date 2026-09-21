@@ -102,6 +102,49 @@ flush 会同步当前 GCU 并检查 dropped records；无效时间戳或丢失�
 没有 host timing fallback。此实现没有声明支持硬件性能计数器：必需但未支持的
 指标报错，可选指标记录 unsupported 原因。
 
+## 细粒度 Profiler 报告
+
+Enflame 采集器默认请求 TOPSPTI kernel、runtime、driver、memcpy 和 memset
+activity。无需修改算子或追加编译插桩；在现有 FlagTree 联合构建基础上重新编译
+FlagPrism 即可。建议先完成编译和设备初始化，再开始性能采集。
+
+原始 `profile.vendor.json` 保留设备时间戳、kernel 名称、grid/block、context/stream、
+correlation ID、API 线程/返回码、拷贝方向/字节数和 memset 参数。成功的
+`topsMalloc/topsFree/topsHostMalloc/topsHostFree` 回调补充地址和分配/释放事件。
+新增 API 和内存 activity 不计入原有 Hatchet kernel 时间，profiler 自身 flush
+引发的同步不归入用户 API。用户主动调用的同步仍正常采集。
+
+生成可直接在浏览器打开、无需联网的交互报告：
+
+```bash
+python3 Profiler/python/flagtree_profiler/report.py profile.vendor.json --out profile-report
+# 同等工作负载的前后对比：
+python3 Profiler/python/flagtree_profiler/report.py profile.vendor.json \
+    --baseline baseline.vendor.json --out profile-comparison
+```
+
+安装后也可使用 `flagtree-profiler-report`。上述直接运行脚本的方式仅依赖 Python
+标准库，查看报告的机器无需安装 FlagTree 或具备加速卡。
+
+`index.html` 提供类别/名称筛选、时间线缩放、事件详情与 correlation 关联、
+热点排序、P50/P95/P99、有效拷贝吞吐、设备活动覆盖、已观测分配曲线和基线对比。
+`report.json` 保存分析结果；`trace.json` 可导入 Perfetto。
+
+解释数据时请注意：
+
+- 活动覆盖是设备首末记录之间的区间并集，不是 SM/Core 利用率。
+- 有效 GB/s 来自记录的字节数和耗时，不是硬件实测 HBM 带宽。
+- 分配曲线只覆盖捕获期间的成功 API 调用，不等于总显存或缓存分配器中的张量生命周期。
+- 当前 SDK 没有可用的 driver callback API 条目，真机未返回 driver activity；
+  不应将空数据理解为程序没有 driver 开销。
+- 当前接口没有提供硬件计数器、cache 命中率或 kernel 内部 warp/Core 时间。
+  这些信息不能由本报告推算，进一步支持需要 SDK 能力或编译插桩。
+- 全类别采集有额外开销，长时间运行会增加主机内存和输出体积。性能对比应使用相同
+  设备、输入、启动配置和采集设置。API 时间可能嵌套，不能和设备时间直接相加。
+
+专项回归：`python3 -m pytest Profiler/test/test_enflame.py Profiler/test/test_report.py -q`。
+统一算子验收仍使用 `test.py --stages profiler`。
+
 ## 验收
 
 ```bash

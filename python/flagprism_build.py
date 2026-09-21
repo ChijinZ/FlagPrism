@@ -203,6 +203,7 @@ class FlagPrismBuildConfig:
         return [
             "flagtree-profiler = flagtree.profiler.cli:main",
             "flagtree-profiler-viewer = flagtree.profiler.viewer:main",
+            "flagtree-profiler-report = flagtree.profiler.report:main",
         ]
 
 

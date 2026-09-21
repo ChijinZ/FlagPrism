@@ -82,3 +82,68 @@ def test_enflame_session_launch_membership(tmp_path):
     assert len(events[0]) == 3
     assert len(events[1]) == 1
     assert not events[0] & events[1]
+
+
+def test_enflame_detailed_memory_and_api_capture(tmp_path):
+    import ctypes
+    pytest.importorskip("torch_gcu")
+    triton = pytest.importorskip("triton")
+    if triton.runtime.driver.active.get_current_target().backend != "gcu":
+        pytest.skip("Enflame device required")
+    from flagtree import profiler
+
+    runtime = ctypes.CDLL("/opt/tops/lib/libtopsrt.so")
+    runtime.topsMalloc.argtypes = [
+        ctypes.POINTER(ctypes.c_void_p), ctypes.c_size_t
+    ]
+    runtime.topsFree.argtypes = [ctypes.c_void_p]
+    runtime.topsMemcpy.argtypes = [
+        ctypes.c_void_p, ctypes.c_void_p, ctypes.c_size_t, ctypes.c_int
+    ]
+    runtime.topsMemset.argtypes = [
+        ctypes.c_void_p, ctypes.c_int, ctypes.c_size_t
+    ]
+    pointer = ctypes.c_void_p()
+    source = (ctypes.c_ubyte * 4096)(*([19] * 4096))
+    output = (ctypes.c_ubyte * 4096)()
+    path = tmp_path / "detailed"
+    session = profiler.start(
+        str(path),
+        backend="enflame",
+        data="tree",
+        context="shadow",
+        mode="runtime_base:runtime_host_timing_fallback=false")
+    try:
+        assert runtime.topsMalloc(ctypes.byref(pointer), 4096) == 0
+        try:
+            assert runtime.topsMemset(pointer, 0, 4096) == 0
+            assert runtime.topsMemcpy(pointer, source, 4096, 1) == 0
+            assert runtime.topsMemcpy(output, pointer, 4096, 2) == 0
+            assert bytes(output) == bytes(source)
+        finally:
+            assert runtime.topsFree(pointer) == 0
+    finally:
+        profiler.finalize(session)
+    associations = json.loads(
+        path.with_suffix(".vendor.json").read_text())["associations"]
+    kinds = {a["metrics"]["enflame.kind"] for a in associations}
+    assert {"runtime", "memcpy", "memset"} <= kinds
+    # Finalization synchronization belongs to the profiler, not this workload.
+    assert not any(a["runtime_event"]["op_name"] == "topsDeviceSynchronize"
+                   for a in associations)
+    transfers = [a for a in associations if a["source"] == "topspti_memcpy"]
+    assert {a["metrics"]["enflame.copy_kind"] for a in transfers} >= {1, 2}
+    assert all(a["metrics"]["enflame.bytes"] == 4096 for a in transfers)
+    api = {
+        a["runtime_event"]["correlation_id"]: a
+        for a in associations
+        if a["source"] in ("topspti_runtime", "topspti_driver")
+    }
+    assert all(a["runtime_event"]["correlation_id"] in api for a in transfers)
+    memory = [
+        a for a in associations if "enflame.memory_action" in a["metrics"]
+    ]
+    assert {a["metrics"]["enflame.memory_action"]
+            for a in memory} == {"allocate", "free"}
+    assert all(a["metrics"]["enflame.address"] == pointer.value
+               for a in memory)

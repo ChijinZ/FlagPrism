@@ -285,8 +285,10 @@ makeVendorMetrics(const VendorMetricAssociation &association,
         static_cast<double>(event.endTimeNs) / 1000.0;
   }
   for (const auto &[name, value] : association.metrics) {
-    const bool isMthreadsMetric = name.rfind("mthreads.", 0) == 0;
-    vendorMetrics[(isMthreadsMetric ? "" : "cann.") + name] = value;
+    // Preserve explicit vendor namespaces, including Enflame activity metadata.
+    const bool hasVendorPrefix =
+        (name.rfind("mthreads.", 0) == 0 || name.rfind("enflame.", 0) == 0);
+    vendorMetrics[(hasVendorPrefix ? "" : "cann.") + name] = value;
   }
   return vendorMetrics;
 }
@@ -483,6 +485,11 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
         association.state != VendorMetricState::Unmatched) {
       continue;
     }
+    // FlagPrism: detailed host/memory activities remain in the vendor artifact;
+    // they must not inflate the existing kernel-only tree/timeline metrics.
+    if (artifact.backend == "enflame" &&
+        association.source != "topspti_activity")
+      continue;
     auto event = association.runtimeEvent;
     bool syntheticTimelineEvent = false;
 
