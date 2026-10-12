@@ -1,0 +1,61 @@
+{
+  "repository": "https://github.com/Ascend/msopprof",
+  "commit": "b28488fa3ac6e42683bf2917c9d3149993942332",
+  "scope": "public upstream reference, not proof installed binary matches this version",
+  "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "b638cc8ca486ec24e2539a18ba7f8518934b09dc14a0e29f8e9a2caffb772720",
+      "bytes": 9185
+    },
+    {
+      "path": "csrc/op_profiling/profiling/device/data_parse/pmu_calculate.cpp",
+      "sha256": "719b1f9090ad71ebde8647d668814a2a0f28636c5838dbf5b21b0266901ddfa8",
+      "bytes": 19819
+    },
+    {
+      "path": "csrc/op_profiling/profiling/device/data_parse/pmu_calculate.h",
+      "sha256": "aea9df2b2009ff4b48c89cc10c206419c8513975b53d8ba93752eb5c5e398aa6",
+      "bytes": 17590
+    },
+    {
+      "path": "csrc/op_profiling/profiling/device/data_parse/metric_data_handler.cpp",
+      "sha256": "206c7e864617dd9a7d1e8f372a8c19b9c9c40c0291252fc81fcdd8a0a02a2699",
+      "bytes": 46353
+    },
+    {
+      "path": "csrc/op_profiling/plugin/utils.h",
+      "sha256": "c5fdba3894ddc6ae4d664fc52b1b2d4efaf77e17493ce92312f2ebe1196592b6",
+      "bytes": 11099
+    },
+    {
+      "path": "docs/en/user_guide/msopprof_user_guide.md",
+      "sha256": "f0274e93cdb2c62b233527237054cfdae24cdaa2ab131c48640d485b5c18e36b",
+      "bytes": 78421
+    },
+    {
+      "path": "docs/en/user_guide/msopprof_performance_data.md",
+      "sha256": "dc227d218d2a803e2618bc9daae8a0e8c4817a2533f243ac196b26a637b83927",
+      "bytes": 45919
+    },
+    {
+      "path": "csrc/op_profiling/profiling/device/data_parse/data_bean.cpp",
+      "sha256": "42799842217c2e060927474af432ef35f4c963cbda641314e786db603e19f7d0",
+      "bytes": 11111
+    },
+    {
+      "path": "csrc/op_profiling/profiling/device/data_parse/data_bean.h",
+      "sha256": "ad466f6a92bc2f65f57a3fb1f491ade59b94e98839952e6542ddd110c190d118",
+      "bytes": 6515
+    }
+  ],
+  "findings": {
+    "replay": "metric_data_handler.cpp MergeTotalPmuData: totalCycles overwritten by final replay",
+    "time_units": "pmu_calculate.cpp totalCycles_/freq_ with timeFactor; AIV plugin uses current frequency when available",
+    "selection": "launch-skip-before-match counts every operator regardless kernel-name",
+    "block": "C220 plugin GetBlockIdx derives logical block/subblock; PMU parser additionally carries blockId and physicalcoreId separately",
+    "raw_format": "Public A2 FFTS records have logical block/subblock and physicalcore separately, plus task/stream IDs, cycles and system timestamps; format must be validated against installed capture before acceptance.",
+    "time_formula": "Calculate::CalTotalTime calls CalPipeTime(totalCycles_), which divides cycles by current/fallback device frequency and applies timeFactor; do not confuse with same SYS_CNT interval."
+  },
+  "precision": "No independent gated accuracy accepted yet; runtime association and SDK-installed parser require further audit"
+}
