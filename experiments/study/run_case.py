@@ -9,7 +9,7 @@ p.add_argument('--operator', required=True, choices=['gemm','gemm_bias_gelu','so
 p.add_argument('--shape', required=True, help='MxNxK for GEMM, RxN otherwise')
 p.add_argument('--variant', type=int, choices=[0,1], default=0)
 p.add_argument('--device', type=int, default=0)
-p.add_argument('--phase', choices=['baseline','native','internal'], default='baseline')
+p.add_argument('--phase', choices=['baseline','native','internal','lowering'], default='baseline')
 p.add_argument('--output', type=Path, required=True)
 p.add_argument('--repeats', type=int, default=7)
 p.add_argument('--batch', type=int, default=20)
@@ -26,6 +26,9 @@ result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
 def save():
     (a.output/'result.json').write_text(json.dumps(result, indent=2, default=str)+'\n')
 save()
+if a.phase=='lowering':
+    os.environ['TRITON_KERNEL_DUMP']='1'
+    os.environ['TRITON_DUMP_DIR']=str(a.output.resolve()/'compiler_dump')
 try:
     import torch
     if a.backend == 'cann':
@@ -58,7 +61,7 @@ try:
         config={'BM':16,'BN':16,'BK':16,'num_stages':a.variant+1,'num_warps':4}
         grid=(triton.cdiv(M,16),triton.cdiv(N,16))
         def launch():
-            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,16,16,16,op=='gemm_bias_gelu',num_stages=a.variant+1,num_warps=4)
+            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,16,16,16,op=='gemm_bias_gelu',num_stages=a.variant+1,num_warps=4,debug=(a.phase=='lowering'))
         tolerance={'atol':0.002,'rtol':0.02}
     elif op=='transpose':
         M,N=shape; cpu_x=rand((M,N)); ref=cpu_x.T.contiguous()
@@ -67,7 +70,7 @@ try:
         config={'BM':bm,'BN':16,'num_stages':1,'num_warps':4}
         grid=(triton.cdiv(M,bm),triton.cdiv(N,16))
         def launch():
-            return kernels.transpose[grid](X,Y,M,N,bm,16,num_stages=1,num_warps=4)
+            return kernels.transpose[grid](X,Y,M,N,bm,16,num_stages=1,num_warps=4,debug=(a.phase=='lowering'))
         tolerance={'atol':0.0,'rtol':0.0}
     else:
         R,N=shape; cpu_x,cpu_w,cpu_b=rand((R,N)),rand((N,)),rand((N,))
@@ -80,7 +83,7 @@ try:
         config={'ROWS':rows,'BLOCK':triton.next_power_of_2(N),'num_stages':1,'num_warps':4}
         grid=(triton.cdiv(R,rows),)
         def launch():
-            return kernels.rows[grid](X,W,B,Y,R,N,config['BLOCK'],rows,op,num_stages=1,num_warps=4)
+            return kernels.rows[grid](X,W,B,Y,R,N,config['BLOCK'],rows,op,num_stages=1,num_warps=4,debug=(a.phase=='lowering'))
         tolerance={'atol':0.0005,'rtol':0.002}
     result['requested_compile_config']=config; result['grid']=grid
     compiled=launch(); iface.synchronize()
@@ -123,6 +126,9 @@ try:
         result['samples']=samples; result['device_event_error']=event_error
         result['statistics']={k:{'median':statistics.median(v), 'min':min(v),'max':max(v)}
                               for k in samples[0] if (v:=[s[k] for s in samples if s[k] is not None])}
+    elif a.phase=='lowering':
+        result['lowering_dump']={'scope':'static compiler diagnostics; not dynamic execution or a timing baseline',
+                                 'files':[str(f.relative_to(a.output)) for f in (a.output/'compiler_dump').rglob('*') if f.is_file()]}
     else:
         from flagtree import profiler
         hook='triton' if a.phase=='native' else 'instrumentation'
