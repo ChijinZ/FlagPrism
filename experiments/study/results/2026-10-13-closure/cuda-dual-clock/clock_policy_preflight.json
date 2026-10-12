@@ -1,0 +1,22 @@
+{
+  "status": "not_attempted_due_to_unrecoverable_prior_policy",
+  "operation_considered": "temporarily lock selectedGPU UUID to1245MHz then restore priorpolicy",
+  "mutations_performed": false,
+  "prior_current_SM_MHz": 135,
+  "prior_application_graphics_MHz": 1245,
+  "prior_default_application_graphics_MHz": 1245,
+  "prior_GPU_idle_reason": "Active",
+  "prior_other_throttle_reasons": "Not Active",
+  "compute_apps_output": "empty",
+  "lock_state_getter_available_in_inspected_public_NVML_header": false,
+  "restore_gap": "Idle135MHz excludes existing1245fixedlock but cannot exclude a preexisting unlocked-like clock range; ResetGpuLockedClocks cannot reconstruct unknown prior min/maxrange.",
+  "precision_gap": "No authoritative constant SM frequency per paired interval; cycles remain unconverted and absolute ns accuracy unverified.",
+  "primary_documents": [
+    "https://docs.nvidia.com/deploy/nvidia-smi/index.html",
+    "https://docs.nvidia.com/cuda/parallel-thread-execution/#special-registers-clock64",
+    "https://docs.nvidia.com/cuda/parallel-thread-execution/#special-registers-globaltimer"
+  ],
+  "public_header_path": "/usr/local/cuda/include/nvml.h",
+  "relevant_header_lines": "8120-8195, SetGpuLockedClocks and ResetGpuLockedClocks; public getter not found",
+  "preflight_sha256": "7b00a9f0dfcf97ff404c4668ca3fb4a263341c03341173889cbe405c86225d90"
+}

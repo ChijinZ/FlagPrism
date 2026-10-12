@@ -1,0 +1,48 @@
+{
+  "fused-v2": {
+    "record_stores": 16,
+    "ptx_record_predicate": "p5=(tid.x&127)==0",
+    "threads_per_CTA": 128,
+    "selected_recording_thread": 0,
+    "sass_endpoint_register_sequence": [
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO"
+    ],
+    "sass_final_unpredicated_store": "Only surviving selected writer reaches finalstore after @!P0 EXIT; PTX all16stores predicated",
+    "ptx_sha256": "47b47b4ede169efc862fcf4e404c8649dc65804fb5541ec511bb86bbf0baed26",
+    "sass_sha256": "5f4c46b6f6e871cadbf20addad38c09f7454d1182c94d9e843eb5f882c440db0"
+  },
+  "softmax": {
+    "record_stores": 16,
+    "ptx_record_predicate": "p5=((tid.x&31)==0) AND ((tid.x&127)<32)",
+    "threads_per_CTA": 128,
+    "selected_recording_thread": 0,
+    "sass_endpoint_register_sequence": [
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO",
+      "CLOCKLO",
+      "GLOBALTIMERLO",
+      "CLOCKLO"
+    ],
+    "sass_final_unpredicated_store": "Only surviving selected writer reaches finalstore after @!P0 EXIT; PTX all16stores predicated",
+    "ptx_sha256": "41549dd4f68e5bd6d73717b96008c133558ccb8f70f381228c658ce94c09e258",
+    "sass_sha256": "72ce61fe2bf7103a53d41c658c4bd0f6a7159bb8b68167a31657dad8b2869935"
+  }
+}

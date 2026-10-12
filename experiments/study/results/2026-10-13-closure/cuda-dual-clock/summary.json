@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "quantity": "output/body relative control-path interval fraction, paired same execution endpoints",
+  "independent_registers": [
+    "PTX globaltimer nanosecond timer",
+    "PTX clock64 cycle counter"
+  ],
+  "frequency_conversion_performed": false,
+  "conditional_assumptions": [
+    "SM cycle frequency constant across each paired body/output interval",
+    "same recording thread for all fields (verify emitted PTX/SASS)"
+  ],
+  "limits": [
+    "Absolute ns precision is not established: SM frequency/DVFS lacks authoritative per-interval provenance.",
+    "Clock64/globaltimer are different register counters; independent physical oscillators are not proved.",
+    "32ns margin is observed globaltimer granularity, not vendor-guaranteed error bound.",
+    "Probes perturb both operators.",
+    "No common calibration is used to transform clock64 into ns."
+  ],
+  "cases": {
+    "fused-v2": {
+      "records": 960,
+      "raw_fraction_outside_cycle_brackets": 715,
+      "nonoverlap_with_empirical_32ns_margin": 1,
+      "median_global_fraction": 0.088,
+      "median_cycle_fraction_lower": 0.08858327473259558,
+      "median_cycle_fraction_upper": 0.09204027767388828,
+      "median_body_midpoint_cycles_per_ns": 1.2389766228952663,
+      "body_midpoint_cycles_per_ns_range": [
+        1.224813432835821,
+        1.250738188976378
+      ],
+      "max_endpoint_bracket_cycles": 8,
+      "source_sha256": "51e6c702ab885531d9d06d95ca25885baac3372e8547ecf9543df32982345e87",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "ptx_sha256": "47b47b4ede169efc862fcf4e404c8649dc65804fb5541ec511bb86bbf0baed26"
+    },
+    "softmax": {
+      "records": 480,
+      "raw_fraction_outside_cycle_brackets": 464,
+      "nonoverlap_with_empirical_32ns_margin": 0,
+      "median_global_fraction": 0.09090909090909091,
+      "median_cycle_fraction_lower": 0.07609531129900077,
+      "median_cycle_fraction_upper": 0.08949416342412451,
+      "median_body_midpoint_cycles_per_ns": 1.2492424242424243,
+      "body_midpoint_cycles_per_ns_range": [
+        1.2102272727272727,
+        1.2913306451612903
+      ],
+      "max_endpoint_bracket_cycles": 8,
+      "source_sha256": "51e6c702ab885531d9d06d95ca25885baac3372e8547ecf9543df32982345e87",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "ptx_sha256": "41549dd4f68e5bd6d73717b96008c133558ccb8f70f381228c658ce94c09e258"
+    }
+  }
+}
