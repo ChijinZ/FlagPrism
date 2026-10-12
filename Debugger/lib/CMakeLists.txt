@@ -13,6 +13,14 @@ add_triton_library(FlagTreeDebuggerRuntime
 flagprism_enable_debugger_runtime(FlagTreeDebuggerRuntime)
 flagprism_apply_backend_compile_definitions(FlagTreeDebuggerRuntime)
 
+# Runtime adapters report invalid launch/buffer requests with exceptions.
+# The compiler's default -fno-exceptions must not disable those checks.
+if(MSVC)
+  target_compile_options(FlagTreeDebuggerRuntime PRIVATE /EHsc)
+else()
+  target_compile_options(FlagTreeDebuggerRuntime PRIVATE -fexceptions)
+endif()
+
 add_triton_library(FlagTreeDebuggerFrontend
   Frontend/Bridge.cpp
   Metadata/TrackedOpTable.cpp

@@ -24,6 +24,8 @@ result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
                          'host_clock':'perf_counter_ns',
                          'device_event_semantics':'stream interval enclosing a batch; not busy cycles'},
           'utc_started':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+if a.phase!='baseline':
+    result['measurement']={'warmup':5,'scope':'compiler diagnostics' if a.phase=='lowering' else 'three prewarmed profiled launches followed by synchronization','launch_count':1 if a.phase=='lowering' else 3}
 def save():
     (a.output/'result.json').write_text(json.dumps(result, indent=2, default=str)+'\n')
 save()
@@ -161,6 +163,8 @@ try:
             os.environ['FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY']='1'
         result['profiling']={'hook':hook,'requested_mode':'runtime_base:runtime_host_timing_fallback=false:device_id='+str(a.device),
                              'launch_count':3,'scope':'three kernel launches plus final synchronization; prewarmed'}
+        if a.backend=='cuda':
+            result['profiling']['requested_mode'] += ':vendor_metrics=launch_stats'
         if a.phase=='internal' and a.backend=='cann':
             result['profiling']['requested_mode'] += ':aclprof_runtime_enabled=false:aclprof_auto_export=false:mstx_enabled=false:aclprof_msproftx_enabled=false'
         result['profiling']['cann_legacy_hook']=os.environ.get('FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY')
