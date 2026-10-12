@@ -1,0 +1,516 @@
+{
+  "cases": [
+    {
+      "scope": "empty",
+      "variant": "broad",
+      "report": "precision-empty-pmu/OPPROF_20261013044717_BWHCWQMKFEHKRHUR",
+      "report_sha256": "a40e425c243b64644243b8a0cf12dd79d087695c0826ad3f27844cd39afe206c",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-empty-pmu/OPPROF_20261013044717_BWHCWQMKFEHKRHUR/dump/DeviceProf1.bin",
+          "native_sha256": "beb8dd4ffb7d99a39b1ffbf91143b697e9d01cd8abec5a93317b2860012844bb",
+          "source_result": "precision-empty-pmu-run-2812981-1791838051719300897/result.json",
+          "source_result_sha256": "f048146aaf0ba45534c885bb5fb131f110e2209d312e052540e4b4c0b0c68e2e",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        },
+        {
+          "native": "precision-empty-pmu/OPPROF_20261013044717_BWHCWQMKFEHKRHUR/dump/DeviceProf2.bin",
+          "native_sha256": "7e041e973078223204e7dfe2866e7d4bf240d2b937322afcf2767bde470a095e",
+          "source_result": "precision-empty-pmu-run-2813631-1791838067015208033/result.json",
+          "source_result_sha256": "48d761045dae3598bb8f6cb271059c85afc8f12a8806c8a988124be424eeb2d2",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-empty-pmu-run-2813631-1791838067015208033/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.02,
+      "reference_median_us": 0.005455
+    },
+    {
+      "scope": "empty",
+      "variant": "narrow",
+      "report": "precision-empty-narrow-pmu/OPPROF_20261013045246_HBNAQPZSAXWKLJOI",
+      "report_sha256": "069adfc3c2d3436621a310589206410fb2c4918b94d8d318794eb025bf3686a8",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-empty-narrow-pmu/OPPROF_20261013045246_HBNAQPZSAXWKLJOI/dump/DeviceProf1.bin",
+          "native_sha256": "c2690725ec0f33e3902e531cdd6decb67b6caa7fabd1b8710b9728c11916a3ad",
+          "source_result": "precision-empty-narrow-pmu-run-2820486-1791838382023759894/result.json",
+          "source_result_sha256": "817e53d3df37e01f38b0a0092f7124e7281ddec312cc3491abf81cdfd1950110",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        },
+        {
+          "native": "precision-empty-narrow-pmu/OPPROF_20261013045246_HBNAQPZSAXWKLJOI/dump/DeviceProf2.bin",
+          "native_sha256": "66ecb5f5e147388bf5ad5ae9e817dc384442b4777f5a920b99d14d2a73142e31",
+          "source_result": "precision-empty-narrow-pmu-run-2820849-1791838396391331900/result.json",
+          "source_result_sha256": "4769d77b66dd812a713d169601ebae2f3bf03256dd1696b5a27fca51591be8a1",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-empty-narrow-pmu-run-2820849-1791838396391331900/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.02,
+      "reference_median_us": 0.004242
+    },
+    {
+      "scope": "empty",
+      "variant": "shared",
+      "report": "precision-empty-shared-pmu/OPPROF_20261013045605_IKPNPPLVADMTWFIF",
+      "report_sha256": "069adfc3c2d3436621a310589206410fb2c4918b94d8d318794eb025bf3686a8",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-empty-shared-pmu/OPPROF_20261013045605_IKPNPPLVADMTWFIF/dump/DeviceProf1.bin",
+          "native_sha256": "b6bc2e970f218bc40241678a67f6b95aab1923212eeedbb850b90996ce00a6d3",
+          "source_result": "precision-empty-shared-pmu-run-2825811-1791838581290248741/result.json",
+          "source_result_sha256": "bcc8abff8168e025e5e8e5f09146ad9fcdb6da54d236ceea1d30ade70b2051aa",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        },
+        {
+          "native": "precision-empty-shared-pmu/OPPROF_20261013045605_IKPNPPLVADMTWFIF/dump/DeviceProf2.bin",
+          "native_sha256": "28f052e2321ad27a26b1cef83322cc373debb2ef9d4cc28d70f29731f673ed56",
+          "source_result": "precision-empty-shared-pmu-run-2826306-1791838597480032018/result.json",
+          "source_result_sha256": "1fed6da34c43cc7a84e0d5dab995a0f6279c15794779477fdd32a1dbb201462b",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-empty-shared-pmu-run-2826306-1791838597480032018/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.0,
+      "reference_median_us": 0.004242
+    },
+    {
+      "scope": "body",
+      "variant": "broad",
+      "report": "precision-body-pmu/OPPROF_20261013044803_AUBHQKPDXWBHVGDC",
+      "report_sha256": "fdbd3bf5258107316840451a2cad035fc2d02586590b2bed649f6c59cea368a4",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-body-pmu/OPPROF_20261013044803_AUBHQKPDXWBHVGDC/dump/DeviceProf1.bin",
+          "native_sha256": "f510db1d7efded90b089ed764454a5da4eaedd6b3b15b04791a327b4d8065ffb",
+          "source_result": "precision-body-pmu-run-2814660-1791838098596424073/result.json",
+          "source_result_sha256": "c128da752c6211cf5b3c5af929ffec9e5e5f65e181eb5b56e539724e1eb01969",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-body-pmu/OPPROF_20261013044803_AUBHQKPDXWBHVGDC/dump/DeviceProf2.bin",
+          "native_sha256": "4e7479133d5b3d4831b8bb7d54a005c58df46051a2210b51e621927c7e97a71f",
+          "source_result": "precision-body-pmu-run-2815102-1791838113636821356/result.json",
+          "source_result_sha256": "f555c3d1180d8b671f4de2c44ab512c1976f136817008ae3ef6d31ca024d628c",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-body-pmu-run-2815102-1791838113636821356/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.2799999999999999,
+      "gate_uncertainty_max_us": 1.08,
+      "reference_median_us": 1.7860610000000001,
+      "source_minus_reference_median_us": -0.28090899999999985,
+      "source_minus_reference_max_abs_us": 1.066061,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.02,
+      "scope_conditioned_abs_error_bound_max_us": 1.1006080606060606,
+      "scope_conditioned_abs_error_rounded_bound_ns": 1101,
+      "source_point_within_20ns": 2
+    },
+    {
+      "scope": "body",
+      "variant": "narrow",
+      "report": "precision-body-narrow-pmu/OPPROF_20261013045331_ZUHJPFGXCXHCNCOE",
+      "report_sha256": "184f198f96a55fbd0e5b9bc9683a04ea29fb4d6389950b7feea2d80f58467335",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-body-narrow-pmu/OPPROF_20261013045331_ZUHJPFGXCXHCNCOE/dump/DeviceProf1.bin",
+          "native_sha256": "31cfd2b0bf3d1d7aa752b20b6d335bb6bebd74ac6997d18f49069d22bdeed056",
+          "source_result": "precision-body-narrow-pmu-run-2821705-1791838427943802211/result.json",
+          "source_result_sha256": "8fd6f1f4e20a7feaf53f46dda634c12eff9c166f5a86c23e6dcc4f0d8901bea3",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-body-narrow-pmu/OPPROF_20261013045331_ZUHJPFGXCXHCNCOE/dump/DeviceProf2.bin",
+          "native_sha256": "127c6fc1b627ee002c44b299933a3c1defb9de612728580f86a5f67f9a594826",
+          "source_result": "precision-body-narrow-pmu-run-2822053-1791838444167597517/result.json",
+          "source_result_sha256": "6623902a7408d9b4ca17298619cc2ddfa74c326b0859efd9ce34ac07178491ce",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-body-narrow-pmu-run-2822053-1791838444167597517/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 2.1703029999999996,
+      "source_minus_reference_median_us": -0.3439390000000001,
+      "source_minus_reference_max_abs_us": 0.579394,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.58,
+      "scope_conditioned_abs_error_bound_max_us": 0.6006080606060604,
+      "scope_conditioned_abs_error_rounded_bound_ns": 601,
+      "source_point_within_20ns": 3
+    },
+    {
+      "scope": "body",
+      "variant": "shared",
+      "report": "precision-body-shared-pmu/OPPROF_20261013045654_QSDGTYOKTJBPKAAO",
+      "report_sha256": "4c69eed6c3b803690a65e04345c3fbf22ce7fbe9658f75375df9645cacf68bcc",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-body-shared-pmu/OPPROF_20261013045654_QSDGTYOKTJBPKAAO/dump/DeviceProf1.bin",
+          "native_sha256": "cea494560907a128f77f9ce647ab665d1231edc266d364aaed464cb7769525cf",
+          "source_result": "precision-body-shared-pmu-run-2827237-1791838631368519838/result.json",
+          "source_result_sha256": "e85c63797c79ce8817b1fd6940a98e794200e688f703737d42ebfd0ed6798577",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-body-shared-pmu/OPPROF_20261013045654_QSDGTYOKTJBPKAAO/dump/DeviceProf2.bin",
+          "native_sha256": "729bd12310bb650314504fb30f4a75396c02615777d91e5156a957c774dde6d9",
+          "source_result": "precision-body-shared-pmu-run-2827788-1791838645576067169/result.json",
+          "source_result_sha256": "9df2098f54297bd063b9b389974e3f3f8b8cbd1a6619e3525ff447cbcb6122c8",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-body-shared-pmu-run-2827788-1791838645576067169/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.3600000000000001,
+      "gate_uncertainty_max_us": 0.8199999999999998,
+      "reference_median_us": 2.2169695000000003,
+      "source_minus_reference_median_us": -0.35818149999999993,
+      "source_minus_reference_max_abs_us": 0.813939,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.0,
+      "scope_conditioned_abs_error_bound_max_us": 0.8406080606060604,
+      "scope_conditioned_abs_error_rounded_bound_ns": 841,
+      "source_point_within_20ns": 4
+    },
+    {
+      "scope": "body",
+      "variant": "dependent",
+      "report": "precision-body-dependent-pmu/OPPROF_20261013045932_TKXCDPAGKNNWYRID",
+      "report_sha256": "5d05dbd70d7cdd6becf561882fac2e8b68a7a763756c036d8d4645f52defc823",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-body-dependent-pmu/OPPROF_20261013045932_TKXCDPAGKNNWYRID/dump/DeviceProf1.bin",
+          "native_sha256": "d9ae516d54cf0e2765844743b166da39096b4546a99051a5981bf81237c6e69f",
+          "source_result": "precision-body-dependent-pmu-run-2831362-1791838788902119836/result.json",
+          "source_result_sha256": "170bde0b49214518aa226a3193d54510507bfbaa538dc3380f3fb9741318d00f",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-body-dependent-pmu/OPPROF_20261013045932_TKXCDPAGKNNWYRID/dump/DeviceProf2.bin",
+          "native_sha256": "bce5bc82cd8d924fd9fb5d61bb98db46c1fba31717ecd32673234b60f5487582",
+          "source_result": "precision-body-dependent-pmu-run-2831846-1791838804199316001/result.json",
+          "source_result_sha256": "50a39b21a092154087232f4174af62e2fbf6a2beaee0cd7b9f6a9e48ffcf969c",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-body-dependent-pmu-run-2831846-1791838804199316001/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 1.8630300000000002,
+      "source_minus_reference_median_us": -0.2784845,
+      "source_minus_reference_max_abs_us": 1.509697,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 1.52,
+      "scope_conditioned_abs_error_bound_max_us": 1.5406080606060606,
+      "scope_conditioned_abs_error_rounded_bound_ns": 1541,
+      "source_point_within_20ns": 8
+    },
+    {
+      "scope": "body",
+      "variant": "branch-v2",
+      "report": "precision-body-branch-v2-pmu/OPPROF_20261013050320_ZUOLOZNPWACTGMJE",
+      "report_sha256": "16ab8d6b9a488e7076ef51428daacc5613957082c424526e020e2c60c6b6961c",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-body-branch-v2-pmu/OPPROF_20261013050320_ZUOLOZNPWACTGMJE/dump/DeviceProf1.bin",
+          "native_sha256": "1403f996605f73c523d4237aef9cc66fa93d731d48500c804c446982627824f3",
+          "source_result": "precision-body-branch-v2-pmu-run-2836251-1791839014791127980/result.json",
+          "source_result_sha256": "8af592c4d0a8f4e2d328ff4deaca843113f532fe33b157594514109732383495",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-body-branch-v2-pmu/OPPROF_20261013050320_ZUOLOZNPWACTGMJE/dump/DeviceProf2.bin",
+          "native_sha256": "cb74ccae8608706a2bdbc12b3dc3e38bc7030c6844dd0ed4011c9b22dd32785e",
+          "source_result": "precision-body-branch-v2-pmu-run-2836771-1791839029991264978/result.json",
+          "source_result_sha256": "cc8635e136b83bbc2061f3b0812319e7de5c83db0cbc8c6f04b54c06326e406f",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-body-branch-v2-pmu-run-2836771-1791839029991264978/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 2.4818179999999996,
+      "source_minus_reference_median_us": -0.0033329999999998083,
+      "source_minus_reference_max_abs_us": 0.015151000000000359,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.0,
+      "scope_conditioned_abs_error_bound_max_us": 0.04060806060606063,
+      "scope_conditioned_abs_error_rounded_bound_ns": 41,
+      "source_point_within_20ns": 32
+    },
+    {
+      "scope": "output",
+      "variant": "broad",
+      "report": "precision-output-pmu/OPPROF_20261013044849_MAGJMEXBVOTJVMSQ",
+      "report_sha256": "1f0189673edc1eff9194f40558b963c4a8100b056469a17ffd34274268d23d00",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-output-pmu/OPPROF_20261013044849_MAGJMEXBVOTJVMSQ/dump/DeviceProf1.bin",
+          "native_sha256": "0617ed273937e4d94b514cf018e09f71d39250f1cee4fe3343f05c36cb454664",
+          "source_result": "precision-output-pmu-run-2816267-1791838146247566274/result.json",
+          "source_result_sha256": "c83a6ae32248c8a30e7a0feb8fa8c4ecba0cdf72944297412655750b7af681c6",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-output-pmu/OPPROF_20261013044849_MAGJMEXBVOTJVMSQ/dump/DeviceProf2.bin",
+          "native_sha256": "190ec81692274bb88e98d12cbe20ab8f02175750ea67bb00a77fcce382b5a335",
+          "source_result": "precision-output-pmu-run-2816727-1791838162695603590/result.json",
+          "source_result_sha256": "25940a3a280440ebcfc4d44bb376edd4d149b75bbcd636b874c704da123a6c2c",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-output-pmu-run-2816727-1791838162695603590/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.06,
+      "gate_uncertainty_max_us": 0.21999999999999997,
+      "reference_median_us": 0.2851515,
+      "source_minus_reference_median_us": -0.06484849999999999,
+      "source_minus_reference_max_abs_us": 0.215152,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.02,
+      "scope_conditioned_abs_error_bound_max_us": 0.24060806060606058,
+      "scope_conditioned_abs_error_rounded_bound_ns": 241,
+      "source_point_within_20ns": 12
+    },
+    {
+      "scope": "output",
+      "variant": "narrow",
+      "report": "precision-output-narrow-pmu/OPPROF_20261013045421_LLQOVKQOGLSSGJMS",
+      "report_sha256": "5ec20d35a806139399018438ccd2faea8e941440837542aa8f62c2ad457cba2f",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-output-narrow-pmu/OPPROF_20261013045421_LLQOVKQOGLSSGJMS/dump/DeviceProf1.bin",
+          "native_sha256": "b856fb107030547d140c088338a4d411410acf39db19fff2807e71e60e3877c6",
+          "source_result": "precision-output-narrow-pmu-run-2823167-1791838476646486186/result.json",
+          "source_result_sha256": "ae9ce05c2df0fe544c26f3dabdf9d87bc81fdb091ae0317b96f030419075725c",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-output-narrow-pmu/OPPROF_20261013045421_LLQOVKQOGLSSGJMS/dump/DeviceProf2.bin",
+          "native_sha256": "f2594319bdad602266691ed28238a09df0224097ee8a22f11fe12861bfef0f83",
+          "source_result": "precision-output-narrow-pmu-run-2823687-1791838493092418643/result.json",
+          "source_result_sha256": "cb864c9a3bd2e5e0d2d82b5428790decf4d43d9df6897963d4815a8f96972c84",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-output-narrow-pmu-run-2823687-1791838493092418643/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 0.20303,
+      "source_minus_reference_median_us": -0.009696999999999983,
+      "source_minus_reference_max_abs_us": 0.13333299999999998,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.12,
+      "scope_conditioned_abs_error_bound_max_us": 0.16060806060606062,
+      "scope_conditioned_abs_error_rounded_bound_ns": 161,
+      "source_point_within_20ns": 25
+    },
+    {
+      "scope": "output",
+      "variant": "shared",
+      "report": "precision-output-shared-pmu/OPPROF_20261013045743_ZFDMIPNOYPHYSDYS",
+      "report_sha256": "fce425400013695faf078922a15f5b6984b760dcb9050f393c98993a7bd7596f",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-output-shared-pmu/OPPROF_20261013045743_ZFDMIPNOYPHYSDYS/dump/DeviceProf1.bin",
+          "native_sha256": "4f122dd7e21d0dec618602a28748e8a5fb3e87f57f96e99c53b397857ddefb29",
+          "source_result": "precision-output-shared-pmu-run-2828899-1791838678340878245/result.json",
+          "source_result_sha256": "7b063147a0fbd5137ddeda32ee121f83aa4516240e8fac56c8282e42768a94e3",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-output-shared-pmu/OPPROF_20261013045743_ZFDMIPNOYPHYSDYS/dump/DeviceProf2.bin",
+          "native_sha256": "a3d17d69fcc10b9a25ec2ef531ebef489f8d921488db3149bf38781a8650a91e",
+          "source_result": "precision-output-shared-pmu-run-2829433-1791838693604606317/result.json",
+          "source_result_sha256": "f1b72c2e9c9ec059e2a29d3c4eade76156fd9e3350ccd45a1698d201935c86a7",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-output-shared-pmu-run-2829433-1791838693604606317/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 0.253939,
+      "source_minus_reference_median_us": -0.053939000000000015,
+      "source_minus_reference_max_abs_us": 0.12484800000000001,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.12,
+      "scope_conditioned_abs_error_bound_max_us": 0.16060806060606062,
+      "scope_conditioned_abs_error_rounded_bound_ns": 161,
+      "source_point_within_20ns": 10
+    },
+    {
+      "scope": "output",
+      "variant": "dependent",
+      "report": "precision-output-dependent-pmu/OPPROF_20261013050020_BVDWHOFYMZIADDXR",
+      "report_sha256": "4c544670e6b68ed297319c224d96b5828455e2617f46957c4cb0d612c09e918e",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-output-dependent-pmu/OPPROF_20261013050020_BVDWHOFYMZIADDXR/dump/DeviceProf1.bin",
+          "native_sha256": "124330dc2ef19a0de3552c5df697808995137294302e6ffd03ba79d2495914d5",
+          "source_result": "precision-output-dependent-pmu-run-2832711-1791838837060799410/result.json",
+          "source_result_sha256": "38ba543515c277b8ddea884671b38766fa09f493c95c320ac8bb52b4bd476be8",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-output-dependent-pmu/OPPROF_20261013050020_BVDWHOFYMZIADDXR/dump/DeviceProf2.bin",
+          "native_sha256": "76913dc4ee904476d45dc092be5d7cbad4d87c1a678afdb4838fd149bc00788d",
+          "source_result": "precision-output-dependent-pmu-run-2833359-1791838853220680118/result.json",
+          "source_result_sha256": "264803de84317a5c34dabe14ab988d797e580982f6cd1471985795bedaa5d86a",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-output-dependent-pmu-run-2833359-1791838853220680118/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.019999999999999962,
+      "reference_median_us": 0.3654545,
+      "source_minus_reference_median_us": -0.004847999999999991,
+      "source_minus_reference_max_abs_us": 0.022424,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.0,
+      "scope_conditioned_abs_error_bound_max_us": 0.06060806060606059,
+      "scope_conditioned_abs_error_rounded_bound_ns": 61,
+      "source_point_within_20ns": 30
+    },
+    {
+      "scope": "output",
+      "variant": "branch-v2",
+      "report": "precision-output-branch-v2-pmu/OPPROF_20261013050406_HLUTQRMXLBBEAHOC",
+      "report_sha256": "7138d086d682643496439eda900f7c3637d2d3fed582b3f06cace803838ca9ca",
+      "frequency_mhz_reported": 1650.0,
+      "raw_associations": [
+        {
+          "native": "precision-output-branch-v2-pmu/OPPROF_20261013050406_HLUTQRMXLBBEAHOC/dump/DeviceProf1.bin",
+          "native_sha256": "6e7ee98b3412c9004761d88f716ca14a084f159e761ce7f52756a1f09679fc81",
+          "source_result": "precision-output-branch-v2-pmu-run-2837523-1791839060484619571/result.json",
+          "source_result_sha256": "58ed5d0d1e419897413d04f6f364b72c167acc437bb2567b44f665228358e26c",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": false
+        },
+        {
+          "native": "precision-output-branch-v2-pmu/OPPROF_20261013050406_HLUTQRMXLBBEAHOC/dump/DeviceProf2.bin",
+          "native_sha256": "467ee305ee62dcbdf5d91044541a5294cccec0a2e69bb9f9f1b487ad2760810a",
+          "source_result": "precision-output-branch-v2-pmu-run-2837976-1791839076775439416/result.json",
+          "source_result_sha256": "d077619faa9e387a4d3e1883802541d39de6f5f967fbfe2228d9acc367833ff8",
+          "invocation": 0,
+          "all32_actor_bodies_contained_by_matching_native_SYS_stamps": true,
+          "csv_cycles_exact_match_all32": true
+        }
+      ],
+      "source_result": "precision-output-branch-v2-pmu-run-2837976-1791839076775439416/result.json",
+      "records": 32,
+      "halo_quantization_violations": 0,
+      "gate_uncertainty_median_us": 0.0,
+      "gate_uncertainty_max_us": 0.020000000000000018,
+      "reference_median_us": 0.7242425,
+      "source_minus_reference_median_us": -0.004848500000000089,
+      "source_minus_reference_max_abs_us": 0.020606000000000013,
+      "source_start_gate_gap_max_us": 0.02,
+      "source_stop_gate_gap_max_us": 0.0,
+      "scope_conditioned_abs_error_bound_max_us": 0.04060806060606063,
+      "scope_conditioned_abs_error_rounded_bound_ns": 41,
+      "source_point_within_20ns": 31
+    }
+  ],
+  "records": 416,
+  "reference": "independent hardware PMU cycle window gated via supported installed SDK CTRLbit0 API, vendor per-AIV aiv_time converted from reported core frequency; not whole-kernel timing or simulator",
+  "sys_counter_period_us": 0.02,
+  "comparison": "physical gate occurs between before/after SET.CTRL SYS halos; elapsed floor-counter uncertainty <20ns; additional PIPE_ALL and scalar preparation perturb same instrumented execution",
+  "association": "raw native128B records validated against all32 CSV cycles and unique replay/invocation timestamps; block ID matched directly to recorded GET.BLOCK.IDX, plain-AIV subblock0; physical core ID is separately decoded",
+  "bound_assumptions": "Physical gate within raw before/afterSET.CTRL halos; 20ns SYS floor-duration uncertainty + one PMUcorecycle at vendorreportedCurrentFreq +2ps verified vendorCSV conversion tolerance; conditionalonreportedfrequencyconversion. Scopepadding=max(upper\u2212source,source\u2212lower), never subtracted to manufacture pointtruth. Finalbranch-v2 rounded conservativebound41ns, empiricalmax20.606ns.",
+  "limits": [
+    "This validates bounded window agreement, not unperturbed compute busy time.",
+    "Public-source native128B format is crosschecked against installed output; native timestamps used only for association.",
+    "Frequency conversion follows vendor reported Current Freq; no independent frequency lock/mutation or oscillator independence asserted.",
+    "Broad halos may substantially exceed source body/output; point disagreement must not be called accurate.",
+    "One selected invocation per scope here; precision sample count is32 blocks, correlated within a launch."
+  ]
+}

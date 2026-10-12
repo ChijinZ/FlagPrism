@@ -1,0 +1,20 @@
+{
+  "material_type": "realoperator internalnumericalreference experiment",
+  "verification_status": "VERIFIED within stated same-instrumented-window scope; unperturbed busytime/internal allphase precision UNVERIFIED",
+  "data": "13selectedcomparisoncases416rows; final2control-dependentscopes64points, with32correlatedblocks/launch",
+  "experiment_object": "canonicalsoftmax32x256 on910B4-1 device4, singlepureAIV actor/program",
+  "evidence": "independenthardwaregatedPMU cycles via installedsupportedSDK, exact raw+CSV identity and unique replay/inv association; reported1650MHz vendorconversion",
+  "actual_numerical_result": {
+    "body_max_abs_difference_ns": 15.151,
+    "output_max_abs_difference_ns": 20.606,
+    "all64_within_20ns": false,
+    "all64_within_scope_conditioned_conservative_41ns": true
+  },
+  "limits": [
+    "Sameinstrumentedexecution, branch and profiler fences/control prep included; no accuracy claim for unperturbed kernel.",
+    "Nativefrequency conversion conditionalonvendorreportedCurrentFreq, no independentoscillator or locked-frequency guarantee.",
+    "PureAIV softmaxonly; fusedAIC/AIV internalreference notcollected.",
+    "Negative scopealignment controls retained."
+  ],
+  "bound": "Measured gate/sourcepaddingmax20ns +SYSfloor duration20ns +one1650MHzPMUcycle0.606ns +verifiedCSVconversiontolerance0.002ns <41ns; conditionalonreportedCoreFreq conversion and physical gate halo ordering."
+}

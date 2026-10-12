@@ -1,0 +1,22 @@
+{
+  "workspace": "/workspace/flagprism-study-closure-20261013",
+  "prepare": "python ascend_precision_prepare.py --output fresh-gates",
+  "compile": [
+    "python ascend_precision_compile.py --source source-kernel.ll --gate-sdk fresh-gates/gates.ll --output precision-body-branch-v2 --scope body --narrow --shared-stop-fence --branch-end",
+    "python ascend_precision_compile.py --source source-kernel.ll --gate-sdk fresh-gates/gates.ll --output precision-output-branch-v2 --scope output --narrow --shared-stop-fence --branch-end"
+  ],
+  "capture": "source /usr/local/Ascend/ascend-toolkit/set_env.sh; python ascend_precision_capture.py --workspace PRIVATE_DIRECTORY --variant branch-v2",
+  "analyze": "python FlagPrism/experiments/study/ascend_precision_analyze.py --raw artifacts/study-closure-20261013/ascend-precision --output FlagPrism/experiments/study/results/2026-10-13-closure/ascend-precision",
+  "notes": [
+    "Start with fresh private directories; output dirs/logs use exclusive creation.",
+    "Use only device4; retain all source invocations0..3 and all application replays.",
+    "Reference uses cold selectedinv0; numerical match actual rawSYS stamps rather than warmup exclusions from mainperformancecapture.",
+    "Use archived executed scripts if exact historical reproductions required; producer SDKprep -emit-llvm-bc + llvm-link validated."
+  ],
+  "workspace_setup": [
+    "Choose a new private directory and copy ascend_precision_{prepare,compile,replay,capture}.py, ascend_llvm_regions.py, kernels.py and source-kernel.ll into it.",
+    "Copy retained canonical inputs into inputs/, or run make_inputs.py inputs and verify the archived input hashes.",
+    "Source CANN set_env.sh in the recorded torch_npu/FlagTree environment; pass --workspace PRIVATE_DIRECTORY to ascend_precision_capture.py."
+  ],
+  "source_kernel_sha256": "63f333f426c245e5579a3ded3084bb9918bdab6faab66ce78b474a5ceffa4438"
+}

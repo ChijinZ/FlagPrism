@@ -1,0 +1,54 @@
+{
+  "source_llvm_sha256": "63f333f426c245e5579a3ded3084bb9918bdab6faab66ce78b474a5ceffa4438",
+  "audit": [
+    {
+      "scope": "body",
+      "kernel_llvm_sha256": "05db0fc4a3ff39da389dc37b053cea9591a735a2fb2d6faf6a3f43c3f5577987",
+      "math_IO_call_sequence_exactly_matches_original": true,
+      "math_IO_calls": 7,
+      "fresh_stopword_after_original_store_helper": true,
+      "no_math_or_async_engine_work_between_original_final_PIPE_ALL_and_stop_SETCTRL": true,
+      "branch_to_distinct_NOPs_then_common_SYSclock": true,
+      "final_binary_SHA256": "42826381e0aba4945494d1665ab89932aa66876e5582caa9b36f55f02a5d4d34",
+      "final_ISA_decode_available": false
+    },
+    {
+      "scope": "output",
+      "kernel_llvm_sha256": "2b1e263595e2a573d6fcae985c052246c41e93e866f727ffdda2c39e73eddeab",
+      "math_IO_call_sequence_exactly_matches_original": true,
+      "math_IO_calls": 7,
+      "fresh_stopword_after_original_store_helper": true,
+      "no_math_or_async_engine_work_between_original_final_PIPE_ALL_and_stop_SETCTRL": true,
+      "branch_to_distinct_NOPs_then_common_SYSclock": true,
+      "final_binary_SHA256": "0bf8bd17df006ffc96b8695ceeb0f3d33ed9c1d9a75f6e2afdd730c5ac0d1f11",
+      "final_ISA_decode_available": false
+    }
+  ],
+  "correctness": [
+    {
+      "scope": "body",
+      "max_abs_error_all4_invocations": 1.3969838619232178e-09,
+      "all32_program_slots_verified": true,
+      "retained_invocations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "reference_invocation": 0
+    },
+    {
+      "scope": "output",
+      "max_abs_error_all4_invocations": 1.3969838619232178e-09,
+      "all32_program_slots_verified": true,
+      "retained_invocations": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "reference_invocation": 0
+    }
+  ],
+  "scope_caution": "Added control-word preparation/PIPE_ALL/branch/NOP overhead perturbs same instrumented scalar projection. End clock at common join follows original final barrier. No unperturbed busytime or all-lane envelope claim."
+}

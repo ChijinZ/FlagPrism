@@ -1,0 +1,65 @@
+{
+  "device": 4,
+  "target": "Ascend910B4-1 / dav-c220-vec",
+  "sdk": "CANN9.0.0",
+  "msopprof_package": "mindstudio-opprof26.0.0",
+  "installed_hashes": {
+    "__clang_cce_aicore_functions.h": "38aebdc792618e9a533bcd1963847b071f3e52bf339cc597d9fa6f5edad50bf5",
+    "msopprof": "22578c7c9da3bb29bed466ddfc199b33e74e18c12aae3a87ce05c9220a2c8ffe",
+    "meta_op.aiv.bc": "d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0"
+  },
+  "reference_public_source_manifest": "../reference-public-msopprof/manifest.json",
+  "primary_documentation": [
+    {
+      "url": "https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/850/devaids/optool/atlasopdev_16_0082.html",
+      "supports": "KernelScale SDK-controlled region sampling on AtlasA2/A3; per-block/subblock metrics; TimelineDetail simulator/Triton exclusion."
+    },
+    {
+      "url": "https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/83RC1alpha001/API/ascendcopapi/atlasascendc_api_07_1214.html",
+      "supports": "MetricsProfStart/Stop supportedAtlasA2/A3, all-pipeline barriers around hardware profiling enable/disable."
+    },
+    {
+      "url": "https://www.hiascend.com/doc_center/source/en/CANNCommunityEdition/900/API/ascendcopapi/atlasascendc_api_07_0282.html",
+      "supports": "GetSystemCycle AtlasA2/A3 50MHz; PIPE_S timing requires other-engine synchronization."
+    }
+  ],
+  "reference_quantity": "Hardware PMU per-AIV totalcycles over CTRLbit0-on region. Vendor aiv_time(us) agrees with rawcycles/reportedCurrentFreq1650MHz, with <=2ps tolerance for CSV/FP32 formatting. Different sampling mechanism from SYS_CNT, oscillator independence not asserted.",
+  "native_association": "NativeSYS timestamps are used for unique replay/invocation association only; rawblock/subblock identities separately matched to actor slots, rawphysicalcoreID decoded separately.",
+  "source_measurement_scope": "Realsoftmax32x256 actor projection with PMU/probe perturbation; selectedinvocation0 is cold launch, unlike main15samples excluding3warmups; numericalcomparison is same instrumented execution.",
+  "disassembly_limit": "Installed llvm-objdump cannot decode dav-c220-vec instructions evenwith --mcpu; cc1 device -S rejected; -print-after unsupported. Dynamic zero-gate/control and nonzero-region data prove actual gate effect; precise finalISA order is not claimed independently decoded.",
+  "scripts": {
+    "ascend_precision_analyze.py": "002eb00625b1025fe4547a5ca85e3792d429b63f650f3e1f82a4e087c28ac248",
+    "ascend_precision_replay.py": "cb6d7c2a4f74b38d4ba3cc9bc93a52f397d538d5fe3d8df3d18dee356284d3c1",
+    "ascend_precision_capture.py": "7ff16c2fcc94c09a55d1e07da677db7894eeda6be2f2bfa893981cee6b11645e",
+    "ascend_precision_prepare.py": "17be08977bb4764695746e108ff62242253a12a524789676d3fc65d989b6f280",
+    "ascend_precision_compile.py": "8633d77798d67124582bdc927581f9f357c8c57edaa6eac8ffa20aff6113de53"
+  },
+  "archival_policy": "Timestamped completed raw snapshots retained; intermediate narrow-progress snapshot distinct from final; no oldround changes.",
+  "local_final_scripts": {
+    "ascend_precision_analyze.py": "4be02c3a86fabcdf2a80542c474d43a5a124385e65aeca8d5d89a651daa5af2b",
+    "ascend_precision_replay.py": "cb6d7c2a4f74b38d4ba3cc9bc93a52f397d538d5fe3d8df3d18dee356284d3c1",
+    "ascend_precision_capture.py": "7ff16c2fcc94c09a55d1e07da677db7894eeda6be2f2bfa893981cee6b11645e",
+    "ascend_precision_prepare.py": "17be08977bb4764695746e108ff62242253a12a524789676d3fc65d989b6f280",
+    "ascend_precision_compile.py": "8633d77798d67124582bdc927581f9f357c8c57edaa6eac8ffa20aff6113de53"
+  },
+  "archived_executed_scripts": {
+    "ascend_precision_runs.py": "aa7986aae3ce28f0faae2213a3e873dee2e77c4f2f4b27ab7cec171e715e219c",
+    "ascend_precision_replay.py": "cb6d7c2a4f74b38d4ba3cc9bc93a52f397d538d5fe3d8df3d18dee356284d3c1",
+    "ascend_precision_capture.py": "7ff16c2fcc94c09a55d1e07da677db7894eeda6be2f2bfa893981cee6b11645e",
+    "ascend_precision_prepare.py": "17be08977bb4764695746e108ff62242253a12a524789676d3fc65d989b6f280",
+    "ascend_precision_compile.py": "8633d77798d67124582bdc927581f9f357c8c57edaa6eac8ffa20aff6113de53"
+  },
+  "selected_reference_cases": [
+    {
+      "scope": "body",
+      "report": "precision-body-branch-v2-pmu/OPPROF_20261013050320_ZUOLOZNPWACTGMJE",
+      "source_result": "precision-body-branch-v2-pmu-run-2836771-1791839029991264978/result.json"
+    },
+    {
+      "scope": "output",
+      "report": "precision-output-branch-v2-pmu/OPPROF_20261013050406_HLUTQRMXLBBEAHOC",
+      "source_result": "precision-output-branch-v2-pmu-run-2837976-1791839076775439416/result.json"
+    }
+  ],
+  "post_review_analysis_correction": "Vendor CSV conversion tolerance2ps replaces pure0.5ps rounding; native observations unchanged; conservative41ns bound retained."
+}

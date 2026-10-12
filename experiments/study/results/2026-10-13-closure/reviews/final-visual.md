@@ -1,0 +1,39 @@
+# Independent final visual audit
+
+Audited the user objective, current `paper/sections/03-study.tex`, all Study figures as rendered in the actual 13-page `paper/main.pdf`, the standalone PMU PNG, both plotting scripts, protocol CSV, Ascend summary and independent PMU comparison CSV. Rendered with Ghostscript at 110 dpi to `/tmp/study-review-page-*.png`. I did not read other reviewers' reports or access servers.
+
+## Verdict
+
+The figure sequence now communicates the requested evidence chain. It uses six real operator distributions, two compiled operator cases, concrete consequences for a shared request, measured internal intervals, targeted interventions, and explicitly scoped numerical checks. The figure captions distinguish static dependencies, actor-local instrumented timing, separate captures and conditional reference checks. The initially identified PMU layout and capture-wording defects were corrected and independently re-rendered; the present figure set passes visual acceptance for the user-review draft.
+
+## Required correction
+
+1. **Figure 9 legend overlaps both x-axis labels.** This is visible in the standalone `study-pmu-reference.png` and actual PDF page 10. `plot_pmu_precision.py` anchors the legend at `(0.5, -0.065)` without reserving sufficient bottom space. Move the legend below both labels and reserve bottom margin, or increase figure height and explicitly allocate space. Re-render the PDF and inspect the result; a successful LaTeX build alone cannot verify this fix.
+2. The same figure's title says **“Rows are separate captures”**, but the selected branch-v2 figure has one row with two separate captures in its body/output panels. Replace with **“Body and output are separate captures”** (the current caption already describes this correctly).
+
+## What each visual establishes
+
+- **Figure 2, six-operator breadth:** The native-duration distributions reveal substantial stack-specific variation across three sizes and two configurations. Operator panels and log scales are legible, and the caption identifies shapes and config meanings. This motivates inspecting execution but does not establish a profiling defect; the nearby text correctly states that limitation. These are absolute durations, not normalized speedups or hardware efficiency comparisons.
+- **Figure 3, fused emitted pipeline:** Explicit data movement, computation and signal/wait dependencies explain how one program becomes AIC plus two AIV subinstances. Arrows are clearly labeled dependencies. Neither widths nor positions imply duration or overlap.
+- **Figure 4, softmax mapping:** The second real case supplies the necessary single-AIV contrast. It keeps load/reduction/normalize/store recognizable across the three backends and makes the distinct clock protocol visible. It is a compiled-structure diagram, not an experimental time chart, and says so.
+- **Figure 5, common-request consequences:** Body/output nested-to-single-active ratios show that GCU window-counter reuse loses body coverage while V100 succeeds; the read-only timer adapter restores ordered windows but perturbs softmax. The 0.023/0.317 body ratios and adapter 1.008/1.239 ratios are visually explicit. Each provider has its own control, so the figure does not silently compare different units. It is a protocol/perturbation check, not an accuracy error figure.
+- **Figure 6, dynamic internal brackets:** The top fused view shows body-only AIC and requested AIV wait/transfer/compute/store projections; the bottom shows the real softmax intervals. Every row has a separate origin, and that fact appears in the title, axis and caption. There is therefore no asserted cross-actor overlap. The figure labels fences and clock-read perturbation. Zero-tick observations are explicitly unresolved. The synchronized-looking rows could still invite casual misreading, but the repeated disclosures suffice for the current review draft; separate mini-panels could improve the final submission.
+- **Figure 7, fixed-work readiness intervention:** The two panels tie moving a fixed 16,384-NOP budget before the signal to measured producer and consumer wait intervals. Fifteen per-launch actor medians are the sampling units. The chart does not assume that equal instruction count implies equal elapsed time or present auxiliary NOPs as useful-compute optimization.
+- **Figure 8, endpoint intervention:** Grey versus blue bars demonstrate changed observation boundaries for both real operators. The names and captions distinguish non-completion issue/gate observations from completion-fenced measurements. Changes are not called numerical error reductions. Independently checked summary values: fused workspace 0→6, bias/GELU 5→19, suffix 26.5→9 ticks; softmax input 1→6, normalization 1→3, suffix 9→7 ticks.
+- **Figure 9, independent PMU check:** Body and output use 32 unique blocks in separate captures. I recomputed maxima directly from the selected `branch-v2` CSV: 15.151ns and 20.606ns point differences; maximum comparison bound 40.6065606ns, conservatively rounded to 41ns. The source and PMU points agree visually, but their near-perfect overplotting prevents reading the tiny differences on a microsecond axis. A residual inset with a ±41ns band would make numerical agreement easier to inspect; it is an improvement, not required to repair a false inference, since exact maxima and conditions appear in the text/caption. The plot must retain conditional vendor-frequency/gate assumptions, 32 correlated blocks, one selected launch and instrumented-work scope.
+
+## Story and scope
+
+The placement order in the rendered PDF is preserved: scope/request and breadth/cases on pages 2–5; consequences and measured brackets on pages 6–7; controls and PMU comparison on pages 8–10; three derived requirements on page 11. Float barriers prevent later-section figures from preceding their supporting narrative. Some float pages and preceding text pages have substantial whitespace, but the task has no current submission-length or page-fit gate. This is a formatting refinement, not evidence failure.
+
+The three final requirements explicitly connect observations to consequences, compiler–profiler mechanisms and verified scope, and separate implemented research probes from proposed production machinery. The figures do not claim a learned optimizer, cross-actor clock synchronization, all-backend absolute accuracy, operational adoption or unperturbed engine busy time. The Study motivates those method requirements without presenting a blueprint as measured results.
+
+The numerical evidence remains deliberately scoped: PMU verification is for instrumented Ascend softmax, V100 dual-counter fraction checking is conditional on local clock behavior, and GCU scale fitting is empirical and cannot certify internal phase precision. Figure readability acceptance does not turn these into a portable accuracy guarantee or certify broader experiment completion.
+
+## Acceptance after correction
+
+Recheck the regenerated standalone PMU image and final PDF page containing Figure 9. If legend/labels are separated and capture wording is corrected, the present figure set passes this independent visual audit for the user-review draft.
+
+## Post-fix verification: passed
+
+Viewed the regenerated standalone PMU PNG and independently re-rendered page 10 of the rebuilt actual `paper/main.pdf` with Ghostscript. The legend now occupies reserved bottom space and does not overlap either x-axis title; all legend entries and panel titles are contained. The title correctly states “Body and output are separate captures”, and shortened panel titles identify one launch and 32 AIV blocks. The required visual fixes are resolved. The current figure set passes this final independent visual audit, subject to the measurement-scope limits above. Residual insets and page-space refinements remain optional improvements, not blocking defects.

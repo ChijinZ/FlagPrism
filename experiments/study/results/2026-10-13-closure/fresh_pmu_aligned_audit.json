@@ -1,0 +1,17 @@
+{
+  "scope": "independent root hash/actor/core-type/identity and aligned independent-PMU interval checks",
+  "selected_records": 64,
+  "reference": "vendor converted per-AIV hardware cycle window; frequency reported1650MHz; no same-SYS outside subtraction",
+  "max_observed_source_reference_difference_ns": 20.606000000000012,
+  "conservative_scope_alignment_counter_quantization_and_one_PMU_cycle_bound_ns": 41,
+  "conditions": [
+    "installed SDK SYS_CNT20ns convention",
+    "vendor-reported core frequency applies to the PMU window",
+    "gate instruction is inside recordedbefore/after halos",
+    "one selected launch per region,32 correlated block records"
+  ],
+  "limitations": [
+    "Instrumented realsoftmaxprobe, notunperturbedbusytime",
+    "Does notvalidateallsubregions/backends or provephysicaloscillatorindependence"
+  ]
+}

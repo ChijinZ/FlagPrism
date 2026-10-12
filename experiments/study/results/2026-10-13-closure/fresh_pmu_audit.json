@@ -1,0 +1,33 @@
+{
+  "scope": "independent root replay of analyzer plus raw hardware core-type/identity/hash checks",
+  "native_rows_checked": 192,
+  "selected_comparison_rows": 96,
+  "cases": [
+    {
+      "scope": "empty",
+      "variant": "broad",
+      "reference_rows": 32,
+      "halo_violations": 0,
+      "max_gate_uncertainty_us": 0.02,
+      "source_sha256": "48d761045dae3598bb8f6cb271059c85afc8f12a8806c8a988124be424eeb2d2"
+    },
+    {
+      "scope": "body",
+      "variant": "broad",
+      "reference_rows": 32,
+      "halo_violations": 0,
+      "max_gate_uncertainty_us": 1.08,
+      "source_sha256": "f555c3d1180d8b671f4de2c44ab512c1976f136817008ae3ef6d31ca024d628c"
+    },
+    {
+      "scope": "output",
+      "variant": "broad",
+      "reference_rows": 32,
+      "halo_violations": 0,
+      "max_gate_uncertainty_us": 0.21999999999999997,
+      "source_sha256": "25940a3a280440ebcfc4d44bb376edd4d149b75bbcd636b874c704da123a6c2c"
+    }
+  ],
+  "absolute_source_point_precision": "Broadgate pointcomparison insufficient; later alignedcases separately verified",
+  "current_scope_note": "Historical broadgate controls do not prove sourcepointaccuracy; aligned softmaxreference is in fresh_pmu_aligned_audit.json."
+}

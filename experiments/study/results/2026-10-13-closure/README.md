@@ -78,9 +78,33 @@ bundle contains a PDF snapshot and experimental artifacts, not another paper
 source tree. Methods/generality/operational deployment still require evaluation.
 Final independent reviews and their resolutions are under `reviews/`.
 
-Current acceptance: common request, breadth, two real cases, dynamic research
-probes, and method-requirement chains are present in their stated scope.
-Semantic/identity controls pass; absolute internal precision is still open.
-Three independent reviews were completed and critical presentation issues fixed.
-An additional CANN PMU attempt is in progress; no successful PMU reference is
-claimed by this snapshot.
+Current acceptance: the original seven-item scientific scope is preserved.
+The common request, six-operator breadth, both real cases, dynamic research
+probes, controlled semantic/identity checks and method chains are complete.
+`ascend-precision/` adds an independent hardware PMU reference for real softmax
+body/output:64 matched records, maximum differences15.151/20.606ns,
+conditional conservative comparison bound41ns. One output record exceeds20ns;
+all controls and residuals remain. This is not all-backend absolute accuracy.
+
+Three final independent reviews: `reviews/final-evidence.md`, `final-story.md`,
+`final-visual.md`; fixes and verification are recorded in `reviews/resolutions.json`.
+
+### Independent internal reference reproduction
+
+See `ascend-precision/reproduction.json` for actual SDK preparation, compile,
+private device4 capture and replay association. New scripts are
+`ascend_precision_{prepare,compile,replay,capture,analyze}.py`.
+To independently recompute the committed records without a device or SDK:
+
+```bash
+python experiments/study/ascend_precision_analyze.py --raw experiments/study/results/2026-10-13-closure/ascend-precision/replay-data --output /tmp/flagprism-pmu-audit
+python experiments/study/plot_pmu_precision.py --comparison /tmp/flagprism-pmu-audit/comparison.csv --variant branch-v2 --output /tmp/flagprism-pmu-figures
+```
+
+The original raw128B PMU records, vendor reports and matching source observation
+JSONs are in `replay-data/`, with byte hashes in `replay-data-manifest.json`.
+SDK libraries are not included. Source/binary receipts and full logs remain
+in workspace raw snapshots. The PMU reference uses a first/cold selected launch
+and reports vendor1650MHz conversion; gate alignment/quantization and probe
+perturbation are explicit. Numerical checks do not prove unperturbed busy time,
+fused cross-actor precision, V100 absolute precision or GCU official timer units.
