@@ -51,3 +51,9 @@ Pilot outputs captured before the explicit CANN hook selection was introduced
 are retained as pilot evidence only; CANN's `native` filename in that first
 pilot requests the normal hook, which actually defaults to IR instrumentation.
 Use collector metadata to interpret it, not the filename.
+
+The initial hardware event calibration showed that tiny kernels are often host-launch limited. Use vendor kernel/task intervals for device-duration comparisons; stream event intervals remain a separate metric. Native profiling currently records three prewarmed launches per case, so min–max spans are descriptive and are not confidence intervals. Fixed clocks and exclusive device use were not enforced.
+
+`lowering` enables compiler diagnostic dumping without calling the profiler. The Ascend GEMM and fused-GEMM diagnostic binaries were checked against their baseline SHA-256, allowing their emitted HIVM IR to describe the same compiled baseline kernels. Static dependencies cannot establish overlap or busy durations.
+
+`summarize.py` extracts raw observations and explicit unknowns; `plot_results.py` creates PDF/PNG/SVG artifacts from those observations. Archive snapshots and every per-case JSON are retained separately. The initial CPU seed is fixed, but exact cross-backend tensor identity was not captured; compiler and CPU-library versions are recorded.

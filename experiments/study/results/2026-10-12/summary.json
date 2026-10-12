@@ -1,0 +1,22 @@
+{
+  "cases": 144,
+  "statuses": {
+    "passed": 144
+  },
+  "baseline_batch_samples": 504,
+  "native_intervals": 216,
+  "compiler_artifacts_verified": 864,
+  "backend_cases": {
+    "cann": 72,
+    "enflame": 72
+  },
+  "limitations": [
+    "These are untuned study probes, not vendor-optimal implementations.",
+    "No exclusive-device or fixed-clock guarantee.",
+    "Three device observations per native capture; min-max is not a confidence interval.",
+    "CPU seed fixed; exact numerical cross-backend input identity not captured.",
+    "Different compilers/SDKs: conclusions concern complete backend stacks.",
+    "Stream event intervals include host-fed gaps; do not substitute for kernel durations.",
+    "No independent internal pipeline timing or instance mismatch rate has been measured."
+  ]
+}

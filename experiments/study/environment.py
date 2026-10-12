@@ -8,7 +8,9 @@ import torch
 extension={'cann':'torch_npu','enflame':'torch_gcu','cuda':None}[a.backend]
 if extension:importlib.import_module(extension)
 import triton
-info={'backend':a.backend,'python':platform.python_version(),'machine':platform.machine(),'target':str(triton.runtime.driver.active.get_current_target()),'modules':{},'nearby_checkouts':{}}
+driver=triton.runtime.driver
+target=str(driver.active.get_current_target()) if hasattr(driver,'active') else {'backend':'cuda','arch':torch.cuda.get_device_capability(0),'legacy_triton_driver':True}
+info={'backend':a.backend,'python':platform.python_version(),'machine':platform.machine(),'target':target,'modules':{},'nearby_checkouts':{}}
 for name in ['torch',extension,'triton','flagtree.profiler','flagtree.debugger']:
  if not name:continue
  try:

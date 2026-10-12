@@ -1,0 +1,55 @@
+{
+  "backend": "cann",
+  "python": "3.11.15",
+  "machine": "aarch64",
+  "target": "GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0)",
+  "modules": {
+    "torch": {
+      "version": "2.9.0+cpu",
+      "file": "/usr/local/python3.11.15/lib/python3.11/site-packages/torch/__init__.py",
+      "file_sha256": "3caf7f40140ede2465bde40b9003af10cbbc8f7bcf436fa1de026471daa1b288"
+    },
+    "torch_npu": {
+      "version": "2.9.0.post2",
+      "file": "/usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/__init__.py",
+      "file_sha256": "27f372506192fe194032728d1d4b296202937ecc71de2d65215d33a64640371d"
+    },
+    "triton": {
+      "version": "3.5.1",
+      "file": "/usr/local/python3.11.15/lib/python3.11/site-packages/triton/__init__.py",
+      "file_sha256": "4ec1df745c6bfd03257370a2aab1534e7a31eaa62110cad2ff6c3b56a67cfc50"
+    },
+    "flagtree.profiler": {
+      "version": "3.5.1",
+      "file": "/usr/local/python3.11.15/lib/python3.11/site-packages/flagtree/profiler/__init__.py",
+      "file_sha256": "cce78ed42bf73f28398c40c0e4de88f9a8d8a81128a6f7059b08027edf2aa99a",
+      "profile_py_sha256": "c74a5f58a3316510f6700894de7ea436440440e5499056adf282e9d6f92fb5a4"
+    },
+    "flagtree.debugger": {
+      "version": "3.5.1",
+      "file": "/usr/local/python3.11.15/lib/python3.11/site-packages/flagtree/debugger/__init__.py",
+      "file_sha256": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db"
+    }
+  },
+  "nearby_checkouts": {
+    "/workspace/FlagTree": {
+      "head": "0364ed4bc39d1dfae483741ec272298297fa5bda",
+      "branch": "triton_v3.5.x",
+      "status": "",
+      "note": "Nearby checkout; not proof that loaded installed modules were built from this commit."
+    }
+  },
+  "device_count": 8,
+  "device_properties_0": "_NPUDeviceProperties(name='Ascend910B4-1', total_memory=62420MB, cube_core_num=20, vector_core_num=40, uuid=00000000-0000-0000-0000-000000000000, L2_cache_size=168MB)",
+  "code_hashes": {
+    "summarize.py": "236a5d3ede37217ac697f016a652b721f901b79f278d2f8513083d8a883da33f",
+    "sweep.py": "3e7bb2581e50a61a9cd1886cccc22bf7967d5c8bbbc224248e5ae4c7edec5f49",
+    "run_case.py": "37b9072075efabe7ffd52453fe991717b919a77daf2002d24b24875a52ba8403",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+    "environment.py": "64f245dfc2fd4aa03e07a29670e697d867cabf8e2dd0d6fd6959178d0e3bdabc"
+  },
+  "limits": [
+    "No fixed-clock or exclusive-device guarantee was recorded.",
+    "Different backend compiler/SDK versions prevent attributing differences exclusively to hardware."
+  ]
+}

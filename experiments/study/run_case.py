@@ -11,6 +11,7 @@ p.add_argument('--variant', type=int, choices=[0,1], default=0)
 p.add_argument('--device', type=int, default=0)
 p.add_argument('--phase', choices=['baseline','native','internal','lowering'], default='baseline')
 p.add_argument('--output', type=Path, required=True)
+p.add_argument('--collector', choices=['flagprism','torch'], default='flagprism')
 p.add_argument('--repeats', type=int, default=7)
 p.add_argument('--batch', type=int, default=20)
 a = p.parse_args()
@@ -43,7 +44,12 @@ try:
     import kernels
     iface.set_device(a.device)
     device = torch.device(f'{device_type}:{a.device}')
-    target = triton.runtime.driver.active.get_current_target()
+    driver=triton.runtime.driver
+    if hasattr(driver,'active'):
+        target=driver.active.get_current_target()
+    elif a.backend=='cuda':
+        target={'backend':'cuda','arch':torch.cuda.get_device_capability(a.device),'legacy_triton_driver':True}
+    else:raise RuntimeError('Unsupported legacy Triton driver API')
     result['runtime']={'torch':torch.__version__, 'triton':triton.__version__,
                        'torch_file':torch.__file__, 'triton_file':triton.__file__, 'target':str(target)}
     torch.manual_seed(1729)
@@ -85,6 +91,8 @@ try:
         def launch():
             return kernels.rows[grid](X,W,B,Y,R,N,config['BLOCK'],rows,op,num_stages=1,num_warps=4,debug=(a.phase=='lowering'))
         tolerance={'atol':0.0005,'rtol':0.002}
+    if ref.device.type!='cpu':raise RuntimeError('Reference unexpectedly resides on accelerator')
+    result['reference_device']=str(ref.device)
     result['requested_compile_config']=config; result['grid']=grid
     compiled=launch(); iface.synchronize()
     actual=Y.detach().cpu()
@@ -93,7 +101,7 @@ try:
                           'finite':bool(torch.isfinite(actual).all()),
                           'passed':bool(torch.allclose(actual,ref,**tolerance))}
     if not result['validation']['passed']: raise RuntimeError('CPU-reference correctness check failed')
-    result['compiled_metadata']=repr(compiled.metadata)
+    result['compiled_metadata']=repr(getattr(compiled,'metadata',{'num_warps':getattr(compiled,'num_warps',None),'num_stages':getattr(compiled,'num_stages',None),'shared':getattr(compiled,'shared',None)}))
     ir=a.output/'asm'; ir.mkdir()
     result['asm']={}
     for stage,content in compiled.asm.items():
@@ -129,6 +137,23 @@ try:
     elif a.phase=='lowering':
         result['lowering_dump']={'scope':'static compiler diagnostics; not dynamic execution or a timing baseline',
                                  'files':[str(f.relative_to(a.output)) for f in (a.output/'compiler_dump').rglob('*') if f.is_file()]}
+    elif a.phase=='native' and a.collector=='torch':
+        if a.backend!='cuda': raise ValueError('Torch reference collection is currently validated only for CUDA')
+        trace_dir=a.output/'reference';trace_dir.mkdir()
+        result['profiling']={'collector':'torch.profiler / Kineto / CUPTI', 'launch_count':3,
+                             'scope':'three prewarmed launches; independent reference collector, not FlagPrism'}
+        with torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,torch.profiler.ProfilerActivity.CUDA]) as capture:
+            for _ in range(3): launch()
+            iface.synchronize()
+        capture.export_chrome_trace(str(trace_dir/'trace.json'))
+        trace=json.loads((trace_dir/'trace.json').read_text())
+        device_events=[e for e in trace.get('traceEvents',[]) if e.get('cat')=='kernel' and e.get('ph')=='X']
+        result['profiling']['observed_kernel_events']=len(device_events)
+        if not device_events: raise RuntimeError('CUPTI reference capture produced no device kernel intervals')
+        actual=Y.detach().cpu()
+        result['post_profile_validation']={'passed':bool(torch.allclose(actual,ref,**tolerance)),
+                                           'max_abs_error':(actual-ref).abs().max().item()}
+        if not result['post_profile_validation']['passed']: raise RuntimeError('Profiled correctness check failed')
     else:
         from flagtree import profiler
         hook='triton' if a.phase=='native' else 'instrumentation'

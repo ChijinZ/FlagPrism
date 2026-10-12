@@ -29,6 +29,11 @@ for root in a.roots:
    for line in events.read_text().splitlines():
     e=json.loads(line)
     native.append({**identity,'source':e.get('source',e.get('original_record',{}).get('source')),'kind':e.get('kind'),'name':e.get('name'),'start_ns':e.get('start_ns'),'end_ns':e.get('end_ns'),'duration_us':e.get('duration_us'),'correlation_key':e.get('correlation_key'),'scope_id':e.get('scope_id'),'device_id':e.get('device_id'),'stream_id':e.get('stream_id'),'timing_status':e.get('timing_status')})
+  trace=case/'reference/trace.json'
+  if trace.exists():
+   for e in json.loads(trace.read_text()).get('traceEvents',[]):
+    if e.get('ph')=='X' and e.get('cat')=='kernel':
+     native.append({**identity,'source':'torch.profiler / Kineto / CUPTI','kind':'kernel','name':e.get('name'),'start_us':e.get('ts'),'duration_us':e.get('dur'),'reported_timestamp_unit':'us','args':json.dumps(e.get('args',{}),sort_keys=True)})
   vendor=case/'profile.vendor.json'
   if vendor.exists():
    v=json.loads(vendor.read_text())
