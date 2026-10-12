@@ -1,0 +1,49 @@
+{
+  "backend": "cuda",
+  "python": "3.12.3",
+  "machine": "x86_64",
+  "target": "GPUTarget(backend='cuda', arch=70, warp_size=32)",
+  "modules": {
+    "torch": {
+      "version": "2.7.0a0+79aa17489c.nv25.04",
+      "file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+      "file_sha256": "2d89d7450e3a25edb54d14c75787ec805ccf11ded5d1f807cf1d549c48bc179e"
+    },
+    "triton": {
+      "version": "3.6.0",
+      "file": "/workspace/study/FlagTree-pr1262/python/triton/__init__.py",
+      "file_sha256": "df3092178f70be89b50d22905cedae5bac414cc38677053616fc56802c91af30"
+    },
+    "flagtree.profiler": {
+      "version": "3.6.0",
+      "file": "/workspace/study/FlagTree-pr1262/third_party/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+      "file_sha256": "cce78ed42bf73f28398c40c0e4de88f9a8d8a81128a6f7059b08027edf2aa99a",
+      "profile_py_sha256": "d49d364000f4ae9fe385b37f0f2d3ef37dae055056e2001333a52912d62da2d7"
+    },
+    "flagtree.debugger": {
+      "version": "3.6.0",
+      "file": "/workspace/study/FlagTree-pr1262/third_party/FlagPrism/Debugger/python/flagtree_debugger/__init__.py",
+      "file_sha256": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db"
+    }
+  },
+  "nearby_checkouts": {},
+  "device_count": 1,
+  "device_properties_0": "_CudaDeviceProperties(name='Tesla V100S-PCIE-32GB', major=7, minor=0, total_memory=32501MB, multi_processor_count=80, uuid=af6bc42c-6a23-9b4c-9ca9-f2f4c0f09ead, L2_cache_size=6MB)",
+  "code_hashes": {
+    "make_inputs.py": "1a2e10f7231489a803099180633c87eac5c3e6f3849db818c1f7db4a887fc87d",
+    "sweep.py": "bdc0cc41e21ca4bab19af52db5a04a79d0fdab4fc2c3de96cf0381f058bce3b2",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+    "summarize.py": "b96258f6e4901e549081866e28b00e08b77e3c0a30f3ac1d309dc7871c248d92",
+    "reference_probe.py": "b559a6cccedcdff62d523e729b6e3efce6cd436b034165a70c1ebd08311413a8",
+    "observations.py": "a9d2cce18ddd02af7d52319b80044976f98704b46f65453de9b7e2e941a4452d",
+    "plot_results.py": "1cddedc2063d325d4b4414496663d83c2bf36b3b174a31e50d4e2f9acf8c6dc8",
+    "run_case.py": "dc815b72c5a1bc8f2244ea3d646c37e0ea1a90b3ca9946fc61d753fce5fcebb5",
+    "freeze_results.py": "002c24669abb3e001ebce13225ae20cdfe85ea461fc378a701b5ee959c0a377c",
+    "environment.py": "8c92dc2b892c6042ee6cd2f47d20b7419d5dcb9cee1ced8d35957566164a6651",
+    "extract_bundle.py": "10eee3e366740d35b6f837b9b5fde9965a13bd13a9cfc5d082cc0a6933c9475b"
+  },
+  "limits": [
+    "No fixed-clock or exclusive-device guarantee was recorded.",
+    "Different backend compiler/SDK versions prevent attributing differences exclusively to hardware."
+  ]
+}

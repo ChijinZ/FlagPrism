@@ -1,0 +1,16 @@
+{
+  "matched_input_groups": 72,
+  "byte_identical_across_three_backends": true,
+  "nested_comparison_rows": 30,
+  "baseline_description": "generic timestamp-style subtraction of two nested vendor begin/end pairs; not a reproduction of Proton, KPerfIR or TCU",
+  "reference_description": "same mathematical work and final-output checks; a separate capture enables exactly one requested interval; same hardware primitive, independently selected endpoints",
+  "limits": [
+    "Different probes alter execution; these are instrumented barrier-delimited intervals, not unperturbed busy times.",
+    "No cross-core clock alignment assumed.",
+    "GCU counter conversion to ns has not been verified.",
+    "Cross-run invocation identity is not inferred from kernel names.",
+    "Three backends do not by themselves establish a same-SIMT-model multi-vendor result."
+  ],
+  "region_probe_captures_audited": 65,
+  "region_probe_positive_native_intervals": 975
+}

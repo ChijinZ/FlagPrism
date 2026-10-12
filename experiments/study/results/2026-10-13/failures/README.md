@@ -1,0 +1,1 @@
+TimelineDetail: application correctness passed, SDK reports collection failed despite exit0. Late-HIVM roundtrip: compiler crash, no device launch. Neither supplies numeric Study measurements. Full failed artifacts retained in raw archive.

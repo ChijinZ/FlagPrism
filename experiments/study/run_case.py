@@ -11,10 +11,16 @@ p.add_argument('--variant', type=int, choices=[0,1], default=0)
 p.add_argument('--device', type=int, default=0)
 p.add_argument('--phase', choices=['baseline','native','internal','lowering'], default='baseline')
 p.add_argument('--output', type=Path, required=True)
+p.add_argument('--unique-output',action='store_true',help='Fresh per-process subdirectory for safe application replay')
+p.add_argument('--tile',type=int,default=16)
+p.add_argument('--k-tile',type=int,default=16)
+p.add_argument('--profile-launches',type=int,default=3)
+p.add_argument('--input-dir',type=Path)
 p.add_argument('--collector', choices=['flagprism','torch'], default='flagprism')
 p.add_argument('--repeats', type=int, default=7)
 p.add_argument('--batch', type=int, default=20)
 a = p.parse_args()
+if a.unique_output:a.output=a.output/f'process-{os.getpid()}'
 a.output.mkdir(parents=True, exist_ok=False)
 result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
           'shape':[int(x) for x in a.shape.split('x')], 'variant':a.variant,
@@ -25,7 +31,7 @@ result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
                          'device_event_semantics':'stream interval enclosing a batch; not busy cycles'},
           'utc_started':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
 if a.phase!='baseline':
-    result['measurement']={'warmup':5,'scope':'compiler diagnostics' if a.phase=='lowering' else 'three prewarmed profiled launches followed by synchronization','launch_count':1 if a.phase=='lowering' else 3}
+    result['measurement']={'warmup':5,'scope':'compiler diagnostics' if a.phase=='lowering' else f'{a.profile_launches} prewarmed profiled launches followed by synchronization','launch_count':1 if a.phase=='lowering' else a.profile_launches}
 def save():
     (a.output/'result.json').write_text(json.dumps(result, indent=2, default=str)+'\n')
 save()
@@ -55,7 +61,18 @@ try:
     result['runtime']={'torch':torch.__version__, 'triton':triton.__version__,
                        'torch_file':torch.__file__, 'triton_file':triton.__file__, 'target':str(target)}
     torch.manual_seed(1729)
+    input_index=0
+    result['input_hashes']=[]
     def rand(shape, dtype=torch.float32):
+        global input_index
+        if a.input_dir:
+            family='matmul' if a.operator.startswith('gemm') else ('transpose' if a.operator=='transpose' else 'rows')
+            path=a.input_dir/f'{family}-{a.shape}-{input_index}.bin'
+            raw=path.read_bytes()
+            result['input_hashes'].append(hashlib.sha256(raw).hexdigest())
+            value=torch.frombuffer(bytearray(raw),dtype=dtype).reshape(shape).clone()
+            input_index+=1
+            return value
         return torch.randn(shape, device='cpu', dtype=dtype) * 0.1
     shape = result['shape']; op = a.operator
     if op.startswith('gemm'):
@@ -66,10 +83,10 @@ try:
             ref=torch.nn.functional.gelu(ref + cpu_bias, approximate='tanh')
         A,B,Bias=cpu_a.to(device),cpu_b.to(device),cpu_bias.to(device)
         Y=torch.empty((M,N),dtype=torch.float32,device=device)
-        config={'BM':16,'BN':16,'BK':16,'num_stages':a.variant+1,'num_warps':4}
-        grid=(triton.cdiv(M,16),triton.cdiv(N,16))
+        config={'BM':a.tile,'BN':a.tile,'BK':a.k_tile,'num_stages':a.variant+1,'num_warps':4}
+        grid=(triton.cdiv(M,a.tile),triton.cdiv(N,a.tile))
         def launch():
-            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,16,16,16,op=='gemm_bias_gelu',num_stages=a.variant+1,num_warps=4,debug=(a.phase=='lowering'))
+            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,a.tile,a.tile,a.k_tile,op=='gemm_bias_gelu',num_stages=a.variant+1,num_warps=4,debug=(a.phase=='lowering'))
         tolerance={'atol':0.002,'rtol':0.02}
     elif op=='transpose':
         M,N=shape; cpu_x=rand((M,N)); ref=cpu_x.T.contiguous()
@@ -142,10 +159,10 @@ try:
     elif a.phase=='native' and a.collector=='torch':
         if a.backend!='cuda': raise ValueError('Torch reference collection is currently validated only for CUDA')
         trace_dir=a.output/'reference';trace_dir.mkdir()
-        result['profiling']={'collector':'torch.profiler / Kineto / CUPTI', 'launch_count':3,
+        result['profiling']={'collector':'torch.profiler / Kineto / CUPTI', 'launch_count':a.profile_launches,
                              'scope':'three prewarmed launches; independent reference collector, not FlagPrism'}
         with torch.profiler.profile(activities=[torch.profiler.ProfilerActivity.CPU,torch.profiler.ProfilerActivity.CUDA]) as capture:
-            for _ in range(3): launch()
+            for _ in range(a.profile_launches): launch()
             iface.synchronize()
         capture.export_chrome_trace(str(trace_dir/'trace.json'))
         trace=json.loads((trace_dir/'trace.json').read_text())
@@ -162,7 +179,7 @@ try:
         if a.backend=='cann' and a.phase=='native':
             os.environ['FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY']='1'
         result['profiling']={'hook':hook,'requested_mode':'runtime_base:runtime_host_timing_fallback=false:device_id='+str(a.device),
-                             'launch_count':3,'scope':'three kernel launches plus final synchronization; prewarmed'}
+                             'launch_count':a.profile_launches,'scope':'prewarmed kernel launches plus final synchronization'}
         if a.backend=='cuda':
             result['profiling']['requested_mode'] += ':vendor_metrics=launch_stats'
         if a.phase=='internal' and a.backend=='cann':
@@ -172,7 +189,7 @@ try:
         session=profiler.start(str(a.output/'profile'),backend=a.backend,hook=hook,
                                mode=result['profiling']['requested_mode'])
         try:
-            for _ in range(3): launch()
+            for _ in range(a.profile_launches): launch()
             iface.synchronize()
         finally:
             profiler.finalize(session)

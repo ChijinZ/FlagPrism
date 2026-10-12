@@ -6,8 +6,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch
-p=argparse.ArgumentParser();p.add_argument('--ascend',type=Path,required=True);p.add_argument('--enflame',type=Path,required=True);p.add_argument('--cuda',type=Path);p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
-plt.rcParams.update({'font.size':9,'pdf.fonttype':42,'ps.fonttype':42,'axes.spines.top':False,'axes.spines.right':False})
+p=argparse.ArgumentParser();p.add_argument('--ascend',type=Path,required=True);p.add_argument('--enflame',type=Path,required=True);p.add_argument('--cuda',type=Path);p.add_argument('--output',type=Path,required=True);p.add_argument('--breadth-only',action='store_true');a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
+plt.rcParams.update({'font.size':12,'pdf.fonttype':42,'ps.fonttype':42,'axes.spines.top':False,'axes.spines.right':False})
 colors={'cann':'#2166ac','enflame':'#d6604d','cuda':'#1b9e77'}
 ops=['gemm','gemm_bias_gelu','softmax','layernorm','reduce_sum','transpose']
 labels=['GEMM','GEMM + bias + GELU','Softmax','LayerNorm','Reduce-sum','Transpose']
@@ -19,7 +19,7 @@ def save(fig,name):
 fig,axes=plt.subplots(2,3,figsize=(10.6,5.3),layout='constrained')
 for ax,op,title in zip(axes.flat,ops,labels):
  shapes=['128x128x128','512x512x512','257x193x320'] if op.startswith('gemm') else (['256x256','1024x1024','513x257'] if op=='transpose' else ['32x256','256x1024','127x769'])
- backends=[('cann',a.ascend,'native-full'),('enflame',a.enflame,'full')]+([('cuda',a.cuda,'full')] if a.cuda else [])
+ backends=[('cann',a.ascend,'native-full' if (a.ascend/'native-full').exists() else 'full'),('enflame',a.enflame,'full')]+([('cuda',a.cuda,'full')] if a.cuda else [])
  for bi,(backend,root,sub) in enumerate(backends):
   for j,shape in enumerate(shapes):
    for v in [0,1]:
@@ -32,8 +32,9 @@ for ax,op,title in zip(axes.flat,ops,labels):
     ax.scatter([x]*len(ds),ds,s=8,color=colors[backend],alpha=.4)
  ax.set_title(title);ax.set_yscale('log');ax.grid(axis='y',alpha=.2)
  ax.set_xticks([.5,3.5,6.5],['small\nv0 / v1','large\nv0 / v1','tail\nv0 / v1']);ax.set_ylabel('Kernel/task duration (µs)')
-fig.suptitle('Observed device activity: Ascend (blue), Enflame (red)'+(', V100S (green)' if a.cuda else '')+'\nThree prewarmed launches per configuration; dots = observations, bars = min–max',fontsize=10)
+fig.suptitle('Observed device activity: Ascend (blue), Enflame (red)'+(', V100S (green)' if a.cuda else '')+'\n15 prewarmed observations; bars = min–max; circles = v0, squares = v1',fontsize=12)
 save(fig,'study-device-duration')
+if a.breadth_only:raise SystemExit(0)
 # Separate clocks; only Enflame exposes correlated host/device activities here.
 fig,axes=plt.subplots(2,1,figsize=(10,4.5),layout='constrained')
 for ax,backend,root,sub in [(axes[0],'cann',a.ascend,'native-full'),(axes[1],'enflame',a.enflame,'full')]:
@@ -51,7 +52,7 @@ for ax,backend,root,sub in [(axes[0],'cann',a.ascend,'native-full'),(axes[1],'en
    linked=[k for k in kernels if k.get('correlation_key')==e.get('correlation_key') and e.get('correlation_key')]
    if len(linked)==1:ax.annotate('',xy=((linked[0]['start_ns']-origin)/1e3,.34),xytext=((e['end_ns']-origin)/1e3,.06),arrowprops={'arrowstyle':'->','lw':.8,'color':'#777777'})
  ax.set_ylim(-.45,1);ax.set_yticks([-.1,.5],['Host launch API' if apis else 'Host API: unavailable','Device activity']);ax.set_xlabel('Time since first recorded launch/kernel (µs; separate capture origin)');ax.grid(axis='x',alpha=.2);ax.set_title(('Ascend 910B4-1: aclprof task intervals' if backend=='cann' else 'Enflame GCU300: TOPSPTI API/kernel intervals')+' — GEMM 128³')
-fig.suptitle('Measured whole-kernel timelines; no internal pipeline timing is inferred',fontsize=10)
+fig.suptitle('Measured whole-kernel timelines; no internal pipeline timing is inferred',fontsize=12)
 save(fig,'study-capture-timeline')
 # Static pipeline mapping from actual emitted IR; verify all displayed operation names.
 cfile=next((a.ascend/'lowering/gemm-128-debug').rglob('kernel.npuir.mlir'))

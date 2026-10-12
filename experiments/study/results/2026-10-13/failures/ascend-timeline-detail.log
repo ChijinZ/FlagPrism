@@ -1,0 +1,53 @@
+can not use command: npu-smi info
+2026-10-13 01:47:36 [WARN]  The option "--application" will be deprecated in future version. It is recommended to specify <app> [arguments] instead.
+2026-10-13 01:47:36 [WARN]  Currently, the root permission is used, which is unrecommended. Please ensure the security of the execution environment and programs.
+2026-10-13 01:47:36 [INFO]  Op profiling analysis start.
+2026-10-13 01:47:36 [INFO]  Running device task: DeviceProf
+[INFO] <ProfData> Start profiling on device 5, kernel: matmul_mix_aic
+[ERROR] <Save> Kernel context save failed, dump kernel args failed
+[WARN] <Launch> Msopt dump kernel failed
+[INFO] Start profiling....
+[INFO] Start export data in PROF_000001_20261013014746964_02703055PCNIGDQJ.
+Tue 13 Oct 2026 01:47:47 [WARNING] [MSVP] [2704295] msprof_entrance.py: Msprof analysis is parsing data as root, which may cause potential system security risks.
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: Start analyzing data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/host" ...
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: It may take few minutes, please be patient ...
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: Analysis data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/host" finished.
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: Start analyzing data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5" ...
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: It may take few minutes, please be patient ...
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_common.py: Analysis data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5" finished.
+Tue 13 Oct 2026 01:47:47 [INFO] [MSVP] [2704302] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5.
+Tue 13 Oct 2026 01:47:48 [WARNING] [MSVP] [2704493] msprof_entrance.py: Msprof analysis is parsing data as root, which may cause potential system security risks.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_export.py: The data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/host" has been analyzed. Parsing phase will be skipped.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_export.py: The data in "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5" has been analyzed. Parsing phase will be skipped.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_export.py: There is no summary data to export for "/tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/host"
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/device_5.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_common.py: Start exporting summary output_file.
+Tue 13 Oct 2026 01:47:48 [INFO] [MSVP] [2704500] msprof_common.py: End exporting summary output_file.The file is stored in the /tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ/mindstudio_profiler_output path.
+[INFO] Export all data in PROF_000001_20261013014746964_02703055PCNIGDQJ done.
+[INFO] Profiling finished.
+[INFO] Process profiling data complete. Data is saved in /tmp/flagtree_profiler_cann_profile_1791827266947082591_0/flagtree_profiler_session_0/PROF_000001_20261013014746964_02703055PCNIGDQJ
+{"operator": "gemm_bias_gelu", "shape": "128x128x128", "variant": 0, "phase": "native", "status": "passed", "error": null}
+2026-10-13 01:47:55 [INFO]  Profiling running finished. All task success.
+2026-10-13 01:47:55 [INFO]  Start parse dump file
+2026-10-13 01:47:55 [WARN]  Failed to get any available dump file to parse, please check
+2026-10-13 01:47:55 [ERROR] Parse kernel data failed, kernel name is matmul_mix_aic, the order is 0
+2026-10-13 01:47:55 [INFO]  Profiling results saved in /workspace/flagprism-study-20261013/msop-v2/report/OPPROF_20261013014736_WTGYWKLJZTYIZFGS
+2026-10-13 01:47:55 [WARN]  Profiling kernels result is: 0 success, 1 failed. Please check
+2026-10-13 01:47:55 [INFO]  Start analyze kernel on device: device5, kernel: matmul_mix_aic, name is: 0
+2026-10-13 01:47:55 [INFO]  Operator Basic Information:
+
+	Op Name: matmul_mix_aic
+	Op Type: mix
+	Task Duration(us): 27.220545
+	Block Dim: 64
+	Mix Block Dim: 128
+	Device Id: 5
+	Pid: 2703055
+	Current Freq: 1650
+	Rated Freq: 1650
+
+2026-10-13 01:47:55 [INFO]  Profiling results saved in /workspace/flagprism-study-20261013/msop-v2/report/OPPROF_20261013014736_WTGYWKLJZTYIZFGS
+2026-10-13 01:47:55 [INFO]  Profiling data parse finished.
+2026-10-13 01:47:55 [WARN]  TimelineDetail data collection failed
+2026-10-13 01:47:55 [INFO]  Op profiling finish. Welcome to next use.

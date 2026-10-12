@@ -1,0 +1,22 @@
+PLEASE submit a bug report to https://github.com/llvm/llvm-project/issues/ and include the crash backtrace.
+Stack dump:
+0.	Program arguments: /usr/local/Ascend/cann-9.0.0/bin/bishengir-compile ../unit-compile-v3/instrumented.hivm.mlir --target=Ascend910B4-1 --enable-hivm-compile=true --disable-hivm-tensor-compile -o ../unit-compile-v3/kernel
+Stack dump without symbol names (ensure you have llvm-symbolizer in your PATH or set the environment var `LLVM_SYMBOLIZER_PATH` to point to it):
+0  bishengir-compile 0x0000aaae6b5c8ba8
+1  bishengir-compile 0x0000aaae6b5c671c
+2  bishengir-compile 0x0000aaae6b5c9370
+3  linux-vdso.so.1   0x0000fffc375107c0 __kernel_rt_sigreturn + 0
+4  bishengir-compile 0x0000aaae672d9c7c
+5  bishengir-compile 0x0000aaae67390458
+6  bishengir-compile 0x0000aaae6728d4f4
+7  bishengir-compile 0x0000aaae6728d4f4
+8  bishengir-compile 0x0000aaae6728d4f4
+9  bishengir-compile 0x0000aaae673784f4
+10 bishengir-compile 0x0000aaae6a9cb260
+11 bishengir-compile 0x0000aaae6a9ce820
+12 bishengir-compile 0x0000aaae67323ce4
+13 bishengir-compile 0x0000aaae672f7874
+14 bishengir-compile 0x0000aaae6727a7dc
+15 libc.so.6         0x0000fffc36fb7400
+16 libc.so.6         0x0000fffc36fb74d8 __libc_start_main + 152
+17 bishengir-compile 0x0000aaae67279e58

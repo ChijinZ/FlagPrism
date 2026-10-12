@@ -6,6 +6,8 @@ p=argparse.ArgumentParser()
 p.add_argument('--backend',required=True)
 p.add_argument('--output',type=Path,required=True)
 p.add_argument('--device',type=int,default=0)
+p.add_argument('--profile-launches',type=int,default=3)
+p.add_argument('--input-dir',type=Path)
 p.add_argument('--collector',choices=['flagprism','torch'],default='flagprism')
 p.add_argument('--pilot',action='store_true')
 p.add_argument('--phases',nargs='+',default=['baseline','native'])
@@ -27,6 +29,8 @@ for op,shape,variant,phase in plan:
   print('EXISTS, no overwrite:',name,flush=True); continue
  cmd=[sys.executable,str(Path(__file__).with_name('run_case.py')),'--backend',a.backend,'--operator',op,'--shape',shape,'--variant',str(variant),'--device',str(a.device),'--phase',phase,'--collector',a.collector,'--output',str(out)]
  print(time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime()),'RUN',name,flush=True)
+ cmd += ['--profile-launches',str(a.profile_launches)]
+ if a.input_dir:cmd += ['--input-dir',str(a.input_dir)]
  with (a.output/(name+'.log')).open('w') as log:
   try: r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,timeout=a.timeout); code=r.returncode
   except subprocess.TimeoutExpired: code=124

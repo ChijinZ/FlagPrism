@@ -1,0 +1,70 @@
+{
+  "backend": "enflame",
+  "python": "3.12.3",
+  "machine": "x86_64",
+  "target": "GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12)",
+  "modules": {
+    "torch": {
+      "version": "2.10.0+cpu",
+      "file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+      "file_sha256": "51c90fe34a7cf869517d1bab4cd114498790e169ec668f1a154c35ec64117a5e"
+    },
+    "torch_gcu": {
+      "version": "2.10.0+3.8.20260703",
+      "file": "/usr/local/lib/python3.12/dist-packages/torch_gcu/__init__.py",
+      "file_sha256": "54432bc8f6f039d9b5b99e19f16e686d7acab1ba8a0c7b6953a03d2dfdcacdda"
+    },
+    "triton": {
+      "version": "3.6.0",
+      "file": "/workspace/FlagTree/python/triton/__init__.py",
+      "file_sha256": "df3092178f70be89b50d22905cedae5bac414cc38677053616fc56802c91af30"
+    },
+    "flagtree.profiler": {
+      "version": "3.6.0",
+      "file": "/workspace/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+      "file_sha256": "cce78ed42bf73f28398c40c0e4de88f9a8d8a81128a6f7059b08027edf2aa99a",
+      "profile_py_sha256": "5a8f085cb7911658f2928c11425ab6386d1e2a38bfc2cbb8171a6f6238c16dad"
+    },
+    "flagtree.debugger": {
+      "version": "3.6.0",
+      "file": "/workspace/FlagPrism/Debugger/python/flagtree_debugger/__init__.py",
+      "file_sha256": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db"
+    }
+  },
+  "nearby_checkouts": {
+    "/workspace/FlagTree": {
+      "head": "add842f2c495a3974944733ea6b07ff6b5bfcee8",
+      "branch": "enflame-flagprism",
+      "status": "",
+      "note": "Nearby checkout; not proof that loaded installed modules were built from this commit."
+    },
+    "/workspace/FlagPrism": {
+      "head": "a7a9aca63738c69ef7846b0faf201206b0882a62",
+      "branch": "detailed-profiler",
+      "status": "",
+      "note": "Nearby checkout; not proof that loaded installed modules were built from this commit."
+    }
+  },
+  "device_count": 8,
+  "device_properties_0": "_GcuDeviceProperties(name='GCU', major=3, minor=0, total_memory=41846MB, multi_processor_count=2, sip_count=24)",
+  "code_hashes": {
+    "extract_bundle.py": "10eee3e366740d35b6f837b9b5fde9965a13bd13a9cfc5d082cc0a6933c9475b",
+    "timing_probe.py": "06da3dd32ea6febac3025c03bbde461dfc3527e58c20b243b8d69f4ee7003776",
+    "observations.py": "a9d2cce18ddd02af7d52319b80044976f98704b46f65453de9b7e2e941a4452d",
+    "environment.py": "8c92dc2b892c6042ee6cd2f47d20b7419d5dcb9cee1ced8d35957566164a6651",
+    "freeze_results.py": "002c24669abb3e001ebce13225ae20cdfe85ea461fc378a701b5ee959c0a377c",
+    "endpoint_probe.py": "7264d59b6e7db718482e4825158823ca9b44e534cf9a95cd0bd9333921508e9c",
+    "reference_probe.py": "b559a6cccedcdff62d523e729b6e3efce6cd436b034165a70c1ebd08311413a8",
+    "make_inputs.py": "1a2e10f7231489a803099180633c87eac5c3e6f3849db818c1f7db4a887fc87d",
+    "sweep.py": "bdc0cc41e21ca4bab19af52db5a04a79d0fdab4fc2c3de96cf0381f058bce3b2",
+    "summarize.py": "b96258f6e4901e549081866e28b00e08b77e3c0a30f3ac1d309dc7871c248d92",
+    "run_case.py": "4eadb1364d11558c1c4687e82aa0d53d7aca91084f7857f7ca44b02bf3120875",
+    "plot_results.py": "1cddedc2063d325d4b4414496663d83c2bf36b3b174a31e50d4e2f9acf8c6dc8",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+    "nested_probe.py": "bf00fcb4f23e7b1d12ef21246c0ef8c0f3f4c3ca751deaa03b091c372b6d2abd"
+  },
+  "limits": [
+    "No fixed-clock or exclusive-device guarantee was recorded.",
+    "Different backend compiler/SDK versions prevent attributing differences exclusively to hardware."
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "backend": "enflame",
+  "loops": 256,
+  "sync": 1,
+  "nested": true,
+  "before": 96,
+  "status": "passed",
+  "semantics": "raw counter bracket; completion semantics require final-code audit",
+  "samples": [
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2209,
+      "delta_ticks_mod32": 2209,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2209,
+      "inner_delta_ticks_mod32": 2209
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2209,
+      "delta_ticks_mod32": 2209,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2209,
+      "inner_delta_ticks_mod32": 2209
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2209,
+      "delta_ticks_mod32": 2209,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2209,
+      "inner_delta_ticks_mod32": 2209
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2209,
+      "delta_ticks_mod32": 2209,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2209,
+      "inner_delta_ticks_mod32": 2209
+    },
+    {
+      "start_low32": 0,
+      "end_low32": 2208,
+      "delta_ticks_mod32": 2208,
+      "inner_start_low32": 0,
+      "inner_end_low32": 2208,
+      "inner_delta_ticks_mod32": 2208
+    }
+  ],
+  "correct": true,
+  "max_abs_error": 8.344650268554688e-07,
+  "metadata": "KernelMetadata(allow_fp8e4b15=False, allow_fp8e4nv=False, allowed_dot_input_precisions=['ieee'], arch='gcu300', backend_name='gcu', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='ieee', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=False, enable_i64=False, enable_stride0=False, extern_libs=[], hash='131f6bee589132da82d2629c5bfe4e32e7a8d9f6c3884613bf999f31d3796837', instrumentation_mode='', launch_cooperative_grid=False, launch_pdl=False, max_dsm=0, max_local=1572352, max_num_imprecise_acc_default=0, max_shared=8388608, name='probe', num_buffers_warp_spec=0, num_consumer_groups=0, num_ctas=1, num_stages=1, num_warps=1, ptr_int_args=[], redundant_sip=False, reg_dec_producer=0, reg_inc_consumer=0, sanitize_overflow=False, shared=0, supported_fp8_dtypes=[], target=GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12), tle_raw=False, tle_raw_deferred=False, triton_version='3.6.0', vector_length=512, warp_size=1)"
+}

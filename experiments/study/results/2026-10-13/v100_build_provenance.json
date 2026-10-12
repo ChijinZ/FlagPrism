@@ -1,0 +1,16 @@
+{
+  "flagtree_pr": "https://github.com/flagos-ai/FlagTree/pull/1262",
+  "flagtree_revision": "57d348b08455ff9a03902016c0fd6054ab44343e",
+  "flagtree_source_archive_sha256": "3362362d95fa1accfeec1b89d4e57f55b25e53d9e2cdc8ed383aba0bedd3e2cb",
+  "container": "flagprism-study-v100-20261012",
+  "image": "nvcr.io/nvidia/pytorch:25.04-py3",
+  "target": "Tesla V100S-PCIE-32GB, sm70",
+  "source_precedence": "study_flagtree_source.pth inserts PR1262/python ahead of stale installed namespace",
+  "TORCH_DEVICE_BACKEND_AUTOLOAD": "0",
+  "runtime_patch": "Debugger/lib/CMakeLists.txt: exceptions only for FlagTreeDebuggerRuntime; committed 4c687a5",
+  "build_script": "experiments/study/build_v100.sh",
+  "limits": [
+    "NGC Torch CUDA kernels are not Volta-compatible; actual studies use custom Triton kernels, CPU references and DMA.",
+    "No global Docker/driver/proxy configuration changed."
+  ]
+}

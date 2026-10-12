@@ -1,0 +1,15 @@
+-------------------------------------------------- --------------- ----------------------------------------------------------------------
+Metric Name                                        Metric Unit     Metric Description
+-------------------------------------------------- --------------- ----------------------------------------------------------------------
+SIP/1D_EFFICIENCY                                  %               Percentage of cycles spent on 1D instruction execution (M-slot +
+                                                                   V-slot) relative to total cycles
+SIP/2D_EFFICIENCY                                  %               Percentage of cycles spent on 2D instruction execution (M-slot)
+                                                                   relative to total cycles
+SIP/BUSY                                           CYCLE           Total number of SIP busy cycles including wait stall
+SIP/L1_ICACHE_HW_PREFETCH                          EVENT           Number of L1 instruction cache hardware prefetch requests launched to
+                                                                   SDTE
+SIP/L1_ICACHE_MISS                                 EVENT           Number of L1 instruction cache miss-fetch requests launched to SDTE
+SIP/L1_ICACHE_SW_PREFETCH                          EVENT           Number of L1 instruction cache software prefetch requests launched to
+                                                                   SDTE
+SIP/MSF_EFFICIENCY                                 %               Percentage of cycles spent on MSF instruction execution (M-slot)
+                                                                   relative to total cycles
