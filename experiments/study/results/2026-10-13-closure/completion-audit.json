@@ -1,0 +1,105 @@
+{
+  "objective": "Original seven acceptance items in pasted-text-1.txt; research Study scope, not a production profiling system or universal accuracy guarantee",
+  "evidence_commit": "e8ace629dedf14507db79cb66ceb168de2049abc",
+  "evidence_commit_remote_verified": true,
+  "requirements": [
+    {
+      "id": 1,
+      "status": "satisfied",
+      "proof": [
+        "../../region_contract.json",
+        "../../region_plan.py",
+        "paper/sections/03-study.tex:fixed observation request"
+      ],
+      "scope": "body/output actor/program/invocation/endpoints/unit/protocol; unsupported crossactorintervalexplicit"
+    },
+    {
+      "id": 2,
+      "status": "satisfied",
+      "proof": [
+        "breadth_reaudit.json"
+      ],
+      "counts": {
+        "passing_cases": 216,
+        "native_intervals": 1620,
+        "artifact_hashes": 1296
+      }
+    },
+    {
+      "id": 3,
+      "status": "satisfied",
+      "proof": [
+        "operator_audit.json",
+        "ascend/generic-writer-audit.json",
+        "ascend/summary.json",
+        "gcu-global-timer/summary.json"
+      ],
+      "scope": "two actualfused/softmaxcases; compiledmapping, dependencies, same request, generic/adapted outcomes and explicitmissingquantities"
+    },
+    {
+      "id": 4,
+      "status": "satisfied",
+      "proof": [
+        "ascend/completion-regions.csv",
+        "ascend/captures/",
+        "figures/study-ascend-operator-pipeline.pdf"
+      ],
+      "scope": "actualactor-local dynamicbrackets; AICbody,AIVwait/transfer/compute/store; no crossactoroverlap or unperturbedbusytimeclaim"
+    },
+    {
+      "id": 5,
+      "status": "satisfied within explicitly tested measurement scopes",
+      "proof": [
+        "ascend/intervention-metadata.json",
+        "ascend-precision/summary.json",
+        "fresh_pmu_aligned_audit.json",
+        "ascend-precision/replay-data-manifest.json"
+      ],
+      "scope": "fixedwork dependencycontrol; actorassociation; independent realsoftmax body/output PMU windowcomparison64records; maximumobserved20.606ns, conditional41nsbound; otherbackends/regions notgivenabsoluteaccuracyguarantees"
+    },
+    {
+      "id": 6,
+      "status": "satisfied",
+      "proof": [
+        "paper/sections/03-study.tex:requirements"
+      ],
+      "scope": "provenance/identity,executionboundaries,clockcontracts each evidence\u2192consequence\u2192limitation\u2192mechanism\u2192validation; implemented/verified/proposed labeled"
+    },
+    {
+      "id": 7,
+      "status": "satisfied",
+      "proof": [
+        "README.md",
+        "reviews/final-evidence.md",
+        "reviews/final-story.md",
+        "reviews/final-visual.md",
+        "reviews/resolutions.json",
+        "paper-review-snapshot.pdf"
+      ],
+      "scope": "code/data/environment/reproductioncommitted+pushed; actualplots/PDFbuilt;3independentreviews andcriticalfixes verified"
+    }
+  ],
+  "checks": {
+    "python_source_compile": true,
+    "latex_build_no_error_undefined_or_overfull": true,
+    "operator_case_audit": 32,
+    "cuda_outer_bounds": 6960,
+    "ascend_cases": 11,
+    "ascend_interval_rows": 98880,
+    "gcu_joint_ordered_records": 1440,
+    "pmu_compact_reproduction_rows": 416,
+    "pmu_compact_summary_csv_byte_identical": true,
+    "secret_scan_no_matches": true,
+    "git_diff_check": true,
+    "no_study_design_directory": true
+  },
+  "paper_snapshot_sha256": "72bbc16b31d60dceb9ed185278879ef4c668f6d0edb6785e9b79f6d5785774c5",
+  "limitations": [
+    "V100absoluteinternalnsaccuracyunverified",
+    "GCUofficialabsoluteunits/internalprecisionunverified",
+    "Ascendfusedindividualphaseabsoluteaccuracyunverified",
+    "Crossactoroverlapunverified",
+    "Unperturbedbusytimeunverified",
+    "No same-SIMTvendorcomparativeproof oroperationaldeploymentclaim"
+  ]
+}
