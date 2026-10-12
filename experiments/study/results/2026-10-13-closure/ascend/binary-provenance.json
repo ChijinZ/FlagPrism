@@ -1,0 +1,31 @@
+{
+  "binaries": {
+    "original_fused32_baseline": {
+      "path": "/workspace/flagprism-study-20261013/fusion-lowering/asm/npubin",
+      "bytes": 5528,
+      "sha256": "99f0f362e1bcbadfb51efaae18d97591735c7cb7b726f7f89b320af197f109ab"
+    },
+    "recompile_fused32_control": {
+      "path": "/workspace/flagprism-study-closure-20261013/control3.o",
+      "bytes": 5472,
+      "sha256": "b03935db47f6bdb34b85287b98dc9c3e64ab2eb25618b845d8098f034819bac7"
+    },
+    "original_fused128_baseline": {
+      "path": "/workspace/flagprism-study-20261013/full/gemm_bias_gelu-128x128x128-v0-baseline/asm/npubin",
+      "bytes": 5312,
+      "sha256": "3e9d9f8757a49ebcfdea4f348a466b0276665fccb3e64f91299c7427c5cfdcb2"
+    },
+    "original_fused128_lowering_debug": {
+      "path": "/workspace/flagprism-study-20261013/lowering-v2/fused-128-debug/asm/npubin",
+      "bytes": 5312,
+      "sha256": "3e9d9f8757a49ebcfdea4f348a466b0276665fccb3e64f91299c7427c5cfdcb2"
+    },
+    "recompile_fused128_control": {
+      "path": "/workspace/flagprism-study-closure-20261013/fused128-control/kernel.o",
+      "bytes": 5256,
+      "sha256": "620c91bb4dc604782bbedf4f58395ad2ea42898a327dd6899ae3bc3970f18919"
+    }
+  },
+  "fused128_baseline_same_binary": false,
+  "limitation": "Successful original-pipeline source recompile preserves compiled entry signature and passes CPU validation. SHA equality is checked rather than assumed. Flags/source paths differ from prior cache compilation; exact cause of any byte difference is not assigned."
+}

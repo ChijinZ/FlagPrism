@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "request_id": "logical-region-intervals-v1",
+  "operators": [
+    "gemm_bias_gelu",
+    "softmax"
+  ],
+  "regions": {
+    "body": "Entry before input loads through the selected post-output-store barrier, on each executing actor where endpoints exist.",
+    "output": "Entry to downstream output processing through the selected barrier after its global store; includes readiness wait and input/workspace transfer executed within that region."
+  },
+  "output_fields": [
+    "operator",
+    "region",
+    "program_id",
+    "actor",
+    "capture_id",
+    "invocation_id",
+    "start",
+    "end",
+    "clock_domain",
+    "unit",
+    "endpoint_policy",
+    "included_activities",
+    "association_provenance"
+  ],
+  "constraints": [
+    "Local brackets do not establish unperturbed engine busy time.",
+    "Do not subtract actor clocks without a verified relation.",
+    "Separate replay captures share a logical request but not a physical invocation.",
+    "Report unavailable boundaries explicitly; do not replace missing observations with inferred timing.",
+    "Control-path projections do not promise minimum entry/maximum exit across every execution lane."
+  ],
+  "recording_actors": {
+    "cuda": "thread0 control-path projection of each logical CTA/program; selected post-store group barrier",
+    "enflame": "work-item0 control-path projection of each logical program; selected post-store group barrier",
+    "cann": "logical block + AIC/AIV + subblock scalar control path; selected PIPE_ALL endpoints"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "prepare": "python FlagPrism/experiments/study/gcu_global_timer_prepare.py --output <new private directory> --library /opt/tops/llvm11/lib/krt/gcu300_api_profile.bc --opt /opt/tops/llvm11/bin/opt",
+  "capture": "python gcu_global_timer_operator.py --leader-records --source operator_regions.py --shim <derived SDK helper.ll> --adapter-output <new directory> --backend enflame --operator gemm_bias_gelu --shape 128x128x128 --input-dir <canonical inputs> --output <new capture directory> --capture nested --device 1 --tile 16 --rows 1 --samples 15 --end-barrier 1",
+  "calibration": "Use same wrapper --source timing_probe.py --backend enflame --loops {0,16,64,256,1024} --sync 1 --device 1; leave nested false.",
+  "analyze": "python gcu_global_timer_analyze.py --operators <leader-workspace> --calibration <calibration-workspace> --case-prefix leader-global --output <compact directory>",
+  "source_hashes": {
+    "operator_regions.py": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+    "gcu_global_timer_prepare.py": "31f98d178d934bf3a921135f67b1aad8e81de1e4780f4fb1c2acc57293646ef9",
+    "gcu_global_timer_probe.py": "1a7bf80cd754cbd25d37e5b1e3d5169140ad4c717c59bb34baee117e89ed155c",
+    "gcu_global_timer_operator.py": "1a5477b009beed509af804682def6a095a90383e8d257f01d1040c214a0efc5f",
+    "gcu_global_timer_adapter.py": "0c902ff73adea594c1d1e21b33fd8235e9b74805fb8e0a4624a5d87b3caa725a",
+    "timing_probe.py": "06da3dd32ea6febac3025c03bbde461dfc3527e58c20b243b8d69f4ee7003776"
+  },
+  "accuracy": "Internal accuracy remains unverified. Native references provide only coarse duration consistency; empirical scale is not an official physical frequency.",
+  "repository_script_hashes": {
+    "gcu_global_timer_prepare.py": "31f98d178d934bf3a921135f67b1aad8e81de1e4780f4fb1c2acc57293646ef9",
+    "gcu_device_properties.cc": "297ec3421a1d92c28ab9f86165a804c3a28a2b8e37b8bd99bd01e5fdb473471b",
+    "gcu_global_timer_probe.py": "1a7bf80cd754cbd25d37e5b1e3d5169140ad4c717c59bb34baee117e89ed155c",
+    "gcu_global_timer_analyze.py": "2a4cef3dc04e518efc02de3b04342cdc1f9ee61e2ae042a8a182de767183a1c3",
+    "gcu_global_timer_operator.py": "1a5477b009beed509af804682def6a095a90383e8d257f01d1040c214a0efc5f",
+    "gcu_global_timer_adapter.py": "0c902ff73adea594c1d1e21b33fd8235e9b74805fb8e0a4624a5d87b3caa725a"
+  },
+  "reproduction_source_note": "Use archived code/operator_regions.py and code/timing_probe.py for exact source SHA; later repository source revisions may differ."
+}

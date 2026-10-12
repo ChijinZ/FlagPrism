@@ -1,0 +1,34 @@
+{
+  "sdk_bitcode": "/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc",
+  "sdk_sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec",
+  "original_function_sha256": "8247b569c876e1f8eb460656e5b95e3f1c93fa0a44521f39904b38b81b94a2e3",
+  "shim_sha256": "70eaee64ecf58b191bbb9c6136ef821c8d084568703807887058f91254bcbe1b",
+  "transformation": "Only rename/linkage/inline annotation and TBAA removal; original SDK volatile read/rollover/mask instructions retained. No invented MMIO addresses or MMIO writes.",
+  "sdk_function_fingerprints": {
+    "_ZN4tops15krt_clock_startEv": {
+      "sha256": "650ab5c8968fef7471d9b2f23d0b9a044933bec462eb5257813077271e41ab9c",
+      "lines": 13,
+      "volatile_loads": 0,
+      "volatile_stores": 0
+    },
+    "_ZN4tops14krt_clock_stopEv": {
+      "sha256": "e54091a7b75ffd3ad9f5be64416df99822b5e185e1d58890a1501aa32acdb828",
+      "lines": 13,
+      "volatile_loads": 0,
+      "volatile_stores": 0
+    },
+    "_ZN4tops9krt_clockEv": {
+      "sha256": "21c0a76514ef87c9cc7c5f0092fb32b865a3a444e4f780ef08ccbf78db618acf",
+      "lines": 6,
+      "volatile_loads": 1,
+      "volatile_stores": 0
+    },
+    "_ZN4tops12global_timerEv": {
+      "sha256": "8247b569c876e1f8eb460656e5b95e3f1c93fa0a44521f39904b38b81b94a2e3",
+      "lines": 22,
+      "volatile_loads": 5,
+      "volatile_stores": 0
+    }
+  },
+  "sdk_source_bulk_not_retained": true
+}

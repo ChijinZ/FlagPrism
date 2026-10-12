@@ -1,0 +1,471 @@
+{
+  "model": "native_whole_kernel_us = tick_period_us * local_bracket_ticks + prefix_suffix_intercept_us",
+  "train_levels": [
+    0,
+    64,
+    1024
+  ],
+  "held_out_from_fit_levels": [
+    16,
+    256
+  ],
+  "partition_provenance": "Parent specified this partition before this fit; earlier exploratory all-level summaries existed. This is not a blinded or preregistered holdout.",
+  "model_fit": {
+    "tick_period_us": 0.0009997173540151878,
+    "intercept_us": 12.305899003160446,
+    "r_squared": 0.9992065381874096,
+    "max_absolute_residual_us": 0.17152986750428134
+  },
+  "holdout": {
+    "16": {
+      "predicted_native_us": 13.115670059912748,
+      "observed_median_native_us": 13.455,
+      "residual_us": 0.3393299400872518,
+      "relative_residual": 0.0252196165059273
+    },
+    "256": {
+      "predicted_native_us": 15.57497475079011,
+      "observed_median_native_us": 15.33,
+      "residual_us": -0.2449747507901101,
+      "relative_residual": -0.015980088114162433
+    }
+  },
+  "levels": {
+    "0": {
+      "pairs": [
+        [
+          615,
+          18.076
+        ],
+        [
+          614,
+          12.54
+        ],
+        [
+          599,
+          13.32
+        ],
+        [
+          601,
+          13.38
+        ],
+        [
+          614,
+          13.41
+        ],
+        [
+          614,
+          12.796
+        ],
+        [
+          599,
+          13.08
+        ],
+        [
+          614,
+          13.83
+        ],
+        [
+          616,
+          12.66
+        ],
+        [
+          614,
+          12.75
+        ],
+        [
+          600,
+          13.456
+        ],
+        [
+          614,
+          12.96
+        ],
+        [
+          599,
+          13.664
+        ],
+        [
+          600,
+          12.81
+        ],
+        [
+          616,
+          11.999
+        ]
+      ],
+      "median_ticks": 614,
+      "median_native_us": 13.08,
+      "native_range_us": [
+        11.999,
+        18.076
+      ],
+      "counter_range_ticks": [
+        599,
+        616
+      ],
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q0/result.json",
+      "native_block_xyz": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "correct": true,
+      "max_abs_error": 0.0
+    },
+    "16": {
+      "pairs": [
+        [
+          810,
+          19.44
+        ],
+        [
+          824,
+          14.64
+        ],
+        [
+          810,
+          13.801
+        ],
+        [
+          809,
+          13.32
+        ],
+        [
+          826,
+          13.455
+        ],
+        [
+          810,
+          13.366
+        ],
+        [
+          810,
+          13.59
+        ],
+        [
+          810,
+          13.92
+        ],
+        [
+          826,
+          13.664
+        ],
+        [
+          810,
+          13.394
+        ],
+        [
+          824,
+          13.41
+        ],
+        [
+          824,
+          13.426
+        ],
+        [
+          810,
+          13.967
+        ],
+        [
+          810,
+          11.94
+        ],
+        [
+          810,
+          13.41
+        ]
+      ],
+      "median_ticks": 810,
+      "median_native_us": 13.455,
+      "native_range_us": [
+        11.94,
+        19.44
+      ],
+      "counter_range_ticks": [
+        809,
+        826
+      ],
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q16/result.json",
+      "native_block_xyz": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "correct": true,
+      "max_abs_error": 5.960464477539063e-08
+    },
+    "64": {
+      "pairs": [
+        [
+          1305,
+          18.99
+        ],
+        [
+          1306,
+          13.874
+        ],
+        [
+          1306,
+          13.44
+        ],
+        [
+          1306,
+          13.574
+        ],
+        [
+          1306,
+          13.094
+        ],
+        [
+          1306,
+          13.29
+        ],
+        [
+          1306,
+          13.14
+        ],
+        [
+          1306,
+          14.31
+        ],
+        [
+          1304,
+          13.86
+        ],
+        [
+          1306,
+          13.394
+        ],
+        [
+          1304,
+          13.14
+        ],
+        [
+          1304,
+          13.89
+        ],
+        [
+          1304,
+          14.296
+        ],
+        [
+          1306,
+          13.334
+        ],
+        [
+          1304,
+          13.214
+        ]
+      ],
+      "median_ticks": 1306,
+      "median_native_us": 13.44,
+      "native_range_us": [
+        13.094,
+        18.99
+      ],
+      "counter_range_ticks": [
+        1304,
+        1306
+      ],
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q64/result.json",
+      "native_block_xyz": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "correct": true,
+      "max_abs_error": 1.7881393432617188e-07
+    },
+    "256": {
+      "pairs": [
+        [
+          3270,
+          24.406
+        ],
+        [
+          3269,
+          15.33
+        ],
+        [
+          3270,
+          15.39
+        ],
+        [
+          3286,
+          15.12
+        ],
+        [
+          3270,
+          14.566
+        ],
+        [
+          3270,
+          16.126
+        ],
+        [
+          3269,
+          15.69
+        ],
+        [
+          3284,
+          15.18
+        ],
+        [
+          3270,
+          15.434
+        ],
+        [
+          3270,
+          15.794
+        ],
+        [
+          3284,
+          14.776
+        ],
+        [
+          3270,
+          15.044
+        ],
+        [
+          3286,
+          16.486
+        ],
+        [
+          3270,
+          15.0
+        ],
+        [
+          3271,
+          14.624
+        ]
+      ],
+      "median_ticks": 3270,
+      "median_native_us": 15.33,
+      "native_range_us": [
+        14.566,
+        24.406
+      ],
+      "counter_range_ticks": [
+        3269,
+        3286
+      ],
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q256/result.json",
+      "native_block_xyz": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "correct": true,
+      "max_abs_error": 8.344650268554688e-07
+    },
+    "1024": {
+      "pairs": [
+        [
+          11160,
+          33.27
+        ],
+        [
+          11160,
+          24.06
+        ],
+        [
+          11160,
+          23.476
+        ],
+        [
+          11160,
+          22.86
+        ],
+        [
+          11160,
+          24.194
+        ],
+        [
+          11160,
+          23.4
+        ],
+        [
+          11160,
+          23.22
+        ],
+        [
+          11160,
+          24.405
+        ],
+        [
+          11160,
+          23.22
+        ],
+        [
+          11160,
+          24.134
+        ],
+        [
+          11160,
+          23.474
+        ],
+        [
+          11160,
+          23.206
+        ],
+        [
+          11160,
+          23.88
+        ],
+        [
+          11160,
+          23.46
+        ],
+        [
+          11160,
+          23.474
+        ]
+      ],
+      "median_ticks": 11160,
+      "median_native_us": 23.474,
+      "native_range_us": [
+        22.86,
+        33.27
+      ],
+      "counter_range_ticks": [
+        11160,
+        11160
+      ],
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q1024/result.json",
+      "native_block_xyz": [
+        [
+          1,
+          1,
+          1
+        ]
+      ],
+      "correct": true,
+      "max_abs_error": 7.68899917602539e-06
+    }
+  },
+  "raw_75_point_ols_sensitivity": {
+    "tick_period_us": 0.0010243597618868963,
+    "intercept_us": 12.764024305331166,
+    "r_squared": 0.8233779796166353,
+    "max_absolute_residual_us": 9.074120752011076
+  },
+  "official_frequency_hz": null,
+  "interpretation": "Stack-specific empirical scale/consistency calibration, not physical frequency verification, independent oscillator evidence, or internal timing precision ground truth.",
+  "within_level_resampling_sensitivity": {
+    "slope_percentiles_2_5_97_5_us_per_tick": [
+      0.0009619455485684466,
+      0.001064200638878777
+    ],
+    "warning": "Conditional bootstrap of 15 serial paired observations within each fixed level. Launch dependence and environment drift are not modeled. This is not an independent physical-frequency confidence interval."
+  },
+  "real_operator_holdout_containment_violations": 0
+}

@@ -1,0 +1,478 @@
+{
+  "cases_verified": 32,
+  "cases": [
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t16-body",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t16-nested",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t16-none",
+      "programs_per_launch": 64,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t16-output",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t64-body",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t64-nested",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t64-none",
+      "programs_per_launch": 4,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "gemm_bias_gelu-t64-output",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r1-body",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r1-nested",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r1-none",
+      "programs_per_launch": 32,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r1-output",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r2-body",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r2-nested",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r2-none",
+      "programs_per_launch": 16,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "cuda",
+      "case": "softmax-r2-output",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t16-body",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t16-nested",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t16-none",
+      "programs_per_launch": 64,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t16-output",
+      "programs_per_launch": 64,
+      "records_verified": 960,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t64-body",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t64-nested",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t64-none",
+      "programs_per_launch": 4,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "gemm_bias_gelu-t64-output",
+      "programs_per_launch": 4,
+      "records_verified": 60,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+        "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+        "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r1-body",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r1-nested",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r1-none",
+      "programs_per_launch": 32,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r1-output",
+      "programs_per_launch": 32,
+      "records_verified": 480,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r2-body",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r2-nested",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r2-none",
+      "programs_per_launch": 16,
+      "records_verified": 0,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    },
+    {
+      "backend": "enflame",
+      "case": "softmax-r2-output",
+      "programs_per_launch": 16,
+      "records_verified": 240,
+      "native_invocations": 15,
+      "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+      "input_hashes": [
+        "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e"
+      ],
+      "status": "passed"
+    }
+  ],
+  "explicit_identity_check": "per launch, each expected logical program slot exists exactly once with matching coordinates",
+  "independent_bound_source": "CUPTI activity duration in the same serial capture; bounds do not prove exact internal-region accuracy",
+  "cuda_outer_bound_checks": 6960,
+  "cuda_outer_bound_violations": 0,
+  "plans": {
+    "cuda": {
+      "backend": "cuda",
+      "request_id": "logical-region-intervals-v1",
+      "captures": [
+        "nested"
+      ],
+      "association": "same capture and launch; explicit Triton program coordinates",
+      "unsupported": [],
+      "clock_unit": "globaltimer_ns"
+    },
+    "enflame": {
+      "backend": "enflame",
+      "request_id": "logical-region-intervals-v1",
+      "captures": [
+        "body",
+        "output"
+      ],
+      "association": "deterministic replay: same logical program/input, different physical launches",
+      "unsupported": [
+        "joint body/output timeline"
+      ],
+      "clock_unit": "SDK_counter_units_unverified"
+    },
+    "cann": {
+      "backend": "cann",
+      "request_id": "logical-region-intervals-v1",
+      "captures": [
+        "actor-local-late-llvm"
+      ],
+      "association": "compiler actor projection; explicit block/subblock/launch slots",
+      "unsupported": [
+        "overall cross-actor body until clock relation validated"
+      ],
+      "clock_unit": "SYS_CNT_ticks"
+    }
+  },
+  "joint_gcu_request": {
+    "backend": "enflame",
+    "request_id": "logical-region-intervals-v1",
+    "captures": [],
+    "association": "no observation returned",
+    "unsupported": [
+      "joint nested body/output with current begin/end primitive"
+    ],
+    "clock_unit": "SDK_counter_units_unverified"
+  },
+  "limits": [
+    "Single-region replay uses the same primitive, so it validates nesting protocol but is not independent physical time.",
+    "No statistical confidence interval claimed; program samples share launches/devices.",
+    "Body vs output frames from GCU replays are not overlaid as one execution.",
+    "Scalar record scope and barrier endpoint semantics require emitted-IR inspection."
+  ]
+}

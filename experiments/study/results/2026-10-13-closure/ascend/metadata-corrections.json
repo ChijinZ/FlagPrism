@@ -1,0 +1,34 @@
+{
+  "raw_files_preserved": true,
+  "corrections": [
+    {
+      "files": [
+        "fused-control-run-v2/result.json",
+        "fused128-control-run/result.json",
+        "softmax-control-native/result.json"
+      ],
+      "field": "semantics",
+      "issue": "Early script used the instrumentation boundary description also for uninstrumented controls.",
+      "interpretation": "instrumented=false, zero actor samples, original pre-link LLVM and binary provenance establish these are source recompile controls with no injected counters/barrier. Correctness and native task measurements remain valid."
+    },
+    {
+      "files": [
+        "softmax-control-run/result.json",
+        "softmax-instrumented-run/result.json"
+      ],
+      "field": "semantics",
+      "issue": "Pilot-only softmax files retained the GEMM boilerplate description.",
+      "interpretation": "Use softmax-control-native and softmax-instrumented-native as selected final cases, with corrected softmax region description; their measurements and CPU validation pass."
+    },
+    {
+      "files": [
+        "legacy internal phase records",
+        "fused128-completion-run/result.json",
+        "softmax-completion-v2-run/result.json"
+      ],
+      "field": "semantics",
+      "issue": "Historical generic boilerplate described pipeline gates as completion and did not specialize all completion-fence wording.",
+      "interpretation": "Use endpoint-policy-corrections.json and summary.phase_endpoint_policy; legacy phase fields are scalar issue/gate brackets, while selected completion cases insert explicit PIPE_ALL fences. Original body/output post-store ALL endpoints are retained."
+    }
+  ]
+}

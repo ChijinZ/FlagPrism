@@ -1,0 +1,380 @@
+{
+  "recording_actor": "work-item x=0 (y=z=0 for tested block geometry)",
+  "group_elapsed_envelope": "unavailable; records are actor control-path projections",
+  "hardware_core_id": null,
+  "sdk_get_thread_id_binding": "dimension 0 maps to llvm.dtu.read.tid.x",
+  "original_staging_scope": "SDK local_mem uses AS9, shared_mem AS3; old pre-guard local staging ownership not assumed",
+  "explicit_staging": "Every T scalar staging store and its global copy are now inside the existing thread0 branch. Compiler memory fence retained after staging. This is after the final clock endpoint; source math and clock call order are unchanged.",
+  "cases": {
+    "leader-global-fused128-nested": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-fused128-nested-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "67103655f51330fd679c9d208043582689280a666224bd681872426727c6f313",
+      "thread_id_value": "%89",
+      "leader_guard": "%393",
+      "guarded_fields": [
+        {
+          "true_block": "bb63",
+          "guard": "%393",
+          "staging_line": 634,
+          "copy_line": 645
+        },
+        {
+          "true_block": "bb65",
+          "guard": "%393",
+          "staging_line": 656,
+          "copy_line": 667
+        },
+        {
+          "true_block": "bb67",
+          "guard": "%393",
+          "staging_line": 677,
+          "copy_line": 688
+        },
+        {
+          "true_block": "bb69",
+          "guard": "%393",
+          "staging_line": 698,
+          "copy_line": 709
+        },
+        {
+          "true_block": "bb71",
+          "guard": "%393",
+          "staging_line": 719,
+          "copy_line": 730
+        },
+        {
+          "true_block": "bb73",
+          "guard": "%393",
+          "staging_line": 740,
+          "copy_line": 751
+        },
+        {
+          "true_block": "bb75",
+          "guard": "%393",
+          "staging_line": 761,
+          "copy_line": 772
+        },
+        {
+          "true_block": "bb77",
+          "guard": "%393",
+          "staging_line": 782,
+          "copy_line": 793
+        }
+      ],
+      "clock_call_count": 4,
+      "clock_ssa_order": [
+        "%55",
+        "%271",
+        "%384",
+        "%386"
+      ]
+    },
+    "leader-global-fused128-body": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-fused128-body-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "dc54179d45a612695e99cb916dfd5f0ff00f49a177b9c06df3310f57621f317d",
+      "thread_id_value": "%89",
+      "leader_guard": "%389",
+      "guarded_fields": [
+        {
+          "true_block": "bb63",
+          "guard": "%389",
+          "staging_line": 630,
+          "copy_line": 641
+        },
+        {
+          "true_block": "bb65",
+          "guard": "%389",
+          "staging_line": 652,
+          "copy_line": 663
+        },
+        {
+          "true_block": "bb67",
+          "guard": "%389",
+          "staging_line": 673,
+          "copy_line": 684
+        },
+        {
+          "true_block": "bb69",
+          "guard": "%389",
+          "staging_line": 694,
+          "copy_line": 705
+        },
+        {
+          "true_block": "bb71",
+          "guard": "%389",
+          "staging_line": 715,
+          "copy_line": 726
+        },
+        {
+          "true_block": "bb73",
+          "guard": "%389",
+          "staging_line": 736,
+          "copy_line": 747
+        },
+        {
+          "true_block": "bb75",
+          "guard": "%389",
+          "staging_line": 757,
+          "copy_line": 768
+        },
+        {
+          "true_block": "bb77",
+          "guard": "%389",
+          "staging_line": 778,
+          "copy_line": 789
+        }
+      ],
+      "clock_call_count": 2,
+      "clock_ssa_order": [
+        "%55",
+        "%382"
+      ]
+    },
+    "leader-global-fused128-output": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-fused128-output-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "a3579e2d1f0c8de1cc0cef67f23804cd3070b10c3c43167e16fac9b779829060",
+      "thread_id_value": "%87",
+      "leader_guard": "%389",
+      "guarded_fields": [
+        {
+          "true_block": "bb63",
+          "guard": "%389",
+          "staging_line": 630,
+          "copy_line": 641
+        },
+        {
+          "true_block": "bb65",
+          "guard": "%389",
+          "staging_line": 652,
+          "copy_line": 663
+        },
+        {
+          "true_block": "bb67",
+          "guard": "%389",
+          "staging_line": 673,
+          "copy_line": 684
+        },
+        {
+          "true_block": "bb69",
+          "guard": "%389",
+          "staging_line": 694,
+          "copy_line": 705
+        },
+        {
+          "true_block": "bb71",
+          "guard": "%389",
+          "staging_line": 715,
+          "copy_line": 726
+        },
+        {
+          "true_block": "bb73",
+          "guard": "%389",
+          "staging_line": 736,
+          "copy_line": 747
+        },
+        {
+          "true_block": "bb75",
+          "guard": "%389",
+          "staging_line": 757,
+          "copy_line": 768
+        },
+        {
+          "true_block": "bb77",
+          "guard": "%389",
+          "staging_line": 778,
+          "copy_line": 789
+        }
+      ],
+      "clock_call_count": 2,
+      "clock_ssa_order": [
+        "%269",
+        "%382"
+      ]
+    },
+    "leader-global-softmax-nested": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-softmax-nested-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "57f28bc2bfebe24518d4427f104771e14a59065003e939d7b4fbd5a20e1e4d66",
+      "thread_id_value": "%95",
+      "leader_guard": "%245",
+      "guarded_fields": [
+        {
+          "true_block": "bb22",
+          "guard": "%245",
+          "staging_line": 401,
+          "copy_line": 412
+        },
+        {
+          "true_block": "bb24",
+          "guard": "%245",
+          "staging_line": 423,
+          "copy_line": 434
+        },
+        {
+          "true_block": "bb26",
+          "guard": "%245",
+          "staging_line": 444,
+          "copy_line": 455
+        },
+        {
+          "true_block": "bb28",
+          "guard": "%245",
+          "staging_line": 465,
+          "copy_line": 476
+        },
+        {
+          "true_block": "bb30",
+          "guard": "%245",
+          "staging_line": 486,
+          "copy_line": 497
+        },
+        {
+          "true_block": "bb32",
+          "guard": "%245",
+          "staging_line": 507,
+          "copy_line": 518
+        },
+        {
+          "true_block": "bb34",
+          "guard": "%245",
+          "staging_line": 528,
+          "copy_line": 539
+        },
+        {
+          "true_block": "bb36",
+          "guard": "%245",
+          "staging_line": 549,
+          "copy_line": 560
+        }
+      ],
+      "clock_call_count": 4,
+      "clock_ssa_order": [
+        "%25",
+        "%201",
+        "%236",
+        "%238"
+      ]
+    },
+    "leader-global-softmax-body": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-softmax-body-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "a5cc046d838148142b9209a732d1e674d203650dc201b44da7ccf69028ee7a08",
+      "thread_id_value": "%95",
+      "leader_guard": "%241",
+      "guarded_fields": [
+        {
+          "true_block": "bb22",
+          "guard": "%241",
+          "staging_line": 397,
+          "copy_line": 408
+        },
+        {
+          "true_block": "bb24",
+          "guard": "%241",
+          "staging_line": 419,
+          "copy_line": 430
+        },
+        {
+          "true_block": "bb26",
+          "guard": "%241",
+          "staging_line": 440,
+          "copy_line": 451
+        },
+        {
+          "true_block": "bb28",
+          "guard": "%241",
+          "staging_line": 461,
+          "copy_line": 472
+        },
+        {
+          "true_block": "bb30",
+          "guard": "%241",
+          "staging_line": 482,
+          "copy_line": 493
+        },
+        {
+          "true_block": "bb32",
+          "guard": "%241",
+          "staging_line": 503,
+          "copy_line": 514
+        },
+        {
+          "true_block": "bb34",
+          "guard": "%241",
+          "staging_line": 524,
+          "copy_line": 535
+        },
+        {
+          "true_block": "bb36",
+          "guard": "%241",
+          "staging_line": 545,
+          "copy_line": 556
+        }
+      ],
+      "clock_call_count": 2,
+      "clock_ssa_order": [
+        "%25",
+        "%234"
+      ]
+    },
+    "leader-global-softmax-output": {
+      "llvm_path": "artifacts/study-closure-20261013/gcu-global-timer/leader-workspace/leader-global-softmax-output-adapter/global-timer.llir.mlir",
+      "llvm_sha256": "9b2d905ac4d15556d7ffe3bc5988d31b7fb7068fbd1b877fcb126b0d3031de8b",
+      "thread_id_value": "%93",
+      "leader_guard": "%241",
+      "guarded_fields": [
+        {
+          "true_block": "bb22",
+          "guard": "%241",
+          "staging_line": 397,
+          "copy_line": 408
+        },
+        {
+          "true_block": "bb24",
+          "guard": "%241",
+          "staging_line": 419,
+          "copy_line": 430
+        },
+        {
+          "true_block": "bb26",
+          "guard": "%241",
+          "staging_line": 440,
+          "copy_line": 451
+        },
+        {
+          "true_block": "bb28",
+          "guard": "%241",
+          "staging_line": 461,
+          "copy_line": 472
+        },
+        {
+          "true_block": "bb30",
+          "guard": "%241",
+          "staging_line": 482,
+          "copy_line": 493
+        },
+        {
+          "true_block": "bb32",
+          "guard": "%241",
+          "staging_line": 503,
+          "copy_line": 514
+        },
+        {
+          "true_block": "bb34",
+          "guard": "%241",
+          "staging_line": 524,
+          "copy_line": 535
+        },
+        {
+          "true_block": "bb36",
+          "guard": "%241",
+          "staging_line": 545,
+          "copy_line": 556
+        }
+      ],
+      "clock_call_count": 2,
+      "clock_ssa_order": [
+        "%199",
+        "%234"
+      ]
+    }
+  }
+}

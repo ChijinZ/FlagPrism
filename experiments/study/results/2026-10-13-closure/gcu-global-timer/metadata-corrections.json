@@ -1,0 +1,25 @@
+{
+  "raw_files_preserved": true,
+  "corrections": [
+    {
+      "captures": "initial global nested/probe exploration",
+      "issue": "Initial adapter metadata counted the old SDK symbol after rename and could report calls=0; some early scope text said no MMIO code injection.",
+      "correct_interpretation": "Private helper clones installed SDK volatile MMIO reads, with no invented addresses or MMIO writes. Actual caller IR audits show 4 nested or 2 single-active helper calls. Final explicit-leader metadata includes before/after counts and SSA order."
+    },
+    {
+      "captures": "global_* six exploratory cases",
+      "issue": "GM copies have thread0 guard, but staging stores were outside that guard and AS9 privacy was not established.",
+      "correct_interpretation": "Do not use these as final sampling-owner evidence; retain as exploration. leader-global_* six cases guard both staging and GM copies explicitly."
+    },
+    {
+      "captures": "stdout of wrapper operator runs",
+      "issue": "Shared source prints its default unit before wrapper final metadata annotation.",
+      "correct_interpretation": "Use final result.json and compact summary: SDK_global_timer_ticks. Legacy PMC counter units are different and are not assigned the empirical global-timer scale."
+    },
+    {
+      "captures": "final explicit-leader compact summary/adapter metadata",
+      "issue": "An earlier source_math_preserved explanation omitted the explicit T staging/publication postpass.",
+      "correct_interpretation": "The adapter changes clock callees/library target and T publication mechanics. Mathematical operations and source clock positions are preserved, while staging is moved inside the existing thread0 copy branches with compiler fences. Raw artifacts are unchanged."
+    }
+  ]
+}

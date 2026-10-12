@@ -1,0 +1,26 @@
+{
+  "status": "checked",
+  "generic_fused_correctness": "passed; program IDs passed; no actor ID stored",
+  "hivm_path": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/generic-fused128-nested/compiler_dump/K6N75DFXUAZKMOKTKSTTZA6HIBQWXOE5M7XC7UAEME4DVZBAX5FQ/kernel.npuir.mlir",
+  "hivm_sha256": "a89c8a48eb41fbfa786667a2ad12f167e94ad4702aad68c51b9a6e00bc428c14",
+  "aic": [
+    "four SYS_CNT sideeffects execute in AIC",
+    "AIC body projection has no output to T argument; corresponding source clocks are not returned"
+  ],
+  "aiv": [
+    "body start %18 before original sync_block_wait",
+    "output start %28 after original sync_block_wait and workspace load issuance; output excludes readiness wait",
+    "record counter fields originate from AIV values %19(body-start),%57(body-end),%29(output-start),%55(output-end)",
+    "T base is block/program index %17=(pid_m*8+pid_n)*8; %58=index_cast(%17)",
+    "record offsets %58..%58+7 do not contain subblock index %9",
+    "both AIV subblock paths execute the same eight record stores; static 2-writer alias per program; returned subactor is unidentifiable"
+  ],
+  "dynamic_limit": "No mixed-field occurrence, winner distribution, or mismatch rate is inferred from this static alias proof. Generic returned records passed program ID checks.",
+  "scope_comparison": "Generic output and late-LLVM output differ in whether readiness wait/workspace activity is inside the interval. A duration ratio is a scope difference, not internal numerical timing accuracy.",
+  "softmax": "Generic source mechanism passes correctness and program identity; single AIV actor per program. Late-LLVM adds direct transfer/compute/store intervals rather than fixing an established softmax failure.",
+  "llvm_paths": [
+    "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/generic-fused128-LLVM-audit/kernel.host.ll.original",
+    "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/generic-fused128-LLVM-audit/kernel.mix_aiv.ll.original",
+    "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/generic-fused128-LLVM-audit/kernel.mix_aic.ll.original"
+  ]
+}

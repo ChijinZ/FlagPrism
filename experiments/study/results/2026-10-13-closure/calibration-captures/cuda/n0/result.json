@@ -1,0 +1,135 @@
+{
+  "backend": "cuda",
+  "loops": 0,
+  "sync": 1,
+  "nested": false,
+  "before": 0,
+  "capture_region": "both",
+  "status": "passed",
+  "semantics": "input-readiness barrier always present; sync changes only the end barrier; counter units retained; not engine busy time",
+  "samples": [
+    {
+      "start_low32": 1669411744,
+      "end_low32": 1669411776,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1706579648,
+      "end_low32": 1706579680,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1706717504,
+      "end_low32": 1706717536,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1706821472,
+      "end_low32": 1706821504,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1706920608,
+      "end_low32": 1706920608,
+      "delta_ticks_mod32": 0,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707018304,
+      "end_low32": 1707018304,
+      "delta_ticks_mod32": 0,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707115200,
+      "end_low32": 1707115232,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707206272,
+      "end_low32": 1707206272,
+      "delta_ticks_mod32": 0,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707306048,
+      "end_low32": 1707306080,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707397952,
+      "end_low32": 1707397952,
+      "delta_ticks_mod32": 0,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707486688,
+      "end_low32": 1707486720,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707586400,
+      "end_low32": 1707586400,
+      "delta_ticks_mod32": 0,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707676256,
+      "end_low32": 1707676288,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707773184,
+      "end_low32": 1707773216,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    },
+    {
+      "start_low32": 1707864512,
+      "end_low32": 1707864544,
+      "delta_ticks_mod32": 32,
+      "inner_start_low32": 0,
+      "inner_end_low32": 0,
+      "inner_delta_ticks_mod32": 0
+    }
+  ],
+  "correct": true,
+  "max_abs_error": 0.0,
+  "metadata": "KernelMetadata(allowed_dot_input_precisions=['tf32', 'tf32x3', 'ieee', 'bf16x3', 'bf16x6'], arch='sm70', backend_name='cuda', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='tf32', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=True, enable_reflect_ftz=True, extern_libs=[['libdevice', '/workspace/study/FlagTree-pr1262/python/triton/backends/nvidia/lib/libdevice.10.bc']], global_scratch_align=1, global_scratch_size=0, hash='a97a5cc11627c5c94cb5202111fb11d6e1d9b46100617f82980b35dcddbc2db1', instrumentation_mode='', ir_override=None, kernel_init_hooks=[], launch_cooperative_grid=False, launch_pdl=False, max_num_imprecise_acc_default=0, maxnreg=None, name='probe', num_ctas=1, num_stages=1, num_warps=1, profile_scratch_align=1, profile_scratch_size=0, ptx_options=None, ptx_version=None, sanitize_overflow=True, shared=0, supported_fp8_dtypes=['fp8e4b15', 'fp8e5'], target=GPUTarget(backend='cuda', arch=70, warp_size=32), tensordesc_meta=[], tle_node_buffer_bindings='', tmem_size=0, triton_version='3.6.0', warp_size=32)"
+}

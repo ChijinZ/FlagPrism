@@ -1,0 +1,10 @@
+{
+  "legacy_cases": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+  "completion_cases": {
+    "fused128-completion-run": "artifacts/study-closure-20261013/ascend/completion-workspace/fused128-completion-run/result.json",
+    "softmax-completion-v2-run": "artifacts/study-closure-20261013/ascend/completion-workspace/softmax-completion-v2-run/result.json"
+  },
+  "body_output": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+  "original_raw_records_retained": true,
+  "compile_only_not_selected": "softmax-completion original compile did not add fences (same binary SHA as old case); it was not launched. softmax-completion-v2 is selected."
+}

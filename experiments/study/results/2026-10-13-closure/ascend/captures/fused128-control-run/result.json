@@ -1,0 +1,97 @@
+{
+  "status": "passed",
+  "operator": "gemm_bias_gelu",
+  "shape": [
+    128,
+    128,
+    128
+  ],
+  "device": 4,
+  "binary_sha256": "620c91bb4dc604782bbedf4f58395ad2ea42898a327dd6899ae3bc3970f18919",
+  "instrumented": false,
+  "counter_unit": "SYS_CNT native ticks",
+  "global_body": null,
+  "samples": [
+    {
+      "invocation": 3,
+      "host_synchronized_ns": 219433,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 4,
+      "host_synchronized_ns": 202993,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 5,
+      "host_synchronized_ns": 203952,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 6,
+      "host_synchronized_ns": 201002,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 7,
+      "host_synchronized_ns": 210162,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 8,
+      "host_synchronized_ns": 194412,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 9,
+      "host_synchronized_ns": 190233,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 10,
+      "host_synchronized_ns": 190192,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 11,
+      "host_synchronized_ns": 189482,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 12,
+      "host_synchronized_ns": 189253,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 13,
+      "host_synchronized_ns": 191003,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 14,
+      "host_synchronized_ns": 186483,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 15,
+      "host_synchronized_ns": 188452,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 16,
+      "host_synchronized_ns": 192142,
+      "max_abs_error": 1.341104507446289e-07
+    },
+    {
+      "invocation": 17,
+      "host_synchronized_ns": 185953,
+      "max_abs_error": 1.341104507446289e-07
+    }
+  ],
+  "input_sha256": {
+    "matmul-128x128x128-0.bin": "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+    "matmul-128x128x128-1.bin": "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+    "matmul-128x128x128-2.bin": "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+  },
+  "semantics": "AIC/AIV actor-local projections. AIV output begins before original readiness wait and includes workspace+bias input, GELU and output store through original PIPE_ALL barrier; added PIPE_MTE2 barrier splits workspace transfer. Probes perturb timing; no cross-actor subtraction or engine busy time."
+}

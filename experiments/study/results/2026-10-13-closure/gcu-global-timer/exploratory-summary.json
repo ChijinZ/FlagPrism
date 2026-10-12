@@ -1,0 +1,1486 @@
+{
+  "status": "passed",
+  "unit": "SDK_global_timer_ticks",
+  "official_frequency_hz": null,
+  "time_in_us": null,
+  "prototype": true,
+  "clock_domain": "actor-local per logical program; cross-program/SIP origin unverified",
+  "cases": {
+    "global-fused128-nested": {
+      "operator": "gemm_bias_gelu",
+      "capture": "nested",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-fused128-nested/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 1780.278,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 2,
+        "before_end_calls": 2,
+        "after_helper_calls": 4,
+        "ssa_order": [
+          "%55",
+          "%271",
+          "%384",
+          "%386"
+        ],
+        "original_sha256": "42a93eec36fc912bd1675a940627104d285924a4a28a3182f9eee7b92afcb25c",
+        "adapted_sha256": "19f62260c0e4b48f32092d959572a002529cdab6c1fb2c12b08485cde79745bc",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 1786.052,
+          "native_correlation_id": 4,
+          "body_median_ticks": 153293.0,
+          "body_max_ticks": 154546,
+          "output_median_ticks": 3796.0,
+          "output_max_ticks": 4230
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 1780.232,
+          "native_correlation_id": 16,
+          "body_median_ticks": 153300.0,
+          "body_max_ticks": 154380,
+          "output_median_ticks": 3796.0,
+          "output_max_ticks": 4126
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 1780.531,
+          "native_correlation_id": 28,
+          "body_median_ticks": 153300.0,
+          "body_max_ticks": 154426,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4186
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 1780.485,
+          "native_correlation_id": 40,
+          "body_median_ticks": 153329.0,
+          "body_max_ticks": 154350,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4200
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 1780.278,
+          "native_correlation_id": 52,
+          "body_median_ticks": 153307.0,
+          "body_max_ticks": 154574,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4126
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 1780.128,
+          "native_correlation_id": 64,
+          "body_median_ticks": 153307.0,
+          "body_max_ticks": 154486,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4156
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 1780.066,
+          "native_correlation_id": 76,
+          "body_median_ticks": 153293.0,
+          "body_max_ticks": 154394,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4156
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 1781.418,
+          "native_correlation_id": 88,
+          "body_median_ticks": 153300.0,
+          "body_max_ticks": 154320,
+          "output_median_ticks": 3809.5,
+          "output_max_ticks": 4126
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 1779.918,
+          "native_correlation_id": 100,
+          "body_median_ticks": 153300.0,
+          "body_max_ticks": 154410,
+          "output_median_ticks": 3795.5,
+          "output_max_ticks": 4140
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 1780.892,
+          "native_correlation_id": 112,
+          "body_median_ticks": 153286.0,
+          "body_max_ticks": 154381,
+          "output_median_ticks": 3796.0,
+          "output_max_ticks": 4140
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 1780.818,
+          "native_correlation_id": 124,
+          "body_median_ticks": 153314.0,
+          "body_max_ticks": 154320,
+          "output_median_ticks": 3817.5,
+          "output_max_ticks": 4139
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 1780.067,
+          "native_correlation_id": 136,
+          "body_median_ticks": 153353.0,
+          "body_max_ticks": 154440,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4186
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 1780.081,
+          "native_correlation_id": 148,
+          "body_median_ticks": 153293.0,
+          "body_max_ticks": 154396,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4170
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 1780.097,
+          "native_correlation_id": 160,
+          "body_median_ticks": 153323.0,
+          "body_max_ticks": 154350,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4140
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 1780.878,
+          "native_correlation_id": 172,
+          "body_median_ticks": 153301.0,
+          "body_max_ticks": 154350,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4126
+        }
+      ],
+      "joint_program_records": 960,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": 153300.0,
+      "output_median_of_launch_medians_ticks": 3803.0,
+      "empirical_scale_holdout_containment": {
+        "violations": [],
+        "tested_launches": 15,
+        "scale_source": "Calibration training q=0/64/1024 only; no operator data fit.",
+        "limitation": "Coarse whole-task duration consistency only, not internal accuracy ground truth."
+      }
+    },
+    "global-fused128-body": {
+      "operator": "gemm_bias_gelu",
+      "capture": "body",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-fused128-body/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 1770.359,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 1,
+        "before_end_calls": 1,
+        "after_helper_calls": 2,
+        "ssa_order": [
+          "%55",
+          "%382"
+        ],
+        "original_sha256": "8042fd3ce92f417e86333dcca5b177cd67709020cdd1d8281b5f7880a796dbb8",
+        "adapted_sha256": "680ef974a6efb628113da94746dde31293673027f6e3e782894d06788a5002b4",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 1775.67,
+          "native_correlation_id": 4,
+          "body_median_ticks": 152054.5,
+          "body_max_ticks": 153360,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 1770.119,
+          "native_correlation_id": 16,
+          "body_median_ticks": 152048.0,
+          "body_max_ticks": 153226,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 1770.39,
+          "native_correlation_id": 28,
+          "body_median_ticks": 152018.0,
+          "body_max_ticks": 153284,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 1770.359,
+          "native_correlation_id": 40,
+          "body_median_ticks": 152063.0,
+          "body_max_ticks": 153346,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 1770.63,
+          "native_correlation_id": 52,
+          "body_median_ticks": 152047.0,
+          "body_max_ticks": 153196,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 1771.529,
+          "native_correlation_id": 64,
+          "body_median_ticks": 152033.0,
+          "body_max_ticks": 153300,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 1769.474,
+          "native_correlation_id": 76,
+          "body_median_ticks": 152048.0,
+          "body_max_ticks": 153270,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 1770.599,
+          "native_correlation_id": 88,
+          "body_median_ticks": 152010.0,
+          "body_max_ticks": 153450,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 1769.594,
+          "native_correlation_id": 100,
+          "body_median_ticks": 152040.0,
+          "body_max_ticks": 153346,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 1769.819,
+          "native_correlation_id": 112,
+          "body_median_ticks": 152010.0,
+          "body_max_ticks": 153374,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 1770.96,
+          "native_correlation_id": 124,
+          "body_median_ticks": 152063.0,
+          "body_max_ticks": 153450,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 1769.459,
+          "native_correlation_id": 136,
+          "body_median_ticks": 152055.0,
+          "body_max_ticks": 153240,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 1770.556,
+          "native_correlation_id": 148,
+          "body_median_ticks": 152054.0,
+          "body_max_ticks": 153256,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 1769.939,
+          "native_correlation_id": 160,
+          "body_median_ticks": 152047.0,
+          "body_max_ticks": 153300,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 1769.836,
+          "native_correlation_id": 172,
+          "body_median_ticks": 152010.0,
+          "body_max_ticks": 153270,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        }
+      ],
+      "joint_program_records": 0,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": 152047.0,
+      "output_median_of_launch_medians_ticks": null,
+      "empirical_scale_holdout_containment": {
+        "violations": [],
+        "tested_launches": 15,
+        "scale_source": "Calibration training q=0/64/1024 only; no operator data fit.",
+        "limitation": "Coarse whole-task duration consistency only, not internal accuracy ground truth."
+      }
+    },
+    "global-fused128-output": {
+      "operator": "gemm_bias_gelu",
+      "capture": "output",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-fused128-output/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 1770.823,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 1,
+        "before_end_calls": 1,
+        "after_helper_calls": 2,
+        "ssa_order": [
+          "%269",
+          "%382"
+        ],
+        "original_sha256": "86b543baf3c3fbb7b4f22d90b5366e23e966e8bf1857b0a7ca1825f245d70905",
+        "adapted_sha256": "fe984b00beeaf514f634f22bf78324094eddb5a5227920c49dcdb9b1a777f1a6",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 1775.414,
+          "native_correlation_id": 4,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3802.5,
+          "output_max_ticks": 4080
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 1770.899,
+          "native_correlation_id": 16,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3787.0,
+          "output_max_ticks": 4065
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 1770.419,
+          "native_correlation_id": 28,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4094
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 1770.674,
+          "native_correlation_id": 40,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4080
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 1769.699,
+          "native_correlation_id": 52,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3780.0,
+          "output_max_ticks": 4110
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 1771.109,
+          "native_correlation_id": 64,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3773.0,
+          "output_max_ticks": 4079
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 1770.823,
+          "native_correlation_id": 76,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4066
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 1770.749,
+          "native_correlation_id": 88,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3787.0,
+          "output_max_ticks": 4094
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 1770.614,
+          "native_correlation_id": 100,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3788.0,
+          "output_max_ticks": 4050
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 1771.649,
+          "native_correlation_id": 112,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4066
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 1770.522,
+          "native_correlation_id": 124,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3803.0,
+          "output_max_ticks": 4065
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 1771.079,
+          "native_correlation_id": 136,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4064
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 1769.908,
+          "native_correlation_id": 148,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3810.0,
+          "output_max_ticks": 4066
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 1771.273,
+          "native_correlation_id": 160,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3802.0,
+          "output_max_ticks": 4110
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 1770.869,
+          "native_correlation_id": 172,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 3795.0,
+          "output_max_ticks": 4066
+        }
+      ],
+      "joint_program_records": 0,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": null,
+      "output_median_of_launch_medians_ticks": 3802.5
+    },
+    "global-softmax-nested": {
+      "operator": "softmax",
+      "capture": "nested",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-softmax-nested/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 76.816,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 2,
+        "before_end_calls": 2,
+        "after_helper_calls": 4,
+        "ssa_order": [
+          "%25",
+          "%201",
+          "%236",
+          "%238"
+        ],
+        "original_sha256": "2db89d01d1fec8d67e5c93d6008c69a375741dbaac0954079fedd727839bc269",
+        "adapted_sha256": "50b60902bf2468dd6d9ffc378d64e4bf53e60275c3791746425fcf4ed7d2e02c",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 86.657,
+          "native_correlation_id": 4,
+          "body_median_ticks": 4424.0,
+          "body_max_ticks": 4830,
+          "output_median_ticks": 1455.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 77.281,
+          "native_correlation_id": 16,
+          "body_median_ticks": 4440.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1455.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 76.32,
+          "native_correlation_id": 28,
+          "body_median_ticks": 4425.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1454.5,
+          "output_max_ticks": 1694
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 78.0,
+          "native_correlation_id": 40,
+          "body_median_ticks": 4425.5,
+          "body_max_ticks": 4845,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1694
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 76.364,
+          "native_correlation_id": 52,
+          "body_median_ticks": 4432.5,
+          "body_max_ticks": 4830,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 77.1,
+          "native_correlation_id": 64,
+          "body_median_ticks": 4426.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1455.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 76.77,
+          "native_correlation_id": 76,
+          "body_median_ticks": 4432.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1455.0,
+          "output_max_ticks": 1696
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 76.395,
+          "native_correlation_id": 88,
+          "body_median_ticks": 4433.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1696
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 77.46,
+          "native_correlation_id": 100,
+          "body_median_ticks": 4433.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1455.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 76.816,
+          "native_correlation_id": 112,
+          "body_median_ticks": 4440.0,
+          "body_max_ticks": 4876,
+          "output_median_ticks": 1455.5,
+          "output_max_ticks": 1696
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 76.577,
+          "native_correlation_id": 124,
+          "body_median_ticks": 4433.0,
+          "body_max_ticks": 4861,
+          "output_median_ticks": 1448.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 76.711,
+          "native_correlation_id": 136,
+          "body_median_ticks": 4432.0,
+          "body_max_ticks": 4846,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1694
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 76.861,
+          "native_correlation_id": 148,
+          "body_median_ticks": 4432.0,
+          "body_max_ticks": 4860,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1694
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 75.915,
+          "native_correlation_id": 160,
+          "body_median_ticks": 4433.0,
+          "body_max_ticks": 4876,
+          "output_median_ticks": 1455.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 76.935,
+          "native_correlation_id": 172,
+          "body_median_ticks": 4440.0,
+          "body_max_ticks": 4846,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1680
+        }
+      ],
+      "joint_program_records": 480,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": 4432.5,
+      "output_median_of_launch_medians_ticks": 1454.5,
+      "empirical_scale_holdout_containment": {
+        "violations": [],
+        "tested_launches": 15,
+        "scale_source": "Calibration training q=0/64/1024 only; no operator data fit.",
+        "limitation": "Coarse whole-task duration consistency only, not internal accuracy ground truth."
+      }
+    },
+    "global-softmax-body": {
+      "operator": "softmax",
+      "capture": "body",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-softmax-body/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 71.7,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 1,
+        "before_end_calls": 1,
+        "after_helper_calls": 2,
+        "ssa_order": [
+          "%25",
+          "%234"
+        ],
+        "original_sha256": "c02c86b28a6afa610a7c201190655f8e2b58ab62bbbb41599b86a5e94baeea1d",
+        "adapted_sha256": "f23ef402634531fdb09ff7f671abb57bf8442b80f91d0fffda431e957139e58f",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 77.956,
+          "native_correlation_id": 4,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4064,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 72.21,
+          "native_correlation_id": 16,
+          "body_median_ticks": 3577.5,
+          "body_max_ticks": 4171,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 71.775,
+          "native_correlation_id": 28,
+          "body_median_ticks": 3584.0,
+          "body_max_ticks": 4081,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 72.404,
+          "native_correlation_id": 40,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4036,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 71.324,
+          "native_correlation_id": 52,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4080,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 71.114,
+          "native_correlation_id": 64,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4094,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 71.597,
+          "native_correlation_id": 76,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4094,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 71.01,
+          "native_correlation_id": 88,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4186,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 71.7,
+          "native_correlation_id": 100,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4079,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 71.76,
+          "native_correlation_id": 112,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4080,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 71.97,
+          "native_correlation_id": 124,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4096,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 71.581,
+          "native_correlation_id": 136,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4080,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 72.434,
+          "native_correlation_id": 148,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4094,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 71.28,
+          "native_correlation_id": 160,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4065,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 71.43,
+          "native_correlation_id": 172,
+          "body_median_ticks": 3570.0,
+          "body_max_ticks": 4066,
+          "output_median_ticks": null,
+          "output_max_ticks": null
+        }
+      ],
+      "joint_program_records": 0,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": 3570.0,
+      "output_median_of_launch_medians_ticks": null,
+      "empirical_scale_holdout_containment": {
+        "violations": [],
+        "tested_launches": 15,
+        "scale_source": "Calibration training q=0/64/1024 only; no operator data fit.",
+        "limitation": "Coarse whole-task duration consistency only, not internal accuracy ground truth."
+      }
+    },
+    "global-softmax-output": {
+      "operator": "softmax",
+      "capture": "output",
+      "source_result": "artifacts/study-closure-20261013/gcu-global-timer/operator-workspace/global-softmax-output/result.json",
+      "unit": "SDK_global_timer_ticks",
+      "time_in_us": null,
+      "native_kernel_events": 15,
+      "native_task_median_us": 72.63,
+      "native_association": "15 chronological same-name TOPSPTI kernel events correspond to 15 serial profiled launches. Initial validation and 5/10 warmups occur before profiling.",
+      "adapter_audit": {
+        "before_begin_calls": 1,
+        "before_end_calls": 1,
+        "after_helper_calls": 2,
+        "ssa_order": [
+          "%199",
+          "%234"
+        ],
+        "original_sha256": "e1df5d2641bae55ab7f3674f76f788a367ee262ce8997ea401a2f3fa2363bcee",
+        "adapted_sha256": "dc56becc48afe6ca7715d1fac6396f43e594108c1d5571fc56cd23f8c2fe287b",
+        "source_math_preserved": "Only clock declarations/callees and library target changed; same original source SHA, input hashes and CPU validation."
+      },
+      "per_launch": [
+        {
+          "invocation_id": 0,
+          "native_duration_us": 81.72,
+          "native_correlation_id": 4,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 1,
+          "native_duration_us": 71.91,
+          "native_correlation_id": 16,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 2,
+          "native_duration_us": 72.706,
+          "native_correlation_id": 28,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1439.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 3,
+          "native_duration_us": 72.63,
+          "native_correlation_id": 40,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1439.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 4,
+          "native_duration_us": 72.84,
+          "native_correlation_id": 52,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 5,
+          "native_duration_us": 73.41,
+          "native_correlation_id": 64,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 6,
+          "native_duration_us": 71.85,
+          "native_correlation_id": 76,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1447.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 7,
+          "native_duration_us": 71.925,
+          "native_correlation_id": 88,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1439.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 8,
+          "native_duration_us": 72.63,
+          "native_correlation_id": 100,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1455.5,
+          "output_max_ticks": 1696
+        },
+        {
+          "invocation_id": 9,
+          "native_duration_us": 71.866,
+          "native_correlation_id": 112,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1439.0,
+          "output_max_ticks": 1694
+        },
+        {
+          "invocation_id": 10,
+          "native_duration_us": 72.104,
+          "native_correlation_id": 124,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1440.5,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 11,
+          "native_duration_us": 72.72,
+          "native_correlation_id": 136,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1666
+        },
+        {
+          "invocation_id": 12,
+          "native_duration_us": 73.154,
+          "native_correlation_id": 148,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1680
+        },
+        {
+          "invocation_id": 13,
+          "native_duration_us": 72.076,
+          "native_correlation_id": 160,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1448.0,
+          "output_max_ticks": 1696
+        },
+        {
+          "invocation_id": 14,
+          "native_duration_us": 72.046,
+          "native_correlation_id": 172,
+          "body_median_ticks": null,
+          "body_max_ticks": null,
+          "output_median_ticks": 1447.0,
+          "output_max_ticks": 1680
+        }
+      ],
+      "joint_program_records": 0,
+      "joint_violations": 0,
+      "body_median_of_launch_medians_ticks": null,
+      "output_median_of_launch_medians_ticks": 1447.5
+    }
+  },
+  "limits": [
+    "SDK helper returns a masked 46-bit timer; these source records retain low 32 bits and decode unsigned modular differences.",
+    "SDK global_timer and TOPSPTI are different observation paths; distinct physical oscillators are not established.",
+    "Counters and fences perturb execution; no unperturbed busy-time or internal precision certificate."
+  ],
+  "shared_operator_source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+  "same_primitive_comparison": {
+    "global-fused128": {
+      "nested_body_to_single_active_body_ratio": 1.0082408728879886,
+      "nested_output_to_single_active_output_ratio": 1.0001314924391846,
+      "limitation": "Separate launches and additional clock reads perturb duration; ratios are consistency observations, not exact equality or accuracy truth."
+    },
+    "global-softmax": {
+      "nested_body_to_single_active_body_ratio": 1.2415966386554622,
+      "nested_output_to_single_active_output_ratio": 1.0048359240069085,
+      "limitation": "Separate launches and additional clock reads perturb duration; ratios are consistency observations, not exact equality or accuracy truth."
+    }
+  },
+  "device_properties": {
+    "device": 1,
+    "count_status": 0,
+    "count": 8,
+    "status": 0,
+    "name": "GCU",
+    "arch": "dtu-enflame-tops--gcu300",
+    "clockRate_kHz": 1416000,
+    "clockInstructionRate_kHz": 1000
+  },
+  "clock_instruction_rate_candidate": {
+    "reported_kHz": 1000,
+    "global_timer_binding": "not established",
+    "candidate_body_containment_violations": 60,
+    "decision": "Do not use this property to convert SDK global_timer records. Core clockRate is also not a timer binding."
+  },
+  "empirical_calibration": {
+    "model": "native_whole_kernel_us = tick_period_us * local_bracket_ticks + prefix_suffix_intercept_us",
+    "train_levels": [
+      0,
+      64,
+      1024
+    ],
+    "held_out_from_fit_levels": [
+      16,
+      256
+    ],
+    "partition_provenance": "Parent specified this partition before this fit; earlier exploratory all-level summaries existed. This is not a blinded or preregistered holdout.",
+    "model_fit": {
+      "tick_period_us": 0.0009997173540151878,
+      "intercept_us": 12.305899003160446,
+      "r_squared": 0.9992065381874096,
+      "max_absolute_residual_us": 0.17152986750428134
+    },
+    "holdout": {
+      "16": {
+        "predicted_native_us": 13.115670059912748,
+        "observed_median_native_us": 13.455,
+        "residual_us": 0.3393299400872518,
+        "relative_residual": 0.0252196165059273
+      },
+      "256": {
+        "predicted_native_us": 15.57497475079011,
+        "observed_median_native_us": 15.33,
+        "residual_us": -0.2449747507901101,
+        "relative_residual": -0.015980088114162433
+      }
+    },
+    "levels": {
+      "0": {
+        "pairs": [
+          [
+            615,
+            18.076
+          ],
+          [
+            614,
+            12.54
+          ],
+          [
+            599,
+            13.32
+          ],
+          [
+            601,
+            13.38
+          ],
+          [
+            614,
+            13.41
+          ],
+          [
+            614,
+            12.796
+          ],
+          [
+            599,
+            13.08
+          ],
+          [
+            614,
+            13.83
+          ],
+          [
+            616,
+            12.66
+          ],
+          [
+            614,
+            12.75
+          ],
+          [
+            600,
+            13.456
+          ],
+          [
+            614,
+            12.96
+          ],
+          [
+            599,
+            13.664
+          ],
+          [
+            600,
+            12.81
+          ],
+          [
+            616,
+            11.999
+          ]
+        ],
+        "median_ticks": 614,
+        "median_native_us": 13.08,
+        "native_range_us": [
+          11.999,
+          18.076
+        ],
+        "counter_range_ticks": [
+          599,
+          616
+        ],
+        "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q0/result.json",
+        "correct": true,
+        "max_abs_error": 0.0
+      },
+      "16": {
+        "pairs": [
+          [
+            810,
+            19.44
+          ],
+          [
+            824,
+            14.64
+          ],
+          [
+            810,
+            13.801
+          ],
+          [
+            809,
+            13.32
+          ],
+          [
+            826,
+            13.455
+          ],
+          [
+            810,
+            13.366
+          ],
+          [
+            810,
+            13.59
+          ],
+          [
+            810,
+            13.92
+          ],
+          [
+            826,
+            13.664
+          ],
+          [
+            810,
+            13.394
+          ],
+          [
+            824,
+            13.41
+          ],
+          [
+            824,
+            13.426
+          ],
+          [
+            810,
+            13.967
+          ],
+          [
+            810,
+            11.94
+          ],
+          [
+            810,
+            13.41
+          ]
+        ],
+        "median_ticks": 810,
+        "median_native_us": 13.455,
+        "native_range_us": [
+          11.94,
+          19.44
+        ],
+        "counter_range_ticks": [
+          809,
+          826
+        ],
+        "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q16/result.json",
+        "correct": true,
+        "max_abs_error": 5.960464477539063e-08
+      },
+      "64": {
+        "pairs": [
+          [
+            1305,
+            18.99
+          ],
+          [
+            1306,
+            13.874
+          ],
+          [
+            1306,
+            13.44
+          ],
+          [
+            1306,
+            13.574
+          ],
+          [
+            1306,
+            13.094
+          ],
+          [
+            1306,
+            13.29
+          ],
+          [
+            1306,
+            13.14
+          ],
+          [
+            1306,
+            14.31
+          ],
+          [
+            1304,
+            13.86
+          ],
+          [
+            1306,
+            13.394
+          ],
+          [
+            1304,
+            13.14
+          ],
+          [
+            1304,
+            13.89
+          ],
+          [
+            1304,
+            14.296
+          ],
+          [
+            1306,
+            13.334
+          ],
+          [
+            1304,
+            13.214
+          ]
+        ],
+        "median_ticks": 1306,
+        "median_native_us": 13.44,
+        "native_range_us": [
+          13.094,
+          18.99
+        ],
+        "counter_range_ticks": [
+          1304,
+          1306
+        ],
+        "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q64/result.json",
+        "correct": true,
+        "max_abs_error": 1.7881393432617188e-07
+      },
+      "256": {
+        "pairs": [
+          [
+            3270,
+            24.406
+          ],
+          [
+            3269,
+            15.33
+          ],
+          [
+            3270,
+            15.39
+          ],
+          [
+            3286,
+            15.12
+          ],
+          [
+            3270,
+            14.566
+          ],
+          [
+            3270,
+            16.126
+          ],
+          [
+            3269,
+            15.69
+          ],
+          [
+            3284,
+            15.18
+          ],
+          [
+            3270,
+            15.434
+          ],
+          [
+            3270,
+            15.794
+          ],
+          [
+            3284,
+            14.776
+          ],
+          [
+            3270,
+            15.044
+          ],
+          [
+            3286,
+            16.486
+          ],
+          [
+            3270,
+            15.0
+          ],
+          [
+            3271,
+            14.624
+          ]
+        ],
+        "median_ticks": 3270,
+        "median_native_us": 15.33,
+        "native_range_us": [
+          14.566,
+          24.406
+        ],
+        "counter_range_ticks": [
+          3269,
+          3286
+        ],
+        "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q256/result.json",
+        "correct": true,
+        "max_abs_error": 8.344650268554688e-07
+      },
+      "1024": {
+        "pairs": [
+          [
+            11160,
+            33.27
+          ],
+          [
+            11160,
+            24.06
+          ],
+          [
+            11160,
+            23.476
+          ],
+          [
+            11160,
+            22.86
+          ],
+          [
+            11160,
+            24.194
+          ],
+          [
+            11160,
+            23.4
+          ],
+          [
+            11160,
+            23.22
+          ],
+          [
+            11160,
+            24.405
+          ],
+          [
+            11160,
+            23.22
+          ],
+          [
+            11160,
+            24.134
+          ],
+          [
+            11160,
+            23.474
+          ],
+          [
+            11160,
+            23.206
+          ],
+          [
+            11160,
+            23.88
+          ],
+          [
+            11160,
+            23.46
+          ],
+          [
+            11160,
+            23.474
+          ]
+        ],
+        "median_ticks": 11160,
+        "median_native_us": 23.474,
+        "native_range_us": [
+          22.86,
+          33.27
+        ],
+        "counter_range_ticks": [
+          11160,
+          11160
+        ],
+        "source_result": "artifacts/study-closure-20261013/gcu-global-timer/calibration-workspace/global-calibration-q1024/result.json",
+        "correct": true,
+        "max_abs_error": 7.68899917602539e-06
+      }
+    },
+    "raw_75_point_ols_sensitivity": {
+      "tick_period_us": 0.0010243597618868963,
+      "intercept_us": 12.764024305331166,
+      "r_squared": 0.8233779796166353,
+      "max_absolute_residual_us": 9.074120752011076
+    },
+    "official_frequency_hz": null,
+    "interpretation": "Stack-specific empirical scale/consistency calibration, not physical frequency verification, independent oscillator evidence, or internal timing precision ground truth.",
+    "within_level_resampling_sensitivity": {
+      "slope_percentiles_2_5_97_5_us_per_tick": [
+        0.0009619455485684466,
+        0.001064200638878777
+      ],
+      "warning": "Conditional bootstrap of 15 serial paired observations within each fixed level. Launch dependence and environment drift are not modeled. This is not an independent physical-frequency confidence interval."
+    },
+    "real_operator_holdout_containment_violations": 0
+  }
+}

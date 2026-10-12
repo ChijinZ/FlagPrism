@@ -1,0 +1,27 @@
+{
+  "/opt/tops/llvm11/bin/clang": {
+    "sha256": "18cff605c6503e87aecdf9c7708ec627af62b5df458efc5f3a58e39684401844",
+    "version": "clang version 11.0.0 (02f3054b5a36e41dcabaf1ae3f3396244a957a43)\nTarget: x86_64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /opt/tops/llvm11/bin\n"
+  },
+  "/opt/tops/bin/clang": {
+    "sha256": "3e41bf00c2d358328c0ca38029b4778619de0aa264396b000e6374d490b5ee6e",
+    "version": "clang version 18.1.8 (6292e508733c2020ff963410eb48c7cb984d382c)\nTarget: x86_64-unknown-linux-gnu\nThread model: posix\nInstalledDir: /opt/tops/bin\n"
+  },
+  "/opt/triton_gcu/bin/gcu-compiler-compile": {
+    "sha256": "1b7e13a7a2888e126a1022de6a129eec1404da5e0f0f0a0c2e702de784855e40",
+    "version": "LLVM (http://llvm.org/):\n  LLVM version 21.0.0git\n  Optimized build with assertions.\ncannot open input file '/tmp/gcu-compiler-compile.hHNwUT.mlir': No such file or directory\n"
+  },
+  "/opt/triton_gcu/bin/gcu-compiler-opt": {
+    "sha256": "6e504993ea784de6d5a8ad2fb42ef747ee7e1e23bb86735700de40189734b895",
+    "version": "LLVM (http://llvm.org/):\n  LLVM version 21.0.0git\n  Optimized build with assertions.\n"
+  },
+  "compile_flags": [
+    "--device-only",
+    "--is-triton-backend",
+    "--arch=gcu300",
+    "--toolkit-path=/opt/triton_gcu",
+    "--output=<private temporary kernel.fatbin>"
+  ],
+  "shim_link": "gcu-compiler-opt --gcu-attach-target=arch=gcu300 l=<derived SDK helper ll>",
+  "prepare_command": "python gcu_global_timer_prepare.py --output <private new directory> --library /opt/tops/llvm11/lib/krt/gcu300_api_profile.bc --opt /opt/tops/llvm11/bin/opt"
+}

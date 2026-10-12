@@ -1,0 +1,749 @@
+{
+  "schema_version": 1,
+  "request_id": "logical-region-intervals-v1",
+  "backend": "cuda",
+  "operator": "gemm_bias_gelu",
+  "shape": [
+    128,
+    128,
+    128
+  ],
+  "capture": "body",
+  "tile": 64,
+  "rows": 1,
+  "end_barrier": 1,
+  "status": "passed",
+  "samples": [
+    {
+      "invocation_id": 0,
+      "program_records": [
+        [
+          -218475296,
+          -218447040,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -218475328,
+          -218447072,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -218475360,
+          -218447072,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -218475360,
+          -218447072,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 1,
+      "program_records": [
+        [
+          -184826208,
+          -184810912,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184826272,
+          -184810880,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184826272,
+          -184811648,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184826304,
+          -184811648,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 2,
+      "program_records": [
+        [
+          -184698272,
+          -184683008,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184698304,
+          -184683072,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184698368,
+          -184683904,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184698336,
+          -184683872,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 3,
+      "program_records": [
+        [
+          -184594016,
+          -184578784,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184594048,
+          -184578816,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184594080,
+          -184579648,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184594080,
+          -184579616,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 4,
+      "program_records": [
+        [
+          -184491136,
+          -184475872,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184491168,
+          -184475904,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184491200,
+          -184476736,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184491200,
+          -184476704,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 5,
+      "program_records": [
+        [
+          -184389440,
+          -184374208,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184389472,
+          -184374208,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184389536,
+          -184375040,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184389536,
+          -184375040,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 6,
+      "program_records": [
+        [
+          -184287456,
+          -184272224,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184287520,
+          -184272256,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184287552,
+          -184273088,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184287552,
+          -184273056,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 7,
+      "program_records": [
+        [
+          -184188928,
+          -184173696,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184188960,
+          -184173728,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184189024,
+          -184174560,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184188992,
+          -184174528,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 8,
+      "program_records": [
+        [
+          -184090016,
+          -184074784,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -184090048,
+          -184074816,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -184090112,
+          -184075648,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -184090112,
+          -184075616,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 9,
+      "program_records": [
+        [
+          -183979200,
+          -183963936,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183979232,
+          -183963936,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183979264,
+          -183964768,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183979264,
+          -183964768,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 10,
+      "program_records": [
+        [
+          -183880992,
+          -183865728,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183881024,
+          -183865792,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183881088,
+          -183866624,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183881088,
+          -183866592,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 11,
+      "program_records": [
+        [
+          -183783840,
+          -183768608,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183783904,
+          -183768672,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183783936,
+          -183769472,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183783936,
+          -183769472,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 12,
+      "program_records": [
+        [
+          -183687520,
+          -183672256,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183687552,
+          -183672320,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183687616,
+          -183673152,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183687616,
+          -183673120,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 13,
+      "program_records": [
+        [
+          -183587648,
+          -183572384,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183587680,
+          -183572384,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183587712,
+          -183573216,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183587712,
+          -183573216,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    },
+    {
+      "invocation_id": 14,
+      "program_records": [
+        [
+          -183489408,
+          -183474176,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        [
+          -183489440,
+          -183474208,
+          0,
+          0,
+          0,
+          1,
+          1,
+          0
+        ],
+        [
+          -183489472,
+          -183475008,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0
+        ],
+        [
+          -183489472,
+          -183475008,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0
+        ]
+      ]
+    }
+  ],
+  "input_hashes": [
+    "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+    "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+    "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+  ],
+  "limits": [
+    "Instrumented actor-local brackets; not unperturbed busy time.",
+    "Separate captures are different physical invocations.",
+    "No counter-to-ns conversion assumed except CUDA globaltimer native ns."
+  ],
+  "correct": true,
+  "max_abs_error": 2.9802322387695312e-08,
+  "grid": [
+    2,
+    2
+  ],
+  "programs": 4,
+  "metadata": "KernelMetadata(allowed_dot_input_precisions=['tf32', 'tf32x3', 'ieee', 'bf16x3', 'bf16x6'], arch='sm70', backend_name='cuda', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='tf32', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=True, enable_reflect_ftz=True, extern_libs=[['libdevice', '/workspace/study/FlagTree-pr1262/python/triton/backends/nvidia/lib/libdevice.10.bc']], global_scratch_align=1, global_scratch_size=0, hash='4eee7e064c6b6067d6776fc420e8e9b955cc791ad21cf55b1db44848070e2ca3', instrumentation_mode='', ir_override=None, kernel_init_hooks=[], launch_cooperative_grid=False, launch_pdl=False, max_num_imprecise_acc_default=0, maxnreg=None, name='matmul_regions', num_ctas=1, num_stages=1, num_warps=4, profile_scratch_align=1, profile_scratch_size=0, ptx_options=None, ptx_version=None, sanitize_overflow=True, shared=8192, supported_fp8_dtypes=['fp8e4b15', 'fp8e5'], target=GPUTarget(backend='cuda', arch=70, warp_size=32), tensordesc_meta=[], tle_node_buffer_bindings='', tmem_size=0, triton_version='3.6.0', warp_size=32)",
+  "runtime": {
+    "torch": "2.7.0a0+79aa17489c.nv25.04",
+    "triton": "3.6.0",
+    "torch_file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+    "triton_file": "/workspace/study/FlagTree-pr1262/python/triton/__init__.py"
+  },
+  "source_sha256": "dd899af7d4c35568b2cd7d3a9ea830011272f8d9f69ae563f2f685154c615fec",
+  "asm": {
+    "source": {
+      "sha256": "4a47d31291f785b02fd625d3a5ffa12eee742d22a2679dcf522183e5a0a4e5fc",
+      "bytes": 34870
+    },
+    "ttir": {
+      "sha256": "ca6a724e4f288cd4f47125a68e35e970a1aad7a9e5de6fc7150bee6e9cef51aa",
+      "bytes": 18489
+    },
+    "ttgir": {
+      "sha256": "9c3348f4a42aea6ec1ec16782ed39b9890e5086831f6f4b860a251c819491cc9",
+      "bytes": 23779
+    },
+    "llir": {
+      "sha256": "49c1a7ce8694f6d4d3e3ad2795e653e0edeb7ce01390c62e690867bd972bee04",
+      "bytes": 109410
+    },
+    "ptx": {
+      "sha256": "46c645bd986971bf72a0434d5cd5ce9a6dd7ddb18d0d57e490b3d9daa6931775",
+      "bytes": 59743
+    },
+    "cubin": {
+      "sha256": "07e6aef8ccfbb73abfc045bf945b8beeb8b636c880a8103113708c250c889e4d",
+      "bytes": 78688
+    }
+  },
+  "post_profile_correct": true,
+  "unit": "globaltimer_ns",
+  "clock_record_width_bits": 32,
+  "interval_decode": "unsigned modular subtraction modulo 2^32, not subtraction of signed tensor values",
+  "identity": "Triton program coordinates stored in dedicated per-program slots, linked to the locally enumerated serial launch; not inferred by kernel name"
+}

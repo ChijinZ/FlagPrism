@@ -1,0 +1,22 @@
+{
+  "sdk_bitcode": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+  "sdk_sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a",
+  "bounded_functions": {
+    "tops_get_thread_id": {
+      "sha256": "bdac3cfa3e1f143eed1cb62b01619de1830decd6639678fd1a650f7dcf24646d",
+      "implementation": "define hidden i32 @tops_get_thread_id(i32 %0) local_unnamed_addr #5 {\n  switch i32 %0, label %8 [\n    i32 0, label %2\n    i32 1, label %4\n    i32 2, label %6\n  ]\n\n2:                                                ; preds = %1\n  %3 = tail call i32 @llvm.dtu.read.tid.x() #3\n  br label %8\n\n4:                                                ; preds = %1\n  %5 = tail call i32 @llvm.dtu.read.tid.y() #3\n  br label %8\n\n6:                                                ; preds = %1\n  %7 = tail call i32 @llvm.dtu.read.tid.z() #3\n  br label %8\n\n8:                                                ; preds = %1, %6, %4, %2\n  %9 = phi i32 [ %7, %6 ], [ %5, %4 ], [ %3, %2 ], [ 0, %1 ]\n  ret i32 %9\n}"
+    },
+    "tops_get_local_memory": {
+      "sha256": "9caed6b1d78e7d2bec7cae17ccea93324840f6ec3a0c82f4fd0ada2e0c31588f",
+      "implementation": "define hidden i8* @tops_get_local_memory() local_unnamed_addr #14 {\n  ret i8* addrspacecast (i8 addrspace(9)* getelementptr inbounds ([1572352 x i8], [1572352 x i8] addrspace(9)* @local_mem, i32 0, i32 0) to i8*)\n}"
+    },
+    "tops_get_shared_memory": {
+      "sha256": "3275e95e2df891f4d4ba14884663625844d1f6f23eaaba4a0e3d1452bd4f3ce5",
+      "implementation": "define hidden i8 addrspace(3)* @tops_get_shared_memory() local_unnamed_addr #14 {\n  ret i8 addrspace(3)* getelementptr inbounds ([0 x i8], [0 x i8] addrspace(3)* @shared_mem, i32 0, i32 0)\n}"
+    },
+    "tops_mfence": {
+      "sha256": "7d40579ec429950cfe01e733320cd321aca10c97197fe8a7da890a886e331f19",
+      "implementation": "define hidden void @tops_mfence() local_unnamed_addr #7 {\n  tail call void asm sideeffect \"\", \"~{memory}\"() #64, !srcloc !2572\n  ret void\n}"
+    }
+  }
+}

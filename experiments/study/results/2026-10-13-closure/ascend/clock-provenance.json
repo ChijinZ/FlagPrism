@@ -1,0 +1,10 @@
+{
+  "unit": "SYS_CNT_ticks",
+  "ticks_per_us": 50,
+  "tick_resolution_ns": 20,
+  "documentation": "https://www.hiascend.com/doc_center/source/en/CANNCommunityEdition/900/API/ascendcopapi/atlasascendc_api_07_0282.html",
+  "sdk": "CANN compiler 9.0.0; AscendNPU IR 1.1.0",
+  "implementation": "dav_c220 GetSystemCycleImpl uses asm volatile MOV SYS_CNT on device",
+  "cross_actor_origin": "unverified; no cross-actor subtraction",
+  "measurement": "PIPE_S counter; async engine completion requires selected synchronization. Containment is a coarse consistency check, not an internal timing accuracy ground truth."
+}

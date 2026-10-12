@@ -1,0 +1,734 @@
+{
+  "cuda": {
+    "train_levels": [
+      0,
+      64,
+      1024
+    ],
+    "holdout_levels": [
+      16,
+      256
+    ],
+    "partition": "specified after exploratory prior data existed, before this fit; not preregistered/blinded",
+    "levels": {
+      "0": {
+        "median_ticks": 32,
+        "median_native_us": 1.6,
+        "pairs": [
+          [
+            32,
+            2.304
+          ],
+          [
+            32,
+            1.856
+          ],
+          [
+            32,
+            1.6
+          ],
+          [
+            32,
+            1.6
+          ],
+          [
+            0,
+            1.599
+          ],
+          [
+            0,
+            1.6
+          ],
+          [
+            32,
+            1.6
+          ],
+          [
+            0,
+            1.601
+          ],
+          [
+            32,
+            1.601
+          ],
+          [
+            0,
+            1.6
+          ],
+          [
+            32,
+            1.6
+          ],
+          [
+            0,
+            1.6
+          ],
+          [
+            32,
+            1.568
+          ],
+          [
+            32,
+            1.568
+          ],
+          [
+            32,
+            1.568
+          ]
+        ],
+        "source_result": "artifacts/study-closure-20261013/cuda/calibration/n0/result.json"
+      },
+      "16": {
+        "median_ticks": 256,
+        "median_native_us": 1.728,
+        "pairs": [
+          [
+            640,
+            2.688
+          ],
+          [
+            256,
+            1.984
+          ],
+          [
+            256,
+            1.696
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.696
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.696
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.727
+          ],
+          [
+            256,
+            1.697
+          ],
+          [
+            256,
+            1.696
+          ],
+          [
+            256,
+            1.728
+          ],
+          [
+            256,
+            1.728
+          ]
+        ],
+        "source_result": "artifacts/study-closure-20261013/cuda/calibration/n16/result.json"
+      },
+      "64": {
+        "median_ticks": 576,
+        "median_native_us": 2.016,
+        "pairs": [
+          [
+            2912,
+            4.96
+          ],
+          [
+            576,
+            2.528
+          ],
+          [
+            576,
+            2.048
+          ],
+          [
+            576,
+            2.015
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            544,
+            2.017
+          ],
+          [
+            544,
+            2.016
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            576,
+            2.048
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            576,
+            2.016
+          ],
+          [
+            544,
+            2.015
+          ]
+        ],
+        "source_result": "artifacts/study-closure-20261013/cuda/calibration/n64/result.json"
+      },
+      "256": {
+        "median_ticks": 3040,
+        "median_native_us": 4.543,
+        "pairs": [
+          [
+            11392,
+            13.536
+          ],
+          [
+            3040,
+            4.864
+          ],
+          [
+            3072,
+            4.512
+          ],
+          [
+            3040,
+            4.544
+          ],
+          [
+            3040,
+            4.544
+          ],
+          [
+            3040,
+            4.511
+          ],
+          [
+            3072,
+            4.512
+          ],
+          [
+            3040,
+            4.544
+          ],
+          [
+            3040,
+            4.543
+          ],
+          [
+            3072,
+            4.511
+          ],
+          [
+            3040,
+            4.512
+          ],
+          [
+            3040,
+            4.544
+          ],
+          [
+            3072,
+            4.512
+          ],
+          [
+            3072,
+            4.544
+          ],
+          [
+            3040,
+            4.543
+          ]
+        ],
+        "source_result": "artifacts/study-closure-20261013/cuda/calibration/n256/result.json"
+      },
+      "1024": {
+        "median_ticks": 6880,
+        "median_native_us": 8.32,
+        "pairs": [
+          [
+            9504,
+            11.552
+          ],
+          [
+            6880,
+            8.8
+          ],
+          [
+            6848,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6848,
+            8.352
+          ],
+          [
+            6880,
+            8.352
+          ],
+          [
+            6848,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6848,
+            8.352
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ],
+          [
+            6880,
+            8.32
+          ]
+        ],
+        "source_result": "artifacts/study-closure-20261013/cuda/calibration/n1024/result.json"
+      }
+    },
+    "tick_period_us_fit": 0.0009891158385751649,
+    "documented_tick_period_us": 0.001,
+    "scale_ratio_to_documented": 0.9891158385751648,
+    "outside_bracket_intercept_us": 1.509833533583056,
+    "holdout": {
+      "16": {
+        "predicted_native_us": 1.763047188258298,
+        "observed_native_us": 1.728,
+        "residual_us": -0.03504718825829811
+      },
+      "256": {
+        "predicted_native_us": 4.516745682851557,
+        "observed_native_us": 4.543,
+        "residual_us": 0.026254317148443285
+      }
+    },
+    "limits": "Independent whole-kernel timing scale/consistency check; does not certify internal endpoint accuracy or unperturbed busy time."
+  },
+  "cann": {
+    "train_levels": [
+      0,
+      64,
+      1024
+    ],
+    "holdout_levels": [
+      16,
+      256
+    ],
+    "partition": "specified after exploratory prior data existed, before this fit; not preregistered/blinded",
+    "levels": {
+      "0": {
+        "median_ticks": 0,
+        "median_native_us": 2.52,
+        "pairs": [
+          [
+            0,
+            1.7
+          ],
+          [
+            0,
+            3.38
+          ],
+          [
+            0,
+            2.52
+          ],
+          [
+            0,
+            3.44
+          ],
+          [
+            0,
+            1.72
+          ],
+          [
+            0,
+            3.14
+          ],
+          [
+            0,
+            1.52
+          ],
+          [
+            0,
+            3.2
+          ],
+          [
+            0,
+            1.56
+          ],
+          [
+            0,
+            3.38
+          ],
+          [
+            1,
+            1.62
+          ],
+          [
+            0,
+            3.52
+          ],
+          [
+            0,
+            1.66
+          ],
+          [
+            0,
+            3.46
+          ],
+          [
+            0,
+            1.7
+          ]
+        ],
+        "source_result": "artifacts/study-20261013/ascend/endpoint-v2/n0-s1/result.json"
+      },
+      "16": {
+        "median_ticks": 25,
+        "median_native_us": 2.68,
+        "pairs": [
+          [
+            24,
+            2.12
+          ],
+          [
+            24,
+            3.82
+          ],
+          [
+            24,
+            2.2
+          ],
+          [
+            24,
+            3.8
+          ],
+          [
+            25,
+            2.68
+          ],
+          [
+            25,
+            3.66
+          ],
+          [
+            25,
+            1.98
+          ],
+          [
+            25,
+            4.12
+          ],
+          [
+            25,
+            2.08
+          ],
+          [
+            25,
+            3.68
+          ],
+          [
+            25,
+            2.06
+          ],
+          [
+            25,
+            3.8
+          ],
+          [
+            24,
+            2.14
+          ],
+          [
+            24,
+            3.98
+          ],
+          [
+            25,
+            2.16
+          ]
+        ],
+        "source_result": "artifacts/study-20261013/ascend/endpoint-v2/n16-s1/result.json"
+      },
+      "64": {
+        "median_ticks": 96,
+        "median_native_us": 4.2,
+        "pairs": [
+          [
+            96,
+            3.66
+          ],
+          [
+            96,
+            5.46
+          ],
+          [
+            96,
+            4.2
+          ],
+          [
+            96,
+            5.26
+          ],
+          [
+            96,
+            3.52
+          ],
+          [
+            96,
+            5.22
+          ],
+          [
+            96,
+            3.54
+          ],
+          [
+            96,
+            5.12
+          ],
+          [
+            96,
+            3.58
+          ],
+          [
+            96,
+            5.42
+          ],
+          [
+            96,
+            3.64
+          ],
+          [
+            96,
+            5.24
+          ],
+          [
+            96,
+            3.72
+          ],
+          [
+            96,
+            5.2
+          ],
+          [
+            96,
+            3.44
+          ]
+        ],
+        "source_result": "artifacts/study-20261013/ascend/endpoint-v2/n64-s1/result.json"
+      },
+      "256": {
+        "median_ticks": 381,
+        "median_native_us": 9.92,
+        "pairs": [
+          [
+            381,
+            9.12
+          ],
+          [
+            380,
+            10.76
+          ],
+          [
+            380,
+            9.92
+          ],
+          [
+            381,
+            10.86
+          ],
+          [
+            381,
+            9.38
+          ],
+          [
+            381,
+            10.84
+          ],
+          [
+            380,
+            9.18
+          ],
+          [
+            381,
+            10.94
+          ],
+          [
+            381,
+            9.3
+          ],
+          [
+            381,
+            10.98
+          ],
+          [
+            380,
+            9.3
+          ],
+          [
+            381,
+            11.02
+          ],
+          [
+            381,
+            9.12
+          ],
+          [
+            381,
+            11.0
+          ],
+          [
+            381,
+            9.12
+          ]
+        ],
+        "source_result": "artifacts/study-20261013/ascend/endpoint-v2/n256-s1/result.json"
+      },
+      "1024": {
+        "median_ticks": 1521,
+        "median_native_us": 33.1,
+        "pairs": [
+          [
+            1521,
+            31.98
+          ],
+          [
+            1521,
+            33.72
+          ],
+          [
+            1521,
+            32.84
+          ],
+          [
+            1521,
+            33.8
+          ],
+          [
+            1522,
+            33.1
+          ],
+          [
+            1521,
+            33.84
+          ],
+          [
+            1521,
+            32.08
+          ],
+          [
+            1521,
+            33.84
+          ],
+          [
+            1521,
+            32.18
+          ],
+          [
+            1522,
+            33.62
+          ],
+          [
+            1521,
+            31.94
+          ],
+          [
+            1522,
+            33.6
+          ],
+          [
+            1521,
+            31.94
+          ],
+          [
+            1521,
+            34.06
+          ],
+          [
+            1521,
+            32.04
+          ]
+        ],
+        "source_result": "artifacts/study-20261013/ascend/endpoint-v2/n1024-s1/result.json"
+      }
+    },
+    "tick_period_us_fit": 0.020181545785455664,
+    "documented_tick_period_us": 0.02,
+    "scale_ratio_to_documented": 1.0090772892727833,
+    "outside_bracket_intercept_us": 2.3954801549727303,
+    "holdout": {
+      "16": {
+        "predicted_native_us": 2.900018799609122,
+        "observed_native_us": 2.68,
+        "residual_us": -0.22001879960912163
+      },
+      "256": {
+        "predicted_native_us": 10.084649099231338,
+        "observed_native_us": 9.92,
+        "residual_us": -0.16464909923133852
+      }
+    },
+    "limits": "Independent whole-kernel timing scale/consistency check; does not certify internal endpoint accuracy or unperturbed busy time."
+  }
+}

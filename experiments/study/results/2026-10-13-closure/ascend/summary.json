@@ -1,0 +1,937 @@
+{
+  "status": "passed",
+  "backend": "cann",
+  "device": 4,
+  "cases": {
+    "fused128-control-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "620c91bb4dc604782bbedf4f58395ad2ea42898a327dd6899ae3bc3970f18919",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 23.38,
+      "native_task_min_us": 22.24,
+      "native_task_max_us": 24.24,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-control-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {},
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": []
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-instrumented-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "56cad18b61f424506807c32882fcb46c32f3166f2c0e193467cca6a6b8b50e8d",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 26.84,
+      "native_task_min_us": 25.62,
+      "native_task_max_us": 27.7,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-instrumented-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 312.0,
+          "min_launch_median_ticks": 268.0,
+          "max_launch_median_ticks": 320.5,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 345.5,
+          "min_launch_median_ticks": 303.0,
+          "max_launch_median_ticks": 353.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 248.5,
+          "min_launch_median_ticks": 234.5,
+          "max_launch_median_ticks": 254.5,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 217.0,
+          "min_launch_median_ticks": 203.5,
+          "max_launch_median_ticks": 221.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 26.5,
+          "min_launch_median_ticks": 26.0,
+          "max_launch_median_ticks": 27.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          9.38,
+          9.32,
+          8.98,
+          9.22,
+          9.92,
+          10.04,
+          9.18,
+          9.64,
+          9.28,
+          8.88,
+          9.38,
+          10.3,
+          9.32,
+          9.74,
+          9.46
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-delay-post-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "d3e16ae359ff65989578949e80e847bf11131ee14dc52aada467acc7a3bdec88",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 25.44,
+      "native_task_min_us": 24.5,
+      "native_task_max_us": 26.08,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-delay-post-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 272.5,
+          "min_launch_median_ticks": 253.0,
+          "max_launch_median_ticks": 290.5,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 303.5,
+          "min_launch_median_ticks": 291.0,
+          "max_launch_median_ticks": 322.5,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 244.0,
+          "min_launch_median_ticks": 238.5,
+          "max_launch_median_ticks": 257.0,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 211.0,
+          "min_launch_median_ticks": 202.5,
+          "max_launch_median_ticks": 220.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 28.0,
+          "min_launch_median_ticks": 27.0,
+          "max_launch_median_ticks": 28.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          10.04,
+          9.26,
+          10.14,
+          10.82,
+          10.56,
+          8.88,
+          10.38,
+          10.88,
+          8.88,
+          10.12,
+          10.28,
+          8.78,
+          8.68,
+          9.2,
+          10.44
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-delay-pre-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "cb34249b490031cbaa7c73bdcbdf92b2c19a02f6d004770d8e47986b528c6a78",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 24.02,
+      "native_task_min_us": 23.76,
+      "native_task_max_us": 25.1,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-delay-pre-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 248.5,
+          "min_launch_median_ticks": 237.0,
+          "max_launch_median_ticks": 264.0,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 62.0,
+          "min_launch_median_ticks": 62.0,
+          "max_launch_median_ticks": 62.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 280.5,
+          "min_launch_median_ticks": 269.5,
+          "max_launch_median_ticks": 296.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 240.0,
+          "min_launch_median_ticks": 233.5,
+          "max_launch_median_ticks": 252.0,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 207.5,
+          "min_launch_median_ticks": 200.0,
+          "max_launch_median_ticks": 219.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 26.0,
+          "min_launch_median_ticks": 26.0,
+          "max_launch_median_ticks": 27.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          8.06,
+          8.84,
+          9.14,
+          8.12,
+          9.78,
+          9.18,
+          9.04,
+          8.3,
+          9.34,
+          8.08,
+          9.78,
+          7.9,
+          8.46,
+          7.68,
+          9.02
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-fenced-delay-post-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "933b0fb03640c423207775554ac6bbea88d8349c89e2e14c2507ab1d52b96faa",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 85.38,
+      "native_task_min_us": 84.14,
+      "native_task_max_us": 86.02,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-fenced-delay-post-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 1035.5,
+          "min_launch_median_ticks": 1028.0,
+          "max_launch_median_ticks": 1052.5,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 267.5,
+          "min_launch_median_ticks": 256.0,
+          "max_launch_median_ticks": 278.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 253.5,
+          "min_launch_median_ticks": 245.5,
+          "max_launch_median_ticks": 260.0,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 222.0,
+          "min_launch_median_ticks": 214.0,
+          "max_launch_median_ticks": 228.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 27.0,
+          "min_launch_median_ticks": 27.0,
+          "max_launch_median_ticks": 27.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          27.74,
+          27.88,
+          27.12,
+          28.06,
+          28.04,
+          27.02,
+          27.2,
+          27.24,
+          27.28,
+          27.46,
+          27.42,
+          27.04,
+          27.28,
+          27.48,
+          26.94
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-fenced-delay-half-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "daeb8cdc382b6e53e7edb3742bd7e14a4de9f2a1b139b8e90268acd84d79e7f7",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 82.5,
+      "native_task_min_us": 82.1,
+      "native_task_max_us": 83.98,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-fenced-delay-half-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 1035.0,
+          "min_launch_median_ticks": 1025.5,
+          "max_launch_median_ticks": 1043.0,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 148.5,
+          "min_launch_median_ticks": 148.0,
+          "max_launch_median_ticks": 151.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 415.0,
+          "min_launch_median_ticks": 404.0,
+          "max_launch_median_ticks": 418.5,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 397.5,
+          "min_launch_median_ticks": 386.0,
+          "max_launch_median_ticks": 405.0,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 367.5,
+          "min_launch_median_ticks": 356.5,
+          "max_launch_median_ticks": 374.0,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 26.0,
+          "min_launch_median_ticks": 25.0,
+          "max_launch_median_ticks": 26.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          24.8,
+          24.42,
+          24.56,
+          25.02,
+          25.54,
+          24.72,
+          25.96,
+          24.9,
+          24.62,
+          24.84,
+          24.52,
+          24.96,
+          24.94,
+          25.08,
+          24.88
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-fenced-delay-pre-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": false,
+      "binary_sha256": "4fc64dc2dc3291a044f523746bcc2e415d6585688c4469e81315fb6b5e8fc36e",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 86.86,
+      "native_task_min_us": 85.94,
+      "native_task_max_us": 88.02,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/fused128-fenced-delay-pre-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 1048.0,
+          "min_launch_median_ticks": 1042.0,
+          "max_launch_median_ticks": 1070.0,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 815.5,
+          "min_launch_median_ticks": 812.5,
+          "max_launch_median_ticks": 820.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 1087.5,
+          "min_launch_median_ticks": 1079.5,
+          "max_launch_median_ticks": 1113.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 1067.5,
+          "min_launch_median_ticks": 1054.5,
+          "max_launch_median_ticks": 1085.5,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 1036.0,
+          "min_launch_median_ticks": 1025.5,
+          "max_launch_median_ticks": 1054.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 5.0,
+          "min_launch_median_ticks": 5.0,
+          "max_launch_median_ticks": 5.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 26.0,
+          "min_launch_median_ticks": 25.0,
+          "max_launch_median_ticks": 26.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          27.3,
+          27.02,
+          27.0,
+          27.6,
+          27.18,
+          26.86,
+          27.66,
+          26.96,
+          27.22,
+          26.92,
+          27.0,
+          27.14,
+          27.22,
+          27.32,
+          27.5
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "softmax-control-native": {
+      "operator": "softmax",
+      "shape": [
+        32,
+        256
+      ],
+      "completion_fences": false,
+      "binary_sha256": "ac278de1bdbc0127082510c328e1afe945b0a548908e9ca34332599c061b21ea",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 3.58,
+      "native_task_min_us": 3.2,
+      "native_task_max_us": 3.9,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/softmax-control-native/result.json",
+      "max_abs_error": 1.3969838619232178e-09,
+      "regions": {},
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": []
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Sum producer scalar materialization precedes output entry; no cross-actor imported dependency is claimed.",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "softmax-instrumented-native": {
+      "operator": "softmax",
+      "shape": [
+        32,
+        256
+      ],
+      "completion_fences": false,
+      "binary_sha256": "8e7022b115f2b9264b94a40b543cad30f285f65da1ae34090c775b4ebbd28dd3",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 3.92,
+      "native_task_min_us": 3.58,
+      "native_task_max_us": 4.52,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/closure-workspace/flagprism-study-closure-20261013/softmax-instrumented-native/result.json",
+      "max_abs_error": 1.3969838619232178e-09,
+      "regions": {
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 27.0,
+          "min_launch_median_ticks": 26.0,
+          "max_launch_median_ticks": 27.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 10.0,
+          "min_launch_median_ticks": 9.0,
+          "max_launch_median_ticks": 10.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 9.0,
+          "min_launch_median_ticks": 8.5,
+          "max_launch_median_ticks": 9.0,
+          "n_launches": 15
+        },
+        "AIV:input_transfer": {
+          "median_of_launch_medians_ticks": 1.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 1.0,
+          "n_launches": 15
+        },
+        "AIV:normalization_compute": {
+          "median_of_launch_medians_ticks": 1.0,
+          "min_launch_median_ticks": 1.0,
+          "max_launch_median_ticks": 1.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          0.56,
+          1.56,
+          1.14,
+          1.32,
+          1.06,
+          0.8,
+          1.52,
+          1.66,
+          1.62,
+          0.84,
+          1.62,
+          0.98,
+          0.56,
+          0.56,
+          0.56
+        ]
+      },
+      "phase_endpoint_policy": "Scalar issue/gate observation only: MTE2-only BARRIER and V->MTE3 gate are not verified to block PIPE_S. No engine completion or isolated transfer/compute/store duration is established.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Sum producer scalar materialization precedes output entry; no cross-actor imported dependency is claimed.",
+      "phase_brackets": {
+        "workspace_or_input": "load issue through engine-only gate (scalar completion unverified)",
+        "compute": "through V-to-MTE3 issue gate (scalar completion unverified)",
+        "store": "V-to-MTE3 scalar issue boundary through post-store ALL; may include unfinished compute"
+      }
+    },
+    "fused128-completion-run": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "completion_fences": true,
+      "binary_sha256": "9facded2a966dfc08f1de8c9c9548aa753d5bad7f9810473820941a7debb7e97",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 26.52,
+      "native_task_min_us": 24.88,
+      "native_task_max_us": 27.76,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/completion-workspace/fused128-completion-run/result.json",
+      "max_abs_error": 1.341104507446289e-07,
+      "regions": {
+        "AIC:body": {
+          "median_of_launch_medians_ticks": 284.5,
+          "min_launch_median_ticks": 258.5,
+          "max_launch_median_ticks": 316.0,
+          "n_launches": 15
+        },
+        "AIC:producer_signal": {
+          "median_of_launch_medians_ticks": 0.0,
+          "min_launch_median_ticks": 0.0,
+          "max_launch_median_ticks": 0.0,
+          "n_launches": 15
+        },
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 318.5,
+          "min_launch_median_ticks": 294.5,
+          "max_launch_median_ticks": 351.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 251.5,
+          "min_launch_median_ticks": 233.5,
+          "max_launch_median_ticks": 265.5,
+          "n_launches": 15
+        },
+        "AIV:readiness_wait": {
+          "median_of_launch_medians_ticks": 218.5,
+          "min_launch_median_ticks": 199.5,
+          "max_launch_median_ticks": 229.5,
+          "n_launches": 15
+        },
+        "AIV:workspace_transfer": {
+          "median_of_launch_medians_ticks": 6.0,
+          "min_launch_median_ticks": 6.0,
+          "max_launch_median_ticks": 6.0,
+          "n_launches": 15
+        },
+        "AIV:epilogue_with_bias_load": {
+          "median_of_launch_medians_ticks": 19.0,
+          "min_launch_median_ticks": 18.0,
+          "max_launch_median_ticks": 19.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 9.0,
+          "min_launch_median_ticks": 9.0,
+          "max_launch_median_ticks": 9.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          9.72,
+          10.96,
+          9.94,
+          10.06,
+          10.66,
+          10.7,
+          10.42,
+          9.58,
+          10.0,
+          10.08,
+          10.44,
+          9.48,
+          11.04,
+          9.66,
+          10.0
+        ]
+      },
+      "phase_endpoint_policy": "Synchronized actor-local brackets: additional PIPE_ALL before workspace/input and compute end clocks. Brackets include synchronization and scalar work; no unperturbed engine busy-time claim.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Imported cross-actor workspace readiness included",
+      "phase_brackets": {
+        "workspace_or_input": "after load issue through added ALL completion",
+        "compute": "after input phase through added ALL completion before clock",
+        "store": "after synchronized compute endpoint through original post-store ALL"
+      }
+    },
+    "softmax-completion-v2-run": {
+      "operator": "softmax",
+      "shape": [
+        32,
+        256
+      ],
+      "completion_fences": true,
+      "binary_sha256": "2b55d2c390770acb49fb29e866f5bce28fea4303bd8ba27177e46341ddd1c56a",
+      "correctness": "18 launches pass CPU reference; first 3 warmups excluded from 15 measured samples",
+      "measured_launches": 15,
+      "native_task_events": 18,
+      "native_task_median_us": 4.059,
+      "native_task_min_us": 3.76,
+      "native_task_max_us": 4.46,
+      "association": "profile starts before loop of 18 launches. Retained sample invocation i maps to ith chronological native same-name task; invocations 0,1,2 are excluded warmups. Helpers have distinct op names. Filter native aclprof category to exclude mirrored scope events.",
+      "source_result": "artifacts/study-closure-20261013/ascend/completion-workspace/softmax-completion-v2-run/result.json",
+      "max_abs_error": 1.3969838619232178e-09,
+      "regions": {
+        "AIV:body": {
+          "median_of_launch_medians_ticks": 27.0,
+          "min_launch_median_ticks": 27.0,
+          "max_launch_median_ticks": 28.0,
+          "n_launches": 15
+        },
+        "AIV:output": {
+          "median_of_launch_medians_ticks": 10.0,
+          "min_launch_median_ticks": 10.0,
+          "max_launch_median_ticks": 10.0,
+          "n_launches": 15
+        },
+        "AIV:output_store": {
+          "median_of_launch_medians_ticks": 7.0,
+          "min_launch_median_ticks": 7.0,
+          "max_launch_median_ticks": 8.0,
+          "n_launches": 15
+        },
+        "AIV:input_transfer": {
+          "median_of_launch_medians_ticks": 6.0,
+          "min_launch_median_ticks": 6.0,
+          "max_launch_median_ticks": 7.0,
+          "n_launches": 15
+        },
+        "AIV:normalization_compute": {
+          "median_of_launch_medians_ticks": 3.0,
+          "min_launch_median_ticks": 2.0,
+          "max_launch_median_ticks": 3.0,
+          "n_launches": 15
+        }
+      },
+      "containment": {
+        "actor_body_violations": [],
+        "all_actor_bodies_within_native_task_duration": true,
+        "max_actor_body_us_per_launch": [
+          1.1,
+          0.58,
+          0.58,
+          0.58,
+          0.58,
+          0.96,
+          0.74,
+          1.52,
+          0.92,
+          1.42,
+          1.76,
+          1.66,
+          1.56,
+          1.08,
+          1.16
+        ]
+      },
+      "phase_endpoint_policy": "Synchronized actor-local brackets: additional PIPE_ALL before workspace/input and compute end clocks. Brackets include synchronization and scalar work; no unperturbed engine busy-time claim.",
+      "body_output_endpoint_policy": "Original post-output-store PIPE_ALL end endpoint. Fused AIV output starts before original imported workspace readiness wait; softmax output starts after sum scalar materialization, before final divide/store.",
+      "output_producer_scope": "Sum producer scalar materialization precedes output entry; no cross-actor imported dependency is claimed.",
+      "phase_brackets": {
+        "workspace_or_input": "after load issue through added ALL completion",
+        "compute": "after input phase through added ALL completion before clock",
+        "store": "after synchronized compute endpoint through original post-store ALL"
+      }
+    }
+  },
+  "clock": {
+    "unit": "SYS_CNT_ticks",
+    "ticks_per_us": 50,
+    "tick_resolution_ns": 20,
+    "documentation": "https://www.hiascend.com/doc_center/source/en/CANNCommunityEdition/900/API/ascendcopapi/atlasascendc_api_07_0282.html",
+    "sdk": "CANN compiler 9.0.0; AscendNPU IR 1.1.0",
+    "implementation": "dav_c220 GetSystemCycleImpl uses asm volatile MOV SYS_CNT on device",
+    "cross_actor_origin": "unverified; no cross-actor subtraction",
+    "measurement": "PIPE_S counter; async engine completion requires selected synchronization. Containment is a coarse consistency check, not an internal timing accuracy ground truth."
+  },
+  "global_body": null,
+  "hardware_core_id": null,
+  "limits": [
+    "Actors are logical block + AIC/AIV + subblock; physical core ID is not collected.",
+    "Added counters, stores and synchronization perturb execution.",
+    "Native association is by ordered matching task events for this serial launch loop, not hardware counter alignment.",
+    "Within-launch actors are not independent statistical replicates. Statistics below use medians per launch.",
+    "Generic fused records have no subblock identity; no actual mixed-record rate is inferred."
+  ],
+  "normalized_interval_csv": "artifacts/study-closure-20261013/ascend/actor-intervals-with-completion.csv",
+  "normalized_interval_rows": 98880
+}
