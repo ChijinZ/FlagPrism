@@ -29,6 +29,10 @@ softmax32×256. Three backend stacks; this does not establish same-SIMT vendors.
   GM publication. Final six captures use work-item0, not a group elapsed envelope.
   Joint nesting is preserved; softmax shows about24% extra-read perturbation.
 - `cuda_record_writer_audit.json`:selected CUDA PTX T stores select thread0.
+- `cuda-dual-clock/`: same-endpoint clock64/globaltimer sandwiches in two real
+  operators (1440 program records). Independent relative-fraction checks are
+  conditional on constant SM frequency; the empirical32ns margin leaves one
+  fused residual, retained. Absolute internal precision remains unverified.
 - `native_scale_calibration.json`, `gcu-global-timer/calibration.json`:single-program
   independent native-reference scale checks, declared fit/holdout partition,
   residuals and raw sensitivity. No internal precision certificate is established.
@@ -73,3 +77,10 @@ Thoughts/body remain only in `paper/main.tex` and referenced sections. This
 bundle contains a PDF snapshot and experimental artifacts, not another paper
 source tree. Methods/generality/operational deployment still require evaluation.
 Final independent reviews and their resolutions are under `reviews/`.
+
+Current acceptance: common request, breadth, two real cases, dynamic research
+probes, and method-requirement chains are present in their stated scope.
+Semantic/identity controls pass; absolute internal precision is still open.
+Three independent reviews were completed and critical presentation issues fixed.
+An additional CANN PMU attempt is in progress; no successful PMU reference is
+claimed by this snapshot.
