@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "backend": "enflame",
+  "operator": "gemm",
+  "shape": [
+    512,
+    512,
+    512
+  ],
+  "variant": 0,
+  "phase": "baseline",
+  "device": 0,
+  "status": "passed",
+  "host": {
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "measurement": {
+    "warmup": 5,
+    "repeats": 3,
+    "batch": 1,
+    "host_clock": "perf_counter_ns",
+    "device_event_semantics": "stream interval enclosing a batch; not busy cycles"
+  },
+  "utc_started": "2026-10-13T15:25:07Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.10.0+cpu",
+    "triton": "3.6.0",
+    "torch_file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+    "triton_file": "/workspace/FlagTree/python/triton/__init__.py",
+    "target": "GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12)"
+  },
+  "input_hashes": [
+    "37e78713586e0d61daa7186ed8556daa6cd3a8da609f7af1adef4bc7df0ed560",
+    "6b3ad92a60d25feacc31c2351341fac349e8dfe05d171842231dd818a8eb7e94",
+    "72091b38d299b4e2b19247be958679a698bc225cda56588eff1575a103ff6c79"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "BM": 64,
+    "BN": 64,
+    "BK": 64,
+    "num_stages": 4,
+    "num_warps": 4
+  },
+  "grid": [
+    8,
+    8
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.002,
+    "rtol": 0.02,
+    "max_abs_error": 5.066394805908203e-07,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(allow_fp8e4b15=False, allow_fp8e4nv=False, allowed_dot_input_precisions=['ieee'], arch='gcu300', backend_name='gcu', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='ieee', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=False, enable_i64=False, enable_stride0=False, extern_libs=[], hash='234ac059e5579b0de65c516c4409e65ba3a6a95b00c92405d723f97b2d7ca10c', instrumentation_mode='', launch_cooperative_grid=False, launch_pdl=False, max_dsm=0, max_local=1572352, max_num_imprecise_acc_default=0, max_shared=33554432, name='matmul', num_buffers_warp_spec=0, num_consumer_groups=0, num_ctas=1, num_stages=4, num_warps=4, ptr_int_args=[], redundant_sip=False, reg_dec_producer=0, reg_inc_consumer=0, sanitize_overflow=False, shared=49152, supported_fp8_dtypes=[], target=GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12), tle_raw=False, tle_raw_deferred=False, triton_version='3.6.0', vector_length=512, warp_size=1)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "6abfbe402d83835b334c2b996999709cecd557331a33acf8f28b2374a7d06491",
+      "bytes": 14381
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "6a0536483debf8933f5bc6beb6ee8ca75c851ab0a7b0c9dd476b5d14b371f898",
+      "bytes": 9577
+    },
+    "ttgir": {
+      "file": "asm/ttgir",
+      "sha256": "6a0536483debf8933f5bc6beb6ee8ca75c851ab0a7b0c9dd476b5d14b371f898",
+      "bytes": 9577
+    },
+    "gcuir": {
+      "file": "asm/gcuir",
+      "sha256": "fb4099b98941155a06f980ead0e1e9fea88b54195d316e161e72f1a049bfe7d8",
+      "bytes": 47326
+    },
+    "llir": {
+      "file": "asm/llir",
+      "sha256": "f5a1af7f98275c5c7aaf8a28a345f36479c7b5ac2cd0d89ccba034f25055ba65",
+      "bytes": 92488
+    },
+    "fatbin": {
+      "file": "asm/fatbin",
+      "sha256": "91d00da91fe5d5ecd2ee6ca8a25af61afeeaa5d16346f6d3c3ed6aa052ceb0c8",
+      "bytes": 313590
+    }
+  },
+  "samples": [
+    {
+      "host_submit_ns_per_call": 368304.0,
+      "host_submit_and_sync_ns_per_call": 468122.0,
+      "device_stream_interval_ns_per_call": 393314.003944397
+    },
+    {
+      "host_submit_ns_per_call": 347904.0,
+      "host_submit_and_sync_ns_per_call": 454732.0,
+      "device_stream_interval_ns_per_call": 369929.9991130829
+    },
+    {
+      "host_submit_ns_per_call": 341455.0,
+      "host_submit_and_sync_ns_per_call": 446893.0,
+      "device_stream_interval_ns_per_call": 372720.00312805176
+    }
+  ],
+  "device_event_error": null,
+  "statistics": {
+    "host_submit_ns_per_call": {
+      "median": 347904.0,
+      "min": 341455.0,
+      "max": 368304.0
+    },
+    "host_submit_and_sync_ns_per_call": {
+      "median": 454732.0,
+      "min": 446893.0,
+      "max": 468122.0
+    },
+    "device_stream_interval_ns_per_call": {
+      "median": 372720.00312805176,
+      "min": 369929.9991130829,
+      "max": 393314.003944397
+    }
+  }
+}

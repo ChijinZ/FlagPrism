@@ -1,0 +1,76 @@
+[
+  {
+    "id": "6a6d496d82a80cae2fed1b0c4f4aefe6c3386ce0d78adc712bc72ab9c71f3a2b",
+    "name": "matmul",
+    "identity": "compiler_cache_hash",
+    "binary_sha256": "e74ccd8eb79cf7345c1a675041508acf56fa6577ed66c17dadb4053ef00e278e",
+    "source": {
+      "path": "/workspace/study-goal-enflame-port-r007/kernels.py",
+      "line": 5,
+      "sha256": "6965ad0ad545cab35e9bff9163dfdf0b0b8875e8c67cdfcaafb4c286d52d71dc",
+      "file_sha256": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+      "file_snapshot_semantics": "Source file as read during capture; kernel text above comes from the JIT object. External dependencies may require their original repository.",
+      "text_file": "ai/sources/6965ad0ad545cab35e9bff9163dfdf0b0b8875e8c67cdfcaafb4c286d52d71dc.py",
+      "file_snapshot_file": "ai/sources/920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6.py",
+      "line_semantics": "Capture-machine decorated function definition start, not necessarily the def line"
+    },
+    "compiler_metadata": {
+      "allow_fp8e4b15": false,
+      "allow_fp8e4nv": false,
+      "allowed_dot_input_precisions": [
+        "ieee"
+      ],
+      "arch": "gcu300",
+      "backend_name": "gcu",
+      "cluster_dims": [
+        1,
+        1,
+        1
+      ],
+      "debug": false,
+      "default_dot_input_precision": "ieee",
+      "deprecated_fp8_dot_operand_dtypes": [],
+      "enable_fp_fusion": false,
+      "enable_i64": false,
+      "enable_stride0": false,
+      "extern_libs": [],
+      "hash": "6a6d496d82a80cae2fed1b0c4f4aefe6c3386ce0d78adc712bc72ab9c71f3a2b",
+      "instrumentation_mode": "",
+      "launch_cooperative_grid": false,
+      "launch_pdl": false,
+      "max_dsm": 0,
+      "max_local": 1572352,
+      "max_num_imprecise_acc_default": 0,
+      "max_shared": 33554432,
+      "name": "matmul",
+      "num_buffers_warp_spec": 0,
+      "num_consumer_groups": 0,
+      "num_ctas": 1,
+      "num_stages": 4,
+      "num_warps": 4,
+      "ptr_int_args": [],
+      "redundant_sip": false,
+      "reg_dec_producer": 0,
+      "reg_inc_consumer": 0,
+      "sanitize_overflow": false,
+      "shared": 12800,
+      "supported_fp8_dtypes": [],
+      "tle_raw": false,
+      "tle_raw_deferred": false,
+      "triton_version": "3.6.0",
+      "vector_length": 512,
+      "warp_size": 1
+    },
+    "target": {
+      "backend": "gcu",
+      "arch": "dtu-enflame-tops--gcu300",
+      "warp_size": 12
+    },
+    "metadata_semantics": {
+      "target": "Compiler target descriptor; target warp_size is backend-defined and not the launch block size.",
+      "compiler_metadata": "Effective backend compiler settings; warp_size may describe a compiler lowering mode and differ from target.warp_size. Do not infer physical threads or occupancy from these fields.",
+      "launch_geometry": "Use the captured activity grid/block for actual launch geometry."
+    },
+    "resource_notes": "Only compiler metadata is recorded; loader register/spill placeholders are not measurements."
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "case": "NVIDIA native-selected Softmax127x769 ROWS1,w4 \u2192 exact GCU P; guided Rw1 with w2 alternative",
+  "prediction": "Holding grid127 and rows1fixed, one work-item per row removes cooperative partialexchange and avoids uneven769-column split; native duration and compiledbarriers/partialexchange decrease. Two work-items remain control for attributing speedup, not barrier-onlycause.",
+  "controls": [
+    "canonicalbytes",
+    "FP32 output and full CPUref",
+    "three independentprocesspairedbatches90calls/version",
+    "all source math identical",
+    "closed research instrumentation",
+    "no configuration substitution in P"
+  ],
+  "limitations": [
+    "similar program organization only, vectorlowering differs",
+    "N is searched best under fixedbudget, not globaloptimal",
+    "source timing projections not enginebusy"
+  ]
+}

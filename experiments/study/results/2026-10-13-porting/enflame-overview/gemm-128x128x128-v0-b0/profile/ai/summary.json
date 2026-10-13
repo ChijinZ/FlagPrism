@@ -1,0 +1,242 @@
+{
+  "origin_ns": 1791902978596495903,
+  "counts": {
+    "runtime": 94,
+    "kernel": 30
+  },
+  "timed_counts": {
+    "runtime": 94,
+    "kernel": 30
+  },
+  "untimed_counts": {},
+  "hotspots": [
+    {
+      "kind": "kernel",
+      "name": "matmul",
+      "id": "group-9c54b440d170a705",
+      "configuration": {
+        "argument_signature": "dd2dcae789a61b954c8906c2eea7125d89910d14167768e87009087089649583",
+        "binary_id": "902488a35e4d7e97c62b4c5f6f081b3c5141d153f764c9f17dce9edb520cd094",
+        "block": [
+          4,
+          1,
+          1
+        ],
+        "context": 0,
+        "device": 0,
+        "grid": [
+          4,
+          4,
+          1
+        ],
+        "process": 68108
+      },
+      "grouping_status": "observed_configuration",
+      "configuration_label": "grid=[4, 4, 1] block=[4, 1, 1] binary=902488a35e4d",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_activity",
+            "count": 30
+          }
+        ],
+        "sample_note": null
+      },
+      "count": 30,
+      "total_us": 49909.621,
+      "mean_us": 1663.6540333333332,
+      "p50_us": 1663.432,
+      "p95_us": 1664.33325,
+      "p99_us": 1670.2727599999998,
+      "max_us": 1672.696,
+      "effective_gbps": null,
+      "bytes": null
+    },
+    {
+      "kind": "runtime",
+      "name": "topsDeviceSynchronize",
+      "id": "group-1a22a6c7c83eb0a5",
+      "configuration": null,
+      "grouping_status": "observed_configuration",
+      "configuration_label": "\u2014",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_runtime",
+            "count": 1
+          }
+        ],
+        "sample_note": "single_observation"
+      },
+      "count": 1,
+      "total_us": 46535.788,
+      "mean_us": 46535.788,
+      "p50_us": 46535.788,
+      "p95_us": 46535.788,
+      "p99_us": 46535.788,
+      "max_us": 46535.788,
+      "effective_gbps": null,
+      "bytes": null
+    },
+    {
+      "kind": "runtime",
+      "name": "topsModuleLaunchKernel",
+      "id": "group-7ad4600723faea44",
+      "configuration": null,
+      "grouping_status": "observed_configuration",
+      "configuration_label": "\u2014",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_runtime",
+            "count": 30
+          }
+        ],
+        "sample_note": null
+      },
+      "count": 30,
+      "total_us": 313.358,
+      "mean_us": 10.445266666666667,
+      "p50_us": 9.024999999999999,
+      "p95_us": 13.510999999999985,
+      "p99_us": 33.23299000000002,
+      "max_us": 40.329,
+      "effective_gbps": null,
+      "bytes": null
+    },
+    {
+      "kind": "runtime",
+      "name": "topsGetDevice",
+      "id": "group-4216f7f131855e64",
+      "configuration": null,
+      "grouping_status": "observed_configuration",
+      "configuration_label": "\u2014",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_runtime",
+            "count": 63
+          }
+        ],
+        "sample_note": null
+      },
+      "count": 63,
+      "total_us": 5.3420000000000005,
+      "mean_us": 0.0847936507936508,
+      "p50_us": 0.07,
+      "p95_us": 0.16799999999999998,
+      "p99_us": 0.22102000000000022,
+      "max_us": 0.27,
+      "effective_gbps": null,
+      "bytes": null
+    }
+  ],
+  "devices": [
+    {
+      "device": 0,
+      "process_id": 68108,
+      "window_us": 49947.649,
+      "activity_covered_us": 49909.621,
+      "kernel_covered_us": 49909.621,
+      "uncovered_us": 38.028,
+      "activity_coverage": 0.9992386428438303
+    }
+  ],
+  "api_error_count": 0,
+  "api_unknown_status_count": 0,
+  "rejected": {},
+  "degrade_reasons": [],
+  "capture_notes": [
+    "Launch metadata extraction adds host-side profiler overhead; host gaps are not unprofiled application timings."
+  ],
+  "observed_peak_bytes": {},
+  "memory": [],
+  "unmatched_frees": 0,
+  "invalid_memory_events": 0,
+  "unknown_memory_events": 0,
+  "sampling": {
+    "sample_unit": "timed_event",
+    "timed_kernel_observations": 30,
+    "untimed_kernel_observations": 0,
+    "single_sample_kernel_groups": 0
+  },
+  "limitations": [
+    "Coverage describes the first-to-last captured device event window, not full operator latency or hardware utilization.",
+    "Observed allocation bytes exclude allocations before capture and caching allocator tensor lifetimes.",
+    "Missing activity categories or fields mean unreported data, not zero hardware activity.",
+    "Effective transfer GB/s uses recorded bytes divided by summed activity duration, not measured HBM bandwidth.",
+    "Runtime and driver API durations may nest; do not add them to device elapsed time.",
+    "Synchronization and allocator API timings are available only when called during capture."
+  ],
+  "context_file": "ai/context.json",
+  "kernels_file": "ai/kernels.json",
+  "metadata_issue_count": 0,
+  "rejected_metadata_update_count": 0,
+  "partial_context_sections": [
+    "hardware",
+    "software",
+    "workload"
+  ],
+  "missing_context_sections": [],
+  "availability": {
+    "events": {
+      "status": "available",
+      "reason": null
+    },
+    "counters": {
+      "status": "unknown",
+      "reason": "Collector did not declare counter availability"
+    },
+    "producer": {
+      "counters": {
+        "status": "unknown",
+        "reason": "Collector did not declare counter availability"
+      }
+    }
+  },
+  "kernel_ids": [
+    "group-9c54b440d170a705"
+  ],
+  "counter_group_ids": [],
+  "evidence_overview": {
+    "source": "captured_records_and_explicit_links",
+    "semantics": "Counts describe this capture, not executed workload completeness. Zero observed records do not establish inactivity or unsupported hardware. Links count kernel events, not unique launches; a link does not imply that every metadata field is known.",
+    "kernel_events": {
+      "total": 30,
+      "timed": 30,
+      "untimed": 0
+    },
+    "linked_kernel_events": {
+      "launch": 30,
+      "arguments": 30,
+      "binary": 30,
+      "source_snapshot": 30
+    },
+    "inventory": {
+      "launch_records": 30,
+      "argument_sets": 1,
+      "binaries": 1,
+      "source_snapshots": 2
+    },
+    "files": {
+      "kernels": "ai/kernels.json",
+      "events": "ai/events.jsonl",
+      "launches": "ai/launches.json",
+      "arguments": "ai/arguments.json",
+      "binaries": "ai/binaries.json",
+      "context": "ai/context.json"
+    }
+  }
+}

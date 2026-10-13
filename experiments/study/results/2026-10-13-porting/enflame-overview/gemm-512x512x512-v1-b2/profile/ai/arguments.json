@@ -1,0 +1,82 @@
+{
+  "3a4e3e5f73ae55ab64e3822e2feb1a3bc900280c81f7d1895c214f940c3f56c7": {
+    "A": {
+      "kind": "tensor",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "torch.float16",
+      "stride": [
+        512,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "B": {
+      "kind": "tensor",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "torch.float16",
+      "stride": [
+        512,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "Bias": {
+      "kind": "tensor",
+      "shape": [
+        512
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "C": {
+      "kind": "tensor",
+      "shape": [
+        512,
+        512
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        512,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "M": {
+      "kind": "scalar_or_metadata",
+      "value": 512
+    },
+    "N": {
+      "kind": "scalar_or_metadata",
+      "value": 512
+    },
+    "K": {
+      "kind": "scalar_or_metadata",
+      "value": 512
+    },
+    "BM": {
+      "kind": "scalar_or_metadata",
+      "value": 32
+    },
+    "BN": {
+      "kind": "scalar_or_metadata",
+      "value": 32
+    },
+    "BK": {
+      "kind": "scalar_or_metadata",
+      "value": 32
+    },
+    "FUSED": {
+      "kind": "scalar_or_metadata",
+      "value": false
+    }
+  }
+}

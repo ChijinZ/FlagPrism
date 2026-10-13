@@ -1,0 +1,35 @@
+{
+  "command": [
+    "msprof",
+    "op",
+    "--application=python single_kernel.py --bk=256 --stages=4 --tile-m=64 --tile-n=64 --operator=gemm_bias_gelu --output=pmu-staged-R_KMN64_K256-app --kernel-kind=original --input-dir=/tmp/chijin-study-canonical-inputs-r007",
+    "--output=pmu-staged-R_KMN64_K256",
+    "--aic-metrics=ArithmeticUtilization,PipeUtilization,MemoryL0,Memory,L2Cache,ResourceConflictRatio",
+    "--kernel-name=matmul",
+    "--launch-count=1",
+    "--warm-up=10"
+  ],
+  "config": {
+    "name": "R_KMN64_K256",
+    "BM": 64,
+    "BN": 64,
+    "BK": 256,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  "started_unix": 1791903515.62492,
+  "timeout_s": 180,
+  "returncode": 0,
+  "ended_unix": 1791903532.6099706,
+  "csv_files": [
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/OpBasicInfo.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/PipeUtilization.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/ArithmeticUtilization.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/L2Cache.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/Memory.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/ResourceConflictRatio.csv",
+    "pmu-staged-R_KMN64_K256/OPPROF_20261013225835_QCMXXDBCPGDYFGAO/MemoryL0.csv"
+  ],
+  "status": "collected"
+}

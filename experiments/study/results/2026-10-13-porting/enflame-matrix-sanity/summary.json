@@ -1,0 +1,596 @@
+{
+  "scope": "bounded matrixpath sanityappendix, controlnative1batch30calls not finalindependent3batchoptimizationcase",
+  "independent_original_baseline": {
+    "host_submit_ns_per_call": {
+      "median": 48713.2,
+      "min": 41867.2,
+      "max": 81864.6
+    },
+    "host_submit_and_sync_ns_per_call": {
+      "median": 94792304.4,
+      "min": 94785932.4,
+      "max": 94828765.8
+    },
+    "device_stream_interval_ns_per_call": {
+      "median": 94756390.38085938,
+      "min": 94753887.93945312,
+      "max": 94792645.26367188
+    }
+  },
+  "native_controls": [
+    {
+      "name": "fixedgrid-w1",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 1
+      },
+      "grid": [
+        16,
+        16
+      ],
+      "samples_us": [
+        279.734,
+        268.875,
+        270.494,
+        269.009,
+        272.112,
+        263.999,
+        265.452,
+        269.742,
+        267.585,
+        270.448,
+        269.579,
+        271.318,
+        268.589,
+        264.282,
+        266.339,
+        265.064,
+        268.603,
+        266.774,
+        264.509,
+        266.608,
+        268.469,
+        265.694,
+        264.285,
+        270.178,
+        267.885,
+        271.154,
+        267.825,
+        271.408,
+        271.573,
+        265.782
+      ],
+      "median_us": 268.529,
+      "matmul_operand_types": [
+        "\"gcu.matmul\"(%48, %86, %97, %arg9) <{inputPrecision = 2 : i32, operandSegmentSizes = array<i32: 1, 1, 1, 1, 0>}> : (memref<32x32xf32>, memref<32x32xf16>, memref<32x32xf16>, memref<32x32xf32>) -> ()"
+      ],
+      "source": "captures/fixedgrid-w1",
+      "validation": {
+        "reference": "PyTorch CPU float32",
+        "atol": 0.002,
+        "rtol": 0.02,
+        "max_abs_error": 4.172325134277344e-07,
+        "finite": true,
+        "passed": true
+      },
+      "input_sha256": [
+        "37e78713586e0d61daa7186ed8556daa6cd3a8da609f7af1adef4bc7df0ed560",
+        "6b3ad92a60d25feacc31c2351341fac349e8dfe05d171842231dd818a8eb7e94",
+        "72091b38d299b4e2b19247be958679a698bc225cda56588eff1575a103ff6c79"
+      ]
+    },
+    {
+      "name": "fixedgrid-w2",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 2
+      },
+      "grid": [
+        16,
+        16
+      ],
+      "samples_us": [
+        1018.276,
+        1008.315,
+        1008.479,
+        1007.383,
+        1014.823,
+        1014.749,
+        1014.736,
+        1015.109,
+        1014.539,
+        1009.635,
+        1008.149,
+        1014.749,
+        1015.14,
+        1014.569,
+        1008.029,
+        1007.849,
+        1008.629,
+        1009.635,
+        1015.816,
+        1016.654,
+        1008.735,
+        1015.875,
+        1015.979,
+        1010.083,
+        1009.935,
+        1009.696,
+        1010.175,
+        1014.765,
+        1015.019,
+        1015.093
+      ],
+      "median_us": 1014.554,
+      "matmul_operand_types": [
+        "\"gcu.matmul\"(%89, %124, %125, %arg9) <{inputPrecision = 2 : i32, operandSegmentSizes = array<i32: 1, 1, 1, 1, 0>}> : (memref<16x32xf32>, memref<16x32xf16>, memref<32x32xf16>, memref<16x32xf32>) -> ()"
+      ],
+      "source": "captures/fixedgrid-w2",
+      "validation": {
+        "reference": "PyTorch CPU float32",
+        "atol": 0.002,
+        "rtol": 0.02,
+        "max_abs_error": 4.172325134277344e-07,
+        "finite": true,
+        "passed": true
+      },
+      "input_sha256": [
+        "37e78713586e0d61daa7186ed8556daa6cd3a8da609f7af1adef4bc7df0ed560",
+        "6b3ad92a60d25feacc31c2351341fac349e8dfe05d171842231dd818a8eb7e94",
+        "72091b38d299b4e2b19247be958679a698bc225cda56588eff1575a103ff6c79"
+      ]
+    },
+    {
+      "name": "tile64-w4",
+      "config": {
+        "BM": 64,
+        "BN": 64,
+        "BK": 64,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "grid": [
+        8,
+        8
+      ],
+      "samples_us": [
+        274.319,
+        265.89,
+        265.709,
+        265.74,
+        265.693,
+        268.53,
+        269.369,
+        265.56,
+        269.699,
+        266.309,
+        265.876,
+        266.173,
+        264.764,
+        268.605,
+        268.724,
+        270.059,
+        265.38,
+        268.949,
+        269.58,
+        269.715,
+        266.07,
+        269.879,
+        268.664,
+        265.843,
+        265.74,
+        265.425,
+        265.62,
+        265.859,
+        264.404,
+        269.893
+      ],
+      "median_us": 266.12149999999997,
+      "matmul_operand_types": [
+        "\"gcu.matmul\"(%95, %136, %140, %arg9) <{inputPrecision = 2 : i32, operandSegmentSizes = array<i32: 1, 1, 1, 1, 0>}> : (memref<32x32xf32>, memref<32x64xf16>, memref<64x32xf16>, memref<32x32xf32>) -> ()"
+      ],
+      "source": "captures/tile64-w4",
+      "validation": {
+        "reference": "PyTorch CPU float32",
+        "atol": 0.002,
+        "rtol": 0.02,
+        "max_abs_error": 5.066394805908203e-07,
+        "finite": true,
+        "passed": true
+      },
+      "input_sha256": [
+        "37e78713586e0d61daa7186ed8556daa6cd3a8da609f7af1adef4bc7df0ed560",
+        "6b3ad92a60d25feacc31c2351341fac349e8dfe05d171842231dd818a8eb7e94",
+        "72091b38d299b4e2b19247be958679a698bc225cda56588eff1575a103ff6c79"
+      ]
+    },
+    {
+      "name": "tile64-w1",
+      "config": {
+        "BM": 64,
+        "BN": 64,
+        "BK": 64,
+        "num_stages": 4,
+        "num_warps": 1
+      },
+      "grid": [
+        8,
+        8
+      ],
+      "samples_us": [
+        81.373,
+        75.359,
+        74.293,
+        72.495,
+        73.828,
+        72.179,
+        72.555,
+        73.588,
+        72.239,
+        77.908,
+        75.238,
+        74.759,
+        73.199,
+        72.178,
+        73.589,
+        72.029,
+        74.879,
+        73.004,
+        73.589,
+        72.149,
+        73.423,
+        72.208,
+        72.375,
+        72.389,
+        73.602,
+        72.329,
+        72.495,
+        72.493,
+        73.378,
+        72.299
+      ],
+      "median_us": 73.1015,
+      "matmul_operand_types": [
+        "\"gcu.matmul\"(%57, %95, %106, %arg9) <{inputPrecision = 2 : i32, operandSegmentSizes = array<i32: 1, 1, 1, 1, 0>}> : (memref<64x64xf32>, memref<64x64xf16>, memref<64x64xf16>, memref<64x64xf32>) -> ()"
+      ],
+      "source": "captures/tile64-w1",
+      "validation": {
+        "reference": "PyTorch CPU float32",
+        "atol": 0.002,
+        "rtol": 0.02,
+        "max_abs_error": 4.470348358154297e-07,
+        "finite": true,
+        "passed": true
+      },
+      "input_sha256": [
+        "37e78713586e0d61daa7186ed8556daa6cd3a8da609f7af1adef4bc7df0ed560",
+        "6b3ad92a60d25feacc31c2351341fac349e8dfe05d171842231dd818a8eb7e94",
+        "72091b38d299b4e2b19247be958679a698bc225cda56588eff1575a103ff6c79"
+      ]
+    }
+  ],
+  "tcu": [
+    {
+      "config_name": "original",
+      "metric": "SIP/2D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0,
+      "all_values": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/original/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "original",
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 16.8096,
+      "all_values": [
+        16.8095,
+        16.8096,
+        16.8096,
+        16.8096,
+        16.8095,
+        16.8096,
+        16.8095,
+        16.8096,
+        16.8097
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/original/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "original",
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 3119060.0,
+      "all_values": [
+        3119070.0,
+        3119060.0,
+        3119060.0,
+        3119050.0,
+        3119070.0,
+        3119050.0,
+        3119070.0,
+        3119060.0,
+        3119040.0
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/original/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w1",
+      "metric": "SIP/2D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.786727,
+      "all_values": [
+        0.789125,
+        0.787129,
+        0.786727,
+        0.78532,
+        0.781464,
+        0.783539,
+        0.785321,
+        0.787636,
+        0.790557
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w1",
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.393364,
+      "all_values": [
+        0.394563,
+        0.393564,
+        0.393364,
+        0.39266,
+        0.390732,
+        0.39177,
+        0.39266,
+        0.393818,
+        0.395278
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w1",
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 32541.1,
+      "all_values": [
+        32443.7,
+        32525.8,
+        32541.1,
+        32600.1,
+        32761.7,
+        32672.2,
+        32601.2,
+        32505.7,
+        32384
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w2",
+      "metric": "SIP/2D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.20546,
+      "all_values": [
+        0.205534,
+        0.205473,
+        0.205459,
+        0.205446,
+        0.20543,
+        0.20542,
+        0.20546,
+        0.205465,
+        0.205485
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w2",
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.144469,
+      "all_values": [
+        0.144521,
+        0.144476,
+        0.144469,
+        0.144457,
+        0.144445,
+        0.144439,
+        0.144467,
+        0.144472,
+        0.144485
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "fixedgrid-w2",
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 62318.2,
+      "all_values": [
+        62295.9,
+        62314.8,
+        62319.1,
+        62323.1,
+        62327.8,
+        62330.6,
+        62318.2,
+        62317.5,
+        62311.2
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/fixedgrid-w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w4",
+      "metric": "SIP/2D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.395656,
+      "all_values": [
+        0.395958,
+        0.395859,
+        0.395591,
+        0.395119,
+        0.395656,
+        0.396068,
+        0.395672,
+        0.395293,
+        0.395583
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w4",
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.197828,
+      "all_values": [
+        0.197979,
+        0.19793,
+        0.197795,
+        0.197559,
+        0.197828,
+        0.198034,
+        0.197836,
+        0.197646,
+        0.197791
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w4",
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 32360.7,
+      "all_values": [
+        32334.6,
+        32343.7,
+        32365.1,
+        32404,
+        32360.7,
+        32324.9,
+        32357.5,
+        32388.4,
+        32364.9
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w1",
+      "metric": "SIP/2D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 1.98662,
+      "all_values": [
+        1.9763,
+        1.98662,
+        1.98715,
+        1.98809,
+        1.98178,
+        1.99337,
+        1.98657,
+        1.97655,
+        1.99451
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w1",
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.993311,
+      "all_values": [
+        0.988148,
+        0.993311,
+        0.993573,
+        0.994043,
+        0.990891,
+        0.996685,
+        0.993285,
+        0.988276,
+        0.997256
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    },
+    {
+      "config_name": "tile64-w1",
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 25776.9,
+      "all_values": [
+        25914.4,
+        25776.9,
+        25769.7,
+        25756.5,
+        25843.5,
+        25686.8,
+        25777.8,
+        25913.8,
+        25672.1
+      ],
+      "samples": 9,
+      "instances_per_record": 24,
+      "source": "tcu/tile64-w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs; nineinclude6initial/warmupcalls +3measurementcalls"
+    }
+  ],
+  "native_original_reference": "../enflame-overview-r010/gemm-512x512x512-v0-b*/profile/ai/events.jsonl"
+}

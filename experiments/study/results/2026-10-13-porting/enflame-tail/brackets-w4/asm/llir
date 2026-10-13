@@ -1,0 +1,643 @@
+"builtin.module"() ({
+  "gpu.module"() <{sym_name = "triton", targets = [#gcu.target<link = ["/workspace/flagprism-study-closure-20261013/sdk-clock/global-timer-shim.ll"]>]}> ({
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, i32, i32, ptr, i32, i32, i32, i32, f32)>, linkage = #llvm.linkage<external>, sym_name = "tops_slice_async_2_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, f32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_memset_async_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, i32, i32, ptr, i32, i32, i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_deslice_async_2_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, ptr, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_memcpy_async", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void ()>, linkage = #llvm.linkage<external>, sym_name = "tops_mfence", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, i32, i32, ptr, i32, i32, i32, i32, i32, i32, i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_slice_deslice_async_2_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xf32> (vector<128xf32>, vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_floordivf_v4_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (f32)>, linkage = #llvm.linkage<external>, sym_name = "tops_broadcast_v1_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_r_b4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_r_b8", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_r_qw1", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_r_qw2", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xf32> (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_exp_v4_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, i32, i32, ptr, i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_broadcast_async_2_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_l_b4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<32xf32>, vector<32xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_maxf_v1_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_l_b8", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_l_qw1", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xi8> (vector<128xi8>)>, linkage = #llvm.linkage<external>, sym_name = "tops_vector_movsft_l_qw2", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<32xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_movva2vr_f32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void ()>, linkage = #llvm.linkage<external>, sym_name = "tops_syncthreads", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<ptr<3> ()>, linkage = #llvm.linkage<external>, sym_name = "tops_get_shared_memory", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void ()>, linkage = #llvm.linkage<external>, sym_name = "tops_fence_local_memory", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<f32 (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_redmaxnumf_v4_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<128xf32> (vector<128xf32>, vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_maxf_v4_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr)>, linkage = #llvm.linkage<external>, sym_name = "tops_wait_dte", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i64 ()>, linkage = #llvm.linkage<external>, sym_name = "study_sdk_global_timer", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, i32, i32, ptr, i32, i32, i32, i32, i32, i32, f32)>, linkage = #llvm.linkage<external>, sym_name = "tops_slice_pad_async_2_fp32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_maxsi_si32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_remsi_si32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_get_thread_id", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<ptr ()>, linkage = #llvm.linkage<external>, sym_name = "tops_get_local_memory", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i32, i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_minsi_si32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_get_block_id", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr)>, linkage = #llvm.linkage<external>, sym_name = "tops_private_dte_ctr", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i32 (i64)>, linkage = #llvm.linkage<external>, sym_name = "tops_trunci_ui64_to_ui32", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_cvt_v4_fp32_to_v1_fp32__0_of_4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_cvt_v4_fp32_to_v1_fp32__1_of_4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_cvt_v4_fp32_to_v1_fp32__2_of_4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<vector<32xf32> (vector<128xf32>)>, linkage = #llvm.linkage<external>, sym_name = "tops_cvt_v4_fp32_to_v1_fp32__3_of_4", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<i64 (i32)>, linkage = #llvm.linkage<external>, sym_name = "tops_extsi_si32_to_si64", visibility_ = 0 : i64}> ({
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, ptr)>, linkage = #llvm.linkage<internal>, sym_name = "softmax_reduce_trace_triton_internal__", visibility_ = 0 : i64}> ({
+    ^bb0(%arg3: !llvm.ptr, %arg4: !llvm.ptr, %arg5: !llvm.ptr):
+      %0 = "llvm.mlir.constant"() <{value = 4 : i64}> : () -> i64
+      %1 = "llvm.mlir.constant"() <{value = 1 : index}> : () -> i32
+      %2 = "llvm.mlir.constant"() <{value = 0xFF800000 : f32}> : () -> f32
+      %3 = "llvm.mlir.constant"() <{value = 769 : index}> : () -> i32
+      %4 = "llvm.mlir.constant"() <{value = 1024 : index}> : () -> i32
+      %5 = "llvm.mlir.constant"() <{value = 0 : index}> : () -> i32
+      %6 = "llvm.mlir.constant"() <{value = 769 : i32}> : () -> i32
+      %7 = "llvm.mlir.constant"() <{value = 127 : i32}> : () -> i32
+      %8 = "llvm.mlir.constant"() <{value = 1 : i32}> : () -> i32
+      %9 = "llvm.mlir.constant"() <{value = 0 : i32}> : () -> i32
+      %10 = "llvm.mlir.constant"() <{value = 4 : index}> : () -> i32
+      %11 = "llvm.mlir.constant"() <{value = 256 : index}> : () -> i32
+      %12 = "llvm.mlir.constant"() <{value = 2047 : index}> : () -> i32
+      %13 = "llvm.mlir.constant"() <{value = 128 : index}> : () -> i32
+      %14 = "llvm.mlir.constant"() <{value = 32 : i32}> : () -> i32
+      %15 = "llvm.mlir.constant"() <{value = 8 : i64}> : () -> i64
+      %16 = "llvm.mlir.constant"() <{value = 12 : i64}> : () -> i64
+      %17 = "llvm.mlir.constant"() <{value = 16 : i64}> : () -> i64
+      %18 = "llvm.mlir.constant"() <{value = 20 : i64}> : () -> i64
+      %19 = "llvm.mlir.constant"() <{value = 24 : i64}> : () -> i64
+      %20 = "llvm.mlir.constant"() <{value = 28 : i64}> : () -> i64
+      %21 = "llvm.mlir.constant"() <{value = 15 : i64}> : () -> i64
+      %22 = "llvm.mlir.constant"() <{value = 0 : i64}> : () -> i64
+      %23 = "llvm.mlir.constant"() <{value = 2 : index}> : () -> i32
+      %24 = "llvm.mlir.constant"() <{value = 768 : index}> : () -> i32
+      %25 = "llvm.alloca"(%24) <{alignment = 128 : i64, elem_type = i8}> : (i32) -> !llvm.ptr<5>
+      %26 = "llvm.alloca"(%24) <{alignment = 128 : i64, elem_type = i8}> : (i32) -> !llvm.ptr<5>
+      %27 = "llvm.alloca"(%23) <{elem_type = !llvm.ptr}> : (i32) -> !llvm.ptr
+      %28 = "llvm.addrspacecast"(%26) : (!llvm.ptr<5>) -> !llvm.ptr
+      "llvm.call"(%28) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_private_dte_ctr, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.store"(%28, %27) <{ordering = 0 : i64}> : (!llvm.ptr, !llvm.ptr) -> ()
+      %29 = "llvm.addrspacecast"(%25) : (!llvm.ptr<5>) -> !llvm.ptr
+      "llvm.call"(%29) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_private_dte_ctr, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      %30 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.store"(%29, %30) <{ordering = 0 : i64}> : (!llvm.ptr, !llvm.ptr) -> ()
+      %31 = "llvm.call"(%5) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_get_block_id, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i32) -> i32
+      %32 = "llvm.icmp"(%31, %7) <{predicate = 2 : i64}> : (i32, i32) -> i1
+      %33 = "llvm.mul"(%31, %6) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %34 = "llvm.select"(%32, %4, %5) <{fastmathFlags = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
+      %35 = "llvm.call"(%34, %3) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_minsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %36 = "llvm.ptrtoint"(%arg3) : (!llvm.ptr) -> i64
+      %37 = "llvm.sext"(%33) : (i32) -> i64
+      %38 = "llvm.mul"(%37, %0) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %39 = "llvm.add"(%36, %38) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %40 = "llvm.inttoptr"(%39) : (i64) -> !llvm.ptr
+      %41 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_get_local_memory, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> !llvm.ptr
+      %42 = "llvm.getelementptr"(%41) <{elem_type = i8, rawConstantIndices = array<i32: 1024>}> : (!llvm.ptr) -> !llvm.ptr
+      %43 = "llvm.icmp"(%35, %5) <{predicate = 4 : i64}> : (i32, i32) -> i1
+      "llvm.cond_br"(%43)[^bb1, ^bb8] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb1:  // pred: ^bb0
+      %44 = "llvm.call"(%5) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_get_thread_id, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i32) -> i32
+      %45 = "llvm.call"(%44, %10) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_remsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %46 = "llvm.mul"(%45, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %47 = "llvm.sub"(%35, %46) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %48 = "llvm.call"(%47, %5) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_maxsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %49 = "llvm.call"(%48, %11) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_minsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %50 = "llvm.sub"(%11, %49) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %51 = "llvm.icmp"(%50, %5) <{predicate = 4 : i64}> : (i32, i32) -> i1
+      %52 = "llvm.icmp"(%49, %5) <{predicate = 1 : i64}> : (i32, i32) -> i1
+      %53 = "llvm.and"(%51, %52) : (i1, i1) -> i1
+      "llvm.cond_br"(%53)[^bb2, ^bb5] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb2:  // pred: ^bb1
+      %54 = "llvm.icmp"(%50, %12) <{predicate = 3 : i64}> : (i32, i32) -> i1
+      "llvm.cond_br"(%54)[^bb3, ^bb4] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb3:  // pred: ^bb2
+      %55 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %56 = "llvm.load"(%55) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %57 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %58 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %59 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %60 = "llvm.trunc"(%35) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%56, %42, %57, %58, %40, %59, %60, %9, %46, %8, %49, %2) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_slice_pad_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 12, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32, i32, i32, i32, i32, f32) -> ()
+      "llvm.br"()[^bb9] : () -> ()
+    ^bb4:  // pred: ^bb2
+      %61 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %62 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %63 = "llvm.mul"(%62, %1) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %64 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %65 = "llvm.mul"(%63, %64) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%61, %42, %2, %65) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memset_async_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, f32, i32) -> ()
+      %66 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%66) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      %67 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %68 = "llvm.load"(%67) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %69 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %70 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %71 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %72 = "llvm.trunc"(%35) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%68, %42, %69, %70, %40, %71, %72, %9, %46, %8, %49, %9, %9) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_slice_deslice_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 13, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32, i32, i32, i32, i32, i32, i32) -> ()
+      "llvm.br"()[^bb9] : () -> ()
+    ^bb5:  // pred: ^bb1
+      "llvm.cond_br"(%52)[^bb6, ^bb7] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb6:  // pred: ^bb5
+      %73 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %74 = "llvm.load"(%73) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %75 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %76 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %77 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %78 = "llvm.trunc"(%35) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%74, %42, %75, %76, %40, %77, %78, %9, %46, %2) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_slice_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 10, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32, i32, i32, f32) -> ()
+      "llvm.br"()[^bb9] : () -> ()
+    ^bb7:  // pred: ^bb5
+      %79 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %80 = "llvm.load"(%79) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %81 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %82 = "llvm.mul"(%81, %1) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %83 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %84 = "llvm.mul"(%82, %83) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%80, %42, %2, %84) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memset_async_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, f32, i32) -> ()
+      "llvm.br"()[^bb9] : () -> ()
+    ^bb8:  // pred: ^bb0
+      %85 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %86 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %87 = "llvm.mul"(%86, %1) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %88 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %89 = "llvm.mul"(%87, %88) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%85, %42, %2, %89) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memset_async_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, f32, i32) -> ()
+      %90 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%90) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb9] : () -> ()
+    ^bb9:  // 5 preds: ^bb3, ^bb4, ^bb6, ^bb7, ^bb8
+      %91 = "llvm.icmp"(%31, %9) <{predicate = 0 : i64}> : (i32, i32) -> i1
+      "llvm.cond_br"(%91, %9)[^bb10, ^bb11] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb10:  // pred: ^bb9
+      %92 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @study_sdk_global_timer, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64
+      %93 = "llvm.call"(%92) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_trunci_ui64_to_ui32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i64) -> i32
+      "llvm.br"(%93)[^bb11] : (i32) -> ()
+    ^bb11(%94: i32):  // 2 preds: ^bb9, ^bb10
+      "llvm.cond_br"(%43)[^bb12, ^bb13] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb12:  // pred: ^bb11
+      %95 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %96 = "llvm.load"(%95) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%96) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb13] : () -> ()
+    ^bb13:  // 2 preds: ^bb11, ^bb12
+      %97 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %98 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %99 = "llvm.add"(%97, %98) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %100 = "llvm.add"(%99, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %101 = "llvm.getelementptr"(%42, %100) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %102 = "llvm.load"(%101) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %103 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %104 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %105 = "llvm.add"(%103, %104) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %106 = "llvm.add"(%105, %13) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %107 = "llvm.getelementptr"(%42, %106) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %108 = "llvm.load"(%107) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %109 = "llvm.call"(%102, %108) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_maxf_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      %110 = "llvm.call"(%109) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_redmaxnumf_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> f32
+      %111 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %112 = "llvm.add"(%111, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %113 = "llvm.getelementptr"(%41, %112) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%110, %113) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_fence_local_memory, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %114 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_get_shared_memory, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> !llvm.ptr<3>
+      %115 = "llvm.addrspacecast"(%114) : (!llvm.ptr<3>) -> !llvm.ptr
+      %116 = "llvm.call"(%5) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_get_thread_id, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i32) -> i32
+      %117 = "llvm.call"(%116, %10) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_remsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %118 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %119 = "llvm.add"(%118, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %120 = "llvm.getelementptr"(%41, %119) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %121 = "llvm.load"(%120) <{ordering = 0 : i64}> : (!llvm.ptr) -> f32
+      %122 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %123 = "llvm.add"(%122, %117) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %124 = "llvm.getelementptr"(%115, %123) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%121, %124) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_syncthreads, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %125 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %126 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %127 = "llvm.add"(%125, %126) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %128 = "llvm.add"(%127, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %129 = "llvm.getelementptr"(%115, %128) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %130 = "llvm.load"(%129) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<32xf32>
+      %131 = "llvm.call"(%130) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_movva2vr_f32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<32xf32>) -> vector<32xf32>
+      %132 = "llvm.bitcast"(%131) : (vector<32xf32>) -> vector<128xi8>
+      %133 = "llvm.call"(%132) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_qw2, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %134 = "llvm.call"(%133) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_qw1, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %135 = "llvm.bitcast"(%134) : (vector<128xi8>) -> vector<32xf32>
+      %136 = "llvm.call"(%134) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_b8, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %137 = "llvm.bitcast"(%136) : (vector<128xi8>) -> vector<32xf32>
+      %138 = "llvm.call"(%135, %137) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_maxf_v1_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %139 = "llvm.bitcast"(%138) : (vector<32xf32>) -> vector<128xi8>
+      %140 = "llvm.call"(%139) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_b4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %141 = "llvm.bitcast"(%140) : (vector<128xi8>) -> vector<32xf32>
+      %142 = "llvm.call"(%138, %141) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_maxf_v1_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %143 = "llvm.extractelement"(%142, %21) : (vector<32xf32>, i64) -> f32
+      %144 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %145 = "llvm.add"(%144, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %146 = "llvm.getelementptr"(%41, %145) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%143, %146) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.cond_br"(%91, %9)[^bb14, ^bb15] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb14:  // pred: ^bb13
+      %147 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @study_sdk_global_timer, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64
+      %148 = "llvm.call"(%147) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_trunci_ui64_to_ui32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i64) -> i32
+      "llvm.br"(%148)[^bb15] : (i32) -> ()
+    ^bb15(%149: i32):  // 2 preds: ^bb13, ^bb14
+      %150 = "llvm.getelementptr"(%41) <{elem_type = i8, rawConstantIndices = array<i32: 2048>}> : (!llvm.ptr) -> !llvm.ptr
+      %151 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %152 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %153 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %154 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %155 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%151, %150, %152, %153, %41, %154, %155) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_broadcast_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 7, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32) -> ()
+      %156 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%156) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      %157 = "llvm.load"(%42) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %158 = "llvm.load"(%150) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %159 = "llvm.getelementptr"(%42) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      %160 = "llvm.load"(%159) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %161 = "llvm.getelementptr"(%150) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      %162 = "llvm.load"(%161) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %163 = "llvm.fsub"(%157, %158) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      %164 = "llvm.call"(%163) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_exp_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<128xf32>
+      %165 = "llvm.fsub"(%160, %162) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      %166 = "llvm.call"(%165) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_exp_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<128xf32>
+      "llvm.store"(%164, %41) <{alignment = 512 : i64, ordering = 0 : i64}> : (vector<128xf32>, !llvm.ptr) -> ()
+      %167 = "llvm.getelementptr"(%41) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.store"(%166, %167) <{alignment = 512 : i64, ordering = 0 : i64}> : (vector<128xf32>, !llvm.ptr) -> ()
+      "llvm.cond_br"(%91, %9)[^bb16, ^bb17] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb16:  // pred: ^bb15
+      %168 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @study_sdk_global_timer, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64
+      %169 = "llvm.call"(%168) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_trunci_ui64_to_ui32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i64) -> i32
+      "llvm.br"(%169)[^bb17] : (i32) -> ()
+    ^bb17(%170: i32):  // 2 preds: ^bb15, ^bb16
+      %171 = "llvm.getelementptr"(%41) <{elem_type = i8, rawConstantIndices = array<i32: 2048>}> : (!llvm.ptr) -> !llvm.ptr
+      %172 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %173 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %174 = "llvm.add"(%172, %173) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %175 = "llvm.add"(%174, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %176 = "llvm.getelementptr"(%41, %175) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %177 = "llvm.load"(%176) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %178 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %179 = "llvm.mul"(%5, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %180 = "llvm.add"(%178, %179) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %181 = "llvm.add"(%180, %13) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %182 = "llvm.getelementptr"(%41, %181) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %183 = "llvm.load"(%182) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %184 = "llvm.fadd"(%177, %183) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      %185 = "llvm.call"(%184) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_cvt_v4_fp32_to_v1_fp32__0_of_4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<32xf32>
+      %186 = "llvm.call"(%184) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_cvt_v4_fp32_to_v1_fp32__1_of_4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<32xf32>
+      %187 = "llvm.call"(%184) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_cvt_v4_fp32_to_v1_fp32__2_of_4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<32xf32>
+      %188 = "llvm.call"(%184) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_cvt_v4_fp32_to_v1_fp32__3_of_4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xf32>) -> vector<32xf32>
+      %189 = "llvm.fadd"(%185, %186) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %190 = "llvm.fadd"(%187, %188) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %191 = "llvm.fadd"(%189, %190) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %192 = "llvm.bitcast"(%191) : (vector<32xf32>) -> vector<128xi8>
+      %193 = "llvm.call"(%192) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_r_qw2, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %194 = "llvm.bitcast"(%193) : (vector<128xi8>) -> vector<32xf32>
+      %195 = "llvm.fadd"(%191, %194) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %196 = "llvm.bitcast"(%195) : (vector<32xf32>) -> vector<128xi8>
+      %197 = "llvm.call"(%196) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_r_qw1, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %198 = "llvm.bitcast"(%197) : (vector<128xi8>) -> vector<32xf32>
+      %199 = "llvm.fadd"(%195, %198) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %200 = "llvm.bitcast"(%199) : (vector<32xf32>) -> vector<128xi8>
+      %201 = "llvm.call"(%200) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_r_b8, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %202 = "llvm.bitcast"(%201) : (vector<128xi8>) -> vector<32xf32>
+      %203 = "llvm.fadd"(%199, %202) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %204 = "llvm.bitcast"(%203) : (vector<32xf32>) -> vector<128xi8>
+      %205 = "llvm.call"(%204) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_r_b4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %206 = "llvm.bitcast"(%205) : (vector<128xi8>) -> vector<32xf32>
+      %207 = "llvm.fadd"(%203, %206) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %208 = "llvm.extractelement"(%207, %17) : (vector<32xf32>, i64) -> f32
+      %209 = "llvm.call"(%208) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_broadcast_v1_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (f32) -> vector<32xf32>
+      %210 = "llvm.fadd"(%207, %209) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %211 = "llvm.extractelement"(%210, %22) : (vector<32xf32>, i64) -> f32
+      %212 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %213 = "llvm.add"(%212, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %214 = "llvm.getelementptr"(%171, %213) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%211, %214) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_fence_local_memory, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %215 = "llvm.getelementptr"(%114) <{elem_type = i8, rawConstantIndices = array<i32: 512>}> : (!llvm.ptr<3>) -> !llvm.ptr<3>
+      %216 = "llvm.addrspacecast"(%215) : (!llvm.ptr<3>) -> !llvm.ptr
+      %217 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %218 = "llvm.add"(%217, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %219 = "llvm.getelementptr"(%171, %218) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %220 = "llvm.load"(%219) <{ordering = 0 : i64}> : (!llvm.ptr) -> f32
+      %221 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %222 = "llvm.add"(%221, %117) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %223 = "llvm.getelementptr"(%216, %222) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%220, %223) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_syncthreads, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %224 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %225 = "llvm.mul"(%5, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %226 = "llvm.add"(%224, %225) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %227 = "llvm.add"(%226, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %228 = "llvm.getelementptr"(%216, %227) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %229 = "llvm.load"(%228) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<32xf32>
+      %230 = "llvm.call"(%229) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_movva2vr_f32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<32xf32>) -> vector<32xf32>
+      %231 = "llvm.bitcast"(%230) : (vector<32xf32>) -> vector<128xi8>
+      %232 = "llvm.call"(%231) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_qw2, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %233 = "llvm.call"(%232) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_qw1, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %234 = "llvm.bitcast"(%233) : (vector<128xi8>) -> vector<32xf32>
+      %235 = "llvm.call"(%233) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_b8, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %236 = "llvm.bitcast"(%235) : (vector<128xi8>) -> vector<32xf32>
+      %237 = "llvm.fadd"(%234, %236) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %238 = "llvm.bitcast"(%237) : (vector<32xf32>) -> vector<128xi8>
+      %239 = "llvm.call"(%238) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_vector_movsft_l_b4, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (vector<128xi8>) -> vector<128xi8>
+      %240 = "llvm.bitcast"(%239) : (vector<128xi8>) -> vector<32xf32>
+      %241 = "llvm.fadd"(%237, %240) <{fastmathFlags = #llvm.fastmath<none>}> : (vector<32xf32>, vector<32xf32>) -> vector<32xf32>
+      %242 = "llvm.extractelement"(%241, %21) : (vector<32xf32>, i64) -> f32
+      %243 = "llvm.add"(%5, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %244 = "llvm.add"(%243, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %245 = "llvm.getelementptr"(%171, %244) <{elem_type = f32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      "llvm.store"(%242, %245) <{ordering = 0 : i64}> : (f32, !llvm.ptr) -> ()
+      "llvm.cond_br"(%91, %9)[^bb18, ^bb19] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb18:  // pred: ^bb17
+      %246 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @study_sdk_global_timer, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64
+      %247 = "llvm.call"(%246) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_trunci_ui64_to_ui32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i64) -> i32
+      "llvm.br"(%247)[^bb19] : (i32) -> ()
+    ^bb19(%248: i32):  // 2 preds: ^bb17, ^bb18
+      %249 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %250 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %251 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %252 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %253 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%249, %42, %250, %251, %171, %252, %253) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_broadcast_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 7, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32) -> ()
+      %254 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%254) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      %255 = "llvm.ptrtoint"(%arg4) : (!llvm.ptr) -> i64
+      %256 = "llvm.add"(%255, %38) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %257 = "llvm.inttoptr"(%256) : (i64) -> !llvm.ptr
+      %258 = "llvm.load"(%41) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %259 = "llvm.load"(%42) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %260 = "llvm.getelementptr"(%41) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      %261 = "llvm.load"(%260) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %262 = "llvm.getelementptr"(%42) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      %263 = "llvm.load"(%262) <{alignment = 512 : i64, ordering = 0 : i64}> : (!llvm.ptr) -> vector<128xf32>
+      %264 = "llvm.call"(%258, %259) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_floordivf_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      %265 = "llvm.call"(%261, %263) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_floordivf_v4_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (vector<128xf32>, vector<128xf32>) -> vector<128xf32>
+      "llvm.store"(%264, %150) <{alignment = 512 : i64, ordering = 0 : i64}> : (vector<128xf32>, !llvm.ptr) -> ()
+      %266 = "llvm.getelementptr"(%150) <{elem_type = f32, rawConstantIndices = array<i32: 128>}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.store"(%265, %266) <{alignment = 512 : i64, ordering = 0 : i64}> : (vector<128xf32>, !llvm.ptr) -> ()
+      "llvm.cond_br"(%43, %5)[^bb20, ^bb24] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb20:  // pred: ^bb19
+      %267 = "llvm.mul"(%117, %11) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %268 = "llvm.sub"(%35, %267) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %269 = "llvm.call"(%268, %5) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_maxsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %270 = "llvm.call"(%269, %11) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_minsi_si32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 2, 0>}> : (i32, i32) -> i32
+      %271 = "llvm.sub"(%11, %270) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %272 = "llvm.icmp"(%271, %5) <{predicate = 4 : i64}> : (i32, i32) -> i1
+      %273 = "llvm.icmp"(%270, %5) <{predicate = 1 : i64}> : (i32, i32) -> i1
+      %274 = "llvm.and"(%272, %273) : (i1, i1) -> i1
+      "llvm.cond_br"(%274)[^bb21, ^bb22] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb21:  // pred: ^bb20
+      %275 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %276 = "llvm.load"(%275) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %277 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %278 = "llvm.trunc"(%35) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %279 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %280 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%276, %257, %277, %278, %150, %279, %280, %9, %9, %8, %270, %9, %267) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_slice_deslice_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 13, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32, i32, i32, i32, i32, i32, i32) -> ()
+      "llvm.br"(%270)[^bb24] : (i32) -> ()
+    ^bb22:  // pred: ^bb20
+      "llvm.cond_br"(%273, %270)[^bb23, ^bb24] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> ()
+    ^bb23:  // pred: ^bb22
+      %281 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %282 = "llvm.load"(%281) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %283 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %284 = "llvm.trunc"(%35) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %285 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %286 = "llvm.trunc"(%11) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      "llvm.call"(%282, %257, %283, %284, %150, %285, %286, %9, %267) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_deslice_async_2_fp32, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 9, 0>}> : (!llvm.ptr, !llvm.ptr, i32, i32, !llvm.ptr, i32, i32, i32, i32) -> ()
+      "llvm.br"(%270)[^bb24] : (i32) -> ()
+    ^bb24(%287: i32):  // 4 preds: ^bb19, ^bb21, ^bb22, ^bb23
+      %288 = "llvm.icmp"(%287, %5) <{predicate = 1 : i64}> : (i32, i32) -> i1
+      "llvm.cond_br"(%91)[^bb25, ^bb41] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb25:  // pred: ^bb24
+      %289 = "llvm.mul"(%31, %14) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %290 = "llvm.call"(%289) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_extsi_si32_to_si64, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (i32) -> i64
+      %291 = "llvm.ptrtoint"(%arg5) : (!llvm.ptr) -> i64
+      %292 = "llvm.add"(%291, %290) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %293 = "llvm.inttoptr"(%292) : (i64) -> !llvm.ptr
+      %294 = "llvm.icmp"(%116, %5) <{predicate = 0 : i64}> : (i32, i32) -> i1
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb26, ^bb27] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb26:  // pred: ^bb25
+      "llvm.store"(%94, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %295 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %296 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %297 = "llvm.add"(%296, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %298 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %299 = "llvm.add"(%298, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %300 = "llvm.getelementptr"(%293, %297) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %301 = "llvm.getelementptr"(%41, %299) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %302 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %303 = "llvm.mul"(%302, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%295, %300, %301, %303) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %304 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%304) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb27] : () -> ()
+    ^bb27:  // 2 preds: ^bb25, ^bb26
+      %305 = "llvm.ptrtoint"(%293) : (!llvm.ptr) -> i64
+      %306 = "llvm.add"(%305, %0) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %307 = "llvm.inttoptr"(%306) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb28, ^bb29] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb28:  // pred: ^bb27
+      "llvm.store"(%149, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %308 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %309 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %310 = "llvm.add"(%309, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %311 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %312 = "llvm.add"(%311, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %313 = "llvm.getelementptr"(%307, %310) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %314 = "llvm.getelementptr"(%41, %312) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %315 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %316 = "llvm.mul"(%315, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%308, %313, %314, %316) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %317 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%317) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb29] : () -> ()
+    ^bb29:  // 2 preds: ^bb27, ^bb28
+      %318 = "llvm.add"(%305, %15) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %319 = "llvm.inttoptr"(%318) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb30, ^bb31] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb30:  // pred: ^bb29
+      "llvm.store"(%170, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %320 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %321 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %322 = "llvm.add"(%321, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %323 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %324 = "llvm.add"(%323, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %325 = "llvm.getelementptr"(%319, %322) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %326 = "llvm.getelementptr"(%41, %324) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %327 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %328 = "llvm.mul"(%327, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%320, %325, %326, %328) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %329 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%329) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb31] : () -> ()
+    ^bb31:  // 2 preds: ^bb29, ^bb30
+      %330 = "llvm.add"(%305, %16) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %331 = "llvm.inttoptr"(%330) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb32, ^bb33] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb32:  // pred: ^bb31
+      "llvm.store"(%248, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %332 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %333 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %334 = "llvm.add"(%333, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %335 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %336 = "llvm.add"(%335, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %337 = "llvm.getelementptr"(%331, %334) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %338 = "llvm.getelementptr"(%41, %336) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %339 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %340 = "llvm.mul"(%339, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%332, %337, %338, %340) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %341 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%341) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb33] : () -> ()
+    ^bb33:  // 2 preds: ^bb31, ^bb32
+      %342 = "llvm.add"(%305, %17) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %343 = "llvm.inttoptr"(%342) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb34, ^bb35] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb34:  // pred: ^bb33
+      "llvm.store"(%31, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %344 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %345 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %346 = "llvm.add"(%345, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %347 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %348 = "llvm.add"(%347, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %349 = "llvm.getelementptr"(%343, %346) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %350 = "llvm.getelementptr"(%41, %348) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %351 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %352 = "llvm.mul"(%351, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%344, %349, %350, %352) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %353 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%353) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb35] : () -> ()
+    ^bb35:  // 2 preds: ^bb33, ^bb34
+      %354 = "llvm.add"(%305, %18) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %355 = "llvm.inttoptr"(%354) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb36, ^bb37] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb36:  // pred: ^bb35
+      "llvm.store"(%9, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %356 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %357 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %358 = "llvm.add"(%357, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %359 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %360 = "llvm.add"(%359, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %361 = "llvm.getelementptr"(%355, %358) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %362 = "llvm.getelementptr"(%41, %360) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %363 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %364 = "llvm.mul"(%363, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%356, %361, %362, %364) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %365 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%365) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb37] : () -> ()
+    ^bb37:  // 2 preds: ^bb35, ^bb36
+      %366 = "llvm.add"(%305, %19) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %367 = "llvm.inttoptr"(%366) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb38, ^bb39] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb38:  // pred: ^bb37
+      "llvm.store"(%8, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %368 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %369 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %370 = "llvm.add"(%369, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %371 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %372 = "llvm.add"(%371, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %373 = "llvm.getelementptr"(%367, %370) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %374 = "llvm.getelementptr"(%41, %372) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %375 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %376 = "llvm.mul"(%375, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%368, %373, %374, %376) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %377 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%377) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb39] : () -> ()
+    ^bb39:  // 2 preds: ^bb37, ^bb38
+      %378 = "llvm.add"(%305, %20) <{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> i64
+      %379 = "llvm.inttoptr"(%378) : (i64) -> !llvm.ptr
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      "llvm.cond_br"(%294)[^bb40, ^bb41] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb40:  // pred: ^bb39
+      "llvm.store"(%9, %41) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> ()
+      "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_mfence, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> ()
+      %380 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      %381 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %382 = "llvm.add"(%381, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %383 = "llvm.mul"(%1, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %384 = "llvm.add"(%383, %5) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      %385 = "llvm.getelementptr"(%379, %382) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %386 = "llvm.getelementptr"(%41, %384) <{elem_type = i32, rawConstantIndices = array<i32: -2147483648>}> : (!llvm.ptr, i32) -> !llvm.ptr
+      %387 = "llvm.trunc"(%1) <{overflowFlags = #llvm.overflow<none>}> : (i32) -> i32
+      %388 = "llvm.mul"(%387, %10) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32
+      "llvm.call"(%380, %385, %386, %388) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_memcpy_async, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 4, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr, i32) -> ()
+      %389 = "llvm.load"(%27) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%389) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb41] : () -> ()
+    ^bb41:  // 3 preds: ^bb24, ^bb39, ^bb40
+      "llvm.cond_br"(%288)[^bb42, ^bb43] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> ()
+    ^bb42:  // pred: ^bb41
+      %390 = "llvm.getelementptr"(%27) <{elem_type = !llvm.ptr, rawConstantIndices = array<i32: 1>}> : (!llvm.ptr) -> !llvm.ptr
+      %391 = "llvm.load"(%390) <{ordering = 0 : i64}> : (!llvm.ptr) -> !llvm.ptr
+      "llvm.call"(%391) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @tops_wait_dte, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 1, 0>}> : (!llvm.ptr) -> ()
+      "llvm.br"()[^bb43] : () -> ()
+    ^bb43:  // 2 preds: ^bb41, ^bb42
+      "llvm.return"() : () -> ()
+    }) : () -> ()
+    "llvm.func"() <{CConv = #llvm.cconv<ccc>, function_type = !llvm.func<void (ptr, ptr, ptr)>, linkage = #llvm.linkage<external>, sym_name = "softmax_reduce_trace", visibility_ = 0 : i64}> ({
+    ^bb0(%arg0: !llvm.ptr, %arg1: !llvm.ptr, %arg2: !llvm.ptr):
+      "llvm.call"(%arg0, %arg1, %arg2) <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @softmax_reduce_trace_triton_internal__, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 3, 0>}> : (!llvm.ptr, !llvm.ptr, !llvm.ptr) -> ()
+      "llvm.return"() : () -> ()
+    }) {dtu_kernel, gcu.local_memory_size = 3072 : i64, gcu.shared_memory_size = 1024 : i64, gpu.kernel} : () -> ()
+  }) : () -> ()
+}) {"ttg.cluster-dims-x" = 1 : i32, "ttg.cluster-dims-y" = 1 : i32, "ttg.cluster-dims-z" = 1 : i32, "ttg.num-ctas" = 1 : i32, "ttg.num-warps" = 4 : i32, ttg.target = "gcu:gcu300", "ttg.threads-per-warp" = 1 : i32} : () -> ()
+

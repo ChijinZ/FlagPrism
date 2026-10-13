@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "backend": "cann",
+  "operator": "reduce_sum",
+  "shape": [
+    256,
+    1024
+  ],
+  "variant": 1,
+  "phase": "native",
+  "device": 4,
+  "status": "passed",
+  "host": {
+    "machine": "aarch64",
+    "python": "3.11.15"
+  },
+  "measurement": {
+    "warmup": 5,
+    "scope": "30 prewarmed profiled launches followed by synchronization",
+    "launch_count": 30
+  },
+  "utc_started": "2026-10-13T15:42:32Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.9.0+cpu",
+    "triton": "3.5.1",
+    "torch_file": "/usr/local/python3.11.15/lib/python3.11/site-packages/torch/__init__.py",
+    "triton_file": "/usr/local/python3.11.15/lib/python3.11/site-packages/triton/__init__.py",
+    "target": "GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0)"
+  },
+  "input_hashes": [
+    "b8daa14b3237d67a44d578d4ad88af0c4f553402b4564d9aa06309326514eda0",
+    "b76b6afd5fbcae9d8c596a9e4dc586be46e22eb039512404ee68e35c500acdaf",
+    "c427b98ea74f59d32663090470f55cc3eca0bda20566aade9ea2fd593db58f4c"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "ROWS": 1,
+    "BLOCK": 1024,
+    "num_stages": 1,
+    "num_warps": 2
+  },
+  "grid": [
+    256
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.0005,
+    "rtol": 0.002,
+    "max_abs_error": 1.430511474609375e-06,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(add_auto_scheduling=False, allow_fp8e4nv=False, allowed_dot_input_precisions=['ieee', 'hf32'], arch='Ascend910B4-1', auto_blockify_size=1, auto_tile_and_bind_subblock=True, auto_vectorize_v2_max_fused_ops_num=None, bisheng_options='-cce-link-aicore-ll-module /usr/local/python3.11.15/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc', bitcodes=[], bs_task_type=10, cluster_dims=(1, 1, 1), compile_mode='simd', compile_on_910_95=False, debug=False, default_dot_input_precision='ieee', deprecated_fp8_dtypes=[], disable_auto_inject_block_sync=None, disable_fma=False, disable_size_align_for_cast=None, disable_tightly_coupled_buffer_reuse=False, enable_auto_bind_sub_block=None, enable_auto_blockify=None, enable_auto_vectorize_v2=None, enable_bishengir_simt_optimization=0, enable_cce_vf_auto_sync=None, enable_cce_vf_remove_membar=None, enable_drop_unit_dims=None, enable_dynamic_cv_pipeline=False, enable_flatten=None, enable_fp_fusion=True, enable_hivm_auto_cv_balance=None, enable_mask_fallback_conversion=False, enable_mixed_cv=None, enable_nd2nz_on_vector=False, enable_persistent=False, enable_preload=None, enable_select_analysis=True, enable_simt_reorder_instruction=False, enable_sync_block_lock=False, enable_ubuf_saving=None, enable_vf_fusion=False, enable_warp_specialization=False, extern_libs=None, force_simt_only=False, force_simt_template=False, hash='9febf3c5db9ff58cffce3260ba5c772ca185c1f1f9630b001eeeae56e149ede9', hfusion_enable_multiple_consumer_fusion=False, inject_barrier_all=None, inject_block_all=None, instrumentation_mode='', kernel_name='rows', limit_auto_multi_buffer_of_local_buffer=None, limit_auto_multi_buffer_only_for_local_buffer=None, llvm_version=15, max_num_imprecise_acc_default=0, mix_mode='aiv', multibuffer=True, name='rows', num_buffers_warp_spec=0, num_consumer_groups=0, num_ctas=1, num_stages=1, num_warps=2, optimize_dynamic_offset=False, optimize_epilogue=False, parallel_mode='simd', prevec_max_fused_ops_num=None, reg_dec_producer=0, reg_inc_consumer=0, required_ub_bits=0, sanitize_overflow=True, set_workspace_multibuffer=None, shared=1, shared_mem_dynamic_size=221184, simt_stack_limit=None, stream=None, supported_fp8_dtypes=['fp8e5', 'fp8e4b15', 'fp8e4nv', 'fp8e4b8', 'fp8e5b16'], sync_solver=None, target=GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0), tensor_kinds=[0, 1], tile_mix_cube_loop=None, tile_mix_vector_loop=None, triton_version='3.5.1', unit_flag=None, use_bytecode=True, vf_merge_level=1, warp_size=32)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "ee75db11cd3a699c9c000ca7167f251cbf041683e9a5954d806c3072675dcd78",
+      "bytes": 7647
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "f96dd99ff243786de03e3e7b02b56f8d831ea5908162b54d6afa1965d3d471ba",
+      "bytes": 4213
+    },
+    "ttadapter": {
+      "file": "asm/ttadapter",
+      "sha256": "95a5168ac4c15e6286de0b7bef45ab2b0d17b24a7b9adc6eb43eb515b175fb3a",
+      "bytes": 5117
+    },
+    "mlirbc": {
+      "file": "asm/mlirbc",
+      "sha256": "5616d43d8002f08b4028215b7ba4723b972cefa1ca27293dbe62bbe777f0c6e0",
+      "bytes": 2021
+    },
+    "bcmlir": {
+      "file": "asm/bcmlir",
+      "sha256": "b3a1ecad43a560c5829ed93a629b7e98c5abebfa7b47bdd6b217ccb0f40157e9",
+      "bytes": 5099
+    },
+    "npubin": {
+      "file": "asm/npubin",
+      "sha256": "6f11933c835558d58a4d626c30dc69a6bbcdf3382892e6bbf35c859d9f30a68b",
+      "bytes": 3480
+    }
+  },
+  "profiling": {
+    "hook": "triton",
+    "requested_mode": "runtime_base:runtime_host_timing_fallback=false:device_id=4",
+    "launch_count": 30,
+    "scope": "prewarmed kernel launches plus final synchronization",
+    "cann_legacy_hook": "1",
+    "profiler_module": "/usr/local/python3.11.15/lib/python3.11/site-packages/flagtree/profiler/__init__.py",
+    "files": [
+      "profile.vendor.json",
+      "profile.meta.json",
+      "profile.timeline.json",
+      "profile.hatchet",
+      "result.json"
+    ]
+  },
+  "post_profile_validation": {
+    "passed": true,
+    "max_abs_error": 1.430511474609375e-06
+  }
+}

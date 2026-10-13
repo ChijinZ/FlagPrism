@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/usr/local/Ascend/cann-9.0.0/bin/bishengir-compile",
+    "/tmp/chijin-ascend-diagnosis-r001/native-canonical-unroll/asm/unroll2/bcmlir",
+    "--target=Ascend910B4-1",
+    "--enable-hfusion-compile=true",
+    "--enable-hivm-compile=true",
+    "--enable-triton-kernel-compile=true",
+    "--enable-auto-bind-sub-block=true",
+    "--enable-auto-multi-buffer=true",
+    "-o",
+    "/tmp/chijin-ascend-diagnosis-r001/lowering-unroll2/kernel"
+  ],
+  "returncode": 0,
+  "status": "passed",
+  "requested_num_stages": 2,
+  "effective_auto_multibuffer": true,
+  "source_sha256": "e5596f4c2fda51b511a86ac5895005fa387e0479b0a1430058eba39666aa09ae"
+}

@@ -1,0 +1,35 @@
+{
+  "command": [
+    "msprof",
+    "op",
+    "--application=python single_kernel.py --bk=256 --stages=4 --tile-m=32 --tile-n=32 --operator=gemm_bias_gelu --output=pmu-staged-R_K32_K256-app --kernel-kind=original --input-dir=/tmp/chijin-study-canonical-inputs-r007",
+    "--output=pmu-staged-R_K32_K256",
+    "--aic-metrics=ArithmeticUtilization,PipeUtilization,MemoryL0,Memory,L2Cache,ResourceConflictRatio",
+    "--kernel-name=matmul",
+    "--launch-count=1",
+    "--warm-up=10"
+  ],
+  "config": {
+    "name": "R_K32_K256",
+    "BM": 32,
+    "BN": 32,
+    "BK": 256,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  "started_unix": 1791903497.5370255,
+  "timeout_s": 180,
+  "returncode": 0,
+  "ended_unix": 1791903515.6242614,
+  "csv_files": [
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/OpBasicInfo.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/PipeUtilization.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/ArithmeticUtilization.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/L2Cache.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/Memory.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/ResourceConflictRatio.csv",
+    "pmu-staged-R_K32_K256/OPPROF_20261013225817_GYCVWKISUBCITLVC/MemoryL0.csv"
+  ],
+  "status": "collected"
+}

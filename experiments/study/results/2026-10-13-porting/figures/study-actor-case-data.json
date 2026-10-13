@@ -1,0 +1,113 @@
+{
+  "summary_sha256": "7d2facc562d4db67e139f20a0202bdc88af84921416187641460d542083bd24f",
+  "trace": [
+    {
+      "config": "P32_K32",
+      "source_pid": 3391362,
+      "packet": "artifacts/study-goal-run/ascend-diagnosis-r001/joint-results/joint-sys-P32_K32/OPPROF_20261014001443_LVWQVELJABTJVQOY/dump/DeviceProf1.bin",
+      "source": "FlagPrism/experiments/study/results/2026-10-13-porting/ascend-diagnosis/joint-sys/summary.json",
+      "loops": 128
+    },
+    {
+      "config": "R_K32_K256",
+      "source_pid": 3391879,
+      "packet": "artifacts/study-goal-run/ascend-diagnosis-r001/joint-results/joint-sys-R_K32_K256/OPPROF_20261014001533_GJMVGPEOCZALMDZZ/dump/DeviceProf1.bin",
+      "source": "FlagPrism/experiments/study/results/2026-10-13-porting/ascend-diagnosis/joint-sys/summary.json",
+      "loops": 16
+    }
+  ],
+  "pmu_program0_us": {
+    "P32_K32": [
+      47.521214,
+      46.722424,
+      0.293333
+    ],
+    "R_K32_K256": [
+      23.811516,
+      26.397575,
+      0.293333
+    ]
+  },
+  "whole_launch_us": {
+    "NVIDIA N": 17.728,
+    "P32_K32": 310.27,
+    "R_K32_K256": 164.12,
+    "R_KMN64_K256": 58.45
+  },
+  "nvidia_source": [
+    "FlagPrism/experiments/study/results/2026-10-13-goal-nvidia-r008/case-controls-independent-r008/long-k-frozen-n-b0/result.json",
+    "FlagPrism/experiments/study/results/2026-10-13-goal-nvidia-r008/case-controls-independent-r008/long-k-frozen-n-b1/result.json",
+    "FlagPrism/experiments/study/results/2026-10-13-goal-nvidia-r008/case-controls-independent-r008/long-k-frozen-n-b2/result.json"
+  ],
+  "target_speedup": 5.308297690333618,
+  "latency_statistics": {
+    "NVIDIA": "median of three batch medians; all90 raw calls retained",
+    "targets": "pooled median of90 calls; three batch medians also displayed"
+  },
+  "derived_source_work": {
+    "P32_K32": {
+      "config": {
+        "name": "P32_K32",
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 4,
+        "kernel": "original"
+      },
+      "logical_programs": 256,
+      "AIC_instances": 256,
+      "AIV_instances": 512,
+      "outer_K_iterations": 128,
+      "nd2nz_API_calls_per_program": 256,
+      "logical_AB_load_bytes_whole_launch": 134217728,
+      "source_GEMM_flops": 2147483648,
+      "source_GELU_output_elements": 262144,
+      "SDK_inner_Kpart_from_linked_formula": 512,
+      "predicted_cube_commands_per_program": 128
+    },
+    "R_K32_K256": {
+      "config": {
+        "name": "R_K32_K256",
+        "BM": 32,
+        "BN": 32,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4,
+        "kernel": "original"
+      },
+      "logical_programs": 256,
+      "AIC_instances": 256,
+      "AIV_instances": 512,
+      "outer_K_iterations": 16,
+      "nd2nz_API_calls_per_program": 32,
+      "logical_AB_load_bytes_whole_launch": 134217728,
+      "source_GEMM_flops": 2147483648,
+      "source_GELU_output_elements": 262144,
+      "SDK_inner_Kpart_from_linked_formula": 512,
+      "predicted_cube_commands_per_program": 16
+    },
+    "R_KMN64_K256": {
+      "config": {
+        "name": "R_KMN64_K256",
+        "BM": 64,
+        "BN": 64,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4,
+        "kernel": "original"
+      },
+      "logical_programs": 64,
+      "AIC_instances": 64,
+      "AIV_instances": 128,
+      "outer_K_iterations": 16,
+      "nd2nz_API_calls_per_program": 32,
+      "logical_AB_load_bytes_whole_launch": 67108864,
+      "source_GEMM_flops": 2147483648,
+      "source_GELU_output_elements": 262144,
+      "SDK_inner_Kpart_from_linked_formula": 256,
+      "predicted_cube_commands_per_program": 16
+    }
+  },
+  "scope": "(a) static dependencies; (b) same-invocation AIC/AIV source-control timeline in an empirically matched common reported SYS epoch, warm-up0 SDK application replay. Body bars are source entry/exit; wait0 bars are scalar wait brackets; ticks are MMA-helper dispatch points; diamonds signal issue. Not hardware occupancy or standalone GELU durations. (c) independent native-PMU replay activities, may overlap and are not added; separate cache/invocation from trace. (d) heldout native latencies, instrumentation disabled, 3x30 each."
+}

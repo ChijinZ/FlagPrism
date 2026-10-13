@@ -1,0 +1,123 @@
+{
+  "schema_version": 1,
+  "backend": "enflame",
+  "operator": "gemm",
+  "shape": [
+    128,
+    128,
+    128
+  ],
+  "variant": 0,
+  "phase": "native",
+  "device": 0,
+  "status": "passed",
+  "host": {
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "measurement": {
+    "warmup": 5,
+    "scope": "30 prewarmed profiled launches followed by synchronization",
+    "launch_count": 30
+  },
+  "utc_started": "2026-10-13T14:49:32Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.10.0+cpu",
+    "triton": "3.6.0",
+    "torch_file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+    "triton_file": "/workspace/FlagTree/python/triton/__init__.py",
+    "target": "GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12)"
+  },
+  "input_hashes": [
+    "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea",
+    "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943",
+    "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "BM": 32,
+    "BN": 32,
+    "BK": 32,
+    "num_stages": 4,
+    "num_warps": 4
+  },
+  "grid": [
+    4,
+    4
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.002,
+    "rtol": 0.02,
+    "max_abs_error": 0.0,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(allow_fp8e4b15=False, allow_fp8e4nv=False, allowed_dot_input_precisions=['ieee'], arch='gcu300', backend_name='gcu', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='ieee', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=False, enable_i64=False, enable_stride0=False, extern_libs=[], hash='902488a35e4d7e97c62b4c5f6f081b3c5141d153f764c9f17dce9edb520cd094', instrumentation_mode='', launch_cooperative_grid=False, launch_pdl=False, max_dsm=0, max_local=1572352, max_num_imprecise_acc_default=0, max_shared=33554432, name='matmul', num_buffers_warp_spec=0, num_consumer_groups=0, num_ctas=1, num_stages=4, num_warps=4, ptr_int_args=[], redundant_sip=False, reg_dec_producer=0, reg_inc_consumer=0, sanitize_overflow=False, shared=12288, supported_fp8_dtypes=[], target=GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12), tle_raw=False, tle_raw_deferred=False, triton_version='3.6.0', vector_length=512, warp_size=1)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "4a2dbc24933dec10605e7b585a8c7d335cbdb98c2ee347960cb0436231f2ede0",
+      "bytes": 13913
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "17bc01bc7cb62ebe1f840fdb3d9466627deb99d31c5daa0818ce8b7471c68e41",
+      "bytes": 9208
+    },
+    "ttgir": {
+      "file": "asm/ttgir",
+      "sha256": "17bc01bc7cb62ebe1f840fdb3d9466627deb99d31c5daa0818ce8b7471c68e41",
+      "bytes": 9208
+    },
+    "gcuir": {
+      "file": "asm/gcuir",
+      "sha256": "dcd949d6831978a7ff7832a778d2cc8e4ab635d81145b066092dabe42594ac4c",
+      "bytes": 46226
+    },
+    "llir": {
+      "file": "asm/llir",
+      "sha256": "2eab92fb314eb1f311ac047438e1bb45de1a93776c735031e76e465a6e2d04fc",
+      "bytes": 90956
+    },
+    "fatbin": {
+      "file": "asm/fatbin",
+      "sha256": "a07a306b851e53c55634169eb8bb9d3dadcacb456489882c0c75cce62a85d153",
+      "bytes": 183278
+    }
+  },
+  "profiling": {
+    "hook": "triton",
+    "requested_mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0",
+    "launch_count": 30,
+    "scope": "prewarmed kernel launches plus final synchronization",
+    "cann_legacy_hook": null,
+    "profiler_module": "/workspace/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+    "files": [
+      "result.json",
+      "profile/manifest.json",
+      "profile/ai/events.jsonl",
+      "profile/ai/call_tree.json",
+      "profile/ai/context.json",
+      "profile/ai/README.md",
+      "profile/ai/kernels.json",
+      "profile/ai/binaries.json",
+      "profile/ai/arguments.json",
+      "profile/ai/launches.json",
+      "profile/ai/summary.json",
+      "profile/report/timeline.json",
+      "profile/report/report.json",
+      "profile/report/index.html",
+      "profile/ai/sources/920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6.py",
+      "profile/ai/sources/6965ad0ad545cab35e9bff9163dfdf0b0b8875e8c67cdfcaafb4c286d52d71dc.py"
+    ]
+  },
+  "post_profile_validation": {
+    "passed": true,
+    "max_abs_error": 0.0
+  }
+}

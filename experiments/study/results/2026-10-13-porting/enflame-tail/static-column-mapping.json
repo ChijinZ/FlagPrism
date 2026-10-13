@@ -1,0 +1,32 @@
+{
+  "quantity": "statically assigned useful inputelements, not measured warp/itemutilization",
+  "nvidia": {
+    "source": "artifacts/study-goal-run/pro6000-independent-r008/case-controls-independent-r008/softmax-w4-b0/asm/llir",
+    "sha256": "bbce84e7f6b28419a9b28c5e0f842c8922e0d4cfb8338eee05d1698e81175d7d",
+    "formula": "column=(tid.x & 127)+128*q, tid=32*warp+lane; q0..7, maskcolumn<769; actualLLVMfirstsixallloaded, q6onlytid0, q7false",
+    "group_unit": "32-lane warp",
+    "counts": [
+      193,
+      192,
+      192,
+      192
+    ]
+  },
+  "gcu": {
+    "source": "artifacts/study-goal-run/enflame-tail-r008/native/b0-w4/asm/gcuir",
+    "sha256": "ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b",
+    "formula": "column=256*(thread_id.x %4)+localcolumn; localcolumn0..255, maskcolumn<769",
+    "group_unit": "backend vector work-item",
+    "counts": [
+      256,
+      256,
+      256,
+      1
+    ]
+  },
+  "limits": [
+    "Groupunits differ and are not comparable compute capacities",
+    "Padding imbalance is not established solecause; GCU1024-wide balancedrow also improved in exploratorycontrols",
+    "No measured perwarp/SIP utilization claimed from staticcounts"
+  ]
+}

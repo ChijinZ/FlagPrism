@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "backend": "enflame",
+  "operator": "transpose",
+  "shape": [
+    1024,
+    1024
+  ],
+  "variant": 0,
+  "phase": "native",
+  "device": 0,
+  "status": "passed",
+  "host": {
+    "machine": "x86_64",
+    "python": "3.12.3"
+  },
+  "measurement": {
+    "warmup": 5,
+    "scope": "30 prewarmed profiled launches followed by synchronization",
+    "launch_count": 30
+  },
+  "utc_started": "2026-10-13T15:15:28Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.10.0+cpu",
+    "triton": "3.6.0",
+    "torch_file": "/usr/local/lib/python3.12/dist-packages/torch/__init__.py",
+    "triton_file": "/workspace/FlagTree/python/triton/__init__.py",
+    "target": "GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12)"
+  },
+  "input_hashes": [
+    "5318a1d833cfdcaed8a4dd5f733ed6bc8f4ea5bd78d494bed9a792b27cfcda1a"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "BM": 16,
+    "BN": 32,
+    "num_stages": 1,
+    "num_warps": 2
+  },
+  "grid": [
+    64,
+    32
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.0,
+    "rtol": 0.0,
+    "max_abs_error": 0.0,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(allow_fp8e4b15=False, allow_fp8e4nv=False, allowed_dot_input_precisions=['ieee'], arch='gcu300', backend_name='gcu', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='ieee', deprecated_fp8_dot_operand_dtypes=[], enable_fp_fusion=False, enable_i64=False, enable_stride0=False, extern_libs=[], hash='1867400ed4529155c46f64fffdfb9c495035434d6672b0b1deeb5bfef4884adf', instrumentation_mode='', launch_cooperative_grid=False, launch_pdl=False, max_dsm=0, max_local=1572352, max_num_imprecise_acc_default=0, max_shared=16777216, name='transpose', num_buffers_warp_spec=0, num_consumer_groups=0, num_ctas=1, num_stages=1, num_warps=2, ptr_int_args=[], redundant_sip=False, reg_dec_producer=0, reg_inc_consumer=0, sanitize_overflow=False, shared=4096, supported_fp8_dtypes=[], target=GPUTarget(backend='gcu', arch='dtu-enflame-tops--gcu300', warp_size=12), tle_raw=False, tle_raw_deferred=False, triton_version='3.6.0', vector_length=512, warp_size=1)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "f8b5977fcb43cf494ea75737bf9fb4056332a366335632d39d0664fd6394d748",
+      "bytes": 6444
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "374d418053f337f994939b5dffe6c9ce74a2140823add12aa667d1c77685e36a",
+      "bytes": 5132
+    },
+    "ttgir": {
+      "file": "asm/ttgir",
+      "sha256": "374d418053f337f994939b5dffe6c9ce74a2140823add12aa667d1c77685e36a",
+      "bytes": 5132
+    },
+    "gcuir": {
+      "file": "asm/gcuir",
+      "sha256": "5207e51a5283e2bbb20b9e9170b7aa7853e86f82578a7ab5982c61710141b40b",
+      "bytes": 14590
+    },
+    "llir": {
+      "file": "asm/llir",
+      "sha256": "dd573fed26174fec73633d9c6dda52ab841c8db00efe3f48afdc78d64004ecd5",
+      "bytes": 30491
+    },
+    "fatbin": {
+      "file": "asm/fatbin",
+      "sha256": "3a78b3482f86deb88e97f911c7688083362799ad5888e0aec2dc676518bb72a7",
+      "bytes": 75822
+    }
+  },
+  "profiling": {
+    "hook": "triton",
+    "requested_mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0",
+    "launch_count": 30,
+    "scope": "prewarmed kernel launches plus final synchronization",
+    "cann_legacy_hook": null,
+    "profiler_module": "/workspace/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+    "files": [
+      "result.json",
+      "profile/manifest.json",
+      "profile/ai/events.jsonl",
+      "profile/ai/call_tree.json",
+      "profile/ai/context.json",
+      "profile/ai/README.md",
+      "profile/ai/kernels.json",
+      "profile/ai/binaries.json",
+      "profile/ai/arguments.json",
+      "profile/ai/launches.json",
+      "profile/ai/summary.json",
+      "profile/report/timeline.json",
+      "profile/report/report.json",
+      "profile/report/index.html",
+      "profile/ai/sources/920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6.py",
+      "profile/ai/sources/9a77b2a38366d5e97338b80e1d500d1dc65d357744c0f8b6df7b75083b92486b.py"
+    ]
+  },
+  "post_profile_validation": {
+    "passed": true,
+    "max_abs_error": 0.0
+  }
+}

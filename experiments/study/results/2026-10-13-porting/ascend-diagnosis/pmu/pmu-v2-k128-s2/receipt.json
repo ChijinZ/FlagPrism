@@ -1,0 +1,23 @@
+{
+  "command": [
+    "msprof",
+    "op",
+    "--application=python single_kernel.py --bk=128 --stages=2 --operator=gemm_bias_gelu --output=pmu-v2-k128-s2-app",
+    "--output=pmu-v2-k128-s2",
+    "--aic-metrics=PipeUtilization,MemoryL0,ResourceConflictRatio",
+    "--kernel-name=matmul",
+    "--launch-count=1",
+    "--warm-up=10"
+  ],
+  "started_unix": 1791900792.8794045,
+  "timeout_s": 180,
+  "returncode": 0,
+  "ended_unix": 1791900809.5667682,
+  "csv_files": [
+    "pmu-v2-k128-s2/OPPROF_20261013221312_BNHDZSAAPLOZCEEL/OpBasicInfo.csv",
+    "pmu-v2-k128-s2/OPPROF_20261013221312_BNHDZSAAPLOZCEEL/PipeUtilization.csv",
+    "pmu-v2-k128-s2/OPPROF_20261013221312_BNHDZSAAPLOZCEEL/ResourceConflictRatio.csv",
+    "pmu-v2-k128-s2/OPPROF_20261013221312_BNHDZSAAPLOZCEEL/MemoryL0.csv"
+  ],
+  "status": "collected"
+}

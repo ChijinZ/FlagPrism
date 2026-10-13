@@ -1,0 +1,26 @@
+{
+  "command": [
+    "msprof",
+    "op",
+    "--application=python single_kernel.py --bk=64 --stages=2 --operator=gemm_bias_gelu --output=pmu-counts-k64-s2-unroll2-app --kernel-kind=unroll --input-dir=/tmp/chijin-study-canonical-inputs-r007",
+    "--output=pmu-counts-k64-s2-unroll2",
+    "--aic-metrics=ArithmeticUtilization,PipeUtilization,MemoryL0,Memory,L2Cache,ResourceConflictRatio",
+    "--kernel-name=matmul",
+    "--launch-count=1",
+    "--warm-up=10"
+  ],
+  "started_unix": 1791902118.8050914,
+  "timeout_s": 180,
+  "returncode": 0,
+  "ended_unix": 1791902134.4914296,
+  "csv_files": [
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/OpBasicInfo.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/PipeUtilization.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/ArithmeticUtilization.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/L2Cache.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/Memory.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/ResourceConflictRatio.csv",
+    "pmu-counts-k64-s2-unroll2/OPPROF_20261013223518_FDJBFUSFEXSZCKZJ/MemoryL0.csv"
+  ],
+  "status": "collected"
+}

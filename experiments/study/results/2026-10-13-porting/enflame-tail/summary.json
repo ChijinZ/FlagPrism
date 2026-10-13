@@ -1,0 +1,294 @@
+{
+  "scope": "actual native-selected NVIDIA N, exactGCU P, config-guided R, alternatives retained",
+  "native": [
+    {
+      "batch": 0,
+      "work_items": 4,
+      "samples": 30,
+      "median_us": 114.8685,
+      "minimum_us": 112.814,
+      "maximum_us": 123.659,
+      "barriers": 2,
+      "local_bytes_per_item": 3072,
+      "shared_bytes": 1024,
+      "source": "native/b0-w4",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "13cfec6c9c093373febe6b2b42be4b0b086ba6778a4dde2ffd30514a9a55824f"
+    },
+    {
+      "batch": 0,
+      "work_items": 1,
+      "samples": 30,
+      "median_us": 71.14500000000001,
+      "minimum_us": 70.77,
+      "maximum_us": 79.98,
+      "barriers": 0,
+      "local_bytes_per_item": 12288,
+      "shared_bytes": 0,
+      "source": "native/b0-w1",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "78d5d75adfd0eaa0dcb845c0c9ff37b5a2cc31cae4a66ff980d8a6298d81de45"
+    },
+    {
+      "batch": 0,
+      "work_items": 2,
+      "samples": 30,
+      "median_us": 73.553,
+      "minimum_us": 71.624,
+      "maximum_us": 105.27,
+      "barriers": 2,
+      "local_bytes_per_item": 6144,
+      "shared_bytes": 1024,
+      "source": "native/b0-w2",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "6b4d68aee2cc2e994bd882bf084ba40708534e5a540cee46374997b53542a822"
+    },
+    {
+      "batch": 1,
+      "work_items": 4,
+      "samples": 30,
+      "median_us": 115.064,
+      "minimum_us": 112.649,
+      "maximum_us": 123.359,
+      "barriers": 2,
+      "local_bytes_per_item": 3072,
+      "shared_bytes": 1024,
+      "source": "native/b1-w4",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "a6675b92ec18156b9b2a6a3b99dd3e33bde9657e275dfe6ccdf8feafdc5f1445"
+    },
+    {
+      "batch": 1,
+      "work_items": 1,
+      "samples": 30,
+      "median_us": 71.12450000000001,
+      "minimum_us": 69.902,
+      "maximum_us": 77.298,
+      "barriers": 0,
+      "local_bytes_per_item": 12288,
+      "shared_bytes": 0,
+      "source": "native/b1-w1",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "248adfc860b026a1e4d2781ed556ea374bbdb4c3b742c53686d18b77dcb6cf97"
+    },
+    {
+      "batch": 1,
+      "work_items": 2,
+      "samples": 30,
+      "median_us": 73.653,
+      "minimum_us": 72.212,
+      "maximum_us": 81.586,
+      "barriers": 2,
+      "local_bytes_per_item": 6144,
+      "shared_bytes": 1024,
+      "source": "native/b1-w2",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "43134200595a15a1ec79f5033f618082c427b542303413ef568c0a660aef290f"
+    },
+    {
+      "batch": 2,
+      "work_items": 4,
+      "samples": 30,
+      "median_us": 115.209,
+      "minimum_us": 112.861,
+      "maximum_us": 123.511,
+      "barriers": 2,
+      "local_bytes_per_item": 3072,
+      "shared_bytes": 1024,
+      "source": "native/b2-w4",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "8300fd55aa1208f307b925fa3a68d73da40a3a4eee4fc42112e36eb9bcf33a41"
+    },
+    {
+      "batch": 2,
+      "work_items": 1,
+      "samples": 30,
+      "median_us": 71.055,
+      "minimum_us": 69.764,
+      "maximum_us": 80.926,
+      "barriers": 0,
+      "local_bytes_per_item": 12288,
+      "shared_bytes": 0,
+      "source": "native/b2-w1",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "726019f81087fcc24cf52a6392de5cd6f2e0aab6d1e1baf3fe13f4d3d0b42109"
+    },
+    {
+      "batch": 2,
+      "work_items": 2,
+      "samples": 30,
+      "median_us": 73.777,
+      "minimum_us": 72.06,
+      "maximum_us": 81.239,
+      "barriers": 2,
+      "local_bytes_per_item": 6144,
+      "shared_bytes": 1024,
+      "source": "native/b2-w2",
+      "input_sha256": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "result_sha256": "42120e89924d8fdd50db9e520e3e8e7e89de1db40f4f32d255dcfac8176032d5"
+    }
+  ],
+  "probes": [
+    {
+      "work_items": 4,
+      "max_median_ticks": 1096,
+      "sum_median_ticks": 1110,
+      "task_median_us": 118.169,
+      "samples": 15,
+      "scope": "same-invocation program0/workitem0 source reductioncontrol-pathbrackets, rawSDKticks; not enginebusy or originalphasefraction",
+      "source": "brackets-w4",
+      "barriers": 2,
+      "local_memory_fences": 10
+    },
+    {
+      "work_items": 1,
+      "max_median_ticks": 855,
+      "sum_median_ticks": 690,
+      "task_median_us": 74.745,
+      "samples": 15,
+      "scope": "same-invocation program0/workitem0 source reductioncontrol-pathbrackets, rawSDKticks; not enginebusy or originalphasefraction",
+      "source": "brackets-w1",
+      "barriers": 0,
+      "local_memory_fences": 10
+    },
+    {
+      "work_items": 2,
+      "max_median_ticks": 1245,
+      "sum_median_ticks": 1109,
+      "task_median_us": 76.186,
+      "samples": 15,
+      "scope": "same-invocation program0/workitem0 source reductioncontrol-pathbrackets, rawSDKticks; not enginebusy or originalphasefraction",
+      "source": "brackets-w2",
+      "barriers": 2,
+      "local_memory_fences": 10
+    }
+  ],
+  "tcu": [
+    {
+      "work_items": 4,
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 6192.08,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 4,
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.840995,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 4,
+      "metric": "SIP/MSF_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.258768,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w4/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 1,
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 5028,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 1,
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 2.99055,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 1,
+      "metric": "SIP/MSF_EFFICIENCY",
+      "unit": "%",
+      "median_value": 1.27597,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w1/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 2,
+      "metric": "SIP/BUSY",
+      "unit": "CYCLE",
+      "median_value": 6353.5,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 2,
+      "metric": "SIP/1D_EFFICIENCY",
+      "unit": "%",
+      "median_value": 1.32603,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    },
+    {
+      "work_items": 2,
+      "metric": "SIP/MSF_EFFICIENCY",
+      "unit": "%",
+      "median_value": 0.505155,
+      "samples": 21,
+      "instances_per_record": 24,
+      "source": "tcu/w2/invocations.csv",
+      "scope": "originalbinary applicationreplay, capture-localIDs;21include6initial/warmupcalls, not joinedtoTOPSPTI"
+    }
+  ]
+}

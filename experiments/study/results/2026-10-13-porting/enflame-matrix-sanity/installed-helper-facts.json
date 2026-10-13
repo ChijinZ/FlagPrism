@@ -1,0 +1,19 @@
+{
+  "installed_library_path": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+  "library_sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a",
+  "helper": "tops_addmm_fp16_fp32",
+  "helper_definition_sha256": "eadd4ac459acc68e3bf744e8b272782f4cba6eb4e04415f936d03a22e0ea084c",
+  "ir_function_arguments": "outputF32,inputF16,inputF16,biasF32,M,K,N",
+  "scalar_fmul_count": 9,
+  "scalar_fadd_count": 9,
+  "half_load_count": 18,
+  "loop_phi_count": 18,
+  "direct_call_targets": [],
+  "header_path": "/opt/triton_gcu/lib/kurama/acore/include/common/matmul.h",
+  "header_sha256": "484172daf27c39d158eb89908943ddd4623574eb91eafce80965c0d8296a6cfe",
+  "header_scope": "separate acore matrix API supportedpatterns, not automaticproof ofthishelper finalISA",
+  "limitations": [
+    "Finalcompiler may replace recognized loops; actualengine-use verifiedseparately byoriginalbinaryTCU",
+    "InstalledprivateSDKlibrary/source retainedonremoteonly, notcopiedintorepo"
+  ]
+}

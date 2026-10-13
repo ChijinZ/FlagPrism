@@ -1,0 +1,214 @@
+{
+  "groups": [
+    {
+      "kind": "kernel",
+      "name": "matmul",
+      "id": "group-dbe3fc3fb6025ac0",
+      "configuration": {
+        "argument_signature": "af05673dd2e7c9221b193b1b26ddb6b9abecec39deeed983da598afc88721e23",
+        "binary_id": "ecc6e936c2ac9ba06786a331452cbc690ea5ca80b70180791d60bb627ccc1538",
+        "block": [
+          4,
+          1,
+          1
+        ],
+        "context": 0,
+        "device": 0,
+        "grid": [
+          16,
+          16,
+          1
+        ],
+        "process": 72214
+      },
+      "grouping_status": "observed_configuration",
+      "configuration_label": "grid=[16, 16, 1] block=[4, 1, 1] binary=ecc6e936c2ac",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_activity",
+            "count": 30
+          }
+        ],
+        "sample_note": null
+      },
+      "count": 30,
+      "total_us": 2830350.438,
+      "mean_us": 94345.01460000001,
+      "p50_us": 94348.643,
+      "p95_us": 94352.2363,
+      "p99_us": 94370.67115,
+      "max_us": 94378.027,
+      "effective_gbps": null,
+      "bytes": null,
+      "grouping": "device_context_name_grid_block_binary_arguments",
+      "event_ids": [
+        2,
+        6,
+        10,
+        14,
+        18,
+        22,
+        26,
+        30,
+        34,
+        38,
+        42,
+        46,
+        50,
+        54,
+        58,
+        62,
+        66,
+        70,
+        74,
+        78,
+        82,
+        86,
+        90,
+        94,
+        98,
+        102,
+        106,
+        110,
+        114,
+        118
+      ],
+      "representative_launch_id": "launch-1",
+      "input_summary": {
+        "A": {
+          "kind": "tensor",
+          "shape": [
+            512,
+            512
+          ],
+          "dtype": "torch.float16",
+          "stride": [
+            512,
+            1
+          ],
+          "device": "gcu:0"
+        },
+        "B": {
+          "kind": "tensor",
+          "shape": [
+            512,
+            512
+          ],
+          "dtype": "torch.float16",
+          "stride": [
+            512,
+            1
+          ],
+          "device": "gcu:0"
+        },
+        "Bias": {
+          "kind": "tensor",
+          "shape": [
+            512
+          ],
+          "dtype": "torch.float32",
+          "stride": [
+            1
+          ],
+          "device": "gcu:0"
+        },
+        "C": {
+          "kind": "tensor",
+          "shape": [
+            512,
+            512
+          ],
+          "dtype": "torch.float32",
+          "stride": [
+            512,
+            1
+          ],
+          "device": "gcu:0"
+        }
+      },
+      "argument_id": "af05673dd2e7c9221b193b1b26ddb6b9abecec39deeed983da598afc88721e23",
+      "arguments_file": "ai/arguments.json",
+      "binary_id": "ecc6e936c2ac9ba06786a331452cbc690ea5ca80b70180791d60bb627ccc1538",
+      "binaries_file": "ai/binaries.json",
+      "source": {
+        "path": "/workspace/study-goal-enflame-port-r007/kernels.py",
+        "line": 5,
+        "sha256": "6965ad0ad545cab35e9bff9163dfdf0b0b8875e8c67cdfcaafb4c286d52d71dc",
+        "file_sha256": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+        "text_file": "ai/sources/6965ad0ad545cab35e9bff9163dfdf0b0b8875e8c67cdfcaafb4c286d52d71dc.py",
+        "file_snapshot_file": "ai/sources/920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6.py"
+      },
+      "scalar_arguments": {
+        "status": "complete",
+        "values": {
+          "BK": 32,
+          "BM": 32,
+          "BN": 32,
+          "FUSED": true,
+          "K": 512,
+          "M": 512,
+          "N": 512
+        },
+        "omitted_count": 0
+      },
+      "compiler_metadata": {
+        "status": "complete",
+        "values": {
+          "allow_fp8e4b15": false,
+          "allow_fp8e4nv": false,
+          "allowed_dot_input_precisions": [
+            "ieee"
+          ],
+          "arch": "gcu300",
+          "backend_name": "gcu",
+          "cluster_dims": [
+            1,
+            1,
+            1
+          ],
+          "debug": false,
+          "default_dot_input_precision": "ieee",
+          "deprecated_fp8_dot_operand_dtypes": [],
+          "enable_fp_fusion": false,
+          "enable_i64": false,
+          "enable_stride0": false,
+          "extern_libs": [],
+          "hash": "ecc6e936c2ac9ba06786a331452cbc690ea5ca80b70180791d60bb627ccc1538",
+          "instrumentation_mode": "",
+          "launch_cooperative_grid": false,
+          "launch_pdl": false,
+          "max_dsm": 0,
+          "max_local": 1572352,
+          "max_num_imprecise_acc_default": 0,
+          "max_shared": 33554432,
+          "name": "matmul",
+          "num_buffers_warp_spec": 0,
+          "num_consumer_groups": 0,
+          "num_ctas": 1,
+          "num_stages": 3,
+          "num_warps": 4,
+          "ptr_int_args": [],
+          "redundant_sip": false,
+          "reg_dec_producer": 0,
+          "reg_inc_consumer": 0,
+          "sanitize_overflow": false,
+          "shared": 8704,
+          "supported_fp8_dtypes": [],
+          "tle_raw": false,
+          "tle_raw_deferred": false,
+          "triton_version": "3.6.0",
+          "vector_length": 512,
+          "warp_size": 1
+        },
+        "omitted_count": 0
+      },
+      "identity_scope": "capture_local; descriptors do not include tensor contents and do not establish cross-run workload equivalence",
+      "identity_limits": "Groups use available identities; missing binary/arguments cannot prove identical work."
+    }
+  ],
+  "instrumented_aggregate_summaries": []
+}

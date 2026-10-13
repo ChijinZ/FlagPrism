@@ -1,0 +1,46 @@
+{
+  "008f4c0f8ef7ca76e2b5f75bcbd3300785227a06e281bc350018b79d3034e347": {
+    "X": {
+      "kind": "tensor",
+      "shape": [
+        513,
+        257
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        257,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "Y": {
+      "kind": "tensor",
+      "shape": [
+        257,
+        513
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        513,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "M": {
+      "kind": "scalar_or_metadata",
+      "value": 513
+    },
+    "N": {
+      "kind": "scalar_or_metadata",
+      "value": 257
+    },
+    "BM": {
+      "kind": "scalar_or_metadata",
+      "value": 16
+    },
+    "BN": {
+      "kind": "scalar_or_metadata",
+      "value": 16
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "audit_date": "2026-10-14",
+  "raw_path": "FlagPrism/experiments/study/results/2026-10-13-porting/ascend-diagnosis/captures/frozenN-staged-holdout/result.json.gz",
+  "raw_sha256": "be747b28e5139d9e71109ded861b4a44c7a8fea64a1393b3dfffd9273b40f73d",
+  "raw_scope_literal": "exploratory, N/P freeze pending",
+  "raw_file_unchanged": true,
+  "explanation": "Historical generic exploratory runner scope string; collection-specific provenance is determined by frozen configuration, kernel source, canonical input identities and independent heldout batches, rather than this stale template field. Raw observations are preserved unchanged.",
+  "nvidia_selection_path": "FlagPrism/experiments/study/results/2026-10-13-goal-nvidia-r007/selection.json",
+  "nvidia_selection_sha256": "df1aa3b9a44895d947c24cfc7da0cbb9c3e0ef37026855357f2a7377d8069fcf",
+  "identity_reference": "frozen_N_selection.json and summary.json: frozen_N_provenance, native frozenN-staged-holdout; reviewer independently verified matching configurations and input hashes",
+  "scope_limit": "This sidecar audits identity; it does not infer an exact selection wall-clock timestamp from filesystem mtime or claim that a metadata edit changes experimental history."
+}

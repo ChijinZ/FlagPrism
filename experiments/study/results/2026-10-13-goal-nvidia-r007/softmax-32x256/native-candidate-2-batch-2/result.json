@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "backend": "cuda",
+  "operator": "softmax",
+  "shape": [
+    32,
+    256
+  ],
+  "variant": 0,
+  "phase": "native",
+  "device": 0,
+  "status": "passed",
+  "host": {
+    "machine": "x86_64",
+    "python": "3.10.12"
+  },
+  "measurement": {
+    "warmup": 5,
+    "scope": "30 prewarmed profiled launches followed by synchronization",
+    "launch_count": 30
+  },
+  "utc_started": "2026-10-13T14:49:13Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.8.0+cu128",
+    "triton": "3.6.0",
+    "torch_file": "/workspace/venv/lib/python3.10/site-packages/torch/__init__.py",
+    "triton_file": "/workspace/FlagTree-pr1262/python/triton/__init__.py",
+    "target": "GPUTarget(backend='cuda', arch=120, warp_size=32)"
+  },
+  "input_hashes": [
+    "bc0461336f5ed7bac68df9742ebc6491b467214f73c04f3e43f7d4e8144aa09e",
+    "6d566f55b1ade05952750091d36996ae530f00406f9091e0bd1c18f4fc93c020",
+    "3ed7946e17cee18b6453fafcc326ad9bdcea8dbc4e24552734488417ae0aae15"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "ROWS": 1,
+    "BLOCK": 256,
+    "num_stages": 1,
+    "num_warps": 2
+  },
+  "grid": [
+    32
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.0005,
+    "rtol": 0.002,
+    "max_abs_error": 1.1641532182693481e-09,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(allowed_dot_input_precisions=['tf32', 'tf32x3', 'ieee', 'bf16x3', 'bf16x6'], arch='sm120', backend_name='cuda', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='tf32', deprecated_fp8_dot_operand_dtypes=['fp8e4b15'], enable_fp_fusion=True, enable_reflect_ftz=True, extern_libs=[['libdevice', '/workspace/FlagTree-pr1262/python/triton/backends/nvidia/lib/libdevice.10.bc']], global_scratch_align=1, global_scratch_size=0, hash='33d2d68d3e39ea3f816a3c6d33a137696cb0e68426febf4fcb47189a28c7b216', instrumentation_mode='', ir_override=None, kernel_init_hooks=[], launch_cooperative_grid=False, launch_pdl=False, max_num_imprecise_acc_default=0, maxnreg=None, name='rows', num_ctas=1, num_stages=1, num_warps=2, profile_scratch_align=1, profile_scratch_size=0, ptx_options=None, ptx_version=None, sanitize_overflow=True, shared=8, supported_fp8_dtypes=['fp8e4b15', 'fp8e4nv', 'fp8e5'], target=GPUTarget(backend='cuda', arch=120, warp_size=32), tensordesc_meta=[], tle_node_buffer_bindings='', tmem_size=0, triton_version='3.6.0', warp_size=32)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "948b18f96798745b89011028842c02ace129fc96a1f8044587efb7159ac63eda",
+      "bytes": 13550
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "d5361d669faf206dc84177fee8f0f6b597854e71873adecadfc34ef449fe0037",
+      "bytes": 5809
+    },
+    "ttgir": {
+      "file": "asm/ttgir",
+      "sha256": "8809cea5a564794763fa752f82c86dccbc44a61b27ea13050bc4a02b3509c2a1",
+      "bytes": 6452
+    },
+    "llir": {
+      "file": "asm/llir",
+      "sha256": "3802eec1154750d2ed78952e6eb54b0fb5038683ad6a1077b9d5094afaf79ad7",
+      "bytes": 11820
+    },
+    "ptx": {
+      "file": "asm/ptx",
+      "sha256": "3f34f11c28e6bba1dd5a4807afbd9005fdf51230bb59987c4dc2233f40a4027d",
+      "bytes": 16811
+    },
+    "cubin": {
+      "file": "asm/cubin",
+      "sha256": "42631b4bd71803be6b42e8d2f18536c523c99533cb17ae41a4f828f8fc578a1a",
+      "bytes": 14904
+    }
+  },
+  "profiling": {
+    "hook": "triton",
+    "requested_mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0:vendor_metrics=launch_stats",
+    "launch_count": 30,
+    "scope": "prewarmed kernel launches plus final synchronization",
+    "cann_legacy_hook": null,
+    "profiler_module": "/workspace/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+    "files": [
+      "profile.meta.json",
+      "profile.hatchet",
+      "profile.timeline.json",
+      "profile.vendor.json",
+      "result.json"
+    ]
+  },
+  "post_profile_validation": {
+    "passed": true,
+    "max_abs_error": 1.1641532182693481e-09
+  }
+}

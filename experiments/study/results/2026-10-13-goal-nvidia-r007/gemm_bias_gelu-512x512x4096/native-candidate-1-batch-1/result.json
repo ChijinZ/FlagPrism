@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "backend": "cuda",
+  "operator": "gemm_bias_gelu",
+  "shape": [
+    512,
+    512,
+    4096
+  ],
+  "variant": 0,
+  "phase": "native",
+  "device": 0,
+  "status": "passed",
+  "host": {
+    "machine": "x86_64",
+    "python": "3.10.12"
+  },
+  "measurement": {
+    "warmup": 5,
+    "scope": "30 prewarmed profiled launches followed by synchronization",
+    "launch_count": 30
+  },
+  "utc_started": "2026-10-13T14:48:38Z",
+  "source_hashes": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+  },
+  "runtime": {
+    "torch": "2.8.0+cu128",
+    "triton": "3.6.0",
+    "torch_file": "/workspace/venv/lib/python3.10/site-packages/torch/__init__.py",
+    "triton_file": "/workspace/FlagTree-pr1262/python/triton/__init__.py",
+    "target": "GPUTarget(backend='cuda', arch=120, warp_size=32)"
+  },
+  "input_hashes": [
+    "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15",
+    "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2",
+    "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+  ],
+  "reference_device": "cpu",
+  "requested_compile_config": {
+    "BM": 64,
+    "BN": 64,
+    "BK": 128,
+    "num_stages": 3,
+    "num_warps": 4
+  },
+  "grid": [
+    8,
+    8
+  ],
+  "validation": {
+    "reference": "PyTorch CPU float32",
+    "atol": 0.002,
+    "rtol": 0.02,
+    "max_abs_error": 1.7523765563964844e-05,
+    "finite": true,
+    "passed": true
+  },
+  "compiled_metadata": "KernelMetadata(allowed_dot_input_precisions=['tf32', 'tf32x3', 'ieee', 'bf16x3', 'bf16x6'], arch='sm120', backend_name='cuda', cluster_dims=(1, 1, 1), debug=False, default_dot_input_precision='tf32', deprecated_fp8_dot_operand_dtypes=['fp8e4b15'], enable_fp_fusion=True, enable_reflect_ftz=True, extern_libs=[['libdevice', '/workspace/FlagTree-pr1262/python/triton/backends/nvidia/lib/libdevice.10.bc']], global_scratch_align=1, global_scratch_size=0, hash='471af0a975746a0d6a2e71c47a2d5a9a9a63f7e8cbc131fdcffb24726ce5e1e2', instrumentation_mode='', ir_override=None, kernel_init_hooks=[], launch_cooperative_grid=False, launch_pdl=False, max_num_imprecise_acc_default=0, maxnreg=None, name='matmul', num_ctas=1, num_stages=3, num_warps=4, profile_scratch_align=1, profile_scratch_size=0, ptx_options=None, ptx_version=None, sanitize_overflow=True, shared=65536, supported_fp8_dtypes=['fp8e4b15', 'fp8e4nv', 'fp8e5'], target=GPUTarget(backend='cuda', arch=120, warp_size=32), tensordesc_meta=[], tle_node_buffer_bindings='', tmem_size=0, triton_version='3.6.0', warp_size=32)",
+  "asm": {
+    "source": {
+      "file": "asm/source",
+      "sha256": "f1f6f11b77bb42966495ff6679df0e9d539abece48321d4b12a24b26dcc4e979",
+      "bytes": 25219
+    },
+    "ttir": {
+      "file": "asm/ttir",
+      "sha256": "2410c04b51d64e0643f0cda0341660a11f0017dd3820d984db07dd6d0b5e5d71",
+      "bytes": 13837
+    },
+    "ttgir": {
+      "file": "asm/ttgir",
+      "sha256": "96373df8bf0e99455d02816e45b8bf3b2554074e8f42fca024ea9599a347700e",
+      "bytes": 26562
+    },
+    "llir": {
+      "file": "asm/llir",
+      "sha256": "b347f5dd2d312e59ce08f83ed6bf773a6e8263f51c25826fb2ce29469090d896",
+      "bytes": 128167
+    },
+    "ptx": {
+      "file": "asm/ptx",
+      "sha256": "141188245052c129ac7cb0ed6f3bdfbdc2ba4506f58adb169d5979fbcc3d3b1a",
+      "bytes": 63581
+    },
+    "cubin": {
+      "file": "asm/cubin",
+      "sha256": "f704396a76824394a1c66cf1f60c3a2bd0e8eab7d285cce2df547d76c9bf0fc3",
+      "bytes": 93816
+    }
+  },
+  "profiling": {
+    "hook": "triton",
+    "requested_mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0:vendor_metrics=launch_stats",
+    "launch_count": 30,
+    "scope": "prewarmed kernel launches plus final synchronization",
+    "cann_legacy_hook": null,
+    "profiler_module": "/workspace/FlagPrism/Profiler/python/flagtree_profiler/__init__.py",
+    "files": [
+      "profile.meta.json",
+      "profile.hatchet",
+      "profile.timeline.json",
+      "profile.vendor.json",
+      "result.json"
+    ]
+  },
+  "post_profile_validation": {
+    "passed": true,
+    "max_abs_error": 1.7523765563964844e-05
+  }
+}

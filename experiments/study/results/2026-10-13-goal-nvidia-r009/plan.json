@@ -1,0 +1,52 @@
+{
+  "backend": "cuda",
+  "choices": [
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "name": "gemm-w1",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 1,
+        "num_stages": 4
+      }
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "name": "gemm-w2",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 2,
+        "num_stages": 4
+      }
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "name": "gemm-w4",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      }
+    }
+  ],
+  "batches": 3,
+  "launches": 30,
+  "ordering": "deterministic randomized case order within each measurement batch; launches within each case are consecutive",
+  "selection_sha256": "df1aa3b9a44895d947c24cfc7da0cbb9c3e0ef37026855357f2a7377d8069fcf",
+  "source_sha256": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "observations.py": "a9d2cce18ddd02af7d52319b80044976f98704b46f65453de9b7e2e941a4452d",
+    "nvidia_case_controls.py": "411b82b2af5cce12098366df8281c8e34b251bbe0e5e952171bff2ed8585f260"
+  },
+  "semantics": "Frozen GEMM512 native-selected source tile/grid/K/stages; warp1/2/4 bounded counterfactuals absent from original4/8warp GEMMsearch. Preserve failures; not evidence of exhaustive optimality.",
+  "mode": "gemm-warps"
+}

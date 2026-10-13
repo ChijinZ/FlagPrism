@@ -1,0 +1,184 @@
+{
+  "groups": [
+    {
+      "kind": "kernel",
+      "name": "softmax_reduce_trace",
+      "id": "group-73b03023b5e93f1e",
+      "configuration": {
+        "argument_signature": "40f50c24ae1add94e87908b9810dffe03aa352ef55a4b558f0856ff4dc8687b4",
+        "binary_id": "7c13ad812780baca9f6ba6b3be8e6f7fea31c214afe6d13a56ccc09c8e26a50b",
+        "block": [
+          1,
+          1,
+          1
+        ],
+        "context": 0,
+        "device": 0,
+        "grid": [
+          127,
+          1,
+          1
+        ],
+        "process": 74386
+      },
+      "grouping_status": "observed_configuration",
+      "configuration_label": "grid=[127, 1, 1] block=[1, 1, 1] binary=7c13ad812780",
+      "measurement": {
+        "sample_unit": "timed_event",
+        "scope": "producer_reported_interval",
+        "duration_calculation": "(end_ns - start_ns) / 1000",
+        "sources": [
+          {
+            "source": "topspti_activity",
+            "count": 15
+          }
+        ],
+        "sample_note": null
+      },
+      "count": 15,
+      "total_us": 1125.133,
+      "mean_us": 75.00886666666666,
+      "p50_us": 74.745,
+      "p95_us": 76.91619999999999,
+      "p99_us": 79.42724,
+      "max_us": 80.055,
+      "effective_gbps": null,
+      "bytes": null,
+      "grouping": "device_context_name_grid_block_binary_arguments",
+      "event_ids": [
+        2,
+        16,
+        30,
+        44,
+        58,
+        72,
+        86,
+        100,
+        114,
+        128,
+        142,
+        156,
+        170,
+        184,
+        198
+      ],
+      "representative_launch_id": "launch-1",
+      "input_summary": {
+        "X": {
+          "kind": "tensor",
+          "shape": [
+            127,
+            769
+          ],
+          "dtype": "torch.float32",
+          "stride": [
+            769,
+            1
+          ],
+          "device": "gcu:0"
+        },
+        "Y": {
+          "kind": "tensor",
+          "shape": [
+            127,
+            769
+          ],
+          "dtype": "torch.float32",
+          "stride": [
+            769,
+            1
+          ],
+          "device": "gcu:0"
+        },
+        "T": {
+          "kind": "tensor",
+          "shape": [
+            127,
+            8
+          ],
+          "dtype": "torch.int32",
+          "stride": [
+            8,
+            1
+          ],
+          "device": "gcu:0"
+        }
+      },
+      "argument_id": "40f50c24ae1add94e87908b9810dffe03aa352ef55a4b558f0856ff4dc8687b4",
+      "arguments_file": "ai/arguments.json",
+      "binary_id": "7c13ad812780baca9f6ba6b3be8e6f7fea31c214afe6d13a56ccc09c8e26a50b",
+      "binaries_file": "ai/binaries.json",
+      "source": {
+        "path": "/workspace/study-goal-enflame-tail-r008/tail_brackets.py",
+        "line": 13,
+        "sha256": "cb6335cc0ffcb005721b85b99f96577c778b8d458911dd05c19c11d650b0f6ee",
+        "file_sha256": "2bc6440497d621bd99ea1912ac49ef85c4d2b442e68cdb4dea5f51c9e3a0ad20",
+        "text_file": "ai/sources/cb6335cc0ffcb005721b85b99f96577c778b8d458911dd05c19c11d650b0f6ee.py",
+        "file_snapshot_file": "ai/sources/2bc6440497d621bd99ea1912ac49ef85c4d2b442e68cdb4dea5f51c9e3a0ad20.py"
+      },
+      "scalar_arguments": {
+        "status": "complete",
+        "values": {
+          "BLOCK": 1024,
+          "N": 769,
+          "R": 127
+        },
+        "omitted_count": 0
+      },
+      "compiler_metadata": {
+        "status": "complete",
+        "values": {
+          "allow_fp8e4b15": false,
+          "allow_fp8e4nv": false,
+          "allowed_dot_input_precisions": [
+            "ieee"
+          ],
+          "arch": "gcu300",
+          "backend_name": "gcu",
+          "cluster_dims": [
+            1,
+            1,
+            1
+          ],
+          "debug": false,
+          "default_dot_input_precision": "ieee",
+          "deprecated_fp8_dot_operand_dtypes": [],
+          "enable_fp_fusion": false,
+          "enable_i64": false,
+          "enable_stride0": false,
+          "extern_libs": [],
+          "hash": "7c13ad812780baca9f6ba6b3be8e6f7fea31c214afe6d13a56ccc09c8e26a50b",
+          "instrumentation_mode": "",
+          "launch_cooperative_grid": false,
+          "launch_pdl": false,
+          "max_dsm": 0,
+          "max_local": 1572352,
+          "max_num_imprecise_acc_default": 0,
+          "max_shared": 8388608,
+          "name": "softmax_reduce_trace",
+          "num_buffers_warp_spec": 0,
+          "num_consumer_groups": 0,
+          "num_ctas": 1,
+          "num_stages": 1,
+          "num_warps": 1,
+          "ptr_int_args": [],
+          "redundant_sip": false,
+          "reg_dec_producer": 0,
+          "reg_inc_consumer": 0,
+          "sanitize_overflow": false,
+          "shared": 0,
+          "supported_fp8_dtypes": [],
+          "tle_raw": false,
+          "tle_raw_deferred": false,
+          "triton_version": "3.6.0",
+          "vector_length": 512,
+          "warp_size": 1
+        },
+        "omitted_count": 0
+      },
+      "identity_scope": "capture_local; descriptors do not include tensor contents and do not establish cross-run workload equivalence",
+      "identity_limits": "Groups use available identities; missing binary/arguments cannot prove identical work."
+    }
+  ],
+  "instrumented_aggregate_summaries": []
+}

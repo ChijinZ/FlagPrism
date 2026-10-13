@@ -1,0 +1,56 @@
+[
+  {
+    "name": "P_frozenN_BK32",
+    "BM": 32,
+    "BN": 32,
+    "BK": 32,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_candidate_BK64",
+    "BM": 32,
+    "BN": 32,
+    "BK": 64,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_candidate_BK128",
+    "BM": 32,
+    "BN": 32,
+    "BK": 128,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_candidate_BK256",
+    "BM": 32,
+    "BN": 32,
+    "BK": 256,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_candidate_BK512",
+    "BM": 32,
+    "BN": 32,
+    "BK": 512,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_candidate_BK1024",
+    "BM": 32,
+    "BN": 32,
+    "BK": 1024,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  }
+]

@@ -1,0 +1,82 @@
+{
+  "backend": "enflame",
+  "device": 0,
+  "batches": 3,
+  "launches": 30,
+  "cases": [
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-32x256/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-32x256/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-256x1024/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-256x1024/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-127x769/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-127x769/result.json"
+    }
+  ],
+  "selection_sha256": "226ce67f917c3c9747d6084ce089bb9b74be89ad6593ed7b4491cd13922873f6",
+  "semantics": "NVIDIA native-selected winner and next distinct shortlisted configuration; unchanged requested configurations on target"
+}

@@ -1,0 +1,70 @@
+{
+  "f39a742a981ae31ca0460cdba24e530603c98b5dba4f6ba92f8e4fd62621f5f7": {
+    "X": {
+      "kind": "tensor",
+      "shape": [
+        32,
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        256,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "W": {
+      "kind": "tensor",
+      "shape": [
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "B": {
+      "kind": "tensor",
+      "shape": [
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "Y": {
+      "kind": "tensor",
+      "shape": [
+        32
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "R": {
+      "kind": "scalar_or_metadata",
+      "value": 32
+    },
+    "N": {
+      "kind": "scalar_or_metadata",
+      "value": 256
+    },
+    "BLOCK": {
+      "kind": "scalar_or_metadata",
+      "value": 256
+    },
+    "ROWS": {
+      "kind": "scalar_or_metadata",
+      "value": 1
+    },
+    "OP": {
+      "kind": "scalar_or_metadata",
+      "value": "reduce_sum"
+    }
+  }
+}

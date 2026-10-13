@@ -1,0 +1,53 @@
+{
+  "backend": "cann",
+  "config": {
+    "aclprof_aicore_metric_id": "0",
+    "aclprof_auto_export": "true",
+    "aclprof_data_type_flags": "ACL_PROF_ACL_API,ACL_PROF_TASK_TIME,ACL_PROF_RUNTIME_API",
+    "aclprof_msproftx_enabled": "false",
+    "aclprof_output_cleanup": "removed",
+    "aclprof_output_cleanup_removed_entries": "118",
+    "aclprof_output_path": "/tmp/flagtree_profiler_cann_profile_1791905901749507656_0/flagtree_profiler_session_0",
+    "aclprof_output_path_temporary": "true",
+    "aclprof_output_retained": "false",
+    "aclprof_output_root": "/tmp/flagtree_profiler_cann_profile_1791905901749507656_0",
+    "aclprof_runtime_enabled": "true",
+    "aclprof_set_config_mem_freq_hz": "15",
+    "artifact_layout": "<base>.hatchet,<base>.timeline.json,<base>.meta.json,<base>.vendor.json",
+    "device_id": "4",
+    "mstx_domain": "flagtree_profiler",
+    "mstx_enabled": "false",
+    "runtime_base_host_fallback_associations": "0",
+    "runtime_base_native_associations": "30",
+    "runtime_host_timing_fallback": "false",
+    "vendor_association_collected": "126",
+    "vendor_association_unmatched": "0",
+    "vendor_runtime_metric_overlays": "126"
+  },
+  "context": "shadow",
+  "data": "tree",
+  "degrade_reasons": [],
+  "device": {
+    "arch": "Ascend910B4-1",
+    "bus_width": 40,
+    "clock_rate": 0,
+    "id": 4,
+    "memory_clock_rate": 0,
+    "name": "Ascend910B4-1",
+    "num_sms": 20,
+    "type": "ASCEND"
+  },
+  "hook": "triton",
+  "mode": "runtime_base:runtime_host_timing_fallback=false:device_id=4",
+  "profiler_name": "cann",
+  "run_id": "1791905904203589075-0",
+  "runtime_base_enabled": true,
+  "schema_version": 1,
+  "session_name": "/tmp/chijin-study-porting-overview-r009/layernorm-256x1024-v1-b1/profile",
+  "vendor_metrics_enabled": [],
+  "vendor_metrics_requested": [],
+  "versions": {
+    "driver": "",
+    "runtime": ""
+  }
+}

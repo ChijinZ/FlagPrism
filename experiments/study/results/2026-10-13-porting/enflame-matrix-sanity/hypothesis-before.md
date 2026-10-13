@@ -1,0 +1,5 @@
+# Before-running matrix sanity/control hypotheses
+Exact frozen GEMM512³ P: BM32 BN32 BK32 num_warps4 num_stages4.
+H0: native TOPSPTI ~95ms is real emitted-device-task duration, not wrong units or callbacklatency. Prediction: independent counter-free stream-event batch intervals and synchronized host elapsed have the same order ofmagnitude; do not replace native kernelinterval with hosttimer.
+H1: four-item microtile mapping invokes16×16 partialoutput tops_addmm helpers; grouped tiny matrix work may be inefficient compared with larger local output tiles. Controls BM64 BN64 BK64 w1/w4 stages4 retain same matrixmath and inspect actualhelper call/operanddimensions. A fixedgrid BM32 BN32 BK32 w1 provides workitem-only control; change not justified as finalR until mechanism corroborated.
+Alternatives: profiler overhead, backendfastpath restrictions, GEMM helper implementation inefficiency, excessive transfer/packing, workitem-resource scheduling. No hardwarelimit or fallback label without actualprimary evidence; no vendoroptimalclaim. This is figure-range sanityappendix, notthirdcase.

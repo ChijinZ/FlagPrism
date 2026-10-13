@@ -1,0 +1,454 @@
+{
+  "backend": "cann",
+  "device": 4,
+  "batches": 3,
+  "launches": 30,
+  "cases": [
+    {
+      "operator": "gemm",
+      "shape": "128x128x128",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-128x128x128/result.json"
+    },
+    {
+      "operator": "gemm",
+      "shape": "128x128x128",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-128x128x128/result.json"
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-512x512x512/result.json"
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-512x512x512/result.json"
+    },
+    {
+      "operator": "gemm",
+      "shape": "257x193x320",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-257x193x320/result.json"
+    },
+    {
+      "operator": "gemm",
+      "shape": "257x193x320",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm-257x193x320/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "128x128x128",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-128x128x128/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "128x128x128",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-128x128x128/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "512x512x512",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-512x512x512/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "512x512x512",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-512x512x512/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "257x193x320",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-257x193x320/result.json"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "257x193x320",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 3
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/gemm_bias_gelu-257x193x320/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-32x256/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-32x256/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-256x1024/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-256x1024/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-127x769/result.json"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/softmax-127x769/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-32x256/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-32x256/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-256x1024/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-256x1024/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-127x769/result.json"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/layernorm-127x769/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-32x256/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-32x256/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-256x1024/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-256x1024/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-127x769/result.json"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/reduce_sum-127x769/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "256x256",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-256x256/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "256x256",
+      "variant": 1,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-256x256/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "1024x1024",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 32,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-1024x1024/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "1024x1024",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 64,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-1024x1024/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "513x257",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-513x257/result.json"
+    },
+    {
+      "operator": "transpose",
+      "shape": "513x257",
+      "variant": 1,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "nvidia_selection": "/workspace/results/pro6000-n-search/transpose-513x257/result.json"
+    }
+  ],
+  "selection_sha256": "df1aa3b9a44895d947c24cfc7da0cbb9c3e0ef37026855357f2a7377d8069fcf",
+  "semantics": "NVIDIA native-selected winner and next distinct shortlisted configuration; unchanged requested configurations on target"
+}

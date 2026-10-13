@@ -1,0 +1,23 @@
+can not use command: npu-smi info
+[INFO] Start profiling....
+[INFO] Start export data in PROF_000001_20261013234340898_03369420FMEBEFQD.
+Tue 13 Oct 2026 23:43:41 [WARNING] [MSVP] [3369497] msprof_entrance.py: Msprof analysis is parsing data as root, which may cause potential system security risks.
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: Start analyzing data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/host" ...
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: It may take few minutes, please be patient ...
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: Analysis data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/host" finished.
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: Start analyzing data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4" ...
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: It may take few minutes, please be patient ...
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_common.py: Analysis data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4" finished.
+Tue 13 Oct 2026 23:43:41 [INFO] [MSVP] [3369520] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4.
+Tue 13 Oct 2026 23:43:42 [WARNING] [MSVP] [3369693] msprof_entrance.py: Msprof analysis is parsing data as root, which may cause potential system security risks.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_export.py: The data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/host" has been analyzed. Parsing phase will be skipped.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_export.py: The data in "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4" has been analyzed. Parsing phase will be skipped.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_export.py: There is no summary data to export for "/tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/host"
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_export.py: All collected data will be exported, path is: /tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/device_4.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_common.py: Start exporting summary output_file.
+Tue 13 Oct 2026 23:43:42 [INFO] [MSVP] [3369695] msprof_common.py: End exporting summary output_file.The file is stored in the /tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD/mindstudio_profiler_output path.
+[INFO] Export all data in PROF_000001_20261013234340898_03369420FMEBEFQD done.
+[INFO] Profiling finished.
+[INFO] Process profiling data complete. Data is saved in /tmp/flagtree_profiler_cann_profile_1791906220882029729_0/flagtree_profiler_session_0/PROF_000001_20261013234340898_03369420FMEBEFQD
+{"operator": "transpose", "shape": "1024x1024", "variant": 1, "phase": "native", "status": "passed", "error": null}

@@ -1,0 +1,45 @@
+{
+  "backend": "nvidia",
+  "config": {
+    "artifact_layout": "<base>.hatchet,<base>.timeline.json,<base>.meta.json,<base>.vendor.json",
+    "cupti_vendor_capture": "true",
+    "device_id": "0",
+    "nvidia_hardware_counters": "false",
+    "runtime_base_host_fallback_associations": "0",
+    "runtime_base_native_associations": "0",
+    "runtime_host_timing_fallback": "false",
+    "vendor_association_collected": "30",
+    "vendor_association_unmatched": "0",
+    "vendor_runtime_metric_overlays": "30"
+  },
+  "context": "shadow",
+  "data": "tree",
+  "degrade_reasons": [],
+  "device": {
+    "arch": "120",
+    "bus_width": 512,
+    "clock_rate": 2617000,
+    "id": 0,
+    "memory_clock_rate": 14001000,
+    "name": "120",
+    "num_sms": 188,
+    "type": "CUDA"
+  },
+  "hook": "triton",
+  "mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0:vendor_metrics=launch_stats",
+  "profiler_name": "cuda",
+  "run_id": "1791903129795447483-0",
+  "runtime_base_enabled": true,
+  "schema_version": 1,
+  "session_name": "/workspace/results/pro6000-n-search/reduce_sum-256x1024/native-candidate-0-batch-2/profile",
+  "vendor_metrics_enabled": [
+    "launch_stats"
+  ],
+  "vendor_metrics_requested": [
+    "launch_stats"
+  ],
+  "versions": {
+    "driver": "",
+    "runtime": ""
+  }
+}

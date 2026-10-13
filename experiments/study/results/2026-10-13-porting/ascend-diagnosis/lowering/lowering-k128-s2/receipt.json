@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/usr/local/Ascend/cann-9.0.0/bin/bishengir-compile",
+    "/tmp/chijin-ascend-diagnosis-r001/captures/11-gemm_bias_gelu-512x512x4096-b64-k128-s2/asm/bcmlir",
+    "--target=Ascend910B4-1",
+    "--enable-hfusion-compile=true",
+    "--enable-hivm-compile=true",
+    "--enable-triton-kernel-compile=true",
+    "--enable-auto-bind-sub-block=true",
+    "--enable-auto-multi-buffer=true",
+    "-o",
+    "/tmp/chijin-ascend-diagnosis-r001/lowering-k128-s2/kernel"
+  ],
+  "returncode": 0,
+  "status": "passed",
+  "requested_num_stages": 2,
+  "effective_auto_multibuffer": true,
+  "source_sha256": "9714e9b728ff8fc9132d0d63d9b103de6643277a7e837d41b7f27c0a579b7893"
+}

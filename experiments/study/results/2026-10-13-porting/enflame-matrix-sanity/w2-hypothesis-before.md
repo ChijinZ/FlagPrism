@@ -1,0 +1,2 @@
+# Final fixed-grid w2 discriminator
+Fresh independent NVIDIA comparison at frozen32³,s4 findsw2 slightlyfasterthanw4; preservepreviousboundedsearch baseline and primarySoftmaxtailcase. Need exactGCUw2 to determine actualprivateoperanddimensions and2Dengineuse. Ifw2routesfastpath, matrix32³w4 penalty is stillrealsoftwarepathfinding butnotreversalagainstthisexpandedNchoice. Ifw2haszero2Dandw1positive, expandedNbest2→target1maystillshowdirectiondifference. No thresholdgeneralization fromdimensionsalone. Native30calls +originalbinaryTCU9invocations, fullCPUref/canonicalbytes.

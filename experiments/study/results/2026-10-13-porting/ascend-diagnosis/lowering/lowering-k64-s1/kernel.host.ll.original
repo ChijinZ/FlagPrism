@@ -1,0 +1,108 @@
+; ModuleID = 'LLVMDialectModule'
+source_filename = "LLVMDialectModule"
+
+define i64 @matmul_infer_workspace_shape_function() {
+  ret i64 16384
+}
+
+define i8 @matmul_infer_task_type_function() {
+  ret i8 32
+}
+
+declare dso_local void @matmul_mix_aic(i64, ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), i32, i32, i32)
+
+; Function Attrs: alwaysinline
+declare dso_local void @set_l1_2d_half(half, ptr addrspace(2), ptr addrspace(2), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_set_l1_2d_half(half, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @nd2nz_half(ptr addrspace(1), ptr addrspace(1), i64, i64, i64, i64, i64, ptr addrspace(2), ptr addrspace(2), i64, i64, i64, i64, i64, i64, i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_nd2nz_half(ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @mma_tile_half_to_float(ptr addrspace(2), ptr addrspace(2), i64, i64, i64, i64, i64, i64, i64, i64, i64, ptr addrspace(2), ptr addrspace(2), i64, i64, i64, i64, i64, i64, i64, i64, i64, i1, i64, i64, i64, ptr addrspace(5), ptr addrspace(5), i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i64, i8) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_mma_tile_half_to_float(ptr, ptr, i1, i64, i64, i64, ptr, i64, i64, i64, i64, i64, i64, i64, i8) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @fixpipe_nz2nd_float_to_float_4d_to_2d(ptr addrspace(5), ptr addrspace(5), i64, i64, i64, i64, i64, i64, i64, i64, i64, ptr addrspace(1), ptr addrspace(1), i64, i64, i64, i64, i64, i64, i64, i1, i8) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_fixpipe_nz2nd_float_to_float_4d_to_2d(ptr, ptr, i64, i64, i1, i8) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @broadcast_scalar_float_to_1d(float, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_broadcast_scalar_float_to_1d(float, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @load_gm_to_ubuf_1d_float(ptr addrspace(1), ptr addrspace(1), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, i32, float, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_load_gm_to_ubuf_1d_float(ptr, ptr, i32, float, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vadd_2d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vadd_2d_float(ptr, ptr, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vmuls_vs_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, float, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vmuls_vs_1d_float(ptr, float, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vmul_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vmul_1d_float(ptr, ptr, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vadd_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vadd_1d_float(ptr, ptr, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vexp_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vexp_1d_float(ptr, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vadds_vs_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, float, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vadds_vs_1d_float(ptr, float, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @vdiv_1d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64, ptr addrspace(6), ptr addrspace(6), i64, i64, i64) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_vdiv_1d_float(ptr, ptr, ptr, ptr) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @store_ubuf_to_gm_2d_float(ptr addrspace(6), ptr addrspace(6), i64, i64, i64, i64, i64, ptr addrspace(1), ptr addrspace(1), i64, i64, i64, i64, i64, i32) #0
+
+; Function Attrs: alwaysinline
+declare dso_local void @_mlir_ciface_store_ubuf_to_gm_2d_float(ptr, ptr, i32) #0
+
+declare dso_local void @matmul_mix_aiv(i64, ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), ptr addrspace(1), i32, i32, i32)
+
+attributes #0 = { alwaysinline }
+
+!llvm.module.flags = !{!0}
+!hivm.annotations = !{!1, !2}
+
+!0 = !{i32 2, !"Debug Info Version", i32 3}
+!1 = !{ptr @matmul_mix_aic, !"kernel", i32 1}
+!2 = !{ptr @matmul_mix_aiv, !"kernel", i32 1}
+

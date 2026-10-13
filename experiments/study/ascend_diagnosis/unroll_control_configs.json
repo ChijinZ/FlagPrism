@@ -1,0 +1,40 @@
+[
+  {
+    "name": "base",
+    "BM": 64,
+    "BN": 64,
+    "BK": 64,
+    "num_stages": 2,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "range1",
+    "BM": 64,
+    "BN": 64,
+    "BK": 64,
+    "num_stages": 2,
+    "num_warps": 4,
+    "kernel": "unroll",
+    "UNROLL": 1
+  },
+  {
+    "name": "unroll2",
+    "BM": 64,
+    "BN": 64,
+    "BK": 64,
+    "num_stages": 2,
+    "num_warps": 4,
+    "kernel": "unroll",
+    "UNROLL": 2
+  },
+  {
+    "name": "bk128",
+    "BM": 64,
+    "BN": 64,
+    "BK": 128,
+    "num_stages": 2,
+    "num_warps": 4,
+    "kernel": "original"
+  }
+]

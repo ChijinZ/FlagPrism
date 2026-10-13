@@ -1,0 +1,72 @@
+{
+  "393d7f4b6dc2d7d2a22dc600101f00f6bef1f66394262614ee63989fbcc0aa10": {
+    "X": {
+      "kind": "tensor",
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1024,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "W": {
+      "kind": "tensor",
+      "shape": [
+        1024
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "B": {
+      "kind": "tensor",
+      "shape": [
+        1024
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "Y": {
+      "kind": "tensor",
+      "shape": [
+        256,
+        1024
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1024,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "R": {
+      "kind": "scalar_or_metadata",
+      "value": 256
+    },
+    "N": {
+      "kind": "scalar_or_metadata",
+      "value": 1024
+    },
+    "BLOCK": {
+      "kind": "scalar_or_metadata",
+      "value": 1024
+    },
+    "ROWS": {
+      "kind": "scalar_or_metadata",
+      "value": 1
+    },
+    "OP": {
+      "kind": "scalar_or_metadata",
+      "value": "softmax"
+    }
+  }
+}

@@ -14,12 +14,19 @@ p.add_argument('--output', type=Path, required=True)
 p.add_argument('--unique-output',action='store_true',help='Fresh per-process subdirectory for safe application replay')
 p.add_argument('--tile',type=int,default=16)
 p.add_argument('--k-tile',type=int,default=16)
+p.add_argument('--tile-m',type=int,help='Explicit M tile; otherwise preserve the variant default')
+p.add_argument('--tile-n',type=int,help='Explicit N tile; otherwise preserve the variant default')
+p.add_argument('--rows',type=int,help='Explicit row grouping; otherwise variant selects 1/2')
+p.add_argument('--num-warps',type=int,default=4)
+p.add_argument('--stages',type=int,help='Explicit stage request; otherwise GEMM variant selects 1/2')
 p.add_argument('--profile-launches',type=int,default=3)
 p.add_argument('--input-dir',type=Path)
 p.add_argument('--collector', choices=['flagprism','torch'], default='flagprism')
 p.add_argument('--repeats', type=int, default=7)
 p.add_argument('--batch', type=int, default=20)
 a = p.parse_args()
+if any(v is not None and v <= 0 for v in [a.tile,a.k_tile,a.tile_m,a.tile_n,a.rows,a.num_warps,a.stages]):
+    p.error('Compile configuration values must be positive')
 if a.unique_output:a.output=a.output/f'process-{os.getpid()}'
 a.output.mkdir(parents=True, exist_ok=False)
 result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
@@ -30,6 +37,8 @@ result = {'schema_version':1, 'backend':a.backend, 'operator':a.operator,
                          'host_clock':'perf_counter_ns',
                          'device_event_semantics':'stream interval enclosing a batch; not busy cycles'},
           'utc_started':time.strftime('%Y-%m-%dT%H:%M:%SZ',time.gmtime())}
+result['source_hashes']={name:hashlib.sha256(Path(__file__).with_name(name).read_bytes()).hexdigest()
+                         for name in ['run_case.py','kernels.py']}
 if a.phase!='baseline':
     result['measurement']={'warmup':5,'scope':'compiler diagnostics' if a.phase=='lowering' else f'{a.profile_launches} prewarmed profiled launches followed by synchronization','launch_count':1 if a.phase=='lowering' else a.profile_launches}
 def save():
@@ -83,19 +92,22 @@ try:
             ref=torch.nn.functional.gelu(ref + cpu_bias, approximate='tanh')
         A,B,Bias=cpu_a.to(device),cpu_b.to(device),cpu_bias.to(device)
         Y=torch.empty((M,N),dtype=torch.float32,device=device)
-        config={'BM':a.tile,'BN':a.tile,'BK':a.k_tile,'num_stages':a.variant+1,'num_warps':4}
-        grid=(triton.cdiv(M,a.tile),triton.cdiv(N,a.tile))
+        bm=a.tile_m or a.tile; bn=a.tile_n or a.tile
+        stages=a.stages or a.variant+1
+        config={'BM':bm,'BN':bn,'BK':a.k_tile,'num_stages':stages,'num_warps':a.num_warps}
+        grid=(triton.cdiv(M,bm),triton.cdiv(N,bn))
         def launch():
-            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,a.tile,a.tile,a.k_tile,op=='gemm_bias_gelu',num_stages=a.variant+1,num_warps=4,debug=(a.phase=='lowering'))
+            return kernels.matmul[grid](A,B,Bias,Y,M,N,K,bm,bn,a.k_tile,op=='gemm_bias_gelu',num_stages=stages,num_warps=a.num_warps,debug=(a.phase=='lowering'))
         tolerance={'atol':0.002,'rtol':0.02}
     elif op=='transpose':
         M,N=shape; cpu_x=rand((M,N)); ref=cpu_x.T.contiguous()
         X=cpu_x.to(device); Y=torch.empty((N,M),dtype=torch.float32,device=device)
-        bm=16 if a.variant==0 else 32
-        config={'BM':bm,'BN':16,'num_stages':1,'num_warps':4}
-        grid=(triton.cdiv(M,bm),triton.cdiv(N,16))
+        bm=a.tile_m or (16 if a.variant==0 else 32); bn=a.tile_n or 16
+        stages=a.stages or 1
+        config={'BM':bm,'BN':bn,'num_stages':stages,'num_warps':a.num_warps}
+        grid=(triton.cdiv(M,bm),triton.cdiv(N,bn))
         def launch():
-            return kernels.transpose[grid](X,Y,M,N,bm,16,num_stages=1,num_warps=4,debug=(a.phase=='lowering'))
+            return kernels.transpose[grid](X,Y,M,N,bm,bn,num_stages=stages,num_warps=a.num_warps,debug=(a.phase=='lowering'))
         tolerance={'atol':0.0,'rtol':0.0}
     else:
         R,N=shape; cpu_x,cpu_w,cpu_b=rand((R,N)),rand((N,)),rand((N,))
@@ -104,11 +116,11 @@ try:
         else: ref=cpu_x.sum(-1)
         X,W,B=cpu_x.to(device),cpu_w.to(device),cpu_b.to(device)
         Y=torch.empty(ref.shape,dtype=torch.float32,device=device)
-        rows=1 if a.variant==0 else 2
-        config={'ROWS':rows,'BLOCK':triton.next_power_of_2(N),'num_stages':1,'num_warps':4}
+        rows=a.rows or (1 if a.variant==0 else 2); stages=a.stages or 1
+        config={'ROWS':rows,'BLOCK':triton.next_power_of_2(N),'num_stages':stages,'num_warps':a.num_warps}
         grid=(triton.cdiv(R,rows),)
         def launch():
-            return kernels.rows[grid](X,W,B,Y,R,N,config['BLOCK'],rows,op,num_stages=1,num_warps=4,debug=(a.phase=='lowering'))
+            return kernels.rows[grid](X,W,B,Y,R,N,config['BLOCK'],rows,op,num_stages=stages,num_warps=a.num_warps,debug=(a.phase=='lowering'))
         tolerance={'atol':0.0005,'rtol':0.002}
     if ref.device.type!='cpu':raise RuntimeError('Reference unexpectedly resides on accelerator')
     result['reference_device']=str(ref.device)

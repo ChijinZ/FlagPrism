@@ -1,0 +1,60 @@
+{
+  "backend": "cuda",
+  "choices": [
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "name": "softmax-w1",
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      }
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "name": "softmax-w2",
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      }
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "name": "softmax-w4",
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      }
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "512x512x4096",
+      "name": "long-k-frozen-n",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      }
+    }
+  ],
+  "batches": 3,
+  "launches": 30,
+  "ordering": "deterministic randomized case order within each measurement batch; launches within each case are consecutive",
+  "selection_sha256": "df1aa3b9a44895d947c24cfc7da0cbb9c3e0ef37026855357f2a7377d8069fcf",
+  "source_sha256": {
+    "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+    "observations.py": "a9d2cce18ddd02af7d52319b80044976f98704b46f65453de9b7e2e941a4452d",
+    "nvidia_case_controls.py": "bb89c12d9db6ba2e4ad73131d1942c8d3a5f60df432bb9f8e4f4ac4fd1876674"
+  },
+  "semantics": "Frozen N unchanged; fixed-grid Softmax warp counterfactuals plus independent long-K N; not post-hoc retuning"
+}

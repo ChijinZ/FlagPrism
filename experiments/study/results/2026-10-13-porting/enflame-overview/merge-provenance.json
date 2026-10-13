@@ -1,0 +1,665 @@
+{
+  "summary": [
+    {
+      "operator": "gemm",
+      "shape": "128x128x128",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "batch_median_us": [
+        1663.432,
+        1663.5059999999999,
+        1663.3535000000002
+      ],
+      "median_of_batch_medians_us": 1663.432,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-128x128x128"
+    },
+    {
+      "operator": "gemm",
+      "shape": "128x128x128",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        1661.618,
+        1661.452,
+        1661.516
+      ],
+      "median_of_batch_medians_us": 1661.516,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-128x128x128"
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "batch_median_us": [
+        94740.6035,
+        94740.98550000001,
+        94740.668
+      ],
+      "median_of_batch_medians_us": 94740.668,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-512x512x512"
+    },
+    {
+      "operator": "gemm",
+      "shape": "512x512x512",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        94730.2255,
+        94730.345,
+        94730.4515
+      ],
+      "median_of_batch_medians_us": 94730.345,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-512x512x512"
+    },
+    {
+      "operator": "gemm",
+      "shape": "257x193x320",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        22380.9935,
+        22381.701,
+        22381.3505
+      ],
+      "median_of_batch_medians_us": 22381.3505,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-257x193x320"
+    },
+    {
+      "operator": "gemm",
+      "shape": "257x193x320",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        22424.6785,
+        22424.862,
+        22424.58
+      ],
+      "median_of_batch_medians_us": 22424.6785,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm-257x193x320"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "128x128x128",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "batch_median_us": [
+        1657.539,
+        1657.539,
+        1657.5365000000002
+      ],
+      "median_of_batch_medians_us": 1657.539,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-128x128x128"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "128x128x128",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        1659.4569999999999,
+        1659.614,
+        1659.617
+      ],
+      "median_of_batch_medians_us": 1659.614,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-128x128x128"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "512x512x512",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 4
+      },
+      "batch_median_us": [
+        94467.0575,
+        94467.122,
+        94466.552
+      ],
+      "median_of_batch_medians_us": 94467.0575,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-512x512x512"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "512x512x512",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 4,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        94348.432,
+        94348.643,
+        94348.44
+      ],
+      "median_of_batch_medians_us": 94348.44,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-512x512x512"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "257x193x320",
+      "variant": 0,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        22707.643,
+        22708.038999999997,
+        22707.555
+      ],
+      "median_of_batch_medians_us": 22707.643,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-257x193x320"
+    },
+    {
+      "operator": "gemm_bias_gelu",
+      "shape": "257x193x320",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_warps": 8,
+        "num_stages": 3
+      },
+      "batch_median_us": [
+        22962.555,
+        22962.754999999997,
+        22962.717
+      ],
+      "median_of_batch_medians_us": 22962.717,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r007/pieces/gemm_bias_gelu-257x193x320"
+    },
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        29.2655,
+        29.559,
+        29.451
+      ],
+      "median_of_batch_medians_us": 29.451,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "softmax",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        36.983000000000004,
+        37.336,
+        37.560500000000005
+      ],
+      "median_of_batch_medians_us": 37.336,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        130.26749999999998,
+        130.561,
+        130.4105
+      ],
+      "median_of_batch_medians_us": 130.4105,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "softmax",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        223.3675,
+        223.12599999999998,
+        223.485
+      ],
+      "median_of_batch_medians_us": 223.3675,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        114.631,
+        115.176,
+        115.02600000000001
+      ],
+      "median_of_batch_medians_us": 115.02600000000001,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "softmax",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        73.0325,
+        73.606,
+        73.65899999999999
+      ],
+      "median_of_batch_medians_us": 73.606,
+      "raw_piece": "artifacts/study-goal-run/enflame-tail-r008/softmax-matching"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        30.3455,
+        30.165,
+        30.502000000000002
+      ],
+      "median_of_batch_medians_us": 30.3455,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-32x256"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        23.234499999999997,
+        23.0855,
+        23.169
+      ],
+      "median_of_batch_medians_us": 23.169,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-32x256"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        195.711,
+        195.832,
+        195.9755
+      ],
+      "median_of_batch_medians_us": 195.832,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-256x1024"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        545.233,
+        545.2785,
+        545.0930000000001
+      ],
+      "median_of_batch_medians_us": 545.233,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-256x1024"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        106.20599999999999,
+        106.27000000000001,
+        106.16900000000001
+      ],
+      "median_of_batch_medians_us": 106.20599999999999,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-127x769"
+    },
+    {
+      "operator": "layernorm",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 2,
+        "BLOCK": 1024,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        278.5935,
+        278.42100000000005,
+        278.745
+      ],
+      "median_of_batch_medians_us": 278.5935,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/layernorm-127x769"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "32x256",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        29.317500000000003,
+        29.384999999999998,
+        29.6245
+      ],
+      "median_of_batch_medians_us": 29.384999999999998,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-32x256"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "32x256",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        29.4375,
+        29.6785,
+        29.5275
+      ],
+      "median_of_batch_medians_us": 29.5275,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-32x256"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "256x1024",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 1,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        130.41000000000003,
+        130.454,
+        130.4685
+      ],
+      "median_of_batch_medians_us": 130.454,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-256x1024"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "256x1024",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        135.115,
+        135.106,
+        135.029
+      ],
+      "median_of_batch_medians_us": 135.106,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-256x1024"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "127x769",
+      "variant": 0,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        105.30600000000001,
+        104.8575,
+        105.7055
+      ],
+      "median_of_batch_medians_us": 105.30600000000001,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-127x769"
+    },
+    {
+      "operator": "reduce_sum",
+      "shape": "127x769",
+      "variant": 1,
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        73.29650000000001,
+        72.643,
+        72.58000000000001
+      ],
+      "median_of_batch_medians_us": 72.643,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/reduce_sum-127x769"
+    },
+    {
+      "operator": "transpose",
+      "shape": "256x256",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        213.01749999999998,
+        212.8115,
+        213.01350000000002
+      ],
+      "median_of_batch_medians_us": 213.01350000000002,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-256x256"
+    },
+    {
+      "operator": "transpose",
+      "shape": "256x256",
+      "variant": 1,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        615.491,
+        615.454,
+        615.2225
+      ],
+      "median_of_batch_medians_us": 615.454,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-256x256"
+    },
+    {
+      "operator": "transpose",
+      "shape": "1024x1024",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 32,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        992.8785,
+        991.9485,
+        992.073
+      ],
+      "median_of_batch_medians_us": 992.073,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-1024x1024"
+    },
+    {
+      "operator": "transpose",
+      "shape": "1024x1024",
+      "variant": 1,
+      "config": {
+        "BM": 32,
+        "BN": 64,
+        "num_warps": 8,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        1300.5735,
+        1300.513,
+        1299.9505
+      ],
+      "median_of_batch_medians_us": 1300.513,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-1024x1024"
+    },
+    {
+      "operator": "transpose",
+      "shape": "513x257",
+      "variant": 0,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 4,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        458.581,
+        459.173,
+        459.057
+      ],
+      "median_of_batch_medians_us": 459.057,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-513x257"
+    },
+    {
+      "operator": "transpose",
+      "shape": "513x257",
+      "variant": 1,
+      "config": {
+        "BM": 16,
+        "BN": 16,
+        "num_warps": 2,
+        "num_stages": 1
+      },
+      "batch_median_us": [
+        279.599,
+        279.467,
+        279.81600000000003
+      ],
+      "median_of_batch_medians_us": 279.599,
+      "raw_piece": "artifacts/study-goal-run/enflame-port-r009/pieces/transpose-513x257"
+    }
+  ],
+  "scope": "All18 shapes \u00d7twoconfigs \u00d7threeindependent30nativecallbatches. Offline copyonly, originalpieceplans retained separately."
+}

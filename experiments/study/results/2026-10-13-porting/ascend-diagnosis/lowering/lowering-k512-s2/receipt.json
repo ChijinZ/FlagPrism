@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/usr/local/Ascend/cann-9.0.0/bin/bishengir-compile",
+    "/tmp/chijin-ascend-diagnosis-r001/native-canonical-large-bk/asm/BK512/bcmlir",
+    "--target=Ascend910B4-1",
+    "--enable-hfusion-compile=true",
+    "--enable-hivm-compile=true",
+    "--enable-triton-kernel-compile=true",
+    "--enable-auto-bind-sub-block=true",
+    "--enable-auto-multi-buffer=true",
+    "-o",
+    "/tmp/chijin-ascend-diagnosis-r001/lowering-k512-s2/kernel"
+  ],
+  "returncode": 0,
+  "status": "passed",
+  "requested_num_stages": 2,
+  "effective_auto_multibuffer": true,
+  "source_sha256": "428cf18cf964316e098777823289d70648b5b8f3bad3090453b3d80267613824"
+}

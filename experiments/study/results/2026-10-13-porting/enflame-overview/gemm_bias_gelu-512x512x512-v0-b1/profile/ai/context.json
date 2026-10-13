@@ -1,0 +1,143 @@
+{
+  "backend": "enflame",
+  "capture": {},
+  "supplied": {},
+  "metadata_issues": [],
+  "metadata_missing_fields": [
+    "/workload"
+  ],
+  "rejected_metadata_updates": [],
+  "sections": {
+    "hardware": {
+      "status": "partial",
+      "device": {
+        "arch": "dtu-enflame-tops--gcu300",
+        "bus_width": 384,
+        "clock_rate": 1416000,
+        "id": 0,
+        "memory_clock_rate": 7000000,
+        "name": "dtu-enflame-tops--gcu300",
+        "num_sms": 2,
+        "type": "ENFLAME"
+      },
+      "source": "collector_device_properties",
+      "semantics": {
+        "clock_rate": "static device clock property in kHz, not a frequency measured during capture",
+        "memory_clock_rate": "static device clock property in kHz, not a frequency measured during capture",
+        "bus_width": "static global memory bus width in bits",
+        "num_sms": "backend-defined processor count; not comparable across architectures"
+      }
+    },
+    "software": {
+      "versions": {
+        "python": "3.12.3",
+        "triton": "3.6.0",
+        "torch": "2.10.0+cpu",
+        "torch_gcu": "2.10.0+3.8.20260703"
+      },
+      "source": "capture_process",
+      "status": "partial"
+    },
+    "workload": {
+      "status": "partial",
+      "launches_file": "ai/launches.json",
+      "missing": [
+        "high_level_operator_semantics",
+        "warmup_and_measurement_policy",
+        "correctness_result"
+      ]
+    },
+    "compilation": {
+      "status": "available",
+      "binaries_file": "ai/binaries.json"
+    }
+  },
+  "producer_metadata": {
+    "backend": "enflame",
+    "degrade_reasons": [],
+    "enabled_metrics": [],
+    "importer": "topspti_activity",
+    "raw_inputs": [],
+    "requested_metrics": [],
+    "schema_version": 1,
+    "summary": {
+      "association_count": 124,
+      "bandwidth_association_count": 0,
+      "counts_by_source": {
+        "topspti_activity": 30,
+        "topspti_runtime": 94
+      },
+      "counts_by_state": {
+        "collected": 124
+      },
+      "mstx_range_count": 0,
+      "raw_input_count": 0,
+      "timed_association_count": 124,
+      "top_op_types": []
+    },
+    "session_metadata": {
+      "backend": "enflame",
+      "config": {
+        "device_id": "0",
+        "runtime_base_host_fallback_associations": "0",
+        "runtime_base_native_associations": "30",
+        "runtime_host_timing_fallback": "false",
+        "vendor_association_collected": "124",
+        "vendor_association_unmatched": "0",
+        "vendor_runtime_metric_overlays": "30"
+      },
+      "context": "shadow",
+      "data": "tree",
+      "degrade_reasons": [],
+      "device": {
+        "arch": "dtu-enflame-tops--gcu300",
+        "bus_width": 384,
+        "clock_rate": 1416000,
+        "id": 0,
+        "memory_clock_rate": 7000000,
+        "name": "dtu-enflame-tops--gcu300",
+        "num_sms": 2,
+        "type": "ENFLAME"
+      },
+      "hook": "triton",
+      "mode": "runtime_base:runtime_host_timing_fallback=false:device_id=0",
+      "profiler_name": "enflame",
+      "run_id": "1791903695265275520-0",
+      "runtime_base_enabled": true,
+      "schema_version": 1,
+      "session_name": "/workspace/study-goal-enflame-port-r007/pieces/gemm_bias_gelu-512x512x512/gemm_bias_gelu-512x512x512-v0-b1/profile",
+      "vendor_metrics_enabled": [],
+      "vendor_metrics_requested": [],
+      "versions": {
+        "driver": "",
+        "runtime": ""
+      }
+    },
+    "software": {
+      "versions": {
+        "python": "3.12.3",
+        "triton": "3.6.0",
+        "torch": "2.10.0+cpu",
+        "torch_gcu": "2.10.0+3.8.20260703"
+      },
+      "source": "capture_process",
+      "status": "partial"
+    },
+    "metadata_rejections": [],
+    "capture_notes": [
+      "Launch metadata extraction adds host-side profiler overhead; host gaps are not unprofiled application timings."
+    ],
+    "availability": {
+      "counters": {
+        "status": "unknown",
+        "reason": "Collector did not declare counter availability"
+      }
+    }
+  },
+  "missing_sections": [],
+  "partial_sections": [
+    "hardware",
+    "software",
+    "workload"
+  ]
+}

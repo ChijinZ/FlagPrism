@@ -1,0 +1,72 @@
+{
+  "311c6f59caa51f5fae0eb20f3fa2219f92a351e0d899cf30999c366f7ed1011f": {
+    "X": {
+      "kind": "tensor",
+      "shape": [
+        32,
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        256,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "W": {
+      "kind": "tensor",
+      "shape": [
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "B": {
+      "kind": "tensor",
+      "shape": [
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "Y": {
+      "kind": "tensor",
+      "shape": [
+        32,
+        256
+      ],
+      "dtype": "torch.float32",
+      "stride": [
+        256,
+        1
+      ],
+      "device": "gcu:0"
+    },
+    "R": {
+      "kind": "scalar_or_metadata",
+      "value": 32
+    },
+    "N": {
+      "kind": "scalar_or_metadata",
+      "value": 256
+    },
+    "BLOCK": {
+      "kind": "scalar_or_metadata",
+      "value": 256
+    },
+    "ROWS": {
+      "kind": "scalar_or_metadata",
+      "value": 1
+    },
+    "OP": {
+      "kind": "scalar_or_metadata",
+      "value": "layernorm"
+    }
+  }
+}

@@ -1,0 +1,29 @@
+[
+  {
+    "name": "P32_K32",
+    "BM": 32,
+    "BN": 32,
+    "BK": 32,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_K32_K256",
+    "BM": 32,
+    "BN": 32,
+    "BK": 256,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  },
+  {
+    "name": "R_KMN64_K256",
+    "BM": 64,
+    "BN": 64,
+    "BK": 256,
+    "num_stages": 4,
+    "num_warps": 4,
+    "kernel": "original"
+  }
+]

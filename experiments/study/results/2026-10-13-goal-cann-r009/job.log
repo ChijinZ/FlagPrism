@@ -1,0 +1,216 @@
+RUN gemm_bias_gelu-512x512x512-v0-b0
+DONE gemm_bias_gelu-512x512x512-v0-b0 0 30
+RUN transpose-513x257-v0-b0
+DONE transpose-513x257-v0-b0 0 30
+RUN gemm_bias_gelu-257x193x320-v0-b0
+DONE gemm_bias_gelu-257x193x320-v0-b0 0 30
+RUN gemm-257x193x320-v0-b0
+DONE gemm-257x193x320-v0-b0 0 30
+RUN reduce_sum-32x256-v1-b0
+DONE reduce_sum-32x256-v1-b0 0 30
+RUN transpose-256x256-v1-b0
+DONE transpose-256x256-v1-b0 0 30
+RUN gemm-257x193x320-v1-b0
+DONE gemm-257x193x320-v1-b0 0 30
+RUN softmax-256x1024-v0-b0
+DONE softmax-256x1024-v0-b0 0 30
+RUN transpose-1024x1024-v1-b0
+DONE transpose-1024x1024-v1-b0 0 30
+RUN transpose-1024x1024-v0-b0
+DONE transpose-1024x1024-v0-b0 0 30
+RUN gemm_bias_gelu-257x193x320-v1-b0
+DONE gemm_bias_gelu-257x193x320-v1-b0 0 30
+RUN softmax-256x1024-v1-b0
+DONE softmax-256x1024-v1-b0 0 30
+RUN softmax-127x769-v0-b0
+DONE softmax-127x769-v0-b0 0 30
+RUN layernorm-256x1024-v1-b0
+DONE layernorm-256x1024-v1-b0 0 30
+RUN gemm_bias_gelu-512x512x512-v1-b0
+DONE gemm_bias_gelu-512x512x512-v1-b0 0 30
+RUN reduce_sum-256x1024-v0-b0
+DONE reduce_sum-256x1024-v0-b0 0 30
+RUN gemm-512x512x512-v1-b0
+DONE gemm-512x512x512-v1-b0 0 30
+RUN softmax-127x769-v1-b0
+DONE softmax-127x769-v1-b0 0 30
+RUN reduce_sum-256x1024-v1-b0
+DONE reduce_sum-256x1024-v1-b0 0 30
+RUN reduce_sum-32x256-v0-b0
+DONE reduce_sum-32x256-v0-b0 0 30
+RUN gemm-128x128x128-v0-b0
+DONE gemm-128x128x128-v0-b0 0 30
+RUN gemm-512x512x512-v0-b0
+DONE gemm-512x512x512-v0-b0 0 30
+RUN layernorm-32x256-v0-b0
+DONE layernorm-32x256-v0-b0 0 30
+RUN gemm_bias_gelu-128x128x128-v1-b0
+DONE gemm_bias_gelu-128x128x128-v1-b0 0 30
+RUN layernorm-127x769-v1-b0
+DONE layernorm-127x769-v1-b0 0 30
+RUN gemm-128x128x128-v1-b0
+DONE gemm-128x128x128-v1-b0 0 30
+RUN reduce_sum-127x769-v0-b0
+DONE reduce_sum-127x769-v0-b0 0 30
+RUN layernorm-127x769-v0-b0
+DONE layernorm-127x769-v0-b0 0 30
+RUN transpose-513x257-v1-b0
+DONE transpose-513x257-v1-b0 0 30
+RUN layernorm-32x256-v1-b0
+DONE layernorm-32x256-v1-b0 0 30
+RUN softmax-32x256-v1-b0
+DONE softmax-32x256-v1-b0 0 30
+RUN gemm_bias_gelu-128x128x128-v0-b0
+DONE gemm_bias_gelu-128x128x128-v0-b0 0 30
+RUN transpose-256x256-v0-b0
+DONE transpose-256x256-v0-b0 0 30
+RUN layernorm-256x1024-v0-b0
+DONE layernorm-256x1024-v0-b0 0 30
+RUN softmax-32x256-v0-b0
+DONE softmax-32x256-v0-b0 0 30
+RUN reduce_sum-127x769-v1-b0
+DONE reduce_sum-127x769-v1-b0 0 30
+RUN layernorm-127x769-v1-b1
+DONE layernorm-127x769-v1-b1 0 30
+RUN reduce_sum-32x256-v0-b1
+DONE reduce_sum-32x256-v0-b1 0 30
+RUN gemm-128x128x128-v0-b1
+DONE gemm-128x128x128-v0-b1 0 30
+RUN reduce_sum-256x1024-v1-b1
+DONE reduce_sum-256x1024-v1-b1 0 30
+RUN gemm-512x512x512-v1-b1
+DONE gemm-512x512x512-v1-b1 0 30
+RUN gemm-512x512x512-v0-b1
+DONE gemm-512x512x512-v0-b1 0 30
+RUN softmax-256x1024-v1-b1
+DONE softmax-256x1024-v1-b1 0 30
+RUN layernorm-32x256-v1-b1
+DONE layernorm-32x256-v1-b1 0 30
+RUN gemm_bias_gelu-128x128x128-v0-b1
+DONE gemm_bias_gelu-128x128x128-v0-b1 0 30
+RUN transpose-256x256-v1-b1
+DONE transpose-256x256-v1-b1 0 30
+RUN softmax-32x256-v0-b1
+DONE softmax-32x256-v0-b1 0 30
+RUN layernorm-32x256-v0-b1
+DONE layernorm-32x256-v0-b1 0 30
+RUN reduce_sum-127x769-v0-b1
+DONE reduce_sum-127x769-v0-b1 0 30
+RUN gemm-257x193x320-v1-b1
+DONE gemm-257x193x320-v1-b1 0 30
+RUN reduce_sum-256x1024-v0-b1
+DONE reduce_sum-256x1024-v0-b1 0 30
+RUN transpose-1024x1024-v0-b1
+DONE transpose-1024x1024-v0-b1 0 30
+RUN gemm-128x128x128-v1-b1
+DONE gemm-128x128x128-v1-b1 0 30
+RUN gemm_bias_gelu-128x128x128-v1-b1
+DONE gemm_bias_gelu-128x128x128-v1-b1 0 30
+RUN gemm_bias_gelu-512x512x512-v0-b1
+DONE gemm_bias_gelu-512x512x512-v0-b1 0 30
+RUN layernorm-127x769-v0-b1
+DONE layernorm-127x769-v0-b1 0 30
+RUN softmax-256x1024-v0-b1
+DONE softmax-256x1024-v0-b1 0 30
+RUN transpose-1024x1024-v1-b1
+DONE transpose-1024x1024-v1-b1 0 30
+RUN softmax-32x256-v1-b1
+DONE softmax-32x256-v1-b1 0 30
+RUN softmax-127x769-v1-b1
+DONE softmax-127x769-v1-b1 0 30
+RUN gemm-257x193x320-v0-b1
+DONE gemm-257x193x320-v0-b1 0 30
+RUN reduce_sum-32x256-v1-b1
+DONE reduce_sum-32x256-v1-b1 0 30
+RUN reduce_sum-127x769-v1-b1
+DONE reduce_sum-127x769-v1-b1 0 30
+RUN softmax-127x769-v0-b1
+DONE softmax-127x769-v0-b1 0 30
+RUN gemm_bias_gelu-257x193x320-v0-b1
+DONE gemm_bias_gelu-257x193x320-v0-b1 0 30
+RUN transpose-513x257-v1-b1
+DONE transpose-513x257-v1-b1 0 30
+RUN layernorm-256x1024-v0-b1
+DONE layernorm-256x1024-v0-b1 0 30
+RUN layernorm-256x1024-v1-b1
+DONE layernorm-256x1024-v1-b1 0 30
+RUN transpose-256x256-v0-b1
+DONE transpose-256x256-v0-b1 0 30
+RUN gemm_bias_gelu-512x512x512-v1-b1
+DONE gemm_bias_gelu-512x512x512-v1-b1 0 30
+RUN gemm_bias_gelu-257x193x320-v1-b1
+DONE gemm_bias_gelu-257x193x320-v1-b1 0 30
+RUN transpose-513x257-v0-b1
+DONE transpose-513x257-v0-b1 0 30
+RUN softmax-256x1024-v0-b2
+DONE softmax-256x1024-v0-b2 0 30
+RUN reduce_sum-32x256-v1-b2
+DONE reduce_sum-32x256-v1-b2 0 30
+RUN reduce_sum-127x769-v1-b2
+DONE reduce_sum-127x769-v1-b2 0 30
+RUN gemm_bias_gelu-512x512x512-v1-b2
+DONE gemm_bias_gelu-512x512x512-v1-b2 0 30
+RUN softmax-127x769-v1-b2
+DONE softmax-127x769-v1-b2 0 30
+RUN gemm_bias_gelu-257x193x320-v1-b2
+DONE gemm_bias_gelu-257x193x320-v1-b2 0 30
+RUN layernorm-127x769-v1-b2
+DONE layernorm-127x769-v1-b2 0 30
+RUN gemm-512x512x512-v1-b2
+DONE gemm-512x512x512-v1-b2 0 30
+RUN gemm-257x193x320-v1-b2
+DONE gemm-257x193x320-v1-b2 0 30
+RUN reduce_sum-32x256-v0-b2
+DONE reduce_sum-32x256-v0-b2 0 30
+RUN gemm-257x193x320-v0-b2
+DONE gemm-257x193x320-v0-b2 0 30
+RUN gemm_bias_gelu-257x193x320-v0-b2
+DONE gemm_bias_gelu-257x193x320-v0-b2 0 30
+RUN reduce_sum-256x1024-v1-b2
+DONE reduce_sum-256x1024-v1-b2 0 30
+RUN gemm-512x512x512-v0-b2
+DONE gemm-512x512x512-v0-b2 0 30
+RUN gemm_bias_gelu-512x512x512-v0-b2
+DONE gemm_bias_gelu-512x512x512-v0-b2 0 30
+RUN layernorm-256x1024-v1-b2
+DONE layernorm-256x1024-v1-b2 0 30
+RUN transpose-1024x1024-v1-b2
+DONE transpose-1024x1024-v1-b2 0 30
+RUN softmax-256x1024-v1-b2
+DONE softmax-256x1024-v1-b2 0 30
+RUN gemm_bias_gelu-128x128x128-v1-b2
+DONE gemm_bias_gelu-128x128x128-v1-b2 0 30
+RUN layernorm-127x769-v0-b2
+DONE layernorm-127x769-v0-b2 0 30
+RUN layernorm-256x1024-v0-b2
+DONE layernorm-256x1024-v0-b2 0 30
+RUN layernorm-32x256-v0-b2
+DONE layernorm-32x256-v0-b2 0 30
+RUN transpose-513x257-v0-b2
+DONE transpose-513x257-v0-b2 0 30
+RUN transpose-513x257-v1-b2
+DONE transpose-513x257-v1-b2 0 30
+RUN softmax-127x769-v0-b2
+DONE softmax-127x769-v0-b2 0 30
+RUN gemm_bias_gelu-128x128x128-v0-b2
+DONE gemm_bias_gelu-128x128x128-v0-b2 0 30
+RUN layernorm-32x256-v1-b2
+DONE layernorm-32x256-v1-b2 0 30
+RUN transpose-256x256-v1-b2
+DONE transpose-256x256-v1-b2 0 30
+RUN gemm-128x128x128-v1-b2
+DONE gemm-128x128x128-v1-b2 0 30
+RUN transpose-1024x1024-v0-b2
+DONE transpose-1024x1024-v0-b2 0 30
+RUN reduce_sum-256x1024-v0-b2
+DONE reduce_sum-256x1024-v0-b2 0 30
+RUN gemm-128x128x128-v0-b2
+DONE gemm-128x128x128-v0-b2 0 30
+RUN transpose-256x256-v0-b2
+DONE transpose-256x256-v0-b2 0 30
+RUN reduce_sum-127x769-v0-b2
+DONE reduce_sum-127x769-v0-b2 0 30
+RUN softmax-32x256-v0-b2
+DONE softmax-32x256-v0-b2 0 30
+RUN softmax-32x256-v1-b2
+DONE softmax-32x256-v1-b2 0 30
