@@ -92,31 +92,6 @@ save(fig,'study-fused-decomposition')
 assert all(t in ptx for t in ['ld.global','st.shared','ld.shared','bar.sync','fma.rn.f32','ex2.approx.f32','st.global'])
 assert all(t in gcu for t in ['gcu.border','gpu.barrier','gcu.matmul','math.exp','triton_gcu.store'])
 assert all(t in asc for t in ['hivm.hir.nd2nz','hivm.hir.mmadL1','hivm.hir.fixpipe','sync_block_set','sync_block_wait','hivm.hir.load','hivm.hir.vexp','hivm.hir.store'])
-fig,ax=plt.subplots(figsize=(11.4,6.3));ax.set_xlim(0,11.4);ax.set_ylim(0,6.3);ax.axis('off')
-xs=[1.55,4,6.45,8.9];w=2.1;h=.72
-stage_colors={'move':'#e3eef8','compute':'#fbe3cd','sync':'#ededed'}
-def stage(x,y,text,kind):
- ax.add_patch(FancyBboxPatch((x,y-h/2),w,h,boxstyle='round,pad=.04',facecolor=stage_colors[kind],edgecolor='#555555',lw=.8))
- ax.text(x+w/2,y,text,ha='center',va='center',fontsize=11.5)
-def flow(x1,y1,x2,y2,dashed=False):
- ax.annotate('',xy=(x2,y2),xytext=(x1,y1),arrowprops={'arrowstyle':'->','lw':1.1,'linestyle':'--' if dashed else '-','color':'#444444'})
-ax.text(5.7,6.05,'Fused GEMM+bias+GELU: emitted data paths and synchronization',ha='center',fontsize=14)
-for y,label,entries in [
- (5.15,'V100S\nPTX', [('Global A/B\nld.global','move'),('Shared staging\nst/ld.shared\nbar.sync','move'),('Dot + GELU\nfma.rn.f32 / ex2','compute'),('Global output\nst.global','move')]),
- (3.85,'GCU300\nGCU IR', [('Input staging\nload / gpu.barrier','move'),('Local matmul\ngcu.matmul (8×8)','compute'),('Bias + GELU\nmath.exp\nvector ops','compute'),('Global output\ntriton_gcu.store','move')]),
- (2.45,'910B4-1\nAIC', [('Global → CBUF\nnd2nz','move'),('Matrix → CC\nmmadL1','compute'),('CC → GM workspace\nfixpipe','move'),('Producer signal\nsync_block_set (0)','sync')]),
- (1.05,'910B4-1\nAIV', [('Consumer wait\nsync_block_wait (0)','sync'),('GM workspace → UB\nload (+ bias)','move'),('Bias + GELU in UB\nvexp / vector ops','compute'),('UB → global output\nstore','move')])]:
- ax.text(.12,y,label,ha='left',va='center',fontsize=12,weight='bold')
- for x,(text,kind) in zip(xs,entries):stage(x,y,text,kind)
- for x,xnext in zip(xs,xs[1:]):flow(x+w+.04,y,xnext-.04,y)
-# Compiler-level dependencies, with event families taken from the saved HIVM.
-ax.text(3.8,3.02,'MTE2 ↔ MTE1 set/wait',ha='center',fontsize=11)
-ax.text(6.5,3.02,'M → FIX set/wait',ha='center',fontsize=11)
-# Route the cross-core dependency through the gap, without suggesting duration.
-ax.plot([9.95,9.95,2.6],[2.04,1.75,1.75],ls='--',color='#444444',lw=1.1)
-flow(2.6,1.75,2.6,1.47,True)
-ax.text(6.3,1.82,'Cross-core dependency, flag 0',ha='center',fontsize=11)
-ax.text(6.5,.45,'AIV: MTE2 → V and V → MTE3 set/wait',ha='center',fontsize=11)
-ax.text(5.7,.08,'Blue: data movement / memory; orange: computation; grey: cross-core synchronization.\nSelected emitted dependencies; box positions/widths carry no timing or overlap information.',ha='center',fontsize=11)
-save(fig,'study-pipeline-structure')
+from plot_pipeline_structure import render_pipeline
+render_pipeline(a.output)
 print(json.dumps({'tcu_invocations':sum(map(len,records.values())),'counter_free_intervals':60,'figures':'nested, endpoint (if available), native-detail, fused-decomposition, pipeline-structure'}))

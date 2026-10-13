@@ -1,0 +1,21 @@
+{
+  "reason": "User found configuration-response claim too strong and original pipeline diagram opaque",
+  "source_style_reference": {
+    "url": "https://www.usenix.org/system/files/osdi25-guan.pdf",
+    "figures": [
+      1,
+      2,
+      3,
+      4,
+      6
+    ],
+    "inspected": "Actual rendered reference pages viewed; source-correlated colors, grouped panels and actor lanes used"
+  },
+  "pipeline": "Same source compute regions \u2192 one CUDA/GCU program path versus AIC+2AIV; intermediateworkspace and release dependencies explicit; no time axis/overlap inferred",
+  "performance_claim": "Absolute durations show scope; several Ascend/GCU configuration responses similar; no preferred-config reversal established",
+  "configuration_ratios": "54descriptive within-backend median(v1)/median(v0) ratios fromoriginal1620intervals; supplementalreviewfigure, not added as a mainStudy claim",
+  "experimental_data": "Unchanged original hardwarecaptures; onlyderivedratio CSV added",
+  "rendered_paper_sha256": "b8033a33df0026a39ce6e24286f10ce8c0866572d3b484ea157fa059f392b482",
+  "reproduce_pipeline": "python experiments/study/plot_pipeline_structure.py --raw ../artifacts/study-20261013 --bundle experiments/study/results/2026-10-13 --output ../paper/figures",
+  "reproduce_ratios": "python experiments/study/plot_configuration_response.py --intervals experiments/study/results/2026-10-13/kernel_intervals.csv --output ../paper/figures --data-output experiments/study/results/2026-10-13-closure/configuration_responses.csv"
+}
