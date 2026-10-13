@@ -118,3 +118,7 @@ for ax,b,title in zip(axes,['cuda','cann','enflame'],['V100 global timer','Ascen
  ax.set_title(title,fontsize=11);ax.set_xlabel('Recorded bracket (µs)');ax.set_ylabel('Native whole-kernel/task (µs)');ax.grid(alpha=.2)
 fig.suptitle('Single-program scale check: circles = fitting levels, squares = held-out levels\nIndependent endpoint/collection path; same physical oscillator is not ruled out',fontsize=12)
 save(fig,'study-native-scale-check')
+
+# Pair the source/actor mapping with measured elapsed intervals in the main pipeline figure.
+import subprocess,sys
+subprocess.run([sys.executable,str(Path(__file__).with_name("plot_timed_pipeline.py")),"--bundle",str(a.bundle),"--output",str(a.output)],check=True)

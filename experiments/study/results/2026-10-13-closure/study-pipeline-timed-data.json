@@ -1,0 +1,88 @@
+{
+  "operator": "gemm_bias_gelu",
+  "shape": [
+    128,
+    128,
+    128
+  ],
+  "tile": 16,
+  "sample_index": 7,
+  "program_coordinates": [
+    0,
+    0
+  ],
+  "sources": [
+    {
+      "path": "captures/cuda/gemm_bias_gelu-t16-nested/result.json",
+      "sha256": "6b782c8fbd63c5c73ef1b7c54f14cc93b3c8f6dea0530963b07599ff7d79023b"
+    },
+    {
+      "path": "captures/cuda/gemm_bias_gelu-t16-nested/native.json",
+      "sha256": "2b399322af6be8bedc6f11d4636248a9a50cf3a1d719c86a6395ee559cff7d37"
+    },
+    {
+      "path": "gcu-global-timer/captures/leader-global-fused128-nested/result.json",
+      "sha256": "6f735ce6c497626f0a69bbb2c7f74104dd761dfe074f4283f1c3f576e0425ded"
+    },
+    {
+      "path": "gcu-global-timer/summary.json",
+      "sha256": "3c3bd6e07f0707ad3197f80f4894e4f01909974a6663c042e25f1d59bde6048e"
+    },
+    {
+      "path": "ascend/captures/fused128-completion-run/result.json",
+      "sha256": "cd13327eb6df3ae29e2ff7d85f4ab643ba98d8554bd60a7551cf7b85a05bf93b"
+    },
+    {
+      "path": "ascend/captures/fused128-completion-run/native.timeline.json",
+      "sha256": "867a610595d9473b95174600988ed51e03c1ef15c37c85e7ee33c15e4045b943"
+    }
+  ],
+  "cuda_us": {
+    "body": 4.128,
+    "output": 0.352,
+    "output_start": 3.7760000000000002
+  },
+  "gcu_thousand_ticks": {
+    "body": 152.76,
+    "output": 3.809,
+    "output_start": 148.51500000000001
+  },
+  "gcu_empirical_tick_period_us": 0.0009997173540151878,
+  "ascend_actor_us": [
+    {
+      "actor": "AIC",
+      "subblock_id": 0,
+      "body_us": 6.96,
+      "components_us": {}
+    },
+    {
+      "actor": "AIV",
+      "subblock_id": 0,
+      "body_us": 7.72,
+      "components_us": {
+        "readiness_wait": 5.88,
+        "workspace_transfer": 0.12,
+        "epilogue_with_bias_load": 0.38,
+        "output_store": 0.18
+      }
+    },
+    {
+      "actor": "AIV",
+      "subblock_id": 1,
+      "body_us": 7.72,
+      "components_us": {
+        "readiness_wait": 3.78,
+        "workspace_transfer": 0.12,
+        "epilogue_with_bias_load": 0.38,
+        "output_store": 0.18
+      }
+    }
+  ],
+  "limits": [
+    "separate backend captures",
+    "no common crossactor origin proved",
+    "not unperturbed busy time",
+    "no load/GEMM subdivision for GPUs/AIC",
+    "GCU official frequency unverified"
+  ]
+}

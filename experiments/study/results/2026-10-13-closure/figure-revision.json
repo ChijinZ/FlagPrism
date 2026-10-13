@@ -15,7 +15,25 @@
   "performance_claim": "Absolute durations show scope; several Ascend/GCU configuration responses similar; no preferred-config reversal established",
   "configuration_ratios": "54descriptive within-backend median(v1)/median(v0) ratios fromoriginal1620intervals; supplementalreviewfigure, not added as a mainStudy claim",
   "experimental_data": "Unchanged original hardwarecaptures; onlyderivedratio CSV added",
-  "rendered_paper_sha256": "b8033a33df0026a39ce6e24286f10ce8c0866572d3b484ea157fa059f392b482",
+  "rendered_paper_sha256": "47d01543f88f089363f337f40bbf61cd874e2880ffafc2189a6649f099fd9bb8",
   "reproduce_pipeline": "python experiments/study/plot_pipeline_structure.py --raw ../artifacts/study-20261013 --bundle experiments/study/results/2026-10-13 --output ../paper/figures",
-  "reproduce_ratios": "python experiments/study/plot_configuration_response.py --intervals experiments/study/results/2026-10-13/kernel_intervals.csv --output ../paper/figures --data-output experiments/study/results/2026-10-13-closure/configuration_responses.csv"
+  "reproduce_ratios": "python experiments/study/plot_configuration_response.py --intervals experiments/study/results/2026-10-13/kernel_intervals.csv --output ../paper/figures --data-output experiments/study/results/2026-10-13-closure/configuration_responses.csv",
+  "timed_pipeline_revision": {
+    "reason": "User required time information in mainpipelinefigure",
+    "data": "study-pipeline-timed-data.json",
+    "source_mapping_and_measured_time": "left dependencydiagram/right actualactor-localbrackets",
+    "sample_index": 7,
+    "program": [
+      0,
+      0
+    ],
+    "raw_times_unchanged": true,
+    "limits": [
+      "separate backend captures",
+      "no common crossactor origin proved",
+      "not unperturbed busy time",
+      "no load/GEMM subdivision for GPUs/AIC",
+      "GCU official frequency unverified"
+    ]
+  }
 }
