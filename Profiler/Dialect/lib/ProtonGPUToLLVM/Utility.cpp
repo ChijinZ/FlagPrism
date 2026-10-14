@@ -97,8 +97,10 @@ Value getLinearCTAId(Location loc, ConversionPatternRewriter &rewriter) {
 Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
                                     ConversionPatternRewriter &rewriter) {
   auto b = TritonLLVMOpBuilder(loc, rewriter);
-  auto programs = mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs");
-  if (!programs) return b.true_val();
+  auto programs =
+      mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs");
+  if (!programs)
+    return b.true_val();
   Value pid = getLinearCTAId(loc, rewriter);
   Value enabled = b.false_val();
   for (int32_t program : programs.asArrayRef())
@@ -124,7 +126,8 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   // Update the index (could be register promoted).
   Value curIdx = b.load(i32_ty, indexPtr);
   Value newIdx = b.add(curIdx, b.i32_val(wordsPerEntry));
-  newIdx = b.select(getProgramCollectionPredicate(mod, loc, rewriter), newIdx, curIdx);
+  newIdx = b.select(getProgramCollectionPredicate(mod, loc, rewriter), newIdx,
+                    curIdx);
   b.store(newIdx, indexPtr);
 
   // Compute the segment size in word (4 bytes).

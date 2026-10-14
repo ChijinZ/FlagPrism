@@ -21,10 +21,11 @@ void setDebugHiddenArgAbiEnabled(mlir::ModuleOp module, bool enabled);
 void setDebugAddrLevel(mlir::ModuleOp module, int32_t addrLevel);
 void setDebugTimelineEnabled(mlir::ModuleOp module, bool enabled);
 void setDebugTimelineOnly(mlir::ModuleOp module, bool enabled);
-llvm::Error setDebugDynamicTimelineOptions(mlir::ModuleOp module, uint32_t program,
-                                    uint32_t actor, uint32_t sampleEvery);
+llvm::Error setDebugDynamicTimelineOptions(mlir::ModuleOp module,
+                                           uint32_t program, uint32_t actor,
+                                           uint32_t sampleEvery);
 llvm::Error setDebugDynamicTimelineSites(mlir::ModuleOp module,
-                                  const std::vector<uint32_t> &sites);
+                                         const std::vector<uint32_t> &sites);
 uint32_t getDebugRecordsPerInstance(mlir::ModuleOp module);
 uint32_t getDebugRecordSize(mlir::ModuleOp module);
 std::string getDebugRecordLayout(mlir::ModuleOp module);

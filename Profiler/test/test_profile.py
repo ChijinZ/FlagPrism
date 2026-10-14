@@ -366,13 +366,14 @@ def test_pcsampling(tmp_path: pathlib.Path):
             tl.store(y + offs, tl.load(x + offs))
 
     temp_file = tmp_path / "test_pcsampling" / "ai/call_tree.json"
-    torch.empty(1, device="cuda")  # Create context for the real SDK capability probe.
+    torch.empty(
+        1, device="cuda")  # Create context for the real SDK capability probe.
     session = None
     try:
         session = profiler.start(str(temp_file.parent.parent),
-                       hook="triton",
-                       backend="cupti",
-                       mode="pcsampling")
+                                 hook="triton",
+                                 backend="cupti",
+                                 mode="pcsampling")
         with profiler.scope("init"):
             x = torch.ones((1024, ), device="cuda", dtype=torch.float32)
             y = torch.zeros_like(x)
@@ -465,10 +466,13 @@ def test_trace(tmp_path: pathlib.Path):
 
     with temp_file.open() as f:
         data = json.load(f)
-        trace_events = [event for event in data["traceEvents"] if event["ph"] == "X"]
+        trace_events = [
+            event for event in data["traceEvents"] if event["ph"] == "X"
+        ]
         assert len(trace_events) == 3
         assert trace_events[-1]["name"] == "foo"
-        assert all(event["args"]["scope_id"] > 0 and event["args"]["correlation_id"] > 0
+        assert all(event["args"]["scope_id"] > 0
+                   and event["args"]["correlation_id"] > 0
                    for event in trace_events)
     # The inherited shadow call stack remains in raw/native; unified activity
     # does not infer it by joining kernel names to a separate tree.

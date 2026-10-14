@@ -74,10 +74,10 @@ void CuptiProfiler::recordActivityKernel(const void *activity) {
   } else
     association.metrics["activity.unknown_fields"] =
         std::string("thread_id,task_id,scope_id");
-  activityEvents.push_back({std::move(association),
-                            launch == activityLaunches.end()
-                                ? std::set<std::string>{}
-                                : launch->second.sessions});
+  activityEvents.push_back(
+      {std::move(association), launch == activityLaunches.end()
+                                   ? std::set<std::string>{}
+                                   : launch->second.sessions});
 }
 
 void CuptiProfiler::recordActivityDropped(size_t count) {
@@ -93,14 +93,22 @@ CuptiProfiler::collectActivityArtifact(const std::string &sessionPath) {
   std::lock_guard<std::mutex> lock(activityMutex);
   if (activityDropped)
     artifact.degradeReasons.push_back(
-        "CUPTI profiler lifetime has cumulatively dropped " + std::to_string(activityDropped) +
-        " records; loss cannot be attributed to one session or native activity");
+        "CUPTI profiler lifetime has cumulatively dropped " +
+        std::to_string(activityDropped) +
+        " records; loss cannot be attributed to one session or native "
+        "activity");
   for (auto it = activityEvents.begin(); it != activityEvents.end();) {
     if (it->sessions.erase(sessionPath)) {
-      if (it->association.metrics.count("activity.graph_instance_count_status") &&
-          std::find(artifact.degradeReasons.begin(), artifact.degradeReasons.end(),
-                    "Graph created before CUPTI capture: per-replay instance count unavailable; correlation cache retained until capture epoch ends") == artifact.degradeReasons.end())
-        artifact.degradeReasons.push_back("Graph created before CUPTI capture: per-replay instance count unavailable; correlation cache retained until capture epoch ends");
+      if (it->association.metrics.count(
+              "activity.graph_instance_count_status") &&
+          std::find(artifact.degradeReasons.begin(),
+                    artifact.degradeReasons.end(),
+                    "Graph created before CUPTI capture: per-replay instance "
+                    "count unavailable; correlation cache retained until "
+                    "capture epoch ends") == artifact.degradeReasons.end())
+        artifact.degradeReasons.push_back(
+            "Graph created before CUPTI capture: per-replay instance count "
+            "unavailable; correlation cache retained until capture epoch ends");
       artifact.associations.push_back(it->association);
     }
     if (it->sessions.empty())
@@ -467,9 +475,10 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
       }
       profiler.correlation.correlate(callbackData->correlationId, numInstances);
       if (!profiler.correlation.externIdQueue.empty())
-        profiler.registerActivityLaunch(callbackData->correlationId,
-                                       profiler.correlation.externIdQueue.back(),
-                                       profiler.getDataSet(), graphInstanceCountUnknown);
+        profiler.registerActivityLaunch(
+            callbackData->correlationId,
+            profiler.correlation.externIdQueue.back(), profiler.getDataSet(),
+            graphInstanceCountUnknown);
       if (profiler.isPCSamplingEnabled() && isDriverAPILaunch(cbId)) {
         pImpl->pcSampling.start(callbackData->context);
       }

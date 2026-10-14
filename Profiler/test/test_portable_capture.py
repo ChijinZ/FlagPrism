@@ -73,12 +73,17 @@ def test_unknown_identities_never_join(capture):
 
 def test_verified_scope_join_does_not_require_matching_kernel_name(capture):
     row = record(scope_id=7)
-    launch = dict(id="launch-7", scope_id=7, name="source_operator",
-                  binary_id="binary-hash", arguments={})
-    event, = capture._report.analyze(dict(backend="future", associations=[row],
-                                         launches=[launch]))["events"]
+    launch = dict(id="launch-7",
+                  scope_id=7,
+                  name="source_operator",
+                  binary_id="binary-hash",
+                  arguments={})
+    event, = capture._report.analyze(
+        dict(backend="future", associations=[row],
+             launches=[launch]))["events"]
     assert event["name"] == "kernel"
-    assert event["launch_id"] == "launch-7" and event["binary_id"] == "binary-hash"
+    assert event["launch_id"] == "launch-7" and event[
+        "binary_id"] == "binary-hash"
 
 
 def test_untimed_records_remain_machine_readable(capture, tmp_path):
@@ -94,10 +99,14 @@ def test_untimed_records_remain_machine_readable(capture, tmp_path):
     assert not (tmp_path / "bundle/report/timeline.json").exists()
 
 
-def test_legacy_ring_trace_is_preserved_without_claimed_clock(capture, tmp_path):
+def test_legacy_ring_trace_is_preserved_without_claimed_clock(
+        capture, tmp_path):
     base = tmp_path / "capture"
-    base.with_suffix(".vendor.json").write_text(json.dumps({
-        "backend": "instrumentation", "associations": []}))
+    base.with_suffix(".vendor.json").write_text(
+        json.dumps({
+            "backend": "instrumentation",
+            "associations": []
+        }))
     trace = {"traceEvents": [{"ph": "X", "name": "loop", "ts": 1, "dur": 2}]}
     base.with_suffix(".timeline.json").write_text(json.dumps(trace))
     output = tmp_path / "bundle"
@@ -706,9 +715,11 @@ def test_invalid_final_metadata_saves_capture_and_prior_snapshot(
         Path(native_paths[0]).with_suffix('.vendor.json').write_text(
             json.dumps(dict(backend='future', associations=[])))
 
-    monkeypatch.setattr(profile, 'profiler_native',
-                        SimpleNamespace(start=start, finalize=finalize,
-                                        activate=lambda session: None))
+    monkeypatch.setattr(
+        profile, 'profiler_native',
+        SimpleNamespace(start=start,
+                        finalize=finalize,
+                        activate=lambda session: None))
     supplied = {
         'workload': {
             'operator': 'original',
@@ -780,7 +791,8 @@ def test_start_activation_failure_restores_flags_and_original_error(
         assert 'cleanup rejected' in str(original.__notes__)
 
 
-def test_start_preserves_preexisting_empty_output_directory(tmp_path, monkeypatch):
+def test_start_preserves_preexisting_empty_output_directory(
+        tmp_path, monkeypatch):
     profile = importlib.import_module('flagtree.profiler.profile')
     flags = importlib.import_module('flagtree.profiler.flags')
     monkeypatch.setattr(profile, '_active_sessions', {})
@@ -795,8 +807,11 @@ def test_start_preserves_preexisting_empty_output_directory(tmp_path, monkeypatc
     assert not flags.get_profiling_on()
 
 
-@pytest.mark.parametrize('original', [ValueError('application failed'),
-                                     KeyboardInterrupt(), SystemExit(7)])
+@pytest.mark.parametrize(
+    'original',
+    [ValueError('application failed'),
+     KeyboardInterrupt(),
+     SystemExit(7)])
 @pytest.mark.parametrize('cleanup_fails', [False, True])
 def test_decorator_failure_finalizes_and_preserves_application_exception(
         monkeypatch, original, cleanup_fails):
@@ -842,19 +857,33 @@ def test_decorator_in_cli_preserves_cli_owned_session(monkeypatch):
 
 def test_ir_session_pause_and_resume_preserves_prior_capture(monkeypatch):
     profile = importlib.import_module('flagtree.profiler.profile')
-    request = {'semantics': ['source_control_interval'], 'programs': [0],
-               'sites': None, 'max_events_per_instance': 4, 'sample_every': 1}
-    state = {'session': 9, 'backend': 'enflame', 'active': True,
-             'instrumentation_hook': True, 'observation_request': request}
+    request = {
+        'semantics': ['source_control_interval'],
+        'programs': [0],
+        'sites': None,
+        'max_events_per_instance': 4,
+        'sample_every': 1
+    }
+    state = {
+        'session': 9,
+        'backend': 'enflame',
+        'active': True,
+        'instrumentation_hook': True,
+        'observation_request': request
+    }
     monkeypatch.setattr(profile, '_active_sessions', {9: state})
     monkeypatch.setattr(profile, 'is_command_line', lambda: False)
     calls = []
-    monkeypatch.setattr(profile.HookManager, 'deactivate', lambda sid: calls.append('hooks_off'))
-    monkeypatch.setattr(profile.HookManager, 'activate', lambda sid: calls.append('hooks_on'))
-    monkeypatch.setattr(profile, 'profiler_native', SimpleNamespace(
-        deactivate=lambda sid: calls.append('native_off'),
-        activate=lambda sid: calls.append('native_on')))
-    monkeypatch.setattr(profile, '_deactivate_instrumentation', lambda: calls.append('ir_off'))
+    monkeypatch.setattr(profile.HookManager, 'deactivate',
+                        lambda sid: calls.append('hooks_off'))
+    monkeypatch.setattr(profile.HookManager, 'activate',
+                        lambda sid: calls.append('hooks_on'))
+    monkeypatch.setattr(
+        profile, 'profiler_native',
+        SimpleNamespace(deactivate=lambda sid: calls.append('native_off'),
+                        activate=lambda sid: calls.append('native_on')))
+    monkeypatch.setattr(profile, '_deactivate_instrumentation',
+                        lambda: calls.append('ir_off'))
 
     def resume(backend, restored, *, clear_runs):
         assert backend == 'enflame' and restored.as_dict() == request
@@ -866,7 +895,9 @@ def test_ir_session_pause_and_resume_preserves_prior_capture(monkeypatch):
     assert state['active'] is False
     profile.activate(9)
     assert state['active'] is True
-    assert calls == ['hooks_off', 'native_off', 'ir_off', 'ir_on', 'hooks_on', 'native_on']
+    assert calls == [
+        'hooks_off', 'native_off', 'ir_off', 'ir_on', 'hooks_on', 'native_on'
+    ]
 
 
 def test_caller_iterations_do_not_invent_observations(capture, tmp_path):

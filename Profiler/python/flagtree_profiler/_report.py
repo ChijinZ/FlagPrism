@@ -929,16 +929,21 @@ def write_bundle(report, source, output, context=None, *, complete=True):
             references = {}
             if isinstance(artifacts, dict):
                 for stage, text in artifacts.items():
-                    if stage not in {"ttir", "ttgir", "gcuir", "llir", "ptx"} or not isinstance(text, str):
+                    if stage not in {"ttir", "ttgir", "gcuir", "llir", "ptx"
+                                     } or not isinstance(text, str):
                         continue
                     content = text.encode("utf-8")
                     digest = hashlib.sha256(content).hexdigest()
                     name = f"raw/compiler/{digest}.{stage}.txt"
-                    (output / "raw/compiler").mkdir(parents=True, exist_ok=True)
+                    (output / "raw/compiler").mkdir(parents=True,
+                                                    exist_ok=True)
                     (output / name).write_bytes(content)
-                    references[stage] = {"file": name, "sha256": digest,
-                                         "bytes": len(content),
-                                         "basis": "actual_compiled_kernel_asm"}
+                    references[stage] = {
+                        "file": name,
+                        "sha256": digest,
+                        "bytes": len(content),
+                        "basis": "actual_compiled_kernel_asm"
+                    }
             if references:
                 entry["compiler_artifact_files"] = references
             source = dict(binary.get("source", {}))
@@ -955,13 +960,20 @@ def write_bundle(report, source, output, context=None, *, complete=True):
             entry["source"] = source
             binaries.append(entry)
         write("ai/binaries.json", binaries)
-        mappings = [entry["execution_manifest"] for entry in binaries
-                    if "execution_manifest" in entry]
+        mappings = [
+            entry["execution_manifest"] for entry in binaries
+            if "execution_manifest" in entry
+        ]
         if mappings:
-            write("ai/execution.json", {
-                "schema_version": 1, "binaries": mappings,
-                "scope": "Compiler execution organization; partial source association is explicit."
-            })
+            write(
+                "ai/execution.json", {
+                    "schema_version":
+                    1,
+                    "binaries":
+                    mappings,
+                    "scope":
+                    "Compiler execution organization; partial source association is explicit."
+                })
     kernels = []
     for row in report["hotspots"]:
         if row["kind"] == "kernel":

@@ -155,7 +155,8 @@ struct FinalizeOpConversion
     rewriter.setInsertionPoint(prevBlock->getTerminator());
     auto selectedIds = op.getSegment().getType().getSelectIds();
     const int segmentWords =
-        bufferSizeInWords / (selectedIds.empty() ? numWarps : selectedIds.size());
+        bufferSizeInWords /
+        (selectedIds.empty() ? numWarps : selectedIds.size());
     Value rawThreadId = getRawThreadId(rewriter, loc);
     Value laneId = b.urem(
         rawThreadId,
@@ -172,12 +173,13 @@ struct FinalizeOpConversion
       copyBase = b.i32_val(0);
     }
     Value shouldCopy = b.and_(b.icmp_eq(laneId, b.i32_val(0)),
-                             b.icmp_sge(segmentObj.segmentBase, b.i32_val(0)));
+                              b.icmp_sge(segmentObj.segmentBase, b.i32_val(0)));
     shouldCopy = b.and_(shouldCopy, b.icmp_ugt(retainedWords, b.i32_val(0)));
-    if (warpSpecialized) shouldCopy = isFirstThread;
+    if (warpSpecialized)
+      shouldCopy = isFirstThread;
 
-    Block *copyDispatch = rewriter.createBlock(
-        op->getParentRegion(), Region::iterator(thenBlock));
+    Block *copyDispatch = rewriter.createBlock(op->getParentRegion(),
+                                               Region::iterator(thenBlock));
     rewriter.setInsertionPointToEnd(ifBlock);
     rewriter.create<cf::BranchOp>(loc, copyDispatch);
     // Both the metadata writer and all remaining threads reach this block.
@@ -188,7 +190,8 @@ struct FinalizeOpConversion
         op->getParentRegion(), Region::iterator(thenBlock), {i32_ty}, {loc});
     rewriter.setInsertionPointToEnd(copyDispatch);
     rewriter.create<cf::CondBranchOp>(loc, shouldCopy, writeBackBlock,
-                                     b.i32_val(0), thenBlock, ArrayRef<Value>());
+                                      b.i32_val(0), thenBlock,
+                                      ArrayRef<Value>());
     rewriter.setInsertionPointToStart(writeBackBlock);
     BlockArgument idx = writeBackBlock->getArgument(0);
     Value bufTagOffset = b.add(copyBase, idx);
@@ -201,7 +204,7 @@ struct FinalizeOpConversion
     Value updatedIdx = b.add(idx, b.i32_val(wordsPerEntry));
     Value pred = b.icmp_ult(updatedIdx, retainedWords);
     rewriter.create<cf::CondBranchOp>(loc, pred, writeBackBlock, updatedIdx,
-                                     thenBlock, ArrayRef<Value>());
+                                      thenBlock, ArrayRef<Value>());
 
     rewriter.eraseOp(op);
     return success();

@@ -1,8 +1,8 @@
 #ifndef PROTON_PROFILER_CUPTI_PROFILER_H_
 #define PROTON_PROFILER_CUPTI_PROFILER_H_
 
-#include "Profiler/GPUProfiler.h"
 #include "Data/Artifacts.h"
+#include "Profiler/GPUProfiler.h"
 #include <mutex>
 #include <unordered_map>
 

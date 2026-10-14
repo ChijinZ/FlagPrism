@@ -327,14 +327,20 @@ CubinData *CuptiPCSampling::getCubinData(uint64_t cubinCrc) {
 
 void CuptiPCSampling::validateSupport(CUcontext context) {
   if (!context)
-    throw std::runtime_error("CUPTI PC sampling capability probe requires an active CUDA context; initialize CUDA before starting pcsampling");
+    throw std::runtime_error(
+        "CUPTI PC sampling capability probe requires an active CUDA context; "
+        "initialize CUDA before starting pcsampling");
   enablePCSampling(context);
   try {
     auto count = getNumStallReasons(context);
     if (!count)
-      throw std::runtime_error("CUPTI PC sampling unsupported: the active device/SDK exposes zero stall reasons");
+      throw std::runtime_error("CUPTI PC sampling unsupported: the active "
+                               "device/SDK exposes zero stall reasons");
   } catch (...) {
-    try { disablePCSampling(context); } catch (...) {}
+    try {
+      disablePCSampling(context);
+    } catch (...) {
+    }
     throw;
   }
   disablePCSampling(context);

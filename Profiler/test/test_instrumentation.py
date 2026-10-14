@@ -23,18 +23,21 @@ def _finalize_sessions_after_test():
 
 def _raw_artifact_path(legacy_path):
     """The public entry now owns a bundle; retain checks on raw inherited ABI."""
-    return legacy_path.with_suffix("") / "raw/native" / ("capture" + legacy_path.suffix)
+    return legacy_path.with_suffix("") / "raw/native" / ("capture" +
+                                                         legacy_path.suffix)
 
 
 def _only_scope_frame(root, name):
     # Oracle on explicit annotation names in one legacy tree, independent of
     # the variable number of launch/context wrapper frames.
     found = []
+
     def visit(node):
         if node.get("frame", {}).get("name") == name:
             found.append(node)
         for child in node.get("children", []):
             visit(child)
+
     visit(root)
     assert len(found) == 1, (name, found)
     return found[0]

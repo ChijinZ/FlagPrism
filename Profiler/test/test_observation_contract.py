@@ -7,15 +7,22 @@ from types import ModuleType
 import pytest
 
 package = ModuleType('observation_contract_test')
-package.__path__ = [str(Path(__file__).parents[1] / 'python/flagtree_profiler')]
+package.__path__ = [
+    str(Path(__file__).parents[1] / 'python/flagtree_profiler')
+]
 sys.modules[package.__name__] = package
 contract = importlib.import_module(package.__name__ + '.observations')
 
 
 def sample(**changes):
-    return dict(id='capture:site:7', capture_id='capture', source='test',
-                semantic='issue', start_tick=100, end_tick=110,
-                clock=dict(domain='test.raw', scope='instance_local'), **changes)
+    return dict(id='capture:site:7',
+                capture_id='capture',
+                source='test',
+                semantic='issue',
+                start_tick=100,
+                end_tick=110,
+                clock=dict(domain='test.raw', scope='instance_local'),
+                **changes)
 
 
 def test_unknown_clock_preserves_ticks_without_fake_microseconds():
@@ -28,8 +35,10 @@ def test_unknown_clock_preserves_ticks_without_fake_microseconds():
 
 def test_producer_conversion_does_not_stretch_to_launch():
     value = sample()
-    value['clock'].update(tick_ns=20, origin_tick=90,
-                          conversion_evidence={'source': 'independent_test_oracle'})
+    value['clock'].update(
+        tick_ns=20,
+        origin_tick=90,
+        conversion_evidence={'source': 'independent_test_oracle'})
     result = contract.observation(value)
     assert result['duration_ns'] == result['relative_start_ns'] == 200
     assert 'kernel_duration' not in result
@@ -48,7 +57,10 @@ def test_unsubstantiated_clock_claims_are_rejected(clock):
 def test_wrap_requires_evidence_not_a_large_invented_duration():
     with pytest.raises(ValueError):
         contract.interval_ticks(250, 5, {'wrap_bits': 8})
-    assert contract.interval_ticks(250, 5, {'wrap_bits': 8, 'wrap_count': 1}) == 11
+    assert contract.interval_ticks(250, 5, {
+        'wrap_bits': 8,
+        'wrap_count': 1
+    }) == 11
 
 
 def test_kernel_name_never_proves_association():
@@ -64,9 +76,15 @@ def test_occurrence_is_not_promoted_to_source_iteration():
 
 
 def test_snapshot_limit_is_preserved_instead_of_claiming_dynamic_history():
-    runs = [dict(decoded=dict(records=[dict(record_kind='TIMELINE',
-                                            op_id=1, logical_instance_id=0,
-                                            start_cycle=100, end_cycle=110)]))]
+    runs = [
+        dict(decoded=dict(records=[
+            dict(record_kind='TIMELINE',
+                 op_id=1,
+                 logical_instance_id=0,
+                 start_cycle=100,
+                 end_cycle=110)
+        ]))
+    ]
     event, = contract.from_ir_runs(runs)
     assert event['storage'] == 'static_site_snapshot'
     assert event['occurrence'] is None and event['duration_ns'] is None
@@ -83,18 +101,32 @@ def test_request_roundtrip_and_invalid_sampling():
 
 
 def test_dynamic_records_keep_site_history_and_verified_invocation():
-    runtime = {'profiler_invocation_id': 'launch-42',
-               'profiler_association_evidence': {'source': 'same_launch_metadata_object'}}
-    records = [dict(record_kind='DYNAMIC_TIMELINE', op_id=3,
-                    logical_instance_id=0, actor_id=0, sequence=index,
-                    attempted_ordinal=index * 3,
-                    start_cycle=100 + index * 10, end_cycle=105 + index * 10)
-               for index in range(3)]
-    events = contract.from_ir_runs([{'runtime_metadata': runtime,
-                                    'decoded': {'records': records}}])
+    runtime = {
+        'profiler_invocation_id': 'launch-42',
+        'profiler_association_evidence': {
+            'source': 'same_launch_metadata_object'
+        }
+    }
+    records = [
+        dict(record_kind='DYNAMIC_TIMELINE',
+             op_id=3,
+             logical_instance_id=0,
+             actor_id=0,
+             sequence=index,
+             attempted_ordinal=index * 3,
+             start_cycle=100 + index * 10,
+             end_cycle=105 + index * 10) for index in range(3)
+    ]
+    events = contract.from_ir_runs([{
+        'runtime_metadata': runtime,
+        'decoded': {
+            'records': records
+        }
+    }])
     assert [event['occurrence'] for event in events] == [0, 1, 2]
     assert [event['attempted_ordinal'] for event in events] == [0, 3, 6]
     assert all(event['association_status'] == 'verified' for event in events)
-    assert all(event['storage'] == 'selected_dynamic_append' for event in events)
+    assert all(event['storage'] == 'selected_dynamic_append'
+               for event in events)
     assert all(event.get('iteration') is None for event in events)
     assert all(event['duration_ns'] is None for event in events)

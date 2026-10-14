@@ -143,7 +143,8 @@ class LaunchHook(Hook):
                 "compiler_metadata":
                 _json_value(compiler_metadata),
                 "compiler_artifacts": {
-                    stage: text for stage, text in kernel.asm.items()
+                    stage: text
+                    for stage, text in kernel.asm.items()
                     if stage in {"ttir", "ttgir", "gcuir", "llir", "ptx"}
                     and isinstance(text, str)
                 },
@@ -164,13 +165,15 @@ class LaunchHook(Hook):
             }
             from ..execution import build_manifest
             try:
-                cls.binaries[key]["execution_manifest"] = _json_value(build_manifest(
-                    kernel.asm, compiler_metadata, target, key))
+                cls.binaries[key]["execution_manifest"] = _json_value(
+                    build_manifest(kernel.asm, compiler_metadata, target, key))
             except Exception as error:
                 # Optional mapping extraction cannot invalidate a real launch.
                 # The error is preserved rather than asserting complete coverage.
                 cls.binaries[key]["execution_manifest"] = {
-                    "schema_version": 1, "binary_id": key, "status": "failed",
+                    "schema_version": 1,
+                    "binary_id": key,
+                    "status": "failed",
                     "reason": f"{type(error).__name__}: {error}",
                 }
         arguments = {
@@ -262,12 +265,19 @@ class LaunchHook(Hook):
         # The exact per-launch LazyDict also reaches the debugger prepare
         # finalizer. This is an identity bridge, never a name/order join.
         metadata._flagprism_invocation_identity = {
-            "invocation_id": f"launch-{id.get()}",
-            "scope_id": id.get(),
-            "binary_id": getattr(bridge.get("kernel"), "hash", None) if bridge else None,
-            "evidence": "same_launch_metadata_object",
-            "session_ids": [session for session, hooks in HookManager.session_hooks.items()
-                            if hooks.get(self, False)],
+            "invocation_id":
+            f"launch-{id.get()}",
+            "scope_id":
+            id.get(),
+            "binary_id":
+            getattr(bridge.get("kernel"), "hash", None) if bridge else None,
+            "evidence":
+            "same_launch_metadata_object",
+            "session_ids": [
+                session
+                for session, hooks in HookManager.session_hooks.items()
+                if hooks.get(self, False)
+            ],
         }
         profiler_native.enter_op(id.get(), lazy_metadata["name"])
         profiler_native.add_metrics(id.get(), fn_metrics)

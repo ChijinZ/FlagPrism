@@ -51,7 +51,8 @@ DEFINE_DISPATCH(ExternLibCupti, activityFlushAll, cuptiActivityFlushAll,
                 uint32_t)
 
 DEFINE_DISPATCH(ExternLibCupti, activityGetNumDroppedRecords,
-                cuptiActivityGetNumDroppedRecords, CUcontext, uint32_t, size_t *)
+                cuptiActivityGetNumDroppedRecords, CUcontext, uint32_t,
+                size_t *)
 
 DEFINE_DISPATCH(ExternLibCupti, activityGetNextRecord,
                 cuptiActivityGetNextRecord, uint8_t *, size_t,

@@ -33,7 +33,8 @@ void InstrumentationProfiler::doFlush() {
   // Flush the instrumentation profiler.
 }
 
-void InstrumentationProfiler::setObservationPrograms(const std::vector<uint32_t> &programs) {
+void InstrumentationProfiler::setObservationPrograms(
+    const std::vector<uint32_t> &programs) {
   observationPrograms = programs;
 }
 
@@ -43,10 +44,12 @@ void InstrumentationProfiler::setRawCaptureEnabled(bool enabled) {
 }
 
 std::vector<uint8_t>
-InstrumentationProfiler::takeRawHostBuffer(uint64_t functionId, uint64_t streamId) {
-  if (!rawCaptureEnabled || rawFunctionId != functionId || rawStreamId != streamId ||
-      rawHostBytes.empty())
-    throw std::runtime_error("No raw instrumentation payload for this function/stream");
+InstrumentationProfiler::takeRawHostBuffer(uint64_t functionId,
+                                           uint64_t streamId) {
+  if (!rawCaptureEnabled || rawFunctionId != functionId ||
+      rawStreamId != streamId || rawHostBytes.empty())
+    throw std::runtime_error(
+        "No raw instrumentation payload for this function/stream");
   return std::exchange(rawHostBytes, {});
 }
 

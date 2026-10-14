@@ -374,7 +374,8 @@ bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
   }
   if (run.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1") {
     const uint32_t dropped = header.writeIdx > header.capacity
-                                 ? header.writeIdx - header.capacity : 0;
+                                 ? header.writeIdx - header.capacity
+                                 : 0;
     if (header.recordSize != kBundleRecordSize ||
         header.overflowCount != dropped || header.reserved0 < header.writeIdx ||
         ((header.flags & RB_FLAG_OVERFLOW) != 0) != (dropped != 0)) {
@@ -446,11 +447,15 @@ bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
           dynamic->raw.sequence != slotIndex ||
           dynamic->raw.attemptedOrdinal >= header.reserved0 ||
           dynamic->raw.endCycle < dynamic->raw.startCycle ||
-          dynamic->raw.durationCycle != dynamic->raw.endCycle - dynamic->raw.startCycle ||
-          (!decoded.records.empty() && dynamic->raw.attemptedOrdinal <=
-              std::get<DecodedDynamicTimelineRecord>(decoded.records.back()).raw.attemptedOrdinal)) {
+          dynamic->raw.durationCycle !=
+              dynamic->raw.endCycle - dynamic->raw.startCycle ||
+          (!decoded.records.empty() &&
+           dynamic->raw.attemptedOrdinal <=
+               std::get<DecodedDynamicTimelineRecord>(decoded.records.back())
+                   .raw.attemptedOrdinal)) {
         decoded = {};
-        return fail(errorMessage, "Incomplete or inconsistent dynamic trace payload");
+        return fail(errorMessage,
+                    "Incomplete or inconsistent dynamic trace payload");
       }
     }
     decoded.records.push_back(record);

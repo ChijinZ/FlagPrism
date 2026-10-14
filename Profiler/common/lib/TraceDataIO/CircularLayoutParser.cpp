@@ -26,8 +26,9 @@ void CircularLayoutParser::parse() {
   uint32_t pos = buffer.position();
   for (int i = 0; i < numBlocks; i++) {
     if (getConfig().selectedBlocks.empty() ||
-        std::find(getConfig().selectedBlocks.begin(), getConfig().selectedBlocks.end(),
-                  static_cast<uint32_t>(i)) != getConfig().selectedBlocks.end()) {
+        std::find(getConfig().selectedBlocks.begin(),
+                  getConfig().selectedBlocks.end(), static_cast<uint32_t>(i)) !=
+            getConfig().selectedBlocks.end()) {
       buffer.seek(pos);
       parseBlock();
     }

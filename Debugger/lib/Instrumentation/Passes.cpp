@@ -1,9 +1,9 @@
 #include "Debugger/Instrumentation/Passes.h"
 
 #include "Debugger/IR/Dialect.h"
+#include "Debugger/Instrumentation/Collectors.h"
 #include "Debugger/Metadata/Passes.h"
 #include "mlir/IR/SymbolTable.h"
-#include "Debugger/Instrumentation/Collectors.h"
 
 #include <algorithm>
 #include <limits>
@@ -14,8 +14,8 @@
 #include "mlir/Dialect/Arith/IR/Arith.h"
 #include "mlir/Dialect/Math/IR/Math.h"
 #ifdef FLAGPRISM_BACKEND_ENFLAME
-#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/GPU/IR/GPUDialect.h"
+#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #endif
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
 #include "mlir/Dialect/SCF/IR/SCF.h"
@@ -159,13 +159,17 @@ constexpr uint32_t kRecordKindSummaryCountBundleU64 = 4;
 constexpr uint32_t kRecordKindSummaryValueBundleF32 = 5;
 constexpr uint32_t kRecordKindTimeline = 6;
 constexpr uint32_t kRecordKindDynamicTimeline = 7;
-constexpr StringLiteral kAttrDynamicTimeline = "flagtree.debug.dynamic_timeline_enabled";
-constexpr StringLiteral kAttrSelectedProgram = "flagtree.debug.selected_program";
+constexpr StringLiteral kAttrDynamicTimeline =
+    "flagtree.debug.dynamic_timeline_enabled";
+constexpr StringLiteral kAttrSelectedProgram =
+    "flagtree.debug.selected_program";
 constexpr StringLiteral kAttrSelectedActor = "flagtree.debug.selected_actor";
 constexpr StringLiteral kAttrSampleEvery = "flagtree.debug.sample_every";
 constexpr StringLiteral kAttrSelectedSites = "flagtree.debug.selected_sites";
-constexpr StringLiteral kAttrSampleClockSafe = "flagtree.debug.sample_clock_safe";
-constexpr StringLiteral kRecordLayoutDynamicTimeline = "selected_dynamic_timeline_v1";
+constexpr StringLiteral kAttrSampleClockSafe =
+    "flagtree.debug.sample_clock_safe";
+constexpr StringLiteral kRecordLayoutDynamicTimeline =
+    "selected_dynamic_timeline_v1";
 // Protocol.h: +16 is recordSize, +20 payloadOffset; +24 is reserved0.
 constexpr int64_t kHeaderAttemptedTotalOffset = 24;
 constexpr uint32_t kRingFlagCounterSaturated = 16;
@@ -904,7 +908,8 @@ Value fieldPointer(OpBuilder &builder, Location loc, Value baseBytePtr,
     offset = builder.create<arith::AddIOp>(
         loc, offset,
         builder.create<arith::ConstantIntOp>(
-            loc, fieldOffset / 4, cast<IntegerType>(offset.getType()).getWidth()));
+            loc, fieldOffset / 4,
+            cast<IntegerType>(offset.getType()).getWidth()));
   }
   return addWordOffset(builder, loc, baseBytePtr, offset);
 }
@@ -1127,15 +1132,17 @@ Value computeDynamicInstanceId(OpBuilder &builder, Location loc) {
   Value nx = builder.create<triton::GetNumProgramsOp>(loc, 0);
   Value ny = builder.create<triton::GetNumProgramsOp>(loc, 1);
   Value xy = builder.create<arith::MulIOp>(loc, nx, ny);
-  Value yz = builder.create<arith::AddIOp>(loc,
-      builder.create<arith::MulIOp>(loc, y, nx),
+  Value yz = builder.create<arith::AddIOp>(
+      loc, builder.create<arith::MulIOp>(loc, y, nx),
       builder.create<arith::MulIOp>(loc, z, xy));
   return builder.create<arith::AddIOp>(loc, x, yz);
 }
 Value loadDynamicHeaderI32(OpBuilder &builder, Location loc, Value ptr,
                            int64_t offset) {
-  return loadI32(builder, loc, fieldPointer(builder, loc, ptr,
-      createI32Constant(builder, loc, 0), offset, builder.getI32Type()));
+  return loadI32(builder, loc,
+                 fieldPointer(builder, loc, ptr,
+                              createI32Constant(builder, loc, 0), offset,
+                              builder.getI32Type()));
 }
 uint32_t dynamicOption(ModuleOp module, StringRef name, uint32_t fallback) {
   auto attr = module->getAttrOfType<IntegerAttr>(name);
@@ -1148,11 +1155,13 @@ Value selectedDynamicWriter(OpBuilder &builder, Location loc, ModuleOp module,
     logicalInstanceId = computeDynamicInstanceId(builder, loc);
   Value programSelected = builder.create<arith::CmpIOp>(
       loc, arith::CmpIPredicate::eq, logicalInstanceId,
-      createI32Constant(builder, loc, dynamicOption(module, kAttrSelectedProgram, 0)));
+      createI32Constant(builder, loc,
+                        dynamicOption(module, kAttrSelectedProgram, 0)));
   Value actor = builder.create<gpu::ThreadIdOp>(loc, gpu::Dimension::x);
   Value actorSelected = builder.create<arith::CmpIOp>(
       loc, arith::CmpIPredicate::eq, actor,
-      builder.create<arith::ConstantIndexOp>(loc, dynamicOption(module, kAttrSelectedActor, 0)));
+      builder.create<arith::ConstantIndexOp>(
+          loc, dynamicOption(module, kAttrSelectedActor, 0)));
   return builder.create<arith::AndIOp>(loc, programSelected, actorSelected);
 }
 #endif
@@ -1190,12 +1199,13 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
   ModuleOp module = func->getParentOfType<ModuleOp>();
   bool dynamic = module && isDynamicTimeline(module);
   Value logicalInstanceId = dynamic ? computeDynamicInstanceId(builder, loc)
-                                   : computeLogicalInstanceId(builder, loc);
+                                    : computeLogicalInstanceId(builder, loc);
 #else
   Value logicalInstanceId = computeLogicalInstanceId(builder, loc);
 #endif
   Value recordsPerInstanceI64 = builder.create<arith::ConstantIntOp>(
-      loc, normalizedRecordsPerInstance, cast<IntegerType>(logicalInstanceId.getType()).getWidth());
+      loc, normalizedRecordsPerInstance,
+      cast<IntegerType>(logicalInstanceId.getType()).getWidth());
   Value instanceBase;
 #ifdef FLAGPRISM_BACKEND_ENFLAME
   if (dynamic)
@@ -1203,22 +1213,26 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
   else
 #endif
     instanceBase = builder.create<arith::MulIOp>(loc, logicalInstanceId,
-                                               recordsPerInstanceI64);
+                                                 recordsPerInstanceI64);
 #ifdef FLAGPRISM_BACKEND_ENFLAME
   Value selectedWriter;
   Value capacity;
   Value payloadOffset;
   if (module && isDynamicTimeline(module)) {
-    selectedWriter = selectedDynamicWriter(builder, loc, module, logicalInstanceId);
+    selectedWriter =
+        selectedDynamicWriter(builder, loc, module, logicalInstanceId);
     // Unselected programs/work-items must not perform the observer's global
     // header traffic merely because they share the instrumented binary.
     auto readHeader = builder.create<scf::IfOp>(
-        loc, TypeRange{builder.getI32Type(), builder.getI32Type()}, selectedWriter, true);
+        loc, TypeRange{builder.getI32Type(), builder.getI32Type()},
+        selectedWriter, true);
     {
       OpBuilder::InsertionGuard nested(builder);
       builder.setInsertionPointToStart(readHeader.thenBlock());
-      Value cap = loadDynamicHeaderI32(builder, loc, ctrlBytePtr, kHeaderCapacityOffset);
-      Value payload = loadDynamicHeaderI32(builder, loc, ctrlBytePtr, kHeaderPayloadOffsetOffset);
+      Value cap = loadDynamicHeaderI32(builder, loc, ctrlBytePtr,
+                                       kHeaderCapacityOffset);
+      Value payload = loadDynamicHeaderI32(builder, loc, ctrlBytePtr,
+                                           kHeaderPayloadOffsetOffset);
       builder.create<scf::YieldOp>(loc, ValueRange{cap, payload});
       builder.setInsertionPointToStart(readHeader.elseBlock());
       Value zero = createI32Constant(builder, loc, 0);
@@ -1227,12 +1241,16 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     capacity = readHeader->getResult(0);
     payloadOffset = readHeader->getResult(1);
   } else {
-    capacity = loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderCapacityOffset);
-    payloadOffset = loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderPayloadOffsetOffset);
+    capacity =
+        loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderCapacityOffset);
+    payloadOffset = loadRingHeaderI32(builder, loc, ctrlBytePtr,
+                                      kHeaderPayloadOffsetOffset);
   }
 #else
-  Value capacity = loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderCapacityOffset);
-  Value payloadOffset = loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderPayloadOffsetOffset);
+  Value capacity =
+      loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderCapacityOffset);
+  Value payloadOffset =
+      loadRingHeaderI32(builder, loc, ctrlBytePtr, kHeaderPayloadOffsetOffset);
 #endif
   Value capacityI64, payloadOffsetBytes, payloadInstanceBaseBytes;
 #ifdef FLAGPRISM_BACKEND_ENFLAME
@@ -1243,19 +1261,22 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
   } else
 #endif
   {
-    capacityI64 = builder.create<arith::ExtUIOp>(loc, builder.getI64Type(), capacity);
-    payloadOffsetBytes = builder.create<arith::ExtUIOp>(loc, builder.getI64Type(), payloadOffset);
-    payloadInstanceBaseBytes = builder.create<arith::MulIOp>(loc, logicalInstanceId,
+    capacityI64 =
+        builder.create<arith::ExtUIOp>(loc, builder.getI64Type(), capacity);
+    payloadOffsetBytes = builder.create<arith::ExtUIOp>(
+        loc, builder.getI64Type(), payloadOffset);
+    payloadInstanceBaseBytes = builder.create<arith::MulIOp>(
+        loc, logicalInstanceId,
         createI64Constant(builder, loc, payloadBytesPerInstance));
   }
   RecordLoweringContext ctx{ctrlBytePtr,
-                               logicalInstanceId,
-                               instanceBase,
-                               capacityI64,
-                               payloadOffsetBytes,
-                               payloadInstanceBaseBytes,
-                               normalizedRecordsPerInstance,
-                               payloadBytesPerInstance};
+                            logicalInstanceId,
+                            instanceBase,
+                            capacityI64,
+                            payloadOffsetBytes,
+                            payloadInstanceBaseBytes,
+                            normalizedRecordsPerInstance,
+                            payloadBytesPerInstance};
 #ifdef FLAGPRISM_BACKEND_ENFLAME
   if (module && isDynamicTimeline(module)) {
     ctx.dynamicTimeline = true;
@@ -1271,7 +1292,8 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
       builder.setInsertionPointToStart(initialize.thenBlock());
       Value zero = createI32Constant(builder, loc, 0);
       for (int i = 0; i < 2; ++i)
-        builder.create<memref::StoreOp>(loc, zero, ctx.dynamicCursor,
+        builder.create<memref::StoreOp>(
+            loc, zero, ctx.dynamicCursor,
             ValueRange{builder.create<arith::ConstantIndexOp>(loc, i)});
     }
     if (ctx.sampleEvery > 1) {
@@ -1294,7 +1316,8 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
         Value selected = builder.create<arith::CmpIOp>(
             loc, arith::CmpIPredicate::eq, remainder,
             createI32Constant(builder, loc, 0));
-        auto gate = builder.create<scf::IfOp>(loc, read->getResultTypes(), selected, true);
+        auto gate = builder.create<scf::IfOp>(loc, read->getResultTypes(),
+                                              selected, true);
         SmallVector<Value> clocks(read->getResults());
         for (auto result : llvm::enumerate(clocks))
           result.value().replaceAllUsesWith(gate->getResult(result.index()));
@@ -1302,7 +1325,8 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
         builder.setInsertionPointToEnd(gate.thenBlock());
         builder.create<scf::YieldOp>(loc, clocks);
         builder.setInsertionPointToStart(gate.elseBlock());
-        SmallVector<Value> zeros(clocks.size(), createI32Constant(builder, loc, 0));
+        SmallVector<Value> zeros(clocks.size(),
+                                 createI32Constant(builder, loc, 0));
         builder.create<scf::YieldOp>(loc, zeros);
         read->removeAttr(kAttrSampleClockSafe);
       }
@@ -2996,13 +3020,15 @@ void emitTimelineStores(OpBuilder &builder, Location loc, Operation *recordOp,
 // Every state change and staging store is inside the sole-writer branch.
 // Cursor state is private to the selected invocation; no global atomic is used.
 void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
-                               Operation *recordOp, const RecordLoweringContext &ctx) {
+                               Operation *recordOp,
+                               const RecordLoweringContext &ctx) {
   auto selected = builder.create<scf::IfOp>(loc, ctx.selectedWriter, false);
   OpBuilder::InsertionGuard guard(builder);
   builder.setInsertionPointToStart(selected.thenBlock());
   Value idx0 = builder.create<arith::ConstantIndexOp>(loc, 0);
   Value idx1 = builder.create<arith::ConstantIndexOp>(loc, 1);
-  Value ordinal = builder.create<memref::LoadOp>(loc, ctx.dynamicCursor, ValueRange{idx1});
+  Value ordinal =
+      builder.create<memref::LoadOp>(loc, ctx.dynamicCursor, ValueRange{idx1});
   Value one = createI32Constant(builder, loc, 1);
   Value zero = createI32Constant(builder, loc, 0);
   Value trueMask = builder.create<arith::ConstantIntOp>(loc, 1, 1);
@@ -3014,14 +3040,17 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
   {
     OpBuilder::InsertionGuard nested(builder);
     builder.setInsertionPointToStart(counterRoom.elseBlock());
-    Value flags = loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr, kHeaderFlagsOffset);
-    flags = builder.create<arith::OrIOp>(loc, flags,
-        createI32Constant(builder, loc, kRingFlagCounterSaturated));
-    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderFlagsOffset, flags, trueMask);
+    Value flags =
+        loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr, kHeaderFlagsOffset);
+    flags = builder.create<arith::OrIOp>(
+        loc, flags, createI32Constant(builder, loc, kRingFlagCounterSaturated));
+    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderFlagsOffset,
+                  flags, trueMask);
   }
   builder.setInsertionPointToStart(counterRoom.thenBlock());
   Value nextOrdinal = builder.create<arith::AddIOp>(loc, ordinal, one);
-  builder.create<memref::StoreOp>(loc, nextOrdinal, ctx.dynamicCursor, ValueRange{idx1});
+  builder.create<memref::StoreOp>(loc, nextOrdinal, ctx.dynamicCursor,
+                                  ValueRange{idx1});
   storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase,
                 kHeaderAttemptedTotalOffset, nextOrdinal, trueMask);
   Value sampleRemainder = builder.create<arith::RemUIOp>(
@@ -3030,36 +3059,51 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
       loc, arith::CmpIPredicate::eq, sampleRemainder, zero);
   auto sampled = builder.create<scf::IfOp>(loc, takeSample, false);
   builder.setInsertionPointToStart(sampled.thenBlock());
-  Value slot = builder.create<memref::LoadOp>(loc, ctx.dynamicCursor, ValueRange{idx0});
+  Value slot =
+      builder.create<memref::LoadOp>(loc, ctx.dynamicCursor, ValueRange{idx0});
   Value nextSlot = builder.create<arith::AddIOp>(loc, slot, one);
-  builder.create<memref::StoreOp>(loc, nextSlot, ctx.dynamicCursor, ValueRange{idx0});
-  Value inBounds = builder.create<arith::CmpIOp>(
-      loc, arith::CmpIPredicate::ult, slot, ctx.capacityI64);
+  builder.create<memref::StoreOp>(loc, nextSlot, ctx.dynamicCursor,
+                                  ValueRange{idx0});
+  Value inBounds = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::ult,
+                                                 slot, ctx.capacityI64);
   auto capacity = builder.create<scf::IfOp>(loc, inBounds, true);
   {
     OpBuilder::InsertionGuard nested(builder);
     builder.setInsertionPointToStart(capacity.thenBlock());
-    Value recordOffset = builder.create<arith::AddIOp>(loc,
-        createI32Constant(builder, loc, kRingHeaderBytes / 4),
-        builder.create<arith::MulIOp>(loc, slot,
-            createI32Constant(builder, loc, kRecordWords)));
+    Value recordOffset = builder.create<arith::AddIOp>(
+        loc, createI32Constant(builder, loc, kRingHeaderBytes / 4),
+        builder.create<arith::MulIOp>(
+            loc, slot, createI32Constant(builder, loc, kRecordWords)));
     std::pair<Value, Value> program{ctx.logicalInstanceId, zero};
-    std::pair<Value, Value> start{recordOp->getOperand(0), recordOp->getOperand(1)};
-    std::pair<Value, Value> end{recordOp->getOperand(2), recordOp->getOperand(3)};
+    std::pair<Value, Value> start{recordOp->getOperand(0),
+                                  recordOp->getOperand(1)};
+    std::pair<Value, Value> end{recordOp->getOperand(2),
+                                recordOp->getOperand(3)};
     Value low = builder.create<arith::SubIOp>(loc, end.first, start.first);
-    Value borrowed = builder.create<arith::CmpIOp>(loc,
-        arith::CmpIPredicate::ult, end.first, start.first);
-    Value borrow = builder.create<arith::ExtUIOp>(loc, builder.getI32Type(), borrowed);
-    Value high = builder.create<arith::SubIOp>(loc,
-        builder.create<arith::SubIOp>(loc, end.second, start.second), borrow);
+    Value borrowed = builder.create<arith::CmpIOp>(
+        loc, arith::CmpIPredicate::ult, end.first, start.first);
+    Value borrow =
+        builder.create<arith::ExtUIOp>(loc, builder.getI32Type(), borrowed);
+    Value high = builder.create<arith::SubIOp>(
+        loc, builder.create<arith::SubIOp>(loc, end.second, start.second),
+        borrow);
     std::pair<Value, Value> duration{low, high};
     auto opId = recordOp->getAttrOfType<IntegerAttr>("op_id");
     SmallVector<Value, kRecordWords> words = {
         createI32Constant(builder, loc, kRecordKindDynamicTimeline),
         createI32Constant(builder, loc, static_cast<uint32_t>(opId.getInt())),
-        program.first, program.second, start.first, start.second,
-        end.first, end.second, duration.first, duration.second,
-        createI32Constant(builder, loc, ctx.selectedActor), slot, ordinal, zero,
+        program.first,
+        program.second,
+        start.first,
+        start.second,
+        end.first,
+        end.second,
+        duration.first,
+        duration.second,
+        createI32Constant(builder, loc, ctx.selectedActor),
+        slot,
+        ordinal,
+        zero,
         createI32Constant(builder, loc, 0x4e563031u),
         createI32Constant(builder, loc, 0x46504459u)};
     // A logical tensor<16xi32> store is partitioned over GCU work-items.
@@ -3067,22 +3111,27 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
     // accidentally storing only that work-item's fraction of the record.
     for (auto word : llvm::enumerate(words))
       storeI32Value(builder, loc, ctx.ctrlBytePtr, recordOffset,
-                    static_cast<int64_t>(word.index()) * 4,
-                    word.value(), trueMask);
+                    static_cast<int64_t>(word.index()) * 4, word.value(),
+                    trueMask);
   }
   {
     OpBuilder::InsertionGuard nested(builder);
     builder.setInsertionPointToStart(capacity.elseBlock());
-    Value drops = loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr, kHeaderOverflowCountOffset);
+    Value drops = loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr,
+                                       kHeaderOverflowCountOffset);
     drops = builder.create<arith::AddIOp>(loc, drops, one);
-    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderOverflowCountOffset, drops, trueMask);
-    Value flags = loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr, kHeaderFlagsOffset);
-    flags = builder.create<arith::OrIOp>(loc, flags,
-        createI32Constant(builder, loc, kRingFlagOverflow));
-    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderFlagsOffset, flags, trueMask);
+    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase,
+                  kHeaderOverflowCountOffset, drops, trueMask);
+    Value flags =
+        loadDynamicHeaderI32(builder, loc, ctx.ctrlBytePtr, kHeaderFlagsOffset);
+    flags = builder.create<arith::OrIOp>(
+        loc, flags, createI32Constant(builder, loc, kRingFlagOverflow));
+    storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderFlagsOffset,
+                  flags, trueMask);
   }
   builder.setInsertionPointAfter(capacity);
-  storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase, kHeaderWriteIdxOffset, nextSlot, trueMask);
+  storeI32Value(builder, loc, ctx.ctrlBytePtr, headerBase,
+                kHeaderWriteIdxOffset, nextSlot, trueMask);
 }
 #endif
 
@@ -3106,7 +3155,8 @@ bool canLowerRecordOp(Operation *op) {
   if (opName == kRecordTimelineOpName) {
 #ifdef FLAGPRISM_BACKEND_ENFLAME
     if (isDynamicTimeline(op->getParentOfType<ModuleOp>()))
-      return op->getNumOperands() == 4 && op->getAttrOfType<IntegerAttr>("op_id");
+      return op->getNumOperands() == 4 &&
+             op->getAttrOfType<IntegerAttr>("op_id");
 #endif
     return op->getNumOperands() == 2 && op->getAttrOfType<IntegerAttr>("op_id");
   }
@@ -3669,31 +3719,37 @@ Operation *createRecordFullValueRefOp(OpBuilder &builder, Operation *anchor,
 
 #ifdef FLAGPRISM_BACKEND_ENFLAME
 SmallVector<Value> createDynamicClockWords(OpBuilder &builder, Location loc,
-                                          bool sampleClockSafe) {
+                                           bool sampleClockSafe) {
   builder.getContext()->getOrLoadDialect<LLVM::LLVMDialect>();
-  ModuleOp module = builder.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  ModuleOp module =
+      builder.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
   constexpr StringLiteral symbol = "_ZN4tops12global_timerEv";
   if (!module.lookupSymbol<LLVM::LLVMFuncOp>(symbol)) {
     OpBuilder::InsertionGuard guard(builder);
     builder.setInsertionPointToStart(module.getBody());
-    builder.create<LLVM::LLVMFuncOp>(loc, symbol,
-        LLVM::LLVMFunctionType::get(builder.getI64Type(), {}));
+    builder.create<LLVM::LLVMFuncOp>(
+        loc, symbol, LLVM::LLVMFunctionType::get(builder.getI64Type(), {}));
   }
   Value selected = selectedDynamicWriter(builder, loc, module);
-  auto read = builder.create<scf::IfOp>(loc,
-      TypeRange{builder.getI32Type(), builder.getI32Type()}, selected, true);
+  auto read = builder.create<scf::IfOp>(
+      loc, TypeRange{builder.getI32Type(), builder.getI32Type()}, selected,
+      true);
   if (sampleClockSafe)
     read->setAttr(kAttrSampleClockSafe, builder.getUnitAttr());
   {
     OpBuilder::InsertionGuard guard(builder);
     builder.setInsertionPointToStart(read.thenBlock());
-    Value clock = builder.create<LLVM::CallOp>(loc,
-        TypeRange{builder.getI64Type()}, symbol, ValueRange{})->getResult(0);
+    Value clock =
+        builder
+            .create<LLVM::CallOp>(loc, TypeRange{builder.getI64Type()}, symbol,
+                                  ValueRange{})
+            ->getResult(0);
     Value low = builder.create<LLVM::TruncOp>(loc, builder.getI32Type(), clock);
-    Value shift = builder.create<LLVM::ConstantOp>(loc, builder.getI64Type(),
-        builder.getI64IntegerAttr(32));
+    Value shift = builder.create<LLVM::ConstantOp>(
+        loc, builder.getI64Type(), builder.getI64IntegerAttr(32));
     Value upper = builder.create<LLVM::LShrOp>(loc, clock, shift);
-    Value high = builder.create<LLVM::TruncOp>(loc, builder.getI32Type(), upper);
+    Value high =
+        builder.create<LLVM::TruncOp>(loc, builder.getI32Type(), upper);
     builder.create<scf::YieldOp>(loc, ValueRange{low, high});
     builder.setInsertionPointToStart(read.elseBlock());
     Value zero = createI32Constant(builder, loc, 0);
@@ -3713,7 +3769,8 @@ Value createDeviceCycleRead(OpBuilder &builder, Location loc,
   // crashes the SDK private-tag pass, and arbitrary tt.extern_elementwise
   // symbols are rejected by its Triton legalization.
   builder.getContext()->getOrLoadDialect<LLVM::LLVMDialect>();
-  ModuleOp module = builder.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  ModuleOp module =
+      builder.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
   constexpr StringLiteral symbol = "_ZN4tops12global_timerEv";
   if (!module.lookupSymbol<LLVM::LLVMFuncOp>(symbol)) {
     OpBuilder::InsertionGuard guard(builder);
@@ -3727,23 +3784,27 @@ Value createDeviceCycleRead(OpBuilder &builder, Location loc,
   module->setAttr("flagtree.debug.clock_unit", builder.getStringAttr("tick"));
   if (isDynamicTimeline(module)) {
     Value selected = selectedDynamicWriter(builder, loc, module);
-    auto read = builder.create<scf::IfOp>(loc, TypeRange{builder.getI64Type()}, selected, true);
+    auto read = builder.create<scf::IfOp>(loc, TypeRange{builder.getI64Type()},
+                                          selected, true);
     {
       OpBuilder::InsertionGuard guard(builder);
       builder.setInsertionPointToStart(read.thenBlock());
-      auto call = builder.create<LLVM::CallOp>(loc, TypeRange{builder.getI64Type()}, symbol,
-                                              ValueRange{});
+      auto call = builder.create<LLVM::CallOp>(
+          loc, TypeRange{builder.getI64Type()}, symbol, ValueRange{});
       if (sampleClockSafe)
         call->setAttr(kAttrSampleClockSafe, builder.getUnitAttr());
       Value clock = call->getResult(0);
       builder.create<scf::YieldOp>(loc, ValueRange{clock});
       builder.setInsertionPointToStart(read.elseBlock());
-      builder.create<scf::YieldOp>(loc, ValueRange{createI64Constant(builder, loc, 0)});
+      builder.create<scf::YieldOp>(
+          loc, ValueRange{createI64Constant(builder, loc, 0)});
     }
     return read->getResult(0);
   }
-  return builder.create<LLVM::CallOp>(loc, TypeRange{builder.getI64Type()}, symbol,
-                                     ValueRange{})->getResult(0);
+  return builder
+      .create<LLVM::CallOp>(loc, TypeRange{builder.getI64Type()}, symbol,
+                            ValueRange{})
+      ->getResult(0);
 #else
   OperationState state(loc, "tt.elementwise_inline_asm");
   state.addAttribute("asm_string", builder.getStringAttr("MOV $0, SYS_CNT"));
@@ -3765,22 +3826,27 @@ Operation *createRecordTimelineOp(OpBuilder &builder, Operation *anchor,
   const bool sampleClockSafe = target.op->getNumRegions() == 0;
 #ifdef FLAGPRISM_BACKEND_ENFLAME
   if (isDynamicTimeline(target.op->getParentOfType<ModuleOp>())) {
-    auto start = createDynamicClockWords(builder, target.op->getLoc(), sampleClockSafe);
+    auto start =
+        createDynamicClockWords(builder, target.op->getLoc(), sampleClockSafe);
     builder.setInsertionPointAfter(anchor);
-    auto end = createDynamicClockWords(builder, target.op->getLoc(), sampleClockSafe);
+    auto end =
+        createDynamicClockWords(builder, target.op->getLoc(), sampleClockSafe);
     OperationState state(target.op->getLoc(), kRecordTimelineOpName);
     state.addOperands({start[0], start[1], end[0], end[1]});
     state.addAttribute("op_id", builder.getI32IntegerAttr(target.opId));
     state.addAttribute("scope_id", builder.getI32IntegerAttr(target.scopeId));
-    state.addAttribute(kAttrRecordIndex, builder.getI32IntegerAttr(recordIndex));
+    state.addAttribute(kAttrRecordIndex,
+                       builder.getI32IntegerAttr(recordIndex));
     builder.setInsertionPointAfter(end[0].getDefiningOp());
     return builder.create(state);
   }
 #endif
-  Value startCycle = createDeviceCycleRead(builder, target.op->getLoc(), sampleClockSafe);
+  Value startCycle =
+      createDeviceCycleRead(builder, target.op->getLoc(), sampleClockSafe);
 
   builder.setInsertionPointAfter(anchor);
-  Value endCycle = createDeviceCycleRead(builder, target.op->getLoc(), sampleClockSafe);
+  Value endCycle =
+      createDeviceCycleRead(builder, target.op->getLoc(), sampleClockSafe);
 
   OperationState state(target.op->getLoc(), kRecordTimelineOpName);
   state.addOperands({startCycle, endCycle});
@@ -3828,12 +3894,14 @@ void insertRecordOps(OpBuilder &builder, const InstrumentationTarget &target,
 
   Operation *anchor = target.op;
   if (target.hasTimeline) {
-    appendRecordPlanEntry(recordPlan, nextRecordIndex, target,
+    appendRecordPlanEntry(
+        recordPlan, nextRecordIndex, target,
 #ifdef FLAGPRISM_BACKEND_ENFLAME
-                          isDynamicTimeline(target.op->getParentOfType<ModuleOp>()) ?
-                              kRecordKindDynamicTimeline :
+        isDynamicTimeline(target.op->getParentOfType<ModuleOp>())
+            ? kRecordKindDynamicTimeline
+            :
 #endif
-                          kRecordKindTimeline);
+            kRecordKindTimeline);
     anchor = createRecordTimelineOp(builder, anchor, target, nextRecordIndex++);
   }
   if (target.hasSummary) {
@@ -4114,8 +4182,10 @@ struct InsertInstrumentationPass
     if (auto sites = module->getAttrOfType<ArrayAttr>(kAttrSelectedSites)) {
       for (Attribute site : sites) {
         auto value = dyn_cast<IntegerAttr>(site);
-        if (!value || value.getInt() <= 0 || value.getInt() > std::numeric_limits<int32_t>::max()) {
-          module.emitError("dynamic timeline sites must be positive int32 static operation IDs");
+        if (!value || value.getInt() <= 0 ||
+            value.getInt() > std::numeric_limits<int32_t>::max()) {
+          module.emitError("dynamic timeline sites must be positive int32 "
+                           "static operation IDs");
           signalPassFailure();
           return;
         }
@@ -4130,14 +4200,17 @@ struct InsertInstrumentationPass
 #ifdef FLAGPRISM_BACKEND_ENFLAME
     if (isDynamicTimeline(module)) {
       bool optionsValid = timelineEnabled && timelineOnly;
-      for (StringRef name : {kAttrSelectedProgram, kAttrSelectedActor, kAttrSampleEvery}) {
+      for (StringRef name :
+           {kAttrSelectedProgram, kAttrSelectedActor, kAttrSampleEvery}) {
         auto attr = module->getAttrOfType<IntegerAttr>(name);
-        if (attr && (attr.getInt() < 0 || static_cast<uint64_t>(attr.getInt()) >
-                        std::numeric_limits<uint32_t>::max()))
+        if (attr &&
+            (attr.getInt() < 0 || static_cast<uint64_t>(attr.getInt()) >
+                                      std::numeric_limits<uint32_t>::max()))
           optionsValid = false;
       }
       if (!optionsValid || dynamicOption(module, kAttrSampleEvery, 1) == 0) {
-        module.emitError("GCU dynamic trace requires timeline-only mode and uint32 selection/sampling options");
+        module.emitError("GCU dynamic trace requires timeline-only mode and "
+                         "uint32 selection/sampling options");
         signalPassFailure();
         return;
       }
@@ -4269,8 +4342,9 @@ struct InsertInstrumentationPass
       const bool hasFullValueRef = valueDump.has_value();
       const bool hasFullAddressRef = addressDump.has_value();
       const uint32_t staticSite = static_cast<uint32_t>(opIdAttr.getInt());
-      const bool hasTimeline = timelineEnabled && shouldEmitTimeline(op) &&
-                              (selectedSites.empty() || selectedSites.contains(staticSite));
+      const bool hasTimeline =
+          timelineEnabled && shouldEmitTimeline(op) &&
+          (selectedSites.empty() || selectedSites.contains(staticSite));
       if (hasTimeline && !selectedSites.empty())
         matchedSites.insert(staticSite);
       const bool hasPrimaryRecords = hasSummary || hasMemoryEvent ||
@@ -4325,8 +4399,10 @@ struct InsertInstrumentationPass
     });
 
     if (matchedSites.size() != selectedSites.size()) {
-      constexpr StringLiteral message = "requested dynamic timeline site does not exist or is not instrumentable";
-      module->setAttr("flagtree.debug.dynamic_site_error", builder.getStringAttr(message));
+      constexpr StringLiteral message = "requested dynamic timeline site does "
+                                        "not exist or is not instrumentable";
+      module->setAttr("flagtree.debug.dynamic_site_error",
+                      builder.getStringAttr(message));
       module.emitError(message);
       signalPassFailure();
       return;
@@ -4379,7 +4455,7 @@ struct InsertInstrumentationPass
 #ifdef FLAGPRISM_BACKEND_ENFLAME
               isDynamicTimeline(module) ? kRecordLayoutDynamicTimeline :
 #endif
-              kRecordLayoutDeterministicCompactV1));
+                                        kRecordLayoutDeterministicCompactV1));
       module->setAttr(
           kAttrRecordPlan,
           builder.getStringAttr(serializeRecordPlanToJson(recordPlan)));
@@ -4450,15 +4526,24 @@ void setDebugTimelineEnabled(ModuleOp module, bool enabled) {
 }
 
 llvm::Error setDebugDynamicTimelineOptions(ModuleOp module, uint32_t program,
-                                    uint32_t actor, uint32_t sampleEvery) {
+                                           uint32_t actor,
+                                           uint32_t sampleEvery) {
   if (program > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()))
-    return llvm::createStringError(llvm::inconvertibleErrorCode(), "GCU selected program must fit signed 32-bit indexing");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "GCU selected program must fit signed 32-bit indexing");
   if (sampleEvery == 0)
-    return llvm::createStringError(llvm::inconvertibleErrorCode(), "dynamic timeline sample_every must be positive");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "dynamic timeline sample_every must be positive");
   if (actor != 0)
-    return llvm::createStringError(llvm::inconvertibleErrorCode(), "GCU dynamic timeline currently selects work-item 0 only");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "GCU dynamic timeline currently selects work-item 0 only");
 #ifndef FLAGPRISM_BACKEND_ENFLAME
-  return llvm::createStringError(llvm::inconvertibleErrorCode(), "selected dynamic timeline currently requires Enflame");
+  return llvm::createStringError(
+      llvm::inconvertibleErrorCode(),
+      "selected dynamic timeline currently requires Enflame");
 #else
   OpBuilder builder(module.getContext());
   module->setAttr(kAttrDynamicTimeline, builder.getBoolAttr(true));
@@ -4470,19 +4555,26 @@ llvm::Error setDebugDynamicTimelineOptions(ModuleOp module, uint32_t program,
 }
 
 llvm::Error setDebugDynamicTimelineSites(ModuleOp module,
-                                  const std::vector<uint32_t> &sites) {
+                                         const std::vector<uint32_t> &sites) {
 #ifndef FLAGPRISM_BACKEND_ENFLAME
-  return llvm::createStringError(llvm::inconvertibleErrorCode(), "selected dynamic timeline currently requires Enflame");
+  return llvm::createStringError(
+      llvm::inconvertibleErrorCode(),
+      "selected dynamic timeline currently requires Enflame");
 #else
   if (sites.empty())
-    return llvm::createStringError(llvm::inconvertibleErrorCode(), "dynamic timeline site selection cannot be empty");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "dynamic timeline site selection cannot be empty");
   Builder builder(module.getContext());
   SmallVector<Attribute> values;
   llvm::DenseSet<uint32_t> unique;
   for (uint32_t site : sites) {
-    if (site == 0 || site > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) ||
+    if (site == 0 ||
+        site > static_cast<uint32_t>(std::numeric_limits<int32_t>::max()) ||
         !unique.insert(site).second)
-      return llvm::createStringError(llvm::inconvertibleErrorCode(), "dynamic timeline sites must be unique positive int32 static IDs");
+      return llvm::createStringError(
+          llvm::inconvertibleErrorCode(),
+          "dynamic timeline sites must be unique positive int32 static IDs");
     values.push_back(builder.getI32IntegerAttr(site));
   }
   module->setAttr(kAttrSelectedSites, builder.getArrayAttr(values));
@@ -4543,20 +4635,23 @@ llvm::Expected<uint32_t> prepareLateObservationAbi(ModuleOp module) {
       entries.push_back(function);
   });
   if (entries.size() != 1)
-    return llvm::createStringError(llvm::inconvertibleErrorCode(),
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
         "late observation ABI requires one public Triton entry function");
   auto function = entries.front();
   if (module->hasAttr(kAttrInstrumentationInserted) ||
       function->hasAttr(kAttrInstrumentationInserted))
     return llvm::createStringError(llvm::inconvertibleErrorCode(),
-        "late observation ABI must be prepared before snapshot instrumentation");
+                                   "late observation ABI must be prepared "
+                                   "before snapshot instrumentation");
   if (function->hasAttr(kAttrHiddenArgIndex)) {
     auto index = function->getAttrOfType<IntegerAttr>(kAttrHiddenArgIndex);
     if (!index || index.getInt() < 0 ||
         static_cast<uint64_t>(index.getInt()) >= function.getNumArguments() ||
         static_cast<uint64_t>(index.getInt()) + 1 != function.getNumArguments())
-      return llvm::createStringError(llvm::inconvertibleErrorCode(),
-                                    "late observation hidden formal identity is invalid");
+      return llvm::createStringError(
+          llvm::inconvertibleErrorCode(),
+          "late observation hidden formal identity is invalid");
     const auto argumentIndex = static_cast<unsigned>(index.getInt());
     auto pointer = dyn_cast<triton::PointerType>(
         function.getArgument(argumentIndex).getType());
@@ -4565,13 +4660,15 @@ llvm::Expected<uint32_t> prepareLateObservationAbi(ModuleOp module) {
     if (!pointer || pointer.getAddressSpace() != 1 ||
         !pointer.getPointeeType().isInteger(32) || !role ||
         role.getValue() != kHiddenArgName)
-      return llvm::createStringError(llvm::inconvertibleErrorCode(),
-                                    "late observation hidden formal role/type is invalid");
+      return llvm::createStringError(
+          llvm::inconvertibleErrorCode(),
+          "late observation hidden formal role/type is invalid");
   }
   Builder builder(module.getContext());
   if (failed(ensureHiddenDebugArgument(function, builder, true)))
-    return llvm::createStringError(llvm::inconvertibleErrorCode(),
-                                  "failed to append late observation control pointer");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "failed to append late observation control pointer");
   annotateFunction(function, builder);
   module->setAttr(kAttrHiddenArgAbiEnabled, builder.getBoolAttr(true));
   module->setAttr(kAttrRecordLayout,
@@ -4581,8 +4678,9 @@ llvm::Expected<uint32_t> prepareLateObservationAbi(ModuleOp module) {
   eraseDebugCollectMarkers(module);
   auto argument = function->getAttrOfType<IntegerAttr>(kAttrHiddenArgIndex);
   if (!argument)
-    return llvm::createStringError(llvm::inconvertibleErrorCode(),
-                                  "late observation control pointer identity missing");
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "late observation control pointer identity missing");
   return static_cast<uint32_t>(argument.getInt());
 }
 

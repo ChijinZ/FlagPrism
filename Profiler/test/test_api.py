@@ -68,7 +68,9 @@ def test_profile_multiple_sessions(tmp_path: pathlib.Path):
             for paused in (False, True):
                 if paused:
                     profiler.deactivate(first)
-                with pytest.raises(RuntimeError, match="does not support overlapping sessions"):
+                with pytest.raises(
+                        RuntimeError,
+                        match="does not support overlapping sessions"):
                     profiler.start(str(tmp_path / "rejected"))
                 assert not (tmp_path / "rejected").exists()
             profiler.activate(first)
@@ -169,8 +171,11 @@ def test_hook(tmp_path: pathlib.Path):
     assert temp_file.exists()
 
 
-@pytest.mark.skipif(_target_backend() not in {"cuda", "hip"},
-                    reason="inherited native instrumentation hook requires CUDA or HIP; other backends use Debugger hooks")
+@pytest.mark.skipif(
+    _target_backend() not in {"cuda", "hip"},
+    reason=
+    "inherited native instrumentation hook requires CUDA or HIP; other backends use Debugger hooks"
+)
 def test_hook_manager(tmp_path: pathlib.Path):
     # Launch hook is a singleton
     HookManager.register(LaunchHook(), 0)
@@ -367,13 +372,15 @@ def test_throw(tmp_path: pathlib.Path):
                                                       1) in deactivate_error
 
 
-def test_unknown_session_does_not_change_existing_hooks(tmp_path: pathlib.Path):
+def test_unknown_session_does_not_change_existing_hooks(
+        tmp_path: pathlib.Path):
     session_id = profiler.start(str(tmp_path / "existing"), hook="triton")
     try:
         hooks_before = list(HookManager.active_hooks)
         sessions_before = set(HookManager.session_hooks)
         for operation in (profiler.activate, profiler.deactivate):
-            with pytest.raises(RuntimeError, match="Session has not been initialized"):
+            with pytest.raises(RuntimeError,
+                               match="Session has not been initialized"):
                 operation(session_id + 1000)
             assert HookManager.active_hooks == hooks_before
             assert set(HookManager.session_hooks) == sessions_before

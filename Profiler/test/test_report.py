@@ -462,13 +462,22 @@ def test_bundle_preserves_evidence_and_unknown_context(tmp_path):
 
 def test_bundle_retains_actual_compiler_ir_without_inline_duplicates(tmp_path):
     import hashlib
-    artifacts = {'ttir': 'module { // source origin\n}\n',
-                 'gcuir': 'module { // vector work-items\n}\n'}
-    document = dict(backend='enflame', associations=[], binaries=[{
-        'id': 'binary1', 'source': {}, 'compiler_artifacts': artifacts,
-        'execution_manifest': {'schema_version': 1, 'binary_id': 'binary1',
-                               'status': 'partial'},
-    }])
+    artifacts = {
+        'ttir': 'module { // source origin\n}\n',
+        'gcuir': 'module { // vector work-items\n}\n'
+    }
+    document = dict(backend='enflame',
+                    associations=[],
+                    binaries=[{
+                        'id': 'binary1',
+                        'source': {},
+                        'compiler_artifacts': artifacts,
+                        'execution_manifest': {
+                            'schema_version': 1,
+                            'binary_id': 'binary1',
+                            'status': 'partial'
+                        },
+                    }])
     output = tmp_path / 'bundle'
     report.write_bundle(report.analyze(document), document, output)
     binary, = json.loads((output / 'ai/binaries.json').read_text())
@@ -545,7 +554,11 @@ def test_automatic_export_keeps_legacy_trace_as_unverified_raw_evidence(
         (output /
          "ai/rejected.jsonl").read_text())["original_record"] == original
     assert not list(output.glob("*.vendor.json"))
-    assert json.loads((output / "raw/native/capture.vendor.json").read_text())["associations"] == [original]
+    assert json.loads(
+        (output /
+         "raw/native/capture.vendor.json").read_text())["associations"] == [
+             original
+         ]
     manifest = json.loads((output / "manifest.json").read_text())
     assert "ai/call_tree.json" in manifest["files"]
     assert manifest["availability"]["producer"]["counters"][

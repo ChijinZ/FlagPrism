@@ -1,11 +1,13 @@
 """Compiler artifact dispatch and explicit source-association coverage."""
 import json
 
-
 _ADAPTERS = {
-    'cuda': 'execution_nvidia', 'nvidia': 'execution_nvidia',
-    'gcu': 'execution_enflame', 'enflame': 'execution_enflame',
-    'ascend': 'execution_ascend', 'cann': 'execution_ascend',
+    'cuda': 'execution_nvidia',
+    'nvidia': 'execution_nvidia',
+    'gcu': 'execution_enflame',
+    'enflame': 'execution_enflame',
+    'ascend': 'execution_ascend',
+    'cann': 'execution_ascend',
     'npu': 'execution_ascend',
 }
 
@@ -18,7 +20,8 @@ def build_manifest(asm, compiler_metadata, target, binary_id):
     """
     import importlib
 
-    backend = target.get('backend') if isinstance(target, dict) else getattr(target, 'backend', None)
+    backend = target.get('backend') if isinstance(target, dict) else getattr(
+        target, 'backend', None)
     module_name = _ADAPTERS.get(str(backend or '').lower())
     metadata = dict(compiler_metadata)
     tracked = metadata.get('debug_tracked_table')
@@ -42,21 +45,36 @@ def build_manifest(asm, compiler_metadata, target, binary_id):
         if type(identity) is int and identity > 0:
             operations[str(identity)] = entry
     result = {
-        'schema_version': 1, 'binary_id': binary_id, 'backend': backend,
-        'source_operations': list(operations.values()),
-        'source_operation_identity': 'compiler_assigned_within_binary',
-        'status': 'unsupported',
-        'limits': ['A binary/source link does not prove each lowered site has source provenance.'],
+        'schema_version':
+        1,
+        'binary_id':
+        binary_id,
+        'backend':
+        backend,
+        'source_operations':
+        list(operations.values()),
+        'source_operation_identity':
+        'compiler_assigned_within_binary',
+        'status':
+        'unsupported',
+        'limits': [
+            'A binary/source link does not prove each lowered site has source provenance.'
+        ],
     }
     if module_name is None:
         result['reason'] = 'No execution-mapping adapter for this backend'
         return result
     adapter = importlib.import_module('.' + module_name, __package__)
-    mapping = adapter.build_execution_mapping(
-        asm, metadata, binary_id=binary_id, source_operations=operations)
+    mapping = adapter.build_execution_mapping(asm,
+                                              metadata,
+                                              binary_id=binary_id,
+                                              source_operations=operations)
     result['mapping'] = mapping
     result['status'] = mapping['status']
-    result['source_association_count'] = len(mapping.get('source_associations', []))
-    result['source_origin_association_count'] = len(mapping.get('source_origin_associations', []))
-    result['source_origin_semantics'] = 'Compiler locations identify origin candidates, not exclusive cost ownership.'
+    result['source_association_count'] = len(
+        mapping.get('source_associations', []))
+    result['source_origin_association_count'] = len(
+        mapping.get('source_origin_associations', []))
+    result[
+        'source_origin_semantics'] = 'Compiler locations identify origin candidates, not exclusive cost ownership.'
     return result

@@ -189,14 +189,24 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
 
     metadata["debug_enabled"] = True
     request = debug_config.get("debug_observation_request")
-    if request is not None and _target_backend(metadata) in {"ascend", "cann", "npu"}:
+    if request is not None and _target_backend(metadata) in {
+            "ascend", "cann", "npu"
+    }:
         programs = request.get("programs")
         if not isinstance(programs, list) or len(programs) != 1:
-            raise ValueError("Ascend actor trace requires exactly one logical program")
-        if request.get("sites") is not None or request.get("sample_every") != 1:
-            raise ValueError("Ascend late trace currently requires all sites and sample_every=1")
-        if not set(request.get("semantics", [])) <= {"issue", "wait_bracket", "control_checkpoint"}:
-            raise ValueError("Ascend late trace provides issue, wait_bracket and control_checkpoint")
+            raise ValueError(
+                "Ascend actor trace requires exactly one logical program")
+        if request.get("sites") is not None or request.get(
+                "sample_every") != 1:
+            raise ValueError(
+                "Ascend late trace currently requires all sites and sample_every=1"
+            )
+        if not set(request.get("semantics", [])) <= {
+                "issue", "wait_bracket", "control_checkpoint"
+        }:
+            raise ValueError(
+                "Ascend late trace provides issue, wait_bracket and control_checkpoint"
+            )
         # Resolve source metadata before erasing markers; late recording itself
         # observes actual post-lowering native sites, whose source relation may
         # remain partial after the vendor compiler.
@@ -205,24 +215,44 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
         fd.add_assign_debug_op_id(metadata_pm)
         passes.common.add_inliner(metadata_pm)
         passes.common.add_symbol_dce(metadata_pm)
-        _run_pass_manager(metadata_pm, mod, "flagtree_late_observation_metadata")
-        metadata["debug_metadata_json"] = fd.get_debug_kernel_metadata_json(mod)
-        metadata["debug_tracked_table"] = json.loads(fd.get_debug_tracked_op_table_json(mod))
+        _run_pass_manager(metadata_pm, mod,
+                          "flagtree_late_observation_metadata")
+        metadata["debug_metadata_json"] = fd.get_debug_kernel_metadata_json(
+            mod)
+        metadata["debug_tracked_table"] = json.loads(
+            fd.get_debug_tracked_op_table_json(mod))
         metadata["debug_kernel_id"] = fd.get_debug_kernel_id(mod)
         index = fd.prepare_late_observation_abi(mod)
         capacity = request["max_events_per_instance"]
         if capacity > (2**32 - 2) // 3:
-            raise ValueError("Ascend actor trace allocation exceeds protocol capacity")
+            raise ValueError(
+                "Ascend actor trace allocation exceeds protocol capacity")
         metadata.update({
-            "debug_launch_hidden_arg": True, "debug_protocol_version": 2,
-            "debug_record_level": 1, "debug_record_size": 64,
-            "debug_record_layout": "ascend_actor_dynamic_v1",
-            "debug_records_per_instance": 0, "debug_record_capacity": 3 * capacity + 1,
-            "debug_export_mode": "POST_KERNEL_EXPORT", "debug_record_plan": [],
-            "flagprism_ascend_trace_source_argument_index": int(index),
-            "flagprism_ascend_trace_capacity": capacity,
-            "flagprism_ascend_trace_program": programs[0],
-            "flagprism_ascend_observation_request": request,
+            "debug_launch_hidden_arg":
+            True,
+            "debug_protocol_version":
+            2,
+            "debug_record_level":
+            1,
+            "debug_record_size":
+            64,
+            "debug_record_layout":
+            "ascend_actor_dynamic_v1",
+            "debug_records_per_instance":
+            0,
+            "debug_record_capacity":
+            3 * capacity + 1,
+            "debug_export_mode":
+            "POST_KERNEL_EXPORT",
+            "debug_record_plan": [],
+            "flagprism_ascend_trace_source_argument_index":
+            int(index),
+            "flagprism_ascend_trace_capacity":
+            capacity,
+            "flagprism_ascend_trace_program":
+            programs[0],
+            "flagprism_ascend_observation_request":
+            request,
         })
         return
     if _target_backend(metadata) in {"gcu", "enflame"}:
@@ -254,17 +284,24 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     request = debug_config.get("debug_observation_request")
     if request is not None:
         if _target_backend(metadata) not in {"gcu", "enflame"}:
-            raise ValueError("Dynamic Debugger observation requests currently require the GCU backend")
+            raise ValueError(
+                "Dynamic Debugger observation requests currently require the GCU backend"
+            )
         programs = request.get("programs")
         if not isinstance(programs, list) or len(programs) != 1:
-            raise ValueError("GCU selected trace requires exactly one logical program")
+            raise ValueError(
+                "GCU selected trace requires exactly one logical program")
         if request.get("semantics") != ["source_control_interval"]:
-            raise ValueError("GCU IR trace provides source_control_interval only")
+            raise ValueError(
+                "GCU IR trace provides source_control_interval only")
         if type(programs[0]) is not int or not 0 <= programs[0] <= 0x7fffffff:
-            raise ValueError("GCU selected program must fit validated signed 32-bit indexing")
+            raise ValueError(
+                "GCU selected program must fit validated signed 32-bit indexing"
+            )
         metadata["debug_dynamic_index_bits"] = 32
         metadata["debug_clock_carrier"] = "llvm_i64_words"
-        fd.set_debug_dynamic_timeline_options(mod, programs[0], 0, request["sample_every"])
+        fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
+                                              request["sample_every"])
         if request.get("sites") is not None:
             fd.set_debug_dynamic_timeline_sites(mod, request["sites"])
         metadata["debug_dynamic_selected_sites"] = request.get("sites")

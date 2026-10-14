@@ -13,10 +13,10 @@
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinAttributes.h"
 #include "mlir/IR/Location.h"
-#include "llvm/Support/raw_ostream.h"
-#include <functional>
 #include "mlir/Pass/PassManager.h"
 #include "passes.h"
+#include "llvm/Support/raw_ostream.h"
+#include <functional>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl_bind.h>
@@ -44,7 +44,8 @@ py::dict locationOrigin(mlir::Location loc) {
   } else if (auto fused = mlir::dyn_cast<mlir::FusedLoc>(loc)) {
     result["kind"] = "fused";
     py::list candidates;
-    for (auto child : fused.getLocations()) candidates.append(locationOrigin(child));
+    for (auto child : fused.getLocations())
+      candidates.append(locationOrigin(child));
     result["candidates"] = candidates;
     if (auto metadata = fused.getMetadata()) {
       std::string metadataText;
@@ -62,7 +63,7 @@ py::dict locationOrigin(mlir::Location loc) {
   }
   return result;
 }
-}
+} // namespace
 
 void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
@@ -142,20 +143,23 @@ void init_triton_proton(py::module &&m) {
   });
 
   // Proton operations
-  m.def("create_proton_record",
-        [](mlir::OpBuilder &opBuilder, bool isStart,
-           const std::string &name, std::optional<mlir::Location> location) -> void {
-          auto nameAttr = mlir::StringAttr::get(opBuilder.getContext(),
-                                                llvm::StringRef(name));
-          auto loc = location.value_or(opBuilder.getUnknownLoc());
-          opBuilder.create<proton::RecordOp>(loc, isStart, nameAttr);
-        }, py::arg("op_builder"), py::arg("is_start"), py::arg("name"),
-        py::arg("location") = py::none());
+  m.def(
+      "create_proton_record",
+      [](mlir::OpBuilder &opBuilder, bool isStart, const std::string &name,
+         std::optional<mlir::Location> location) -> void {
+        auto nameAttr = mlir::StringAttr::get(opBuilder.getContext(),
+                                              llvm::StringRef(name));
+        auto loc = location.value_or(opBuilder.getUnknownLoc());
+        opBuilder.create<proton::RecordOp>(loc, isStart, nameAttr);
+      },
+      py::arg("op_builder"), py::arg("is_start"), py::arg("name"),
+      py::arg("location") = py::none());
 
   m.def("add_select_proton_programs", [](mlir::PassManager &pm,
                                          const std::vector<int32_t> &programs) {
     for (int32_t program : programs)
-      if (program < 0) throw std::invalid_argument("Program identities must be nonnegative");
+      if (program < 0)
+        throw std::invalid_argument("Program identities must be nonnegative");
     pm.addPass(proton::createSelectProtonProgramsPass(programs));
   });
 

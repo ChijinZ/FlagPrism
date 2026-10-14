@@ -22,8 +22,8 @@ public:
   InstrumentationProfiler *setMode(const std::vector<std::string> &mode);
   void setRawCaptureEnabled(bool enabled);
   void setObservationPrograms(const std::vector<uint32_t> &programs);
-  std::vector<uint8_t> takeRawHostBuffer(uint64_t functionId, uint64_t streamId);
-
+  std::vector<uint8_t> takeRawHostBuffer(uint64_t functionId,
+                                         uint64_t streamId);
 
 protected:
   // Profiler

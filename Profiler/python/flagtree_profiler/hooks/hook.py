@@ -63,9 +63,13 @@ class HookManager:
                     hook.abort_enter(metadata, error)
                 except BaseException as cleanup_error:
                     if hasattr(error, "add_note"):
-                        error.add_note(f"{type(hook).__name__} rollback failed: {cleanup_error}")
+                        error.add_note(
+                            f"{type(hook).__name__} rollback failed: {cleanup_error}"
+                        )
                     else:
-                        print(f"{type(hook).__name__} rollback failed: {cleanup_error}", file=sys.stderr)
+                        print(
+                            f"{type(hook).__name__} rollback failed: {cleanup_error}",
+                            file=sys.stderr)
             raise
 
     @staticmethod

@@ -504,7 +504,8 @@ py::dict toPyDecodedRecord(const DecodedRecord &record) {
     dict["duration_cycle"] = raw.durationCycle;
     return dict;
   }
-  if (const auto *timeline = std::get_if<DecodedDynamicTimelineRecord>(&record)) {
+  if (const auto *timeline =
+          std::get_if<DecodedDynamicTimelineRecord>(&record)) {
     const auto &raw = timeline->raw;
     dict["record_kind"] = "DYNAMIC_TIMELINE";
     dict["op_id"] = raw.header.opId;

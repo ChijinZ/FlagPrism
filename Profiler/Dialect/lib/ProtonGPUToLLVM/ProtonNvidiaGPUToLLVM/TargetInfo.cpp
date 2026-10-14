@@ -1,6 +1,6 @@
 #include "Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.h"
-#include "Dialect/ProtonGPU/IR/Dialect.h"
 #include "Conversion/ProtonGPUToLLVM/Utility.h"
+#include "Dialect/ProtonGPU/IR/Dialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMTypes.h"
 #include "mlir/Dialect/LLVMIR/NVVMDialect.h"
@@ -19,11 +19,13 @@ Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
   auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
   auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
   auto *clock = builder.newConstantOperand(isClock64 ? "%clock64" : "%clock");
-  auto mod = rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  auto mod =
+      rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
   if (mod->hasAttr("proton.selected_programs")) {
     builder.create("mov")->o(isClock64 ? "u64" : "u32")(
         dest, builder.newConstantOperand(0));
-    mov(dest, clock).predicate(getProgramCollectionPredicate(mod, loc, rewriter));
+    mov(dest, clock)
+        .predicate(getProgramCollectionPredicate(mod, loc, rewriter));
   } else {
     mov(dest, clock);
   }

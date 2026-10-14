@@ -23,13 +23,17 @@ def _enflame_counters(command, output, *, metrics, replay_mode, env):
 def _ascend_counters(command, output, *, metrics, replay_mode, env):
     from .cann import collect_msprof
     if replay_mode not in ("none", "independent"):
-        raise ValueError("CANN counter collection supports independent replay only")
+        raise ValueError(
+            "CANN counter collection supports independent replay only")
     if isinstance(metrics, str):
-        metrics = tuple(part.strip() for part in metrics.split(",") if part.strip())
-    return collect_msprof(
-        command, output,
-        metrics=metrics or ("ArithmeticUtilization", "PipeUtilization"),
-        replay_mode="independent", env=env)
+        metrics = tuple(part.strip() for part in metrics.split(",")
+                        if part.strip())
+    return collect_msprof(command,
+                          output,
+                          metrics=metrics
+                          or ("ArithmeticUtilization", "PipeUtilization"),
+                          replay_mode="independent",
+                          env=env)
 
 
 _DEFAULT = CaptureBackend()

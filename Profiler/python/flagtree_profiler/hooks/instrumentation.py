@@ -178,8 +178,10 @@ class InstrumentationHook(Hook):
         for capture in cls.observation_captures:
             members = capture['session_ids']
             if session is None or session in members:
-                result.append({key: value for key, value in capture.items()
-                               if key != 'session_ids'})
+                result.append({
+                    key: value
+                    for key, value in capture.items() if key != 'session_ids'
+                })
                 if session is None:
                     members.clear()
                 else:
@@ -189,11 +191,15 @@ class InstrumentationHook(Hook):
         cls.observation_captures = retained
         return result
 
-    def __init__(self, mode_obj: Union[None, str, mode.InstrumentationMode], *, observation_plan=None):
+    def __init__(self,
+                 mode_obj: Union[None, str, mode.InstrumentationMode],
+                 *,
+                 observation_plan=None):
         # Mapping of function objects to their scope ID pairs
         self.mode: mode.InstrumentationMode = _interpret_mode(mode_obj)
         self.observation_plan = observation_plan
-        self.selected_programs = None if observation_plan is None else observation_plan["output_selection"]["programs"]
+        self.selected_programs = None if observation_plan is None else observation_plan[
+            "output_selection"]["programs"]
 
         self.allocator = CudaAllocator(self)
         self.buffer = None
@@ -201,8 +207,10 @@ class InstrumentationHook(Hook):
         self.observation_metadata = type(self)._function_observation_metadata
         self._observation_lock = threading.Lock()
         self._observation_run_lock = threading.Lock()
-        self._observation_entered = ContextVar('proton_observation_entered', default=False)
-        self._observation_stack = ContextVar('proton_observation_stack', default=())
+        self._observation_entered = ContextVar('proton_observation_entered',
+                                               default=False)
+        self._observation_stack = ContextVar('proton_observation_stack',
+                                             default=())
         self.capture_observations = False
 
     def activate(self):
@@ -222,11 +230,13 @@ class InstrumentationHook(Hook):
         self.capture_observations = backend_name == "nvidia"
         if self.capture_observations:
             profiler_native.set_raw_capture_enabled(True)
-            profiler_native.set_observation_programs(self.selected_programs or [])
+            profiler_native.set_observation_programs(self.selected_programs
+                                                     or [])
 
         def to_llvmir_passes(pm):
             if self.selected_programs is not None:
-                triton_proton.add_select_proton_programs(pm, self.selected_programs)
+                triton_proton.add_select_proton_programs(
+                    pm, self.selected_programs)
             is_long_clk = False if mode.Optimize.CLOCK32 in self.mode.optimizations else True
             triton_proton.add_convert_proton_to_protongpu(
                 pm, self.mode.metric_type, self.mode.sampling_strategy,
@@ -274,12 +284,17 @@ class InstrumentationHook(Hook):
             # Own the shared scratch allocator before compilation/allocation,
             # not just after the launcher has already chosen a device buffer.
             locked = instrumentation_hook.capture_observations
-            if locked and not instrumentation_hook._observation_run_lock.acquire(blocking=False):
-                raise RuntimeError('Concurrent NVIDIA instrumented JIT launches are unsupported')
+            if locked and not instrumentation_hook._observation_run_lock.acquire(
+                    blocking=False):
+                raise RuntimeError(
+                    'Concurrent NVIDIA instrumented JIT launches are unsupported'
+                )
             try:
                 kwargs["instrumentation_mode"] = str(original_mode)
                 if instrumentation_hook.selected_programs is not None:
-                    kwargs["instrumentation_mode"] += ':selected_programs=' + ','.join(map(str, instrumentation_hook.selected_programs))
+                    kwargs[
+                        "instrumentation_mode"] += ':selected_programs=' + ','.join(
+                            map(str, instrumentation_hook.selected_programs))
                 return original_run(jit_function, *args, **kwargs)
             finally:
                 if locked:
@@ -348,13 +363,24 @@ class InstrumentationHook(Hook):
             scope_id_parents = triton_proton.get_scope_id_parents(module)
             from ..source_origins_nvidia import capture_scope_origins
             scope_origins, origin_sources = capture_scope_origins(
-                triton_proton.get_scope_id_origins(module), binary_id=hash, compiler_ir_path=ir_path)
+                triton_proton.get_scope_id_origins(module),
+                binary_id=hash,
+                compiler_ir_path=ir_path)
             self.observation_metadata[function] = {
-                'binary_id': hash, 'scope_id_names': list(scope_id_names),
-                'scope_id_origins': scope_origins, 'scope_origin_sources': origin_sources,
-                'scope_id_parents': list(scope_id_parents),
-                'compiler_ir_sha256': hashlib.sha256(Path(ir_path).read_bytes()).hexdigest(),
-                'compiler_metadata': json.loads(Path(metadata_path).read_text())
+                'binary_id':
+                hash,
+                'scope_id_names':
+                list(scope_id_names),
+                'scope_id_origins':
+                scope_origins,
+                'scope_origin_sources':
+                origin_sources,
+                'scope_id_parents':
+                list(scope_id_parents),
+                'compiler_ir_sha256':
+                hashlib.sha256(Path(ir_path).read_bytes()).hexdigest(),
+                'compiler_metadata':
+                json.loads(Path(metadata_path).read_text())
                 if metadata_path else None,
             }
             profiler_native.init_function_metadata(function, name,
@@ -371,43 +397,79 @@ class InstrumentationHook(Hook):
     def enter(self, metadata: LazyDict) -> None:
         func = metadata.data.get("function")
         stream = metadata.data.get("stream")
-        alloc_size = 0 if self.buffer is None else self.buffer.element_size() * self.buffer.numel()
+        alloc_size = 0 if self.buffer is None else self.buffer.element_size(
+        ) * self.buffer.numel()
         if self.capture_observations:
             if not self._observation_lock.acquire(blocking=False):
-                raise RuntimeError('Concurrent NVIDIA instrumented launches share one buffer and are unsupported')
+                raise RuntimeError(
+                    'Concurrent NVIDIA instrumented launches share one buffer and are unsupported'
+                )
             self._observation_entered.set(True)
         try:
-            if self.capture_observations and any(int(site) > 255 or int(site) < 0 for site, _ in self.observation_metadata.get(func, {}).get('scope_id_names', [])):
-                raise RuntimeError('NVIDIA Proton scope identity exceeds the eight-bit ring ABI; reduce the number of explicit scopes')
-            if self.observation_plan is not None and not self.observation_metadata.get(func, {}).get('scope_id_names'):
-                raise RuntimeError('NVIDIA source_control_interval requires explicit Proton scopes; annotate the kernel with enter_scope/exit_scope and enable Triton semantics')
+            if self.capture_observations and any(
+                    int(site) > 255 or int(site) < 0
+                    for site, _ in self.observation_metadata.get(func, {}).get(
+                        'scope_id_names', [])):
+                raise RuntimeError(
+                    'NVIDIA Proton scope identity exceeds the eight-bit ring ABI; reduce the number of explicit scopes'
+                )
+            if self.observation_plan is not None and not self.observation_metadata.get(
+                    func, {}).get('scope_id_names'):
+                raise RuntimeError(
+                    'NVIDIA source_control_interval requires explicit Proton scopes; annotate the kernel with enter_scope/exit_scope and enable Triton semantics'
+                )
             if self.capture_observations:
                 from .launch import LaunchHook, id as launch_scope
-                identity = getattr(metadata, '_flagprism_invocation_identity', None)
+                identity = getattr(metadata, '_flagprism_invocation_identity',
+                                   None)
                 identity = identity if isinstance(identity, dict) else {}
-                scope_id = launch_scope.get() if LaunchHook() in HookManager.active_hooks else None
+                scope_id = launch_scope.get() if LaunchHook(
+                ) in HookManager.active_hooks else None
                 if identity.get('scope_id') != scope_id:
                     scope_id = None
-                binary_id = self.observation_metadata.get(func, {}).get('binary_id')
-                rows = [row for row in LaunchHook.launches
-                        if row['scope_id'] == scope_id and row['binary_id'] == binary_id]
-                associated = len(rows) == 1 and identity.get('binary_id') == binary_id
-                session_ids = {session for session, hooks in HookManager.session_hooks.items()
-                               if hooks.get(self, False)}
-                self._observation_stack.set(self._observation_stack.get() + ({
-                    'scope_id': scope_id if associated else None,
-                    'invocation_id': f'launch-{scope_id}' if associated else None,
-                    'association_evidence': {'basis': 'same_metadata_object_and_active_launch_hook_scope',
-                                             'metadata_bridge': identity.get('evidence'),
-                                             'scope_id': scope_id, 'binary_id': binary_id}
-                    if associated else None,
-                    'session_ids': session_ids, 'function': func,
-                    'stream_handle': int(stream),
-                },))
-            has_scopes = bool(self.observation_metadata.get(func, {}).get('scope_id_names'))
-            if self.selected_programs is not None and (self.observation_metadata.get(func, {}).get('compiler_metadata') or {}).get('num_ctas', 1) != 1:
-                raise RuntimeError('NVIDIA program selection requires num_ctas=1; CTA clusters are unsupported')
-            profiler_native.enter_instrumented_op(stream, func, self._data_ptr() if has_scopes else 0, alloc_size if has_scopes else 0)
+                binary_id = self.observation_metadata.get(func,
+                                                          {}).get('binary_id')
+                rows = [
+                    row for row in LaunchHook.launches
+                    if row['scope_id'] == scope_id
+                    and row['binary_id'] == binary_id
+                ]
+                associated = len(rows) == 1 and identity.get(
+                    'binary_id') == binary_id
+                session_ids = {
+                    session
+                    for session, hooks in HookManager.session_hooks.items()
+                    if hooks.get(self, False)
+                }
+                self._observation_stack.set(self._observation_stack.get() + (
+                    {
+                        'scope_id': scope_id if associated else None,
+                        'invocation_id':
+                        f'launch-{scope_id}' if associated else None,
+                        'association_evidence': {
+                            'basis':
+                            'same_metadata_object_and_active_launch_hook_scope',
+                            'metadata_bridge': identity.get('evidence'),
+                            'scope_id': scope_id,
+                            'binary_id': binary_id
+                        } if associated else None,
+                        'session_ids': session_ids,
+                        'function': func,
+                        'stream_handle': int(stream),
+                    }, ))
+            has_scopes = bool(
+                self.observation_metadata.get(func, {}).get('scope_id_names'))
+            if self.selected_programs is not None and (
+                    self.observation_metadata.get(
+                        func, {}).get('compiler_metadata') or {}).get(
+                            'num_ctas', 1) != 1:
+                raise RuntimeError(
+                    'NVIDIA program selection requires num_ctas=1; CTA clusters are unsupported'
+                )
+            profiler_native.enter_instrumented_op(
+                stream, func,
+                self._data_ptr() if has_scopes else 0,
+                alloc_size if has_scopes else 0)
         except BaseException:
             self.abort_enter(metadata)
             raise
@@ -422,12 +484,19 @@ class InstrumentationHook(Hook):
     def exit(self, metadata: LazyDict) -> None:
         func = metadata.data.get("function")
         stream = metadata.data.get("stream")
-        alloc_size = 0 if self.buffer is None else self.buffer.element_size() * self.buffer.numel()
+        alloc_size = 0 if self.buffer is None else self.buffer.element_size(
+        ) * self.buffer.numel()
         try:
-            has_scopes = bool(self.observation_metadata.get(func, {}).get('scope_id_names'))
-            profiler_native.exit_instrumented_op(stream, func, self._data_ptr() if has_scopes else 0, alloc_size if has_scopes else 0)
-            has_scopes = bool(self.observation_metadata.get(func, {}).get('scope_id_names'))
-            if has_scopes and (InstrumentationHook.enable_host_buffer or self.capture_observations):
+            has_scopes = bool(
+                self.observation_metadata.get(func, {}).get('scope_id_names'))
+            profiler_native.exit_instrumented_op(
+                stream, func,
+                self._data_ptr() if has_scopes else 0,
+                alloc_size if has_scopes else 0)
+            has_scopes = bool(
+                self.observation_metadata.get(func, {}).get('scope_id_names'))
+            if has_scopes and (InstrumentationHook.enable_host_buffer
+                               or self.capture_observations):
                 self._populate_host_buffer(func, stream)
             if self.capture_observations and has_scopes:
                 self._export_observation_capture(func)
@@ -446,8 +515,10 @@ class InstrumentationHook(Hook):
         from ..observations import observation
         stack = self._observation_stack.get()
         launch = stack[-1] if stack else {
-            'scope_id': None, 'invocation_id': None,
-            'association_evidence': None, 'session_ids': set(),
+            'scope_id': None,
+            'invocation_id': None,
+            'association_evidence': None,
+            'session_ids': set(),
         }
         self._observation_stack.set(stack[:-1])
         if InstrumentationHook.host_buffer is None:
@@ -460,33 +531,61 @@ class InstrumentationHook(Hook):
         metadata = self.observation_metadata.get(function, {})
         scopes = dict(metadata.get('scope_id_names', []))
         decoded = decode_proton_ring(
-            raw, capture_id=capture_id,
+            raw,
+            capture_id=capture_id,
             invocation_id=launch['invocation_id'],
-            association_evidence=launch['association_evidence'], scopes=scopes,
+            association_evidence=launch['association_evidence'],
+            scopes=scopes,
             granularity=str(self.mode.granularity).lower().split('.')[-1],
-            clock_bits=32 if mode.Optimize.CLOCK32 in self.mode.optimizations else 43)
+            clock_bits=32
+            if mode.Optimize.CLOCK32 in self.mode.optimizations else 43)
         if self.observation_plan is not None:
             decoded = select_observations(decoded, self.observation_plan)
         for value in decoded['observations']:
             value['compiler_site'] = {
-                'kind': 'explicit_proton_scope', 'binary_id': metadata.get('binary_id'),
-                'scope_id': value['site'],
-                'origin': metadata.get('scope_id_origins', {}).get(str(value['site']),
-                           {'status': 'unknown', 'semantic': 'source_region_origin'}),
+                'kind':
+                'explicit_proton_scope',
+                'binary_id':
+                metadata.get('binary_id'),
+                'scope_id':
+                value['site'],
+                'origin':
+                metadata.get('scope_id_origins',
+                             {}).get(str(value['site']), {
+                                 'status': 'unknown',
+                                 'semantic': 'source_region_origin'
+                             }),
             }
-        decoded['observations'] = [observation(value)
-                                   for value in decoded['observations']]
+        decoded['observations'] = [
+            observation(value) for value in decoded['observations']
+        ]
         cls.observation_captures.append({
-            'capture_id': capture_id, 'scope_id': launch['scope_id'],
-            'process_id': os.getpid(), 'stream_handle': launch.get('stream_handle'),
-            'invocation_id': launch['invocation_id'],
-            'session_ids': launch['session_ids'], **metadata,
-            'raw_encoding': 'base64_proton_ring_v1',
-            'raw_sha256': hashlib.sha256(raw).hexdigest(),
-            'raw_base64': base64.b64encode(raw).decode('ascii'),
-            'decoded': decoded,
-            'collection_boundary': 'after_inherited_native_buffer_synchronization',
-            'capture_notes': ['Raw export reuses the inherited native parser host transfer; owned bytes are copied before its callback returns.'],
+            'capture_id':
+            capture_id,
+            'scope_id':
+            launch['scope_id'],
+            'process_id':
+            os.getpid(),
+            'stream_handle':
+            launch.get('stream_handle'),
+            'invocation_id':
+            launch['invocation_id'],
+            'session_ids':
+            launch['session_ids'],
+            **metadata,
+            'raw_encoding':
+            'base64_proton_ring_v1',
+            'raw_sha256':
+            hashlib.sha256(raw).hexdigest(),
+            'raw_base64':
+            base64.b64encode(raw).decode('ascii'),
+            'decoded':
+            decoded,
+            'collection_boundary':
+            'after_inherited_native_buffer_synchronization',
+            'capture_notes': [
+                'Raw export reuses the inherited native parser host transfer; owned bytes are copied before its callback returns.'
+            ],
         })
 
     def _populate_host_buffer(self, function: Any, stream: Any = None) -> None:
@@ -576,10 +675,13 @@ class InstrumentationHook(Hook):
             data_portion = InstrumentationHook.host_buffer[
                 header_size:].view_as(self.buffer)
             if self.capture_observations:
-                payload = profiler_native.get_raw_host_buffer(int(function), int(stream))
+                payload = profiler_native.get_raw_host_buffer(
+                    int(function), int(stream))
                 if len(payload) != alloc_size:
-                    raise RuntimeError('Native raw instrumentation payload size mismatch')
-                host_payload = torch.frombuffer(bytearray(payload), dtype=torch.uint8)
+                    raise RuntimeError(
+                        'Native raw instrumentation payload size mismatch')
+                host_payload = torch.frombuffer(bytearray(payload),
+                                                dtype=torch.uint8)
                 data_portion.view(torch.uint8).copy_(host_payload)
             else:
                 data_portion.copy_(self.buffer.cpu())

@@ -134,18 +134,22 @@ def export_capture(base, output, counters=None, context=None):
     _report.write_bundle(result, document, output, context, complete=False)
     raw_native = Path(output) / "raw/native"
     raw_native.mkdir(parents=True, exist_ok=False)
-    for suffix in (".vendor.json", ".meta.json", ".hatchet", ".timeline.json", ".chrome_trace", ".launches.json"):
+    for suffix in (".vendor.json", ".meta.json", ".hatchet", ".timeline.json",
+                   ".chrome_trace", ".launches.json"):
         source = base.with_suffix(suffix)
         if source.exists():
             shutil.copyfile(source, raw_native / ("capture" + suffix))
     (raw_native / "README.txt").write_text(
         "Original collector artifacts. A legacy trace may contain unverified clock assumptions; "
-        "use normalized ai/events.jsonl and typed ai/observations.json for analysis.\n")
+        "use normalized ai/events.jsonl and typed ai/observations.json for analysis.\n"
+    )
     if unverified_trace is not None:
-        (Path(output) / "ai/raw_native_trace.json").write_text(json.dumps({
-            "source": "legacy_collector_trace", "timing_status": "unverified",
-            "original_trace": unverified_trace,
-        }) + "\n")
+        (Path(output) / "ai/raw_native_trace.json").write_text(
+            json.dumps({
+                "source": "legacy_collector_trace",
+                "timing_status": "unverified",
+                "original_trace": unverified_trace,
+            }) + "\n")
     observations = base.with_suffix('.observations.json')
     if observations.exists():
         shutil.copyfile(observations, Path(output) / 'ai/observations.json')

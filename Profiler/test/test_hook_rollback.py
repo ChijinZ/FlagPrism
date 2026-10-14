@@ -9,6 +9,7 @@ def test_enter_failure_rolls_back_successful_hooks_in_reverse(monkeypatch):
     original = ValueError('buffer is in use')
 
     class Probe(Hook):
+
         def __init__(self, name, fail=False):
             self.name, self.fail = name, fail
 
@@ -21,10 +22,14 @@ def test_enter_failure_rolls_back_successful_hooks_in_reverse(monkeypatch):
             assert error is original
             events.append(('abort', self.name))
 
-    monkeypatch.setattr(HookManager, 'active_hooks',
-                        [Probe('scope'), Probe('observer'), Probe('reject', True)])
+    monkeypatch.setattr(
+        HookManager, 'active_hooks',
+        [Probe('scope'),
+         Probe('observer'),
+         Probe('reject', True)])
     with pytest.raises(ValueError) as caught:
         HookManager.enter(None)
     assert caught.value is original
-    assert events == [('enter', 'scope'), ('enter', 'observer'), ('enter', 'reject'),
-                      ('abort', 'observer'), ('abort', 'scope')]
+    assert events == [('enter', 'scope'), ('enter', 'observer'),
+                      ('enter', 'reject'), ('abort', 'observer'),
+                      ('abort', 'scope')]

@@ -235,15 +235,16 @@ TEST_F(CircularLayoutParserTest, TimeShift) {
 
 TEST_F(CircularLayoutParserTest, SelectedBlockSkipsUnselectedBytes) {
   // An unselected CTA slot is never decoded, even if its payload is stale.
-  const std::vector<uint32_t> valid = {kPreamble, 1, 3, 16, 4,
-                                      0x02000000, 4096, 0x82000000, 8192};
+  const std::vector<uint32_t> valid = {kPreamble,  1,    3,          16,  4,
+                                       0x02000000, 4096, 0x82000000, 8192};
   config.numBlocks = 2;
   config.totalUnits = 1;
   config.scratchMemSize = valid.size() * sizeof(uint32_t);
   config.uidVec = {0};
   config.selectedBlocks = {1};
   testData.resize(config.numBlocks * config.scratchMemSize, 0);
-  std::memcpy(testData.data() + config.scratchMemSize, valid.data(), config.scratchMemSize);
+  std::memcpy(testData.data() + config.scratchMemSize, valid.data(),
+              config.scratchMemSize);
   auto buffer = ByteSpan(testData.data(), testData.size());
   CircularLayoutParser parser(buffer, config);
   parser.parse();

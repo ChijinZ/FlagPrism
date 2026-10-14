@@ -395,8 +395,7 @@ public:
 
 namespace {
 class SelectProtonProgramsPass
-    : public PassWrapper<SelectProtonProgramsPass,
-                               OperationPass<ModuleOp>> {
+    : public PassWrapper<SelectProtonProgramsPass, OperationPass<ModuleOp>> {
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(SelectProtonProgramsPass)
   explicit SelectProtonProgramsPass(std::vector<int32_t> programs)
@@ -406,10 +405,11 @@ public:
     mod->setAttr("proton.selected_programs",
                  DenseI32ArrayAttr::get(mod.getContext(), programs));
   }
+
 private:
   std::vector<int32_t> programs;
 };
-}
+} // namespace
 
 std::unique_ptr<OperationPass<ModuleOp>>
 createSelectProtonProgramsPass(const std::vector<int32_t> &programs) {

@@ -1172,7 +1172,8 @@ TEST(DebuggerDecodeTest, MarksMissingTrackedOpInReport) {
 }
 
 TEST(DebuggerDecodeTest, DynamicTraceRetainsRepeatedSiteAndOverflow) {
-  auto run = makeRunWithRecordSize(2, 3, kBundleRecordSize, 1, RB_FLAG_OVERFLOW);
+  auto run =
+      makeRunWithRecordSize(2, 3, kBundleRecordSize, 1, RB_FLAG_OVERFLOW);
   run.runtimeMetadata.recordLayout = "selected_dynamic_timeline_v1";
   RingBufferHeader dynamicHeader{};
   std::memcpy(&dynamicHeader, run.rawBuffer.data(), sizeof(dynamicHeader));
@@ -1197,7 +1198,8 @@ TEST(DebuggerDecodeTest, DynamicTraceRetainsRepeatedSiteAndOverflow) {
   ASSERT_TRUE(decodeExportedRun(run, decoded, &error)) << error;
   ASSERT_EQ(decoded.records.size(), 2u);
   EXPECT_EQ(decoded.header.overflowCount, 1u);
-  const auto &second = std::get<DecodedDynamicTimelineRecord>(decoded.records[1]).raw;
+  const auto &second =
+      std::get<DecodedDynamicTimelineRecord>(decoded.records[1]).raw;
   EXPECT_EQ(second.header.opId, 19u);
   EXPECT_EQ(second.sequence, 1u);
   EXPECT_EQ(second.attemptedOrdinal, 3u);

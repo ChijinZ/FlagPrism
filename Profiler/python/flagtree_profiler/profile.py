@@ -84,12 +84,14 @@ def _instrumentation_record_capacity() -> int:
     return buffer_mb * 1024 * 1024 // _IR_RECORD_SIZE_BYTES
 
 
-def _activate_instrumentation(backend: Optional[str] = None, request=None,
-                              *, clear_runs: bool = True) -> None:
+def _activate_instrumentation(backend: Optional[str] = None,
+                              request=None,
+                              *,
+                              clear_runs: bool = True) -> None:
     import flagtree.debugger as debugger
 
-    record_capacity = (_instrumentation_record_capacity() if request is None
-                       else request.max_events_per_instance)
+    record_capacity = (_instrumentation_record_capacity()
+                       if request is None else request.max_events_per_instance)
     if clear_runs:
         debugger.clear_exported_runs()
     debugger.activate(
@@ -141,11 +143,16 @@ def _take_instrumentation_runs() -> list[dict]:
             run.get("debug_kernel_name", ""),
             "debug_tracked_table":
             list(run.get("debug_tracked_table") or []),
-            "semantic_observations": run.get("semantic_observations") or [],
-            "raw_encoding": ("base64_ascend_actor_dynamic_v1" if runtime_metadata.get("record_layout") == "ascend_actor_dynamic_v1"
-                             else "base64_debugger_protocol_v2"),
-            "raw_base64": base64.b64encode(raw_buffer).decode("ascii"),
-            "raw_sha256": hashlib.sha256(raw_buffer).hexdigest(),
+            "semantic_observations":
+            run.get("semantic_observations") or [],
+            "raw_encoding":
+            ("base64_ascend_actor_dynamic_v1"
+             if runtime_metadata.get("record_layout")
+             == "ascend_actor_dynamic_v1" else "base64_debugger_protocol_v2"),
+            "raw_base64":
+            base64.b64encode(raw_buffer).decode("ascii"),
+            "raw_sha256":
+            hashlib.sha256(raw_buffer).hexdigest(),
         })
     for run in runtime_runs:
         normalized.append({
@@ -210,7 +217,8 @@ def _internal_timeline_events_for_run(run_index: int, run: dict,
     runtime.setdefault('capture_id', f'ir-capture-{run_index}')
     for record in from_ir_runs([dict(run, runtime_metadata=runtime)]):
         clock = record['clock']
-        if (record['duration_ns'] is None or record['relative_start_ns'] is None
+        if (record['duration_ns'] is None
+                or record['relative_start_ns'] is None
                 or clock['alignment'] == 'unverified'):
             continue
         instance = record.get('program')
@@ -224,8 +232,10 @@ def _internal_timeline_events_for_run(run_index: int, run: dict,
             pid += 0 if instance is None else instance + 1
         events.append({
             'name': _tracked_op_name(entry) if entry else f'op_{op_id}',
-            'cat': 'flagtree.source_control_snapshot', 'ph': 'X',
-            'pid': pid, 'tid': instance or 0,
+            'cat': 'flagtree.source_control_snapshot',
+            'ph': 'X',
+            'pid': pid,
+            'tid': instance or 0,
             'ts': record['relative_start_ns'] / 1000,
             'dur': record['duration_ns'] / 1000,
             'args': record,
@@ -263,7 +273,8 @@ def _augment_timeline(path: Path,
     events = timeline.setdefault('traceEvents', [])
     additions = []
     for run_index, run in enumerate(runs):
-        additions.extend(_internal_timeline_events_for_run(run_index, run, None))
+        additions.extend(
+            _internal_timeline_events_for_run(run_index, run, None))
     if additions:
         events.extend(additions)
         path.write_text(json.dumps(timeline, indent=2) + '\n')
@@ -866,19 +877,34 @@ def _augment_instrumentation_artifacts(
     base = Path(name)
     from .observations import from_ir_runs
     base.with_suffix('.observations.json').write_text(
-        json.dumps({'schema_version': 1, 'observations': from_ir_runs(runs),
-                    'captures': [{
-                        'capture_id': (run.get('runtime_metadata') or {}).get('capture_id') or f'ir-capture-{index}',
-                        'runtime_metadata': run.get('runtime_metadata') or {},
-                        'header': (run.get('decoded') or {}).get('header') or {},
-                        'actors': (run.get('decoded') or {}).get('actors') or [],
-                        'dropped': (run.get('decoded') or {}).get('dropped'),
-                        'record_layout': (run.get('runtime_metadata') or {}).get('record_layout'),
-                        'counter_saturated': bool(((run.get('decoded') or {}).get('header') or {}).get('flags', 0) & 16),
-                        'raw_encoding': run.get('raw_encoding'),
-                        'raw_base64': run.get('raw_base64'),
-                        'raw_sha256': run.get('raw_sha256'),
-                    } for index, run in enumerate(runs)]}, indent=2) + '\n')
+        json.dumps(
+            {
+                'schema_version':
+                1,
+                'observations':
+                from_ir_runs(runs),
+                'captures': [{
+                    'capture_id': (run.get('runtime_metadata') or {}).get(
+                        'capture_id') or f'ir-capture-{index}',
+                    'runtime_metadata':
+                    run.get('runtime_metadata') or {},
+                    'header': (run.get('decoded') or {}).get('header') or {},
+                    'actors': (run.get('decoded') or {}).get('actors') or [],
+                    'dropped': (run.get('decoded') or {}).get('dropped'),
+                    'record_layout':
+                    (run.get('runtime_metadata') or {}).get('record_layout'),
+                    'counter_saturated':
+                    bool(((run.get('decoded') or {}).get('header') or {}
+                          ).get('flags', 0) & 16),
+                    'raw_encoding':
+                    run.get('raw_encoding'),
+                    'raw_base64':
+                    run.get('raw_base64'),
+                    'raw_sha256':
+                    run.get('raw_sha256'),
+                } for index, run in enumerate(runs)]
+            },
+            indent=2) + '\n')
     _augment_timeline(
         base.with_suffix(".timeline.json"),
         runs,
@@ -917,7 +943,10 @@ def _export_native_observations(state):
         return
     path = Path(state["name"]).with_suffix(".observations.json")
     existing = json.loads(path.read_text()) if path.exists() else {
-        "schema_version": 1, "observations": [], "captures": []}
+        "schema_version": 1,
+        "observations": [],
+        "captures": []
+    }
     existing.setdefault("captures", []).extend(captures)
     existing.setdefault("observations", []).extend(
         record for capture in captures
@@ -1090,23 +1119,33 @@ def start(
     if observation_request is not None:
         from .observations import ObservationRequest
         if isinstance(observation_request, dict):
-            observation_request = ObservationRequest.from_dict(observation_request)
+            observation_request = ObservationRequest.from_dict(
+                observation_request)
         if not isinstance(observation_request, ObservationRequest):
-            raise TypeError("observation_request must be an ObservationRequest or dictionary")
+            raise TypeError(
+                "observation_request must be an ObservationRequest or dictionary"
+            )
         if hook != "instrumentation":
-            raise ValueError("observation_request requires hook='instrumentation'")
+            raise ValueError(
+                "observation_request requires hook='instrumentation'")
         if backend == "instrumentation":
-            target_backend = triton.runtime.driver.active.get_current_target().backend
+            target_backend = triton.runtime.driver.active.get_current_target(
+            ).backend
             if target_backend != "cuda":
-                raise ValueError("This instrumentation request lowering requires CUDA")
+                raise ValueError(
+                    "This instrumentation request lowering requires CUDA")
             if mode is not None:
-                raise ValueError("Use either an observation request or explicit instrumentation mode")
+                raise ValueError(
+                    "Use either an observation request or explicit instrumentation mode"
+                )
             from .observations_nvidia import lower_request
             from .mode import Default
             observation_plan = lower_request(observation_request)
             mode = Default(**observation_plan["mode_options"])
         elif not (_is_enflame_backend(backend) or _is_cann_backend(backend)):
-            raise ValueError("Explicit requests support Enflame, CANN, or CUDA backend='instrumentation' modes")
+            raise ValueError(
+                "Explicit requests support Enflame, CANN, or CUDA backend='instrumentation' modes"
+            )
 
     # Native collection exports automatically; external counter tools are opt-in.
     from ._capture import INTERNAL_ENV
@@ -1114,8 +1153,8 @@ def start(
     if metadata is not None:
         metadata = metadata_snapshot(metadata)
     _check_env(backend)
-    if backend == "cupti_pcsampling" or (
-            backend == "cupti" and str(mode or "").split(":", 1)[0] == "pcsampling"):
+    if backend == "cupti_pcsampling" or (backend == "cupti" and str(
+            mode or "").split(":", 1)[0] == "pcsampling"):
         # Probe before allocating a session: an enabled SDK may still expose
         # zero stall reasons on a particular GPU/toolkit combination.
         profiler_native.validate_pc_sampling_support(
@@ -1138,20 +1177,34 @@ def start(
                  or _is_enflame_backend(backend)))
     effective_mode = (_mode_with_ir_triton_overrides(mode, backend) if
                       ir_default_for_triton else _get_mode_str(backend, mode))
-    request_spec = None if observation_request is None else observation_request.as_dict()
+    request_spec = None if observation_request is None else observation_request.as_dict(
+    )
     if not internal:
         requested_output = Path(name).expanduser().resolve()
         existing = next((state for state in _active_sessions.values()
-                         if state.get("bundle_output") == requested_output), None)
+                         if state.get("bundle_output") == requested_output),
+                        None)
         if existing is not None:
-            requested = {"backend": backend, "effective_mode": effective_mode,
-                         "context": context, "data": data, "hook": hook,
-                         "observation_request": request_spec}
-            if any(existing.get(key) != value for key, value in requested.items()):
-                raise ValueError("An existing session cannot change backend, mode, hook or observation request")
+            requested = {
+                "backend": backend,
+                "effective_mode": effective_mode,
+                "context": context,
+                "data": data,
+                "hook": hook,
+                "observation_request": request_spec
+            }
+            if any(
+                    existing.get(key) != value
+                    for key, value in requested.items()):
+                raise ValueError(
+                    "An existing session cannot change backend, mode, hook or observation request"
+                )
             activate(existing["session"])
             if metadata is not None:
-                existing["metadata"] = {**(existing.get("metadata") or {}), **metadata}
+                existing["metadata"] = {
+                    **(existing.get("metadata") or {}),
+                    **metadata
+                }
             return existing["session"]
     if not _active_sessions:
         LaunchHook.reset_capture()
@@ -1163,10 +1216,11 @@ def start(
         state.get("instrumentation_hook") and state.get("active", True)
         for state in _active_sessions.values())
     if ir_session_exists and any(
-            state.get("instrumentation_hook") and
-            state.get("observation_request") != request_spec
+            state.get("instrumentation_hook")
+            and state.get("observation_request") != request_spec
             for state in _active_sessions.values()):
-        raise ValueError("Nested IR sessions must use the same observation request")
+        raise ValueError(
+            "Nested IR sessions must use the same observation request")
     instrumentation_activated = use_instrumentation_hook and not instrumentation_was_active
     session = None
     staging = None
@@ -1174,7 +1228,8 @@ def start(
     bundle_created = False
     try:
         if instrumentation_activated:
-            _activate_instrumentation(backend, observation_request,
+            _activate_instrumentation(backend,
+                                      observation_request,
                                       clear_runs=not ir_session_exists)
         if not internal:
             bundle_output = Path(name).expanduser().resolve()
@@ -1200,7 +1255,9 @@ def start(
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
-            HookManager.register(InstrumentationHook(mode, observation_plan=observation_plan), session)
+            HookManager.register(
+                InstrumentationHook(mode, observation_plan=observation_plan),
+                session)
     except BaseException as error:
         # Compiler/debugger activation can fail before native start. Unwind all
         # owned resources without replacing the application's original error.
@@ -1221,9 +1278,11 @@ def start(
                 operation()
             except BaseException as cleanup_error:
                 if hasattr(error, "add_note"):
-                    error.add_note(f"Profiler start cleanup failed: {cleanup_error}")
+                    error.add_note(
+                        f"Profiler start cleanup failed: {cleanup_error}")
                 else:
-                    print(f"Profiler start cleanup failed: {cleanup_error}", file=sys.stderr)
+                    print(f"Profiler start cleanup failed: {cleanup_error}",
+                          file=sys.stderr)
         raise
     if session in _active_sessions:
         if metadata is not None:
@@ -1279,18 +1338,22 @@ def activate(session: Optional[int] = None) -> None:
         )
     if session is not None and session not in _active_sessions:
         raise RuntimeError(f"Session has not been initialized: {session}")
-    targets = (list(_active_sessions.values()) if session is None
-               else [_active_sessions[session]])
-    ir_targets = [state for state in targets if state.get("instrumentation_hook")]
-    have_active_ir = any(state.get("instrumentation_hook") and state.get("active", True)
-                         for state in _active_sessions.values())
+    targets = (list(_active_sessions.values())
+               if session is None else [_active_sessions[session]])
+    ir_targets = [
+        state for state in targets if state.get("instrumentation_hook")
+    ]
+    have_active_ir = any(
+        state.get("instrumentation_hook") and state.get("active", True)
+        for state in _active_sessions.values())
     if ir_targets and not have_active_ir:
         from .observations import ObservationRequest
         state = ir_targets[0]
         request = state.get("observation_request")
-        _activate_instrumentation(state["backend"],
-                                  ObservationRequest.from_dict(request) if request else None,
-                                  clear_runs=False)
+        _activate_instrumentation(
+            state["backend"],
+            ObservationRequest.from_dict(request) if request else None,
+            clear_runs=False)
     HookManager.activate(session)
     profiler_native.activate_all(
     ) if session is None else profiler_native.activate(session)
@@ -1319,8 +1382,8 @@ def deactivate(session: Optional[int] = None) -> None:
     HookManager.deactivate(session)
     profiler_native.deactivate_all(
     ) if session is None else profiler_native.deactivate(session)
-    targets = (list(_active_sessions.values()) if session is None
-               else [_active_sessions[session]])
+    targets = (list(_active_sessions.values())
+               if session is None else [_active_sessions[session]])
     for state in targets:
         state["active"] = False
     if any(state.get("instrumentation_hook") for state in targets) and not any(
@@ -1432,10 +1495,15 @@ def finalize(session: Optional[int] = None,
 
             def export():
                 if state.get("instrumentation_hook"):
-                    session_runs = [run for run in runs
-                                    if not (run.get("runtime_metadata") or {}).get("profiler_association_evidence")
-                                    or state["session"] in ((run.get("runtime_metadata") or {})
-                                        .get("profiler_association_evidence", {}).get("session_ids", []))]
+                    session_runs = [
+                        run for run in runs
+                        if not (run.get("runtime_metadata") or {}
+                                ).get("profiler_association_evidence")
+                        or state["session"] in (
+                            (run.get("runtime_metadata") or {}
+                             ).get("profiler_association_evidence", {}).get(
+                                 "session_ids", []))
+                    ]
                     _augment_instrumentation_artifacts(
                         str(state.get("name") or DEFAULT_PROFILE_NAME),
                         session_runs,
@@ -1515,9 +1583,12 @@ def _profiling(
             except BaseException as cleanup_error:
                 if hasattr(error, "add_note"):
                     error.add_note(
-                        f"Decorated profiling finalization also failed: {cleanup_error}")
+                        f"Decorated profiling finalization also failed: {cleanup_error}"
+                    )
                 else:
-                    print(f"Decorated profiling finalization also failed: {cleanup_error}", file=sys.stderr)
+                    print(
+                        f"Decorated profiling finalization also failed: {cleanup_error}",
+                        file=sys.stderr)
             raise
 
     return wrapper

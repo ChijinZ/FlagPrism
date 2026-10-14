@@ -1099,7 +1099,8 @@ public:
     if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
       allocation->asyncExportPending = false;
       allocation->asyncCopySubmitted = false;
-      return; // Actor-local headers are initialized by the actual selected writers.
+      return; // Actor-local headers are initialized by the actual selected
+              // writers.
     }
 
     RingBufferHeader header{};

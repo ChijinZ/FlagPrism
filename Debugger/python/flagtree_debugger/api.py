@@ -1310,30 +1310,37 @@ def _build_launch_metadata_dict(metadata: Any) -> dict[str, Any]:
 def _propagate_observation_clock(runtime_metadata, metadata_dict):
     domain = metadata_dict.get("debug_clock_domain")
     if domain:
-        runtime_metadata.setdefault("observation_clock", {
-            "domain": domain,
-            "scope": "instance_local",
-            "alignment": "unverified",
-            "tick_ns": None,
-            "wrap_bits": metadata_dict.get("debug_clock_bits"),
-            "source": "compiled_clock_primitive",
-        })
+        runtime_metadata.setdefault(
+            "observation_clock", {
+                "domain": domain,
+                "scope": "instance_local",
+                "alignment": "unverified",
+                "tick_ns": None,
+                "wrap_bits": metadata_dict.get("debug_clock_bits"),
+                "source": "compiled_clock_primitive",
+            })
 
 
 def _default_launch_prepare_hook(
         metadata: Any, stream: int, launch_metadata: Any,
         kernel_args: Sequence[Any]) -> PreparedKernelLaunch:
-    launch_identity_object = (launch_metadata.get("_flagprism_launch_identity_object")
-                             if isinstance(launch_metadata, dict) else launch_metadata)
+    launch_identity_object = (
+        launch_metadata.get("_flagprism_launch_identity_object") if isinstance(
+            launch_metadata, dict) else launch_metadata)
     if isinstance(launch_metadata, dict):
-        launch_metadata = {key: value for key, value in launch_metadata.items()
-                           if key != "_flagprism_launch_identity_object"}
+        launch_metadata = {
+            key: value
+            for key, value in launch_metadata.items()
+            if key != "_flagprism_launch_identity_object"
+        }
     launch_metadata = _materialize_launch_metadata(launch_metadata)
     metadata_dict = _build_launch_metadata_dict(metadata)
     if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
         handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
         if handoff.get("phase") != "finished" or not handoff.get("artifacts"):
-            raise RuntimeError("Ascend dynamic observations require a verified compiler.driver.v1 late-pass handoff; rebuild the compiler integration")
+            raise RuntimeError(
+                "Ascend dynamic observations require a verified compiler.driver.v1 late-pass handoff; rebuild the compiler integration"
+            )
     runtime_metadata = _infer_runtime_metadata(metadata, kernel_args)
     _propagate_observation_clock(runtime_metadata, metadata_dict)
     if _active_config.runtime_metadata_builder is not None:
@@ -1375,11 +1382,15 @@ def _default_launch_prepare_hook(
         exported_runtime_metadata = dict(
             exported_run.get("runtime_metadata", {}))
         if "observation_clock" in runtime_metadata:
-            exported_runtime_metadata.setdefault("observation_clock", runtime_metadata["observation_clock"])
-        identity = getattr(launch_identity_object, "_flagprism_invocation_identity", None)
+            exported_runtime_metadata.setdefault(
+                "observation_clock", runtime_metadata["observation_clock"])
+        identity = getattr(launch_identity_object,
+                           "_flagprism_invocation_identity", None)
         if identity and identity.get("status") != "rejected_before_launch":
-            exported_runtime_metadata["profiler_invocation_id"] = identity["invocation_id"]
-            exported_runtime_metadata["profiler_association_evidence"] = dict(identity)
+            exported_runtime_metadata["profiler_invocation_id"] = identity[
+                "invocation_id"]
+            exported_runtime_metadata["profiler_association_evidence"] = dict(
+                identity)
         exported_runtime_metadata.setdefault("host_start_time_ns",
                                              host_start_time_ns)
         exported_runtime_metadata.setdefault("host_end_time_ns",
@@ -1389,7 +1400,8 @@ def _default_launch_prepare_hook(
             max(0, host_end_time_ns - host_start_time_ns),
         )
         exported_run["runtime_metadata"] = exported_runtime_metadata
-        if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
+        if metadata_dict.get(
+                "debug_record_layout") == "ascend_actor_dynamic_v1":
             import uuid
             from flagtree.profiler.observations_ascend import decode_dynamic64
             capture_id = str(uuid.uuid4())
@@ -1397,25 +1409,42 @@ def _default_launch_prepare_hook(
             sites = []
             for artifact in handoff.get("artifacts", []):
                 manifest = artifact.get("metadata") or {}
-                kinds = {actor.get("actor_kind") for actor in manifest.get("actors", [])}
-                slots = [0] if kinds == {"AIC"} else [1, 2] if kinds == {"AIV"} else []
+                kinds = {
+                    actor.get("actor_kind")
+                    for actor in manifest.get("actors", [])
+                }
+                slots = [0] if kinds == {
+                    "AIC"
+                } else [1, 2] if kinds == {"AIV"} else []
                 for site in manifest.get("dynamic_sites", []):
                     sites.extend(dict(site, actor_slot=slot) for slot in slots)
             decoded = decode_dynamic64(
                 exported_run["raw_buffer"],
                 capacity=metadata_dict["flagprism_ascend_trace_capacity"],
-                actor_slots=3, capture_id=capture_id,
-                invocation_id=exported_runtime_metadata.get("profiler_invocation_id"),
-                association_evidence=exported_runtime_metadata.get("profiler_association_evidence"),
+                actor_slots=3,
+                capture_id=capture_id,
+                invocation_id=exported_runtime_metadata.get(
+                    "profiler_invocation_id"),
+                association_evidence=exported_runtime_metadata.get(
+                    "profiler_association_evidence"),
                 site_manifest=sites)
-            requested = set((metadata_dict.get("flagprism_ascend_observation_request") or {}).get("semantics", []))
-            exported_run["semantic_observations"] = [event for event in decoded["observations"]
-                                                      if event["semantic"] in requested]
-            exported_run["decoded"] = {"actors": decoded["actors"], "records": [],
-                                       "dropped": decoded["dropped"]}
+            requested = set(
+                (metadata_dict.get("flagprism_ascend_observation_request")
+                 or {}).get("semantics", []))
+            exported_run["semantic_observations"] = [
+                event for event in decoded["observations"]
+                if event["semantic"] in requested
+            ]
+            exported_run["decoded"] = {
+                "actors": decoded["actors"],
+                "records": [],
+                "dropped": decoded["dropped"]
+            }
             exported_runtime_metadata["capture_id"] = capture_id
-            exported_runtime_metadata["collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
-            exported_runtime_metadata["selection_stage"] = "semantic_output_filter_after_capture"
+            exported_runtime_metadata[
+                "collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
+            exported_runtime_metadata[
+                "selection_stage"] = "semantic_output_filter_after_capture"
         else:
             exported_run = _finalize_exported_run(exported_run, metadata_dict)
         _exported_runs.append(exported_run)
@@ -1511,7 +1540,8 @@ def current_compile_config() -> dict[str, Any]:
         "debug_record_capacity": int(_active_config.record_capacity),
     }
     if _active_config.observation_request is not None:
-        result["debug_observation_request"] = dict(_active_config.observation_request)
+        result["debug_observation_request"] = dict(
+            _active_config.observation_request)
     return result
 
 
@@ -1656,7 +1686,8 @@ def launch_context(
     metadata_dict = _metadata_to_dict(metadata)
     runtime_launch_metadata = _materialize_launch_metadata(launch_metadata)
     runtime_launch_metadata = dict(runtime_launch_metadata or {})
-    runtime_launch_metadata["_flagprism_launch_identity_object"] = launch_metadata
+    runtime_launch_metadata[
+        "_flagprism_launch_identity_object"] = launch_metadata
     runtime_launch_metadata.setdefault("grid", tuple(int(dim) for dim in grid))
     has_hidden_arg = bool(metadata_dict.get("debug_launch_hidden_arg", False))
     prepare = prepare_kernel_launch if has_hidden_arg else prepare_metadata_only_kernel_launch

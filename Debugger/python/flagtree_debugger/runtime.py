@@ -142,14 +142,15 @@ class DebugCollectRuntime:
             self._metadata_to_dict(metadata))
         runtime_metadata_dict = dict(runtime_metadata or {})
         if metadata_dict.get("debug_clock_domain"):
-            runtime_metadata_dict.setdefault("observation_clock", {
-                "domain": metadata_dict["debug_clock_domain"],
-                "scope": "instance_local",
-                "alignment": "unverified",
-                "tick_ns": None,
-                "wrap_bits": metadata_dict.get("debug_clock_bits"),
-                "source": "compiled_clock_primitive",
-            })
+            runtime_metadata_dict.setdefault(
+                "observation_clock", {
+                    "domain": metadata_dict["debug_clock_domain"],
+                    "scope": "instance_local",
+                    "alignment": "unverified",
+                    "tick_ns": None,
+                    "wrap_bits": metadata_dict.get("debug_clock_bits"),
+                    "source": "compiled_clock_primitive",
+                })
         if metadata_dict.get("debug_record_layout"):
             runtime_metadata_dict.setdefault(
                 "record_layout", metadata_dict["debug_record_layout"])
