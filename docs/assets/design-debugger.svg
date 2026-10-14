@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="494" viewBox="0 0 1000 494" role="img" aria-labelledby="title desc">
+  <title id="title">Debugger collection and reporting</title>
+  <desc id="desc">A selected region produces chosen value and memory observations. Device records are transferred to the host and decoded with source mappings into debug reports.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 10 4 L 0 8 Z" fill="#333333"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="494" fill="#ffffff"/>
+  <polyline points="420,92 420,122 170,122 170,152" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="500,92 500,152" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="580,92 580,122 830,122 830,152" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="170,212 170,248 750,248 750,284" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="500,212 500,232 790,232 790,284" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="830,212 830,284" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="830,344 830,394" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="500,344 500,394" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="700,424 630,424" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="370,424 300,424" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <g id="region">
+    <rect x="370" y="32" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="62" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Selected Region</text>
+  </g>
+  <g id="summary">
+    <rect x="40" y="152" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="170" y="182" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Value Summaries</text>
+  </g>
+  <g id="values">
+    <rect x="370" y="152" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="182" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Tensor Values</text>
+  </g>
+  <g id="memory">
+    <rect x="700" y="152" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="182" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Memory Accesses</text>
+  </g>
+  <g id="mapping">
+    <rect x="370" y="284" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="314" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Source Map</text>
+  </g>
+  <g id="buffer">
+    <rect x="700" y="284" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="314" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Device Buffer</text>
+  </g>
+  <g id="report">
+    <rect x="40" y="394" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="170" y="424" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Debug Reports</text>
+  </g>
+  <g id="decode">
+    <rect x="370" y="394" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="424" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Decoding</text>
+  </g>
+  <g id="transfer">
+    <rect x="700" y="394" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="424" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Host Transfer</text>
+  </g>
+</svg>

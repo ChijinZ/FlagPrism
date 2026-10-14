@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="668" viewBox="0 0 1200 668" role="img" aria-labelledby="title desc">
+  <title id="title">FlagPrism architecture</title>
+  <desc id="desc">FlagTree compilation paths alongside shared metadata, instrumentation, and runtime records feeding the Profiler and Debugger.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 10 4 L 0 8 Z" fill="#333333"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="668" fill="#ffffff"/>
+  <polyline points="300,124 300,164" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="300,224 300,274 160,274 160,324" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="300,224 300,274 440,274 440,324" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="160,384 160,434" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="440,384 440,434" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="160,494 160,564" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="440,494 440,564" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="400,494 400,529 220,529 220,564" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="920,124 920,164" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="700,194 500,194" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="920,224 920,264" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="920,324 920,344 770,344 770,364" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="920,324 920,344 1050,344 1050,364" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="770,424 770,464" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="1050,424 1050,464" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="770,524 770,564" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="1050,524 1050,564" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <g id="source">
+    <rect x="100" y="64" width="400" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="300" y="94" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Triton Language &amp; TLE</text>
+  </g>
+  <g id="ir">
+    <rect x="100" y="164" width="400" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="300" y="194" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Triton IR &amp; Extensions</text>
+  </g>
+  <g id="gpu">
+    <rect x="40" y="324" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="160" y="354" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">TritonGPU IR</text>
+  </g>
+  <g id="flir">
+    <rect x="320" y="324" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="440" y="354" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">FLIR</text>
+  </g>
+  <g id="gpu-backend">
+    <rect x="40" y="434" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="160" y="464" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Backend IR</text>
+  </g>
+  <g id="flir-backend">
+    <rect x="320" y="434" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="440" y="464" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Backend IR</text>
+  </g>
+  <g id="llvm">
+    <rect x="40" y="564" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="160" y="594" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">LLVM IR</text>
+  </g>
+  <g id="kernel-code">
+    <rect x="320" y="564" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="440" y="594" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Kernel Code</text>
+  </g>
+  <g id="metadata">
+    <rect x="700" y="64" width="440" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="920" y="94" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Shared Metadata</text>
+  </g>
+  <g id="instrumentation">
+    <rect x="700" y="164" width="440" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="920" y="194" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">IR Instrumentation</text>
+  </g>
+  <g id="records">
+    <rect x="700" y="264" width="440" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="920" y="294" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Runtime Records</text>
+  </g>
+  <g id="profiler">
+    <rect x="650" y="364" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="770" y="394" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Profiler</text>
+  </g>
+  <g id="debugger">
+    <rect x="930" y="364" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="1050" y="394" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Debugger</text>
+  </g>
+  <g id="aggregation">
+    <rect x="650" y="464" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="770" y="494" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Aggregation</text>
+  </g>
+  <g id="decoding">
+    <rect x="930" y="464" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="1050" y="494" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Decoding</text>
+  </g>
+  <g id="profiles">
+    <rect x="650" y="564" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="770" y="594" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Profiles</text>
+  </g>
+  <g id="reports">
+    <rect x="930" y="564" width="240" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="1050" y="594" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Debug Reports</text>
+  </g>
+  <text x="300" y="28" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="600" fill="#202020">FlagTree</text>
+  <text x="910" y="28" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="24" font-weight="600" fill="#202020">FlagPrism</text>
+</svg>

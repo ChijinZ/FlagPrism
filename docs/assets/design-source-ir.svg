@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="428" viewBox="0 0 1000 428" role="img" aria-labelledby="title desc">
+  <title id="title">Source, IR, and execution</title>
+  <desc id="desc">Instrumentation carries observation identifiers into execution. Saved source mappings and runtime records are matched to reconstruct a source view.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 8" refX="10" refY="4" markerWidth="10" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+      <path d="M 0 0 L 10 4 L 0 8 Z" fill="#333333"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="428" fill="#ffffff"/>
+  <polyline points="300,62 370,62" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="630,62 700,62" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="500,92 500,180" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="830,92 830,180" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="830,240 830,328" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="500,240 500,328" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="700,358 630,358" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <polyline points="370,358 300,358" fill="none" stroke="#333333" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <g id="source">
+    <rect x="40" y="32" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="170" y="62" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Source Code</text>
+  </g>
+  <g id="ir">
+    <rect x="370" y="32" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="62" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">IR Operations</text>
+  </g>
+  <g id="instrumentation">
+    <rect x="700" y="32" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="62" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Instrumentation</text>
+  </g>
+  <g id="mapping">
+    <rect x="370" y="180" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="210" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Source Map</text>
+  </g>
+  <g id="execution">
+    <rect x="700" y="180" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="210" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Kernel Execution</text>
+  </g>
+  <g id="view">
+    <rect x="40" y="328" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="170" y="358" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Source View</text>
+  </g>
+  <g id="matching">
+    <rect x="370" y="328" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="500" y="358" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Match Records</text>
+  </g>
+  <g id="records">
+    <rect x="700" y="328" width="260" height="60" fill="#ffffff" stroke="#333333" stroke-width="1.8"/>
+    <text x="830" y="358" dy="0.35em" text-anchor="middle" font-family="sans-serif" font-size="22" fill="#202020">Runtime Records</text>
+  </g>
+</svg>
