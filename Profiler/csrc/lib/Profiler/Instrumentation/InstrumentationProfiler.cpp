@@ -13,6 +13,7 @@
 #include <queue>
 #include <set>
 #include <stdexcept>
+#include <utility>
 
 namespace proton {
 
@@ -32,7 +33,25 @@ void InstrumentationProfiler::doFlush() {
   // Flush the instrumentation profiler.
 }
 
+void InstrumentationProfiler::setObservationPrograms(const std::vector<uint32_t> &programs) {
+  observationPrograms = programs;
+}
+
+void InstrumentationProfiler::setRawCaptureEnabled(bool enabled) {
+  rawCaptureEnabled = enabled;
+  rawHostBytes.clear();
+}
+
+std::vector<uint8_t>
+InstrumentationProfiler::takeRawHostBuffer(uint64_t functionId, uint64_t streamId) {
+  if (!rawCaptureEnabled || rawFunctionId != functionId || rawStreamId != streamId ||
+      rawHostBytes.empty())
+    throw std::runtime_error("No raw instrumentation payload for this function/stream");
+  return std::exchange(rawHostBytes, {});
+}
+
 void InstrumentationProfiler::doStop() {
+  rawHostBytes.clear();
   // Stop the instrumentation profiler.
   // FIXME: Also we should ensure the context is valid before releasing the
   // memory
@@ -108,6 +127,7 @@ InstrumentationProfiler::getParserConfig(uint64_t functionId,
   config->totalUnits = functionMetadata.at(functionId).getNumWarps();
   config->numBlocks = bufferSize / config->scratchMemSize;
   config->uidVec = getUnitIdVector(modeOptions, config->totalUnits);
+  config->selectedBlocks = observationPrograms;
 
   // Check if the uidVec is valid
   for (auto uid : config->uidVec)
@@ -129,11 +149,11 @@ void InstrumentationProfiler::initFunctionMetadata(
     const std::vector<std::pair<size_t, std::string>> &scopeIdPairs,
     const std::vector<std::pair<size_t, size_t>> &scopeIdParentPairs,
     const std::string &metadataPath) {
-  if (functionScopeIdNames.count(functionId)) {
-    throw std::runtime_error(
-        "Duplicate function id: " + std::to_string(functionId) +
-        " for function " + functionName);
-  }
+  // Driver handles can be registered again from cached compilation or reused
+  // after module unload. This callback supplies the current emitted metadata.
+  functionScopeIdNames.erase(functionId);
+  functionScopeIdContexts.erase(functionId);
+  functionMetadata.erase(functionId);
   functionNames[functionId] = functionName;
   for (auto &pair : scopeIdPairs) {
     auto scopeId = pair.first;
@@ -179,8 +199,11 @@ void InstrumentationProfiler::enterInstrumentedOp(uint64_t streamId,
 void InstrumentationProfiler::exitInstrumentedOp(uint64_t streamId,
                                                  uint64_t functionId,
                                                  uint8_t *buffer, size_t size) {
+  rawHostBytes.clear();
   if (!buffer || !hostBuffer)
     return;
+  rawFunctionId = functionId;
+  rawStreamId = streamId;
 
   uint64_t device = runtime->getDevice();
   void *&priorityStream = deviceStreams[reinterpret_cast<void *>(device)];
@@ -231,6 +254,8 @@ void InstrumentationProfiler::exitInstrumentedOp(uint64_t streamId,
   runtime->processHostBuffer(
       hostBuffer, size, buffer, size, priorityStream,
       [&](uint8_t *bufferPtr, size_t size) {
+        if (rawCaptureEnabled)
+          rawHostBytes.insert(rawHostBytes.end(), bufferPtr, bufferPtr + size);
         ByteSpan byteSpan(bufferPtr, size);
         CircularLayoutParser parser(byteSpan, *circularLayoutConfig);
         parser.parse();

@@ -191,6 +191,15 @@ bool decodeRecordAt(const std::vector<uint8_t> &buffer, size_t slotOffset,
     record = DecodedTimelineRecord{raw};
     return true;
   }
+  case RecordKind::DYNAMIC_TIMELINE: {
+    DynamicTimelineRecord raw{};
+    if (!readObject(buffer, slotOffset, raw, errorMessage,
+                    "DynamicTimelineRecord")) {
+      return false;
+    }
+    record = DecodedDynamicTimelineRecord{raw};
+    return true;
+  }
   }
 
   std::ostringstream os;
@@ -329,6 +338,10 @@ bool decodeCompactRecordAt(const std::vector<uint8_t> &buffer,
     record = DecodedTimelineRecord{raw};
     return true;
   }
+  case RecordKind::DYNAMIC_TIMELINE:
+    return fail(errorMessage,
+                "Dynamic timeline records cannot use deterministic compact "
+                "snapshot layout");
   }
 
   std::ostringstream os;
@@ -358,6 +371,16 @@ bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
   if (!validateHeader(header, run.rawBuffer.size(), errorMessage)) {
     decoded = {};
     return false;
+  }
+  if (run.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1") {
+    const uint32_t dropped = header.writeIdx > header.capacity
+                                 ? header.writeIdx - header.capacity : 0;
+    if (header.recordSize != kBundleRecordSize ||
+        header.overflowCount != dropped || header.reserved0 < header.writeIdx ||
+        ((header.flags & RB_FLAG_OVERFLOW) != 0) != (dropped != 0)) {
+      decoded = {};
+      return fail(errorMessage, "Inconsistent selected dynamic trace header");
+    }
   }
 
   decoded.meta = run.meta;
@@ -395,7 +418,20 @@ bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
     }
     if (static_cast<uint16_t>(recordHeader.recordKind) == 0 &&
         recordHeader.opId == 0 && recordHeader.logicalInstanceId == 0) {
+      if (run.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1") {
+        decoded = {};
+        return fail(errorMessage, "Uncommitted slot in selected dynamic trace");
+      }
       continue;
+    }
+
+    if ((recordHeader.recordKind == RecordKind::SUMMARY_COUNT_BUNDLE_U64 ||
+         recordHeader.recordKind == RecordKind::SUMMARY_VALUE_BUNDLE_F32 ||
+         recordHeader.recordKind == RecordKind::TIMELINE ||
+         recordHeader.recordKind == RecordKind::DYNAMIC_TIMELINE) &&
+        header.recordSize != kBundleRecordSize) {
+      decoded = {};
+      return fail(errorMessage, "64-byte record in a non-64-byte slot");
     }
 
     DecodedRecord record;
@@ -403,6 +439,19 @@ bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
                         errorMessage)) {
       decoded = {};
       return false;
+    }
+    if (run.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1") {
+      const auto *dynamic = std::get_if<DecodedDynamicTimelineRecord>(&record);
+      if (!dynamic || dynamic->raw.commitTag != kDynamicRecordCommitTag ||
+          dynamic->raw.sequence != slotIndex ||
+          dynamic->raw.attemptedOrdinal >= header.reserved0 ||
+          dynamic->raw.endCycle < dynamic->raw.startCycle ||
+          dynamic->raw.durationCycle != dynamic->raw.endCycle - dynamic->raw.startCycle ||
+          (!decoded.records.empty() && dynamic->raw.attemptedOrdinal <=
+              std::get<DecodedDynamicTimelineRecord>(decoded.records.back()).raw.attemptedOrdinal)) {
+        decoded = {};
+        return fail(errorMessage, "Incomplete or inconsistent dynamic trace payload");
+      }
     }
     decoded.records.push_back(record);
   }

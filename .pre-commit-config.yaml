@@ -6,6 +6,8 @@ repos:
       - id: check-symlinks
       - id: destroyed-symlinks
       - id: trailing-whitespace
+        # A blank unified-diff context line is one significant space.
+        exclude: ^integration/patches/.*\.patch$
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-toml

@@ -1170,3 +1170,83 @@ TEST(DebuggerDecodeTest, MarksMissingTrackedOpInReport) {
   std::string report = renderTextReport(decoded, metadata);
   EXPECT_NE(report.find("static: <missing>"), std::string::npos);
 }
+
+TEST(DebuggerDecodeTest, DynamicTraceRetainsRepeatedSiteAndOverflow) {
+  auto run = makeRunWithRecordSize(2, 3, kBundleRecordSize, 1, RB_FLAG_OVERFLOW);
+  run.runtimeMetadata.recordLayout = "selected_dynamic_timeline_v1";
+  RingBufferHeader dynamicHeader{};
+  std::memcpy(&dynamicHeader, run.rawBuffer.data(), sizeof(dynamicHeader));
+  dynamicHeader.reserved0 = 7; // sampled ordinals 0, 3, 6; final sample dropped
+  writeObject(run.rawBuffer, 0, dynamicHeader);
+  for (uint32_t index = 0; index < 2; ++index) {
+    DynamicTimelineRecord record{};
+    record.header.recordKind = RecordKind::DYNAMIC_TIMELINE;
+    record.header.opId = 19;
+    record.header.logicalInstanceId = 7;
+    record.startCycle = 100 + index * 20;
+    record.endCycle = record.startCycle + 10;
+    record.durationCycle = 10;
+    record.actorId = 2;
+    record.sequence = index;
+    record.attemptedOrdinal = index * 3;
+    record.commitTag = kDynamicRecordCommitTag;
+    writeObject(run.rawBuffer, slotOffset(index, kBundleRecordSize), record);
+  }
+  DecodedDebugRun decoded;
+  std::string error;
+  ASSERT_TRUE(decodeExportedRun(run, decoded, &error)) << error;
+  ASSERT_EQ(decoded.records.size(), 2u);
+  EXPECT_EQ(decoded.header.overflowCount, 1u);
+  const auto &second = std::get<DecodedDynamicTimelineRecord>(decoded.records[1]).raw;
+  EXPECT_EQ(second.header.opId, 19u);
+  EXPECT_EQ(second.sequence, 1u);
+  EXPECT_EQ(second.attemptedOrdinal, 3u);
+  EXPECT_EQ(second.actorId, 2u);
+}
+
+TEST(DebuggerDecodeTest, RejectsWideRecordInNarrowSlot) {
+  auto run = makeRun(2, 1);
+  RecordHeader header{};
+  header.recordKind = RecordKind::DYNAMIC_TIMELINE;
+  writeObject(run.rawBuffer, slotOffset(0), header);
+  DecodedDebugRun decoded;
+  std::string error;
+  EXPECT_FALSE(decodeExportedRun(run, decoded, &error));
+  EXPECT_TRUE(decoded.records.empty());
+  EXPECT_NE(error.find("64-byte"), std::string::npos);
+}
+
+TEST(DebuggerDecodeTest, RejectsPartialDynamicRecordPublication) {
+  auto run = makeRunWithRecordSize(1, 1, kBundleRecordSize);
+  run.runtimeMetadata.recordLayout = "selected_dynamic_timeline_v1";
+  RingBufferHeader header{};
+  std::memcpy(&header, run.rawBuffer.data(), sizeof(header));
+  header.reserved0 = 1;
+  writeObject(run.rawBuffer, 0, header);
+  DynamicTimelineRecord record{};
+  record.header.recordKind = RecordKind::DYNAMIC_TIMELINE;
+  record.header.opId = 3;
+  // Reproduces a writer publishing the header but losing the rest of its tile.
+  writeObject(run.rawBuffer, slotOffset(0, kBundleRecordSize), record);
+  DecodedDebugRun decoded;
+  std::string error;
+  EXPECT_FALSE(decodeExportedRun(run, decoded, &error));
+  EXPECT_TRUE(decoded.records.empty());
+  EXPECT_NE(error.find("Incomplete"), std::string::npos);
+}
+
+TEST(DebuggerDecodeTest, RejectsDynamicKindInCompactSnapshotPlan) {
+  auto run = makeRunWithRecordSize(1, 1, kBundleRecordSize);
+  run.runtimeMetadata.recordLayout = "deterministic_compact_v1";
+  run.runtimeMetadata.recordsPerInstance = 1;
+  DebugRecordPlanEntry plan;
+  plan.recordIndex = 0;
+  plan.opId = 7;
+  plan.recordKind = RecordKind::DYNAMIC_TIMELINE;
+  run.runtimeMetadata.recordPlan.push_back(plan);
+  DecodedDebugRun decoded;
+  std::string error;
+  EXPECT_FALSE(decodeExportedRun(run, decoded, &error));
+  EXPECT_TRUE(decoded.records.empty());
+  EXPECT_NE(error.find("snapshot layout"), std::string::npos);
+}

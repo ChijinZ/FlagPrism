@@ -17,8 +17,9 @@ Finalization directly creates a self-contained output directory. No report comma
 conversion script is needed. TCU is disabled by default; ordinary Python API usage needs
 no special launcher. Existing output directories are never overwritten.
 Outputs include `report/index.html`, analyzed `report/report.json` and, when timed events
-exist, Perfetto `report/timeline.json`. Legacy `.vendor.json`, `.meta.json` and `.hatchet`
-files are internal temporary intermediates, not user-facing output. Original event records
+exist, Perfetto `report/timeline.json`. Original `.vendor.json`, `.meta.json` and `.hatchet`
+files are retained under `raw/native/` for audit. Unverified legacy traces are
+preserved without being promoted to a certified timeline. Original event records
 are retained in `ai/events.jsonl` (accepted) and `ai/rejected.jsonl` (excluded); native scope
 metrics are retained in `ai/call_tree.json` when available.
 

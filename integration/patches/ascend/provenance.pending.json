@@ -1,0 +1,30 @@
+{
+  "status": "pending_remote_restore_and_complete_export",
+  "backend": "ascend",
+  "flagtree_baseline": "0364ed4bc39d1dfae483741ec272298297fa5bda",
+  "initial_patch": {
+    "path": "initial-handoff.patch",
+    "sha256": "9a67673d0e55c3ae1e8941552a5f924b3117f101231568231d90e892fcc20c0d",
+    "complete": false,
+    "missing": ["compiler_driver_cache_key callback and AscendOptions cache integration"]
+  },
+  "complete_patch": null,
+  "integration_commit": null,
+  "dependency_pins": {
+    "AscendNPU-IR": "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9",
+    "FLIR": "516ad3110cbf6112bbed8f927ae606c627a193f2"
+  },
+  "dependency_gaps": ["Verify tracked dependency trees are clean during actual complete patch export"],
+  "compiler_core": "LLVM22 existing container cache; actual triton target required",
+  "late_observer": "upstream LLVM15.0.7 opt-15 out-of-process; vendor plugin loading unsupported",
+  "latest_hidden_abi_build": "pending",
+  "latest_runtime_validation": "pending",
+  "automatic_joint_clock_producer_and_finalize": "not_implemented",
+  "latest_gateway_check": {
+    "date": "2026-10-14",
+    "stdout": "FLAGPRISM_ASCEND_RESTORE_SENTINEL_R2; chijin-v35",
+    "exit_code": 0,
+    "container_sentinel_observed": true,
+    "remote_command_execution_proven": true
+  }
+}

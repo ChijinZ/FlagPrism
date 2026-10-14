@@ -3,8 +3,16 @@
 import argparse
 from pathlib import Path
 
+# Ascend's backend loads Torch during Triton discovery; initialize it first.
+import os
+os.environ.setdefault("TORCH_DEVICE_BACKEND_AUTOLOAD", "0")
+import torch
+import torch_npu
 import triton
 import triton.language as tl
+import flagtree
+if os.environ.get("FLAGPRISM_TEST_NAMESPACE_ROOT"):
+    flagtree.__path__.insert(0, os.environ["FLAGPRISM_TEST_NAMESPACE_ROOT"])
 
 
 @triton.jit
@@ -59,7 +67,7 @@ def main():
         data="tree",
         hook="triton",
         backend="cann",
-        mode=("runtime_base:vendor_metrics=aicore,bandwidth:"
+        mode=(f"runtime_base:device_id={args.device}:vendor_metrics=aicore,bandwidth:"
               f"aclprof_output_path={vendor_output}:"
               "runtime_host_timing_fallback=true:aclprof_runtime_enabled=true:"
               "aclprof_auto_export=true:mstx_enabled=true:"

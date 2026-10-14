@@ -1,5 +1,6 @@
 #include "TraceDataIO/CircularLayoutParser.h"
 #include <cstdlib>
+#include <cstring>
 #include <fstream>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -230,4 +231,36 @@ TEST_F(CircularLayoutParserTest, TimeShift) {
   EXPECT_EQ(event0.second->cycle, 49);
   EXPECT_EQ(event1.first->cycle, 40);
   EXPECT_EQ(event1.second->cycle, 72);
+}
+
+TEST_F(CircularLayoutParserTest, SelectedBlockSkipsUnselectedBytes) {
+  // An unselected CTA slot is never decoded, even if its payload is stale.
+  const std::vector<uint32_t> valid = {kPreamble, 1, 3, 16, 4,
+                                      0x02000000, 4096, 0x82000000, 8192};
+  config.numBlocks = 2;
+  config.totalUnits = 1;
+  config.scratchMemSize = valid.size() * sizeof(uint32_t);
+  config.uidVec = {0};
+  config.selectedBlocks = {1};
+  testData.resize(config.numBlocks * config.scratchMemSize, 0);
+  std::memcpy(testData.data() + config.scratchMemSize, valid.data(), config.scratchMemSize);
+  auto buffer = ByteSpan(testData.data(), testData.size());
+  CircularLayoutParser parser(buffer, config);
+  parser.parse();
+  ASSERT_EQ(parser.getResult()->blockTraces.size(), 1);
+  auto &block = parser.getResult()->blockTraces.front();
+  EXPECT_EQ(block.blockId, 1);
+  ASSERT_EQ(block.traces.front().profileEvents.size(), 1);
+  EXPECT_EQ(block.traces.front().profileEvents.front().second->cycle, 8192);
+
+  config.selectedBlocks = {99};
+  auto emptyBuffer = ByteSpan(testData.data(), testData.size());
+  CircularLayoutParser emptyParser(emptyBuffer, config);
+  emptyParser.parse();
+  EXPECT_TRUE(emptyParser.getResult()->blockTraces.empty());
+
+  config.selectedBlocks.clear();
+  auto legacyBuffer = ByteSpan(testData.data(), testData.size());
+  CircularLayoutParser legacyParser(legacyBuffer, config);
+  EXPECT_THROW(legacyParser.parse(), ParserException);
 }

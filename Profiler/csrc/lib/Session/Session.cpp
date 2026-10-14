@@ -783,6 +783,24 @@ void Session::finalize(const std::string &outputFormat) {
                       toJson(vendorArtifact));
     return;
   }
+#if FLAGTREE_PROFILER_GPU_RUNTIME
+  if (proton::toLower(profilerName) == "cupti" ||
+      proton::toLower(profilerName) == "cupti_pcsampling") {
+    auto artifact = CuptiProfiler::instance().collectActivityArtifact(path);
+    writeJsonArtifact(makeArtifactPath(path, ".vendor.json"), toJson(artifact));
+    writeJsonArtifact(makeArtifactPath(path, ".meta.json"),
+                      {{"schema_version", 1},
+                       {"run_id", makeRunId(id)},
+                       {"session_name", path},
+                       {"backend", "nvidia"},
+                       {"profiler_name", profilerName},
+                       {"context", contextSourceName},
+                       {"data", dataName},
+                       {"hook", hookName},
+                       {"mode", mode},
+                       {"runtime_base_enabled", true}});
+  }
+#endif
   data->dump(outputFormat);
 }
 

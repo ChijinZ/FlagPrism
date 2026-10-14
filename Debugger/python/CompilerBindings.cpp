@@ -82,6 +82,12 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
     loadDebuggerDialect(*builder.getContext());
     return builder.create<CollectEndOp>(IntegerAttr());
   });
+  m.def("prepare_late_observation_abi", [](ModuleOp mod) {
+    auto result = prepareLateObservationAbi(mod);
+    if (!result)
+      throw py::value_error(llvm::toString(result.takeError()));
+    return *result;
+  });
   m.def("has_debug_collect_markers",
         [](ModuleOp mod) { return hasDebugCollectMarkers(mod); });
   m.def("insert_default_debug_collect_markers", [](ModuleOp mod, int32_t level,
@@ -116,6 +122,19 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
   });
   m.def("set_debug_addr_level", [](ModuleOp mod, int32_t addrLevel) {
     setDebugAddrLevel(mod, addrLevel);
+  });
+  m.def("set_debug_dynamic_timeline_options", [](ModuleOp mod, uint32_t program,
+                                                 uint32_t actor, uint32_t sampleEvery) {
+    if (auto error = setDebugDynamicTimelineOptions(mod, program, actor, sampleEvery))
+      throw py::value_error(llvm::toString(std::move(error)));
+  });
+  m.def("set_debug_dynamic_timeline_sites", [](ModuleOp mod, const std::vector<uint32_t> &sites) {
+    if (auto error = setDebugDynamicTimelineSites(mod, sites))
+      throw py::value_error(llvm::toString(std::move(error)));
+  });
+  m.def("get_debug_dynamic_timeline_site_error", [](ModuleOp mod) {
+    auto error = mod->getAttrOfType<StringAttr>("flagtree.debug.dynamic_site_error");
+    return error ? error.getValue().str() : std::string();
   });
   m.def("set_debug_timeline_enabled", [](ModuleOp mod, bool enabled) {
     setDebugTimelineEnabled(mod, enabled);

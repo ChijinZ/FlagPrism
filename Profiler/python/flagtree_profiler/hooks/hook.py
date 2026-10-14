@@ -2,6 +2,7 @@ from triton.compiler import LazyDict
 from abc import abstractmethod
 from typing import Dict, Any, Optional
 from collections import defaultdict
+import sys
 import triton.knobs as knobs
 
 
@@ -21,6 +22,10 @@ class Hook:
     @abstractmethod
     def exit(self, metadata: LazyDict) -> None:
         raise NotImplementedError
+
+    def abort_enter(self, metadata: LazyDict, error: BaseException) -> None:
+        """Release a successful enter when a later hook rejects the launch."""
+        self.exit(metadata)
 
     @abstractmethod
     def activate(self) -> None:
@@ -47,8 +52,21 @@ class HookManager:
 
     @staticmethod
     def enter(metadata: LazyDict) -> None:
-        for hook in HookManager.active_hooks:
-            hook.enter(metadata)
+        entered = []
+        try:
+            for hook in tuple(HookManager.active_hooks):
+                hook.enter(metadata)
+                entered.append(hook)
+        except BaseException as error:
+            for hook in reversed(entered):
+                try:
+                    hook.abort_enter(metadata, error)
+                except BaseException as cleanup_error:
+                    if hasattr(error, "add_note"):
+                        error.add_note(f"{type(hook).__name__} rollback failed: {cleanup_error}")
+                    else:
+                        print(f"{type(hook).__name__} rollback failed: {cleanup_error}", file=sys.stderr)
+            raise
 
     @staticmethod
     def exit(metadata: LazyDict) -> None:
@@ -64,7 +82,7 @@ class HookManager:
             sessions = [session]
 
         for session in sessions:
-            for hook in HookManager.session_hooks[session]:
+            for hook in HookManager.session_hooks.get(session, {}):
                 if hook not in HookManager.active_hooks:
                     hook.activate()
                     HookManager.active_hooks.append(hook)
@@ -81,7 +99,7 @@ class HookManager:
 
         deactivated_hooks = set()
         for session in sessions:
-            for hook in HookManager.session_hooks[session]:
+            for hook in HookManager.session_hooks.get(session, {}):
                 if hook in HookManager.active_hooks:
                     deactivated_hooks.add(hook)
                 HookManager.session_hooks[session][hook] = False
@@ -89,7 +107,7 @@ class HookManager:
         # Check if any other sessions rely on this hook
         for hook in deactivated_hooks:
             if not any(
-                    session_hooks[hook]
+                    session_hooks.get(hook, False)
                     for session_hooks in HookManager.session_hooks.values()):
                 hook.deactivate()
                 HookManager.active_hooks.remove(hook)

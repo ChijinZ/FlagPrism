@@ -20,6 +20,10 @@ public:
   virtual ~InstrumentationProfiler();
 
   InstrumentationProfiler *setMode(const std::vector<std::string> &mode);
+  void setRawCaptureEnabled(bool enabled);
+  void setObservationPrograms(const std::vector<uint32_t> &programs);
+  std::vector<uint8_t> takeRawHostBuffer(uint64_t functionId, uint64_t streamId);
+
 
 protected:
   // Profiler
@@ -56,6 +60,12 @@ private:
   std::map<void *, void *> deviceStreams;
   std::map<std::string, std::string> modeOptions;
   uint8_t *hostBuffer{nullptr};
+  bool rawCaptureEnabled{false};
+  std::vector<uint32_t> observationPrograms;
+  uint64_t rawFunctionId{0};
+  uint64_t rawStreamId{0};
+  std::vector<uint8_t> rawHostBytes;
+
   // functionId -> scopeId -> scopeName
   std::map<uint64_t, std::map<size_t, std::string>> functionScopeIdNames;
   // functionId -> scopeId -> contexts

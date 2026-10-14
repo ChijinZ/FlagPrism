@@ -1,4 +1,8 @@
 #include "Profiler.h"
+#if FLAGTREE_PROFILER_GPU_RUNTIME
+#include "Profiler/Instrumentation/InstrumentationProfiler.h"
+#include "Profiler/Cupti/CuptiPCSampling.h"
+#endif
 
 #include <map>
 #include <stdexcept>
@@ -97,6 +101,25 @@ static void initProfiler(pybind11::module &&m) {
     SessionManager::instance().exitInstrumentedOp(
         streamId, functionId, reinterpret_cast<uint8_t *>(buffer), size);
   });
+
+#if FLAGTREE_PROFILER_GPU_RUNTIME
+  m.def("validate_pc_sampling_support", [](const std::string &libPath) {
+    if (!libPath.empty()) cupti::setLibPath(libPath);
+    CUcontext context = nullptr;
+    cuda::ctxGetCurrent<false>(&context);
+    CuptiPCSampling::instance().validateSupport(context);
+  }, pybind11::arg("lib_path") = "");
+  m.def("set_observation_programs", [](const std::vector<uint32_t> &programs) {
+    InstrumentationProfiler::instance().setObservationPrograms(programs);
+  });
+  m.def("set_raw_capture_enabled", [](bool enabled) {
+    InstrumentationProfiler::instance().setRawCaptureEnabled(enabled);
+  });
+  m.def("get_raw_host_buffer", [](uint64_t functionId, uint64_t streamId) {
+    auto bytes = InstrumentationProfiler::instance().takeRawHostBuffer(functionId, streamId);
+    return pybind11::bytes(reinterpret_cast<const char *>(bytes.data()), bytes.size());
+  });
+#endif
 
   m.def("enter_state", [](const std::string &state) {
     SessionManager::instance().setState(state);

@@ -39,10 +39,15 @@ struct DecodedTimelineRecord {
   TimelineRecord raw{};
 };
 
+struct DecodedDynamicTimelineRecord {
+  DynamicTimelineRecord raw{};
+};
+
 using DecodedRecord =
     std::variant<DecodedSummaryRecord, DecodedSummaryCountBundleRecord,
                  DecodedSummaryValueBundleRecord, DecodedMemoryEventRecord,
-                 DecodedFullValueRefRecord, DecodedTimelineRecord>;
+                 DecodedFullValueRefRecord, DecodedTimelineRecord,
+                 DecodedDynamicTimelineRecord>;
 
 struct DecodedDebugRun {
   BufferMeta meta{};

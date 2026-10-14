@@ -1,5 +1,6 @@
 #include "Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.h"
 #include "Dialect/ProtonGPU/IR/Dialect.h"
+#include "Conversion/ProtonGPUToLLVM/Utility.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMTypes.h"
 #include "mlir/Dialect/LLVMIR/NVVMDialect.h"
@@ -12,29 +13,22 @@ namespace mlir::triton::proton::gpu::NVIDIA {
 Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
                         bool isClock64) const {
 
-  auto getClockReg = [&](const std::string &clkName) {
-    PTXBuilder builder;
-    auto &movLow = builder.create("mov")->o("u32");
-    auto *destLowOpr = builder.newOperand("=r");
-    auto *sRegLowOpr = builder.newConstantOperand(clkName);
-    movLow(destLowOpr, sRegLowOpr);
-    Value clkLow32 =
-        builder.launch(rewriter, loc, rewriter.getIntegerType(32), true);
-    return clkLow32;
-  };
-
-  Value clkLow32 = getClockReg("%clock");
-
-  if (!isClock64)
-    return clkLow32;
-
-  Value clkHigh32 = getClockReg("%clock_hi");
-
-  auto b = TritonLLVMOpBuilder(loc, rewriter);
-  Value clkLow64 = b.zext(i64_ty, clkLow32);
-  Value clkHigh64 = b.zext(i64_ty, clkHigh32);
-  Value clock64 = b.or_(b.shl(clkHigh64, b.i64_val(32)), clkLow64);
-  return clock64;
+  // One PTX read avoids combining a low word from before rollover with a
+  // high word from afterwards. These are SM-local cycle ticks, not CUPTI ns.
+  PTXBuilder builder;
+  auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
+  auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
+  auto *clock = builder.newConstantOperand(isClock64 ? "%clock64" : "%clock");
+  auto mod = rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  if (mod->hasAttr("proton.selected_programs")) {
+    builder.create("mov")->o(isClock64 ? "u64" : "u32")(
+        dest, builder.newConstantOperand(0));
+    mov(dest, clock).predicate(getProgramCollectionPredicate(mod, loc, rewriter));
+  } else {
+    mov(dest, clock);
+  }
+  return builder.launch(rewriter, loc,
+                        rewriter.getIntegerType(isClock64 ? 64 : 32), true);
 }
 
 Value TargetInfo::processorId(ConversionPatternRewriter &rewriter,

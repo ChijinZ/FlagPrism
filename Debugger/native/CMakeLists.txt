@@ -51,6 +51,14 @@ set(DEBUGGER_COMPILER_IMPLEMENTATION_SOURCES
   "${DEBUGGER_ROOT}/lib/Instrumentation/RecordBuilder.cpp"
   "${DEBUGGER_ROOT}/lib/Instrumentation/Writer.cpp"
 )
+set(DEBUGGER_COMPILER_LINK_LIBS)
+if(TARGET FlagTreeDebugger)
+  # Unit-test builds already compile these implementations into the core's
+  # Debugger libraries. Reuse them rather than putting a second definition of
+  # every dialect/pass/record helper into libtriton through this plugin.
+  set(DEBUGGER_COMPILER_IMPLEMENTATION_SOURCES)
+  list(APPEND DEBUGGER_COMPILER_LINK_LIBS FlagTreeDebugger)
+endif()
 add_triton_plugin(TritonDebugger
   "${DEBUGGER_ROOT}/python/CompilerPlugin.cpp"
   "${DEBUGGER_ROOT}/python/CompilerBindings.cpp"
@@ -64,6 +72,7 @@ add_triton_plugin(TritonDebugger
   MLIRPass
   MLIRPtrDialect
   LLVMSupport
+  ${DEBUGGER_COMPILER_LINK_LIBS}
 )
 target_link_libraries(TritonDebugger PRIVATE Python3::Module pybind11::headers)
 flagprism_apply_backend_compile_definitions(TritonDebugger)

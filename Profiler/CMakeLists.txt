@@ -85,6 +85,16 @@ find_package(Python3 REQUIRED Interpreter Development.Module)
 find_package(pybind11 CONFIG REQUIRED HINTS "${Python3_SITELIB}")
 
 if(FLAGTREE_PROFILER_STANDALONE)
+  # Reuse the same backend policy as the bundled build, without pretending
+  # this component is the parent FlagTree source tree.
+  if(NOT COMMAND flagprism_apply_backend_compile_definitions)
+    function(flagprism_apply_backend_compile_definitions target)
+      if(FLAGPRISM_BACKEND MATCHES "^(ascend|enflame|mthreads|tianshu)$")
+        string(TOUPPER "${FLAGPRISM_BACKEND}" _backend)
+        target_compile_definitions(${target} PRIVATE "FLAGPRISM_BACKEND_${_backend}=1")
+      endif()
+    endfunction()
+  endif()
   if(NOT FLAGTREE_BUILD_DIR)
     message(FATAL_ERROR "FLAGTREE_BUILD_DIR must point to the FlagTree core CMake build tree")
   endif()
@@ -245,6 +255,13 @@ if(FLAGTREE_PROFILER_STANDALONE)
     "${FLAGTREE_LIBTRITON}"
     MLIRIR
     MLIRPass
+    MLIRTransformUtils
+    MLIRControlFlowDialect
+    MLIRSCFDialect
+    MLIRLLVMDialect
+    MLIRArithDialect
+    MLIRGPUDialect
+    MLIRLLVMCommonConversion
     LLVMSupport
   )
 endif()

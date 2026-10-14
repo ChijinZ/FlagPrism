@@ -65,6 +65,8 @@ std::string toString(RecordKind kind) {
     return "SUMMARY_VALUE_BUNDLE_F32";
   case RecordKind::TIMELINE:
     return "TIMELINE";
+  case RecordKind::DYNAMIC_TIMELINE:
+    return "DYNAMIC_TIMELINE";
   }
   return "UNKNOWN_RECORD_KIND";
 }

@@ -366,16 +366,27 @@ def test_pcsampling(tmp_path: pathlib.Path):
             tl.store(y + offs, tl.load(x + offs))
 
     temp_file = tmp_path / "test_pcsampling" / "ai/call_tree.json"
-    profiler.start(str(temp_file.parent.parent),
-                   hook="triton",
-                   backend="cupti",
-                   mode="pcsampling")
-    with profiler.scope("init"):
-        x = torch.ones((1024, ), device="cuda", dtype=torch.float32)
-        y = torch.zeros_like(x)
-    with profiler.scope("test"):
-        foo[(1, )](x, y, x.size()[0], num_warps=4)
-    profiler.finalize()
+    torch.empty(1, device="cuda")  # Create context for the real SDK capability probe.
+    session = None
+    try:
+        session = profiler.start(str(temp_file.parent.parent),
+                       hook="triton",
+                       backend="cupti",
+                       mode="pcsampling")
+        with profiler.scope("init"):
+            x = torch.ones((1024, ), device="cuda", dtype=torch.float32)
+            y = torch.zeros_like(x)
+        with profiler.scope("test"):
+            foo[(1, )](x, y, x.size()[0], num_warps=4)
+        profiler.finalize(session)
+        session = None
+    except RuntimeError as error:
+        if "CUPTI PC sampling unsupported" in str(error):
+            pytest.skip(str(error))
+        raise
+    finally:
+        if session is not None:
+            profiler.finalize(session)
     with temp_file.open() as f:
         data = json.load(f)
     init_frame = data[0]["children"][0]
@@ -454,12 +465,16 @@ def test_trace(tmp_path: pathlib.Path):
 
     with temp_file.open() as f:
         data = json.load(f)
-        trace_events = data["traceEvents"]
+        trace_events = [event for event in data["traceEvents"] if event["ph"] == "X"]
         assert len(trace_events) == 3
         assert trace_events[-1]["name"] == "foo"
-        assert trace_events[-1]["args"]["call_stack"] == [
-            "ROOT", "test", "foo"
-        ]
+        assert all(event["args"]["scope_id"] > 0 and event["args"]["correlation_id"] > 0
+                   for event in trace_events)
+    # The inherited shadow call stack remains in raw/native; unified activity
+    # does not infer it by joining kernel names to a separate tree.
+    raw_trace = temp_file.parent.parent / "raw/native/capture.chrome_trace"
+    legacy = json.loads(raw_trace.read_text())["traceEvents"]
+    assert legacy[-1]["args"]["call_stack"] == ["ROOT", "test", "foo"]
 
 
 def test_scope_multiple_threads(tmp_path: pathlib.Path):

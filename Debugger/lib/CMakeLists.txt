@@ -11,6 +11,13 @@ add_triton_library(FlagTreeDebuggerRuntime
 )
 flagprism_enable_debugger_runtime(FlagTreeDebuggerRuntime)
 flagprism_apply_backend_compile_definitions(FlagTreeDebuggerRuntime)
+# Native runtime validation reports invalid buffer/launch contracts by
+# exception. LLVM's default -fno-exceptions policy is suitable for compiler
+# passes, but not this runtime target (also built by the full core graph).
+target_compile_options(FlagTreeDebuggerRuntime PRIVATE
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-fexceptions>
+  $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/EHsc>
+)
 
 add_triton_library(FlagTreeDebuggerFrontend
   Frontend/Bridge.cpp

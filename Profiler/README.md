@@ -49,6 +49,12 @@ other backends can implement the contract without changing the report UI.
 No separate report script is required. TCU is off by default.
 See [activity reports and the collector contract](docs/activity_report.md).
 
+This development branch also adds compiler execution mapping, semantic
+observations and invocation-associated reconstruction. See
+[semantic profiling and support boundaries](docs/semantic_profiling.md) and
+[method acceptance tests](docs/method_testing.md). Ascend hidden-only
+instrumentation is pending full hardware acceptance.
+
 ## Usage
 
 ### Basic usage

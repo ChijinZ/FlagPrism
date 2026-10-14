@@ -7,12 +7,116 @@
 #include "Profiler/Cupti/CuptiPCSampling.h"
 #include "Utility/Map.h"
 
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
+#include <unistd.h>
 
 namespace proton {
+
+void CuptiProfiler::beginActivityCapture() {
+  std::lock_guard<std::mutex> lock(activityMutex);
+  ++activityEpoch;
+}
+
+void CuptiProfiler::registerActivityLaunch(uint32_t correlationId,
+                                           size_t scopeId,
+                                           const std::set<Data *> &dataSet,
+                                           bool graphInstanceCountUnknown) {
+  std::lock_guard<std::mutex> lock(activityMutex);
+  auto &launch = activityLaunches[correlationId];
+  launch.scopeId = scopeId;
+  launch.epoch = activityEpoch;
+  launch.graphInstanceCountUnknown = graphInstanceCountUnknown;
+  for (auto *data : dataSet)
+    launch.sessions.insert(data->getPath());
+}
+
+void CuptiProfiler::recordActivityKernel(const void *activity) {
+  auto *kernel = static_cast<const CUpti_ActivityKernel5 *>(activity);
+  VendorMetricAssociation association;
+  auto &event = association.runtimeEvent;
+  event.opName = kernel->name ? kernel->name : "";
+  event.correlationId = kernel->correlationId;
+  event.deviceId = kernel->deviceId;
+  event.streamId = kernel->streamId;
+  event.startTimeNs = kernel->start;
+  event.endTimeNs = kernel->end;
+  association.source = "cupti_activity";
+  association.state = VendorMetricState::Collected;
+  association.metrics = {
+      {"activity.kind", std::string("kernel")},
+      {"activity.process_id", uint64_t(getpid())},
+      {"activity.context_id", uint64_t(kernel->contextId)},
+      {"activity.correlation_domain", std::string("cupti")},
+      {"activity.clock_domain", std::string("cupti_timestamp_ns")},
+      {"activity.time_semantics", std::string("device_kernel_execution")},
+      {"activity.grid_x", uint64_t(kernel->gridX)},
+      {"activity.grid_y", uint64_t(kernel->gridY)},
+      {"activity.grid_z", uint64_t(kernel->gridZ)},
+      {"activity.block_x", uint64_t(kernel->blockX)},
+      {"activity.block_y", uint64_t(kernel->blockY)},
+      {"activity.block_z", uint64_t(kernel->blockZ)},
+      {"activity.graph_id", uint64_t(kernel->graphId)},
+      {"activity.unknown_fields", std::string("thread_id,task_id")}};
+  std::lock_guard<std::mutex> lock(activityMutex);
+  auto launch = activityLaunches.find(kernel->correlationId);
+  if (launch != activityLaunches.end()) {
+    event.scopeId = launch->second.scopeId;
+    if (launch->second.graphInstanceCountUnknown)
+      association.metrics["activity.graph_instance_count_status"] =
+          std::string("unknown_graph_created_before_capture");
+    association.metrics["activity.capture_epoch"] = launch->second.epoch;
+    association.metrics["activity.correlation_domain"] =
+        std::string("cupti-capture-") + std::to_string(launch->second.epoch);
+  } else
+    association.metrics["activity.unknown_fields"] =
+        std::string("thread_id,task_id,scope_id");
+  activityEvents.push_back({std::move(association),
+                            launch == activityLaunches.end()
+                                ? std::set<std::string>{}
+                                : launch->second.sessions});
+}
+
+void CuptiProfiler::recordActivityDropped(size_t count) {
+  std::lock_guard<std::mutex> lock(activityMutex);
+  activityDropped += count;
+}
+
+VendorProfileArtifact
+CuptiProfiler::collectActivityArtifact(const std::string &sessionPath) {
+  VendorProfileArtifact artifact;
+  artifact.backend = "cuda";
+  artifact.importer = "cupti_activity";
+  std::lock_guard<std::mutex> lock(activityMutex);
+  if (activityDropped)
+    artifact.degradeReasons.push_back(
+        "CUPTI profiler lifetime has cumulatively dropped " + std::to_string(activityDropped) +
+        " records; loss cannot be attributed to one session or native activity");
+  for (auto it = activityEvents.begin(); it != activityEvents.end();) {
+    if (it->sessions.erase(sessionPath)) {
+      if (it->association.metrics.count("activity.graph_instance_count_status") &&
+          std::find(artifact.degradeReasons.begin(), artifact.degradeReasons.end(),
+                    "Graph created before CUPTI capture: per-replay instance count unavailable; correlation cache retained until capture epoch ends") == artifact.degradeReasons.end())
+        artifact.degradeReasons.push_back("Graph created before CUPTI capture: per-replay instance count unavailable; correlation cache retained until capture epoch ends");
+      artifact.associations.push_back(it->association);
+    }
+    if (it->sessions.empty())
+      it = activityEvents.erase(it);
+    else
+      ++it;
+  }
+  for (auto it = activityLaunches.begin(); it != activityLaunches.end();) {
+    it->second.sessions.erase(sessionPath);
+    if (it->second.sessions.empty())
+      it = activityLaunches.erase(it);
+    else
+      ++it;
+  }
+  return artifact;
+}
 
 template <>
 thread_local GPUProfiler<CuptiProfiler>::ThreadState
@@ -250,6 +354,9 @@ void CuptiProfiler::CuptiProfilerPimpl::completeBuffer(CUcontext ctx,
   do {
     status = cupti::activityGetNextRecord<false>(buffer, validSize, &activity);
     if (status == CUPTI_SUCCESS) {
+      if (activity->kind == CUPTI_ACTIVITY_KIND_KERNEL ||
+          activity->kind == CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL)
+        profiler.recordActivityKernel(activity);
       auto correlationId =
           processActivity(profiler.correlation.corrIdToExternId,
                           profiler.correlation.apiExternIds, dataSet, activity);
@@ -261,6 +368,9 @@ void CuptiProfiler::CuptiProfilerPimpl::completeBuffer(CUcontext ctx,
     }
   } while (true);
 
+  size_t dropped = 0;
+  cupti::activityGetNumDroppedRecords<true>(ctx, streamId, &dropped);
+  profiler.recordActivityDropped(dropped);
   std::free(buffer);
 
   profiler.correlation.complete(maxCorrelationId);
@@ -329,6 +439,7 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
     if (callbackData->callbackSite == CUPTI_API_ENTER) {
       threadState.enterOp();
       size_t numInstances = 1;
+      bool graphInstanceCountUnknown = false;
       if (cbId == CUPTI_DRIVER_TRACE_CBID_cuGraphLaunch ||
           cbId == CUPTI_DRIVER_TRACE_CBID_cuGraphLaunch_ptsz) {
         auto graphExec = static_cast<const cuGraphLaunch_params *>(
@@ -345,14 +456,20 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
             findGraph = true;
           }
         }
-        if (!findGraph)
+        if (!findGraph) {
+          graphInstanceCountUnknown = true;
           std::cerr << "[PROTON] Cannot find graph for graphExecId: "
                     << graphExecId
                     << ", and t may cause memory leak. To avoid this problem, "
                        "please start profiling before the graph is created."
                     << std::endl;
+        }
       }
       profiler.correlation.correlate(callbackData->correlationId, numInstances);
+      if (!profiler.correlation.externIdQueue.empty())
+        profiler.registerActivityLaunch(callbackData->correlationId,
+                                       profiler.correlation.externIdQueue.back(),
+                                       profiler.getDataSet(), graphInstanceCountUnknown);
       if (profiler.isPCSamplingEnabled() && isDriverAPILaunch(cbId)) {
         pImpl->pcSampling.start(callbackData->context);
       }
@@ -371,6 +488,12 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
 }
 
 void CuptiProfiler::CuptiProfilerPimpl::doStart() {
+  // CUPTI finalization can recycle correlation IDs. Namespace each subscriber
+  // lifetime and reset its completion watermark before accepting new launches.
+  profiler.beginActivityCapture();
+  profiler.correlation.maxSubmittedCorrelationId.store(0);
+  profiler.correlation.maxCompletedCorrelationId.store(0);
+  profiler.correlation.corrIdToExternId.clear();
   cupti::subscribe<true>(&subscriber, callbackFn, nullptr);
   if (profiler.isPCSamplingEnabled()) {
     setResourceCallbacks(subscriber, /*enable=*/true);

@@ -79,7 +79,7 @@ def test_enflame_session_launch_membership(tmp_path):
     for path in paths:
         assert (path / "manifest.json").exists()
         assert not (path / "ai/counters.json").exists()
-        assert not (path / "raw").exists()
+        assert (path / "raw/native/capture.vendor.json").exists()
         assert not path.with_suffix(".vendor.json").exists()
         associations = [
             json.loads(line)["original_record"]

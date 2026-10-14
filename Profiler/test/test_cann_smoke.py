@@ -30,6 +30,11 @@ profiler_native = runtime_binding()
 
 profiler_profile = importlib.import_module("flagtree.profiler.profile")
 
+def _native_artifact(base, suffix):
+    """Public bundle preserves the complete original native producer records."""
+    return pathlib.Path(base) / "raw" / "native" / ("capture" + suffix)
+
+
 
 @pytest.fixture(autouse=True)
 def _use_legacy_cann_triton_hook(monkeypatch):
@@ -54,7 +59,7 @@ def _finalize_cann_import(base, import_root, monkeypatch, metrics="aicore"):
               "aclprof_msproftx_enabled=false"),
     )
     profiler.finalize(session_id)
-    return json.loads(base.with_suffix(".vendor.json").read_text())
+    return json.loads(_native_artifact(base, ".vendor.json").read_text())
 
 
 def _op_summary_associations(vendor_json):
@@ -104,7 +109,7 @@ def test_ir_record_capacity_is_part_of_cache_mode(monkeypatch):
     assert get_instrumentation_mode() == ""
 
 
-def test_native_instrumentation_preserves_mode_and_default_hook(monkeypatch):
+def test_native_instrumentation_preserves_mode_and_default_hook(monkeypatch, tmp_path):
     from flagtree.profiler.mode import Default
 
     calls = {}
@@ -127,7 +132,7 @@ def test_native_instrumentation_preserves_mode_and_default_hook(monkeypatch):
     monkeypatch.setattr(
         profiler_profile,
         "InstrumentationHook",
-        lambda selected_mode: ("instrumentation", selected_mode),
+        lambda selected_mode, **options: ("instrumentation", selected_mode),
     )
     monkeypatch.setattr(
         profiler_profile.HookManager,
@@ -138,18 +143,20 @@ def test_native_instrumentation_preserves_mode_and_default_hook(monkeypatch):
     profiler_profile._active_sessions.clear()
     try:
         session = profiler_profile.start(
-            "/tmp/flagtree_profiler_instrumentation_compat",
+            str(tmp_path / "instrumentation_compat"),
             backend="instrumentation",
             mode=mode,
         )
         assert session == 71
         assert calls["start"][4] == f"cuda:{mode}"
-        assert calls["hook"] == (("instrumentation", mode), 71)
+        assert calls["hook"][1] == 71
+        assert isinstance(calls["hook"][0], profiler_profile.LaunchHook)
+        assert profiler_profile._active_sessions[71]["instrumentation_hook"] is not None
     finally:
         profiler_profile._active_sessions.clear()
 
 
-def test_finalize_preserves_data_specific_default_format(monkeypatch):
+def test_finalize_preserves_data_specific_default_format(monkeypatch, tmp_path):
     calls = {}
     runtime = SimpleNamespace(finalize=lambda session, output_format: calls.
                               setdefault("finalize", (session, output_format)),
@@ -163,7 +170,7 @@ def test_finalize_preserves_data_specific_default_format(monkeypatch):
         staticmethod(lambda session=None: None),
     )
     profiler_profile._active_sessions.clear()
-    profiler_profile._active_sessions[72] = {"name": "trace"}
+    profiler_profile._active_sessions[72] = {"name": str(tmp_path / "trace"), "session": 72}
     profiler_profile.finalize(72)
     assert calls["finalize"] == (72, "")
 
@@ -195,7 +202,10 @@ def real_cann_direct_run(tmp_path_factory):
     msprof_out = out / "msprof"
     env = os.environ.copy()
     env.setdefault("TORCH_DEVICE_BACKEND_AUTOLOAD", "0")
-    env.setdefault("ASCEND_VISIBLE_DEVICES", "0")
+    namespace = out / "component_namespace"
+    namespace.mkdir()
+    (namespace / "profiler").symlink_to(pathlib.Path(profiler.__file__).parent)
+    env["FLAGPRISM_TEST_NAMESPACE_ROOT"] = str(namespace)
     env.setdefault("FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY", "1")
     cmd = [
         sys.executable,
@@ -229,13 +239,12 @@ def real_cann_direct_run(tmp_path_factory):
         "stdout":
         result.stdout,
         "meta":
-        json.loads(profile_base.with_suffix(".meta.json").read_text()),
+        json.loads(_native_artifact(profile_base, ".meta.json").read_text()),
         "vendor":
-        json.loads(profile_base.with_suffix(".vendor.json").read_text()),
+        json.loads(_native_artifact(profile_base, ".vendor.json").read_text()),
         "timeline":
         json.loads(
-            profile_base.with_suffix(
-                ".timeline.json").read_text().splitlines()[0]),
+            _native_artifact(profile_base, ".timeline.json").read_text().splitlines()[0]),
     }
 
 
@@ -265,10 +274,10 @@ def test_cann_backend_smoke(tmp_path):
 
     profiler.finalize(session_id)
 
-    hatchet = base.with_suffix(".hatchet")
-    timeline = base.with_suffix(".timeline.json")
-    meta = base.with_suffix(".meta.json")
-    vendor = base.with_suffix(".vendor.json")
+    hatchet = _native_artifact(base, ".hatchet")
+    timeline = _native_artifact(base, ".timeline.json")
+    meta = _native_artifact(base, ".meta.json")
+    vendor = _native_artifact(base, ".vendor.json")
 
     assert hatchet.exists()
     assert timeline.exists()
@@ -317,7 +326,7 @@ def test_cann_hatchet_preserves_custom_scope_data(tmp_path):
         pass
     profiler.finalize(session_id)
 
-    hatchet = json.loads(base.with_suffix(".hatchet").read_text())
+    hatchet = json.loads(_native_artifact(base, ".hatchet").read_text())
     pending = [hatchet[0]]
     custom_scope = None
     while pending:
@@ -358,7 +367,7 @@ def test_cann_imports_exported_msprof_tx_csv(tmp_path, monkeypatch):
     )
     profiler.finalize(session_id)
 
-    vendor = base.with_suffix(".vendor.json")
+    vendor = _native_artifact(base, ".vendor.json")
     vendor_json = json.loads(vendor.read_text())
     assert any("msprof_tx_0.csv" in path
                for path in vendor_json.get("raw_inputs", []))
@@ -388,7 +397,7 @@ def test_cann_defaults_host_timing_fallback_and_temporary_output(
     )
     profiler.finalize(session_id)
 
-    meta_json = json.loads(base.with_suffix(".meta.json").read_text())
+    meta_json = json.loads(_native_artifact(base, ".meta.json").read_text())
     config = meta_json["config"]
     assert config["runtime_host_timing_fallback"] == "true"
     assert config["aclprof_output_path_temporary"] == "true"
@@ -581,7 +590,8 @@ def test_cann_correlates_op_summary_by_correlation_id(tmp_path, monkeypatch):
     assert len(associations) == 1
     assoc = associations[0]
     assert assoc["state"] == "collected"
-    assert "correlation_id" in assoc["note"]
+    assert assoc["runtime_event"]["correlation_id"] == 9001
+    assert assoc["runtime_event"]["scope_id"] == 0
     assert assoc["metrics"]["aicore_time_ms"] == 0.2
     assert assoc["metrics"]["totalcycle"] == 12345
 
@@ -607,14 +617,14 @@ def test_cann_derives_bandwidth_from_op_summary_bytes(tmp_path, monkeypatch):
     assert metrics["bandwidth_source"].startswith(
         "derived_from_bytes_and_task_duration")
 
-    timeline = json.loads(base.with_suffix(".timeline.json").read_text())
+    timeline = json.loads(_native_artifact(base, ".timeline.json").read_text())
     event = next(event for event in timeline["traceEvents"]
                  if str(event.get("name", "")).startswith("bandwidth_kernel"))
     assert event["cat"] == "cann_runtime:aclprof_op_summary"
-    assert event["args"]["cann.bandwidth_gb_s"] == 300
-    assert event["args"]["metrics"]["cann.memory_access_bytes"] == 3_000_000
+    assert event["args"]["metrics"]["bandwidth_gb_s"] == 300
+    assert event["args"]["metrics"]["memory_access_bytes"] == 3_000_000
 
-    hatchet = json.loads(base.with_suffix(".hatchet").read_text())
+    hatchet = json.loads(_native_artifact(base, ".hatchet").read_text())
     nodes = []
 
     def collect(node):
@@ -625,7 +635,7 @@ def test_cann_derives_bandwidth_from_op_summary_bytes(tmp_path, monkeypatch):
     collect(hatchet[0])
     bandwidth_node = next(node for node in nodes if str(
         node.get("frame", {}).get("name", "")).startswith("bandwidth_kernel"))
-    assert bandwidth_node["metrics"]["cann.bandwidth_gb_s"] == 300
+    assert bandwidth_node["metrics"]["bandwidth_gb_s"] == 300
     assert isinstance(bandwidth_node["metrics"]["device_id"], str)
 
 
@@ -699,7 +709,9 @@ def test_cann_correlates_op_summary_by_task_id(tmp_path, monkeypatch):
     associations = _op_summary_associations(vendor_json)
     assert len(associations) == 1
     assert associations[0]["state"] == "collected"
-    assert "task_id" in associations[0]["note"]
+    assert associations[0]["runtime_event"]["task_id"] == 7007
+    assert associations[0]["runtime_event"]["scope_id"] == 0
+    assert associations[0]["metrics"]["activity.association"] == "unassociated"
 
 
 def test_cann_correlates_op_summary_by_strict_runtime_key(
@@ -720,7 +732,8 @@ def test_cann_correlates_op_summary_by_strict_runtime_key(
     associations = _op_summary_associations(vendor_json)
     assert len(associations) == 1
     assert associations[0]["state"] == "collected"
-    assert "device_id/stream_id/op_name" in associations[0]["note"]
+    assert associations[0]["runtime_event"]["scope_id"] == 0
+    assert associations[0]["metrics"]["activity.association"] == "unassociated"
 
 
 def test_cann_fuzzy_match_requires_timestamp_window(tmp_path, monkeypatch):
@@ -739,8 +752,9 @@ def test_cann_fuzzy_match_requires_timestamp_window(tmp_path, monkeypatch):
                                         csv_dir, monkeypatch)
     associations = _op_summary_associations(vendor_json)
     assert len(associations) == 1
-    assert associations[0]["state"] == "unmatched"
-    assert "No runtime event matched" in associations[0]["note"]
+    assert associations[0]["state"] == "collected"
+    assert associations[0]["runtime_event"]["scope_id"] == 0
+    assert associations[0]["metrics"]["activity.association"] == "unassociated"
 
 
 def test_cann_real_direct_exports_bandwidth(real_cann_direct_run):
@@ -779,15 +793,16 @@ def test_cann_real_direct_imports_aicore_op_summary(real_cann_direct_run):
 def test_cann_real_direct_imports_mstx_timeline(real_cann_direct_run):
     vendor_json = real_cann_direct_run["vendor"]
     assert any(
-        assoc.get("source") == "msprof_mstx"
-        and assoc.get("metrics", {}).get("message") ==
-        "flagtree_profiler_cann_triton::triton_vector_add_fp32"
+        assoc.get("source") in {"msprof_mstx", "msprof_native_trace"}
+        and assoc.get("runtime_event", {}).get("scope_id", 0) > 0
+        and str(assoc.get("runtime_event", {}).get("op_name", "")).startswith("flagprism.scope=")
+        and "flagtree_profiler_cann_triton::triton_vector_add_fp32" in assoc.get("runtime_event", {}).get("op_name", "")
         for assoc in vendor_json.get("associations", []))
 
     events = real_cann_direct_run["timeline"].get("traceEvents", [])
     assert any(
-        str(event.get("name", "")).startswith(
-            "flagtree_profiler_cann_triton::triton_vector_add_fp32")
+        str(event.get("name", "")).startswith("flagprism.scope=")
+        and "flagtree_profiler_cann_triton::triton_vector_add_fp32" in event.get("name", "")
         for event in events)
     assert any(
         assoc.get("source") == "aclprof_op_summary"

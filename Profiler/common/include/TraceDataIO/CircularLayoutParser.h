@@ -23,6 +23,8 @@ struct CircularLayoutParserConfig : public ParserConfig {
   size_t numBlocks = 0;
   // A vector of trace's uids
   std::vector<uint32_t> uidVec = {};
+  // Empty preserves legacy all-CTA parsing; otherwise physical linear CTA slots.
+  std::vector<uint32_t> selectedBlocks = {};
 };
 
 struct CircularLayoutParserResult {

@@ -1,0 +1,18 @@
+{
+  "baseline": "0364ed4bc39d1dfae483741ec272298297fa5bda",
+  "initial_patch_sha256": "9a67673d0e55c3ae1e8941552a5f924b3117f101231568231d90e892fcc20c0d",
+  "complete_patch_sha256": "a0d612e6ca1d7d30728c3dec1b901d2a282c8190dc65912248c04a91f8a1ff92",
+  "files": {
+    "python/flagtree/_flagprism.py": "c0ebc53ec8e7d20d34a52385c04d3f72c2e88e744d782907146a84a4c73870dc",
+    "third_party/ascend/backend/compiler.py": "9dee630e81131e6555d02f54fe4c344e7f7c1d66fe17f6c84a3b79fd178a2696"
+  },
+  "dependencies": {
+    "AscendNPU-IR": "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9",
+    "FLIR": "516ad3110cbf6112bbed8f927ae606c627a193f2"
+  },
+  "validation_status": "export_only_build_and_runtime_pending",
+  "combined_patch_files": [
+    "python/flagtree/_flagprism.py",
+    "third_party/ascend/backend/compiler.py"
+  ]
+}

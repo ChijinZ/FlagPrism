@@ -1,4 +1,5 @@
 import argparse
+import json
 import sys
 import os
 from pathlib import Path
@@ -61,10 +62,11 @@ def parse_arguments():
         "--counters",
         action="store_true",
         help=
-        "Enable external hardware counters (TCU on Enflame; off by default)")
+        "Enable external hardware counters (TCU on Enflame or msprof on Ascend; off by default)")
     parser.add_argument("--counter-metrics", default=None)
+    parser.add_argument("--observation-request", help="JSON file describing a typed detailed observation request")
     parser.add_argument("--replay-mode",
-                        choices=("none", "application"),
+                        choices=("none", "application", "independent"),
                         default="none")
     parser.add_argument("--metadata",
                         help="Workload/environment JSON metadata")
@@ -301,6 +303,8 @@ def run_profiling(args, target_args):
         backend=backend,
         mode=args.mode,
         hook=args.hook,
+        observation_request=(json.loads(Path(args.observation_request).read_text())
+                             if getattr(args, "observation_request", None) else None),
     )
 
     try:

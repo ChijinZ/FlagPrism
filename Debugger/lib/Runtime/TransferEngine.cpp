@@ -989,6 +989,9 @@ struct BackendTransferAllocation {
 
 void synthesizeExportHeader(const DebugLaunchContext &ctx,
                             BackendTransferAllocation &allocation) {
+  if (ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+      ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1")
+    return; // The actual writer publishes its own counts, including overflow.
   if (!ctx.runtimeMetadata.hasLaunchGrid ||
       ctx.runtimeMetadata.recordsPerInstance == 0 || !allocation.hostBuffer ||
       allocation.bytes < sizeof(RingBufferHeader)) {
@@ -1023,7 +1026,8 @@ public:
     // Enflame full-payload lowering elides per-record bounds masks. Enforce
     // its precondition here too, so native callers share the Python guard.
     if (meta.backendKind == BackendKind::ENFLAME && plan.payloadBytes) {
-      if (!runtimeMetadata.hasLaunchGrid || !runtimeMetadata.recordsPerInstance)
+      if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+          !runtimeMetadata.hasLaunchGrid || !runtimeMetadata.recordsPerInstance)
         throw std::invalid_argument(
             "Enflame full dump requires launch grid and record count");
       uint64_t slots =
@@ -1091,6 +1095,12 @@ public:
     // it synchronous so the instrumented kernel never observes stale allocation
     // contents when different backend launch APIs are mixed in one process.
     adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes, 0);
+
+    if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
+      allocation->asyncExportPending = false;
+      allocation->asyncCopySubmitted = false;
+      return; // Actor-local headers are initialized by the actual selected writers.
+    }
 
     RingBufferHeader header{};
     header.writeIdx = 0;

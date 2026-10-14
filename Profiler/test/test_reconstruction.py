@@ -66,3 +66,23 @@ def test_shared_clock_requires_matching_invocation_proof(reconstruction):
     frame, = document['alignment_sets']
     assert frame['display_origin_tick'] == 10
     assert document['groups'][0]['time_relation'] == 'verified_shared_control_clock'
+
+
+@pytest.mark.parametrize('binary_id,scope_id,expected', [
+    ('binary1', 3, True), ('another-binary', 3, False), ('binary1', 4, False)])
+def test_region_origin_requires_actual_binary_and_observer_id(
+        reconstruction, binary_id, scope_id, expected):
+    raw = event()
+    raw['source'] = 'proton_nvidia_ring'
+    origin = {'status': 'source_region_origin', 'semantic': 'source_region_origin',
+              'entry': [{'kind': 'file_line_column', 'file': 'kernel.py',
+                         'line': 12, 'column': 4}], 'exit': [],
+              'basis': 'scope_id_allocation_and_record_op_location'}
+    raw['compiler_site'] = {'kind': 'explicit_proton_scope',
+                            'binary_id': binary_id, 'scope_id': scope_id,
+                            'origin': origin}
+    document = reconstruction.reconstruct({'observations': [raw]},
+        [dict(id='launch-1', binary_id='binary1')], [dict(id='binary1')], [])
+    record, = document['groups'][0]['observations']
+    assert record['source_region_origin'] == (origin if expected else None)
+    assert record['source_site'] is None  # Scope IDs are not TTIR operation IDs.

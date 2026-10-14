@@ -460,6 +460,29 @@ def test_bundle_preserves_evidence_and_unknown_context(tmp_path):
         report.write_bundle(result, source, out)
 
 
+def test_bundle_retains_actual_compiler_ir_without_inline_duplicates(tmp_path):
+    import hashlib
+    artifacts = {'ttir': 'module { // source origin\n}\n',
+                 'gcuir': 'module { // vector work-items\n}\n'}
+    document = dict(backend='enflame', associations=[], binaries=[{
+        'id': 'binary1', 'source': {}, 'compiler_artifacts': artifacts,
+        'execution_manifest': {'schema_version': 1, 'binary_id': 'binary1',
+                               'status': 'partial'},
+    }])
+    output = tmp_path / 'bundle'
+    report.write_bundle(report.analyze(document), document, output)
+    binary, = json.loads((output / 'ai/binaries.json').read_text())
+    assert 'compiler_artifacts' not in binary
+    manifest = json.loads((output / 'manifest.json').read_text())
+    for stage, content in artifacts.items():
+        ref = binary['compiler_artifact_files'][stage]
+        assert (output / ref['file']).read_bytes() == content.encode()
+        assert ref['sha256'] == hashlib.sha256(content.encode()).hexdigest()
+        assert manifest['files'][ref['file']]['sha256'] == ref['sha256']
+    analysis = json.loads((output / 'report/report.json').read_text())
+    assert 'compiler_artifacts' not in analysis['binaries'][0]
+
+
 def test_bundle_context_and_empty_capture(tmp_path):
     result = load(tmp_path, [])
     source = tmp_path / "profile.vendor.json"
@@ -473,7 +496,7 @@ def test_bundle_context_and_empty_capture(tmp_path):
     assert not (out / "report/timeline.json").exists()
 
 
-def test_automatic_export_retains_legacy_evidence_without_legacy_files(
+def test_automatic_export_keeps_legacy_trace_as_unverified_raw_evidence(
         tmp_path, monkeypatch):
     import sys
     import types
@@ -514,12 +537,15 @@ def test_automatic_export_retains_legacy_evidence_without_legacy_files(
     assert not output.exists()
     capture.export_capture(base, output)
     assert json.loads((output / "ai/call_tree.json").read_text()) == tree
-    assert json.loads(
-        (output / "report/timeline.json").read_text()) == native_trace
+    raw_trace = json.loads((output / "ai/raw_native_trace.json").read_text())
+    assert raw_trace["original_trace"] == native_trace
+    assert raw_trace["timing_status"] == "unverified"
+    assert not (output / "report/timeline.json").exists()
     assert json.loads(
         (output /
          "ai/rejected.jsonl").read_text())["original_record"] == original
-    assert not list(output.rglob("*.vendor.json"))
+    assert not list(output.glob("*.vendor.json"))
+    assert json.loads((output / "raw/native/capture.vendor.json").read_text())["associations"] == [original]
     manifest = json.loads((output / "manifest.json").read_text())
     assert "ai/call_tree.json" in manifest["files"]
     assert manifest["availability"]["producer"]["counters"][

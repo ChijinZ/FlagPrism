@@ -5,9 +5,11 @@
 #include "Device.h"
 #include "Utility/String.h"
 
+#include <nlohmann/json.hpp>
 #include <algorithm>
 #include <cctype>
 #include <chrono>
+#include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
@@ -17,11 +19,13 @@
 #include <memory>
 #include <optional>
 #include <set>
+#include <stdexcept>
 #include <unordered_map>
 #include <unordered_set>
 
 #if defined(__linux__)
 #include <dlfcn.h>
+#include <unistd.h>
 #endif
 
 namespace proton {
@@ -236,6 +240,7 @@ AclProfApi &aclProfApi() {
 struct AclRuntimeApi {
   using FnInit = AclError (*)(const char *);
   using FnSetDevice = AclError (*)(int32_t);
+  using FnGetDevice = AclError (*)(int32_t *);
   using FnCreateStream = AclError (*)(void **);
   using FnSynchronizeStream = AclError (*)(void *);
   using FnDestroyStream = AclError (*)(void *);
@@ -243,6 +248,7 @@ struct AclRuntimeApi {
   void *lib{nullptr};
   FnInit init{nullptr};
   FnSetDevice setDevice{nullptr};
+  FnGetDevice getDevice{nullptr};
   FnCreateStream createStream{nullptr};
   FnSynchronizeStream synchronizeStream{nullptr};
   FnDestroyStream destroyStream{nullptr};
@@ -295,6 +301,7 @@ struct AclRuntimeApi {
         continue;
       }
       setDevice = reinterpret_cast<FnSetDevice>(dlsym(lib, "aclrtSetDevice"));
+      getDevice = reinterpret_cast<FnGetDevice>(dlsym(lib, "aclrtGetDevice"));
       createStream =
           reinterpret_cast<FnCreateStream>(dlsym(lib, "aclrtCreateStream"));
       destroyStream =
@@ -493,7 +500,7 @@ std::optional<double> parseDouble(const std::string &value) {
   try {
     size_t parsedChars = 0;
     auto parsed = std::stod(cleaned, &parsedChars);
-    if (parsedChars != cleaned.size()) {
+    if (parsedChars != cleaned.size() || !std::isfinite(parsed)) {
       return std::nullopt;
     }
     return parsed;
@@ -510,7 +517,7 @@ std::optional<uint64_t> parseU64(const std::string &value) {
   try {
     size_t parsedChars = 0;
     auto parsed = std::stoull(cleaned, &parsedChars);
-    if (parsedChars != cleaned.size()) {
+    if (cleaned.front() == '-' || parsedChars != cleaned.size()) {
       return std::nullopt;
     }
     return static_cast<uint64_t>(parsed);
@@ -835,19 +842,22 @@ bool isCandidateVendorCsvFileName(const std::string &fileName) {
 
 uint64_t parseTimeToNs(const std::string &rawValue,
                        const std::string &rawHeader) {
-  auto parsed = parseDouble(rawValue);
-  if (!parsed.has_value()) {
+  const auto cleaned = trim(rawValue);
+  try {
+    size_t consumed = 0;
+    const auto value = std::stold(cleaned, &consumed);
+    if (consumed != cleaned.size() || !std::isfinite(value) || value < 0)
+      return 0;
+    const auto header = toLower(rawHeader);
+    const long double factor = header.find("ns") != std::string::npos ? 1.0L :
+        (header.find("ms") != std::string::npos ? 1'000'000.0L : 1'000.0L);
+    const auto ns = value * factor;
+    if (ns > static_cast<long double>(std::numeric_limits<uint64_t>::max()))
+      return 0;
+    return static_cast<uint64_t>(std::round(ns));
+  } catch (...) {
     return 0;
   }
-  auto header = toLower(rawHeader);
-  if (header.find("ns") != std::string::npos) {
-    return static_cast<uint64_t>(parsed.value());
-  }
-  if (header.find("ms") != std::string::npos) {
-    return static_cast<uint64_t>(parsed.value() * 1'000'000.0);
-  }
-  // Default to microseconds for msprof/aclprof summary fields.
-  return static_cast<uint64_t>(parsed.value() * 1'000.0);
 }
 
 std::vector<std::filesystem::path>
@@ -1012,6 +1022,10 @@ void parseOpSummaryCsv(const std::filesystem::path &file,
     VendorMetricAssociation association;
     association.state = VendorMetricState::Collected;
     association.source = "aclprof_op_summary";
+    association.metrics["activity.kind"] = std::string("kernel");
+    association.metrics["activity.semantics"] = std::string("native_device_task_lifecycle");
+    association.metrics["activity.clock_domain"] = std::string("cann_export");
+    association.metrics["activity.unknown_fields"] = std::string("process_id,thread_id,context_id");
     association.runtimeEvent.opName = getCell(opNameIdx);
     association.runtimeEvent.streamId =
         parseU64(getCell(streamIdIdx)).value_or(0);
@@ -1100,9 +1114,9 @@ void parseTaskTimeCsv(const std::filesystem::path &file,
   const auto streamIdIdx = findColumn(headers, {"streamid"});
   const auto deviceIdIdx = findColumn(headers, {"deviceid", "device"});
   const auto startIdx = findColumn(headers, {"taskstarttimeus", "starttimeus",
-                                             "taskstarttime", "starttime"});
+                                             "taskstarttime", "starttime", "taskstartus"});
   const auto durationIdx = findColumn(
-      headers, {"taskdurationus", "durationus", "taskduration", "duration"});
+      headers, {"taskdurationus", "durationus", "taskduration", "duration", "tasktimeus"});
   if (!startIdx.has_value() || !durationIdx.has_value()) {
     return;
   }
@@ -1213,6 +1227,13 @@ bool populateRuntimeEventFromRow(const std::vector<std::string> &headers,
     event.opName =
         getAny({"name", "message", "rangename", "range", "eventname"});
   }
+  // Scope identity is emitted in the range payload, independent of kernel names.
+  const std::string scopePrefix = "flagprism.scope=";
+  if (event.opName.rfind(scopePrefix, 0) == 0) {
+    const auto end = event.opName.find(';');
+    event.scopeId = parseU64(event.opName.substr(scopePrefix.size(),
+        end == std::string::npos ? end : end - scopePrefix.size())).value_or(0);
+  }
   event.taskId = parseU64(getAny({"taskid"})).value_or(0);
   event.correlationId =
       parseU64(getAny({"correlationid", "correlation_id", "corrid"}))
@@ -1288,6 +1309,10 @@ void parseStructuredSupplementalCsv(
     association.state = VendorMetricState::Collected;
     association.source = sourceTag;
     association.note = "Supplemental msprof row (normalized).";
+    if (sourceTag == "msprof_mstx") {
+      association.metrics["activity.kind"] = std::string("runtime");
+      association.metrics["activity.clock_domain"] = std::string("cann_export");
+    }
     association.metrics["input_file"] = file.string();
     association.metrics["summary_row_index"] =
         static_cast<uint64_t>(parsedRows);
@@ -1340,311 +1365,178 @@ void parseStructuredSupplementalCsv(
   }
 }
 
-uint64_t absDiffU64(uint64_t lhs, uint64_t rhs) {
-  return lhs > rhs ? (lhs - rhs) : (rhs - lhs);
-}
-
-std::string canonicalKernelNameForCorrelation(const std::string &name) {
-  auto normalized = trim(name);
-  for (const auto &suffix : {" mix", " aiv", " aic"}) {
-    if (normalized.size() > std::strlen(suffix) &&
-        normalized.compare(normalized.size() - std::strlen(suffix),
-                           std::strlen(suffix), suffix) == 0) {
-      normalized.resize(normalized.size() - std::strlen(suffix));
-      break;
+// Import the SDK's native lifecycle and connection identities. Chrome trace
+// pid is a display-lane identifier, not an OS process id.
+void importNativeTrace(const std::filesystem::path &file,
+                       VendorProfileArtifact &artifact) {
+  using Json = nlohmann::json;
+  Json events;
+  try {
+    std::ifstream input(file);
+    input >> events;
+  } catch (const std::exception &error) {
+    artifact.degradeReasons.push_back("Cannot parse native CANN trace " +
+        file.string() + ": " + error.what());
+    return;
+  }
+  if (!events.is_array()) {
+    artifact.degradeReasons.push_back("CANN native trace must be an event array: " + file.string());
+    return;
+  }
+  std::optional<uint64_t> processId;
+  try {
+    std::ifstream input(file.parent_path().parent_path() / "host" / "info.json");
+    if (input) {
+      Json info;
+      input >> info;
+      if (info.contains("pid"))
+        processId = parseU64(info["pid"].is_string() ? info["pid"].get<std::string>() : info["pid"].dump());
+    }
+  } catch (...) {
+    artifact.degradeReasons.push_back("CANN host process identity unavailable for " + file.string());
+  }
+  const auto captureDomain = "cann.sdk.connection:" + file.parent_path().parent_path().filename().string();
+  std::map<uint64_t, uint64_t> devices;
+  for (const auto &row : events) {
+    if (!row.is_object() || row.value("name", "") != "process_labels")
+      continue;
+    const auto args = row.value("args", Json::object());
+    const auto label = args.value("labels", "");
+    if (label.rfind("NPU ", 0) == 0 && row.contains("pid") && row["pid"].is_number_unsigned()) {
+      if (auto device = parseU64(label.substr(4)))
+        devices[row["pid"].get<uint64_t>()] = *device;
     }
   }
-  return normalized;
-}
-
-bool sameKernelForCorrelation(const std::string &lhs, const std::string &rhs) {
-  if (lhs.empty() || rhs.empty()) {
-    return false;
+  auto stringValue = [](const Json &value) {
+    return value.is_string() ? value.get<std::string>() : value.dump();
+  };
+  for (const auto &row : events) {
+    if (!row.is_object() || row.value("ph", "") != "X" || !row.contains("ts") || !row.contains("dur"))
+      continue;
+    const auto args = row.value("args", Json::object());
+    const auto name = row.value("name", "");
+    const bool kernel = args.contains("Task Type");
+    const bool runtime = args.contains("level") || name.rfind("flagprism.scope=", 0) == 0;
+    if (!kernel && !runtime)
+      continue;
+    VendorMetricAssociation observation;
+    observation.state = VendorMetricState::Collected;
+    observation.source = "msprof_native_trace";
+    auto &event = observation.runtimeEvent;
+    event.opName = name;
+    event.startTimeNs = parseTimeToNs(stringValue(row["ts"]), "us");
+    const auto duration = parseTimeToNs(stringValue(row["dur"]), "us");
+    if (duration > std::numeric_limits<uint64_t>::max() - event.startTimeNs)
+      continue;
+    event.endTimeNs = event.startTimeNs + duration;
+    std::string unknown = "context_id";
+    if (processId)
+      observation.metrics["activity.process_id"] = *processId;
+    else
+      unknown += ",process_id";
+    observation.metrics["activity.correlation_domain"] = captureDomain;
+    if (row.contains("pid") && row["pid"].is_number_unsigned()) {
+      const auto pid = row["pid"].get<uint64_t>();
+      observation.metrics["activity.trace_lane_id"] = pid;
+      auto device = devices.find(pid);
+      if (kernel && device != devices.end())
+        event.deviceId = device->second;
+      else
+        unknown += ",device_id";
+    } else {
+      unknown += ",device_id";
+    }
+    if (args.contains("Task Id"))
+      event.taskId = parseU64(stringValue(args["Task Id"])).value_or(0);
+    if (args.contains("Physic Stream Id"))
+      event.streamId = parseU64(stringValue(args["Physic Stream Id"])).value_or(0);
+    else
+      unknown += ",stream_id";
+    if (args.contains("connection_id"))
+      event.correlationId = parseU64(stringValue(args["connection_id"])).value_or(0);
+    if (args.contains("Thread Id"))
+      observation.metrics["activity.thread_id"] = parseU64(stringValue(args["Thread Id"])).value_or(0);
+    else
+      unknown += ",thread_id";
+    if (name.rfind("flagprism.scope=", 0) == 0) {
+      const auto end = name.find(';');
+      event.scopeId = parseU64(name.substr(16, end == std::string::npos ? end : end - 16)).value_or(0);
+    }
+    observation.metrics["activity.kind"] = std::string(kernel ? "kernel" : "runtime");
+    observation.metrics["activity.semantics"] = std::string(kernel ? "native_device_task_lifecycle" : "native_runtime_activity");
+    observation.metrics["activity.clock_domain"] = std::string("cann_export");
+    observation.metrics["activity.unknown_fields"] = unknown;
+    observation.metrics["activity.association"] = std::string(event.scopeId != 0 ? "explicit_scope" : "unassociated");
+    observation.metrics["input_file"] = file.string();
+    observation.metrics["raw_event_json"] = row.dump();
+    // Merge only a unique native task with its summary in the same SDK export.
+    // This preserves counters without duplicating timed kernel observations.
+    VendorMetricAssociation *summary = nullptr;
+    size_t candidates = 0;
+    if (kernel && event.taskId != 0) {
+      for (auto &association : artifact.associations) {
+        const auto &key = association.runtimeEvent;
+        auto input = association.metrics.find("input_file");
+        if (association.source != "aclprof_op_summary" || input == association.metrics.end() || !std::holds_alternative<std::string>(input->second))
+          continue;
+        if (std::filesystem::path(std::get<std::string>(input->second)).parent_path() != file.parent_path())
+          continue;
+        if (key.taskId == event.taskId && key.streamId == event.streamId && key.deviceId == event.deviceId) {
+          summary = &association;
+          ++candidates;
+        }
+      }
+    }
+    if (candidates == 1) {
+      summary->runtimeEvent.correlationId = event.correlationId;
+      summary->metrics["raw_event_json"] = row.dump();
+      summary->metrics["native_trace_file"] = file.string();
+      summary->metrics["activity.association"] = std::string("native_task_identity");
+      summary->metrics["activity.unknown_fields"] = unknown;
+      summary->metrics["activity.correlation_domain"] = captureDomain;
+      if (processId)
+        summary->metrics["activity.process_id"] = *processId;
+    } else {
+      artifact.associations.push_back(std::move(observation));
+    }
   }
-  return canonicalKernelNameForCorrelation(lhs) ==
-         canonicalKernelNameForCorrelation(rhs);
 }
 
+// Native timestamps and host steady_clock are different clock domains. Only
+// explicit correlation or device/stream/task identity can join their records.
 void correlateVendorToRuntimeEvents(
     VendorProfileArtifact &artifact,
     const std::vector<RuntimeTraceEventKey> &runtimeEvents) {
-  constexpr uint64_t kStrictMatchWindowNs = 5'000'000; // 5ms
-  constexpr uint64_t kFuzzyMatchWindowNs = 20'000'000; // 20ms
-  std::map<std::string, size_t> nextRuntimeEventByKernel;
-  std::map<std::string, size_t> nextLaunchRangeByKernel;
-
-  auto matchRuntimeEventByKernelOrder =
-      [&](const VendorMetricAssociation &association)
-      -> const RuntimeTraceEventKey * {
-    auto key =
-        canonicalKernelNameForCorrelation(association.runtimeEvent.opName);
-    if (key.empty()) {
-      return nullptr;
-    }
-    auto &nextIndex = nextRuntimeEventByKernel[key];
-    for (size_t index = nextIndex; index < runtimeEvents.size(); ++index) {
-      const auto &runtimeEvent = runtimeEvents[index];
-      if (!sameKernelForCorrelation(association.runtimeEvent.opName,
-                                    runtimeEvent.opName)) {
-        continue;
-      }
-      if (association.runtimeEvent.deviceId != 0 &&
-          runtimeEvent.deviceId != 0 &&
-          association.runtimeEvent.deviceId != runtimeEvent.deviceId) {
-        continue;
-      }
-      nextIndex = index + 1;
-      return &runtimeEvent;
-    }
-    return nullptr;
-  };
-
-  auto matchLaunchRangeByKernelOrder =
-      [&](const VendorMetricAssociation &association)
-      -> const VendorMetricAssociation * {
-    auto key =
-        canonicalKernelNameForCorrelation(association.runtimeEvent.opName);
-    if (key.empty()) {
-      return nullptr;
-    }
-    auto &nextIndex = nextLaunchRangeByKernel[key];
-    for (size_t index = nextIndex; index < artifact.associations.size();
-         ++index) {
-      const auto &launchRange = artifact.associations[index];
-      if (launchRange.source != "msprof_mstx" ||
-          launchRange.runtimeEvent.endTimeNs <=
-              launchRange.runtimeEvent.startTimeNs) {
-        continue;
-      }
-      if (!sameKernelForCorrelation(association.runtimeEvent.opName,
-                                    launchRange.runtimeEvent.opName)) {
-        continue;
-      }
-      if (association.runtimeEvent.deviceId != 0 &&
-          launchRange.runtimeEvent.deviceId != 0 &&
-          association.runtimeEvent.deviceId !=
-              launchRange.runtimeEvent.deviceId) {
-        continue;
-      }
-      auto startDiff = absDiffU64(association.runtimeEvent.startTimeNs,
-                                  launchRange.runtimeEvent.startTimeNs);
-      if (startDiff > kStrictMatchWindowNs) {
-        continue;
-      }
-      nextIndex = index + 1;
-      return &launchRange;
-    }
-    return nullptr;
-  };
-
   for (auto &association : artifact.associations) {
     if (association.source != "aclprof_op_summary" &&
-        association.source != "msprof_mstx") {
+        association.source != "msprof_mstx")
+      continue;
+    auto &event = association.runtimeEvent;
+    if (event.scopeId != 0) {
+      association.metrics["activity.association"] = std::string("explicit_scope");
       continue;
     }
-    if (runtimeEvents.empty()) {
-      association.state = VendorMetricState::Collected;
-      association.note =
-          "Runtime base event imported directly from aclprof summary.";
-      continue;
-    }
-
-    if (association.source == "msprof_mstx") {
-      if (auto runtimeEvent = matchRuntimeEventByKernelOrder(association)) {
-        association.runtimeEvent.scopeId = runtimeEvent->scopeId;
-        association.runtimeEvent.opName = runtimeEvent->opName;
-        if (association.runtimeEvent.deviceId == 0) {
-          association.runtimeEvent.deviceId = runtimeEvent->deviceId;
-        }
-        if (association.runtimeEvent.streamId == 0) {
-          association.runtimeEvent.streamId = runtimeEvent->streamId;
-        }
-        association.metrics["runtime_scope_op_name"] = runtimeEvent->opName;
-        association.metrics["matched_runtime_scope_id"] =
-            static_cast<uint64_t>(runtimeEvent->scopeId);
-        association.state = VendorMetricState::Collected;
-        association.note = "Matched msprof range to Triton runtime scope by "
-                           "kernel launch order.";
-      }
-      continue;
-    }
-
-    if (association.runtimeEvent.scopeId != 0 &&
-        association.runtimeEvent.endTimeNs >
-            association.runtimeEvent.startTimeNs) {
-      if (association.note.empty()) {
-        association.note = "Scope mapped without host timing correlation; "
-                           "timing from aclprof summary.";
-      }
-      continue;
-    }
-
-    const RuntimeTraceEventKey *best = nullptr;
-    uint64_t bestScore = std::numeric_limits<uint64_t>::max();
-    std::string matchedTier = "";
-
-    auto selectBy = [&](auto &&predicate, uint64_t windowNs) {
-      best = nullptr;
-      bestScore = std::numeric_limits<uint64_t>::max();
-      for (const auto &runtimeEvent : runtimeEvents) {
-        if (!predicate(runtimeEvent)) {
-          continue;
-        }
-        auto startDiff = absDiffU64(association.runtimeEvent.startTimeNs,
-                                    runtimeEvent.startTimeNs);
-        auto endDiff = absDiffU64(association.runtimeEvent.endTimeNs,
-                                  runtimeEvent.endTimeNs);
-        if (startDiff > windowNs || endDiff > windowNs) {
-          continue;
-        }
-        auto score = startDiff + endDiff;
-        if (score < bestScore) {
-          bestScore = score;
-          best = &runtimeEvent;
-        }
-      }
-      return best != nullptr;
-    };
-
-    // Tier-1 strict matching: device_id + stream_id + op_name + timestamp.
-    auto assocCorrId = association.runtimeEvent.correlationId;
-    if (assocCorrId == 0) {
-      assocCorrId = parseMetricU64(association, "correlation_id").value_or(0);
-    }
-    auto assocTaskId = association.runtimeEvent.taskId;
-    if (assocTaskId == 0) {
-      assocTaskId = parseMetricU64(association, "task_id").value_or(0);
-    }
-
-    bool matched = false;
-    if (assocCorrId != 0) {
-      matched = selectBy(
-          [&](const RuntimeTraceEventKey &runtimeEvent) {
-            return runtimeEvent.correlationId != 0 &&
-                   runtimeEvent.correlationId == assocCorrId;
-          },
-          std::numeric_limits<uint64_t>::max());
-      if (matched) {
-        matchedTier = "correlation_id";
-      }
-    }
-
-    if (!matched && assocTaskId != 0) {
-      matched = selectBy(
-          [&](const RuntimeTraceEventKey &runtimeEvent) {
-            return runtimeEvent.taskId != 0 &&
-                   runtimeEvent.taskId == assocTaskId;
-          },
-          std::numeric_limits<uint64_t>::max());
-      if (matched) {
-        matchedTier = "task_id";
-      }
-    }
-
-    if (!matched) {
-      matched = selectBy(
-          [&](const RuntimeTraceEventKey &runtimeEvent) {
-            return sameKernelForCorrelation(association.runtimeEvent.opName,
-                                            runtimeEvent.opName) &&
-                   association.runtimeEvent.deviceId == runtimeEvent.deviceId &&
-                   association.runtimeEvent.streamId == runtimeEvent.streamId;
-          },
-          kStrictMatchWindowNs);
-      if (matched) {
-        matchedTier = "strict";
-      }
-    }
-
-    // Tier-2 relaxed matching: op_name + timestamp.
-    if (!matched) {
-      matched = selectBy(
-          [&](const RuntimeTraceEventKey &runtimeEvent) {
-            return sameKernelForCorrelation(association.runtimeEvent.opName,
-                                            runtimeEvent.opName);
-          },
-          kStrictMatchWindowNs);
-      if (matched) {
-        matchedTier = "op_name";
-      }
-    }
-
-    // Tier-3 fuzzy matching: timestamp only.
-    if (!matched) {
-      matched = selectBy([&](const RuntimeTraceEventKey &) { return true; },
-                         kFuzzyMatchWindowNs);
-      if (matched) {
-        matchedTier = "fuzzy";
-      }
-    }
-
-    if (!matched) {
-      if (const auto *bestLaunchRange =
-              matchLaunchRangeByKernelOrder(association)) {
-        association.runtimeEvent.scopeId =
-            bestLaunchRange->runtimeEvent.scopeId;
-        association.runtimeEvent.opName = bestLaunchRange->runtimeEvent.opName;
-        association.metrics["launch_range_op_name"] =
-            bestLaunchRange->runtimeEvent.opName;
-        association.metrics["merged_with_launch_range"] = std::string("true");
-        association.state = VendorMetricState::Collected;
-        association.note = "Matched CANN op_summary to msprof launch range by "
-                           "kernel launch order.";
+    const RuntimeTraceEventKey *unique = nullptr;
+    size_t candidates = 0;
+    for (const auto &runtime : runtimeEvents) {
+      const bool correlation = event.correlationId != 0 &&
+          event.correlationId == runtime.correlationId;
+      const bool task = event.taskId != 0 && runtime.taskId == event.taskId &&
+          event.deviceId == runtime.deviceId && event.streamId == runtime.streamId;
+      if (!(correlation || task))
         continue;
-      }
-      association.state = VendorMetricState::Unmatched;
-      association.note =
-          "No runtime event matched by strict/fuzzy timestamp strategy";
-      continue;
+      unique = &runtime;
+      ++candidates;
     }
-
-    auto vendorEvent = association.runtimeEvent;
-    if (vendorEvent.scopeId == 0) {
-      vendorEvent.scopeId = best->scopeId;
-    }
-    if (vendorEvent.opName.empty()) {
-      vendorEvent.opName = best->opName;
-    }
-    if (vendorEvent.deviceId == 0) {
-      vendorEvent.deviceId = best->deviceId;
-    }
-    if (vendorEvent.streamId == 0) {
-      vendorEvent.streamId = best->streamId;
-    }
-    if (vendorEvent.taskId == 0) {
-      vendorEvent.taskId = best->taskId;
-    }
-    if (vendorEvent.correlationId == 0) {
-      vendorEvent.correlationId = best->correlationId;
-    }
-    if (vendorEvent.endTimeNs <= vendorEvent.startTimeNs) {
-      vendorEvent.startTimeNs = best->startTimeNs;
-      vendorEvent.endTimeNs = best->endTimeNs;
-    }
-    association.runtimeEvent = std::move(vendorEvent);
-    if (association.runtimeEvent.taskId != 0) {
-      association.metrics["task_id"] = association.runtimeEvent.taskId;
-    }
-    if (association.runtimeEvent.correlationId != 0) {
-      association.metrics["correlation_id"] =
-          association.runtimeEvent.correlationId;
-    }
-    association.state = VendorMetricState::Collected;
-    if (matchedTier == "correlation_id") {
-      association.note = "Matched runtime scope by correlation_id; timing from "
-                         "aclprof summary.";
-    } else if (matchedTier == "task_id") {
-      association.note =
-          "Matched runtime scope by task_id; timing from aclprof summary.";
-    } else if (matchedTier == "fuzzy") {
-      association.note = "Fuzzy matched runtime scope by timestamp only; "
-                         "timing from aclprof summary.";
-    } else if (association.runtimeEvent.deviceId == 0 &&
-               association.runtimeEvent.streamId == 0) {
-      association.note = "Matched runtime scope by op_name/timestamp; timing "
-                         "from aclprof summary.";
+    if (candidates == 1 && unique->scopeId != 0) {
+      event.scopeId = unique->scopeId;
+      association.metrics["activity.association"] = std::string("native_identity");
+      association.note = "Unique native identity; original native timing retained.";
     } else {
-      association.note = "Matched runtime scope by device_id/stream_id/op_name "
-                         "and timestamp; timing from aclprof summary.";
+      association.metrics["activity.association"] =
+          std::string(candidates > 1 ? "ambiguous" : "unassociated");
+      association.note = "Native observation retained without source attribution; "
+                         "name/order and uncalibrated timestamps are not identities.";
     }
   }
 }
@@ -1660,6 +1552,13 @@ void addRuntimeBaseFallbackAssociations(
     association.runtimeEvent = event;
     association.state = VendorMetricState::Collected;
     association.source = "runtime_base_fallback";
+    association.metrics["activity.kind"] = std::string("runtime");
+    association.metrics["activity.semantics"] = std::string("host_launch_scope");
+    association.metrics["activity.clock_domain"] = std::string("host_steady_clock");
+#if defined(__linux__)
+    association.metrics["activity.process_id"] = static_cast<uint64_t>(getpid());
+#endif
+    association.metrics["activity.unknown_fields"] = std::string("device_id,stream_id,task_id,correlation_id");
     association.note =
         "aclprof summary unavailable; using runtime_base host-timing fallback.";
     association.metrics["runtime_base_source"] =
@@ -1682,6 +1581,9 @@ void addRuntimeBaseNativeAssociations(
     association.runtimeEvent = event;
     association.state = VendorMetricState::Collected;
     association.source = sourceTag;
+    association.metrics["activity.kind"] = std::string("kernel");
+    association.metrics["activity.semantics"] = std::string("native_device_task_lifecycle");
+    association.metrics["activity.clock_domain"] = std::string("cann_export");
     association.note = note;
     association.metrics["runtime_base_source"] = sourceMetricTag;
     association.metrics["task_duration_us"] =
@@ -1837,6 +1739,7 @@ void CannProfiler::startOp(const Scope &scope) {
 
 #if defined(__linux__)
   if (enableMstx) {
+    const auto message = "flagprism.scope=" + std::to_string(scope.scopeId) + ";" + scope.name;
     auto &api = mstxApi();
     if (!api.rangeStartA || !api.rangeEnd) {
       std::lock_guard<std::mutex> lock(mutex);
@@ -1846,10 +1749,10 @@ void CannProfiler::startOp(const Scope &scope) {
     } else {
       if (domain && api.domainRangeStartA && api.domainRangeEnd) {
         range.rangeId =
-            api.domainRangeStartA(domain, scope.name.c_str(), stream);
+            api.domainRangeStartA(domain, message.c_str(), stream);
         range.mstxDomainRange = true;
       } else {
-        range.rangeId = api.rangeStartA(scope.name.c_str(), stream);
+        range.rangeId = api.rangeStartA(message.c_str(), stream);
         range.mstxDomainRange = false;
       }
       if (range.rangeId != 0) {
@@ -2183,6 +2086,7 @@ void CannProfiler::doSetMode(const std::vector<std::string> &modeAndOptions) {
   mstxDomainName = getEnvOrDefault("FLAGTREE_PROFILER_CANN_MSTX_DOMAIN",
                                    "flagtree_profiler");
 
+  bool explicitDeviceId = false;
   bool wantsAicore = false;
   bool wantsBandwidth = false;
   bool msproftxExplicitlyConfigured = false;
@@ -2211,9 +2115,11 @@ void CannProfiler::doSetMode(const std::vector<std::string> &modeAndOptions) {
     auto key = toLower(trim(token.substr(0, eqPos)));
     auto value = trim(token.substr(eqPos + 1));
     if (key == "device_id") {
-      if (auto parsed = parseU64(value); parsed.has_value()) {
-        deviceId = static_cast<uint32_t>(parsed.value());
-      }
+      explicitDeviceId = true;
+      auto parsed = parseU64(value);
+      if (!parsed || *parsed > std::numeric_limits<uint32_t>::max())
+        throw std::invalid_argument("CANN device_id must be a nonnegative uint32 value");
+      deviceId = static_cast<uint32_t>(*parsed);
     } else if (key == "output_path" || key == "aclprof_output_path") {
       outputPath = value;
     } else if (key == "aclprof_set_config_mem_freq_hz") {
@@ -2246,6 +2152,17 @@ void CannProfiler::doSetMode(const std::vector<std::string> &modeAndOptions) {
     }
   }
 
+#if defined(__linux__)
+  // Select the current runtime device only at session start. Applications that
+  // change devices after start must supply device_id explicitly.
+  if (!explicitDeviceId) {
+    auto &runtime = aclRuntimeApi();
+    int32_t currentDevice = -1;
+    if (runtime.load() && runtime.getDevice &&
+        runtime.getDevice(&currentDevice) == 0 && currentDevice >= 0)
+      deviceId = static_cast<uint32_t>(currentDevice);
+  }
+#endif
   if (wantsAicore || wantsBandwidth) {
     aclprofDataTypeConfig |= kAclProfAicoreMetrics;
     if (!msproftxExplicitlyConfigured) {
@@ -2327,6 +2244,20 @@ CannProfiler::importMsprofOutput(const SessionProfileMetadata &metadata,
     }
   }
 
+  std::set<std::filesystem::path> traceDirectories;
+  for (const auto &csv : csvFiles)
+    traceDirectories.insert(csv.parent_path());
+  for (const auto &directory : traceDirectories) {
+    std::error_code error;
+    for (const auto &entry : std::filesystem::directory_iterator(directory, error)) {
+      const auto name = entry.path().filename().string();
+      if (entry.is_regular_file() && name.rfind("msprof_", 0) == 0 && name.size() > 7 && std::isdigit(static_cast<unsigned char>(name[7])) && entry.path().extension() == ".json") {
+        artifact.rawInputs.push_back(entry.path().string());
+        importNativeTrace(entry.path(), artifact);
+      }
+    }
+  }
+
   if (metricEnabled(plan.enabledVendorMetrics, "bandwidth")) {
     bool hasBandwidth = false;
     for (const auto &association : artifact.associations) {
@@ -2377,8 +2308,8 @@ CannProfiler::importMsprofOutput(const SessionProfileMetadata &metadata,
       correlateVendorToRuntimeEvents(artifact, nativeRuntimeEvents);
     } else if (!hostRuntimeEvents.empty()) {
       artifact.degradeReasons.push_back(
-          "task_time runtime events unavailable; using host runtime events for "
-          "op_summary correlation (runtime_host_timing_fallback=true).");
+          "task_time runtime events unavailable; native source attribution requires "
+          "explicit scope/correlation; host timestamps are never matched.");
       correlateVendorToRuntimeEvents(artifact, hostRuntimeEvents);
     } else {
       const std::vector<RuntimeTraceEventKey> emptyRuntimeEvents{};
@@ -2397,6 +2328,10 @@ CannProfiler::importMsprofOutput(const SessionProfileMetadata &metadata,
     artifact.degradeReasons.push_back(
         "No runtime_base events could be imported from aclprof exports.");
   }
+  // Host launch scopes remain source-control observations even when device
+  // tasks exist. They do not inherit device-task timing or engine semantics.
+  if (!hostRuntimeEvents.empty() && opSummaryAssociationCount > 0)
+    addRuntimeBaseFallbackAssociations(artifact, hostRuntimeEvents);
   addAssociationQualityReasons(artifact);
 
   return artifact;

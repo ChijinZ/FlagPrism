@@ -248,7 +248,7 @@ def analyze(path):
         configuration = None
         if event["kind"] == "kernel":
             launch = launches.get(event["scope_id"])
-            if launch and launch["name"] == event["name"]:
+            if launch and launch.get("status") != "rejected_before_launch":
                 event["launch_id"] = launch["id"]
                 event["binary_id"] = launch["binary_id"]
                 event["argument_signature"] = hashlib.sha256(
@@ -925,6 +925,22 @@ def write_bundle(report, source, output, context=None, *, complete=True):
     if report["binaries"]:
         for binary in report["binaries"]:
             entry = dict(binary)
+            artifacts = entry.pop("compiler_artifacts", {})
+            references = {}
+            if isinstance(artifacts, dict):
+                for stage, text in artifacts.items():
+                    if stage not in {"ttir", "ttgir", "gcuir", "llir", "ptx"} or not isinstance(text, str):
+                        continue
+                    content = text.encode("utf-8")
+                    digest = hashlib.sha256(content).hexdigest()
+                    name = f"raw/compiler/{digest}.{stage}.txt"
+                    (output / "raw/compiler").mkdir(parents=True, exist_ok=True)
+                    (output / name).write_bytes(content)
+                    references[stage] = {"file": name, "sha256": digest,
+                                         "bytes": len(content),
+                                         "basis": "actual_compiled_kernel_asm"}
+            if references:
+                entry["compiler_artifact_files"] = references
             source = dict(binary.get("source", {}))
             for key in ("text", "file_snapshot"):
                 content = source.pop(key, None)
@@ -939,6 +955,13 @@ def write_bundle(report, source, output, context=None, *, complete=True):
             entry["source"] = source
             binaries.append(entry)
         write("ai/binaries.json", binaries)
+        mappings = [entry["execution_manifest"] for entry in binaries
+                    if "execution_manifest" in entry]
+        if mappings:
+            write("ai/execution.json", {
+                "schema_version": 1, "binaries": mappings,
+                "scope": "Compiler execution organization; partial source association is explicit."
+            })
     kernels = []
     for row in report["hotspots"]:
         if row["kind"] == "kernel":
@@ -1025,6 +1048,7 @@ def write_bundle(report, source, output, context=None, *, complete=True):
     report["evidence_overview"] = overview
     report["observed_device"] = device or None
     report["caller_context"] = supplied
+    report["binaries"] = binaries
     write("ai/summary.json", summary)
     if report["events"] or report["untimed_events"]:
         with (output / "ai/events.jsonl").open("w") as stream:

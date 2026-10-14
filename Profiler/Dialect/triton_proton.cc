@@ -11,6 +11,10 @@
 #include "Dialect/ProtonGPU/IR/Dialect.h"
 #include "Dialect/ProtonGPU/Transforms/Passes.h"
 #include "mlir/IR/Builders.h"
+#include "mlir/IR/BuiltinAttributes.h"
+#include "mlir/IR/Location.h"
+#include "llvm/Support/raw_ostream.h"
+#include <functional>
 #include "mlir/Pass/PassManager.h"
 #include "passes.h"
 #include <pybind11/pybind11.h>
@@ -19,6 +23,46 @@
 
 namespace py = pybind11;
 using namespace mlir::triton;
+
+namespace {
+py::dict locationOrigin(mlir::Location loc) {
+  py::dict result;
+  std::string text;
+  llvm::raw_string_ostream stream(text);
+  loc.print(stream);
+  stream.flush();
+  result["ir_location"] = text;
+  if (auto file = mlir::dyn_cast<mlir::FileLineColLoc>(loc)) {
+    result["kind"] = "file_line_column";
+    result["file"] = file.getFilename().str();
+    result["line"] = file.getLine();
+    result["column"] = file.getColumn();
+  } else if (auto call = mlir::dyn_cast<mlir::CallSiteLoc>(loc)) {
+    result["kind"] = "callsite";
+    result["callee"] = locationOrigin(call.getCallee());
+    result["caller"] = locationOrigin(call.getCaller());
+  } else if (auto fused = mlir::dyn_cast<mlir::FusedLoc>(loc)) {
+    result["kind"] = "fused";
+    py::list candidates;
+    for (auto child : fused.getLocations()) candidates.append(locationOrigin(child));
+    result["candidates"] = candidates;
+    if (auto metadata = fused.getMetadata()) {
+      std::string metadataText;
+      llvm::raw_string_ostream metadataStream(metadataText);
+      metadata.print(metadataStream);
+      metadataStream.flush();
+      result["metadata"] = metadataText;
+    }
+  } else if (auto name = mlir::dyn_cast<mlir::NameLoc>(loc)) {
+    result["kind"] = "named";
+    result["descriptive_name"] = name.getName().str();
+    result["child"] = locationOrigin(name.getChildLoc());
+  } else {
+    result["kind"] = "unknown";
+  }
+  return result;
+}
+}
 
 void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
@@ -75,15 +119,45 @@ void init_triton_proton(py::module &&m) {
     return proton::ModuleScopeIdAllocation(module).getScopeIdParents();
   });
 
+  m.def("get_scope_id_origins", [](mlir::ModuleOp &module) {
+    proton::ModuleScopeIdAllocation allocation(module);
+    py::dict result;
+    module.walk([&](proton::RecordOp record) {
+      auto id = allocation.getOpScopeId(record);
+      auto key = py::str(std::to_string(id));
+      if (!result.contains(key)) {
+        py::dict origin;
+        origin["scope_id"] = id;
+        origin["semantic"] = "source_region_origin";
+        origin["basis"] = "scope_id_allocation_and_record_op_location";
+        origin["entry"] = py::list();
+        origin["exit"] = py::list();
+        result[key] = origin;
+      }
+      auto origin = result[key].cast<py::dict>();
+      origin[record.getIsStart() ? "entry" : "exit"].cast<py::list>().append(
+          locationOrigin(record.getLoc()));
+    });
+    return result;
+  });
+
   // Proton operations
   m.def("create_proton_record",
         [](mlir::OpBuilder &opBuilder, bool isStart,
-           const std::string &name) -> void {
+           const std::string &name, std::optional<mlir::Location> location) -> void {
           auto nameAttr = mlir::StringAttr::get(opBuilder.getContext(),
                                                 llvm::StringRef(name));
-          auto loc = opBuilder.getUnknownLoc();
+          auto loc = location.value_or(opBuilder.getUnknownLoc());
           opBuilder.create<proton::RecordOp>(loc, isStart, nameAttr);
-        });
+        }, py::arg("op_builder"), py::arg("is_start"), py::arg("name"),
+        py::arg("location") = py::none());
+
+  m.def("add_select_proton_programs", [](mlir::PassManager &pm,
+                                         const std::vector<int32_t> &programs) {
+    for (int32_t program : programs)
+      if (program < 0) throw std::invalid_argument("Program identities must be nonnegative");
+    pm.addPass(proton::createSelectProtonProgramsPass(programs));
+  });
 
   m.def("add_convert_proton_to_protongpu",
         [](mlir::PassManager &pm, proton::MetricType &metricType,

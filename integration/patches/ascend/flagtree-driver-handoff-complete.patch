@@ -1,0 +1,88 @@
+diff --git a/python/flagtree/_flagprism.py b/python/flagtree/_flagprism.py
+index f47380fda..abbe0ccd6 100644
+--- a/python/flagtree/_flagprism.py
++++ b/python/flagtree/_flagprism.py
+@@ -19,6 +19,7 @@ HOST_API_VERSION = (2, 0)
+ HOST_CAPABILITIES = frozenset({
+     "compiler.dialects.v1",
+     "compiler.events.v1",
++    "compiler.driver.v1",
+     "compiler.options.v1",
+     "frontend.statement_events.v1",
+     "language.debug_collect.v1",
+@@ -309,3 +310,32 @@ def debugger_launch_context(
+             kernel_args=kernel_args,
+         ),
+     )
++
++
++@dataclass
++class CompilerDriverEvent:
++    """A per-compile external-driver handoff; command and environment are private copies."""
++    backend: str
++    command: list[str]
++    environment: dict[str, str]
++    metadata: dict[str, Any]
++
++
++def prepare_compiler_driver(*, backend: str, command: list[str], environment: dict[str, str], metadata: dict[str, Any]) -> CompilerDriverEvent:
++    event = CompilerDriverEvent(str(backend), list(command), dict(environment), metadata)
++    for callback in _registered_callbacks("on_prepare_compiler_driver"):
++        callback(event)
++    return event
++
++
++def finish_compiler_driver(event: CompilerDriverEvent, *, returncode: int) -> None:
++    for callback in _registered_callbacks("on_finish_compiler_driver"):
++        callback(event, returncode=int(returncode))
++
++
++def compiler_driver_cache_key() -> str:
++    """Components identify codegen-affecting driver configuration before caching."""
++    values = []
++    for callback in _registered_callbacks("compiler_driver_cache_key"):
++        values.append(str(callback()))
++    return "|".join(values)
+diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend/compiler.py
+index ea9c0b594..426bae507 100644
+--- a/third_party/ascend/backend/compiler.py
++++ b/third_party/ascend/backend/compiler.py
+@@ -550,7 +550,13 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata)
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -746,7 +752,13 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata)
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -902,7 +914,7 @@ class NPUOptions:
+ 
+     def hash(self):
+         key = "_".join([f"{name}-{val}" for name, val in self.__dict__.items()])
+-        key = "_".join([key, get_cann_version_file_hash()])
++        key = "_".join([key, get_cann_version_file_hash(), _flagprism.compiler_driver_cache_key()])
+         return hashlib.sha256(key.encode("utf-8")).hexdigest()
+ 
+ 

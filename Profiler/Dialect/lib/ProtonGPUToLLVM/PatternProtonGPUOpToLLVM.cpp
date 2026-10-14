@@ -14,35 +14,6 @@ namespace proton::gpu {
 
 namespace {
 
-Value getLinearId(Location loc, ConversionPatternRewriter &rewriter) {
-  auto b = TritonLLVMOpBuilder(loc, rewriter);
-  // Note:
-  // 1. We compute use i64 data type to compute and then truncate to i32
-  // to support various backend intrinsics (e.g. amd).
-  // 2. We avoid using the targetInfo's programId() because of its coupling
-  // with cluster id in Nvidia TritonGPU's llvm lowering.
-  Value pidX = rewriter.create<arith::IndexCastOp>(
-      loc, i64_ty,
-      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::x));
-  Value pidY = rewriter.create<arith::IndexCastOp>(
-      loc, i64_ty,
-      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::y));
-  Value pidZ = rewriter.create<arith::IndexCastOp>(
-      loc, i64_ty,
-      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::z));
-
-  Value gridDimX = rewriter.create<arith::IndexCastOp>(
-      loc, i64_ty,
-      rewriter.create<::mlir::gpu::GridDimOp>(loc, mlir::gpu::Dimension::x));
-  Value gridDimY = rewriter.create<arith::IndexCastOp>(
-      loc, i64_ty,
-      rewriter.create<::mlir::gpu::GridDimOp>(loc, mlir::gpu::Dimension::y));
-  Value linearId =
-      b.trunc(i32_ty, b.add(b.add(pidX, b.mul(pidY, gridDimX)),
-                            b.mul(pidZ, b.mul(gridDimX, gridDimY))));
-  return linearId;
-}
-
 struct ReadCounterOpConversion
     : public ConvertOpToLLVMPattern<mlir::triton::proton::gpu::ReadCounterOp> {
   explicit ReadCounterOpConversion(
@@ -92,7 +63,7 @@ struct FinalizeOpConversion
 
     int numWarps = getTotalNumWarps(mod);
 
-    Value threadId = getThreadId(rewriter, loc);
+    Value threadId = getRawThreadId(rewriter, loc);
     Value warpId = b.udiv(
         threadId,
         b.i32_val(triton::gpu::TritonGPUDialect::getThreadsPerWarp(mod)));
@@ -159,7 +130,7 @@ struct FinalizeOpConversion
     // Write back 'program id'.
     Value gmemPidOffset = b.i32_val(1);
     Value gmemPidPtr = b.gep(scratchPtrTy, i32_ty, scratchPtr, gmemPidOffset);
-    Value pid = getLinearId(loc, rewriter);
+    Value pid = getLinearCTAId(loc, rewriter);
     b.store(pid, gmemPidPtr);
 
     // Write back 'hw id'.
@@ -178,32 +149,59 @@ struct FinalizeOpConversion
     rewriter.setInsertionPointToEnd(prevBlock);
     rewriter.create<cf::CondBranchOp>(loc, isFirstThread, ifBlock, thenBlock);
 
-    // Write back the data.
-    const int upper = bufferSizeInWords - wordsPerEntry;
-    rewriter.setInsertionPointToEnd(ifBlock);
-    Value initIdx = b.i32_val(0);
-    Value wbBaseOffset = b.i32_val(metadataWordSize);
+    // Each warp master copies its own retained prefix. Its local counter is
+    // authoritative, so no cross-warp synchronization or global counter reads
+    // are needed. Once a segment wraps, the entire ring remains live.
+    rewriter.setInsertionPoint(prevBlock->getTerminator());
+    auto selectedIds = op.getSegment().getType().getSelectIds();
+    const int segmentWords =
+        bufferSizeInWords / (selectedIds.empty() ? numWarps : selectedIds.size());
+    Value rawThreadId = getRawThreadId(rewriter, loc);
+    Value laneId = b.urem(
+        rawThreadId,
+        b.i32_val(triton::gpu::TritonGPUDialect::getThreadsPerWarp(mod)));
+    Value retainedWords = b.select(b.icmp_ult(index, b.i32_val(segmentWords)),
+                                   index, b.i32_val(segmentWords));
+    const bool warpSpecialized = numWarps != triton::gpu::lookupNumWarps(mod);
+    Value copyBase = segmentObj.segmentBase;
+    if (warpSpecialized) {
+      // Worker warps save their counters and return before finalization in
+      // the master partition. Preserve the inherited whole-buffer copy here;
+      // a master lane's private index cannot describe worker-written prefixes.
+      retainedWords = b.i32_val(bufferSizeInWords);
+      copyBase = b.i32_val(0);
+    }
+    Value shouldCopy = b.and_(b.icmp_eq(laneId, b.i32_val(0)),
+                             b.icmp_sge(segmentObj.segmentBase, b.i32_val(0)));
+    shouldCopy = b.and_(shouldCopy, b.icmp_ugt(retainedWords, b.i32_val(0)));
+    if (warpSpecialized) shouldCopy = isFirstThread;
 
+    Block *copyDispatch = rewriter.createBlock(
+        op->getParentRegion(), Region::iterator(thenBlock));
+    rewriter.setInsertionPointToEnd(ifBlock);
+    rewriter.create<cf::BranchOp>(loc, copyDispatch);
+    // Both the metadata writer and all remaining threads reach this block.
+    rewriter.setInsertionPointToEnd(prevBlock);
+    prevBlock->getTerminator()->setSuccessor(copyDispatch, 1);
+    rewriter.setInsertionPointToStart(copyDispatch);
     Block *writeBackBlock = rewriter.createBlock(
-        op->getParentRegion(), std::next(Region::iterator(ifBlock)), {i32_ty},
-        {loc});
+        op->getParentRegion(), Region::iterator(thenBlock), {i32_ty}, {loc});
+    rewriter.setInsertionPointToEnd(copyDispatch);
+    rewriter.create<cf::CondBranchOp>(loc, shouldCopy, writeBackBlock,
+                                     b.i32_val(0), thenBlock, ArrayRef<Value>());
     rewriter.setInsertionPointToStart(writeBackBlock);
     BlockArgument idx = writeBackBlock->getArgument(0);
-    Value gmemWbTagOffset = b.add(wbBaseOffset, idx);
-    Value gmemWbCounterOffset = b.add(gmemWbTagOffset, b.i32_val(1));
-
-    Value bufTagOffset = idx;
+    Value bufTagOffset = b.add(copyBase, idx);
     Value bufCounterOffset = b.add(bufTagOffset, b.i32_val(1));
+    Value gmemWbTagOffset = b.add(b.i32_val(metadataWordSize), bufTagOffset);
+    Value gmemWbCounterOffset = b.add(gmemWbTagOffset, b.i32_val(1));
     auto memSpace = op.getSegment().getType().getMemorySpace();
     copyWord(bufTagOffset, gmemWbTagOffset, memSpace);
     copyWord(bufCounterOffset, gmemWbCounterOffset, memSpace);
-    Value pred = b.icmp_slt(idx, b.i32_val(upper));
     Value updatedIdx = b.add(idx, b.i32_val(wordsPerEntry));
+    Value pred = b.icmp_ult(updatedIdx, retainedWords);
     rewriter.create<cf::CondBranchOp>(loc, pred, writeBackBlock, updatedIdx,
-                                      thenBlock, ArrayRef<Value>());
-
-    rewriter.setInsertionPointToEnd(ifBlock);
-    rewriter.create<cf::BranchOp>(loc, writeBackBlock, initIdx);
+                                     thenBlock, ArrayRef<Value>());
 
     rewriter.eraseOp(op);
     return success();
@@ -265,6 +263,8 @@ struct SegmentAllocOpConversion
           defaultSegmentAlloc(b, curWarpId, selectIds, bufferSizeInBytes);
     }
 
+    segmentBase = b.select(getProgramCollectionPredicate(mod, loc, rewriter),
+                           segmentBase, b.i32_val(-1));
     Value buffer = adaptor.getBuffer();
     auto bufferBaseTy =
         mlir::cast<LLVM::LLVMStructType>(buffer.getType()).getBody()[0];
@@ -354,7 +354,7 @@ struct GlobalScratchAllocOpConversion
         "ttg.profile_scratch_memory_size");
     assert(allocSizeAttr);
 
-    Value linearId = getLinearId(loc, rewriter);
+    Value linearId = getLinearCTAId(loc, rewriter);
 
     auto allocSize = allocSizeAttr.getValue().getZExtValue();
     Value gmemOffset =

@@ -393,6 +393,29 @@ public:
   }
 };
 
+namespace {
+class SelectProtonProgramsPass
+    : public PassWrapper<SelectProtonProgramsPass,
+                               OperationPass<ModuleOp>> {
+public:
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(SelectProtonProgramsPass)
+  explicit SelectProtonProgramsPass(std::vector<int32_t> programs)
+      : programs(std::move(programs)) {}
+  void runOnOperation() override {
+    auto mod = getOperation();
+    mod->setAttr("proton.selected_programs",
+                 DenseI32ArrayAttr::get(mod.getContext(), programs));
+  }
+private:
+  std::vector<int32_t> programs;
+};
+}
+
+std::unique_ptr<OperationPass<ModuleOp>>
+createSelectProtonProgramsPass(const std::vector<int32_t> &programs) {
+  return std::make_unique<SelectProtonProgramsPass>(programs);
+}
+
 std::unique_ptr<OperationPass<ModuleOp>> createConvertProtonToProtonGPUPass(
     MetricType metricType, SamplingStrategy samplingStrategy,
     llvm::StringRef samplingOptions, gpu::Granularity granularity,

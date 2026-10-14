@@ -34,6 +34,10 @@ struct SegmentObject {
 namespace triton {
 namespace proton::gpu {
 
+Value getLinearCTAId(Location loc, ConversionPatternRewriter &rewriter);
+Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
+                                    ConversionPatternRewriter &rewriter);
+
 struct CircularStoreDataPack {
   Value isWriter;
   Value record;

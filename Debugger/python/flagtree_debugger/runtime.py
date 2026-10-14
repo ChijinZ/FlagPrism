@@ -11,6 +11,7 @@ class DebugLaunchContext:
     hidden_arg: int
     handle: Any | None = None
     metadata: Any | None = None
+    runtime_metadata: dict[str, Any] | None = None
 
 
 @dataclass
@@ -140,6 +141,15 @@ class DebugCollectRuntime:
         metadata_dict = self._normalize_launch_metadata(
             self._metadata_to_dict(metadata))
         runtime_metadata_dict = dict(runtime_metadata or {})
+        if metadata_dict.get("debug_clock_domain"):
+            runtime_metadata_dict.setdefault("observation_clock", {
+                "domain": metadata_dict["debug_clock_domain"],
+                "scope": "instance_local",
+                "alignment": "unverified",
+                "tick_ns": None,
+                "wrap_bits": metadata_dict.get("debug_clock_bits"),
+                "source": "compiled_clock_primitive",
+            })
         if metadata_dict.get("debug_record_layout"):
             runtime_metadata_dict.setdefault(
                 "record_layout", metadata_dict["debug_record_layout"])
@@ -170,6 +180,7 @@ class DebugCollectRuntime:
             hidden_arg=int(handle.hidden_arg_value),
             handle=handle,
             metadata=metadata,
+            runtime_metadata=runtime_metadata_dict,
         )
 
     def hidden_arg(self, ctx: DebugLaunchContext) -> int:
@@ -182,6 +193,9 @@ class DebugCollectRuntime:
                                     raw_buffer=b"")
 
         exported = ctx.handle.finish()
+        if ctx.runtime_metadata and "observation_clock" in ctx.runtime_metadata:
+            exported.setdefault("runtime_metadata", {}).setdefault(
+                "observation_clock", ctx.runtime_metadata["observation_clock"])
         ctx.handle = None
         metadata_dict = self._normalize_launch_metadata(
             self._metadata_to_dict(ctx.metadata))

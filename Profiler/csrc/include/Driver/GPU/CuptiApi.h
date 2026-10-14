@@ -46,6 +46,10 @@ CUptiResult activityDisable(CUpti_ActivityKind kind);
 template <bool CheckSuccess> CUptiResult activityFlushAll(uint32_t flag);
 
 template <bool CheckSuccess>
+CUptiResult activityGetNumDroppedRecords(CUcontext context, uint32_t streamId,
+                                        size_t *dropped);
+
+template <bool CheckSuccess>
 CUptiResult activityGetNextRecord(uint8_t *buffer, size_t validBufferSizeBytes,
                                   CUpti_Activity **record);
 

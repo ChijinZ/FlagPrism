@@ -1,4 +1,6 @@
 import functools
+import base64
+import hashlib
 import triton
 import os
 import json
@@ -6,6 +8,7 @@ from pathlib import Path
 import pathlib
 import tempfile
 import shutil
+import sys
 
 from .native import runtime_binding
 from ._metadata import snapshot as metadata_snapshot
@@ -38,6 +41,10 @@ def _is_tianshu_backend(backend: Optional[str]) -> bool:
 
 def _is_mthreads_backend(backend: Optional[str]) -> bool:
     return str(backend or "").lower() in {"mthreads", "musa"}
+
+
+def _is_enflame_backend(backend: Optional[str]) -> bool:
+    return str(backend or "").lower() in {"enflame", "gcu", "tops"}
 
 
 def _uses_default_ir_triton_hook(backend: Optional[str],
@@ -77,16 +84,20 @@ def _instrumentation_record_capacity() -> int:
     return buffer_mb * 1024 * 1024 // _IR_RECORD_SIZE_BYTES
 
 
-def _activate_instrumentation(backend: Optional[str] = None) -> None:
+def _activate_instrumentation(backend: Optional[str] = None, request=None,
+                              *, clear_runs: bool = True) -> None:
     import flagtree.debugger as debugger
 
-    record_capacity = _instrumentation_record_capacity()
-    debugger.clear_exported_runs()
+    record_capacity = (_instrumentation_record_capacity() if request is None
+                       else request.max_events_per_instance)
+    if clear_runs:
+        debugger.clear_exported_runs()
     debugger.activate(
         record_level=1,
         addr_level=1 if _is_tianshu_backend(backend) else 0,
         record_capacity=record_capacity,
         output_dir=None,
+        observation_request=None if request is None else request.as_dict(),
     )
     _set_instrumentation_mode("debugger_auto")
 
@@ -115,6 +126,7 @@ def _take_instrumentation_runs() -> list[dict]:
     runtime_runs = default_debug_collect_runtime.take_exported_runs()
     normalized = []
     for run in runs:
+        raw_buffer = bytes(run.get("raw_buffer", b""))
         meta = dict(run.get("meta") or {})
         runtime_metadata = dict(run.get("runtime_metadata") or {})
         decoded = dict(run.get("decoded") or {})
@@ -129,6 +141,11 @@ def _take_instrumentation_runs() -> list[dict]:
             run.get("debug_kernel_name", ""),
             "debug_tracked_table":
             list(run.get("debug_tracked_table") or []),
+            "semantic_observations": run.get("semantic_observations") or [],
+            "raw_encoding": ("base64_ascend_actor_dynamic_v1" if runtime_metadata.get("record_layout") == "ascend_actor_dynamic_v1"
+                             else "base64_debugger_protocol_v2"),
+            "raw_base64": base64.b64encode(raw_buffer).decode("ascii"),
+            "raw_sha256": hashlib.sha256(raw_buffer).hexdigest(),
         })
     for run in runtime_runs:
         normalized.append({
@@ -181,213 +198,39 @@ def _records_by_op_instance(
     return summaries
 
 
-def _name_matches_kernel(candidate: object, kernel_name: str) -> bool:
-    candidate = str(candidate or "")
-    return candidate == kernel_name or candidate.startswith(f"{kernel_name} ")
-
-
-def _kernel_name_matches(event: dict, kernel_name: str) -> bool:
-    if not kernel_name:
-        return False
-    args = event.get("args") or {}
-    metrics = args.get("metrics") or {}
-    candidates = [
-        event.get("name"),
-        args.get("name"),
-        args.get("cann.op_name"),
-        args.get("cann.op_type"),
-        args.get("runtime.op_name"),
-        metrics.get("cann.op_name"),
-        metrics.get("cann.op_type"),
-        metrics.get("runtime.op_name"),
-    ]
-    candidates.extend(args.get("call_stack") or [])
-    for candidate in candidates:
-        if _name_matches_kernel(candidate, kernel_name):
-            return True
-    return False
-
-
-def _find_kernel_event(events: list[dict], kernel_name: str,
-                       used: set[int]) -> tuple[int, dict] | tuple[None, None]:
-    if not kernel_name:
-        return None, None
-    for index, event in enumerate(events):
-        if index in used:
-            continue
-        if event.get("ph") != "X":
-            continue
-        if event.get("cat") == "flagtree.ir_kernel":
-            continue
-        if _kernel_name_matches(event, kernel_name):
-            return index, event
-    return None, None
-
-
 def _internal_timeline_events_for_run(run_index: int, run: dict,
                                       kernel_event: dict | None) -> list[dict]:
-    records = (run.get("decoded") or {}).get("records") or []
-    timeline_records = _timeline_records(run)
-    if not timeline_records:
-        return []
-
-    tracked = {}
-    for entry in run.get("debug_tracked_table") or []:
-        if isinstance(entry, dict):
-            tracked[int(entry.get("op_id", entry.get("opId", 0)))] = entry
-    summaries = _records_by_op_instance(records)
-
-    min_cycle = min(
-        int(record.get("start_cycle", 0)) for record in timeline_records)
-    max_cycle = max(
-        int(record.get("end_cycle", 0)) for record in timeline_records)
-    cycle_span = max(1, max_cycle - min_cycle)
-    if kernel_event is not None:
-        base_ts = float(kernel_event.get("ts", 0.0))
-        base_dur = max(float(kernel_event.get("dur", 0.0)), 1.0)
-        pid = kernel_event.get("pid", 0)
-        base_tid = int(kernel_event.get("tid", 0))
-    else:
-        base_ts = 0.0
-        base_dur = float(cycle_span)
-        pid = 0
-        base_tid = 100000 + run_index * 1000
+    # Kernel/host duration is not a conversion factor for an internal clock.
+    # Raw snapshots are exported separately even when calibration is unknown.
+    from .observations import from_ir_runs
 
     events = []
-    for record in timeline_records:
-        start = int(record.get("start_cycle", 0))
-        end = int(record.get("end_cycle", 0))
-        duration = int(record.get("duration_cycle", max(0, end - start)))
-        if start == 0 and end == 0:
+    tracked = _tracked_by_op(run)
+    runtime = dict(run.get('runtime_metadata') or {})
+    runtime.setdefault('capture_id', f'ir-capture-{run_index}')
+    for record in from_ir_runs([dict(run, runtime_metadata=runtime)]):
+        clock = record['clock']
+        if (record['duration_ns'] is None or record['relative_start_ns'] is None
+                or clock['alignment'] == 'unverified'):
             continue
-        if end < start or duration <= 0:
-            continue
-        op_id = int(record.get("op_id", 0))
-        logical_instance_id = int(record.get("logical_instance_id", 0))
+        instance = record.get('program')
+        op_id = record.get('site')
         entry = tracked.get(op_id, {})
         if _is_ir_control_flow_op(entry):
             continue
-        scaled_ts = base_ts + ((start - min_cycle) / cycle_span) * base_dur
-        scaled_dur = max((duration / cycle_span) * base_dur,
-                         0.001 if duration > 0 else 0.0)
-        args = {
-            "timestamp_unit":
-            "SYS_CNT cycles",
-            "op_id":
-            op_id,
-            "logical_instance_id":
-            logical_instance_id,
-            "mlir_op":
-            entry.get("mlir_op", entry.get("mlirOpName")),
-            "source_loc":
-            entry.get("source_loc", entry.get("sourceLoc")),
-            "triton_statement":
-            entry.get("triton_statement", entry.get("tritonStatement")),
-            "op_category":
-            entry.get("op_category", entry.get("opCategory")),
-            "role":
-            entry.get("role"),
-            "start_cycle":
-            start,
-            "end_cycle":
-            end,
-            "duration_cycle":
-            duration,
-        }
-        bytes_per_instance = _memory_access_bytes_per_instance(entry)
-        if bytes_per_instance > 0:
-            args["memory_access_bytes"] = bytes_per_instance
-            direction = _memory_direction(entry)
-            if direction:
-                args["memory_direction"] = direction
-        summary = summaries.get((op_id, logical_instance_id))
-        if summary:
-            args["summary"] = summary
+        # Unshared clocks remain separate processes/frames; no native overlay.
+        pid = 700000 + run_index * 100000
+        if clock['alignment'] != 'verified_shared':
+            pid += 0 if instance is None else instance + 1
         events.append({
-            "name": _tracked_op_name(entry) if entry else f"op_{op_id}",
-            "cat": "flagtree.kernel_internal",
-            "ph": "X",
-            "pid": pid,
-            "tid": base_tid * 100000 + 10000 + logical_instance_id,
-            "ts": scaled_ts,
-            "dur": scaled_dur,
-            "args": args,
+            'name': _tracked_op_name(entry) if entry else f'op_{op_id}',
+            'cat': 'flagtree.source_control_snapshot', 'ph': 'X',
+            'pid': pid, 'tid': instance or 0,
+            'ts': record['relative_start_ns'] / 1000,
+            'dur': record['duration_ns'] / 1000,
+            'args': record,
         })
     return events
-
-
-def _synthetic_kernel_event_for_run(
-    run_index: int,
-    run: dict,
-    trace_events: list[dict],
-    base_ts: float,
-) -> dict | None:
-    summary = _run_ir_summary(run)
-    if not summary:
-        return None
-    kernel_name = str(
-        run.get("debug_kernel_name") or f"instrumentation_run_{run_index}")
-    host_start_ns = summary.get("host_start_time_ns", 0.0)
-    host_duration_ns = summary.get("host_duration_ns", 0.0)
-    if host_start_ns > 0 and host_duration_ns > 0:
-        event_ts = host_start_ns / 1000.0
-        event_duration = max(host_duration_ns / 1000.0, 0.001)
-        timestamp_unit = "host ns"
-        source = "flagtree_host_launch"
-    else:
-        event_ts = base_ts
-        event_duration = max(summary.get("duration_cycle", 0.0), 1.0)
-        timestamp_unit = "SYS_CNT cycles"
-        source = "flagtree_ir"
-    tid = 500000 + run_index
-    trace_events.append({
-        "name": "thread_name",
-        "ph": "M",
-        "pid": 0,
-        "tid": tid,
-        "args": {
-            "name": f"flagtree ir kernel {run_index}"
-        },
-    })
-    metrics = {
-        _ir_metric_name("op_event_count"): summary["op_event_count"],
-        _ir_metric_name("memory_access_bytes"): summary["memory_access_bytes"],
-        _ir_metric_name("memory_read_bytes"): summary["memory_read_bytes"],
-        _ir_metric_name("memory_write_bytes"): summary["memory_write_bytes"],
-    }
-    for name in (
-            "start_cycle",
-            "end_cycle",
-            "duration_cycle",
-            "host_start_time_ns",
-            "host_end_time_ns",
-            "host_duration_ns",
-    ):
-        if name in summary:
-            metrics[_ir_metric_name(name)] = summary[name]
-    if "estimated_bandwidth_bytes_per_cycle" in summary:
-        metrics[
-            _ir_metric_name("estimated_bandwidth_bytes_per_cycle"
-                            )] = summary["estimated_bandwidth_bytes_per_cycle"]
-    event = {
-        "name": kernel_name,
-        "cat": "flagtree.ir_kernel",
-        "ph": "X",
-        "pid": 0,
-        "tid": tid,
-        "ts": event_ts,
-        "dur": event_duration,
-        "args": {
-            "call_stack": ["ROOT", kernel_name],
-            "source": source,
-            "kernel_sequence_index": run_index,
-            "timestamp_unit": timestamp_unit,
-            "metrics": metrics,
-            **metrics,
-        },
-    }
-    trace_events.append(event)
-    return event
 
 
 def _load_timeline(path: Path) -> dict:
@@ -414,60 +257,16 @@ def _load_timeline(path: Path) -> dict:
 def _augment_timeline(path: Path,
                       runs: list[dict],
                       synthesize_kernel_events: bool = False) -> None:
+    # Legacy argument retained for callers; host intervals never synthesize a
+    # device lifecycle, and kernel names/order never associate internal records.
     timeline = _load_timeline(path)
-    trace_events = timeline.setdefault("traceEvents", [])
-    used_kernel_events: set[int] = set()
-    new_events = []
-    metadata_events = set()
-    changed = not path.exists()
-    synthetic_next_ts = 0.0
+    events = timeline.setdefault('traceEvents', [])
+    additions = []
     for run_index, run in enumerate(runs):
-        kernel_name = str(run.get("debug_kernel_name") or "")
-        event_index, kernel_event = _find_kernel_event(trace_events,
-                                                       kernel_name,
-                                                       used_kernel_events)
-        if event_index is not None:
-            used_kernel_events.add(event_index)
-            synthetic_next_ts = max(
-                synthetic_next_ts,
-                float(kernel_event.get("ts", 0.0)) +
-                float(kernel_event.get("dur", 0.0)),
-            )
-        elif synthesize_kernel_events or _host_time_bounds(run)[0] is not None:
-            kernel_event = _synthetic_kernel_event_for_run(
-                run_index,
-                run,
-                trace_events,
-                synthetic_next_ts,
-            )
-            changed = changed or kernel_event is not None
-            if kernel_event is not None:
-                kernel_end = float(kernel_event.get("ts", 0.0)) + float(
-                    kernel_event.get("dur", 0.0))
-                synthetic_next_ts = kernel_end + max(
-                    float(kernel_event.get("dur", 0.0)) * 0.02,
-                    1.0,
-                )
-        events = _internal_timeline_events_for_run(run_index, run,
-                                                   kernel_event)
-        for event in events:
-            tid = event["tid"]
-            if tid not in metadata_events:
-                metadata_events.add(tid)
-                trace_events.append({
-                    "name": "thread_name",
-                    "ph": "M",
-                    "pid": event["pid"],
-                    "tid": tid,
-                    "args": {
-                        "name": f"kernel internal {run_index}:{tid % 10000}"
-                    },
-                })
-        new_events.extend(events)
-    if not new_events and not changed:
-        return
-    trace_events.extend(new_events)
-    path.write_text(json.dumps(timeline, separators=(",", ":"), default=str))
+        additions.extend(_internal_timeline_events_for_run(run_index, run, None))
+    if additions:
+        events.extend(additions)
+        path.write_text(json.dumps(timeline, indent=2) + '\n')
 
 
 def _op_metric_name(name: str) -> str:
@@ -725,17 +524,6 @@ def _internal_hatchet_metrics_for_run(
     return by_op
 
 
-def _find_hatchet_node(node: dict, name: str) -> dict | None:
-    node_name = (node.get("frame") or {}).get("name")
-    if node_name == name or _name_matches_kernel(node_name, name):
-        return node
-    for child in node.get("children") or []:
-        found = _find_hatchet_node(child, name)
-        if found is not None:
-            return found
-    return None
-
-
 def _upsert_child(node: dict, name: str) -> dict:
     children = node.setdefault("children", [])
     for child in children:
@@ -764,7 +552,6 @@ def _augment_hatchet(path: Path, runs: list[dict]) -> None:
         return
     root = database[0]
     root_metrics = root.setdefault("metrics", {})
-    root_metrics.setdefault("device_id", 0)
     changed = False
     for run_index, run in enumerate(runs):
         metrics_by_op = _internal_hatchet_metrics_for_run(run)
@@ -772,12 +559,10 @@ def _augment_hatchet(path: Path, runs: list[dict]) -> None:
             continue
         tracked = _tracked_by_op(run)
         kernel_name = str(run.get("debug_kernel_name") or "")
-        kernel_node = _find_hatchet_node(root,
-                                         kernel_name) if kernel_name else None
-        if kernel_node is None:
-            kernel_node = _upsert_child(
-                root, kernel_name or f"instrumentation_run_{run_index}")
-        kernel_node.setdefault("metrics", {}).setdefault("device_id", 0)
+        # Keep IR captures apart from native call-tree nodes: names cannot
+        # establish invocation or binary identity.
+        kernel_node = _upsert_child(
+            root, f"IR capture {run_index}: {kernel_name or 'unnamed'}")
         run_summary = _run_ir_summary(run)
         if run_summary:
             kernel_metrics = kernel_node.setdefault("metrics", {})
@@ -817,7 +602,6 @@ def _augment_hatchet(path: Path, runs: list[dict]) -> None:
             child_name = f"{op_id}:{_tracked_op_name(entry) if entry else f'op_{op_id}'}"
             child = _upsert_child(kernel_node, child_name)
             child_metrics = child.setdefault("metrics", {})
-            child_metrics.setdefault("device_id", 0)
             for name, value in metrics_by_op[op_id].items():
                 child_metrics[name] = value
                 root_metrics.setdefault(name, 0)
@@ -933,11 +717,11 @@ def _ir_associations_for_runs(runs: list[dict]) -> list[dict]:
              if host_end_ns > host_start_ns else
              "Collected from FlagTree IR instrumentation runtime buffer."),
             "runtime_event": {
-                "correlation_id": run_index,
-                "device_id": 0,
-                "stream_id": 0,
-                "task_id": run_index,
-                "scope_id": 0,
+                "correlation_id": None,
+                "device_id": None,
+                "stream_id": None,
+                "task_id": None,
+                "scope_id": None,
                 "op_name": kernel_name,
                 "start_time_ns": host_start_ns,
                 "end_time_ns": host_end_ns,
@@ -975,11 +759,11 @@ def _ir_associations_for_runs(runs: list[dict]) -> list[dict]:
                 "note":
                 "Collected from FlagTree IR instrumentation runtime buffer.",
                 "runtime_event": {
-                    "correlation_id": run_index,
-                    "device_id": 0,
-                    "stream_id": 0,
-                    "task_id": run_index,
-                    "scope_id": 0,
+                    "correlation_id": None,
+                    "device_id": None,
+                    "stream_id": None,
+                    "task_id": None,
+                    "scope_id": None,
                     "op_name": kernel_name,
                     "start_time_ns": host_start_ns,
                     "end_time_ns": host_end_ns,
@@ -1080,6 +864,21 @@ def _augment_instrumentation_artifacts(
     if not runs:
         return
     base = Path(name)
+    from .observations import from_ir_runs
+    base.with_suffix('.observations.json').write_text(
+        json.dumps({'schema_version': 1, 'observations': from_ir_runs(runs),
+                    'captures': [{
+                        'capture_id': (run.get('runtime_metadata') or {}).get('capture_id') or f'ir-capture-{index}',
+                        'runtime_metadata': run.get('runtime_metadata') or {},
+                        'header': (run.get('decoded') or {}).get('header') or {},
+                        'actors': (run.get('decoded') or {}).get('actors') or [],
+                        'dropped': (run.get('decoded') or {}).get('dropped'),
+                        'record_layout': (run.get('runtime_metadata') or {}).get('record_layout'),
+                        'counter_saturated': bool(((run.get('decoded') or {}).get('header') or {}).get('flags', 0) & 16),
+                        'raw_encoding': run.get('raw_encoding'),
+                        'raw_base64': run.get('raw_base64'),
+                        'raw_sha256': run.get('raw_sha256'),
+                    } for index, run in enumerate(runs)]}, indent=2) + '\n')
     _augment_timeline(
         base.with_suffix(".timeline.json"),
         runs,
@@ -1110,6 +909,20 @@ def _export_session(state):
         export_capture(state["name"],
                        state["bundle_output"],
                        context=state.get("metadata"))
+
+
+def _export_native_observations(state):
+    captures = InstrumentationHook.take_observation_captures(state["session"])
+    if not captures:
+        return
+    path = Path(state["name"]).with_suffix(".observations.json")
+    existing = json.loads(path.read_text()) if path.exists() else {
+        "schema_version": 1, "observations": [], "captures": []}
+    existing.setdefault("captures", []).extend(captures)
+    existing.setdefault("observations", []).extend(
+        record for capture in captures
+        for record in capture["decoded"]["observations"])
+    path.write_text(json.dumps(existing, indent=2, allow_nan=False) + "\n")
 
 
 def _drop_sessions(session=None):
@@ -1182,9 +995,16 @@ def _check_env(backend: str) -> None:
 
 
 def _get_backend_default_path(backend: str) -> str:
-    if backend != "cupti":
+    if backend not in {"cupti", "cupti_pcsampling"}:
         return ""
-    lib_path = triton.knobs.profiler.cupti_dir
+    # FlagTree releases exposing the inherited Proton knob remain supported.
+    # Do not require applications to monkey-patch the compiler configuration.
+    knobs = triton.knobs
+    profiler_knobs = getattr(knobs, "profiler", None)
+    lib_path = getattr(profiler_knobs, "cupti_dir", None)
+    if lib_path is None:
+        proton_knobs = getattr(knobs, "proton", None)
+        lib_path = getattr(proton_knobs, "cupti_lib_dir", None)
     if lib_path is not None:
         return lib_path
     return str(
@@ -1209,6 +1029,7 @@ def start(
     mode: Optional[Union[str, BaseMode]] = None,
     hook: Optional[str] = None,
     metadata: Optional[dict] = None,
+    observation_request=None,
 ):
     """
     Start profiling with the given name and backend.
@@ -1225,7 +1046,8 @@ def start(
         name (str, optional): The name (with path) of the profiling session.
                               If not provided, the output directory is "profile-run".
         backend (str, optional): The backend to use for profiling.
-        Available options are [None, "cupti", "cupti_pcsampling", "roctracer", "cann", "mthreads", "tianshu"].
+        Available options include None, "cupti", "cupti_pcsampling",
+            "instrumentation", "roctracer", "enflame", "cann", "mthreads", "tianshu".
                                  Defaults to None, which automatically selects the backend matching the current active runtime.
         context (str, optional): The context to use for profiling.
                                  Available options are ["shadow", "python"].
@@ -1247,6 +1069,10 @@ def start(
         hook (str, optional): The hook to use for profiling.
                               Available options are [None, "triton", "instrumentation"].
                               Defaults to None.
+        observation_request (ObservationRequest or dict, optional): Explicit
+            semantic/instance/site/capacity selection. Requires
+            hook="instrumentation" and a supported backend lowering; unsupported
+            requests fail explicitly. Clock conversion is not implied.
     Returns:
         session (int): The session ID of the profiling session.
     """
@@ -1260,39 +1086,96 @@ def start(
     if backend is None:
         backend = _select_backend()
 
+    observation_plan = None
+    if observation_request is not None:
+        from .observations import ObservationRequest
+        if isinstance(observation_request, dict):
+            observation_request = ObservationRequest.from_dict(observation_request)
+        if not isinstance(observation_request, ObservationRequest):
+            raise TypeError("observation_request must be an ObservationRequest or dictionary")
+        if hook != "instrumentation":
+            raise ValueError("observation_request requires hook='instrumentation'")
+        if backend == "instrumentation":
+            target_backend = triton.runtime.driver.active.get_current_target().backend
+            if target_backend != "cuda":
+                raise ValueError("This instrumentation request lowering requires CUDA")
+            if mode is not None:
+                raise ValueError("Use either an observation request or explicit instrumentation mode")
+            from .observations_nvidia import lower_request
+            from .mode import Default
+            observation_plan = lower_request(observation_request)
+            mode = Default(**observation_plan["mode_options"])
+        elif not (_is_enflame_backend(backend) or _is_cann_backend(backend)):
+            raise ValueError("Explicit requests support Enflame, CANN, or CUDA backend='instrumentation' modes")
+
     # Native collection exports automatically; external counter tools are opt-in.
     from ._capture import INTERNAL_ENV
     internal = bool(os.environ.get(INTERNAL_ENV))
     if metadata is not None:
         metadata = metadata_snapshot(metadata)
     _check_env(backend)
+    if backend == "cupti_pcsampling" or (
+            backend == "cupti" and str(mode or "").split(":", 1)[0] == "pcsampling"):
+        # Probe before allocating a session: an enabled SDK may still expose
+        # zero stall reasons on a particular GPU/toolkit combination.
+        profiler_native.validate_pc_sampling_support(
+            _get_backend_default_path(backend))
 
     use_triton_hook = (
-        hook == "triton" or (_is_mthreads_backend(backend) and hook is None)
+        hook in ("triton", "instrumentation") or backend == "instrumentation"
+        or (_is_mthreads_backend(backend) and hook is None)
         or (hook == "instrumentation" and
-            (_is_cann_backend(backend) or _is_tianshu_backend(backend))))
+            (_is_cann_backend(backend) or _is_tianshu_backend(backend)
+             or _is_enflame_backend(backend))))
     ir_default_for_triton = _uses_default_ir_triton_hook(backend, hook)
     use_instrumentation_hook = (
-        (_is_cann_backend(backend) or _is_tianshu_backend(backend))
+        (_is_cann_backend(backend) or _is_tianshu_backend(backend)
+         or _is_enflame_backend(backend))
         and (hook == "instrumentation" or ir_default_for_triton))
     use_native_instrumentation_hook = backend == "instrumentation" or (
         hook == "instrumentation"
-        and not (_is_cann_backend(backend) or _is_tianshu_backend(backend)))
+        and not (_is_cann_backend(backend) or _is_tianshu_backend(backend)
+                 or _is_enflame_backend(backend)))
     effective_mode = (_mode_with_ir_triton_overrides(mode, backend) if
                       ir_default_for_triton else _get_mode_str(backend, mode))
+    request_spec = None if observation_request is None else observation_request.as_dict()
+    if not internal:
+        requested_output = Path(name).expanduser().resolve()
+        existing = next((state for state in _active_sessions.values()
+                         if state.get("bundle_output") == requested_output), None)
+        if existing is not None:
+            requested = {"backend": backend, "effective_mode": effective_mode,
+                         "context": context, "data": data, "hook": hook,
+                         "observation_request": request_spec}
+            if any(existing.get(key) != value for key, value in requested.items()):
+                raise ValueError("An existing session cannot change backend, mode, hook or observation request")
+            activate(existing["session"])
+            if metadata is not None:
+                existing["metadata"] = {**(existing.get("metadata") or {}), **metadata}
+            return existing["session"]
     if not _active_sessions:
         LaunchHook.reset_capture()
     set_profiling_on()
-    instrumentation_was_active = any(
+    ir_session_exists = any(
         state.get("instrumentation_hook", False)
         for state in _active_sessions.values())
+    instrumentation_was_active = any(
+        state.get("instrumentation_hook") and state.get("active", True)
+        for state in _active_sessions.values())
+    if ir_session_exists and any(
+            state.get("instrumentation_hook") and
+            state.get("observation_request") != request_spec
+            for state in _active_sessions.values()):
+        raise ValueError("Nested IR sessions must use the same observation request")
     instrumentation_activated = use_instrumentation_hook and not instrumentation_was_active
-    if instrumentation_activated:
-        _activate_instrumentation(backend)
     session = None
     staging = None
     bundle_output = None
+    bundle_created = False
     try:
+        if instrumentation_activated:
+            _activate_instrumentation(backend, observation_request,
+                                      clear_runs=not ir_session_exists)
         if not internal:
             bundle_output = Path(name).expanduser().resolve()
             existing = next((state for state in _active_sessions.values()
@@ -1302,6 +1185,7 @@ def start(
                 name = existing["name"]
             else:
                 bundle_output.mkdir(parents=True, exist_ok=False)
+                bundle_created = True
                 staging = tempfile.mkdtemp(prefix="flagprism-session-")
                 name = str(Path(staging) / "capture")
         session = profiler_native.start(
@@ -1316,21 +1200,30 @@ def start(
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
-            HookManager.register(InstrumentationHook(mode), session)
-    except Exception:
-        if staging is not None:
-            shutil.rmtree(staging)
-            if bundle_output is not None:
-                try:
-                    bundle_output.rmdir()
-                except OSError:
-                    pass
+            HookManager.register(InstrumentationHook(mode, observation_plan=observation_plan), session)
+    except BaseException as error:
+        # Compiler/debugger activation can fail before native start. Unwind all
+        # owned resources without replacing the application's original error.
+        cleanup = []
         if session is not None:
-            HookManager.unregister(session)
+            cleanup.extend((lambda: profiler_native.finalize(session, ""),
+                            lambda: HookManager.unregister(session)))
         if instrumentation_activated:
-            _deactivate_instrumentation()
+            cleanup.append(_deactivate_instrumentation)
         if not _active_sessions:
-            set_profiling_off()
+            cleanup.append(set_profiling_off)
+        if staging is not None:
+            cleanup.append(lambda: shutil.rmtree(staging))
+        if bundle_created:
+            cleanup.append(bundle_output.rmdir)
+        for operation in cleanup:
+            try:
+                operation()
+            except BaseException as cleanup_error:
+                if hasattr(error, "add_note"):
+                    error.add_note(f"Profiler start cleanup failed: {cleanup_error}")
+                else:
+                    print(f"Profiler start cleanup failed: {cleanup_error}", file=sys.stderr)
         raise
     if session in _active_sessions:
         if metadata is not None:
@@ -1349,7 +1242,12 @@ def start(
         return session
     _active_sessions[session] = {
         "session": session,
+        "active": True,
         "backend": backend,
+        "effective_mode": effective_mode,
+        "context": context,
+        "data": data,
+        "hook": hook,
         "triton_hook": use_triton_hook,
         "instrumentation_hook": use_instrumentation_hook,
         "native_instrumentation_hook": use_native_instrumentation_hook,
@@ -1358,48 +1256,77 @@ def start(
         "staging": staging,
         "bundle_output": bundle_output,
         "metadata": metadata,
+        "observation_request": request_spec,
     }
     return session
 
 
-def activate(session: Optional[int] = 0) -> None:
+def activate(session: Optional[int] = None) -> None:
     """
     Activate the specified session.
     The profiling session will be active and data will be recorded.
 
     Args:
-        session (int): The session ID of the profiling session. Defaults to 0 (the first session started.)
+        session (int, optional): Session to activate. None activates all existing
+            sessions; explicit IDs must refer to an initialized session.
 
     Returns:
         None
     """
-    if is_command_line() and session != 0:
+    if is_command_line() and session not in (None, 0):
         raise ValueError(
             "Only one session can be activated when running from the command line."
         )
+    if session is not None and session not in _active_sessions:
+        raise RuntimeError(f"Session has not been initialized: {session}")
+    targets = (list(_active_sessions.values()) if session is None
+               else [_active_sessions[session]])
+    ir_targets = [state for state in targets if state.get("instrumentation_hook")]
+    have_active_ir = any(state.get("instrumentation_hook") and state.get("active", True)
+                         for state in _active_sessions.values())
+    if ir_targets and not have_active_ir:
+        from .observations import ObservationRequest
+        state = ir_targets[0]
+        request = state.get("observation_request")
+        _activate_instrumentation(state["backend"],
+                                  ObservationRequest.from_dict(request) if request else None,
+                                  clear_runs=False)
     HookManager.activate(session)
     profiler_native.activate_all(
     ) if session is None else profiler_native.activate(session)
+    for state in targets:
+        state["active"] = True
 
 
-def deactivate(session: Optional[int] = 0) -> None:
+def deactivate(session: Optional[int] = None) -> None:
     """
     Stop the specified session.
     The profiling session's data will still be in the memory, but no more data will be recorded.
 
     Args:
-        session (int): The session ID of the profiling session. Defaults to 0 (the first session started.)
+        session (int, optional): Session to deactivate. None deactivates all
+            existing sessions; explicit IDs must refer to an initialized session.
 
     Returns:
         None
     """
-    if is_command_line() and session != 0:
+    if is_command_line() and session not in (None, 0):
         raise ValueError(
             "Only one session can be deactivated when running from the command line."
         )
+    if session is not None and session not in _active_sessions:
+        raise RuntimeError(f"Session has not been initialized: {session}")
     HookManager.deactivate(session)
     profiler_native.deactivate_all(
     ) if session is None else profiler_native.deactivate(session)
+    targets = (list(_active_sessions.values()) if session is None
+               else [_active_sessions[session]])
+    for state in targets:
+        state["active"] = False
+    if any(state.get("instrumentation_hook") for state in targets) and not any(
+            state.get("instrumentation_hook") and state.get("active", True)
+            for state in _active_sessions.values()):
+        _deactivate_instrumentation()
 
 
 def finalize(session: Optional[int] = None,
@@ -1505,11 +1432,16 @@ def finalize(session: Optional[int] = None,
 
             def export():
                 if state.get("instrumentation_hook"):
+                    session_runs = [run for run in runs
+                                    if not (run.get("runtime_metadata") or {}).get("profiler_association_evidence")
+                                    or state["session"] in ((run.get("runtime_metadata") or {})
+                                        .get("profiler_association_evidence", {}).get("session_ids", []))]
                     _augment_instrumentation_artifacts(
                         str(state.get("name") or DEFAULT_PROFILE_NAME),
-                        runs,
+                        session_runs,
                         ir_default_for_triton=bool(
                             state.get("ir_default_for_triton", False)))
+                _export_native_observations(state)
                 _export_session(state)
                 state["exported"] = True
 
@@ -1563,15 +1495,30 @@ def _profiling(
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        if is_command_line():
+            # The CLI owns its session and finalization. A decorator inside
+            # that application must not deactivate or finalize the CLI capture.
+            return func(*args, **kwargs)
         session = start(name,
                         context=context,
                         data=data,
                         backend=backend,
                         mode=mode,
                         hook=hook)
-        ret = func(*args, **kwargs)
-        deactivate(session)
-        return ret
+        try:
+            ret = func(*args, **kwargs)
+            deactivate(session)
+            return ret
+        except BaseException as error:
+            try:
+                finalize(session)
+            except BaseException as cleanup_error:
+                if hasattr(error, "add_note"):
+                    error.add_note(
+                        f"Decorated profiling finalization also failed: {cleanup_error}")
+                else:
+                    print(f"Decorated profiling finalization also failed: {cleanup_error}", file=sys.stderr)
+            raise
 
     return wrapper
 

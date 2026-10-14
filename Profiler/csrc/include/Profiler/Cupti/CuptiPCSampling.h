@@ -101,6 +101,7 @@ struct ConfigureData {
 class CuptiPCSampling : public Singleton<CuptiPCSampling> {
 
 public:
+  void validateSupport(CUcontext context);
   CuptiPCSampling() = default;
   virtual ~CuptiPCSampling() = default;
 

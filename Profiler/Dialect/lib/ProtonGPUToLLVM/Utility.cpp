@@ -65,6 +65,47 @@ SegmentObject SegmentObject::fromStruct(Location loc, Value segmentStruct,
 namespace triton {
 namespace proton::gpu {
 
+Value getLinearCTAId(Location loc, ConversionPatternRewriter &rewriter) {
+  auto b = TritonLLVMOpBuilder(loc, rewriter);
+  // Note:
+  // 1. We compute use i64 data type to compute and then truncate to i32
+  // to support various backend intrinsics (e.g. amd).
+  // 2. We avoid using the targetInfo's programId() because of its coupling
+  // with cluster id in Nvidia TritonGPU's llvm lowering.
+  Value pidX = rewriter.create<arith::IndexCastOp>(
+      loc, i64_ty,
+      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::x));
+  Value pidY = rewriter.create<arith::IndexCastOp>(
+      loc, i64_ty,
+      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::y));
+  Value pidZ = rewriter.create<arith::IndexCastOp>(
+      loc, i64_ty,
+      rewriter.create<mlir::gpu::BlockIdOp>(loc, mlir::gpu::Dimension::z));
+
+  Value gridDimX = rewriter.create<arith::IndexCastOp>(
+      loc, i64_ty,
+      rewriter.create<::mlir::gpu::GridDimOp>(loc, mlir::gpu::Dimension::x));
+  Value gridDimY = rewriter.create<arith::IndexCastOp>(
+      loc, i64_ty,
+      rewriter.create<::mlir::gpu::GridDimOp>(loc, mlir::gpu::Dimension::y));
+  Value linearId =
+      b.trunc(i32_ty, b.add(b.add(pidX, b.mul(pidY, gridDimX)),
+                            b.mul(pidZ, b.mul(gridDimX, gridDimY))));
+  return linearId;
+}
+
+Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
+                                    ConversionPatternRewriter &rewriter) {
+  auto b = TritonLLVMOpBuilder(loc, rewriter);
+  auto programs = mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs");
+  if (!programs) return b.true_val();
+  Value pid = getLinearCTAId(loc, rewriter);
+  Value enabled = b.false_val();
+  for (int32_t program : programs.asArrayRef())
+    enabled = b.or_(enabled, b.icmp_eq(pid, b.i32_val(program)));
+  return enabled;
+}
+
 CircularStoreDataPack
 lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
                            ConversionPatternRewriter &rewriter) {
@@ -83,6 +124,7 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   // Update the index (could be register promoted).
   Value curIdx = b.load(i32_ty, indexPtr);
   Value newIdx = b.add(curIdx, b.i32_val(wordsPerEntry));
+  newIdx = b.select(getProgramCollectionPredicate(mod, loc, rewriter), newIdx, curIdx);
   b.store(newIdx, indexPtr);
 
   // Compute the segment size in word (4 bytes).

@@ -71,6 +71,16 @@ def test_unknown_identities_never_join(capture):
         for e in capture._report.chrome_trace(report)["traceEvents"])
 
 
+def test_verified_scope_join_does_not_require_matching_kernel_name(capture):
+    row = record(scope_id=7)
+    launch = dict(id="launch-7", scope_id=7, name="source_operator",
+                  binary_id="binary-hash", arguments={})
+    event, = capture._report.analyze(dict(backend="future", associations=[row],
+                                         launches=[launch]))["events"]
+    assert event["name"] == "kernel"
+    assert event["launch_id"] == "launch-7" and event["binary_id"] == "binary-hash"
+
+
 def test_untimed_records_remain_machine_readable(capture, tmp_path):
     row = record(start_time_ns=None)
     document = dict(backend="future", associations=[row])
@@ -82,6 +92,20 @@ def test_untimed_records_remain_machine_readable(capture, tmp_path):
     exported = json.loads((tmp_path / "bundle/ai/events.jsonl").read_text())
     assert exported["original_record"] == row
     assert not (tmp_path / "bundle/report/timeline.json").exists()
+
+
+def test_legacy_ring_trace_is_preserved_without_claimed_clock(capture, tmp_path):
+    base = tmp_path / "capture"
+    base.with_suffix(".vendor.json").write_text(json.dumps({
+        "backend": "instrumentation", "associations": []}))
+    trace = {"traceEvents": [{"ph": "X", "name": "loop", "ts": 1, "dur": 2}]}
+    base.with_suffix(".timeline.json").write_text(json.dumps(trace))
+    output = tmp_path / "bundle"
+    capture.export_capture(base, output)
+    raw = json.loads((output / "ai/raw_native_trace.json").read_text())
+    assert raw["original_trace"] == trace
+    assert raw["timing_status"] == "unverified"
+    assert not (output / "report/timeline.json").exists()
 
 
 @pytest.mark.parametrize("status",
@@ -117,7 +141,7 @@ def test_backend_extensions_are_lazy_and_replaceable(capture, monkeypatch):
 
 
 def test_cli_failure_retains_intermediates_and_restores_environment(
-        capture, tmp_path, monkeypatch):
+        capture, tmp_path, monkeypatch, capsys):
     stage = tmp_path / "stage"
     stage.mkdir()
     monkeypatch.setattr(capture.tempfile, "mkdtemp", lambda **kw: str(stage))
@@ -133,7 +157,10 @@ def test_cli_failure_retains_intermediates_and_restores_environment(
     with pytest.raises(json.JSONDecodeError) as caught:
         capture.run_capture(args, ["workload.py"], execute)
     assert stage.joinpath("capture.vendor.json").read_text() == "broken JSON"
-    assert str(stage) in str(caught.value.__notes__)
+    if hasattr(caught.value, 'add_note'):
+        assert str(stage) in str(caught.value.__notes__)
+    else:
+        assert str(stage) in capsys.readouterr().err
     assert capture.INTERNAL_ENV not in capture.os.environ
     assert args.name == str(tmp_path / "out")
 
@@ -680,7 +707,8 @@ def test_invalid_final_metadata_saves_capture_and_prior_snapshot(
             json.dumps(dict(backend='future', associations=[])))
 
     monkeypatch.setattr(profile, 'profiler_native',
-                        SimpleNamespace(start=start, finalize=finalize))
+                        SimpleNamespace(start=start, finalize=finalize,
+                                        activate=lambda session: None))
     supplied = {
         'workload': {
             'operator': 'original',
@@ -715,6 +743,130 @@ def test_invalid_final_metadata_saves_capture_and_prior_snapshot(
         assert rejected['value'] == bad_update
     assert not profile._active_sessions
     assert not Path(native_paths[0]).parent.exists()
+
+
+@pytest.mark.parametrize('cleanup_fails', [False, True])
+def test_start_activation_failure_restores_flags_and_original_error(
+        tmp_path, monkeypatch, cleanup_fails):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    flags = importlib.import_module('flagtree.profiler.flags')
+    monkeypatch.setattr(profile, '_active_sessions', {})
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    monkeypatch.setattr(profile.LaunchHook, 'reset_capture', lambda: None)
+    monkeypatch.setattr(flags, 'profiling_on', False)
+    calls = []
+    original = RuntimeError('compiler activation rejected')
+
+    def activate(*args, **kwargs):
+        assert kwargs['clear_runs'] is True
+        calls.append('activate')
+        raise original
+
+    def deactivate():
+        calls.append('deactivate')
+        if cleanup_fails:
+            raise RuntimeError('cleanup rejected')
+
+    monkeypatch.setattr(profile, '_activate_instrumentation', activate)
+    monkeypatch.setattr(profile, '_deactivate_instrumentation', deactivate)
+    output = tmp_path / 'never_started'
+    with pytest.raises(RuntimeError) as caught:
+        profile.start(str(output), backend='enflame', hook='instrumentation')
+    assert caught.value is original
+    assert calls == ['activate', 'deactivate']
+    assert not flags.get_profiling_on()
+    assert not profile._active_sessions and not output.exists()
+    if cleanup_fails and hasattr(original, 'add_note'):
+        assert 'cleanup rejected' in str(original.__notes__)
+
+
+def test_start_preserves_preexisting_empty_output_directory(tmp_path, monkeypatch):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    flags = importlib.import_module('flagtree.profiler.flags')
+    monkeypatch.setattr(profile, '_active_sessions', {})
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    monkeypatch.setattr(profile.LaunchHook, 'reset_capture', lambda: None)
+    monkeypatch.setattr(flags, 'profiling_on', False)
+    output = tmp_path / 'existing'
+    output.mkdir()
+    with pytest.raises(FileExistsError):
+        profile.start(str(output), backend='future')
+    assert output.is_dir() and not list(output.iterdir())
+    assert not flags.get_profiling_on()
+
+
+@pytest.mark.parametrize('original', [ValueError('application failed'),
+                                     KeyboardInterrupt(), SystemExit(7)])
+@pytest.mark.parametrize('cleanup_fails', [False, True])
+def test_decorator_failure_finalizes_and_preserves_application_exception(
+        monkeypatch, original, cleanup_fails):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    calls = []
+    monkeypatch.setattr(profile, 'start', lambda *args, **kw: 17)
+
+    def finalize(session):
+        calls.append(session)
+        if cleanup_fails:
+            raise RuntimeError('SDK finalize failed')
+
+    monkeypatch.setattr(profile, 'finalize', finalize)
+
+    @profile.profile
+    def fails():
+        raise original
+
+    with pytest.raises(type(original)) as caught:
+        fails()
+    assert caught.value is original and calls == [17]
+    if cleanup_fails and hasattr(original, 'add_note'):
+        assert 'SDK finalize failed' in str(original.__notes__)
+
+
+def test_decorator_in_cli_preserves_cli_owned_session(monkeypatch):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    monkeypatch.setattr(profile, 'is_command_line', lambda: True)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail('An application decorator changed the CLI-owned session')
+
+    for operation in ('start', 'deactivate', 'finalize'):
+        monkeypatch.setattr(profile, operation, forbidden)
+
+    @profile.profile
+    def compute(value):
+        return value + 1
+
+    assert compute(3) == 4
+
+
+def test_ir_session_pause_and_resume_preserves_prior_capture(monkeypatch):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    request = {'semantics': ['source_control_interval'], 'programs': [0],
+               'sites': None, 'max_events_per_instance': 4, 'sample_every': 1}
+    state = {'session': 9, 'backend': 'enflame', 'active': True,
+             'instrumentation_hook': True, 'observation_request': request}
+    monkeypatch.setattr(profile, '_active_sessions', {9: state})
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    calls = []
+    monkeypatch.setattr(profile.HookManager, 'deactivate', lambda sid: calls.append('hooks_off'))
+    monkeypatch.setattr(profile.HookManager, 'activate', lambda sid: calls.append('hooks_on'))
+    monkeypatch.setattr(profile, 'profiler_native', SimpleNamespace(
+        deactivate=lambda sid: calls.append('native_off'),
+        activate=lambda sid: calls.append('native_on')))
+    monkeypatch.setattr(profile, '_deactivate_instrumentation', lambda: calls.append('ir_off'))
+
+    def resume(backend, restored, *, clear_runs):
+        assert backend == 'enflame' and restored.as_dict() == request
+        assert clear_runs is False, 'Resuming must preserve earlier dynamic records'
+        calls.append('ir_on')
+
+    monkeypatch.setattr(profile, '_activate_instrumentation', resume)
+    profile.deactivate(9)
+    assert state['active'] is False
+    profile.activate(9)
+    assert state['active'] is True
+    assert calls == ['hooks_off', 'native_off', 'ir_off', 'ir_on', 'hooks_on', 'native_on']
 
 
 def test_caller_iterations_do_not_invent_observations(capture, tmp_path):

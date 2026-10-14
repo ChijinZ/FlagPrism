@@ -25,8 +25,12 @@ void CircularLayoutParser::parse() {
   const int scratchMemSize = getConfig().scratchMemSize;
   uint32_t pos = buffer.position();
   for (int i = 0; i < numBlocks; i++) {
-    buffer.seek(pos);
-    parseBlock();
+    if (getConfig().selectedBlocks.empty() ||
+        std::find(getConfig().selectedBlocks.begin(), getConfig().selectedBlocks.end(),
+                  static_cast<uint32_t>(i)) != getConfig().selectedBlocks.end()) {
+      buffer.seek(pos);
+      parseBlock();
+    }
     pos += scratchMemSize;
   }
 }
@@ -55,11 +59,12 @@ void CircularLayoutParser::parseMetadata() {
   for (auto uid : getConfig().uidVec) {
     auto count = countVec[uid];
 
-    if (count > maxCountPerUnit) {
+    const auto countRecords = count / kWordsPerEntry;
+    if (countRecords > maxCountPerUnit) {
       std::cerr << "Warning (cta" << bt.blockId << ", warp" << uid
-                << "): first " << count - maxCountPerUnit
+                << "): first " << countRecords - maxCountPerUnit
                 << " events are dropped due to insufficient buffer size ("
-                << maxCountPerUnit << "/" << count << ")" << std::endl;
+                << maxCountPerUnit << "/" << countRecords << ")" << std::endl;
     }
 
     auto &trace = bt.traces.emplace_back();

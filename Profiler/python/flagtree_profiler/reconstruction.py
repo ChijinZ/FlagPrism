@@ -37,6 +37,19 @@ def reconstruct(payload, launches, binaries, native_events):
                                 record['source'] in {'flagtree_ir_snapshot', 'flagtree_ir_dynamic'} else None)
         record['source_site_association'] = ('compiler_assigned_observer_id'
                                            if record['source_site'] else 'partial')
+        compiler_site = record.get('compiler_site')
+        if not isinstance(compiler_site, dict):
+            compiler_site = {}
+        region_origin = None
+        if (linked and record['source_available'] and
+                compiler_site.get('kind') == 'explicit_proton_scope' and
+                compiler_site.get('binary_id') == record['binary_id'] and
+                compiler_site.get('scope_id') == record.get('site') and
+                isinstance(compiler_site.get('origin'), dict)):
+            region_origin = compiler_site['origin']
+        record['source_region_origin'] = region_origin
+        record['source_region_origin_status'] = (
+            region_origin.get('status', 'unknown') if region_origin else 'unassociated')
         clock = record.get('clock') or {}
         key = (record['capture_id'], record.get('invocation_id') if linked else None,
                record.get('program'), json.dumps(record.get('actor', record.get('actor_slot')), sort_keys=True),
@@ -95,7 +108,11 @@ def render(document):
         rows = []
         for record in group['observations']:
             source = record.get('source_site') or {}
-            values = (record.get('site'), record.get('scope_name') or source.get('sourceLoc', source.get('source_loc')), record['semantic'],
+            origin = record.get('source_region_origin')
+            origin_text = (json.dumps(origin, ensure_ascii=False) if origin is not None
+                           else 'partial; see compiler execution mapping')
+            values = (record.get('site'), record.get('scope_name') or source.get('sourceLoc', source.get('source_loc')),
+                      origin_text, record['semantic'],
                       record.get('occurrence'), record.get('sequence'),
                       record.get('start_tick'), record.get('end_tick'),
                       record.get('duration_ticks'), record.get('duration_ns'),
@@ -110,7 +127,7 @@ def render(document):
         binary = escape(str(group['binary_id']))
         panels.append(f'<section><h2>{title}</h2><p>{clock}</p><p>Binary: {binary}</p>'
                       '<table><thead><tr>' + ''.join('<th>' + field + '</th>' for field in
-                       ('Site', 'Source scope', 'Semantic', 'Retained occurrence', 'Sequence',
+                       ('Site', 'Source scope', 'Source origin (not exclusive cost)', 'Semantic', 'Retained occurrence', 'Sequence',
                         'Start tick', 'End tick', 'Duration ticks', 'Duration ns', 'Storage')) +
                       '</tr></thead><tbody>' + ''.join(rows) + '</tbody></table></section>')
     return ('<!doctype html><meta charset="utf-8"><title>Detailed observations</title>'

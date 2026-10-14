@@ -14,6 +14,7 @@ constexpr uint32_t kDefaultRingBufferHeaderSize = 32;
 constexpr uint32_t kInvalidKernelId = 0;
 constexpr uint32_t kInvalidScopeId = 0;
 constexpr uint32_t kInvalidOpId = 0;
+constexpr uint64_t kDynamicRecordCommitTag = 0x465044594e563031ULL;
 
 enum class RecordLevel : uint16_t {
   LEVEL_SUMMARY = 1,
@@ -42,6 +43,7 @@ enum class RecordKind : uint16_t {
   SUMMARY_COUNT_BUNDLE_U64 = 4,
   SUMMARY_VALUE_BUNDLE_F32 = 5,
   TIMELINE = 6,
+  DYNAMIC_TIMELINE = 7,
 };
 
 enum class CollectorKind : uint16_t {
@@ -144,6 +146,25 @@ struct TimelineRecord {
 };
 static_assert(sizeof(TimelineRecord) == 64, "TimelineRecord must be 64 bytes");
 
+// Append-only, selected single-writer trace. Sequence is execution order,
+// not a source-level loop iteration; attemptedOrdinal precedes sampling.
+struct DynamicTimelineRecord {
+  RecordHeader header;
+  uint64_t startCycle;
+  uint64_t endCycle;
+  uint64_t durationCycle;
+  uint32_t actorId;
+  uint32_t sequence;
+  uint64_t attemptedOrdinal;
+  uint64_t commitTag;
+};
+static_assert(sizeof(DynamicTimelineRecord) == 64,
+              "DynamicTimelineRecord must be 64 bytes");
+static_assert(offsetof(DynamicTimelineRecord, actorId) == 40,
+              "Dynamic actor offset must match compiler stores");
+static_assert(offsetof(DynamicTimelineRecord, attemptedOrdinal) == 48,
+              "Dynamic ordinal offset must match compiler stores");
+
 struct RingBufferHeader {
   uint32_t writeIdx;
   uint32_t capacity;
@@ -161,6 +182,7 @@ enum RingBufferFlags : uint32_t {
   RB_FLAG_NONE = 0,
   RB_FLAG_OVERFLOW = 1u << 0,
   RB_FLAG_FROZEN = 1u << 1,
+  RB_FLAG_COUNTER_SATURATED = 1u << 4,
 };
 
 struct BufferMeta {

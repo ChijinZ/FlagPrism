@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.20)
+project(FlagPrismAscendLateObserver LANGUAGES C CXX)
+find_package(LLVM 15 REQUIRED CONFIG)
+if(NOT LLVM_VERSION_MAJOR EQUAL 15)
+  message(FATAL_ERROR "The isolated upstream opt15 adapter requires LLVM15 plugin headers")
+endif()
+add_library(FlagPrismAscendLateObserver MODULE AscendLateObserver.cpp)
+target_include_directories(FlagPrismAscendLateObserver SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})
+target_compile_definitions(FlagPrismAscendLateObserver PRIVATE ${LLVM_DEFINITIONS})
+target_compile_features(FlagPrismAscendLateObserver PRIVATE cxx_std_17)
+target_compile_options(FlagPrismAscendLateObserver PRIVATE -fno-rtti)
+# Resolve LLVM ABI from opt15; the vendor bisheng fork never loads this plugin.
+set_target_properties(FlagPrismAscendLateObserver PROPERTIES PREFIX "" SUFFIX ".so")

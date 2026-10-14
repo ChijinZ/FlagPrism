@@ -15,6 +15,31 @@ from typing import NamedTuple
 pl.enable_semantic("triton")
 
 
+@pytest.fixture(autouse=True)
+def _finalize_sessions_after_test():
+    yield
+    profiler.finalize()
+
+
+def _raw_artifact_path(legacy_path):
+    """The public entry now owns a bundle; retain checks on raw inherited ABI."""
+    return legacy_path.with_suffix("") / "raw/native" / ("capture" + legacy_path.suffix)
+
+
+def _only_scope_frame(root, name):
+    # Oracle on explicit annotation names in one legacy tree, independent of
+    # the variable number of launch/context wrapper frames.
+    found = []
+    def visit(node):
+        if node.get("frame", {}).get("name") == name:
+            found.append(node)
+        for child in node.get("children", []):
+            visit(child)
+    visit(root)
+    assert len(found) == 1, (name, found)
+    return found[0]
+
+
 def is_cuda():
     return triton.runtime.driver.active.get_current_target().backend == "cuda"
 
@@ -218,11 +243,11 @@ def test_tree(tmp_path: pathlib.Path, hook):
     add_kernel[grid](x, y, output, n_elements, BLOCK_SIZE=1024, num_warps=1)
     profiler.finalize()
 
-    with open(temp_file, "rb") as f:
+    with open(_raw_artifact_path(temp_file), "rb") as f:
         data = json.load(f)
         if hook:
             assert "add_1024" == data[0]["children"][0]["frame"]["name"]
-        kernel_frame = data[0]["children"][0]["children"][0]
+        kernel_frame = _only_scope_frame(data[0], "kernel")
         load_ops = kernel_frame["children"][0]
         assert "load_ops" in load_ops["frame"]["name"]
         assert ("load_x" in load_ops["children"][0]["frame"]["name"]
@@ -290,7 +315,7 @@ def test_trace(tmp_path: pathlib.Path):
     sub_kernel[grid](x, y, output, n_elements, BLOCK_SIZE=1024, num_warps=1)
     profiler.finalize()
 
-    with open(temp_file, "rb") as f:
+    with open(_raw_artifact_path(temp_file), "rb") as f:
         data = json.load(f)
         events = data["traceEvents"]
         assert events[0]["name"] == "kernel"
@@ -342,13 +367,15 @@ def test_multi_session(tmp_path: pathlib.Path):
     add_kernel[grid](x, y, output, n_elements, BLOCK_SIZE=1024, num_warps=1)
     profiler.finalize()
 
-    with open(temp_file_inst, "rb") as f:
+    with open(_raw_artifact_path(temp_file_inst), "rb") as f:
         data = json.load(f)
         kernel_frame = data[0]["children"][0]
         assert "add_kernel" == kernel_frame["frame"]["name"]
-        assert "cycles" in kernel_frame["children"][0]["metrics"]
+        for name in ("load_x", "load_y"):
+            frame = _only_scope_frame(data[0], name)
+            assert frame["metrics"]["cycles"] > 0
 
-    with open(temp_file_driver, "rb") as f:
+    with open(_raw_artifact_path(temp_file_driver), "rb") as f:
         data = json.load(f)
         kernel_frame = data[0]["children"][0]
         assert "add_kernel" == kernel_frame["frame"]["name"]
@@ -409,7 +436,7 @@ def test_autotune(tmp_path: pathlib.Path):
     profiler.finalize()
 
     # Check all names exist in the output
-    with open(temp_file, "rb") as f:
+    with open(_raw_artifact_path(temp_file), "rb") as f:
         data = json.load(f)
         names = [frame["frame"]["name"] for frame in data[0]["children"]]
         assert "add_256" in names
@@ -648,12 +675,11 @@ def test_warp_spec(tmp_path: pathlib.Path):
     matmul_tma(a, b, warp_specialize=HAS_WARP_SPECIALIZE)
     profiler.finalize()
 
-    with open(temp_file, "rb") as f:
+    with open(_raw_artifact_path(temp_file), "rb") as f:
         data = json.load(f)
-        kernel_level = data[0]["children"][0]["children"][0]
-        assert kernel_level["children"][0]["frame"]["name"] == 'loop'
-        assert kernel_level["children"][0]["metrics"]['cycles'] > 0
-        assert kernel_level["frame"]["name"] == "kernel"
+        kernel_level = _only_scope_frame(data[0], "kernel")
+        loop = _only_scope_frame(kernel_level, "loop")
+        assert loop["metrics"]['cycles'] > 0
         assert kernel_level["metrics"]["cycles"] > 0
 
 
@@ -688,7 +714,7 @@ def test_timeline(tmp_path: pathlib.Path):
 
     profiler.finalize()
 
-    with temp_file.open() as f:
+    with _raw_artifact_path(temp_file).open() as f:
         data = json.load(f)
         trace_events = data["traceEvents"]
         assert len(trace_events) == 12

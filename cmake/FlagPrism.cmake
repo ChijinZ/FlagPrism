@@ -20,7 +20,7 @@ option(TRITON_BUILD_FLAGPRISM
        "Build the bundled FlagPrism debugger and profiler"
        ${_flagprism_default})
 
-set(_flagprism_supported_backends all ascend mthreads tianshu enflame)
+set(_flagprism_supported_backends all nvidia ascend mthreads tianshu enflame)
 set(_flagprism_backend_default "all")
 if(FLAGTREE_BACKEND STREQUAL "enflame")
   set(_flagprism_backend_default "enflame")
@@ -36,17 +36,20 @@ elseif(FLAGTREE_BACKEND STREQUAL "mthreads" OR
 endif()
 if(NOT FLAGPRISM_BACKEND)
   set(FLAGPRISM_BACKEND "${_flagprism_backend_default}" CACHE STRING
-      "FlagPrism vendor backend to compile (all, ascend, mthreads, tianshu, or enflame)" FORCE)
+      "FlagPrism vendor backend to compile (all, nvidia, ascend, mthreads, tianshu, or enflame)" FORCE)
 endif()
 string(TOLOWER "${FLAGPRISM_BACKEND}" FLAGPRISM_BACKEND)
-set_property(CACHE FLAGPRISM_BACKEND PROPERTY STRINGS all ascend mthreads tianshu enflame)
+if(FLAGPRISM_BACKEND STREQUAL "cuda")
+  set(FLAGPRISM_BACKEND "nvidia" CACHE STRING "FlagPrism backend" FORCE)
+endif()
+set_property(CACHE FLAGPRISM_BACKEND PROPERTY STRINGS all nvidia ascend mthreads tianshu enflame)
 if(NOT FLAGPRISM_BACKEND IN_LIST _flagprism_supported_backends)
   message(FATAL_ERROR
     "Unsupported FLAGPRISM_BACKEND='${FLAGPRISM_BACKEND}'. "
-    "Choose all, ascend, mthreads, tianshu, or enflame.")
+    "Choose all, nvidia, ascend, mthreads, tianshu, or enflame.")
 endif()
 set(FLAGPRISM_BUILD_VENDOR_LOWERING OFF)
-if(FLAGPRISM_BACKEND STREQUAL "all")
+if(FLAGPRISM_BACKEND STREQUAL "all" OR FLAGPRISM_BACKEND STREQUAL "nvidia")
   set(FLAGPRISM_BUILD_VENDOR_LOWERING ON)
 endif()
 message(STATUS "FlagPrism vendor backend: ${FLAGPRISM_BACKEND}")
@@ -67,7 +70,10 @@ function(flagprism_apply_backend_compile_definitions target)
 endfunction()
 
 function(flagprism_enable_debugger_runtime target)
-  if(FLAGPRISM_BACKEND STREQUAL "enflame")
+  if(FLAGPRISM_BACKEND STREQUAL "nvidia")
+    # NVIDIA uses the existing dynamically dispatched generic runtime.
+    return()
+  elseif(FLAGPRISM_BACKEND STREQUAL "enflame")
     flagtree_debugger_enable_enflame(${target})
   elseif(FLAGPRISM_BACKEND STREQUAL "mthreads")
     flagtree_debugger_enable_musa(${target})

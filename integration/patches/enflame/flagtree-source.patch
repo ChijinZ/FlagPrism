@@ -1,0 +1,112 @@
+diff --git a/third_party/enflame/backend/compiler.py b/third_party/enflame/backend/compiler.py
+index db4c5ff..dfed6b6 100644
+--- a/third_party/enflame/backend/compiler.py
++++ b/third_party/enflame/backend/compiler.py
+@@ -203,6 +203,32 @@ def make_ttgir(mod, metadata, options):
+ # FlagPrism: local collect regions can request L2 under a global L1 default.
+ # The payload plan after TTIR instrumentation determines the SDK's i64 requirement.
+ def _debug_codegen_options(options, metadata):
++    if metadata.get("debug_clock_domain") == "enflame.sdk.global_timer":
++        if options.arch != "gcu300":
++            raise RuntimeError("FlagPrism SDK global timer currently supports GCU300 only")
++        # GCU300 compilation uses the LLVM11 SDK toolchain. Link its installed
++        # read-only helper, not the LLVM18 library at the top-level SDK path.
++        library = os.path.join(toolkit.get_tops_home(), "llvm11", "lib", "krt",
++                               "gcu300_api_profile.bc")
++        if not os.path.isfile(library):
++            raise RuntimeError("GCU300 read-only SDK timer library is unavailable: " + library)
++        libraries = tuple(options.extern_libs or ())
++        if not any(path == library for _, path in libraries):
++            libraries += (("flagprism_sdk_global_timer", library),)
++        # Dynamic counters and pointers use validated i32. The SDK clock
++        # alone stays LLVM i64 and is split immediately into two i32 words.
++        dynamic_words = metadata.get("debug_clock_carrier") == "llvm_i64_words"
++        selected_i64 = options.enable_i64 if dynamic_words else True
++        metadata["enable_i64"] = selected_i64
++        metadata["debug_clock_library"] = library
++        with open(library, "rb") as stream:
++            metadata["debug_clock_library_sha256"] = hashlib.sha256(stream.read()).hexdigest()
++        metadata["debug_clock_primitive"] = "_ZN4tops12global_timerEv"
++        metadata["debug_clock_frequency_verified"] = False
++        metadata["debug_clock_bits"] = 46
++        metadata["debug_clock_unit"] = "tick"
++        # No SDK frequency/calibration relationship is assumed.
++        return replace(options, enable_i64=selected_i64, extern_libs=libraries)
+     if (options.instrumentation_mode.startswith("debugger")
+             and metadata.get("debug_full_dump_payload_bytes_per_instance", 0) > 0 and not options.enable_i64):
+         metadata["enable_i64"] = True
+@@ -302,6 +328,10 @@ def make_gcuir(mod, metadata, options):
+             if metadata['tle_raw_deferred']:
+                 gcu_passes.gcu400.add_tle_dslregion_inline(pm)
+     gcu_passes.mlir.add_print_op_generic(pm)
++    # Preserve actual lowering locations for origin candidates. This changes
++    # serialization, not the pass pipeline or source mathematical operations.
++    pm.add_pass("mlir-print-debuginfo")
++    metadata["gcu_source_location_provenance"] = "compiler_location_chain"
+ 
+     return pm.run(patched_mod)
+ 
+diff --git a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp b/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
+index b7ba104..cd2315d 100644
+--- a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
++++ b/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
+@@ -79,6 +79,7 @@ struct Gcu300Pipeline_ {
+   std::vector<std::pair<std::string, std::string>> passes;
+   std::string lastError;
+   bool printGeneric = false;
++  bool printDebugInfo = false;
+   bool printAfterAll = false;
+   bool disableThreading = false;
+   bool printModuleScope = false;
+@@ -107,6 +108,10 @@ void gcu300_pipeline_add_pass(Gcu300Pipeline p, const char *pass_name,
+ 
+   llvm::StringRef name(pass_name);
+ 
++  if (name == "mlir-print-debuginfo") {
++    p->printDebugInfo = true;
++    return;
++  }
+   if (name == "mlir-print-op-generic") {
+     p->printGeneric = true;
+     return;
+@@ -205,6 +210,8 @@ Gcu300String gcu300_pipeline_run(Gcu300Pipeline p, const char *input,
+   mlir::OpPrintingFlags flags;
+   if (p->printGeneric)
+     flags.printGenericOpForm();
++  if (p->printDebugInfo)
++    flags.enableDebugInfo();
+   module->print(os, flags);
+   return makeString(output);
+ }
+diff --git a/third_party/enflame/triton_gcu/triton_gcu400/lib/triton_gcu400_core.cpp b/third_party/enflame/triton_gcu/triton_gcu400/lib/triton_gcu400_core.cpp
+index a1586ed..5411ffb 100644
+--- a/third_party/enflame/triton_gcu/triton_gcu400/lib/triton_gcu400_core.cpp
++++ b/third_party/enflame/triton_gcu/triton_gcu400/lib/triton_gcu400_core.cpp
+@@ -80,6 +80,7 @@ struct Gcu400Pipeline_ {
+   std::vector<std::pair<std::string, std::string>> passes;
+   std::string lastError;
+   bool printGeneric = false;
++  bool printDebugInfo = false;
+   bool printAfterAll = false;
+   bool disableThreading = false;
+   bool printModuleScope = false;
+@@ -108,6 +109,10 @@ void gcu400_pipeline_add_pass(Gcu400Pipeline p, const char *pass_name,
+ 
+   llvm::StringRef name(pass_name);
+ 
++  if (name == "mlir-print-debuginfo") {
++    p->printDebugInfo = true;
++    return;
++  }
+   if (name == "mlir-print-op-generic") {
+     p->printGeneric = true;
+     return;
+@@ -211,6 +216,8 @@ Gcu400String gcu400_pipeline_run(Gcu400Pipeline p, const char *input,
+   mlir::OpPrintingFlags flags;
+   if (p->printGeneric)
+     flags.printGenericOpForm();
++  if (p->printDebugInfo)
++    flags.enableDebugInfo();
+   module->print(os, flags);
+   return makeString(output);
+ }

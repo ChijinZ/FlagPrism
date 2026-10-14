@@ -11,6 +11,9 @@ namespace mlir::triton::proton {
 #define GEN_PASS_DECL
 #include "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/Passes.h.inc"
 
+std::unique_ptr<OperationPass<ModuleOp>>
+createSelectProtonProgramsPass(const std::vector<int32_t> &programs);
+
 std::unique_ptr<OperationPass<ModuleOp>> createConvertProtonToProtonGPUPass(
     MetricType metricType = MetricType::CYCLE,
     SamplingStrategy samplingStrategy = SamplingStrategy::NONE,

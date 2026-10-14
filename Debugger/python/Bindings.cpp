@@ -72,7 +72,8 @@ uint32_t getSequenceUInt32(py::handle value, size_t index, uint32_t fallback) {
   int64_t dim = py::cast<int64_t>(sequence[index]);
   if (dim <= 0 ||
       static_cast<uint64_t>(dim) > std::numeric_limits<uint32_t>::max()) {
-    throw std::out_of_range("launch grid dimension must fit uint32_t");
+    throw std::invalid_argument(
+        "launch grid dimension must be positive and fit uint32_t");
   }
   return static_cast<uint32_t>(dim);
 }
@@ -374,6 +375,8 @@ py::dict toPyRingBufferHeader(const RingBufferHeader &header) {
   dict["flags"] = header.flags;
   dict["record_size"] = header.recordSize;
   dict["payload_offset"] = header.payloadOffset;
+  dict["reserved0"] = header.reserved0;
+  dict["reserved1"] = header.reserved1;
   return dict;
 }
 
@@ -501,6 +504,20 @@ py::dict toPyDecodedRecord(const DecodedRecord &record) {
     dict["duration_cycle"] = raw.durationCycle;
     return dict;
   }
+  if (const auto *timeline = std::get_if<DecodedDynamicTimelineRecord>(&record)) {
+    const auto &raw = timeline->raw;
+    dict["record_kind"] = "DYNAMIC_TIMELINE";
+    dict["op_id"] = raw.header.opId;
+    dict["logical_instance_id"] = raw.header.logicalInstanceId;
+    dict["start_cycle"] = raw.startCycle;
+    dict["end_cycle"] = raw.endCycle;
+    dict["duration_cycle"] = raw.durationCycle;
+    dict["actor_id"] = raw.actorId;
+    dict["sequence"] = raw.sequence;
+    dict["attempted_ordinal"] = raw.attemptedOrdinal;
+    dict["commit_tag"] = raw.commitTag;
+    return dict;
+  }
   const auto &raw = std::get<DecodedFullValueRefRecord>(record).raw;
   dict["record_kind"] = "FULL_VALUE";
   dict["op_id"] = raw.header.opId;
@@ -554,6 +571,63 @@ public:
 
     DebugRuntimeMetadata runtimeMetadata =
         parseRuntimeMetadata(runtimeMetadataValue);
+    if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+        runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
+      // Legacy snapshots retain their minimum allocation. Dynamic capacity is
+      // explicit and must not be silently raised by normalizeCompileRequest.
+      compileRequest.options.recordCapacity =
+          getUInt32Or(metadata, "debug_record_capacity", 1024);
+      if (compileRequest.options.recordCapacity == 0)
+        throw std::invalid_argument("dynamic trace capacity must be positive");
+    }
+    if (getUInt32Or(metadata, "debug_dynamic_index_bits", 0) == 32) {
+      // The bounded GCU writer uses signed pointer offsets and unsigned flat
+      // program ids. Validate the actual launch before allocating any buffer;
+      // compile-time selection alone cannot establish these runtime bounds.
+      if (runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1" ||
+          getStringOr(metadata, "debug_clock_carrier", "") !=
+              "llvm_i64_words" ||
+          getUInt32Or(metadata, "debug_record_size", 0) != 64)
+        throw std::invalid_argument("bounded dynamic indexing requires "
+                                    "selected_dynamic_timeline_v1, 64-byte "
+                                    "records and llvm_i64_words clock carrier");
+      py::dict runtimeDict = runtimeMetadataValue.is_none()
+                                 ? py::dict()
+                                 : py::cast<py::dict>(runtimeMetadataValue);
+      py::handle grid = lookup(runtimeDict, "grid");
+      if (!grid || !py::isinstance<py::sequence>(grid))
+        throw std::invalid_argument(
+            "bounded dynamic indexing requires actual launch grid metadata");
+      auto dimensions = py::reinterpret_borrow<py::sequence>(grid);
+      if (dimensions.size() < 1 || dimensions.size() > 3)
+        throw std::invalid_argument(
+            "bounded dynamic launch grid requires one to three dimensions");
+      constexpr uint64_t signedLimit = std::numeric_limits<int32_t>::max();
+      if (runtimeMetadata.gridX > signedLimit ||
+          runtimeMetadata.gridY > signedLimit ||
+          runtimeMetadata.gridZ > signedLimit)
+        throw std::invalid_argument(
+            "bounded dynamic launch grid dimension exceeds INT32_MAX");
+      if (launchGridProduct(runtimeMetadata) >
+          std::numeric_limits<uint32_t>::max())
+        throw std::invalid_argument(
+            "bounded dynamic launch grid product exceeds UINT32_MAX");
+      const uint64_t bufferBytes =
+          32 + checkedMulU64(compileRequest.options.recordCapacity, 64,
+                             "bounded dynamic record area");
+      if (bufferBytes > signedLimit)
+        throw std::invalid_argument(
+            "bounded dynamic trace buffer exceeds INT32_MAX pointer offsets");
+      if (!lookup(metadata, "debug_dynamic_selected_program"))
+        throw std::invalid_argument(
+            "bounded dynamic indexing requires an explicit selected program");
+      if (getUInt64Or(metadata, "debug_dynamic_selected_program", 0) >
+          signedLimit)
+        throw std::invalid_argument(
+            "bounded dynamic selected program exceeds INT32_MAX");
+      // A selected id outside the grid intentionally collects no records.
+      // Do not reject that supported ablation or silently narrow the id.
+    }
 
     DebugKernelArtifacts artifacts;
     bridge->attachKernelMetadata(compileRequest, artifacts, kernelMetadata);

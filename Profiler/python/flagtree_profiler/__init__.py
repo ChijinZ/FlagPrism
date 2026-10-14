@@ -15,9 +15,11 @@ from .profile import (
     DEFAULT_PROFILE_NAME,
 )
 from . import context, specs, mode
+from .observations import ObservationRequest
 
 __all__ = (
     "DEFAULT_PROFILE_NAME",
+    "ObservationRequest",
     "activate",
     "context",
     "cpu_timed_scope",
@@ -47,6 +49,21 @@ class _ProfilerComponent:
         from .native import compiler_binding
 
         compiler_binding().load_dialects(context)
+
+    @staticmethod
+    def on_prepare_compiler_driver(event) -> None:
+        from .ascend_compiler import prepare
+        prepare(event)
+
+    @staticmethod
+    def on_finish_compiler_driver(event, *, returncode) -> None:
+        from .ascend_compiler import finish
+        finish(event, returncode=returncode)
+
+    @staticmethod
+    def compiler_driver_cache_key():
+        from .ascend_compiler import cache_key
+        return cache_key()
 
 
 component = register_component("profiler", _ProfilerComponent())

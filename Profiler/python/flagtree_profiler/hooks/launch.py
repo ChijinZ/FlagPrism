@@ -142,6 +142,11 @@ class LaunchHook(Hook):
                 },
                 "compiler_metadata":
                 _json_value(compiler_metadata),
+                "compiler_artifacts": {
+                    stage: text for stage, text in kernel.asm.items()
+                    if stage in {"ttir", "ttgir", "gcuir", "llir", "ptx"}
+                    and isinstance(text, str)
+                },
                 "target": {
                     name: _json_value(getattr(target, name, None))
                     for name in ("backend", "arch", "warp_size")
@@ -157,6 +162,17 @@ class LaunchHook(Hook):
                 "resource_notes":
                 "Only compiler metadata is recorded; loader register/spill placeholders are not measurements."
             }
+            from ..execution import build_manifest
+            try:
+                cls.binaries[key]["execution_manifest"] = _json_value(build_manifest(
+                    kernel.asm, compiler_metadata, target, key))
+            except Exception as error:
+                # Optional mapping extraction cannot invalidate a real launch.
+                # The error is preserved rather than asserting complete coverage.
+                cls.binaries[key]["execution_manifest"] = {
+                    "schema_version": 1, "binary_id": key, "status": "failed",
+                    "reason": f"{type(error).__name__}: {error}",
+                }
         arguments = {
             name: _argument(value)
             for name, value in bridge["arguments"].items()
@@ -243,6 +259,16 @@ class LaunchHook(Hook):
         op_name.set(lazy_metadata["name"])
         id.set(profiler_native.record_scope())
         self.record_launch(lazy_metadata, id.get(), bridge)
+        # The exact per-launch LazyDict also reaches the debugger prepare
+        # finalizer. This is an identity bridge, never a name/order join.
+        metadata._flagprism_invocation_identity = {
+            "invocation_id": f"launch-{id.get()}",
+            "scope_id": id.get(),
+            "binary_id": getattr(bridge.get("kernel"), "hash", None) if bridge else None,
+            "evidence": "same_launch_metadata_object",
+            "session_ids": [session for session, hooks in HookManager.session_hooks.items()
+                            if hooks.get(self, False)],
+        }
         profiler_native.enter_op(id.get(), lazy_metadata["name"])
         profiler_native.add_metrics(id.get(), fn_metrics)
 
@@ -250,3 +276,14 @@ class LaunchHook(Hook):
         if not isinstance(metadata, LazyDict):
             return
         profiler_native.exit_op(id.get(), op_name.get())
+
+    def abort_enter(self, metadata: LazyDict, error: BaseException) -> None:
+        identity = getattr(metadata, "_flagprism_invocation_identity", None)
+        if identity:
+            identity["status"] = "rejected_before_launch"
+            for row in self.launches:
+                if row["scope_id"] == identity["scope_id"]:
+                    row["status"] = "rejected_before_launch"
+                    row["error_type"] = type(error).__name__
+                    break
+        self.exit(metadata)

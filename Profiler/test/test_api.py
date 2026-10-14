@@ -22,6 +22,18 @@ def _uses_cann_runtime():
     return backend in {"ascend", "npu"}
 
 
+def _target_backend():
+    return triton.runtime.driver.active.get_current_target().backend
+
+
+@pytest.fixture(autouse=True)
+def _release_api_test_sessions():
+    yield
+    # A failed assertion must not leak its SDK mode/session into later tests.
+    # Cleanup failures remain pytest errors rather than being swallowed.
+    profiler.finalize()
+
+
 def test_profile_single_session(tmp_path: pathlib.Path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     temp_file0 = tmp_path / "test_profile0" / "ai/call_tree.json"
@@ -29,7 +41,7 @@ def test_profile_single_session(tmp_path: pathlib.Path, monkeypatch):
     profiler.activate()
     profiler.deactivate()
     profiler.finalize()
-    assert session_id0 == 0
+    assert isinstance(session_id0, int) and session_id0 >= 0
     assert temp_file0.exists()
 
     temp_file1 = tmp_path / "test_profile1" / "ai/call_tree.json"
@@ -49,9 +61,25 @@ def test_profile_single_session(tmp_path: pathlib.Path, monkeypatch):
     pathlib.Path("test/ai/call_tree.json").unlink()
 
 
-@pytest.mark.skipif(_uses_cann_runtime(),
-                    reason="CANN sessions cannot overlap")
 def test_profile_multiple_sessions(tmp_path: pathlib.Path):
+    if _target_backend() not in {"cuda", "hip"}:
+        first = profiler.start(str(tmp_path / "first"))
+        try:
+            for paused in (False, True):
+                if paused:
+                    profiler.deactivate(first)
+                with pytest.raises(RuntimeError, match="does not support overlapping sessions"):
+                    profiler.start(str(tmp_path / "rejected"))
+                assert not (tmp_path / "rejected").exists()
+            profiler.activate(first)
+        finally:
+            profiler.finalize(first)
+        # Verify recovery through the same public path after the supported
+        # rejection; do not merely skip a vendor limitation.
+        second = profiler.start(str(tmp_path / "rejected"))
+        profiler.finalize(second)
+        assert (tmp_path / "rejected/manifest.json").exists()
+        return
     temp_file0 = tmp_path / "test_profile0" / "ai/call_tree.json"
     profiler.start(str(temp_file0.parent.parent))
     temp_file1 = tmp_path / "test_profile1" / "ai/call_tree.json"
@@ -141,8 +169,8 @@ def test_hook(tmp_path: pathlib.Path):
     assert temp_file.exists()
 
 
-@pytest.mark.skipif(_uses_cann_runtime(),
-                    reason="native instrumentation hooks require CUDA or HIP")
+@pytest.mark.skipif(_target_backend() not in {"cuda", "hip"},
+                    reason="inherited native instrumentation hook requires CUDA or HIP; other backends use Debugger hooks")
 def test_hook_manager(tmp_path: pathlib.Path):
     # Launch hook is a singleton
     HookManager.register(LaunchHook(), 0)
@@ -329,7 +357,7 @@ def test_throw(tmp_path: pathlib.Path):
 
     deactivate_error = ""
     try:
-        session_id = profiler.start(str(temp_file.parent.parent))
+        session_id = profiler.start(str(tmp_path / "test_throw_deactivate"))
         profiler.deactivate(session_id + 1)
     except Exception as e:
         deactivate_error = str(e)
@@ -337,3 +365,23 @@ def test_throw(tmp_path: pathlib.Path):
         profiler.finalize()
     assert "Session has not been initialized: " + str(session_id +
                                                       1) in deactivate_error
+
+
+def test_unknown_session_does_not_change_existing_hooks(tmp_path: pathlib.Path):
+    session_id = profiler.start(str(tmp_path / "existing"), hook="triton")
+    try:
+        hooks_before = list(HookManager.active_hooks)
+        sessions_before = set(HookManager.session_hooks)
+        for operation in (profiler.activate, profiler.deactivate):
+            with pytest.raises(RuntimeError, match="Session has not been initialized"):
+                operation(session_id + 1000)
+            assert HookManager.active_hooks == hooks_before
+            assert set(HookManager.session_hooks) == sessions_before
+        # Default operations address the current session even when ID zero has
+        # already been finalized; they do not create a phantom hook entry.
+        profiler.deactivate()
+        assert not HookManager.active_hooks
+        profiler.activate()
+        assert HookManager.active_hooks == hooks_before
+    finally:
+        profiler.finalize(session_id)

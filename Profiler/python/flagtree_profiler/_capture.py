@@ -119,12 +119,38 @@ def export_capture(base, output, counters=None, context=None):
     native_trace = base.with_suffix(".timeline.json")
     if not native_trace.exists():
         native_trace = base.with_suffix(".chrome_trace")
+    unverified_trace = None
     if native_trace.exists() and not result["events"]:
-        result["native_trace"] = json.loads(native_trace.read_text())
+        # Inherited instrumentation writers may assume a frequency and shift
+        # independent instance clocks. Preserve their output, but do not present
+        # it as a calibrated device timeline just because no native rows exist.
+        unverified_trace = json.loads(native_trace.read_text())
+        result.setdefault("capture_notes", []).append(
+            "Unnormalized collector trace retained in ai/raw_native_trace.json; "
+            "its timing/association has not been validated for this capture.")
     tree = base.with_suffix(".hatchet")
     payload = sanitize_call_tree(json.loads(
         tree.read_text())) if tree.exists() else None
     _report.write_bundle(result, document, output, context, complete=False)
+    raw_native = Path(output) / "raw/native"
+    raw_native.mkdir(parents=True, exist_ok=False)
+    for suffix in (".vendor.json", ".meta.json", ".hatchet", ".timeline.json", ".chrome_trace", ".launches.json"):
+        source = base.with_suffix(suffix)
+        if source.exists():
+            shutil.copyfile(source, raw_native / ("capture" + suffix))
+    (raw_native / "README.txt").write_text(
+        "Original collector artifacts. A legacy trace may contain unverified clock assumptions; "
+        "use normalized ai/events.jsonl and typed ai/observations.json for analysis.\n")
+    if unverified_trace is not None:
+        (Path(output) / "ai/raw_native_trace.json").write_text(json.dumps({
+            "source": "legacy_collector_trace", "timing_status": "unverified",
+            "original_trace": unverified_trace,
+        }) + "\n")
+    observations = base.with_suffix('.observations.json')
+    if observations.exists():
+        shutil.copyfile(observations, Path(output) / 'ai/observations.json')
+        from .reconstruction import write_view
+        write_view(output, json.loads(observations.read_text()), result)
     # Retain native call-tree data for backends that have richer scope metrics.
     # This is machine-readable data, not another legacy user-facing artifact.
     if payload is not None:
@@ -161,6 +187,8 @@ def run_capture(args, target_args, execute):
                 child += ["--mode", args.mode]
             if args.hook:
                 child += ["--hook", args.hook]
+            if getattr(args, "observation_request", None):
+                child += ["--observation-request", args.observation_request]
             child += target_args
             counters = backend.collect_counters(child,
                                                 output / "raw",
