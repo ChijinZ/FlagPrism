@@ -247,8 +247,8 @@ def lower_request(request):
     max_sites = value.get('max_sites', 8)
     if type(automatic) is not bool:
         raise ValueError('automatic must be a boolean')
-    if automatic and (type(max_sites) is not int or not 2 <= max_sites <= 128):
-        raise ValueError('Automatic site budget must be between 2 and 128')
+    if automatic and (type(max_sites) is not int or not 1 <= max_sites <= 128):
+        raise ValueError('Automatic site budget must be between 1 and 128')
     if value.get('semantics',
                  ['source_control_interval']) != ['source_control_interval']:
         raise ValueError(

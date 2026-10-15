@@ -95,6 +95,42 @@ public:
     choose(helpers, selected - ordinals.size());
     llvm::sort(ordinals);
     OpBuilder builder(&getContext());
+    SmallVector<Attribute> inventory;
+    for (size_t ordinal = 0; ordinal < candidates.size(); ++ordinal) {
+      Operation *op = candidates[ordinal];
+      bool chosen = llvm::is_contained(ordinals, ordinal);
+      bool statement = op->hasAttr("flagtree.debug.statement_id") ||
+                       op->hasAttr("flagtree.debug.triton_statement");
+      SmallVector<NamedAttribute> fields{
+          builder.getNamedAttr("candidate_ordinal",
+                               builder.getI64IntegerAttr(ordinal)),
+          builder.getNamedAttr(
+              "operation", builder.getStringAttr(op->getName().getStringRef())),
+          builder.getNamedAttr("location", op->getLoc()),
+          builder.getNamedAttr("selected", builder.getBoolAttr(chosen)),
+          builder.getNamedAttr(
+              "candidate_class",
+              builder.getStringAttr(statement ? "source_statement"
+                                              : "internal_operation")),
+          builder.getNamedAttr(
+              "selection_reason",
+              builder.getStringAttr(
+                  chosen ? (statement ? "source_statement_priority"
+                                      : "evenly_spaced_internal_operation")
+                         : "site_budget_excluded"))};
+      if (chosen)
+        fields.push_back(builder.getNamedAttr(
+            "selected_scope_name",
+            builder.getStringAttr("auto/" + std::to_string(ordinal) + "/" +
+                                  op->getName().getStringRef().str())));
+      if (auto text = op->getAttr("flagtree.debug.triton_statement"))
+        fields.push_back(builder.getNamedAttr("source_statement", text));
+      inventory.push_back(builder.getDictionaryAttr(fields));
+    }
+    module->setAttr("proton.automatic_inventory_schema",
+                    builder.getI32IntegerAttr(2));
+    module->setAttr("proton.automatic_inventory",
+                    builder.getArrayAttr(inventory));
     for (size_t ordinal : ordinals) {
       Operation *op = candidates[ordinal];
       std::string name = "auto/" + std::to_string(ordinal) + "/" +

@@ -68,6 +68,7 @@ py::dict locationOrigin(mlir::Location loc) {
 
 void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
+  m.attr("AUTOMATIC_INVENTORY_VERSION") = 2;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -166,16 +167,60 @@ void init_triton_proton(py::module &&m) {
       py::arg("location") = py::none());
 
   m.def("add_automatic_proton_scopes", [](mlir::PassManager &pm, unsigned maxSites) {
-    if (maxSites < 2 || maxSites > 128)
-      throw std::invalid_argument("Automatic site budget must be between 2 and 128");
+    if (maxSites < 1 || maxSites > 128)
+      throw std::invalid_argument("Automatic site budget must be between 1 and 128");
     pm.addPass(proton::createAutomaticScopesPass(maxSites));
   }, py::arg("pm"), py::arg("max_sites") = 8);
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
-    for (auto name : {"proton.automatic_candidates", "proton.automatic_selected"})
+    for (auto name :
+         {"proton.automatic_candidates", "proton.automatic_selected"})
       if (auto value = module->getAttrOfType<mlir::IntegerAttr>(name))
         result[py::str(name)] = value.getInt();
+    auto inventory =
+        module->getAttrOfType<mlir::ArrayAttr>("proton.automatic_inventory");
+    if (auto schema = module->getAttrOfType<mlir::IntegerAttr>(
+            "proton.automatic_inventory_schema"))
+      result["schema_version"] = schema.getInt();
+    if (inventory) {
+      llvm::StringMap<size_t> allocatedScopes;
+      for (const auto &entry :
+           proton::ModuleScopeIdAllocation(module).getScopeIdNames())
+        allocatedScopes[entry.second] = entry.first;
+      py::list candidates;
+      for (auto attribute : inventory) {
+        auto candidate = mlir::cast<mlir::DictionaryAttr>(attribute);
+        py::dict row;
+        row["candidate_ordinal"] =
+            candidate.getAs<mlir::IntegerAttr>("candidate_ordinal").getInt();
+        row["operation"] = candidate.getAs<mlir::StringAttr>("operation").str();
+        row["location"] = locationOrigin(
+            mlir::cast<mlir::LocationAttr>(candidate.get("location")));
+        row["selected"] =
+            candidate.getAs<mlir::BoolAttr>("selected").getValue();
+        row["candidate_class"] =
+            candidate.getAs<mlir::StringAttr>("candidate_class").str();
+        row["selection_reason"] =
+            candidate.getAs<mlir::StringAttr>("selection_reason").str();
+        row["selected_scope_name"] = py::none();
+        row["scope_id"] = py::none();
+        if (auto name =
+                candidate.getAs<mlir::StringAttr>("selected_scope_name")) {
+          row["selected_scope_name"] = name.str();
+          auto allocated = allocatedScopes.find(name.getValue());
+          if (allocated == allocatedScopes.end())
+            throw std::runtime_error(
+                "Automatic candidate scope is missing from saved compiler IR");
+          row["scope_id"] = allocated->second;
+        }
+        if (auto text = candidate.getAs<mlir::StringAttr>("source_statement"))
+          row["source_statement"] = text.str();
+        candidates.append(row);
+      }
+      result["inventory"] = candidates;
+      result["compiler_stage"] = "completed_ttgir_before_proton_lowering";
+    }
     return result;
   });
 
