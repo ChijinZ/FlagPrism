@@ -1,0 +1,3 @@
+# Final shared-source regression
+
+469 exact source/fixture hashes at a9a28ba258fb95056447c451de262824b5f04392, server Docker only. NVIDIA483passed4optional-browser skips; GCU406passed5explicit skips; Ascend469passed20explicit skips (see sibling ascend-final-provenance-20261015). Actual native hashes retained in logs. 52 runtime Python files were verified at actual import locations (GCU copied overlay with backup). Ascend isolated r7 wheel matches those bytes. No NVIDIA performance measurements. Earlier hardware matrices and focused GPU captures retain their original exact versions; final guards do not relabel earlier datasets.

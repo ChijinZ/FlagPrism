@@ -166,14 +166,14 @@ A filtered output alone does not establish lower device cost.
   exports actual dynamic records. A fresh fused GEMM+bias+GELU capture also
   passes math/input/canary checks, with four exact native task associations
   and 232 local-duration records from one AIC and two AIV actors for the
-  selected tile. The full matrix remains pending. The launch-worker path
-  have single-task evidence across two binaries and two streams, including
+  selected tile. The earlier full matrix and held-out coverage are summarized
+  below, with their original source versions. The launch-worker path
+  has single-task evidence across two binaries and two streams, including
   task zero. Original SDK retention and public normalized task association are
   available. Retained MIX evidence distinguishes compute members through exact
   SDK context membership and `COMPUTE_TASK_INFO.globalTaskId`; dispatch context
   views are preserved separately. Multiple compute members retain their native
-  tasks without claiming one source binding. Broader operator/held-out
-  acceptance remains tracked separately.
+  tasks without claiming one source binding.
   Verified A2/c220 source records can obtain local duration conversion from
   retained task/device frequency evidence and the actual compiled SYS counter
   instruction. The conversion keeps an actor-local clock and supplies no
@@ -274,8 +274,11 @@ earlier detailed invocation by name or rendered as simultaneous execution.
 Application replay runs the application again, including its side effects.
 
 NVIDIA and Enflame have real native/dynamic captures, six operator families with
-varied shapes/configurations, and held-out RMSNorm checks. Full acceptance still
-requires frozen-source fidelity, lifecycle and overhead runs. The controlled
+varied shapes/configurations, and held-out RMSNorm checks. The final common-source
+regression and focused hardware checks are retained under
+`integration/evidence/final-common-20261015/`; the earlier full matrices retain
+their original compiler, source and native-library manifests. These correctness
+checks do not certify diagnostic timing fidelity or universal overhead. The controlled
 Enflame scalar one-store experiment measured about 3% device-task perturbation,
 whereas its vector alternative measured about 26%. Host and stream latency were
 much higher, and neither result establishes the cost of all-site collection.
@@ -289,8 +292,35 @@ configuration controls. Independent retained-buffer and bundle audits are in
 local-duration conversion, not a verified shared actor/native clock origin.
 All-site detailed collection increased small RMSNorm device-task medians by
 61.2–67.6% in the controlled experiment; bounded output is not a low-overhead
-guarantee. Long-K short controls do not supersede this negative result.
+guarantee. Later prespecified long-K batches (three batches of thirty calls per
+mode) show -0.08% to +1.30% device-task change, but detailed host calls take
+12.33–12.46 ms, export takes 15.62–17.21 s, and each 33-call session occupies
+221–229 MB. This distinct cost regime does not supersede the small-kernel
+negative result. Compiler wait-only selection still incurs 60.1–78.0%
+small-RMSNorm device-task perturbation; fewer records do not ensure lower cost.
 See [method tests](method_testing.md) and the backend evidence manifests for
-actual results and supported versions. Compiler-static dependency extraction
-is being completed separately; the earlier capture audits do not certify that
-new implementation.
+actual results and supported versions. Same-compilation typed SDK readiness
+extraction has separate real fused-capture evidence in
+`integration/evidence/ascend-static-readiness-20261015/`. It establishes a static
+channel, not dynamic flag-generation pairing or shared actor clock alignment;
+the earlier full-matrix audits do not certify this later implementation.
+
+### Retained provenance and diagnostic sensitivity
+
+Verified Ascend readiness and source origins require the retained original source
+and per-artifact manifest bytes, their hashes and typed JSON consistency, the
+successful enclosing/SDK compilation identities, and the corresponding LLVM
+and finished driver job. Older hash-only bundles retain raw inventory without
+asserting verified associations; separately revalidated sidecars are derived
+evidence and do not rewrite those originals. Missing line locations remain
+partial even when compilation provenance is complete.
+
+In the three-configuration fusion control, all-site versus wait-only collection
+changes the original configuration's local AIV waits by 76.8% and 83.4%. The
+first reduction-step intervention preserves its qualitative wait reduction in
+both modes; the subsequent output-tile change does not preserve a further wait
+reduction. Low whole-task perturbation is therefore not a certificate of local
+wait accuracy. The independent minimal two-read control produced 64 zero-tick
+spans with advancing start counters: unresolved resolution, not zero cost or a
+fusion-error bound. Evidence and original version identities are retained in
+`integration/evidence/ascend-wait-fidelity-20261015/`.

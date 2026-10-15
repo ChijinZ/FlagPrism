@@ -142,3 +142,59 @@ perturbation is therefore not low end-to-end cost. All six requests retain
 original math/input/canary checks and exact identity; each detailed request has
 13398 local records and33 valid393312-byte zero-loss captures. The final actual
 public metadata describes compiler semantic selection plus output filtering.
+
+Round 2 binds static readiness to exact durable UTF-8 pre-driver source bytes,
+its raw-byte SHA, the enclosing successful compile ID and the successful actor
+receipts. The source text is embedded in the handoff and portable binary
+metadata, so replay does not depend on an original absolute source path. CRLF
+input is preserved by byte reads/writes. Hash-only legacy handoffs remain
+unavailable for this stronger readiness claim; a separately labeled offline
+analysis can revalidate original retained source.mlir without rewriting old
+runtime evidence. One fresh ordinary fused capture validates the complete
+public route: 372244 retained source bytes, one static channel, four exact
+launches, 232 local records, zero loss and correct mathematics.
+
+The decoder now rejects contradictions against a unique known compiler site's
+semantic/callee and against an explicitly provided selected program. Missing or
+ambiguous legacy descriptors remain partial; absent expected-program metadata
+does not imply program validation. The actual finalizer recovery contracts
+retain rejected raw bytes and the decode error. The initial focused formatted-source
+suite had 65 passing cases, including CRLF and negative provenance/program/site
+cases. No native core, receipt provider or late-pass binary changed.
+
+The bounded six-request local-wait fidelity check uses the original three
+512×512×4096 configurations, all-site versus wait-only, with three warmups and
+ten measured calls per request. Counts agree with the original LLVM loop CFG:
+AIV site0 occurs once per actor/call; all-site AIC sites6/9 occur128/16/16 times
+and checkpoint17 occurs129/17/17 times (condition/exit included). P32 all-site
+AIV wait medians55.37/54.72us versus wait-only31.31/29.83us differ by
+76.84/83.44%, exceeding the predeclared25% sensitivity flag. The P32→BK256
+wait reduction persists in both modes, but exact magnitudes are perturbed;
+BK256→tile64 wait increase is not stable across modes. These are local source
+control intervals, not shared-axis engine activity or an absolute timer accuracy
+certificate. Checkpoint zero and zero issue durations do not establish a timer
+floor. The unchanged cached two-MOV control subsequently ran64 calls with a pure-AIV
+blockDim1 launcher and separate guarded two-word outputs: all64 observed pair
+deltas were zero ticks, all first ticks were distinct and increasing, and all
+canaries survived. This is a minimal two-read source-control result, not a
+certificate of adjacent machine instructions or an absolute accuracy bound for
+fusion waits. The SDK rejected a same-input -S request; no machine disassembly
+claim is made. Raw pairs, generated launcher and the original binary are retained.
+
+
+The final source-origin consistency check uses the same portable provenance
+validator as readiness. Exact retained manifest UTF-8 bytes must match their SHA
+and parsed metadata with exact JSON types; actor LLVM hashes and both job/manifest
+compile IDs must match the successful enclosing compile. Compiler cache identity
+uses descriptor v3. Native source associations and verified debug origins require
+these per-artifact facts plus the retained source and tracked-table hash. Raw
+legacy inventory remains available with unverified provenance; it does not gain
+source associations. Origins do not depend on having a cross-actor channel or an
+SDK IR dump. The final focused suite has91 passing cases, including an AIC-only
+positive, stale/coherently swapped artifacts, typed JSON mismatch, missing fields
+and null SDK receipt/job negatives. A fresh opt-in line-info128³ fused capture
+retains34 verified origins,27 ambiguous and13 unassociated sites, the same one
+static channel and232 zero-loss local records. Final invalid-input guards were
+rechecked against these genuine retained bytes without repeating GPU timing.
+Manifest text adds20236+17583 bytes to this fresh handoff; it is not free metadata.
+The six fidelity requests remain explicitly tied to the earlier18ed577 source.

@@ -1,0 +1,98 @@
+{
+  "status": "PASS",
+  "binary_checks": {
+    "core": {
+      "entry": "triton/_C/libtriton.so",
+      "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d",
+      "byte_identical_to_verified_runtime": true
+    },
+    "debugger": {
+      "entry": "flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c",
+      "byte_identical_to_verified_runtime": true
+    },
+    "profiler": {
+      "entry": "flagtree/profiler/_native.so",
+      "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a",
+      "byte_identical_to_verified_runtime": true
+    }
+  },
+  "canonical_python_modules": {
+    "profiler": {
+      "flagtree/profiler/__init__.py": "e5458ed9555994957e3c50df769c9f2661370813ff27eeedb9bcd31b3619afee",
+      "flagtree/profiler/_backends.py": "fe47e0baa03a21a9263929d2ce7d1c88250066cef56ed50dd30a7538fc4feb99",
+      "flagtree/profiler/_capture.py": "e01c45b05ecf1b1119b247aa3e7432b332228566c8aaa63f9ddb6f72f8660491",
+      "flagtree/profiler/_metadata.py": "a59bef29569aab461d1842a02711b460bc0cd36cc65a6d14542ce8aeac5bac04",
+      "flagtree/profiler/_report.py": "7b3d7b3c751a4ae666956b4e5a8323e112c0729c2f9de0e1440158fc8eddc071",
+      "flagtree/profiler/ascend_abi.py": "bc7376d0c2c255ee5fb2fe973f26f2d3b9a2b50f3576529b5145c0012cabe47e",
+      "flagtree/profiler/ascend_clock.py": "b73451d0a456bd0934219803873a21024afc2022aa82171c00d4357f24fb49a5",
+      "flagtree/profiler/ascend_compiler.py": "63816029aca61dc660707e4da88e11a4b5032117301c04d90630ec2d639808eb",
+      "flagtree/profiler/ascend_driver.py": "6cc13f03aa3b3e39a70e136de11d9f3975308ca8b108838c08f3b46571d16eb7",
+      "flagtree/profiler/ascend_hivm.py": "b6ba22b46c24c9eb8a144f552070b72a5f2ba131ca302a3a89c152eaf157900b",
+      "flagtree/profiler/ascend_launch.py": "03bba9dca24cdefaad2d4fc2c670bfcfdefab1d248c25c58d7c25e3359b13c76",
+      "flagtree/profiler/ascend_sdk_driver.py": "7738ebd55929987ed20f342f58a8b0e75cea0a05069b33e95baedfa077ec0292",
+      "flagtree/profiler/cann.py": "d63d2d173024a93a077d1f2287ebb854e24b548729fcc0c166ad0356ec84bfc0",
+      "flagtree/profiler/cann_artifacts.py": "465b591c3ab31d5b467ba7671e847fbb149b6e35763419e81bf263dce767d277",
+      "flagtree/profiler/cann_joint.py": "26b4f22c84b06c70165bedf6acc279f466f8daf3bdd5ea0d71996707dac0deb3",
+      "flagtree/profiler/cann_native.py": "806e63b9f5648b37b93e9e52721e22045656726838a0a9103ede205fd65abee8",
+      "flagtree/profiler/cann_raw_sys.py": "d259239bee16f02fe1604054097c1000e34b5f47964d6d61843043bf70aec23c",
+      "flagtree/profiler/cann_source_clock.py": "f9c2048c4d672995561e3e3cbe66bf185355db18cc81cd27cf3a2ded3e3f754f",
+      "flagtree/profiler/cli.py": "01b940748102f613accb46fe6d6ac7239b11bd53c69492dee95cc15971920f42",
+      "flagtree/profiler/context.py": "7d398c8a89aa967b1a113474dc18fb1551731e837ca607bd596a9177cdc3d8bb",
+      "flagtree/profiler/execution.py": "c2c19ea881e89aed972f25657b8b36da1d797d061a99433878d242a42a905759",
+      "flagtree/profiler/execution_ascend.py": "eb9e328b9f8e75cf85f81d7a4b0817640b0d1ec33d989b7c40b0132bac6082e5",
+      "flagtree/profiler/execution_enflame.py": "20f0434887a30e25662a6b112f06d237ef6630f4275fe17780efc0c605632c1a",
+      "flagtree/profiler/execution_nvidia.py": "b75b1e1cfc576cf4cf89f01dfc8b42183dd1d08de8f04144476bb5d74406d4db",
+      "flagtree/profiler/flags.py": "42911adf7411294b65e0862ab1c763b3c17e41bcb5be5baaa5f59179c1a157bb",
+      "flagtree/profiler/hooks/__init__.py": "ab06fcca92d0d2838503787d33746d5353a1251ff07761194ca276a453477aea",
+      "flagtree/profiler/hooks/hook.py": "cc884a520eac9d009b9a5e6d2402fc9c3384ea41adc1fa307a36aa68835b7c68",
+      "flagtree/profiler/hooks/instrumentation.py": "7b885318e0804ff6f774bd99f004f7aa3f5724b71d218cda9ee10dfced2926a5",
+      "flagtree/profiler/hooks/launch.py": "13548f09d52a4b5cc03685d41ef3db7f3a2046348b423ad7ad927ee2906f75d7",
+      "flagtree/profiler/language.py": "2abf18ed559e4f2c19df9a3622f3debbe410ff236d12c903811e3d19d2ab3988",
+      "flagtree/profiler/mode.py": "00fbf53edef15bb421a87fc32292694385bf150d4c87b05e5643edf58b645a12",
+      "flagtree/profiler/mthreads.py": "abc3502c47196c2c5e3d4b7a770c8fa8e5475028f1ef192774083160ea5d9076",
+      "flagtree/profiler/native.py": "46670c7e47d022bb1a40267c6ede67c548f03c74444cbf03a10578af976e0654",
+      "flagtree/profiler/observations.py": "44a9610c8c837b65bf4cf1e4f5e95e11ef3cb9c3c7b0252872a295e2008c27e1",
+      "flagtree/profiler/observations_ascend.py": "f11dbba842275e15db8cd5e1eb1fdfec1a9c054a095d45cd82ea1be255499090",
+      "flagtree/profiler/observations_nvidia.py": "036228a7beab5a8393906771f5d875ddd9078c07ad175c791a68eba3d059efce",
+      "flagtree/profiler/profile.py": "92395f2e00a83de1378a3d4b1580278dd11f08555b02c47b3980c23578a140f5",
+      "flagtree/profiler/reconstruction.py": "b205689088440262b018941d23552486538755941fd4073c9440d502e170ed49",
+      "flagtree/profiler/scope.py": "2844e349352cb986c32d2c0062ccdfe25fb48ed74dc87c9ec4b510f626b149a8",
+      "flagtree/profiler/source_origins_nvidia.py": "b969d0d9dae13821f9739557c2cfc3c4b1196c49995fc77df6301b76c78ae360",
+      "flagtree/profiler/specs.py": "87a2739559bb1ef022a03026bb4acf152b0a890b3220e6181697543b3c6e430c",
+      "flagtree/profiler/state.py": "3bef03466c7cb93a5e6bc07d0e02f92a5ced94c4ef630926d905a55cbdb3bb27",
+      "flagtree/profiler/tcu.py": "5dbc968a57fdc022b376da4fc616fc604f0c9d2c4d79fda326c65c72dce17950",
+      "flagtree/profiler/tianshu.py": "d06fe37a431bdd363a7a11c526a06b236457ad52e8f3a3fbac499cba667e79d3",
+      "flagtree/profiler/viewer.py": "df7f2f376955c3a29674cf7e85c8e0627cfde5bbd5acce8ab40518ec10ab754a"
+    },
+    "debugger": {
+      "flagtree/debugger/__init__.py": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db",
+      "flagtree/debugger/api.py": "92d9a6b15f1cb7f2048b2ba60d58c4720f3b1b071d8e090f6815dc6c285ceebd",
+      "flagtree/debugger/compiler.py": "3ff595c5205e9fc5b3ece4b2d24c794fb2ab545b388b02796325ee44fb8d3c8b",
+      "flagtree/debugger/language.py": "f8a3784178ccd25cf4756d0d700d513d08f273dd8c040f9c3f66e7e94e9ae7c7",
+      "flagtree/debugger/native.py": "5e129eb3c3cd8241b1a4213f5f336aa179f8c088d9f8e18bfb90cd11a7e720ea",
+      "flagtree/debugger/runtime.py": "d04e9003d8713fb7c87c088c4779f859c1c56bd9e23984145ef7b8cacd1855f8",
+      "flagtree/debugger/statement.py": "7f66e41fb70c7f28b1b141f68e1a5d376f57bd1f7bd3dfef06eade0e148ca80b"
+    }
+  },
+  "isolated_bindings": {
+    "status": "PASS",
+    "triton": "/tmp/flagprism-method-ascend/wheel-header-r7/isolated-install/triton/__init__.py",
+    "core": "/tmp/flagprism-method-ascend/wheel-header-r7/isolated-install/triton/_C/libtriton.so",
+    "debugger": "/tmp/flagprism-method-ascend/wheel-header-r7/isolated-install/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+    "profiler": "/tmp/flagprism-method-ascend/wheel-header-r7/isolated-install/flagtree/profiler/_native.so",
+    "abi_provider": "/tmp/flagprism-method-ascend/wheel-header-r7/isolated-install/flagtree/profiler/ascend_launch.py",
+    "hidden_compiler_abi": "actual MLIR preparation index2/idempotence",
+    "native_preallocation_guard": "actual rejection without device allocation",
+    "cann_receipt_capability": true,
+    "source_fallback": false
+  },
+  "no_core_rebuild_guard": true,
+  "wheel": "/tmp/flagprism-method-ascend/wheel-header-r7/dist/flagtree-0.6.0+ascend.git00650233-cp311-cp311-linux_aarch64.whl",
+  "wheel_sha256": "b3d95af3a35e93877c2b92810247c954e7c38e302d1e312acf33b501b111aa8e",
+  "header_entry": "flagtree/profiler/_cann_launch_receipt.h",
+  "header_sha256": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540",
+  "header_matches_CMake_resource_and_source": true,
+  "isolated_installed_helper_no_source_fallback": true,
+  "packaging": "actual FlagTree setup distribution + standard build_py + real bdist_wheel skip_build, reusing proven built binaries; not a fresh toolchain build"
+}
