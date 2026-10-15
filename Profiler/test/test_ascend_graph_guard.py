@@ -108,3 +108,56 @@ def test_gcu_query_never_imports_torchnpu(guard, monkeypatch):
     fake.gcu.is_current_stream_capturing = lambda: True
     with pytest.raises(RuntimeError, match='GCU graph capture is unsupported'):
         guard.require_eager('tops')
+
+
+@pytest.mark.parametrize('state', [False, True])
+def test_actual_current_handle_does_not_require_external_stream(
+        guard, monkeypatch, state):
+    calls = fake_runtime(monkeypatch, lambda: state)
+    runtime = sys.modules['torch'].npu
+    del runtime.ExternalStream
+    runtime.current_stream = lambda: SimpleNamespace(npu_stream=37)
+    if state:
+        with pytest.raises(RuntimeError, match='eager launches only'):
+            guard.require_eager('cann', stream=37)
+    else:
+        guard.require_eager('cann', stream=37)
+    assert calls == []
+
+
+def test_noncurrent_handle_without_external_stream_is_fail_closed(
+        guard, monkeypatch):
+    calls = fake_runtime(monkeypatch, lambda: False)
+    runtime = sys.modules['torch'].npu
+    del runtime.ExternalStream
+    runtime.current_stream = lambda: SimpleNamespace(npu_stream=37)
+    with pytest.raises(RuntimeError, match='cannot verify') as caught:
+        guard.require_eager('cann', stream=38)
+    assert isinstance(caught.value.__cause__, AttributeError)
+    assert calls == []
+
+
+@pytest.mark.parametrize('state', [None, 0, 'false'])
+def test_matching_current_handle_still_rejects_indeterminate(
+        guard, monkeypatch, state):
+    fake_runtime(monkeypatch, lambda: state)
+    runtime = sys.modules['torch'].npu
+    del runtime.ExternalStream
+    runtime.current_stream = lambda: SimpleNamespace(npu_stream=37)
+    with pytest.raises(RuntimeError, match='indeterminate'):
+        guard.require_eager('cann', stream=37)
+
+
+def test_matching_current_query_failure_preserves_cause(guard, monkeypatch):
+    original = ValueError('current query failed')
+
+    def query():
+        raise original
+
+    fake_runtime(monkeypatch, query)
+    runtime = sys.modules['torch'].npu
+    del runtime.ExternalStream
+    runtime.current_stream = lambda: SimpleNamespace(npu_stream=37)
+    with pytest.raises(RuntimeError, match='cannot verify') as caught:
+        guard.require_eager('cann', stream=37)
+    assert caught.value.__cause__ is original

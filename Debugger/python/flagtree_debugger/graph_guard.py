@@ -29,8 +29,22 @@ def require_eager(backend, *, stream=None):
         else:
             # launch_context supplies the actual SDK handle, which need not be
             # the thread's current stream. The context restores it on failure.
-            with runtime.stream(runtime.ExternalStream(int(stream))):
+            current_stream = getattr(runtime, 'current_stream', None)
+            current = current_stream() if current_stream is not None else None
+            handle_name = 'npu_stream' if runtime_name == 'npu' else 'gcu_stream'
+            current_handle = getattr(current, handle_name, None)
+            if current_handle is not None and int(current_handle) == int(
+                    stream):
                 capturing = query()
+            else:
+                external_stream = getattr(runtime, 'ExternalStream', None)
+                if external_stream is None:
+                    raise AttributeError(
+                        f'{device_name} provider cannot wrap a non-current launch '
+                        'stream; make that stream current before detailed profiling'
+                    )
+                with runtime.stream(external_stream(int(stream))):
+                    capturing = query()
     except Exception as error:
         raise RuntimeError(
             f'FlagPrism {vendor} detailed profiling cannot verify {device_name} stream '
