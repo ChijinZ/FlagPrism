@@ -1,5 +1,6 @@
 """Internal collection orchestration and automatic human/machine export."""
 import json
+import time
 import os
 from pathlib import Path
 import sys
@@ -52,6 +53,7 @@ def capture_software(backend=None):
 
 
 def export_capture(base, output, counters=None, context=None):
+    export_started = time.monotonic()
     base = Path(base)
     if not any(
             base.with_suffix(suffix).exists()
@@ -144,7 +146,7 @@ def export_capture(base, output, counters=None, context=None):
     raw_native = Path(output) / "raw/native"
     raw_native.mkdir(parents=True, exist_ok=False)
     for suffix in (".vendor.json", ".meta.json", ".hatchet", ".timeline.json",
-                   ".chrome_trace", ".launches.json",
+                   ".chrome_trace", ".launches.json", ".finalization.json",
                    ".cann-launch-receipts.json", ".cann-task-identities.json",
                    ".cann-raw-sys.json", ".observations.json"):
         source = base.with_suffix(suffix)
@@ -187,6 +189,19 @@ def export_capture(base, output, counters=None, context=None):
     # allowed only after the full bundle and verified SDK copy are present.
     from .cann_artifacts import cleanup_retained_native_capture
     cleanup_retained_native_capture(base, output)
+    from .export_timing import write_receipt
+    phases = {'bundle_materialization_s': time.monotonic() - export_started}
+    finalization = base.with_suffix('.finalization.json')
+    complete = False
+    if finalization.is_file():
+        recorded = json.loads(finalization.read_text())
+        if (recorded.get('schema_version') == 1
+                and recorded.get('includes_bundle_export') is False):
+            phases['collector_finalize_s'] = recorded['collector_finalize_s']
+            complete = True
+    write_receipt(output, phases=phases, complete=complete,
+                  scope='collector_finalize_then_bundle_export' if complete
+                  else 'bundle_materialization_only')
 
 
 def run_capture(args, target_args, execute):

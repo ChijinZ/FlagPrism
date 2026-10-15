@@ -73,3 +73,15 @@ def test_backend_plans_keep_distinct_binary_and_actor_provenance(view):
     assert plans[1]['compile_id'] == 'compile-5'
     assert plans[1]['module_sha256'] == 'actor-sha'
     assert plans[1]['plan']['inventory'][0]['selected'] is False
+
+
+def test_control_checkpoint_names_actual_compiler_structure(view):
+    data = document()
+    event = data['groups'][0]['observations'][0]
+    event['semantic'] = 'control_checkpoint'
+    event['compiler_site'] = {'semantics': 'loop_header_occurrence',
+                              'source_file': 'loop.py', 'line': 9, 'column': 1}
+    record = view.normalize(data)['records'][0]
+    assert record['operation'] == 'loop_header_occurrence'
+    assert record['source_locations'][0]['file'] == 'loop.py'
+    assert record['semantic'] == 'control_checkpoint'

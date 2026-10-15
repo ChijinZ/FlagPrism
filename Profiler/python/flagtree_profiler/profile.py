@@ -1,4 +1,5 @@
 import functools
+import time
 import base64
 import hashlib
 import triton
@@ -1783,6 +1784,7 @@ def finalize(session: Optional[int] = None,
     """
     if session is not None and session not in _active_sessions:
         return
+    finalize_started = time.monotonic()
     metadata_error = None
     if metadata is not None:
         if session is None and len(_active_sessions) > 1:
@@ -1910,6 +1912,9 @@ def finalize(session: Optional[int] = None,
         raise RuntimeError(
             f"Profiling finalization failed: {detail}. "
             f"Capture intermediates retained at: {retained}") from errors[0][2]
+
+    from .export_timing import finish_sessions
+    finish_sessions(states, time.monotonic() - finalize_started)
 
     if metadata_error is not None:
         outputs = [

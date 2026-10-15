@@ -56,7 +56,8 @@ def normalize(document):
             row['actor'] = event.get('actor', event.get('actor_slot'))
             row.update(source_locations=locations,
                        operation=origin.get('operation', compiler.get('operation',
-                           compiler.get('compiler_opcode', source.get('mlirOpName')))),
+                           compiler.get('compiler_opcode', compiler.get('callee',
+                               source.get('mlirOpName', compiler.get('semantics')))))),
                        association_status=event['reconstruction_association'],
                        source_status='located' if locations else 'unresolved',
                        native_event_ids=group['native_event_ids'])

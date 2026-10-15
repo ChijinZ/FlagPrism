@@ -34,6 +34,10 @@ CUDA device API: otherwise both Enflame and CUDA drivers may appear active.
 Select devices with the vendor runtime's visibility controls before Python
 starts, or set the current device before starting a session in the API path.
 The script must use logical device indices consistent with that visibility.
+The CLI also accepts `--device N` before the script name to select the runtime
+logical device before starting the collector. The application must use that
+same logical device; for example, profiling an application that chooses NPU4
+requires `--device 4`. Backend selection and device selection are separate.
 Do not set line-info, plugin-path, capture-directory or publisher environment
 variables for normal automatic profiling; those are advanced overrides.
 
@@ -86,6 +90,12 @@ Machine-readable counterparts are:
 - `ai/observations.json`: original typed observations and backend capture/loss
   data. Raw artifacts remain under `raw/`.
 - `ai/execution.json`: actual compiler execution mapping and its evidence limits.
+- `ai/export_timing.json`: host finalization/export time. A complete API receipt
+  measures the entire finalize call through cleanup; CLI receipts combine
+  collector finalization and subsequent bundle materialization. The final timing
+  receipt write is excluded. A standalone export of legacy raw files may have
+  only materialization time and explicitly reports incomplete total timing.
+  These values measure host engineering cost, not GPU/kernel latency.
 
 Read the semantic and clock columns together. NVIDIA records instrumented
 source-control intervals in SM-local counter ticks. Enflame records source
