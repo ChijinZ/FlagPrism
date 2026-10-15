@@ -24,6 +24,8 @@ void setDebugTimelineOnly(mlir::ModuleOp module, bool enabled);
 llvm::Error setDebugDynamicTimelineOptions(mlir::ModuleOp module,
                                            uint32_t program, uint32_t actor,
                                            uint32_t sampleEvery);
+llvm::Error setDebugDynamicPublicationWorkItems(mlir::ModuleOp module,
+                                                uint32_t workItems);
 llvm::Error setDebugDynamicTimelineSites(mlir::ModuleOp module,
                                          const std::vector<uint32_t> &sites);
 uint32_t getDebugRecordsPerInstance(mlir::ModuleOp module);

@@ -16,7 +16,8 @@ def test_preserves_work_item_ownership_and_unknown_source():
     mapping = build_execution_mapping({"gcuir": ir}, {"name": "arbitrary"})
     assert mapping["execution_model"] == "vector_work_items"
     assert mapping["work_item_count"] == 3
-    assert mapping["sites"][0]["operand_expressions"][-1] == "((work_item.x % 3) * 7)"
+    assert mapping["sites"][0]["operand_expressions"][
+        -1] == "((work_item.x % 3) * 7)"
     assert mapping["sites"][1]["kind"] == "barrier"
     assert mapping["sites"][2]["kind"] == "partial_exchange_storage"
     assert mapping["status"] == "partial"
@@ -38,14 +39,19 @@ def test_explicit_source_identity_survives_split():
     ir = '''"gpu.barrier"() {flagprism.source_op_id = "op:a"} : () -> ()
 "gpu.barrier"() {flagprism.source_op_id = "op:a"} : () -> ()
 "gpu.barrier"() {flagprism.source_op_id = "not-in-source"} : () -> ()'''
-    mapping = build_execution_mapping({"gcuir": ir}, {}, source_operations={"op:a": {}})
+    mapping = build_execution_mapping({"gcuir": ir}, {},
+                                      source_operations={"op:a": {}})
     assert len(mapping["source_associations"]) == 2
-    assert len({row["lowered_site_id"] for row in mapping["source_associations"]}) == 2
+    assert len(
+        {row["lowered_site_id"]
+         for row in mapping["source_associations"]}) == 2
     assert len(mapping["unassociated_sites"]) == 1
 
 
 def test_missing_artifact_and_llvm_sites_are_not_measurements():
-    mapping = build_execution_mapping({"llir": '"llvm.call"() <{callee = @tops_clock_begin}> : () -> i64'}, {})
+    mapping = build_execution_mapping(
+        {"llir": '"llvm.call"() <{callee = @tops_clock_begin}> : () -> i64'},
+        {})
     assert mapping["status"] == "unsupported"
     assert mapping["work_item_count"] is None
     assert not mapping["llvm_primitive_sites"][0]["dynamic_observation"]
@@ -72,13 +78,24 @@ def test_real_location_aliases_preserve_ambiguous_origin_not_exclusive_cost():
 #loc2 = loc("/library.py":20:5)
 #loc3 = loc(callsite(#loc2 at #loc1))
 #loc4 = loc(fused[#loc1, #loc2])'''
-    sources = {'11': {'sourceLoc': 'loc("/source a.py":10:7)'},
-               '12': {'sourceLoc': 'loc("/library.py":20:5)'}}
-    mapping = build_execution_mapping({'gcuir': ir}, {}, source_operations=sources)
+    sources = {
+        '11': {
+            'sourceLoc': 'loc("/source a.py":10:7)'
+        },
+        '12': {
+            'sourceLoc': 'loc("/library.py":20:5)'
+        }
+    }
+    mapping = build_execution_mapping({'gcuir': ir}, {},
+                                      source_operations=sources)
     assert len(mapping['source_origin_associations']) == 2
-    assert all(row['status'] == 'ambiguous' for row in mapping['source_origin_associations'])
-    assert all(set(row['candidate_source_ids']) == {'11', '12'} for row in mapping['source_origin_associations'])
-    assert all(row['exclusive_cost'] is False for row in mapping['source_origin_associations'])
+    assert all(row['status'] == 'ambiguous'
+               for row in mapping['source_origin_associations'])
+    assert all(
+        set(row['candidate_source_ids']) == {'11', '12'}
+        for row in mapping['source_origin_associations'])
+    assert all(row['exclusive_cost'] is False
+               for row in mapping['source_origin_associations'])
     assert not mapping['source_associations']
     assert mapping['status'] == 'partial'
 
@@ -88,11 +105,19 @@ def test_unique_location_origin_and_unresolved_alias_remain_distinct():
 "memref.load"(%a, %i) : (memref<4xf32>, index) -> f32 loc(fused[#loc1, #missing])
 "memref.load"(%a, %i) : (memref<4xf32>, index) -> f32 loc(#missing)
 #loc1 = loc("/source.py":3:9)'''
-    mapping = build_execution_mapping({'gcuir': ir}, {'debug_tracked_table': [
-        {'opId': 7, 'sourceLoc': 'loc("/source.py":3:9)', 'mlirOpName': 'tt.load'}]})
-    assert [site['source_origin_status'] for site in mapping['sites']] == ['unique_origin', 'ambiguous', 'missing']
-    assert mapping['source_origin_associations'][0]['candidate_source_ids'] == ['7']
-    assert mapping['source_origin_associations'][1]['unresolved_location_aliases'] == ['#missing']
+    mapping = build_execution_mapping({'gcuir': ir}, {
+        'debug_tracked_table': [{
+            'opId': 7,
+            'sourceLoc': 'loc("/source.py":3:9)',
+            'mlirOpName': 'tt.load'
+        }]
+    })
+    assert [site['source_origin_status'] for site in mapping['sites']
+            ] == ['unique_origin', 'ambiguous', 'missing']
+    assert mapping['source_origin_associations'][0][
+        'candidate_source_ids'] == ['7']
+    assert mapping['source_origin_associations'][1][
+        'unresolved_location_aliases'] == ['#missing']
 
 
 def test_ttir_origins_are_ir_scoped_and_location_aliases_do_not_leak_ssa():
@@ -117,12 +142,16 @@ def test_ttir_origins_are_ir_scoped_and_location_aliases_do_not_leak_ssa():
 #loc1 = loc("/first.py":1:2)
 #loc2 = loc("/second.py":1:2)'''
     mapping = build_execution_mapping({'ttir': ttir, 'gcuir': gcu}, {})
-    assert [site['ownership_status'] for site in mapping['sites']] == ['symbolic', 'unknown']
+    assert [site['ownership_status']
+            for site in mapping['sites']] == ['symbolic', 'unknown']
     origins = mapping['origin_source_operations']
-    assert all(row['identity_kind'] == 'ttir_operation_with_debug_origin' for row in origins)
+    assert all(row['identity_kind'] == 'ttir_operation_with_debug_origin'
+               for row in origins)
     assert origins[0]['id'] != origins[1]['id']
-    assert ':function-1:' in origins[0]['id'] and ':function-2:' in origins[1]['id']
-    assert [site['source_origin_status'] for site in mapping['sites']] == ['unique_origin', 'unique_origin']
+    assert ':function-1:' in origins[0]['id'] and ':function-2:' in origins[1][
+        'id']
+    assert [site['source_origin_status'] for site in mapping['sites']
+            ] == ['unique_origin', 'unique_origin']
 
 
 def test_location_cycle_and_quoted_alias_are_not_guessed():
@@ -130,8 +159,13 @@ def test_location_cycle_and_quoted_alias_are_not_guessed():
 "gpu.barrier"() : () -> () loc("/literal#loc1.py":2:8)
 #loc1 = loc(#loc2)
 #loc2 = loc(#loc1)'''
-    mapping = build_execution_mapping({'gcuir': ir}, {}, source_operations={
-        'literal': {'sourceLoc': 'loc("/literal#loc1.py":2:8)'}})
+    mapping = build_execution_mapping({'gcuir': ir}, {},
+                                      source_operations={
+                                          'literal': {
+                                              'sourceLoc':
+                                              'loc("/literal#loc1.py":2:8)'
+                                          }
+                                      })
     assert mapping['sites'][0]['source_origin_status'] == 'missing'
     assert mapping['sites'][0]['location']['unresolved_aliases']
     assert mapping['sites'][1]['source_origin_status'] == 'unique_origin'

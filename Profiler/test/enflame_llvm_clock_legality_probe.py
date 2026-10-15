@@ -11,9 +11,11 @@ import torch
 import torch_gcu  # noqa:F401
 import triton
 
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--output',type=Path,required=True)
-a=p.parse_args();a.output.mkdir(parents=True,exist_ok=False)
-text='''module {
+p = argparse.ArgumentParser(description=__doc__)
+p.add_argument('--output', type=Path, required=True)
+a = p.parse_args()
+a.output.mkdir(parents=True, exist_ok=False)
+text = '''module {
  llvm.func @_ZN4tops12global_timerEv() -> i64
  tt.func public @scoped_clock_words(%X: !tt.ptr<f32>, %Y: !tt.ptr<f32>, %T: !tt.ptr<i32>) {
   %range = tt.make_range {start = 0 : i32, end = 128 : i32} : tensor<128xi32>
@@ -39,25 +41,68 @@ text='''module {
  }
 }
 '''
-ir=a.output/'clock-math.ttir';ir.write_text(text)
-library=Path('/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc')
-result={'kind':'bounded_legality_probe','requested_enable_i64':False,'primitive':'_ZN4tops12global_timerEv','library_sha256':hashlib.sha256(library.read_bytes()).hexdigest(),'clock_frequency_verified':False,'user_math':'i32 vector indices; FP32 x+1; one logical program and one work-item; no new synchronization'}
+ir = a.output / 'clock-math.ttir'
+ir.write_text(text)
+library = Path('/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc')
+result = {
+    'kind':
+    'bounded_legality_probe',
+    'requested_enable_i64':
+    False,
+    'primitive':
+    '_ZN4tops12global_timerEv',
+    'library_sha256':
+    hashlib.sha256(library.read_bytes()).hexdigest(),
+    'clock_frequency_verified':
+    False,
+    'user_math':
+    'i32 vector indices; FP32 x+1; one logical program and one work-item; no new synchronization'
+}
 try:
- target=triton.runtime.driver.active.get_current_target()
- kernel=triton.compile(str(ir),target=target,options={'num_warps':1,'num_stages':1,'enable_i64':False,'extern_libs':(('sdk_readonly_global_timer',str(library)),)})
- metadata=kernel.metadata._asdict();metadata.pop('target',None);result['compiled_metadata']=metadata
- assert metadata['enable_i64'] is False
- cpu=torch.arange(128,dtype=torch.float32,device='cpu');x=cpu.to('gcu');y=torch.empty_like(x);ticks=torch.empty((2,),dtype=torch.int32,device='gcu')
- samples=[]
- for _ in range(8):
-  kernel[(1,1,1)](x,y,ticks);torch.gcu.synchronize();torch.testing.assert_close(y.cpu(),cpu+1,rtol=0,atol=0)
-  words=[int(v)&0xffffffff for v in ticks.cpu().tolist()];value=words[0]|(words[1]<<32);assert 0<value<(1<<46);samples.append({'words':words,'raw46_ticks':value})
- assert all(b['raw46_ticks']>a['raw46_ticks'] for a,b in zip(samples,samples[1:]))
- result.update(status='passed',samples=samples,binary_id=kernel.hash)
- for key,value in kernel.asm.items():
-  if isinstance(value,(str,bytes)):(a.output/key).write_bytes(value.encode() if isinstance(value,str) else value)
+    target = triton.runtime.driver.active.get_current_target()
+    kernel = triton.compile(str(ir),
+                            target=target,
+                            options={
+                                'num_warps':
+                                1,
+                                'num_stages':
+                                1,
+                                'enable_i64':
+                                False,
+                                'extern_libs':
+                                (('sdk_readonly_global_timer', str(library)), )
+                            })
+    metadata = kernel.metadata._asdict()
+    metadata.pop('target', None)
+    result['compiled_metadata'] = metadata
+    assert metadata['enable_i64'] is False
+    cpu = torch.arange(128, dtype=torch.float32, device='cpu')
+    x = cpu.to('gcu')
+    y = torch.empty_like(x)
+    ticks = torch.empty((2, ), dtype=torch.int32, device='gcu')
+    samples = []
+    for _ in range(8):
+        kernel[(1, 1, 1)](x, y, ticks)
+        torch.gcu.synchronize()
+        torch.testing.assert_close(y.cpu(), cpu + 1, rtol=0, atol=0)
+        words = [int(v) & 0xffffffff for v in ticks.cpu().tolist()]
+        value = words[0] | (words[1] << 32)
+        assert 0 < value < (1 << 46)
+        samples.append({'words': words, 'raw46_ticks': value})
+    assert all(b['raw46_ticks'] > a['raw46_ticks']
+               for a, b in zip(samples, samples[1:]))
+    result.update(status='passed', samples=samples, binary_id=kernel.hash)
+    for key, value in kernel.asm.items():
+        if isinstance(value, (str, bytes)):
+            (a.output / key
+             ).write_bytes(value.encode() if isinstance(value, str) else value)
 except Exception as error:
- result.update(status='failed',error=repr(error),traceback=traceback.format_exc());traceback.print_exc()
+    result.update(status='failed',
+                  error=repr(error),
+                  traceback=traceback.format_exc())
+    traceback.print_exc()
 finally:
- (a.output/'result.json').write_text(json.dumps(result,indent=2,default=str));print(json.dumps(result,default=str))
-raise SystemExit(0 if result['status']=='passed' else 1)
+    (a.output / 'result.json').write_text(
+        json.dumps(result, indent=2, default=str))
+    print(json.dumps(result, default=str))
+raise SystemExit(0 if result['status'] == 'passed' else 1)

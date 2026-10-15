@@ -130,6 +130,11 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
             setDebugDynamicTimelineOptions(mod, program, actor, sampleEvery))
       throw py::value_error(llvm::toString(std::move(error)));
   });
+  m.def("set_debug_dynamic_publication_work_items",
+        [](ModuleOp mod, uint32_t workItems) {
+          if (auto error = setDebugDynamicPublicationWorkItems(mod, workItems))
+            throw py::value_error(llvm::toString(std::move(error)));
+        });
   m.def("set_debug_dynamic_timeline_sites",
         [](ModuleOp mod, const std::vector<uint32_t> &sites) {
           if (auto error = setDebugDynamicTimelineSites(mod, sites))

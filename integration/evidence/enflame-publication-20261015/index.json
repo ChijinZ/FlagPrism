@@ -1,0 +1,24 @@
+{
+  "kind": "immutable_engineering_checkpoint",
+  "source_baseline": "3107c04",
+  "mechanism": "explicit vector GCU record publication; scalar remains default",
+  "files": {
+    "postformat-final-source-native-manifest.json": "73918f075f1f5c89d3c1832cc3d04db4802d0514d797cd289455a24e2a9d3aad",
+    "format-applied-hashes.json": "81a1c6a7364b7987d61a4cc6f2ad399ce6d27b18cbc6a7d8c566a1da6bb1891f",
+    "vector-full36-independent-audit.json": "e72242468a45dc0d3d82cd4ffbacaf172561b9ee193ab2bec89916d898ecf798",
+    "root-vector36-artifact-audit.json": "38facbe2810c86a75b3513682624b6195a2097a7272bbaaf4ff0e62d1336bc53",
+    "t5-i32-scalar-controlled-audit.json": "bf5dc87486d3c5c4033ae3b9e0f76f6e29283cc9fe10af2c40234cdb6cf6dd5c",
+    "t5-i32-vector-controlled-audit.json": "ce517c2bbf6a97ec450a747ecd145617aed768d35b6fc7afef9e921ce9648c62",
+    "stage-commit-receipt.json": "e9e3930329bd85950b060c65a56d56d363d5c7019221fe186a9433d6d7148ab2"
+  },
+  "raw_archives": {
+    "vector-full36-functional-matrix.tar.gz": "f31414ea2728927c81e99cb463570cb5144a3908403333450170ecd8403ce808"
+  },
+  "raw_artifact_location": "workspace artifacts/method-run/enflame; not included in Git",
+  "limits": [
+    "Functional full matrix uses explicit vector mode; scalar remains the default.",
+    "Vector selected-store perturbation is higher; no low-overhead claim.",
+    "Raw timer frequency and cross-actor alignment unverified.",
+    "This checkpoint does not certify CANN end-to-end support or OSDI novelty."
+  ]
+}

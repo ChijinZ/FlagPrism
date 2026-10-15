@@ -28,10 +28,42 @@ def _instrumentation_kind(mode: str | None = None) -> str:
     return value.split("|", 1)[0]
 
 
+def _gcu_publication_config(config):
+    result = dict(config)
+    request = result.get("debug_observation_request")
+    if isinstance(request, dict) and request.get("semantics") == [
+            "source_control_interval"
+    ]:
+        mode = os.environ.get("FLAGPRISM_GCU_DYNAMIC_PUBLISHER", "scalar16")
+        if mode not in {"scalar16", "vector16_per_work_item"}:
+            raise ValueError("Unknown GCU dynamic publisher mode")
+        result["debug_dynamic_publication_mode"] = mode
+    return result
+
+
+def _frozen_gcu_publication_mode(metadata):
+    mode = str(metadata.get("instrumentation_mode", ""))
+    if "|config=" not in mode:
+        raise ValueError(
+            "GCU publication requires frozen compiler option identity")
+    config = json.loads(mode.split("|config=", 1)[1])
+    publisher = config.get("debug_dynamic_publication_mode")
+    if publisher not in {"scalar16", "vector16_per_work_item"}:
+        raise ValueError(
+            "GCU publication mode missing from compiler option identity")
+    return publisher
+
+
 def apply_compile_options(options: dict) -> None:
-    if options.get("instrumentation_mode"):
-        return
-    mode = get_instrumentation_mode()
+    provided = options.get("instrumentation_mode")
+    if provided:
+        from .api import current_compile_config
+        request = current_compile_config().get("debug_observation_request")
+        if not (_instrumentation_kind(str(provided)).startswith("debugger")
+                and isinstance(request, dict)
+                and request.get("semantics") == ["source_control_interval"]):
+            return
+    mode = str(provided) if provided else get_instrumentation_mode()
     if not mode:
         try:
             from .api import is_active
@@ -44,7 +76,7 @@ def apply_compile_options(options: dict) -> None:
     from . import __version__
     from .api import current_compile_config
 
-    config = json.dumps(current_compile_config(),
+    config = json.dumps(_gcu_publication_config(current_compile_config()),
                         sort_keys=True,
                         separators=(",", ":"))
     options["instrumentation_mode"] = (
@@ -304,6 +336,25 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                                               request["sample_every"])
         if request.get("sites") is not None:
             fd.set_debug_dynamic_timeline_sites(mod, request["sites"])
+        publisher = _frozen_gcu_publication_mode(metadata)
+        source_work_items = metadata.get("num_warps")
+        if publisher == "vector16_per_work_item":
+            if type(source_work_items) is not int or source_work_items <= 0:
+                raise ValueError(
+                    "GCU vector publication requires actual compiler work-item configuration"
+                )
+            fd.set_debug_dynamic_publication_work_items(mod, source_work_items)
+            metadata["debug_dynamic_publication"] = "per_work_item_vector16_v1"
+            metadata[
+                "debug_dynamic_publication_work_items"] = source_work_items
+        elif publisher == "scalar16":
+            metadata["debug_dynamic_publication"] = "scalar16_v1"
+            metadata[
+                "debug_dynamic_publication_work_items"] = source_work_items
+        else:
+            raise ValueError("Unknown GCU dynamic publisher mode")
+        metadata[
+            "debug_dynamic_publication_config_basis"] = "GCU compiler configuration num_warps denotes work-items"
         metadata["debug_dynamic_selected_sites"] = request.get("sites")
         metadata["debug_dynamic_clock_sampling"] = "region_free_sites_only"
         metadata["debug_dynamic_selected_program"] = programs[0]

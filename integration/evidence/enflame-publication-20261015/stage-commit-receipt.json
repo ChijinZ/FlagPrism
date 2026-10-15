@@ -1,0 +1,42 @@
+{
+  "functional_pending_files": [
+    "Debugger/lib/Instrumentation/Passes.cpp",
+    "Debugger/include/Debugger/Instrumentation/Passes.h",
+    "Debugger/python/CompilerBindings.cpp",
+    "Debugger/python/flagtree_debugger/compiler.py",
+    "Profiler/test/test_enflame_publication_hardware.py"
+  ],
+  "format_only_paths": [
+    "Debugger/lib/Instrumentation/Passes.cpp",
+    "Debugger/include/Debugger/Instrumentation/Passes.h",
+    "Debugger/python/CompilerBindings.cpp",
+    "Debugger/python/flagtree_debugger/compiler.py",
+    "Profiler/python/flagtree_profiler/execution_enflame.py",
+    "Profiler/test/test_execution_enflame.py",
+    "Profiler/test/test_execution_enflame_hardware.py",
+    "Profiler/test/test_execution_enflame_dynamic_hardware.py",
+    "Profiler/test/test_enflame_dynamic_bounds_hardware.py",
+    "Profiler/test/test_enflame_publication_hardware.py",
+    "Profiler/test/enflame_method_matrix.py",
+    "Profiler/test/enflame_method_fidelity.py",
+    "Profiler/test/enflame_llvm_clock_legality_probe.py",
+    "Profiler/test/fixtures/enflame_method/run_case.py",
+    "Profiler/test/fixtures/enflame_method/kernels.py"
+  ],
+  "preformat_functional_source_manifest": "vector-publication-tested-source-manifest.json",
+  "matrix_evidence": "vector-full36-independent-audit.json",
+  "matrix_archive": "vector-full36-functional-matrix.tar.gz",
+  "postformat_applied_hashes": "format-applied-hashes.json",
+  "final_postformat_build_and_smoke_manifest": "postformat-final-source-native-manifest.json",
+  "patch_status": "userGit FlagTree lawfulSDKsource diff current enflame-bounded-clock-location-origin.patch; no SDKbc included",
+  "limits": [
+    "No git add/commit/push by child",
+    "Scalar16 default; vector explicit feature with real T5 negative cost"
+  ],
+  "postformat_build_status": "Actualfullcoreandnative targets exit0; actualmodulepaths/hash manifest generated",
+  "postformat_contract_status": "247passed5skipped API+Enflame/bounds+alllatestCPUcontracts",
+  "postformat_decoder_status": "27passed actual C++",
+  "publication_setter_CPU_status": "10actualcompilerAPI cases pass; counts0/3/64+non-dynamic reject;1/2/4/8/16/32 attraccepted, not hardwareclaims",
+  "status": "ready_for_root_integration",
+  "focused_hardware": "9passed548.69s"
+}

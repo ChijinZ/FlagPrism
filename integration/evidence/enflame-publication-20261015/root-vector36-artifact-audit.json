@@ -1,0 +1,28 @@
+{
+  "kind": "offline_original_artifact_audit",
+  "status": "verified",
+  "archive_sha256": "f31414ea2728927c81e99cb463570cb5144a3908403333450170ecd8403ce808",
+  "cases": 36,
+  "families": [
+    "gemm",
+    "gemm_bias_gelu",
+    "layernorm",
+    "reduce_sum",
+    "softmax",
+    "transpose"
+  ],
+  "captures_with_raw_sha256_verified": 108,
+  "retained_observations": 4599,
+  "declared_drops": 21996,
+  "checks": [
+    "36 unique original results; six families/three shapes/two variants",
+    "recorded original pre/post CPU checks, input immutability and output canaries",
+    "unchanged allsite/program0/cap64 request and enable_i64False",
+    "108 raw byte hashes checked independently of decoder",
+    "summary agrees with original raw artifact counts"
+  ],
+  "limits": [
+    "This offline audit checks retained evidence; CPU reference kernels were executed remotely, not rerun locally.",
+    "Does not certify timer frequency, device-wide alignment or cost."
+  ]
+}

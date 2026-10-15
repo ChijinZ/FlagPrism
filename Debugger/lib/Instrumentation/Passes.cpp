@@ -3017,6 +3017,36 @@ void emitTimelineStores(OpBuilder &builder, Location loc, Operation *recordOp,
 }
 
 #ifdef FLAGPRISM_BACKEND_ENFLAME
+// Each GCU work-item receives its own complete 16-word logical vector.
+// The sole-writer branch activates only actor 0. Repeating both values and
+// offsets preserves its complete record under the backend's tensor partition.
+// Actual GCU ownership and raw bytes must be validated before enabling this.
+void storePerWorkItemRecordVector(OpBuilder &builder, Location loc,
+                                  Value ctrlPtr, Value recordOffset,
+                                  ArrayRef<Value> words, uint32_t workItems) {
+  assert(recordOffset.getType() == builder.getI32Type());
+  assert(words.size() == kRecordWords && workItems >= 1 && workItems <= 32);
+  auto type =
+      RankedTensorType::get({kRecordWords * workItems}, builder.getI32Type());
+  Value lanes = builder.create<triton::MakeRangeOp>(
+      loc, type, 0, static_cast<int32_t>(kRecordWords * workItems));
+  Value wordIndices = builder.create<arith::RemUIOp>(
+      loc, lanes, createIntegerConstantLike(builder, loc, type, kRecordWords));
+  Value offsets = builder.create<arith::AddIOp>(
+      loc, wordIndices,
+      builder.create<triton::SplatOp>(loc, type, recordOffset));
+  Value ptrs = addWordOffsetLike(builder, loc, ctrlPtr, offsets);
+  Value values = createIntegerConstantLike(builder, loc, type, 0);
+  for (auto indexed : llvm::enumerate(words)) {
+    Value mask = builder.create<arith::CmpIOp>(
+        loc, arith::CmpIPredicate::eq, wordIndices,
+        createIntegerConstantLike(builder, loc, type, indexed.index()));
+    Value word = builder.create<triton::SplatOp>(loc, type, indexed.value());
+    values = builder.create<arith::SelectOp>(loc, mask, word, values);
+  }
+  storeValue(builder, loc, ptrs, values);
+}
+
 // Every state change and staging store is inside the sole-writer branch.
 // Cursor state is private to the selected invocation; no global atomic is used.
 void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
@@ -3109,10 +3139,18 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
     // A logical tensor<16xi32> store is partitioned over GCU work-items.
     // Only work-item 0 is active here, so publish scalar words instead of
     // accidentally storing only that work-item's fraction of the record.
-    for (auto word : llvm::enumerate(words))
-      storeI32Value(builder, loc, ctx.ctrlBytePtr, recordOffset,
-                    static_cast<int64_t>(word.index()) * 4, word.value(),
-                    trueMask);
+    uint32_t publicationWorkItems =
+        dynamicOption(recordOp->getParentOfType<ModuleOp>(),
+                      "flagtree.debug.dynamic_publication_work_items", 0);
+    if (publicationWorkItems) {
+      storePerWorkItemRecordVector(builder, loc, ctx.ctrlBytePtr, recordOffset,
+                                   words, publicationWorkItems);
+    } else {
+      for (auto word : llvm::enumerate(words))
+        storeI32Value(builder, loc, ctx.ctrlBytePtr, recordOffset,
+                      static_cast<int64_t>(word.index()) * 4, word.value(),
+                      trueMask);
+    }
   }
   {
     OpBuilder::InsertionGuard nested(builder);
@@ -4550,6 +4588,25 @@ llvm::Error setDebugDynamicTimelineOptions(ModuleOp module, uint32_t program,
   module->setAttr(kAttrSelectedProgram, builder.getI64IntegerAttr(program));
   module->setAttr(kAttrSelectedActor, builder.getI64IntegerAttr(actor));
   module->setAttr(kAttrSampleEvery, builder.getI64IntegerAttr(sampleEvery));
+  return llvm::Error::success();
+#endif
+}
+
+llvm::Error setDebugDynamicPublicationWorkItems(ModuleOp module,
+                                                uint32_t workItems) {
+#ifndef FLAGPRISM_BACKEND_ENFLAME
+  return llvm::createStringError(llvm::inconvertibleErrorCode(),
+                                 "GCU vector publication requires Enflame");
+#else
+  if (!isDynamicTimeline(module) || !workItems || workItems > 32 ||
+      (workItems & (workItems - 1)))
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
+        "GCU vector publication requires dynamic timeline and actual "
+        "power-of-two work-items in [1,32]");
+  OpBuilder builder(module.getContext());
+  module->setAttr("flagtree.debug.dynamic_publication_work_items",
+                  builder.getI32IntegerAttr(workItems));
   return llvm::Error::success();
 #endif
 }

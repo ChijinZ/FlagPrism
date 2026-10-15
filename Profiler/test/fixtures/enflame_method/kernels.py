@@ -2,17 +2,21 @@
 import triton
 import triton.language as tl
 
+
 @triton.jit
 def matmul(A, B, Bias, C, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
-           BM: tl.constexpr, BN: tl.constexpr, BK: tl.constexpr, FUSED: tl.constexpr):
+           BM: tl.constexpr, BN: tl.constexpr, BK: tl.constexpr,
+           FUSED: tl.constexpr):
     m = tl.program_id(0) * BM + tl.arange(0, BM)
     n = tl.program_id(1) * BN + tl.arange(0, BN)
     k = tl.arange(0, BK)
     acc = tl.full((BM, BN), 0, tl.float32)
     for base in range(tl.cdiv(K, BK)):
         kk = base * BK + k
-        a = tl.load(A + m[:, None] * K + kk[None, :], (m[:, None] < M) & (kk[None, :] < K), 0)
-        b = tl.load(B + kk[:, None] * N + n[None, :], (kk[:, None] < K) & (n[None, :] < N), 0)
+        a = tl.load(A + m[:, None] * K + kk[None, :],
+                    (m[:, None] < M) & (kk[None, :] < K), 0)
+        b = tl.load(B + kk[:, None] * N + n[None, :],
+                    (kk[:, None] < K) & (n[None, :] < N), 0)
         acc += tl.dot(a, b)
     if FUSED:
         bias = tl.load(Bias + n, n < N, 0)
@@ -20,11 +24,13 @@ def matmul(A, B, Bias, C, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
         u = 0.7978845608028654 * (z + 0.044715 * z * z * z)
         tanh_u = 2.0 / (1.0 + tl.exp(-2.0 * u)) - 1.0
         acc = 0.5 * z * (1.0 + tanh_u)
-    tl.store(C + m[:, None] * N + n[None, :], acc, (m[:, None] < M) & (n[None, :] < N))
+    tl.store(C + m[:, None] * N + n[None, :], acc,
+             (m[:, None] < M) & (n[None, :] < N))
+
 
 @triton.jit
-def rows(X, W, B, Y, R: tl.constexpr, N: tl.constexpr,
-         BLOCK: tl.constexpr, ROWS: tl.constexpr, OP: tl.constexpr):
+def rows(X, W, B, Y, R: tl.constexpr, N: tl.constexpr, BLOCK: tl.constexpr,
+         ROWS: tl.constexpr, OP: tl.constexpr):
     r = tl.program_id(0) * ROWS + tl.arange(0, ROWS)
     c = tl.arange(0, BLOCK)
     valid = (r[:, None] < R) & (c[None, :] < N)
@@ -40,15 +46,18 @@ def rows(X, W, B, Y, R: tl.constexpr, N: tl.constexpr,
         var = tl.sum(centered * centered, 1) / N
         w = tl.load(W + c, c < N, 0.0)
         b = tl.load(B + c, c < N, 0.0)
-        y = centered * tl.rsqrt(var[:, None] + 1.0e-5) * w[None, :] + b[None, :]
+        y = centered * tl.rsqrt(var[:, None] +
+                                1.0e-5) * w[None, :] + b[None, :]
         tl.store(Y + r[:, None] * N + c[None, :], y, valid)
     else:
         x = tl.load(X + r[:, None] * N + c[None, :], valid, 0.0)
         y = tl.sum(x, 1)
         tl.store(Y + r, y, r < R)
 
+
 @triton.jit
-def transpose(X, Y, M: tl.constexpr, N: tl.constexpr, BM: tl.constexpr, BN: tl.constexpr):
+def transpose(X, Y, M: tl.constexpr, N: tl.constexpr, BM: tl.constexpr,
+              BN: tl.constexpr):
     m = tl.program_id(0) * BM + tl.arange(0, BM)
     n = tl.program_id(1) * BN + tl.arange(0, BN)
     mask = (m[:, None] < M) & (n[None, :] < N)
