@@ -79,7 +79,9 @@ selection remain explicit. Historical failed builds, unsafe-capacity rejection
 and incomplete captures remain archived rather than reclassified as passes.
 
 Packaging uses the real setup Distribution, standard build_py and
-bdist_wheel(skip_build=True), reusing all three validated binaries unchanged.
+bdist_wheel(skip_build=True), copying supplied native artifacts without changing
+their bytes. Those artifacts must match the component native inputs; a previous
+validation of an older core is insufficient after common compiler targets change.
 `USE_FLIR=OFF` and `USE_FLAGPRISM=OFF` only prevent this old setup's dependency
 metadata/download recursion during repacking; `TRITON_BUILD_FLAGPRISM=ON` and
 all actual feature binaries/Python modules/header remain present. A subprocess
@@ -131,3 +133,31 @@ job's process group, returns exit 124 and retains partial output plus its
 `timed_out` receipt, child PID/group, requested deadline and elapsed time. This
 is compiler-stage enforcement; the public export receipt separately measures
 full finalization/export and must not be described as a compiler deadline.
+
+The usability native audit found that the Ascend core and packaged
+`triton-mlir-opt` both link the common Proton targets. Consequently the current
+`AutomaticScopes.cpp`, its registration/header and `triton_proton.cc` require a
+real incremental build even though Ascend's observations use the separate late
+LLVM plugin. With the pinned parent integration and current component source:
+
+```sh
+export FLAGTREE_BACKEND=ascend
+cmake --build "$ASCEND_CORE_BUILD" --target triton flagtree_profiler_native flagtree_debugger_native -j 4
+cmake --build "$ASCEND_CORE_BUILD" --target triton-mlir-opt -j 4
+```
+
+The actual run independently sealed the new core, frontend tool and checked
+runtime artifacts under
+`/tmp/flagprism-usability-ascend/run-001/native-final/native-runtime`.
+`native-final/native-provenance.json` records the pinned parent commit, all
+component native input hashes, exact commands and original/new artifact hashes;
+its build logs record successful compilation of the changed pass/binding and
+relinking of both compiler artifacts. Runtime/debugger inputs remained byte
+identical and their requested targets were up to date. The independently built
+LLVM15 observer's unchanged C++ source hash and existing clean-build/test logs
+justify its reuse. Original baseline compiler/runtime paths were restored after
+sealing, so the baseline distribution is preserved. Supply the sealed
+`native-runtime/python` and `native-runtime/core/libtriton.so` to the wheel
+helper; the sibling core tool is included automatically. This is an incremental
+component rebuild against the pinned parent, not a rebuild of every vendor SDK
+component or a claim that unrelated repository targets were compiled.

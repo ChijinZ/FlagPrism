@@ -149,7 +149,7 @@ def main():
               'flagtree_tracked_diff_sha256': hashlib.sha256(subprocess.check_output(['git', 'diff', '--binary'], cwd=args.flagtree)).hexdigest(),
               'plugin_sources': {name: hashlib.sha256((args.component / 'Profiler/llvm' / name).read_bytes()).hexdigest()
                                  for name in ('AscendLateObserver.cpp', 'CMakeLists.txt')},
-              'native_provenance': 'supplied matching already-built native; no rebuild',
+              'native_provenance': 'packaging copies supplied artifacts without compiling; see their external native build/source audit',
               'plugin': str(args.plugin), 'plugin_source': str(args.component / 'Profiler/llvm'),
               'flagtree': str(args.flagtree), 'component': str(args.component)}
     (args.output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
