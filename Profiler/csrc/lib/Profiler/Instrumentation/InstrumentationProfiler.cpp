@@ -65,8 +65,7 @@ void InstrumentationProfiler::doStop() {
   }
 }
 
-void
-InstrumentationProfiler::doSetMode(const std::vector<std::string> &mode) {
+void InstrumentationProfiler::doSetMode(const std::vector<std::string> &mode) {
   if (mode.empty()) {
     throw std::runtime_error("Mode cannot be empty");
   }
@@ -296,7 +295,6 @@ void InstrumentationProfiler::exitInstrumentedOp(uint64_t streamId,
           }
         }
       });
-
 }
 
 } // namespace proton

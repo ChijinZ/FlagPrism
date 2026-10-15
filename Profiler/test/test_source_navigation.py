@@ -191,12 +191,20 @@ def test_source_failure_is_actionable_and_does_not_blame_execution(
     (tmp_path / 'ai').mkdir()
     (tmp_path / 'ai/fine_grained.json').write_text(
         json.dumps(
-            dict(records=[
-                dict(source_locations=[],
-                     operation='arith.addf',
-                     association_status='verified',
-                     semantic='operation_checkpoint')
-            ])))
+            dict(captures=[
+                dict(capture_id='capture-a',
+                     invocation_id='launch-a',
+                     binary_id='binary-a')
+            ],
+                 records=[
+                     dict(capture_id='capture-a',
+                          invocation_id='launch-a',
+                          binary_id='binary-a',
+                          source_locations=[],
+                          operation='arith.addf',
+                          association_status='verified',
+                          semantic='operation_checkpoint')
+                 ])))
     with pytest.raises(RuntimeError, match='lack_valid_source_snapshot'):
         fine.require_automatic_records(tmp_path, {'automatic': True})
     status = json.loads((tmp_path / 'ai/selection_status.json').read_text())

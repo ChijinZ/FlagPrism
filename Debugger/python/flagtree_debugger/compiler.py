@@ -42,7 +42,8 @@ def _gcu_publication_config(config):
         if mode not in {"scalar16", "vector16_per_work_item"}:
             raise ValueError("Unknown GCU dynamic publisher mode")
         result["debug_dynamic_publication_mode"] = mode
-        result["debug_dynamic_lowering_revision"] = GCU_DYNAMIC_LOWERING_REVISION
+        result[
+            "debug_dynamic_lowering_revision"] = GCU_DYNAMIC_LOWERING_REVISION
         if request.get("automatic"):
             from .automatic_plan import (AUTOMATIC_PLAN_VERSION,
                                          CONTROL_FLOW_METADATA_VERSION)

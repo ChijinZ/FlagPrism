@@ -35,7 +35,8 @@ def recurrence(x, y, out, launches, rounds, n: tl.constexpr, b: tl.constexpr):
 
 
 @triton.jit
-def nested_memory(x, y, out, launches, rounds, n: tl.constexpr, b: tl.constexpr):
+def nested_memory(x, y, out, launches, rounds, n: tl.constexpr,
+                  b: tl.constexpr):
     i = tl.arange(0, b)
     a = tl.load(x + i, i < n, 0)
     for outer in range(rounds):
@@ -58,20 +59,23 @@ def main():
     device = f'npu:{args.device}'
     n, b = 257, 512
     cx = torch.arange(n, dtype=torch.float32) / 32
-    cy = torch.full((n,), .25)
+    cy = torch.full((n, ), .25)
     x, y = cx.to(device), cy.to(device)
     rows = []
-    for kind, fn in [('recurrence', recurrence), ('nested_memory', nested_memory)]:
+    for kind, fn in [('recurrence', recurrence),
+                     ('nested_memory', nested_memory)]:
         for rounds in args.rounds:
-            storage = torch.full((n + 32,), -12345., device=device)
+            storage = torch.full((n + 32, ), -12345., device=device)
             out = storage[16:-16]
             launches = torch.zeros((), dtype=torch.int32, device=device)
             target = args.output / f'{kind}-{rounds}'
             start = time.monotonic()
-            session = profiler.start(str(target), backend='cann', detail='auto')
+            session = profiler.start(str(target),
+                                     backend='cann',
+                                     detail='auto')
             try:
                 compile_start = time.monotonic()
-                compiled = fn[(1,)](x, y, out, launches, rounds, n, b)
+                compiled = fn[(1, )](x, y, out, launches, rounds, n, b)
                 torch.npu.synchronize()
                 compile_launch_s = time.monotonic() - compile_start
             finally:
@@ -84,13 +88,18 @@ def main():
             torch.testing.assert_close(out.cpu(), expected)
             torch.testing.assert_close(x.cpu(), cx, rtol=0, atol=0)
             torch.testing.assert_close(y.cpu(), cy, rtol=0, atol=0)
-            assert launches.item() == 1, 'instrumentation replayed the user kernel'
+            assert launches.item(
+            ) == 1, 'instrumentation replayed the user kernel'
             guards = storage.cpu()
-            assert (guards[:16] == -12345.).all() and (guards[-16:] == -12345.).all()
+            assert (guards[:16] == -12345.).all() and (guards[-16:]
+                                                       == -12345.).all()
             payload = json.loads((target / 'ai/observations.json').read_text())
             events = payload['observations']
-            assert events and all(e['association_status'] == 'verified' for e in events)
-            positions = {(e['compiler_site']['source_file'], e['compiler_site']['line']) for e in events}
+            assert events and all(e['association_status'] == 'verified'
+                                  for e in events)
+            positions = {(e['compiler_site']['source_file'],
+                          e['compiler_site']['line'])
+                         for e in events}
             assert len(positions) >= 2
             captures = payload['captures']
             dropped = sum(c['dropped'] for c in captures)
@@ -105,26 +114,56 @@ def main():
                     assert version in (0, 1) and committed <= capacity
                     assert attempted == committed + lost
                     decoded = capture['actors'][actor]
-                    assert (committed, attempted, lost) == tuple(decoded[k] for k in ('committed', 'attempted', 'dropped'))
-                    raw_headers.append(dict(actor=actor, version=version, committed=committed, attempted=attempted, dropped=lost))
+                    assert (committed, attempted,
+                            lost) == tuple(decoded[k]
+                                           for k in ('committed', 'attempted',
+                                                     'dropped'))
+                    raw_headers.append(
+                        dict(actor=actor,
+                             version=version,
+                             committed=committed,
+                             attempted=attempted,
+                             dropped=lost))
             assert sum(h['committed'] for h in raw_headers) == len(events)
-            bundle_bytes = sum(f.stat().st_size for f in target.rglob('*') if f.is_file())
-            row = dict(kind=kind, rounds=rounds, pid=os.getpid(), binary=compiled.hash,
-                       compile_launch_s=compile_launch_s, export_s=export_s,
-                       elapsed_s=time.monotonic()-start, bundle_bytes=bundle_bytes,
-                       raw_headers=raw_headers, capacity=capacity,
-                       event_count=len(events), dropped=dropped,
+            bundle_bytes = sum(f.stat().st_size for f in target.rglob('*')
+                               if f.is_file())
+            row = dict(kind=kind,
+                       rounds=rounds,
+                       pid=os.getpid(),
+                       binary=compiled.hash,
+                       compile_launch_s=compile_launch_s,
+                       export_s=export_s,
+                       elapsed_s=time.monotonic() - start,
+                       bundle_bytes=bundle_bytes,
+                       raw_headers=raw_headers,
+                       capacity=capacity,
+                       event_count=len(events),
+                       dropped=dropped,
                        source_positions=sorted(positions),
-                       frequencies={str(k): v for k, v in Counter((e['actor_slot'], e['site'], e['semantic']) for e in events).items()},
-                       math='passed', inputs='unchanged', canaries='passed', actual_launches=launches.item())
+                       frequencies={
+                           str(k): v
+                           for k, v in Counter(
+                               (e['actor_slot'], e['site'], e['semantic'])
+                               for e in events).items()
+                       },
+                       math='passed',
+                       inputs='unchanged',
+                       canaries='passed',
+                       actual_launches=launches.item())
             rows.append(row)
-            result = dict(pid=os.getpid(), source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(), cases=rows)
-            (args.output / 'result.json').write_text(json.dumps(result, indent=2))
+            result = dict(pid=os.getpid(),
+                          source_sha256=hashlib.sha256(
+                              Path(__file__).read_bytes()).hexdigest(),
+                          cases=rows)
+            (args.output / 'result.json').write_text(
+                json.dumps(result, indent=2))
             assert bundle_bytes <= 64 * 1024**2 and export_s <= 60
             if not args.expect_loss:
                 assert dropped == 0, f'{kind}: default capacity lost {dropped} records'
     if args.expect_loss:
-        assert any(r['dropped'] for r in rows), 'did not reproduce the original default loss'
+        assert any(
+            r['dropped']
+            for r in rows), 'did not reproduce the original default loss'
     for kind in ('recurrence', 'nested_memory'):
         assert len({r['binary'] for r in rows if r['kind'] == kind}) == 1
     print(json.dumps(result, indent=2))

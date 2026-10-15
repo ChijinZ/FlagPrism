@@ -1410,10 +1410,10 @@ def _automatic_observation_request(backend):
         # Keep every selected occurrence up to a fixed per-actor bound; do not
         # infer source iteration counts, replay, or silently sample away loss.
         # Three actor regions use 3 * (32 + 4096 * 64) = 786,528 raw bytes.
-        return ObservationRequest(
-            semantics=("operation_checkpoint", "control_checkpoint"),
-            max_events_per_instance=4096,
-            automatic=True)
+        return ObservationRequest(semantics=("operation_checkpoint",
+                                             "control_checkpoint"),
+                                  max_events_per_instance=4096,
+                                  automatic=True)
     return ObservationRequest(semantics=("source_control_interval", ),
                               automatic=True)
 

@@ -17,8 +17,8 @@
 #include <algorithm>
 #include <cctype>
 #include <chrono>
-#include <filesystem>
 #include <exception>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -670,7 +670,8 @@ void Session::activate() {
     auto failure = std::current_exception();
     attemptCleanup(failure, [&] { profiler->unregisterData(data.get()); });
     if (timelineData)
-      attemptCleanup(failure, [&] { profiler->unregisterData(timelineData.get()); });
+      attemptCleanup(failure,
+                     [&] { profiler->unregisterData(timelineData.get()); });
     // stop() leaves a shared profiler running when another session owns data.
     attemptCleanup(failure, [&] { profiler->stop(); });
     std::rethrow_exception(failure);
@@ -681,7 +682,8 @@ void Session::deactivate() {
   std::exception_ptr failure;
   attemptCleanup(failure, [&] { profiler->flush(); });
   if (timelineData) {
-    attemptCleanup(failure, [&] { profiler->unregisterData(timelineData.get()); });
+    attemptCleanup(failure,
+                   [&] { profiler->unregisterData(timelineData.get()); });
     if (!vendorAdapter)
       attemptCleanup(failure, [&] { timelineData->clear(); });
   }
@@ -921,8 +923,10 @@ void SessionManager::deactivateSession(size_t sessionId) {
 void SessionManager::deactivateAllSessions() {
   std::unique_lock<std::shared_mutex> lock(mutex);
   std::exception_ptr failure;
-  for (const auto &[sessionId, _] : activeSessions)
+  for (const auto &entry : activeSessions) {
+    const auto sessionId = entry.first;
     attemptCleanup(failure, [&] { deActivateSessionImpl(sessionId); });
+  }
   if (failure)
     std::rethrow_exception(failure);
 }
