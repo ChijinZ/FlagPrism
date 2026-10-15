@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <exception>
 #if defined(__linux__)
 #include <dlfcn.h>
 #endif
@@ -88,7 +89,7 @@ throwUnavailableBackend(const RuntimeBackendAdapter &adapter) {
     message += recent;
     message += "\"";
   }
-  failRuntime(message);
+  throw std::runtime_error(message);
 }
 
 void checkAcl(aclError error, const char *call) {
@@ -99,6 +100,18 @@ void checkAcl(aclError error, const char *call) {
 
 aclrtStream toAclrtStream(uint64_t streamHandle) {
   return reinterpret_cast<aclrtStream>(streamHandle);
+}
+
+void requireCannEager(uint64_t streamHandle) {
+  aclmdlRICaptureStatus status = ACL_MODEL_RI_CAPTURE_STATUS_NONE;
+  aclmdlRI model = nullptr;
+  checkAcl(aclmdlRICaptureGetInfo(toAclrtStream(streamHandle), &status, &model),
+           "aclmdlRICaptureGetInfo (before debugger allocation)");
+  if (status != ACL_MODEL_RI_CAPTURE_STATUS_NONE)
+    throw std::runtime_error(
+        "FlagPrism Ascend detailed profiling supports eager launches only; "
+        "NPU graph capture is unsupported (SDK capture status=" +
+        std::to_string(static_cast<int>(status)) + ")");
 }
 #endif
 
@@ -151,6 +164,25 @@ public:
 };
 
 #if FLAGTREE_DEBUGGER_HAS_ENFLAME_RUNTIME
+void checkTops(topsError_t result, const char *call) {
+  if (result != topsSuccess)
+    throw std::runtime_error(std::string(call) + " failed with topsError=" +
+                             std::to_string(static_cast<int>(result)) + ": " +
+                             topsGetErrorString(result));
+}
+
+void requireTopsEager(uint64_t streamHandle) {
+  topsStreamCaptureStatus status = topsStreamCaptureStatusNone;
+  checkTops(topsStreamIsCapturing(reinterpret_cast<topsStream_t>(streamHandle),
+                                  &status),
+            "topsStreamIsCapturing (before debugger allocation)");
+  if (status != topsStreamCaptureStatusNone)
+    throw std::runtime_error(
+        "FlagPrism Enflame detailed profiling supports eager launches only; "
+        "GCU graph capture is unsupported (SDK capture status=" +
+        std::to_string(static_cast<int>(status)) + ")");
+}
+
 class EnflameRuntimeBackendAdapter final : public RuntimeBackendAdapter {
 public:
   TransferDriverKind driverKind() const override {
@@ -207,10 +239,7 @@ private:
     return reinterpret_cast<topsStream_t>(stream);
   }
   static void check(topsError_t result, const char *call) {
-    if (result != topsSuccess)
-      failRuntime(std::string(call) + " failed with topsError=" +
-                  std::to_string(static_cast<int>(result)) + ": " +
-                  topsGetErrorString(result));
+    checkTops(result, call);
   }
   static void copy(void *dst, const void *src, size_t bytes,
                    topsMemcpyKind kind, uint64_t stream) {
@@ -1045,6 +1074,25 @@ public:
         throw std::invalid_argument(
             "Enflame full dump buffer must fit 32-bit payload offsets");
     }
+    if ((options_.driverKind == TransferDriverKind::CANN ||
+         options_.driverKind == TransferDriverKind::TOPS) &&
+        (!adapter_ || !adapter_->isAvailable()))
+      throw std::runtime_error(std::string("FlagPrism ") +
+                               (options_.driverKind == TransferDriverKind::CANN
+                                    ? "CANN"
+                                    : "Enflame") +
+                               " debugger runtime is unavailable in this build "
+                               "or has no usable device; "
+                               "install a runtime built with the corresponding "
+                               "SDK before preparing a launch");
+#if FLAGTREE_DEBUGGER_HAS_CANN_RUNTIME
+    if (options_.driverKind == TransferDriverKind::CANN)
+      requireCannEager(options_.streamHandle);
+#endif
+#if FLAGTREE_DEBUGGER_HAS_ENFLAME_RUNTIME
+    if (options_.driverKind == TransferDriverKind::TOPS)
+      requireTopsEager(options_.streamHandle);
+#endif
     ensureAdapterReady(meta);
 
     DebugLaunchContext ctx;
@@ -1061,13 +1109,29 @@ public:
     allocation->bytes = ctx.bufferSize;
     allocation->deviceBuffer = adapter_->allocateDevice(ctx.bufferSize);
     if (!allocation->deviceBuffer) {
+      if (options_.driverKind == TransferDriverKind::CANN ||
+          options_.driverKind == TransferDriverKind::TOPS)
+        throw std::runtime_error("failed to allocate runtime device buffer");
       failRuntime("failed to allocate runtime device buffer");
     }
 
-    allocation->hostBuffer = adapter_->allocateHost(ctx.bufferSize);
-    if (!allocation->hostBuffer) {
-      adapter_->freeDevice(allocation->deviceBuffer);
-      failRuntime("failed to allocate runtime host buffer");
+    try {
+      allocation->hostBuffer = adapter_->allocateHost(ctx.bufferSize);
+      if (!allocation->hostBuffer) {
+        if (options_.driverKind == TransferDriverKind::CANN ||
+            options_.driverKind == TransferDriverKind::TOPS)
+          throw std::runtime_error("failed to allocate runtime host buffer");
+        failRuntime("failed to allocate runtime host buffer");
+      }
+    } catch (...) {
+      // Preserve the allocation error even if rollback itself also fails.
+      try {
+        adapter_->freeDevice(allocation->deviceBuffer);
+      } catch (const std::exception &error) {
+        std::fprintf(stderr, "FlagPrism debugger allocation rollback: %s\n",
+                     error.what());
+      }
+      throw;
     }
 
     std::memset(allocation->hostBuffer, 0, ctx.bufferSize);
@@ -1178,9 +1242,19 @@ public:
       }
     }
 
+    std::exception_ptr releaseError;
     if (allocation) {
-      adapter_->freeHost(allocation->hostBuffer);
-      adapter_->freeDevice(allocation->deviceBuffer);
+      try {
+        adapter_->freeHost(allocation->hostBuffer);
+      } catch (...) {
+        releaseError = std::current_exception();
+      }
+      try {
+        adapter_->freeDevice(allocation->deviceBuffer);
+      } catch (...) {
+        if (!releaseError)
+          releaseError = std::current_exception();
+      }
     }
 
     ctx.deviceCtrlPtr = nullptr;
@@ -1189,6 +1263,8 @@ public:
     ctx.recordCapacity = 0;
     ctx.streamHandle = 0;
     ctx.layout = {};
+    if (releaseError)
+      std::rethrow_exception(releaseError);
   }
 
 private:
@@ -1304,7 +1380,9 @@ createRuntimeBackendAdapter(const TransferEngineOptions &options) {
 #if FLAGTREE_DEBUGGER_HAS_ENFLAME_RUNTIME
     return std::make_unique<EnflameRuntimeBackendAdapter>();
 #else
-    failRuntime("TOPS runtime support is not compiled in");
+    throw std::runtime_error(
+        "FlagPrism Enflame debugger runtime is unavailable in this build; "
+        "install a runtime built with the TOPS SDK");
 #endif
   case TransferDriverKind::HOST:
     return std::make_unique<HostRuntimeBackendAdapter>();

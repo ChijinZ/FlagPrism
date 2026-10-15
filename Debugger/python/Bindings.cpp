@@ -5,6 +5,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <cstdio>
 #include <cstring>
 #include <limits>
 #include <optional>
@@ -707,7 +708,16 @@ public:
         artifacts, bufferMeta, runtimeMetadata, streamHandle));
   }
 
-  ~PreparedLaunchHandle() { releaseInternal(); }
+  ~PreparedLaunchHandle() noexcept {
+    try {
+      releaseInternal();
+    } catch (const std::exception &error) {
+      // Python may destroy the handle while another SDK exception is active.
+      // Destructors must never replace that exception with std::terminate.
+      std::fprintf(stderr, "FlagPrism debugger handle cleanup: %s\n",
+                   error.what());
+    }
+  }
 
   uint64_t hiddenArgValue() const {
     ensurePrepared();

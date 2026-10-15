@@ -272,3 +272,45 @@ site-ID namespace is used to classify or exempt records. Both plans bind to
 the actual compiler/module/actor handoff and are exported by the public plan
 view. This inventory addition requires rebuilding the LLVM15 observer; it is
 not a report-only reconstruction of earlier buffers.
+
+### Detailed profiling and NPU graphs
+
+Detailed observation sessions require eager launches. Starting an internal CANN
+session inside NPU graph capture, or invoking a Triton kernel inside capture
+while that session is active, raises `RuntimeError` before debugger buffer
+preparation. Leave the graph context before making an eager recovery call. The
+same session can continue collecting eager calls; finalization still exports
+those original records. A rejected launch has no allocated trace bytes to export.
+
+The Python guard uses TorchNPU's public capture query without caching its result.
+An unavailable, failed, or indeterminate query refuses instrumentation and keeps
+the original exception as its cause. The per-JIT guard checks the current stream;
+ordinary kernel arguments, including an argument named `stream`, pass through
+unchanged. Launch metadata and the native backstop check the actual SDK stream.
+CANN's native `aclmdlRICaptureGetInfo` check also rejects active or invalidated
+capture and checks the SDK return code before allocation. CANN SDK failures in
+this prepare/export/release chain become Python exceptions. Preparation rollback
+attempts both owned frees and preserves the original failure if cleanup also
+fails. This does not turn all internal `failRuntime` assertions or other backend
+fatal errors into recoverable exceptions.
+
+The shared Python guard also covers detailed Enflame sessions through TorchGCU's
+public query; its checked native backstop uses `topsStreamIsCapturing`. Neither
+provider extension is imported for other backends. Native-only sessions are not
+reclassified as detailed sessions by this guard.
+
+After installing the matching source-built wheel, the ordinary unannotated
+kernel regression can be run through both public entrypoints:
+
+```bash
+python tests/ascend/automatic_graph_rejection.py --device 4 --output /tmp/graph-api
+python -m flagtree.profiler.cli --backend cann --device 4 --detail auto \
+  --name /tmp/graph-cli-bundle tests/ascend/automatic_graph_rejection.py \
+  --device 4 --output /tmp/graph-cli-state --cli
+```
+
+The API test prewarms ordinary kernels before starting observation sessions. The
+CLI test's explicit application prewarm calls are collected by its outer session.
+Both check rejection and eager recovery on two actual streams with separate
+recovery outputs, input checks and canaries. These are development regressions,
+not independent qualification results.
