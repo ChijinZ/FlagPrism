@@ -38,10 +38,12 @@ Every normalized record has the following keys. Nullable fields are present as
 | `semantic` | string | What was measured, for example `source_control_interval` or `operation_checkpoint` |
 | `occurrence` | integer or null | Retained visit ordinal for this capture/call/program/actor/site; not a source iteration variable |
 | `iteration` | integer or null | Explicit iteration identity only when supplied by the protocol |
-| `source_locations` | array of objects | Each location has `file` (string), `line` (positive integer), `column` (integer) |
+| `source_locations` | array of objects | Navigable positions within an unambiguous digest-checked full-file snapshot; each has `file` (string), `line` (positive integer), `column` (integer) |
+| `source_location_candidates` | array of objects | Original source positions, distinct compiler/inline/interval roles and snapshot validation results, including invalid or unavailable candidates |
+| `source_links` | array of objects | Validated candidates with `source_id`, snapshot digest/line count and report-relative `href` |
 | `operation` | string or null | Actual compiler operation or called primitive |
 | `association_status` | string | `verified` or `unassociated` in this reconstructed view |
-| `source_status` | string | `located` or `unresolved` |
+| `source_status` | string | `located` when at least one position has a validated captured snapshot anchor; otherwise `unresolved` |
 | `association_evidence` | object or null | Original call/binary association evidence |
 | `native_event_ids` | array | Native event IDs associated with the same actual invocation; may be empty |
 | `clock` | object or null | Counter domain and comparability evidence, described below |
@@ -90,12 +92,24 @@ unverified. A checkpoint with equal start/end ticks reports an occurrence; its
 zero duration does not describe operation latency. Source-control intervals do
 not establish asynchronous completion or engine occupancy.
 
+Current writers validate source bounds against captured full-file bytes before
+setting `located`. Earlier version-1 writers accepted positive compiler line
+numbers without snapshot bounds checks; readers needing this stronger guarantee
+must check candidates for `validation_status: "in_range_snapshot_position"`.
+Candidates also retain `outside_snapshot_line_range`, `snapshot_unavailable` or
+`ambiguous_snapshot_versions`. Compiler-supplied directories can resolve a
+relative inline filename; basename-only matching to another file is forbidden.
+Roles include `compiler_primary`, `inline_callsite`, `interval_entry`,
+`interval_exit`, `captured_location_reference` and `frontend_source`. Duplicate
+roles may point to the same position. Valid bounds prove that a captured line
+exists, not compiled-text alignment or exclusive operation cost.
+
 ## `ai/observation_plan.json`
 
 The envelope contains `schema_version: 1`, `plans` (array), `capture_evidence`
 (array), and `limits` (array of strings). Each entry in `plans` contains
 `binary_id` (string or null) and `plan` (object). Applicable entries also include
-`capture_id`, `compile_id`, `actor`, `module_sha256`, or `selected_origins`.
+`capture_id`, `compile_id`, `actor`, `module_sha256`, `plan_kind`, or `selected_origins`.
 Multiple entries can describe separate actors or captures of the same binary;
 do not collapse them by kernel name.
 
@@ -108,6 +122,34 @@ has `schema_version: 1`, `candidate_count`, `max_sites`, `policy`, `selected_sit
 `opId`/`op_id`, `mlirOpName` and source information, plus `automatic_eligible`,
 `exclusion_reason`, `selected`, and a `selection_reason` on selected entries.
 Native IR bookkeeping is not interchangeable with source operations.
+
+Current Enflame plans additionally have `policy_version: 2` and `control_regions`.
+Inventory entries carry `controlFlowSchemaVersion: 1` and actual outer-to-inner
+`controlFlowAncestors`, each with `controlId`, `parentOpId`, `operation`,
+`regionIndex`, `blockIndex` and `repeated`. These come from IR owners, not source
+line proximity. `parentOpId: 0` means the owner is not a tracked operation.
+Regions expose eligible/direct/selected site lists and coverage status/reason;
+absence of eligible operations differs from exclusion by the finite site budget.
+Repeated regions receive priority before class filling. Default eight-site
+coverage is bounded: a plan may still leave regions uncovered, which must remain
+visible. Older round-robin plans remain readable and have no such coverage proof.
+
+Current Ascend handoffs also export a distinct `control_plan`; the public
+envelope labels actor plans with `plan_kind: "operation"` or `"control"`.
+Both use the same actual binary-local site allocation. The kind is not a
+separate numeric namespace. Control inventory names actual original primitives
+and loop headers, their public semantics, selected status and reason. Its
+`policy` is `all_requested_original_control_sites`, `budget_scope` is
+`existing_primitives_and_original_loop_headers`, `max_sites` is null and
+`operation_max_sites_applies` is false. `record_capacity_per_actor` separately
+bounds retained dynamic records. The operation plan's finite `max_sites` applies
+only to source-operation candidates (`budget_scope:
+"source_operation_candidates_only"`, `control_sites_included: false`). Do not
+interpret eight operation sites as a total bound including control checkpoints.
+For membership checks, use the selected inventories for the actual binary,
+module, actor and semantic class. Older operation-only plans cannot establish a
+complete control-site selection proof; raw compiler-site provenance remains
+available but is not a substitute for a missing plan.
 
 The NVIDIA nested plan uses its own `schema_version: 2` (the outer envelope
 remains version 1), actual `proton.automatic_candidates` and
@@ -293,6 +335,32 @@ dependency or a separately compiled caller. For example:
 compiled artifacts. A source location identifies the original absolute source
 path, while the source snapshot is found using the binary record above; a
 consumer must not try to open that original path on a different machine.
+
+## `ai/source_index.json` and report navigation
+
+The source index has `schema_version: 1`, `sources`, `diagnostics` and `limits`.
+Each source has an `id` derived from binary/path/digest/kind, `binary_id`, `file`,
+`sha256`, bundle-relative `snapshot_file`, `line_count`, `capture_basis`,
+`compiled_text_alignment` and `observed_lines`. `kind` is `file_snapshot` or
+`jit_function_text`. The latter has relative lines and is never used to guess a
+file-line offset. `observed_lines` maps line numbers to retained record counts
+for this binary/source, deduplicating repeated candidates of one record. These
+are neither complete execution counts nor iteration counts. Different bytes
+for the same binary/path remain separate and make file anchors ambiguous.
+
+`report/sources.html` embeds captured text, offers binary/source selection and
+line anchors, and links observed lines back to the exact binary and line filter
+in `report/fine_grained.html`. All source text is rendered as text, not markup.
+`report/execution.html` shows measured identity groups separately from complete,
+expandable static compiler mapping tables. Its retained-count groups include
+invocation/program/actor/semantic/clock and association status. It introduces no
+static-to-dynamic actor joins, clock conversion, cross-actor ordering or inferred
+busy timeline. Original mapping evidence stays in `ai/execution.json`.
+
+Automatic capture with internal records but no valid snapshot position is
+incomplete with reason `internal_records_lack_valid_source_snapshot_positions`;
+the action points to source candidates and index diagnostics. This differs from
+a selected program producing no internal records. Both retain original data.
 
 ## `ai/export_timing.json`
 

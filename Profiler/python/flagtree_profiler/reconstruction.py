@@ -48,8 +48,8 @@ def reconstruct(payload, launches, binaries, native_events):
         if not isinstance(compiler_site, dict):
             compiler_site = {}
         region_origin = None
-        if (linked and record['source_available']
-                and compiler_site.get('kind') in {'explicit_proton_scope', 'automatic_compiler_operation'}
+        if (linked and record['source_available'] and compiler_site.get('kind')
+                in {'explicit_proton_scope', 'automatic_compiler_operation'}
                 and compiler_site.get('binary_id') == record['binary_id']
                 and compiler_site.get('scope_id') == record.get('site')
                 and isinstance(compiler_site.get('origin'), dict)):
@@ -215,7 +215,8 @@ def render(document):
         'th,td{border:1px solid #ccc;padding:.4rem}section{margin-top:2rem}</style>'
         '<h1>Program-associated observations</h1><p><a href="index.html">Capture overview</a> | '
         '<a href="../ai/reconstruction.json">Complete reconstruction</a> | '
-        '<a href="../ai/execution.json">Compiler execution mapping</a></p>'
+        '<a href="execution.html">Compiler execution mapping</a> | '
+        '<a href="sources.html">Captured source</a></p>'
         '<p>Raw ticks stay in their measured clock frame. None denotes an unavailable quantity. '
         'Zero-tick intervals are unresolved at the counter granularity, '
         'rather than evidence of zero execution cost. '

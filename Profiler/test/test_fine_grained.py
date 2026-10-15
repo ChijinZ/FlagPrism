@@ -125,6 +125,18 @@ def test_backend_plans_keep_distinct_binary_and_actor_provenance(view):
                                     'site_id': 3,
                                     'selected': False
                                 }]
+                            },
+                            'control_plan': {
+                                'max_sites':
+                                None,
+                                'inventory': [{
+                                    'site_id':
+                                    9,
+                                    'selected':
+                                    True,
+                                    'public_semantic':
+                                    'control_checkpoint'
+                                }]
                             }
                         }
                     }]
@@ -138,6 +150,12 @@ def test_backend_plans_keep_distinct_binary_and_actor_provenance(view):
     assert plans[1]['compile_id'] == 'compile-5'
     assert plans[1]['module_sha256'] == 'actor-sha'
     assert plans[1]['plan']['inventory'][0]['selected'] is False
+    assert plans[1]['plan_kind'] == 'operation'
+    assert plans[2]['plan_kind'] == 'control'
+    assert plans[2]['binary_id'] == plans[1]['binary_id']
+    assert plans[2]['module_sha256'] == plans[1]['module_sha256']
+    assert plans[2]['plan']['inventory'][0]['site_id'] == 9
+    assert plans[2]['plan']['max_sites'] is None
 
 
 def test_control_checkpoint_names_actual_compiler_structure(view):
