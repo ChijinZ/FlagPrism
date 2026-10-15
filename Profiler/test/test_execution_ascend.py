@@ -128,6 +128,17 @@ def test_debug_origin_requires_complete_snapshot_and_unique_candidate():
     sites=[{'id':i,'callee':'llvm.hivm.WAIT.FLAG.IMM','operands':['1','2','3'],'debug_directory':'/source','debug_file':'a.py','debug_line':7,'debug_column':3,'inline_chain':[]} for i in range(2)]
     manifest={'module_sha256':'actual-compiler-sha','actors':[{'function':'any_symbol','actor_kind':'AIV','arguments':[],'sites':sites,'loops':[]}]}
     metadata = provenance_metadata(manifest, entries)
+    public = importlib.import_module('_ascend_test_package.execution')
+
+    def public_summary(operations):
+        metadata['debug_tracked_table'] = list(operations.values())
+        return public.build_manifest({}, metadata, {'backend': 'npu'},
+                                     'origin-test-binary')
+
+    summary = public_summary(entries)
+    assert summary['source_origin_association_count'] == 2
+    assert summary['source_association_count'] == 2
+    assert len(summary['mapping']['source_origin_associations']) == 2
     result=module.build_execution_mapping({},metadata,source_operations=entries)
     assert len(result['source_associations'])==2
     assert all(a['status']=='verified_origin' and a['cost_ownership']=='not_established' for a in result['source_associations'])
@@ -135,8 +146,16 @@ def test_debug_origin_requires_complete_snapshot_and_unique_candidate():
     metadata['flagprism_ascend_handoff']['source_snapshot']['tracked_ops_sha256']=hashlib.sha256(json.dumps(list(ambiguous.values()),sort_keys=True,separators=(',',':')).encode()).hexdigest()
     result=module.build_execution_mapping({},metadata,source_operations=ambiguous)
     assert not result['source_associations'] and all(s['debug_origin_status']=='ambiguous' for s in result['sites'])
+    summary = public_summary(ambiguous)
+    assert summary['source_origin_association_count'] == 0
+    assert summary['source_association_count'] == 0
+    assert not summary['mapping']['source_origin_associations']
     metadata['flagprism_ascend_handoff']['source_snapshot']['tracked_ops_sha256']='wrong-snapshot'
     assert not module.build_execution_mapping({},metadata,source_operations=entries)['source_associations']
+    summary = public_summary(entries)
+    assert summary['source_origin_association_count'] == 0
+    assert summary['source_association_count'] == 0
+    assert not summary['mapping']['source_origin_associations']
 
 
 def test_dynamic_loop_checkpoint_retains_actual_origin_without_iteration_claim():

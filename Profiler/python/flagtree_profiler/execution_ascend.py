@@ -323,6 +323,8 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
         sites,
         'source_associations':
         associations,
+        'source_origin_associations':
+        origin_associations,
         'loops':
         loops,
         'global_arguments':
