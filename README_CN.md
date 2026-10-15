@@ -67,15 +67,17 @@ Triton workload 在设备上的执行情况，并将采集结果关联、聚合�
 
 ## 与 FlagTree 联合开发
 
-FlagPrism 与 FlagTree 统一开发和编译。首先下载 FlagTree、拉取 FlagPrism
-submodule，然后在 FlagTree 仓库根目录编译完整项目：
+FlagPrism 与配套的 FlagTree 编译器联合构建。使用自动内部观测时，按后端配方中的
+固定编译器版本、补丁、依赖和构建步骤安装：
 
-```bash
-git clone https://github.com/flagos-ai/FlagTree.git
-cd FlagTree
-git submodule update --init --recursive third_party/FlagPrism
-python3 -m pip install . --no-build-isolation
-```
+- [英伟达构建与安装](integration/patches/nvidia/README.md)。
+- [燧原源码构建与安装](integration/patches/enflame/README.md)。
+- [昇腾源码构建与安装](integration/patches/ascend/README.md)。
+
+配方从匹配源码构建编译器和组件 native 模块；任意版本的 FlagTree main 或只替换
+Python 文件不能安装这些 pass。安装后按[自动内部观测指南](Profiler/docs/automatic.md)
+使用 `--detail auto` 运行自己的普通 kernel 脚本并打开报告。不加 `--detail auto` 时，
+CLI 保留原生采集模式；原生采集成功不代表已经获得内部动态记录。
 
 ## 仓库结构
 

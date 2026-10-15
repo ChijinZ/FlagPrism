@@ -49,6 +49,11 @@ With the installed environment active and its SDK environment initialized:
 python -m flagtree.profiler.cli --detail auto -n profile-run my_kernel_script.py
 ```
 
+`--detail auto` enables automatic internal observation. Omitting `--detail`
+keeps the CLI's native collection mode, which can complete successfully without
+internal dynamic records. For the session API, use `start(detail="auto", ...)`;
+omitting `detail` likewise does not enable automatic internal instrumentation.
+
 Normal arguments after the script name belong to the script. Use a fresh output
 directory for each capture. The script executes once in a supervised worker; the basic command does
 not request an application replay or external counter collection. The CLI

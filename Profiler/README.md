@@ -6,6 +6,16 @@ FlagTree Profiler is a lightweight profiler for Triton, designed to be used for 
 
 ## Installation
 
+For automatic internal profiling on NVIDIA, Enflame or Ascend, follow the
+[matching backend build recipes](../integration/patches/README.md) and then the
+[automatic profiling guide](docs/automatic.md). Those recipes pin the compiler
+and build the required native passes and plugins. Run the CLI with
+`--detail auto` to enable internal observation; without `--detail`, native
+collection remains the default and does not require internal records.
+
+The general integrated build below requires a compiler checkout that already
+contains the matching component integration:
+
 FlagTree Profiler is maintained in the `FlagPrism` submodule and bundled into the
 main FlagTree wheel. Initialize the submodule and build FlagTree once:
 

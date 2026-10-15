@@ -79,16 +79,21 @@ timelines, and portable performance reports. See the
 
 ## Developing with FlagTree
 
-FlagPrism is developed and built together with FlagTree. Download FlagTree,
-initialize the FlagPrism submodule, and build the complete project from the
-FlagTree repository root:
+FlagPrism is built together with a matching FlagTree compiler. For automatic
+internal profiling, use the pinned compiler revision, patches, dependencies and
+build steps in the recipe for your backend:
 
-```bash
-git clone https://github.com/flagos-ai/FlagTree.git
-cd FlagTree
-git submodule update --init --recursive third_party/FlagPrism
-python3 -m pip install . --no-build-isolation
-```
+- [NVIDIA build and installation](integration/patches/nvidia/README.md).
+- [Enflame source build and installation](integration/patches/enflame/README.md).
+- [Ascend source build and installation](integration/patches/ascend/README.md).
+
+Each recipe builds the compiler and component native modules from matching
+source. Checking out an arbitrary FlagTree main revision or replacing only the
+Python files does not install these passes. After installation, follow
+[Automatic internal profiling](Profiler/docs/automatic.md) to profile your own
+unmodified kernel script with `--detail auto` and open its report. Without
+`--detail auto`, the CLI keeps its native collection mode; a successful native
+capture alone does not establish that internal dynamic records were collected.
 
 ## Repository Layout
 
