@@ -1,0 +1,1 @@
+docker exec -i -e METHOD_SOURCE=/workspace/FlagPrism-method-nvidia -e METHOD_COMPILER_SOURCE=/workspace/FlagTree-method-nvidia -e PYTHONPYCACHEPREFIX=/workspace/method-final-pycache-r29 chijin-study-pro6000 /workspace/venv/bin/python -

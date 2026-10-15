@@ -1,0 +1,29 @@
+{
+  "canonical_git_commit": "1cb15d729e4bed52d27c19b996f97b7ab88ffa80",
+  "exact_source_files": 487,
+  "source_freeze_sha256": "5541aba872bea22b5ab432742941730413d3f68953aaba5dbf933e928f59119a"
+}
+{
+  "paths": {
+    "compiler": "/workspace/FlagTree-method-nvidia/python/triton/_C/libtriton.so",
+    "debugger_native": "/workspace/FlagPrism-method-nvidia/Debugger/python/flagtree_debugger/_native.cpython-310-x86_64-linux-gnu.so",
+    "profiler_native": "/workspace/FlagPrism-method-nvidia/Profiler/python/flagtree_profiler/_native.so"
+  },
+  "sha256": {
+    "compiler": "48ced086ce666911562ce1f66855d70305d5816f82cf0f8370ee550dab96a6e6",
+    "debugger_native": "6118c72090d5732abc9ce30b20988387f4144c7d61f08b93ff6a32babf996e4a",
+    "profiler_native": "73cadbefc0b4412b2e319ff4970dd751684e5fdf9dab49b8ab393dbad2c91634"
+  },
+  "no_gpu_kernel_execution": true
+}
+...........................................................s............ [ 16%]
+.............................ss......................................... [ 33%]
+........................................................................ [ 50%]
+........................................................................ [ 67%]
+........................................................................ [ 84%]
+.........s.......................................................        [100%]
+=========================== short test summary info ============================
+SKIPPED [1] FlagPrism-method-nvidia/Profiler/test/test_portable_capture.py:354: Opt-in browser regression
+SKIPPED [2] FlagPrism-method-nvidia/Profiler/test/test_portable_capture.py:1026: Opt-in browser regression
+SKIPPED [1] FlagPrism-method-nvidia/Profiler/test/test_report.py:252: Opt-in Playwright browser regression
+421 passed, 4 skipped in 13.17s

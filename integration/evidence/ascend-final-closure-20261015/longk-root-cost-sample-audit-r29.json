@@ -1,0 +1,42 @@
+{
+  "status": "independent_raw_result_samples_and_cost_arithmetic_passed",
+  "input_sha256": "ed37e02eeea1d982a76827b5eca824c298712f9e274e877ec49904e6a10007cd",
+  "raw_results_checked": 6,
+  "measured_calls": 180,
+  "pairs": [
+    {
+      "batch": 0,
+      "native_us": 311.19,
+      "detailed_us": 310.94,
+      "increase_percent": -0.08033677174716924,
+      "native_host_us": 272.3885,
+      "detailed_host_us": 12464.0595,
+      "detailed_trace_bytes": 228541034,
+      "detailed_export_s": 17.21013732
+    },
+    {
+      "batch": 1,
+      "native_us": 309.74,
+      "detailed_us": 313.76,
+      "increase_percent": 1.2978627235745943,
+      "native_host_us": 267.193,
+      "detailed_host_us": 12404.0445,
+      "detailed_trace_bytes": 221511553,
+      "detailed_export_s": 15.731219266
+    },
+    {
+      "batch": 2,
+      "native_us": 309.88,
+      "detailed_us": 312.58000000000004,
+      "increase_percent": 0.871305021298574,
+      "native_host_us": 271.20799999999997,
+      "detailed_host_us": 12333.913499999999,
+      "detailed_trace_bytes": 221509986,
+      "detailed_export_s": 15.616440872
+    }
+  ],
+  "limits": [
+    "Native SDK collection remains enabled in both task-reference modes.",
+    "This case does not certify native-versus-off device perturbation or end-to-end low cost."
+  ]
+}

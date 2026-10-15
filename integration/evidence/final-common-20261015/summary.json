@@ -1,0 +1,36 @@
+{
+  "runtime_code_commit": "1cb15d729e4bed52d27c19b996f97b7ab88ffa80",
+  "code_files_excluding_markdown": 468,
+  "runtime_python_modules": 52,
+  "results": {
+    "nvidia": {
+      "passed": 421,
+      "skipped": 4,
+      "skip_reasons": "four opt-in browsers",
+      "hardware": "three public request launches: programs0/1/99, scope math, dynamic loss/capacity and cache identity passed",
+      "performance": "explicitly deferred; no new timing experiment"
+    },
+    "enflame": {
+      "passed": 350,
+      "skipped": 5,
+      "skip_reasons": "four browsers and one inherited CUDA/HIP instrumentation hook",
+      "hardware": "six interleaved calls/two actual streams/two specializations passed on final runtime; no overlap or shared-clock claim"
+    },
+    "ascend": {
+      "passed": 407,
+      "skipped": 18,
+      "skip_reasons": "four browsers, eleven GCU-only native guards and three optional actual CANN fixtures (actual fixture CPU checks run on NVIDIA separately)",
+      "hardware": "final semantic selection and prespecified native/all-site long-K6 phases each30calls passed; unchanged core/two native libraries; separate actual LLVM15 plugin contracts and r5 wheel probes"
+    }
+  },
+  "harness_corrections": [
+    "First GCU bootstrap assumed source symlinks; actual overlay was copied. Guard rejected it before tests. All52 actual runtime Python files were backed up/synchronized and verified, unchanged native bytes, then350passed.",
+    "First NVIDIA functional wrapper preloaded a profiler that the workload loads itself. Duplicate-component guard rejected it before GPU calls. Fixed harness loads debugger only; original workload/oracles unchanged; actual three launches passed.",
+    "First Ascend CPU harness used ordinary namespace merging against development overlays. No profiler subpackage resolved. Final harness uses the validated worker source-plus-native loader and verifies every actual chosen Python module byte, then407passed."
+  ],
+  "limits": [
+    "Operator matrices and earlier lifecycle experiments retain their own earlier exact source/native manifests; final code tests do not relabel them as new full-matrix executions.",
+    "Source origin can be partial/ambiguous, CANN shared source/ACSQ epoch remains unverified, GCU/NVIDIA raw clock domains are not assigned invented nanoseconds.",
+    "Cost is not universally low, default traces are bounded and GCU full36 vector cases explicitly declare drops."
+  ]
+}
