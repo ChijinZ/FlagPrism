@@ -1,0 +1,11 @@
+# Root disposition of independent round2
+
+All3 reports independently support functional usability and bounded retrospective utility with plausible Operational Systems contribution; all request substantial finite presentation/evidence repairs. No blocking supported-path defect or unavoidable structural deficit identified. Root verified cited code/raw scopes, rather than treating votes as proof.
+
+Accepted: stronger closest-prior specifics (KPerfIR5.2collaborative publication/5.3waitdistortion and conditional correction; no unsupported Proton absence claim); public-service versus richer Study probes adjacent to diagnosis; source-observer-disabled recovery versus currentversion retained; compact decisionevidence table; 59partialrecords/4compute+4view/localwaitsensitivity concrete counterexamples; bounded request guidance and worked actual site/binary-specific inventory/output walk; exactfinalruntime/version distinction; completeabstract/background/conclusion and replace metricsTODO with actual unavailable scope.
+
+Validation: offline scripts reproduce original rawpublication/capture counts and two distinct GCUbinary inventories, selectedsite29each/no loss/canonicalmath. No new device/performance run; runtime469hashes unchangeda9a28ba, existingfinal483/406/469 regressions remain exact. New PDF/source/doc hashes frozen for fresh3read-only reviews. Draft makes no accurateunperturbedwait/sharedclock/lowendtoendcost claim.
+
+Table-format requests interpreted by user preference: prior user explicitly rejected capability matrices. We added a single-column evidence-to-decision table plus concrete bounded request/cost paragraphs and worked public workflow, rather than reintroducing a broad capability matrix. Usable-selection prerequisites and negative costs remain in main paper. No newfeature catalog or artificialbenchmark. No claim of automatic site discovery; actualsite29fixture validated perbinary.
+
+One reviewer treated older runtimea9a28ba documentation as frozen rather than laterdocscommit5e5c953; next manifest explicitly pins documentation bytes and releasecommit separately from runtime. It is a packet/version ambiguity corrected in the new freeze, not a retracted runtime feature. Significance/acceptance risk remains; completion cannot be obtained by relabeling threeadapters or tests as novelty.

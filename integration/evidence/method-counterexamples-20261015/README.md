@@ -1,0 +1,5 @@
+# Data-only counterexamples and worked workflow
+
+Run retained scripts from workspace root. These read stored original data, never import or execute profiler/device code. Publication: historical before-repair archive/raw SHA,59 records with only first4of16words, failed nonzero-clock oracle. Missing fields are not measured zero time. Contexts: current original four-launch capture yields4canonicalcompute tasks+4retaineddispatchviews; counting all8 ascompute is an illustrative offline counting error, not a measured legacy join.
+
+Workflow replay reads each original GCU specializations inventory independently and checks requested store29/program0/capacity64, one verified observation/no drops/unknown-frequencyclock and math/input/canary outputs. Distinct binary IDs happen to use identical numeric store29: IDs cannot be transferred without rechecking. The hardware fixture is a retrospective known-site regression, not an automatic discovery API or measured onboarding. Complete command/selection/output walkthrough is in Profiler/docs/semantic_profiling.md. Original performance versions remain unchanged.

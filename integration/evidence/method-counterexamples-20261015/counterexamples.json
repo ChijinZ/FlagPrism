@@ -1,0 +1,37 @@
+{
+  "publication": {
+    "archive_sha256": "bbaa004719f023569295234541c3fb687b4e908683307b8dc1fb2b7363f7552e",
+    "raw_sha256": "86e3c5a74a0a5242c68a93d52ef084985ccae2eb0d6045405056ce88ab3bfc39",
+    "records": 59,
+    "first_record_16xu32": [
+      7,
+      8,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "only_first_four_word_slice_published": true,
+    "known_failure": "nonzero start_tick oracle failed; zero fields are missing publication, not measured zero latency",
+    "scope": "historical pre-repair capture; not a final-runtime failure"
+  },
+  "context_views": {
+    "source_sha256": "1be7119b9a7917bbc320d9f2676dd7d04769e17b38c66b3299383d6d541eeae2",
+    "canonical_compute_tasks": 4,
+    "retained_dispatch_context_views": 4,
+    "source_associated_tasks": 4,
+    "incorrect_if_all_eight_views_counted_as_compute": 8,
+    "scope": "offline counting counterexample from one retained four-launch capture, not another hardware experiment or measured legacy join"
+  },
+  "wait_sensitivity": "See original 120 per-call rows and paired modes in integration/evidence/ascend-wait-fidelity-20261015; mode-dependent medians are not local-error bounds."
+}

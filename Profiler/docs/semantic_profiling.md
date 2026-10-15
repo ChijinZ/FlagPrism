@@ -324,3 +324,59 @@ wait accuracy. The independent minimal two-read control produced 64 zero-tick
 spans with advancing start counters: unresolved resolution, not zero cost or a
 fusion-error bound. Evidence and original version identities are retained in
 `integration/evidence/ascend-wait-fidelity-20261015/`.
+
+## Worked bounded Softmax diagnosis (retrospective)
+
+Use the pinned GCU container/compiler integration in the evidence manifests.
+This is a reproducible fixture walkthrough, not an automatic site selector or
+an onboarding study. Start with a small bounded discovery capture (`sites=None`)
+on the intended specialization; inspect its compiled tracked-operation table.
+An all-site discovery request still instruments all sites and may be costly or
+fail compilation on larger kernels. The tested narrow request can instead
+reuse a retained inventory only after checking its exact binary/configuration.
+Never transfer a numeric site ID from another binary without this check.
+
+The recorded fixture writes `compiled-metadata.json` beside its bundle. Inspect
+its inventory as follows (run inside the existing developer Docker):
+
+```python
+import json
+metadata = json.load(open("compiled-metadata.json"))
+stores = [row["opId"] for row in metadata["debug_tracked_table"]
+          if row["mlirOpName"] == "tt.store"]
+print(stores)  # [29] for each of the two recorded specializations
+```
+
+For that binary, request `programs=(0,), sites=(29,),
+max_events_per_instance=64` with the public Enflame instrumentation backend.
+The existing canonical-input fixture executes this exact start/launch/finalize
+path, checks original CPU tolerances, unchanged inputs and output canaries,
+and exports both the inventory and the result:
+
+```bash
+FLAGPRISM_TEST_ENFLAME=1 \
+FLAGPRISM_ENFLAME_CANONICAL_INPUT_DIR=/workspace/chijin-study-canonical-inputs-r007 \
+python -m pytest -q \
+  Profiler/test/test_enflame_softmax_diagnostic_hardware.py
+```
+
+Use a new output/temp directory when retaining another run. Read
+`ai/execution.json` for the actual binary and `mapping.work_item_count`,
+barrier/storage sites and symbolic operand ownership. Read
+`ai/observations.json` for effective program/site, verified association,
+committed/attempted/drop fields and clock conversion status. The recorded
+four-item capture exposes two shared scratch buffers, two barriers and useful
+ownership 256/256/256/1; the one-item capture removes that exchange. Each retains
+one associated store observation with no drops; ticks have unknown frequency.
+The structural clue suggests testing fewer workers, not assigning barrier cost
+from the store interval.
+
+Changing the work-item request creates a distinct binary. The retained replay
+rechecks each inventory independently: both happen to assign the store numeric
+ID29, but their binary-qualified site identities differ. The independent
+source-observer-disabled recovery uses native collection held constant and
+three batches of30 calls, yielding1.615–1.621x for four→one. A two-item control
+retains barriers yet nearly reaches one-item performance. These retained
+performance captures have their original version; rerunning the functional
+fixture is not a new performance experiment. A data-only replay and exact
+hashes are in `integration/evidence/method-counterexamples-20261015/`.
