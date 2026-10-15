@@ -10,7 +10,9 @@ pytestmark = pytest.mark.skipif(
     reason="requires selected real Enflame hardware")
 
 
-def test_interleaved_two_streams_preserve_launch_identity(tmp_path):
+@pytest.mark.parametrize('automatic', [False, True],
+                         ids=['explicit_request', 'automatic'])
+def test_interleaved_two_streams_preserve_launch_identity(tmp_path, automatic):
     import torch
     import torch_gcu  # noqa: F401
     import triton
@@ -49,11 +51,15 @@ def test_interleaved_two_streams_preserve_launch_identity(tmp_path):
                        device="gcu:0"))
     torch.gcu.synchronize(0)
     output = tmp_path / "bundle"
-    session = profiler.start(str(output),
-                             backend="enflame",
-                             hook="instrumentation",
-                             observation_request=ObservationRequest(
-                                 programs=(1, ), max_events_per_instance=64))
+    options = {
+        'detail': 'auto'
+    } if automatic else {
+        'hook':
+        'instrumentation',
+        'observation_request':
+        ObservationRequest(programs=(1, ), max_events_per_instance=64)
+    }
+    session = profiler.start(str(output), backend="enflame", **options)
     host_receipts, kernels = [], {}
     try:
         for index, (stream_index, scale) in enumerate(schedule):
@@ -148,7 +154,8 @@ def test_interleaved_two_streams_preserve_launch_identity(tmp_path):
         captures = {e["capture_id"] for e in events}
         assert len(captures) == 1 and not captures & seen_captures
         seen_captures.update(captures)
-        assert all(e["program"] == 1 and e["actor"] == 0 for e in events)
+        assert all(e["program"] == (0 if automatic else 1) and e["actor"] == 0
+                   for e in events)
         receipt.update(native_stream_id=event["stream_id"],
                        native_task_id=event["task_id"],
                        correlation_id=event["correlation_id"],

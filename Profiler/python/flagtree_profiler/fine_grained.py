@@ -95,6 +95,8 @@ def normalize(document):
                             'sampling', 'association_evidence')
             }
             row['actor'] = event.get('actor', event.get('actor_slot'))
+            row['compiler_actor'] = compiler.get(
+                'compiler_actor') if verified else None
             row.update(source_locations=locations,
                        source_location_candidates=candidates,
                        operation=origin.get(
@@ -151,7 +153,12 @@ def _plans(report, captures):
                             'identity':
                             f'late_llvm:{manifest.get("module_sha256")}:{actor["function"]}'
                             if manifest.get('module_sha256')
-                            and actor.get('function') else None
+                            and actor.get('function') else None,
+                            'runtime_actor_binding':
+                            manifest.get('runtime_actor_binding') if
+                            (manifest.get('runtime_actor_binding')
+                             or {}).get('function') == actor.get('function')
+                            else None
                         } for actor in manifest.get('actors', [])],
                         'module_sha256':
                         manifest.get('module_sha256'),
@@ -193,9 +200,18 @@ def render(data):
     rows = []
     for row in data['records']:
         clock = row['clock'] or {}
+        actor_label = str(row['actor'])
+        compiler_actor = row.get('compiler_actor') or {}
+        binding_proof = compiler_actor.get('binding_proof') or {}
+        if (binding_proof.get('runtime_slot_status')
+                == 'verified_against_raw_record_and_segment'
+                and binding_proof.get('observed_actor_slot') == row['actor']
+                and binding_proof.get('status')
+                == 'verified_compiler_emission_manifest'):
+            actor_label += f' · {compiler_actor.get("kind")} / {compiler_actor.get("function")} (verified compiler binding)'
         values = [
             row['operation'], row['invocation_id'], row['binary_id'],
-            row['program'], row['actor'], row['site'], row['semantic'],
+            row['program'], actor_label, row['site'], row['semantic'],
             row['occurrence'], row['start_tick'], row['end_tick'],
             row['duration_ticks'],
             clock.get('domain'),

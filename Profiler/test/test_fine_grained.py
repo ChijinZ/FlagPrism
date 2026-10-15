@@ -159,13 +159,64 @@ def test_backend_plans_keep_distinct_binary_and_actor_provenance(view):
     assert plans[1]['compiler_actors'] == [
         dict(function='compiler_function',
              actor_kind='AIV',
-             identity='late_llvm:actor-sha:compiler_function')
+             identity='late_llvm:actor-sha:compiler_function',
+             runtime_actor_binding=None)
     ]
     assert plans[2]['plan_kind'] == 'control'
     assert plans[2]['binary_id'] == plans[1]['binary_id']
     assert plans[2]['module_sha256'] == plans[1]['module_sha256']
     assert plans[2]['plan']['inventory'][0]['site_id'] == 9
     assert plans[2]['plan']['max_sites'] is None
+
+
+@pytest.mark.parametrize('verified', [True, False])
+def test_actor_proof_is_preserved_only_for_verified_binary_association(
+        view, verified):
+    data = document(verified)
+    event = data['groups'][0]['observations'][0]
+    event['actor'] = 2
+    proof = dict(status='verified_compiler_emission_manifest',
+                 observed_actor_slot=2,
+                 runtime_slot_status='verified_against_raw_record_and_segment')
+    compiler_actor = dict(id='late_llvm:module:function',
+                          kind='AIV',
+                          function='function',
+                          binding_proof=proof)
+    event['compiler_site']['compiler_actor'] = compiler_actor
+    normalized = view.normalize(data)
+    row, = normalized['records']
+    assert row['actor'] == 2
+    assert row['compiler_actor'] == (compiler_actor if verified else None)
+    page = view.render(normalized)
+    assert ('AIV / function (verified compiler binding)' in page) is verified
+    if verified:
+        row['compiler_actor']['binding_proof']['observed_actor_slot'] = 1
+        assert 'verified compiler binding' not in view.render(normalized)
+
+
+@pytest.mark.parametrize('function',
+                         ['compiler_function', 'different_function'])
+def test_plan_binding_requires_the_declared_compiler_function(view, function):
+    binding = dict(function=function,
+                   actor_kind='AIV',
+                   module_sha256='module',
+                   compile_id='compile',
+                   layout='actor_header4_record8_v1')
+    manifest = dict(
+        module_sha256='module',
+        actors=[dict(function='compiler_function', actor_kind='AIV')],
+        runtime_actor_binding=binding,
+        control_plan=dict(inventory=[]))
+    handoff = dict(compile_id='compile', artifacts=[dict(metadata=manifest)])
+    report = {
+        'binaries': [
+            dict(id='binary',
+                 compiler_metadata=dict(flagprism_ascend_handoff=handoff))
+        ]
+    }
+    entry, = view._plans(report, [])['plans']
+    actual = entry['compiler_actors'][0]['runtime_actor_binding']
+    assert actual == (binding if function == 'compiler_function' else None)
 
 
 def test_control_checkpoint_names_actual_compiler_structure(view):
