@@ -1,0 +1,47 @@
+{
+  "yapf": "0.43.0",
+  "ruff": "ruff 0.9.1",
+  "files": [
+    {
+      "file": "tests/ascend/acceptance.py",
+      "new_file": false,
+      "baseline": "42bd4ae",
+      "before_sha256": "69ce5bdb125bcc9623e9f9480e89db147e05d5a65a2369d41e519b2c21e9e442",
+      "after_sha256": "87839b1f5ecb09c457f66da869c081340e6f72f24f1048976d7f0c7c9e05eb90",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          128,
+          130
+        ],
+        [
+          229,
+          288
+        ],
+        [
+          291,
+          294
+        ],
+        [
+          299,
+          299
+        ]
+      ],
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 60
+    },
+    {
+      "file": "Profiler/test/test_ascend_acceptance_plans.py",
+      "new_file": true,
+      "baseline": null,
+      "before_sha256": "6417bc3dbad66abc0bcbfa9bdac4a687d5bc008e3da3e301e09449b6b5c08681",
+      "after_sha256": "0c099e4d445cdd6d28c91d8ef034db33bfef64c92fe9d823d8afc60b2137fa0a",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": null,
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    }
+  ]
+}

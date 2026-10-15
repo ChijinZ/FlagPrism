@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-15",
+  "scope": "Bounded read-only CANN9 installed source + official primary documentation + existing retained capture anchors; not a GPU experiment or review",
+  "environment": {
+    "ssh": "zhiyuan_ascend",
+    "docker": "chijin_v3.5.x",
+    "SDK": "/usr/local/Ascend/cann-9.0.0",
+    "GPU_access": false,
+    "source_modified": false
+  },
+  "strongest_supported_conclusion": {
+    "native_ACSQ_reported_frame": "Supported: the inspected SDK decoder treats these ACSQ raw packet counters as device/capture system-count inputs to one per-device affine timeline conversion. No per-core or actor offset is passed to or applied by the inspected conversion function. This is a software processing contract for SDK-produced packet timestamps.",
+    "source_SYS_CNT_to_ACSQ_same_frame": "Not established by inspected evidence. The source counter is explicitly MOV SYS_CNT via installed GetSystemCycleImpl, but no inspected SDK statement or source bridge equates that register origin/reset/frame to ACSQ args[4] and the dev_start cntvct anchor.",
+    "combined_SDK_reported_frame_for_source_and_ACSQ": "Cannot certify at present; may describe a candidate interpretation only, with source/native frame relationship unverified.",
+    "physical_oscillator_required": false,
+    "reason": "The missing condition is an SDK-level origin/frame relationship, not proof of a physical oscillator. Applying a uniform converter to inputs does not by itself certify that all producers satisfy the converter input-domain precondition.",
+    "status_recommendation": "Keep native SDK task identity independently verified and source local duration supported; do not promote source/native or cross-actor clocks to verified_shared."
+  },
+  "source_evidence": [
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/profiler/profiler_tool/analysis/profiling_bean/stars/acsq_task.py",
+      "sha256": "931ce8e1f69f45e271217a844f1cf698e0ef6d4eda012e30d252bb8a2bc777c5",
+      "locations": {
+        "29-41": "ACSQ raw args[4] becomes _sys_cnt; acc_id/acsq_id decoded independently",
+        "75-81": "sys_cnt property calls InfoConfReader.time_from_syscnt(_sys_cnt)"
+      }
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/profiler/profiler_tool/analysis/common_func/info_conf_reader.py",
+      "sha256": "195d542a7b7b46f62fedde0ed7de1e6cdfc56d8d54b967fb80a942d91d0c17b5",
+      "locations": {
+        "222-237": "get_freq reads per-device hwts_frequency with unit conversion",
+        "266-285": "dev_cnt anchored from dev_start cntvct; timestamp/duration conversion functions",
+        "512-538": "reads DEVICE_SYSCNT from dev_start log",
+        "548-568": "host monotonic/cntvct anchor read from host_start log"
+      }
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/profiler/profiler_tool/analysis/msparser/stars/stars_log_parser.py",
+      "sha256": "25ca90c41706cbb7fed193d0df294cc3b5a284a37cb27680dfb445158bda5948",
+      "locations": {
+        "37-58": "stars log calculator per-project/device configuration; 64-byte default, 32-byte chip-v6",
+        "70-96": "parse stars soc log and flush dispatched parsers"
+      }
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/profiler/profiler_tool/analysis/msparser/stars/acsq_task_parser.py",
+      "sha256": "e8a58c7f759203475345ae458abe57d917e6823f46efff8f5e7a44f12361eb05",
+      "locations": {
+        "23-41": "selects AcsqTask decoder for non-v6, parameterized by result_dir"
+      }
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/profiler/profiler_tool/analysis/profiling_bean/basic_info/device_info.py",
+      "sha256": "a6af2fc35cf1e1fa36cf8b828571a823ada6e99d3944e4e32381b790ef3e004f",
+      "locations": {
+        "21-33": "DeviceInfo key vocabulary",
+        "44-66": "reads device ID and counts from InfoConfReader; not a source-to-ACSQ clock contract"
+      }
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/aarch64-linux/asc/impl/basic_api/dav_c220/kernel_operator_sys_var_impl.h",
+      "sha256": "0a889a0604d0383b38045c8c0ee38361ab6ce42277507f4ecb0d0e53d524b948",
+      "locations": {
+        "87-98": "GetSystemCycleImpl real-device branch reads MOV SYS_CNT; CPU debug branch instead uses CLOCK_REALTIME"
+      }
+    },
+    {
+      "path": "/usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/profiler/analysis/_profiler_config.py",
+      "sha256": "781f21397da785be39f752d58116426954f8f410a3c8c6752523ec6ddd2d8587",
+      "locations": {
+        "96-104": "separate host syscnt conversion",
+        "107-134": "CPU Frequency and host_start.log Host cntvct/clock_monotonic_raw anchors; this is not device SYS_CNT evidence"
+      }
+    }
+  ],
+  "conversion_contract": {
+    "raw_input": "ACSQ args[4] stored unchanged in _sys_cnt",
+    "timestamp_formula": "((sys_cnt - dev_cnt_anchor) / reported_hwts_frequency) * time_unit_scale + host_monotonic_anchor * time_unit_scale (using SDK frequency units)",
+    "duration_formula": "delta_syscnt / reported_hwts_frequency * time_unit_scale",
+    "anchor_scope": "Loaded from the result/capture device configuration; scalar per-device/capture values in inspected InfoConfReader instance.",
+    "actor_offsets": "None in the inspected conversion function; no actor/core argument. Absence of such a correction does not prove physical zero offset or that arbitrary injected source readings are supported inputs.",
+    "host_counter_distinction": "torch_npu host syscnt conversion uses CPU Frequency and Host cntvct; must not mix with device hwts_frequency or source SYS_CNT."
+  },
+  "actual_retained_capture": {
+    "root": "/tmp/flagprism-method-ascend/mix-smoke-r2/capture/raw/native/cann_sdk/PROF_000001_20261015132848809_00260032EEFIGLCM",
+    "device_id": 4,
+    "hwts_frequency_MHz": "50.000000",
+    "dev_start_cntvct": 151636534835884,
+    "dev_start_clock_monotonic_raw": 3032455306267080,
+    "dev_start_sha256": "cb846b6900ad9f50d1279347b8dbae84b543f01393c1f103b25ea5f579c1ec9f",
+    "info_json_sha256": "8a8e7e3fa1d684d2aef496e481de16e347fd8747f461eba7f0354e3b744b7a69",
+    "bounds": "Anchors and frequency are reported provenance, not source/native frame equality evidence."
+  },
+  "requested_SyscntConversion_status": {
+    "finding": "No SyscntConversion class/name located in the bounded 740-file installed tools/profiler source scan or its small JSON definitions; no same-name table in the specific retained mix-r2 msprof DB inspected.",
+    "DeviceInfo_model_path": "tools/profiler/profiler_tool/analysis/msmodel/device_info/device_info_model.py is absent in this installation; actual available DeviceInfo bean is recorded above.",
+    "limitation": "This does not claim no SyscntConversion exists elsewhere or in another SDK exporter. Its schema/implementation is not certified by this audit."
+  },
+  "official_primary_sources": [
+    {
+      "url": "https://www.hiascend.com/doc_center/source/zh/canncommercial/800/apiref/ascendcopapi/atlasascendc_api_07_0282.html",
+      "title": "GetSystemCycle(ISASI)",
+      "locator": "Function description / return value / supported products; extracted page lines2-25",
+      "verified_content": "System cycle value, 50MHz conversion, A2 product applicability. No ACSQ field-origin, epoch, reset or cross-actor equality contract stated.",
+      "version_boundary": "8.0 document, consistent with installed c220 implementation; not represented as a complete CANN9 profiler contract."
+    },
+    {
+      "url": "https://www.hiascend.com/document/detail/zh/canncommercial/900/API/ascendcopapi/atlasascendc_api_07_0282.html",
+      "finding": "Search identifies GetSystemCycle CANN9 page, but direct web fetch timed out; static doc_center variant inaccessible. No unseen text used."
+    },
+    {
+      "url": "https://www.hiascend.com/document/detail/zh/CANNCommunityEdition/910/API/ascendcopapi/docs/api/SIMD-API/%E5%9F%BA%E7%A1%80API/%E5%B7%A5%E5%85%B7%E6%8E%A5%E5%8F%A3/%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90%E4%B8%8E%E5%8F%98%E9%87%8F/GetSystemCycle_ISASI.md",
+      "finding": "Direct fetch rendered portal navigation, not substantive API content; not used to infer counter-domain guarantees."
+    }
+  ],
+  "missing_conditions": [
+    "An official register/packet definition or implementation bridge explicitly identifying ACSQ timestamp source and its relationship to the c220 SYS_CNT register, including origin/reset/frame scope.",
+    "A version/device-appropriate documented SDK relationship or separate calibration evidence for any source-to-native offset before using source and native timestamps in a joint timeline.",
+    "If multiple AIC/AIV actors are overlaid, an SDK guarantee or measurement bound appropriate to cross-actor reported frame alignment; current task identity alone does not supply it."
+  ],
+  "not_proofs": [
+    "Same syscnt name",
+    "Same50MHz nominal frequency",
+    "Source samples numerically contained in native task bounds",
+    "Uniform timestamp-conversion code",
+    "Independent verified native task/source invocation identity"
+  ],
+  "search_limits": {
+    "source_location_pass": "One bounded installed tools/profiler scan, followed only located converter/decoder files and metadata-located torch_npu profiler config.",
+    "not_performed": [
+      "No new CPU calibration tests, GPU work, clock fit, compiler builds or formal source changes.",
+      "No binary-string inference or packet renormalization; no failed broad search repeated."
+    ]
+  },
+  "evidence": [
+    {
+      "path": "artifacts/method-run/ascend/reported-counter-domain-source-scan.json",
+      "sha256": "58e63cfd6270da242e41e63e231ab04d018729b9eebb8ef6b3e876aaf55f0dbb"
+    },
+    {
+      "path": "artifacts/method-run/ascend/reported-counter-domain-selected-source.txt",
+      "sha256": "3db8fa03c2642729266aa96c40169da381a0d4ccd674d2e4931a906fb76f5620"
+    },
+    {
+      "path": "artifacts/method-run/ascend/reported-counter-domain-anchor-source.txt",
+      "sha256": "cdd9bc22868a78e87a5982a3e93554a430c3e2ace664da388217692c9bb18e2b"
+    },
+    {
+      "path": "artifacts/method-run/ascend/reported-counter-domain-capture-anchors.json",
+      "sha256": "5270fcd640e3e1a24ae37202959999fa87d512cfc100668ffa288d82bb46bb46"
+    }
+  ]
+}

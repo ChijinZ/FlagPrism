@@ -1,0 +1,17 @@
+{
+  "purpose": "Required held-out shape/config generalization through the same public profiler service, independent of the fixed-shape RMS T5 perturbation plan.",
+  "observed_plan_mismatch": "The old README described3 shapes×2 configs, but existing --suite t5 actually generates only RMSNorm127x769 variant0×3 batches×3 modes. Preserve that original run as fixed-shape T5; do not relabel it as held-out generalization.",
+  "new_suite": "heldout",
+  "operator": "rmsnorm",
+  "shapes": [[32,256],[256,1024],[127,769]],
+  "variants": [0,1],
+  "variant_semantics": {"0": {"ROWS":1,"num_warps":1,"num_stages":1},"1":{"ROWS":1,"num_warps":4,"num_stages":1}},
+  "modes": ["off","native","detailed"],
+  "batches": 1,
+  "total_requests": 18,
+  "measurement": {"warmup":3,"samples":3,"per_actor_capacity":256,"device":4,"program":0},
+  "oracle": "CPU in same Ascend Docker: x*rsqrt(mean(x*x, axis=-1, keepdim=True)+1e-5)*weight; unchanged atol .0005/rtol .002; exact input bytes and both output canaries verified.",
+  "inputs": "Existing frozen canonical rows-32x256, rows-256x1024, rows-127x769 input files from the operator matrix; original hashes retained and independently verified in every result.",
+  "required_evidence": ["18 unchanged mathematical results", "all12 native/detailed measured task identities verified", "all6 detailed traces genuinely populated", "actual raw bytes/overflow/source-clock fidelity retained"],
+  "execution_order": "After the unchanged108-request operators and original9-request fixed-shape T5 finish, add general plan builder/config overrides to existing acceptance.py; Docker CPU plan contracts; then run this18-request heldout suite and the3 fixed long-K Study configurations."
+}

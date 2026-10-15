@@ -125,8 +125,9 @@ def worker(plan, output):
         m,n,k=shape;a,da=read(0,(m,k),torch.float16);b,db=read(1,(k,n),torch.float16);bias,dbias=read(2,(n,))
         expected=a.float()@b.float()
         if operator=='gemm_bias_gelu':expected=torch.nn.functional.gelu(expected+bias,approximate='tanh')
-        bm=16 if variant==0 else 32;bn=16;bk=16;stages=variant+1;warps=4
-        config={'BM':bm,'BN':bn,'BK':bk,'num_stages':stages,'num_warps':warps}
+        config = resolve_matmul_config(plan)
+        bm, bn, bk = (config[key] for key in ('BM', 'BN', 'BK'))
+        stages, warps = (config[key] for key in ('num_stages', 'num_warps'))
         grid=(triton.cdiv(m,bm),triton.cdiv(n,bn))
         def invoke():return workloads.matmul[grid](da,db,dbias,result,m,n,k,bm,bn,bk,operator=='gemm_bias_gelu',num_stages=stages,num_warps=warps)
         atol,rtol=.002,.02
@@ -225,21 +226,77 @@ def worker(plan, output):
             dump(output/'result.json',record)
 
 
+def resolve_matmul_config(plan):
+    """Explicit case overrides retain the ordinary mathematical kernel."""
+    variant = plan['variant']
+    config = {
+        'BM': 16 if variant == 0 else 32,
+        'BN': 16,
+        'BK': 16,
+        'num_stages': variant + 1,
+        'num_warps': 4
+    }
+    if 'config' not in plan:
+        return config
+    override = plan['config']
+    if not isinstance(override, dict) or set(override) - set(config):
+        raise ValueError(
+            'matmul config must be a dictionary of supported tile/stage/warp keys'
+        )
+    config.update(override)
+    for key, value in config.items():
+        if type(value) is not int or value <= 0:
+            raise ValueError('matmul config values must be positive integers')
+        if key != 'num_stages' and value & (value - 1):
+            raise ValueError(
+                'matmul tile and warp values must be powers of two')
+    return config
+
+
+def build_plans(suite, device):
+    """Keep generalization and fixed-shape perturbation as separate contracts."""
+    if suite not in ('operators', 't5', 'heldout'):
+        raise ValueError('unsupported acceptance suite')
+    plans = []
+    rng = random.Random(1729)
+    for operator in OPERATORS if suite == 'operators' else ('rmsnorm', ):
+        if suite == 'operators':
+            family = 'gemm' if operator.startswith(
+                'gemm') else 'transpose' if operator == 'transpose' else 'rows'
+            shapes = SHAPES[family]
+        else:
+            shapes = [(127, 769)] if suite == 't5' else SHAPES['rows']
+        for shape in shapes:
+            for variant in (0, ) if suite == 't5' else (0, 1):
+                for batch in range(3 if suite == 't5' else 1):
+                    modes = list(MODES)
+                    rng.shuffle(modes)
+                    for mode in modes:
+                        plans.append({
+                            'operator': operator,
+                            'shape': list(shape),
+                            'variant': variant,
+                            'batch': batch,
+                            'mode': mode,
+                            'device': device,
+                            'capacity': 256,
+                            'warmup': 3,
+                            'samples': 30 if suite == 't5' else 3
+                        })
+    return plans
+
+
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--output',type=Path,required=True);parser.add_argument('--worker',type=Path)
-    parser.add_argument('--suite',choices=('operators','t5'),default='operators');parser.add_argument('--device',type=int,default=4)
+    parser.add_argument('--suite',
+                        choices=('operators', 't5', 'heldout'),
+                        default='operators')
+    parser.add_argument('--device', type=int, default=4)
     parser.add_argument('--timeout',type=int,default=300);args=parser.parse_args()
     if args.worker:
         plan=json.loads(args.worker.read_text());args.output.mkdir(parents=True,exist_ok=False);worker(plan,args.output);return
     args.output.mkdir(parents=True,exist_ok=True)
-    plans=[];rng=random.Random(1729)
-    for operator in OPERATORS if args.suite=='operators' else ('rmsnorm',):
-        shapes=SHAPES['gemm' if operator.startswith('gemm') else 'transpose' if operator=='transpose' else 'rows'] if args.suite=='operators' else [(127,769)]
-        for shape in shapes:
-            for variant in (0,1) if args.suite=='operators' else (0,):
-                for batch in range(1 if args.suite=='operators' else 3):
-                    modes=list(MODES);rng.shuffle(modes)
-                    for mode in modes:plans.append({'operator':operator,'shape':list(shape),'variant':variant,'batch':batch,'mode':mode,'device':args.device,'capacity':256,'warmup':3,'samples':3 if args.suite=='operators' else 30})
+    plans = build_plans(args.suite, args.device)
     source=Path(os.environ['METHOD_SOURCE'])
     provenance={'source_hashes':{str(path.relative_to(source)):hashlib.sha256(path.read_bytes()).hexdigest()
                  for path in [Path(__file__).resolve(),Path(__file__).with_name('heldout_workloads.py').resolve(),source/'tests/nvidia/reference_workloads.py']},

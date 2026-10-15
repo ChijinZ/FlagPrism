@@ -1,0 +1,17 @@
+{
+  "reason": "After detailed long-K reproduction, measure the same three fixed configurations with native capture and the source observer off. This checks P/R direction without confusing fewer logged events after BK changes with less original AIC work. Keep all outcomes, including reversed directions or large perturbation.",
+  "phase": "Added after detailed3 pass and before collecting any native comparator data; not a new3x30 performance campaign.",
+  "detailed_plan_reference": "study-formal-preregistered-r1.json",
+  "configs": [
+    {"name":"P32_K32","BM":32,"BN":32,"BK":32,"num_stages":4,"num_warps":4},
+    {"name":"R_K32_K256","BM":32,"BN":32,"BK":256,"num_stages":4,"num_warps":4},
+    {"name":"R_KMN64_K256","BM":64,"BN":64,"BK":256,"num_stages":4,"num_warps":4}
+  ],
+  "operator":"gemm_bias_gelu",
+  "shape":[512,512,4096],
+  "mode":"native",
+  "warmup":3,
+  "samples":3,
+  "input_and_oracle":"Exactly the original canonical3 SHA and CPU GELU-tanh float32 oracle, atol .002/rtol .02, plus unchanged input/canary checks from the detailed plan.",
+  "limits":["Three measured calls per config provide short functional comparison, not a variance-certified optimization benchmark.","No off isolated task baseline or new NVIDIA performance data.","Native task intervals only after exact source identity; full detailed logger perturbation must be reported."]
+}
