@@ -1477,6 +1477,12 @@ def _default_launch_prepare_hook(
                     "collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
                 exported_runtime_metadata[
                     "selection_stage"] = "semantic_output_filter_after_capture"
+                exported_runtime_metadata[
+                    "program_selection_stage"] = "device_record_publication_predicate"
+                exported_runtime_metadata[
+                    "semantic_selection_stage"] = "semantic_output_filter_after_capture"
+                exported_runtime_metadata[
+                    "program_selection_limit"] = "counter_reads_may_execute_for_unselected_programs"
             else:
                 exported_run = _finalize_exported_run(exported_run,
                                                       metadata_dict)

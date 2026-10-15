@@ -1,0 +1,14 @@
+{
+  "scope": "Additive descriptive metadata only; retains legacy selection_stage; no kernel/logger/ABI change",
+  "source": "Debugger/python/flagtree_debugger/api.py",
+  "sha256": "25b66f69afce3f1b04d3b10c0957ad9e90c056d7722f029496b6412f41073d76",
+  "docker": "chijin-study-pro6000 / Python3.10",
+  "tests": "18 passed; existing decode/reconstruction/lifecycle contracts; no GPU execution",
+  "compiler_oracle": "Original fresh MIX-r2 AIC adapted-0.ll SHA95d73136da70e55b83cacead265d3cf7f77d42f539a8db73a8923811a3465599, blockIdx predicate L44; AIV predicate L349. Counter read precedes publication predicate.",
+  "semantics": [
+    "program selection predicates device record publication",
+    "semantic type filtering occurs after capture",
+    "counter reads may still execute for unselected programs"
+  ],
+  "old_matrix": "Original Ascend 108 operators+9T5 use previous metadata; preserve their raw artifacts. No claim that this metadata addition removes instrumentation cost."
+}
