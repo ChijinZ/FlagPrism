@@ -59,7 +59,7 @@ def main():
         except (OSError, ValueError) as error:
             errors.append(repr(error))
         while True:
-            data = stream.read(65536)
+            data = stream.read1(65536)
             if not data:
                 break
             count += len(data)
@@ -95,6 +95,8 @@ def main():
             'sha256': digest.hexdigest()
         }
 
+    process = None
+    threads = []
     try:
         process = subprocess.Popen(command,
                                    stdout=subprocess.PIPE,
@@ -105,10 +107,10 @@ def main():
         threads = [
             threading.Thread(target=drain,
                              args=(process.stdout, 'stdout',
-                                   sys.stdout.buffer)),
+                                   sys.stdout.buffer), daemon=True),
             threading.Thread(target=drain,
                              args=(process.stderr, 'stderr',
-                                   sys.stderr.buffer))
+                                   sys.stderr.buffer), daemon=True)
         ]
         for thread in threads:
             thread.start()
@@ -142,7 +144,25 @@ def main():
                                    '; '.join(errors))
         return code if code >= 0 else 128 - code
     except BaseException as error:
-        receipt.update(state='failed', error=repr(error))
+        # A cancelled wrapper must not detach a continuing SDK compilation.
+        # Preserve the original exception even when cleanup itself fails.
+        if process is not None:
+            try:
+                try:
+                    os.killpg(process.pid, signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+                process.wait(timeout=10)
+            except Exception as cleanup_error:
+                receipt['cleanup_error'] = repr(cleanup_error)
+            for thread in threads:
+                if thread.ident is not None:
+                    thread.join(timeout=2)
+            receipt['sdk_process_returncode'] = process.returncode
+        receipt.update(state='failed', error=repr(error),
+                       elapsed_s=time.monotonic() - started)
+        if errors:
+            receipt['capture_errors'] = errors
         raise
     finally:
         receipt_path.write_text(json.dumps(receipt, indent=2))
