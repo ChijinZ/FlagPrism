@@ -89,6 +89,14 @@ class SourceCatalog:
         binaries = json.loads(path.read_text()) if path.is_file() else []
         for binary in binaries:
             source = binary.get('source') or {}
+            for snapshot in binary.get('source_snapshots', []):
+                if snapshot.get('status') == 'captured':
+                    self._exported(binary.get('id'), snapshot.get('file'),
+                                   snapshot.get('snapshot_file'),
+                                   snapshot.get('sha256'), 'file_snapshot')
+                else:
+                    self._note(binary.get('id'), snapshot.get('file'),
+                               'compiler_referenced_snapshot_unavailable')
             self._exported(binary.get('id'), source.get('path'),
                            source.get('file_snapshot_file'),
                            source.get('file_sha256'), 'file_snapshot')

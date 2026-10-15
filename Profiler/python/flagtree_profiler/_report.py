@@ -997,6 +997,10 @@ def write_bundle(report, source, output, context=None, *, complete=True):
             source[
                 "line_semantics"] = "Capture-machine decorated function definition start, not necessarily the def line"
             entry["source"] = source
+            if 'source_snapshots' in entry:
+                from .source_capture import export_metadata_sources
+                entry['source_snapshots'] = export_metadata_sources(
+                    entry['source_snapshots'], output)
             binaries.append(entry)
         write("ai/binaries.json", binaries)
         mappings = [

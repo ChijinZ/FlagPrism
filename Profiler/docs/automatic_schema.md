@@ -151,6 +151,14 @@ module, actor and semantic class. Older operation-only plans cannot establish a
 complete control-site selection proof; raw compiler-site provenance remains
 available but is not a substitute for a missing plan.
 
+Ascend entries also preserve `compiler_actors` with actual `function`,
+`actor_kind` and the same `late_llvm:<module_sha256>:<function>` compiler identity
+as the execution mapping. These are compiler declarations, not runtime actor
+slots. The older nullable `actor` label is retained for compatibility; it is
+often null because actual artifacts supply actor declarations instead of one
+actor label. Never equate an AIV label with a fixed runtime slot. Read the raw
+capture's actor/manifest association before using a module-local site ID.
+
 The NVIDIA nested plan uses its own `schema_version: 2` (the outer envelope
 remains version 1), actual `proton.automatic_candidates` and
 `proton.automatic_selected` counts, `max_sites`, `policy`, `semantics`,
@@ -335,6 +343,17 @@ dependency or a separately compiled caller. For example:
 compiled artifacts. A source location identifies the original absolute source
 path, while the source snapshot is found using the binary record above; a
 consumer must not try to open that original path on a different machine.
+
+New binary records also carry `source_snapshots`: capture-time snapshots of
+other files explicitly referenced by structured compiler positions or frontend
+source locations (for example, imported JIT helpers). A captured entry has
+`file`, `status: "captured"`, `sha256`, `snapshot_file`, `capture_boundary` and
+`compiled_text_alignment`; unavailable entries preserve their reason instead.
+Bytes are acquired at binary registration, not by reopening paths while viewing
+or exporting. Export verifies the digest and deduplicates by bytes. CRLF and
+declared Python file encodings are preserved. Only exact compiler file identities
+or explicit directory/relative-file combinations create source anchors; no
+neighboring or basename search is performed.
 
 ## `ai/source_index.json` and report navigation
 

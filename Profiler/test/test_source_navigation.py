@@ -220,3 +220,57 @@ def test_native_loader_preserves_original_module_error(modules, monkeypatch,
     assert result.value.__cause__ is original
     assert 'missing_test_symbol' in str(result.value)
     assert 'triton._C.libtriton' in str(result.value)
+
+
+def test_external_helper_snapshots_preserve_raw_bytes_and_do_not_reopen_sources(
+        modules, tmp_path):
+    capture = importlib.import_module(modules[0].__package__ +
+                                      '.source_capture')
+    helper = tmp_path / 'helper.py'
+    content = b'# coding: latin-1\r\n# caf\xe9\r\ndef helper():\r\n    return 1\r\n'
+    helper.write_bytes(content)
+    snapshots = capture.capture_metadata_sources(
+        {'sourceLoc': f'loc("{helper}":3:1)'}, {
+            'inline_chain': [{
+                'directory': str(tmp_path),
+                'file': 'helper.py',
+                'line': 3,
+                'column': 1
+            }]
+        })
+    assert len(snapshots) == 1
+    assert base64.b64decode(snapshots[0]['content']) == content
+    helper.unlink()
+    output = tmp_path / 'bundle'
+    (output / 'ai').mkdir(parents=True)
+    (output / 'report').mkdir()
+    exported = capture.export_metadata_sources(snapshots, output)
+    assert 'content' not in exported[0]
+    (output / 'ai/binaries.json').write_text(
+        json.dumps([dict(id='binary-a', source_snapshots=exported)]))
+    catalog = modules[0].SourceCatalog(output)
+    catalog.load([])
+    row = record([dict(file=str(helper), line=3, column=1)])
+    catalog.annotate([row])
+    catalog.write()
+    assert row['source_status'] == 'located'
+    assert row['source_links'][0]['snapshot_line_count'] == 4
+    assert 'caf' in (output / 'report/sources.html').read_text()
+    assert (output / exported[0]['snapshot_file']).read_bytes() == content
+
+
+def test_missing_compiler_source_and_corrupt_payload_remain_explicit(
+        modules, tmp_path):
+    capture = importlib.import_module(modules[0].__package__ +
+                                      '.source_capture')
+    missing = tmp_path / 'missing.py'
+    snapshots = capture.capture_metadata_sources(
+        dict(source_file=str(missing), line=7, column=0))
+    assert snapshots[0]['status'] == 'unavailable'
+    assert snapshots[0]['reason'].startswith('FileNotFoundError:')
+    corrupt = dict(status='captured',
+                   sha256='0' * 64,
+                   content=base64.b64encode(b'actual bytes').decode())
+    with pytest.raises(ValueError, match='digest mismatch'):
+        capture.export_metadata_sources([corrupt], tmp_path)
+    assert not list(tmp_path.rglob('*.py'))

@@ -207,3 +207,50 @@ def test_pointer_wrapper_description_is_optional():
             return (1, )
 
     assert _argument(Pointer()) == {"status": "unavailable", "type": "Pointer"}
+
+
+def test_registration_snapshots_external_helper_and_preserves_crlf(
+        monkeypatch, tmp_path):
+    import base64
+    import hashlib
+    from collections import namedtuple
+
+    source_file = tmp_path / 'application.py'
+    source_bytes = b'def kernel():\r\n    return 1\r\n'
+    source_file.write_bytes(source_bytes)
+    helper = tmp_path / 'helper.py'
+    helper_bytes = b'def helper():\n    return 2\n'
+    helper.write_bytes(helper_bytes)
+
+    def user_function():
+        return 1
+
+    user_function.__code__ = user_function.__code__.replace(
+        co_filename=str(source_file))
+    metadata_type = namedtuple('SourceCaptureMetadata',
+                               ['target', 'debug_tracked_table'])
+    metadata = metadata_type(
+        None, [dict(opId=1, source_file=str(helper), line=2, column=4)])
+    kernel = SimpleNamespace(
+        hash='unit-source-binary',
+        name='unit_kernel',
+        kernel=b'unit-test-fixture',
+        metadata=metadata,
+        asm={},
+        src=SimpleNamespace(fn=SimpleNamespace(
+            fn=user_function, src='def kernel():\n    return 1\n')))
+    monkeypatch.setattr(LaunchHook, 'binaries', {})
+    monkeypatch.setattr(LaunchHook, 'launches', [])
+    bridge = dict(kernel=kernel, arguments={}, grid=(1, ))
+    LaunchHook.record_launch(dict(name='unit_kernel'), 1, bridge)
+    binary = LaunchHook.binaries[kernel.hash]
+    assert binary['source']['file_snapshot'].encode() == source_bytes
+    assert binary['source']['file_sha256'] == hashlib.sha256(
+        source_bytes).hexdigest()
+    helper_snapshot = next(s for s in binary['source_snapshots']
+                           if s['file'] == str(helper))
+    assert base64.b64decode(helper_snapshot['content']) == helper_bytes
+    helper.write_bytes(b'changed after registration')
+    LaunchHook.record_launch(dict(name='unit_kernel'), 2, bridge)
+    assert base64.b64decode(helper_snapshot['content']) == helper_bytes
+    assert len(LaunchHook.launches) == 2

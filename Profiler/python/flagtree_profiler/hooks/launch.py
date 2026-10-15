@@ -108,7 +108,8 @@ class LaunchHook(Hook):
             file_text = None
             if code:
                 try:
-                    file_text = Path(code.co_filename).read_text()
+                    file_text = Path(
+                        code.co_filename).read_bytes().decode('utf-8')
                 except (OSError, UnicodeError):
                     pass
             compiler_metadata = kernel.metadata._asdict()
@@ -176,6 +177,10 @@ class LaunchHook(Hook):
                     "status": "failed",
                     "reason": f"{type(error).__name__}: {error}",
                 }
+            from ..source_capture import capture_metadata_sources
+            cls.binaries[key]['source_snapshots'] = capture_metadata_sources(
+                cls.binaries[key]['compiler_metadata'],
+                cls.binaries[key]['execution_manifest'])
         arguments = {
             name: _argument(value)
             for name, value in bridge["arguments"].items()

@@ -137,12 +137,28 @@ def _plans(report, captures):
                 actor_plan = manifest.get(kind + '_plan')
                 if actor_plan:
                     plans.append({
-                        'binary_id': binary['id'],
-                        'compile_id': handoff.get('compile_id'),
-                        'actor': artifact.get('actor'),
-                        'module_sha256': manifest.get('module_sha256'),
-                        'plan_kind': kind,
-                        'plan': actor_plan
+                        'binary_id':
+                        binary['id'],
+                        'compile_id':
+                        handoff.get('compile_id'),
+                        'actor':
+                        artifact.get('actor'),
+                        'compiler_actors': [{
+                            'function':
+                            actor.get('function'),
+                            'actor_kind':
+                            actor.get('actor_kind'),
+                            'identity':
+                            f'late_llvm:{manifest.get("module_sha256")}:{actor["function"]}'
+                            if manifest.get('module_sha256')
+                            and actor.get('function') else None
+                        } for actor in manifest.get('actors', [])],
+                        'module_sha256':
+                        manifest.get('module_sha256'),
+                        'plan_kind':
+                        kind,
+                        'plan':
+                        actor_plan
                     })
     for capture in captures:
         if capture.get('automatic_plan'):
