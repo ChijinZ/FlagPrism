@@ -160,6 +160,22 @@ def reconstruct(payload, launches, binaries, native_events):
 
 def render(document):
     panels = []
+    failures = [
+        capture for capture in document.get('captures', [])
+        if capture.get('capture_status') == 'decode_failed'
+    ]
+    if failures:
+        details = escape(
+            json.dumps([{
+                'capture_id': capture.get('capture_id'),
+                'error': capture.get('decode_error')
+            } for capture in failures],
+                       ensure_ascii=False))
+        panels.append(
+            '<section><h2>Failed observation captures</h2>'
+            '<p>Decoding failed. Raw bytes and error details are retained; '
+            'these captures provide no decoded execution evidence.</p>'
+            f'<pre>{details}</pre></section>')
     for group in document['groups']:
         rows = []
         for record in group['observations']:

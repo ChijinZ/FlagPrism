@@ -18,7 +18,14 @@ python -m pytest -q \
   Profiler/test/test_launch_metadata.py Profiler/test/test_tcu.py \
   Profiler/test/test_observation_contract.py \
   Profiler/test/test_internal_time_semantics.py \
-  Profiler/test/test_reconstruction.py Profiler/test/test_hook_rollback.py
+  Profiler/test/test_reconstruction.py Profiler/test/test_hook_rollback.py \
+  Profiler/test/test_ascend_launch.py \
+  Profiler/test/test_cann_launch_receipts.py Profiler/test/test_cann_joint.py \
+  Profiler/test/test_observer_allocation_contract.py \
+  Profiler/test/test_observer_decode_recovery.py \
+  Profiler/test/test_native_observation_recovery.py \
+  Profiler/test/test_cann_artifacts.py Profiler/test/test_cann_native.py \
+  Profiler/test/test_cann_raw_sys.py Profiler/test/test_cann_source_clock.py
 ```
 
 These cover malformed records, unknown IDs, rejected joins, unverified clocks,
@@ -26,6 +33,34 @@ lossless raw artifacts, manifest hashes, replay separation and cleanup preservin
 the original exception. Browser skips remain skips. Also run applicable native
 `test_api.py`, `test_profile.py`, `test_instrumentation.py` and backend suites;
 mock-only passes cannot establish native lifecycle or SDK support.
+
+The CANN receipt tests cover the packaged ABI, successful zero task IDs,
+failed queries, ambiguous source tokens and export errors. The SDK identity
+producer tests use explicit simulated capture directories and connection tables;
+they reject missing/old/ambiguous directory seals and repeated task/token
+identities. Also compile the actual `CannProfiler.cpp` for the CPU registry and
+`ProfilerStartRecoveryTest.cpp` tests: retained queued-callback lifetime,
+concurrent publication/close, session epochs, capacity recovery and failed-start
+retry must hold independently of SDK availability. These CPU checks do not
+certify the actual generated launcher's worker query or raw counter domain.
+
+The observer allocation contract checks derived metadata after the real
+post-pass callback and rejects inconsistent native actor layouts before any
+device allocation. Decode recovery uses the real truncated-record decoder and
+checks that raw bytes and the original exception survive, while failed decode
+captures produce no reconstructed execution events. CANN SDK retention tests
+verify file hashes, successful public bundle export, temporary-only cleanup,
+and source preservation on partial export failure.
+
+Native-observation recovery tests cover repeat finalization, durable recovery
+files, atomic replacement, session-specific acknowledgement, conflicting
+capture identities, truncated Proton decoding and failure before bundle export.
+The CANN native-task tests include a retained actual SDK fixture alongside
+simulated negative cases; native report identity does not certify a source
+clock. Raw SYS tests preserve original packet offsets and hashes. Source-rate
+tests require exact task/binary/compiler/device evidence and leave clock epoch
+and cross-actor alignment separate; an existing independently aligned clock
+must remain unchanged.
 
 ## Compiler, protocol and actual hardware
 
@@ -59,6 +94,11 @@ failures. Runtime loop tests must avoid constant specialization when claiming
 that different control paths execute the same binary.
 
 ## Fidelity and cost
+
+NVIDIA performance experiments are currently deferred by the user's explicit
+instruction. Continue compilation, correctness and short GPU functional
+checks; preserve the earlier performance results and the pending cost gate.
+Do not use correctness passes to certify performance.
 
 Run at least three interleaved/randomized batches of thirty calls per mode, with
 warmup reported separately. Retain every sample, including failures/slow calls.

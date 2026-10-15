@@ -1,20 +1,28 @@
 {
-  "status": "pending_remote_restore_and_complete_export",
+  "status": "historical_snapshot_superseded",
   "backend": "ascend",
   "flagtree_baseline": "0364ed4bc39d1dfae483741ec272298297fa5bda",
   "initial_patch": {
     "path": "initial-handoff.patch",
     "sha256": "9a67673d0e55c3ae1e8941552a5f924b3117f101231568231d90e892fcc20c0d",
     "complete": false,
-    "missing": ["compiler_driver_cache_key callback and AscendOptions cache integration"]
+    "missing": [
+      "compiler_driver_cache_key callback and AscendOptions cache integration"
+    ]
   },
-  "complete_patch": null,
+  "complete_patch": {
+    "path": "flagtree-driver-handoff-complete.patch",
+    "sha256": "a0d612e6ca1d7d30728c3dec1b901d2a282c8190dc65912248c04a91f8a1ff92",
+    "source": "actual independent remote Docker worktree diff against pinned baseline",
+    "build_validation": "pending"
+  },
   "integration_commit": null,
   "dependency_pins": {
     "AscendNPU-IR": "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9",
     "FLIR": "516ad3110cbf6112bbed8f927ae606c627a193f2"
   },
-  "dependency_gaps": ["Verify tracked dependency trees are clean during actual complete patch export"],
+  "dependency_gaps": [],
+  "dependency_tracked_clean_guard": "passed during actual complete patch export",
   "compiler_core": "LLVM22 existing container cache; actual triton target required",
   "late_observer": "upstream LLVM15.0.7 opt-15 out-of-process; vendor plugin loading unsupported",
   "latest_hidden_abi_build": "pending",
@@ -26,5 +34,8 @@
     "exit_code": 0,
     "container_sentinel_observed": true,
     "remote_command_execution_proven": true
-  }
+  },
+  "historical_status": "actual_complete_patch_exported_build_and_runtime_pending",
+  "superseded_by": "flagtree-source-manifest.json",
+  "scope": "Historical export before worker bridge and standalone tool repairs; old dependency and pending fields are not current state."
 }

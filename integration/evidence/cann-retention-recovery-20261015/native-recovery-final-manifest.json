@@ -1,0 +1,61 @@
+{
+  "status": "frozen",
+  "scope": "CANN opaque SDK capture retention and native observation failure recovery",
+  "source_files": [
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_artifacts.py",
+      "sha256": "465b591c3ab31d5b467ba7671e847fbb149b6e35763419e81bf263dce767d277"
+    },
+    {
+      "path": "Profiler/test/test_cann_artifacts.py",
+      "sha256": "09a47b44d1621a1448e106be9bc84b55397371eae4dfec7cb1ce794749c569bd"
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/profile.py",
+      "sha256": "bfede300475a0975e17f9225efaec0a77fc2a2899d88ed4254f3d5dd63e4911d"
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/instrumentation.py",
+      "sha256": "7b885318e0804ff6f774bd99f004f7aa3f5724b71d218cda9ee10dfced2926a5"
+    },
+    {
+      "path": "Profiler/test/test_native_observation_recovery.py",
+      "sha256": "218b201ae731348f6d21363cc11e8999ecb5e70770d36e920dadecce036a8886"
+    }
+  ],
+  "validation": {
+    "environment": "zhiyuan_suiyuan Docker flagprism-enflame-dev",
+    "cpu_tests": {
+      "passed": 161,
+      "skipped": 4,
+      "skip_reason": "opt-in browser tests",
+      "seconds": 4.55
+    },
+    "ast_equivalent_files": 3,
+    "ruff": "passed",
+    "gpu_tests_run": false
+  },
+  "evidence": [
+    {
+      "path": "artifacts/method-run/enflame/native-recovery-format-applied.json",
+      "sha256": "ae49798cb18b607c58cfec4301104557a35107785bcf57539ae883e2b7989f17"
+    },
+    {
+      "path": "artifacts/method-run/enflame/native-recovery-postformat-tests.log",
+      "sha256": "dce0716f5205ea332292ae9b55b985084a4cdf60c7f79cad202094f4626d92e5"
+    },
+    {
+      "path": "artifacts/method-run/enflame/native-recovery-postformat-ruff.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "artifacts/method-run/enflame/native-recovery-decoder-tests.log",
+      "sha256": "fc412edaca2f1b8ce93d6a18aea7506380b248e3d0e8a921a0da6c2f4594e890"
+    }
+  ],
+  "limitations": [
+    "All storage locations failing leaves captures unacknowledged in process memory and reports explicitly not durable.",
+    "Malformed native packets preserve raw bytes and decoder error without fabricated observations."
+  ],
+  "historical_negative": "native-recovery-decoder-tests.log preserves initial incorrect test assertion (empty bundle events.jsonl expectation); corrected assertion passed in final tests."
+}

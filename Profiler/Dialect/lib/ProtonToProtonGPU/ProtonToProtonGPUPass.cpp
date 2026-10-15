@@ -282,6 +282,10 @@ public:
 #if defined(FLAGPRISM_BACKEND_MTHREADS)
     auto ctaLayout = triton::gpu::CGAEncodingAttr::fromSplitParams(
         context, ctasPerCGA, ctaSplitNum, ctaOrder);
+#elif defined(FLAGPRISM_BACKEND_ASCEND)
+    // The supported Ascend FlagTree revision predates CTAEncodingAttr.
+    auto ctaLayout = triton::gpu::CTALayoutAttr::get(context, ctasPerCGA,
+                                                     ctaSplitNum, ctaOrder);
 #else
     auto ctaLayout = triton::gpu::CTAEncodingAttr::fromSplitParams(
         context, ctasPerCGA, ctaSplitNum, ctaOrder);

@@ -91,8 +91,12 @@ def _normalize_event(row, index):
     host = kind in ("runtime", "driver")
     identities = {
         key:
-        integer(key, raw.get(key),
-                1 if key in ("correlation_id", "scope_id", "task_id") else 0)
+        integer(
+            key, raw.get(key),
+            1 if key in ("correlation_id", "scope_id", "task_id")
+            and not (type(raw.get(key)) is int and raw[key] == 0
+                     and type(metrics.get("activity." + key)) is int
+                     and metrics["activity." + key] == raw[key]) else 0)
         for key in ("device_id", "stream_id", "correlation_id", "scope_id",
                     "task_id")
     }
@@ -166,6 +170,7 @@ def _normalize_event(row, index):
             issues.get(key) == "invalid"
             for key in ("start_time_ns", "end_time_ns")) else "unknown",
         field_issues=issues,
+        invocation_identity=row.get("invocation_identity"),
         lane=lane,
         metrics=metrics,
         source=row.get("source"))
@@ -217,6 +222,11 @@ def analyze(path):
     rejected = Counter()
     for index, row in enumerate(rows):
         kind = row.get("metrics", {}).get("activity.kind")
+        if kind in ("profiler_marker", "device_event_record",
+                    "unclassified_device_task"):
+            rejected[
+                f"{kind} retained as raw SDK extension; not kernel activity"] += 1
+            continue
         if kind not in ("kernel", "runtime", "driver", "memcpy", "memset"):
             rejected["missing or unsupported activity.kind"] += 1
             continue
@@ -243,11 +253,40 @@ def analyze(path):
         scope: entries[0]
         for scope, entries in launch_candidates.items() if len(entries) == 1
     }
+    direct_launches = defaultdict(list)
+    for launch in document.get("launches", []):
+        if isinstance(launch.get("id"), str):
+            direct_launches[launch["id"]].append(launch)
     groups = defaultdict(list)
     for event in events + untimed_events:
         configuration = None
         if event["kind"] == "kernel":
-            launch = launches.get(event["scope_id"])
+            identity = event.get("invocation_identity")
+            if identity is None:
+                launch = launches.get(event["scope_id"])
+            else:
+                # Explicit retained-worker identity also supports legal scope0.
+                # Invalid direct proofs must not fall back to a scope-only join.
+                peers = direct_launches.get(
+                    identity.get("invocation_id"),
+                    []) if isinstance(identity, dict) and isinstance(
+                        identity.get("invocation_id"), str) else []
+                launch = peers[0] if len(peers) == 1 else None
+                if (not isinstance(identity, dict)
+                        or event.get("source") != "cann_sdk_task"
+                        or identity.get("status") != "verified_task_identity"
+                        or identity.get("evidence_kind")
+                        != "retained_worker_token_and_sdk_connection_tables"
+                        or any(
+                            type(identity.get(key)) is not int
+                            or identity[key] < 0
+                            for key in ("scope_id", "session_id", "token_id",
+                                        "capture_epoch")) or not launch
+                        or identity.get("binary_id") != launch.get("binary_id")
+                        or identity.get("scope_id") != launch.get("scope_id")
+                        or identity.get("scope_id") != event["scope_id"]
+                        or not isinstance(launch.get("arguments"), dict)):
+                    launch = None
             if launch and launch.get("status") != "rejected_before_launch":
                 event["launch_id"] = launch["id"]
                 event["binary_id"] = launch["binary_id"]
@@ -1062,6 +1101,21 @@ def write_bundle(report, source, output, context=None, *, complete=True):
     report["caller_context"] = supplied
     report["binaries"] = binaries
     write("ai/summary.json", summary)
+    if "cann_native_superseded_views" in document or "cann_native_activity_extensions" in document:
+        write(
+            "ai/cann_native_tasks.json", {
+                "superseded_views":
+                document.get("cann_native_superseded_views", []),
+                "unclassified_tasks":
+                document.get("cann_native_unclassified_tasks", []),
+                "activity_extensions":
+                document.get("cann_native_activity_extensions", []),
+                "activity_classification":
+                document.get("capture", {}).get("cann_native_activity_kinds",
+                                                {}),
+                "capture":
+                document.get("capture", {}).get("cann_native_tasks", {})
+            })
     if report["events"] or report["untimed_events"]:
         with (output / "ai/events.jsonl").open("w") as stream:
             for event in report["events"] + report["untimed_events"]:
@@ -1101,7 +1155,8 @@ def write_manifest(output, report):
     output = Path(output)
     files = {}
     for path in sorted(output.rglob("*")):
-        if path.is_file() and path.name != "manifest.json":
+        if path.is_file() and path.relative_to(
+                output).as_posix() != "manifest.json":
             files[path.relative_to(output).as_posix()] = dict(
                 bytes=path.stat().st_size,
                 sha256=hashlib.sha256(path.read_bytes()).hexdigest())
@@ -1475,6 +1530,10 @@ function inspect(e) {
     if (values.every(v => v != null)) fields.push([key === 'grid' ? 'Grid' : 'Block', values.join(' × ')]);
   }
   if (e.metrics['activity.bytes'] != null) fields.push(['Transfer bytes', fmt(e.metrics['activity.bytes'])]);
+  if (e.metrics['activity.association'] != null) fields.push(['Source association', e.metrics['activity.association']]);
+  if (e.metrics['activity.association_reason'] != null) fields.push(['Association detail', e.metrics['activity.association_reason']]);
+  if (e.metrics['activity.duration_scope'] != null) fields.push(['Duration semantics', e.metrics['activity.duration_scope']]);
+  if (e.metrics['activity.clock_alignment'] != null) fields.push(['Clock alignment', e.metrics['activity.clock_alignment']]);
   const list = document.createElement('dl');
   for (const [label, value] of fields) {
     list.append(el('dt', label), el('dd', fmt(value)));

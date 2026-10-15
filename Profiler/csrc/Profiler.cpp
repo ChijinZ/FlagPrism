@@ -1,9 +1,13 @@
 #include "Profiler.h"
+#if defined(FLAGPRISM_BACKEND_ASCEND)
+#include "Profiler/Vendor/CannLaunchReceipt.h"
+#endif
 #if FLAGTREE_PROFILER_GPU_RUNTIME
 #include "Profiler/Cupti/CuptiPCSampling.h"
 #include "Profiler/Instrumentation/InstrumentationProfiler.h"
 #endif
 
+#include <iostream>
 #include <map>
 #include <stdexcept>
 
@@ -32,7 +36,21 @@ static void initProfiler(pybind11::module &&m) {
         auto sessionId = SessionManager::instance().addSession(
             path, profilerName, profilerPath, contextSourceName, dataName, mode,
             hookName);
-        SessionManager::instance().activateSession(sessionId);
+        try {
+          SessionManager::instance().activateSession(sessionId);
+        } catch (...) {
+          // The Python caller has not received an id yet. Remove the native
+          // session/path here and retain the original startup exception.
+          try {
+            SessionManager::instance().finalizeSession(sessionId, "");
+          } catch (const std::exception &cleanup) {
+            std::cerr << "FlagPrism native startup cleanup failed: "
+                      << cleanup.what() << '\n';
+          } catch (...) {
+            std::cerr << "FlagPrism native startup cleanup failed\n";
+          }
+          throw;
+        }
         return sessionId;
       },
       pybind11::arg("path"), pybind11::arg("contextSourceName"),
@@ -63,6 +81,86 @@ static void initProfiler(pybind11::module &&m) {
   });
 
   m.def("record_scope", []() { return Scope::getNewScopeId(); });
+
+  m.def("supports_cann_launch_receipts", []() {
+#if defined(FLAGPRISM_BACKEND_ASCEND)
+    return true;
+#else
+    return false;
+#endif
+  });
+#if defined(FLAGPRISM_BACKEND_ASCEND)
+  m.def("cann_launch_receipts_active", [](uint64_t sessionId) {
+    return SessionManager::instance().isActiveSessionForProfiler(sessionId,
+                                                                 "cann") &&
+           cannLaunchReceiptCaptureActive();
+  });
+  m.def("make_cann_launch_receipt", [](uint64_t scopeId, uint64_t sessionId) {
+    if (!SessionManager::instance().isActiveSessionForProfiler(sessionId,
+                                                               "cann"))
+      throw pybind11::value_error(
+          "launch receipt requires a live active CANN session");
+    auto *sink = createCannLaunchReceiptSink(scopeId, sessionId);
+    if (!sink)
+      throw std::runtime_error(
+          "CANN SDK launch receipt collector is inactive or full");
+    if (sink->abiVersion != kCannLaunchReceiptAbiVersion ||
+        sink->structSize != sizeof(CannLaunchReceiptSinkV1) || !sink->context ||
+        !sink->retain || !sink->release || !sink->publish || !sink->cancel) {
+      if (sink->context && sink->release)
+        sink->release(sink->context);
+      throw std::runtime_error("invalid CANN launch receipt sink ABI");
+    }
+    return pybind11::capsule(
+        sink, kCannLaunchReceiptCapsuleName, [](void *pointer) {
+          auto *owned = static_cast<CannLaunchReceiptSinkV1 *>(pointer);
+          owned->release(owned->context);
+        });
+  });
+  m.def("cancel_cann_launch_receipt", [](pybind11::capsule capsule,
+                                         const std::string &reason) {
+    auto *sink = static_cast<CannLaunchReceiptSinkV1 *>(
+        PyCapsule_GetPointer(capsule.ptr(), kCannLaunchReceiptCapsuleName));
+    if (!sink)
+      throw pybind11::error_already_set();
+    cancelCannLaunchReceiptSink(sink, reason);
+  });
+  m.def("drain_cann_launch_receipts", [](uint64_t sessionId) {
+    pybind11::list result;
+    for (const auto &receipt : drainCannLaunchReceipts(sessionId)) {
+      pybind11::dict row;
+      row["token_id"] = receipt.tokenId;
+      row["scope_id"] = receipt.scopeId;
+      row["session_id"] = receipt.sessionId;
+      row["capture_epoch"] = receipt.captureEpoch;
+      row["collector_output_path"] = receipt.collectorOutputPath;
+      row["sdk_capture_path"] = receipt.sdkCapturePath;
+      row["sdk_capture_binding_status"] = receipt.sdkCaptureBindingStatus;
+      row["sdk_capture_binding_evidence"] = receipt.sdkCaptureBindingEvidence;
+      row["publish_count"] = receipt.publishCount;
+      row["late_callback"] = receipt.lateCallback;
+      row["status"] = receipt.status;
+      row["reason"] = receipt.reason;
+      const auto &worker = receipt.worker;
+      pybind11::dict record;
+      record["abi_version"] = worker.abiVersion;
+      record["struct_size"] = worker.structSize;
+      record["process_id"] = worker.processId;
+      record["thread_id"] = worker.threadId;
+      record["stream_handle"] = worker.streamHandle;
+      record["device_id"] = worker.deviceId;
+      record["stream_id"] = worker.streamId;
+      record["task_id"] = worker.taskId;
+      record["launch_status"] = worker.launchStatus;
+      record["device_query_status"] = worker.deviceQueryStatus;
+      record["stream_query_status"] = worker.streamQueryStatus;
+      record["task_query_status"] = worker.taskQueryStatus;
+      row["worker"] = record;
+      result.append(row);
+    }
+    return result;
+  });
+#endif
 
   m.def("enter_scope", [](size_t scopeId, const std::string &name) {
     SessionManager::instance().enterScope(Scope(scopeId, name));

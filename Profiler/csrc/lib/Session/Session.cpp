@@ -417,13 +417,16 @@ void isolateCannRuntimeOutputPath(VendorProfilePlan &plan, size_t sessionId) {
   if (trim(root).empty()) {
     root = "./flagtree_profiler_cann_profile";
   }
+  // Applications may change cwd after starting profiling. Resolve the SDK
+  // destination once, in the same frame used to initialize its collector.
+  root = std::filesystem::absolute(root).lexically_normal().string();
 
   auto isolated = std::filesystem::path(root) /
                   ("flagtree_profiler_session_" + std::to_string(sessionId));
   options["aclprof_output_root"] = root;
   options[pathKey] = isolated.string();
   if (useTemporaryRoot) {
-    options["aclprof_output_retained"] = "false";
+    options["aclprof_output_retained"] = "true";
   }
   if (pathKey == "aclprof_output_path") {
     options.erase("output_path");
@@ -432,9 +435,8 @@ void isolateCannRuntimeOutputPath(VendorProfilePlan &plan, size_t sessionId) {
   }
 }
 
-void cleanupTemporaryCannOutput(const VendorProfilePlan &plan,
-                                std::map<std::string, std::string> &config,
-                                std::vector<std::string> &degradeReasons) {
+void deferTemporaryCannOutputCleanup(
+    const VendorProfilePlan &plan, std::map<std::string, std::string> &config) {
   if (!adapterOptionEnabled(plan.requested.adapterOptions,
                             {"aclprof_output_path_temporary"}, false)) {
     return;
@@ -444,17 +446,11 @@ void cleanupTemporaryCannOutput(const VendorProfilePlan &plan,
       trim(rootIt->second).empty()) {
     return;
   }
-  std::error_code ec;
-  auto removed = std::filesystem::remove_all(rootIt->second, ec);
-  if (ec) {
-    appendUnique(degradeReasons,
-                 {"Failed to remove temporary CANN profiler output '" +
-                  rootIt->second + "': " + ec.message()});
-    config["aclprof_output_cleanup"] = "failed";
-  } else {
-    config["aclprof_output_cleanup"] = "removed";
-    config["aclprof_output_cleanup_removed_entries"] = std::to_string(removed);
-  }
+  // Python's post-finalize task/clock producers still need the original SDK
+  // databases. The bundle exporter copies and verifies them before deleting
+  // this session's temporary directory. A failed export retains the originals.
+  config["aclprof_output_cleanup"] = "deferred_to_python_bundle_export";
+  config["aclprof_output_retained"] = "true";
 }
 
 size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
@@ -738,8 +734,7 @@ void Session::finalize(const std::string &outputFormat) {
     metadata.config["runtime_base_host_fallback_associations"] =
         std::to_string(hostFallbackCount);
 
-    cleanupTemporaryCannOutput(vendorPlan, metadata.config,
-                               metadata.degradeReasons);
+    deferTemporaryCannOutputCleanup(vendorPlan, metadata.config);
 
     data->dumpToPath(makeArtifactPath(path, ".hatchet"), "hatchet");
     if (timelineData) {
@@ -907,8 +902,8 @@ void SessionManager::activateSessionImpl(size_t sessionId) {
   throwIfSessionNotInitialized(sessions, sessionId);
   if (activeSessions[sessionId])
     return;
-  activeSessions[sessionId] = true;
   sessions[sessionId]->activate();
+  activeSessions[sessionId] = true;
   registerInterface<ScopeInterface>(sessionId, scopeInterfaceCounts);
   registerInterface<OpInterface>(sessionId, opInterfaceCounts);
   registerInterface<InstrumentationInterface>(sessionId,
@@ -960,6 +955,16 @@ size_t SessionManager::addSession(const std::string &path,
   sessionPaths[path] = sessionId;
   sessions[sessionId] = std::move(session);
   return sessionId;
+}
+
+bool SessionManager::isActiveSessionForProfiler(
+    size_t sessionId, const std::string &profilerName) const {
+  std::shared_lock<std::shared_mutex> lock(mutex);
+  auto session = sessions.find(sessionId);
+  auto active = activeSessions.find(sessionId);
+  return session != sessions.end() && active != activeSessions.end() &&
+         active->second &&
+         toLower(session->second->profilerName) == toLower(profilerName);
 }
 
 void SessionManager::finalizeSession(size_t sessionId,

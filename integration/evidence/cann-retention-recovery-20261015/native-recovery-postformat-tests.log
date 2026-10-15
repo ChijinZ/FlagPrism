@@ -1,0 +1,21 @@
+/workspace/method-enflame-20261014/i3-runtime/flagtree/profiler/profile.py
+bfede300475a0975e17f9225efaec0a77fc2a2899d88ed4254f3d5dd63e4911d
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.1, pluggy-1.6.0
+rootdir: /workspace/method-enflame-20261014/i3-source
+plugins: regex-0.2.0
+ pytest-regex selected 165 tests to run for regex: .*
+collected 165 items
+
+Profiler/test/test_native_observation_recovery.py .................      [ 10%]
+Profiler/test/test_cann_artifacts.py ................................... [ 31%]
+.....                                                                    [ 34%]
+Profiler/test/test_portable_capture.py ................................s [ 54%]
+.........................................ss                              [ 80%]
+Profiler/test/test_report.py ....................s...........            [100%]
+
+=========================== short test summary info ============================
+SKIPPED [1] Profiler/test/test_portable_capture.py:354: Opt-in browser regression
+SKIPPED [2] Profiler/test/test_portable_capture.py:1026: Opt-in browser regression
+SKIPPED [1] Profiler/test/test_report.py:252: Opt-in Playwright browser regression
+======================== 161 passed, 4 skipped in 4.55s ========================

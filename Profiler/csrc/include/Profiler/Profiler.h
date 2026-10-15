@@ -29,7 +29,16 @@ public:
   Profiler *start() {
     if (!this->started) {
       this->started = true;
+      struct StartRollback {
+        bool &started;
+        bool committed{false};
+        ~StartRollback() {
+          if (!committed)
+            started = false;
+        }
+      } rollback{this->started};
       this->doStart();
+      rollback.committed = true;
     }
     return this;
   }

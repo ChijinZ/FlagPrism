@@ -64,6 +64,9 @@ private:
   bool mstxStreamOwned{false};
   void *aclprofConfig{nullptr};
   bool aclprofActive{false};
+  uint64_t launchReceiptCaptureEpoch{0};
+  std::vector<std::string> launchReceiptSdkRootsBefore;
+  bool launchReceiptSdkRootScanComplete{false};
   bool aclprofRuntimeEnabled{false};
   bool aclprofAutoExportEnabled{true};
 };

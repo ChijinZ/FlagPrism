@@ -65,5 +65,10 @@ class _ProfilerComponent:
         from .ascend_compiler import cache_key
         return cache_key()
 
+    @staticmethod
+    def get_cann_launch_receipt_abi():
+        from .ascend_launch import get_launch_receipt_abi
+        return get_launch_receipt_abi()
+
 
 component = register_component("profiler", _ProfilerComponent())

@@ -1321,6 +1321,36 @@ def _propagate_observation_clock(runtime_metadata, metadata_dict):
             })
 
 
+def _retain_failed_decode(exported_run, metadata_dict, error):
+    """Preserve the original bytes after finish released the device handle."""
+    import uuid
+
+    exported_run["capture_status"] = "decode_failed"
+    exported_run["decode_error"] = {
+        "type": type(error).__name__,
+        "message": str(error)
+    }
+    runtime = exported_run.setdefault("runtime_metadata", {})
+    runtime["capture_status"] = "decode_failed"
+    runtime.setdefault("capture_id", str(uuid.uuid4()))
+    exported_run.setdefault("debug_kernel_name", metadata_dict.get("name", ""))
+    # Partial decoder output must not become trusted observations.
+    exported_run["decoded"] = {}
+    exported_run["semantic_observations"] = []
+    _exported_runs.append(exported_run)
+    if _active_config.export_handler is not None:
+        try:
+            _active_config.export_handler(exported_run)
+        except BaseException as secondary:
+            exported_run["recovery_export_error"] = {
+                "type": type(secondary).__name__,
+                "message": str(secondary)
+            }
+            if callable(getattr(error, "add_note", None)):
+                error.add_note("Failed-capture export handler also failed: " +
+                               str(secondary))
+
+
 def _default_launch_prepare_hook(
         metadata: Any, stream: int, launch_metadata: Any,
         kernel_args: Sequence[Any]) -> PreparedKernelLaunch:
@@ -1400,53 +1430,59 @@ def _default_launch_prepare_hook(
             max(0, host_end_time_ns - host_start_time_ns),
         )
         exported_run["runtime_metadata"] = exported_runtime_metadata
-        if metadata_dict.get(
-                "debug_record_layout") == "ascend_actor_dynamic_v1":
-            import uuid
-            from flagtree.profiler.observations_ascend import decode_dynamic64
-            capture_id = str(uuid.uuid4())
-            handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
-            sites = []
-            for artifact in handoff.get("artifacts", []):
-                manifest = artifact.get("metadata") or {}
-                kinds = {
-                    actor.get("actor_kind")
-                    for actor in manifest.get("actors", [])
+        try:
+            if metadata_dict.get(
+                    "debug_record_layout") == "ascend_actor_dynamic_v1":
+                import uuid
+                from flagtree.profiler.observations_ascend import decode_dynamic64
+                capture_id = str(uuid.uuid4())
+                handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
+                sites = []
+                for artifact in handoff.get("artifacts", []):
+                    manifest = artifact.get("metadata") or {}
+                    kinds = {
+                        actor.get("actor_kind")
+                        for actor in manifest.get("actors", [])
+                    }
+                    slots = [0] if kinds == {
+                        "AIC"
+                    } else [1, 2] if kinds == {"AIV"} else []
+                    for site in manifest.get("dynamic_sites", []):
+                        sites.extend(
+                            dict(site, actor_slot=slot) for slot in slots)
+                decoded = decode_dynamic64(
+                    exported_run["raw_buffer"],
+                    capacity=metadata_dict["flagprism_ascend_trace_capacity"],
+                    actor_slots=3,
+                    capture_id=capture_id,
+                    invocation_id=exported_runtime_metadata.get(
+                        "profiler_invocation_id"),
+                    association_evidence=exported_runtime_metadata.get(
+                        "profiler_association_evidence"),
+                    site_manifest=sites)
+                requested = set(
+                    (metadata_dict.get("flagprism_ascend_observation_request")
+                     or {}).get("semantics", []))
+                exported_run["semantic_observations"] = [
+                    event for event in decoded["observations"]
+                    if event["semantic"] in requested
+                ]
+                exported_run["decoded"] = {
+                    "actors": decoded["actors"],
+                    "records": [],
+                    "dropped": decoded["dropped"]
                 }
-                slots = [0] if kinds == {
-                    "AIC"
-                } else [1, 2] if kinds == {"AIV"} else []
-                for site in manifest.get("dynamic_sites", []):
-                    sites.extend(dict(site, actor_slot=slot) for slot in slots)
-            decoded = decode_dynamic64(
-                exported_run["raw_buffer"],
-                capacity=metadata_dict["flagprism_ascend_trace_capacity"],
-                actor_slots=3,
-                capture_id=capture_id,
-                invocation_id=exported_runtime_metadata.get(
-                    "profiler_invocation_id"),
-                association_evidence=exported_runtime_metadata.get(
-                    "profiler_association_evidence"),
-                site_manifest=sites)
-            requested = set(
-                (metadata_dict.get("flagprism_ascend_observation_request")
-                 or {}).get("semantics", []))
-            exported_run["semantic_observations"] = [
-                event for event in decoded["observations"]
-                if event["semantic"] in requested
-            ]
-            exported_run["decoded"] = {
-                "actors": decoded["actors"],
-                "records": [],
-                "dropped": decoded["dropped"]
-            }
-            exported_runtime_metadata["capture_id"] = capture_id
-            exported_runtime_metadata[
-                "collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
-            exported_runtime_metadata[
-                "selection_stage"] = "semantic_output_filter_after_capture"
-        else:
-            exported_run = _finalize_exported_run(exported_run, metadata_dict)
+                exported_runtime_metadata["capture_id"] = capture_id
+                exported_runtime_metadata[
+                    "collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
+                exported_runtime_metadata[
+                    "selection_stage"] = "semantic_output_filter_after_capture"
+            else:
+                exported_run = _finalize_exported_run(exported_run,
+                                                      metadata_dict)
+        except BaseException as decode_error:
+            _retain_failed_decode(exported_run, metadata_dict, decode_error)
+            raise
         _exported_runs.append(exported_run)
         if _active_config.export_handler is not None:
             _active_config.export_handler(exported_run)

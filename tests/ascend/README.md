@@ -1,18 +1,41 @@
 # Ascend method acceptance: recovery and boundaries
 
-The formal hidden-only path is implemented in source and **awaits a new compiler binding build and Ascend hardware validation**. The gateway currently returns `no available gateway`, sometimes with exit 0. That output is a connection failure, never a passed build/test. Do not retry SSH until access is restored. Run builds, imports, tests, CPU oracles and workloads inside `chijin_v3.5.x`; physical device4 is the reserved device.
+The new core links and its actual hidden-only ABI/backend contracts pass
+80/80 in the Ascend Docker. The public native worker-receipt smoke passes four
+calls over two binaries and two streams, including legitimate task zero and
+exact SDK connection proofs. A common metadata-capacity overwrite was found by
+the first actual observer launch and fixed: the final preallocation guard and
+metadata regressions pass 11/11; a correct 49248-byte three-actor allocation
+exports an all-zero buffer before any kernel launch. The faulty configuration
+is retained as a failure and is never launched again.
+
+A fresh ordinary Softmax32x256 hidden-only run now passes original CPU math,
+input and canary checks and exports 32 actual dynamic records across four calls
+(one warmup, three samples). This is a functional smoke, not the full matrix or
+a cross-actor clock certificate. Native SDK cleanup is now deferred until Python
+bundle export. A fresh default-output hidden smoke exports four exact task
+proofs, including task zero, while retaining the original SDK directory.
+Canonical report/SDK bundle retention integration awaits its final public rerun.
+The actual retained r3 bundle passes automatic raw task SYS extraction and local
+duration calibration for all 32 source events; this does not assign a shared
+clock epoch or turn source-control brackets into engine occupancy.
+
+The SSH gateway is intermittent; recent sentinel-verified commands succeeded.
+Check the specific recorded process/terminal status after a disconnect rather
+than restarting a job. All builds, imports, tests, CPU oracles and workloads run
+inside `chijin_v3.5.x`; physical device4 is reserved.
 
 ## What is established, what remains pending
 
 | Path | Evidence and boundary |
 | --- | --- |
-| Native CANN tasks | Earlier fresh runtime builds captured three real device4 vector-add tasks and passed CPU checks. Native records survive missing source association. Recent current-device/default-query changes and public joint routing require a fresh run. |
+| Native CANN tasks | Public native r3 captures four calls across two binaries/two streams with exact retained-worker/SDK connection proofs. Default detailed r3 also has four exact proofs after deferred cleanup. Final canonical report/retention entry awaits a fresh public run. |
 | msprof PMU | Earlier real vector-add replay produced Arithmetic/Pipe actor aggregates. Every replay has its own directory/UUID; raw CSV rows and unknown values are retained. Latest explicit SDK kernel-replay/device checks await rerun. PMU records are independent replay aggregates, never foreground busy intervals. |
 | Final actor handoff | The private FlagTree driver patch and upstream opt15 pass captured real SDK-generated actor LLVM and role/loop/wait manifests. Original and adapted LLVM/object hashes are separate. |
-| LLVM dynamic64 | An explicit extra-buffer **test adapter** produced real records and correct math. This does not validate the formal hidden-only ABI. |
-| Public detailed request | Frontend appends a compiler-owned hidden pointer; runtime allocates a separate actor log. New `prepare_late_observation_abi` binding, unused-pointer preservation through SDK split, formal role validation and runtime transfer must be built/run together. |
+| LLVM dynamic64 | The formal hidden-only Softmax smoke emits 32 real source-control records over four calls and passes CPU math/input/canary checks. Historical explicit-buffer adapter tests remain separate evidence. |
+| Public detailed request | Frontend appends a compiler-owned hidden pointer; actual final SDK formal roles and the safe actor allocation/export passed the Softmax smoke. Full operator/heldout and MIX validation remain pending. |
 | Source origin | Full `(file,line,column,inline chain)` may match the exact retained TrackedOpTable snapshot. A unique candidate establishes debug origin, not exclusive source-region cost. Missing/multiple candidates remain unassociated/ambiguous. |
-| Joint SYS/native clock | **Automatic producer and finalize wiring are missing**, not merely untested. Parser/alignment helpers exist, but no formal collector currently creates the exact SDK packet→source invocation proof. A reported frequency or caller-supplied evidence dictionary cannot fill this gap. |
+| SYS counter service | `cann_raw_sys` rebuilds exact task identity from raw SDK/receipt files and extracts unique original ACSQ SYS endpoints. `cann_source_clock` validates same-call binary/LLVM/logger, installed c220 getter and actual sealed SDK frequency to calibrate local durations. Actual r3: 32/32 converted; 15 contracts pass. Alignment remains actor-local/instance-local; MIX actor coverage and shared-axis relations remain unverified. |
 
 The three-slot dynamic ABI currently supports actual `dav-c220-cube`/`dav-c220-vec` targets (910B): AIC slot0 and AIV subblocks in slots1/2. Other dynamic targets are rejected. Supported request semantics are `issue`, `wait_bracket`, `control_checkpoint`; exactly one logical program, all sites, `sample_every=1`. Capacity must be 1..1,000,000. Natural loop-header records are zero-length checkpoints and their occurrence is not an induction variable. Signal/wait brackets measure scalar source control, not engine busy or engine completion.
 
@@ -83,7 +106,7 @@ Actor PMU activities can overlap. Ratios/cycles may describe several SDK measure
 
 `align_same_call` needs a producer-established invocation/capture/device/stream/task/connection/scope/packetSHA binding, nonempty actual identity evidence **and counter-domain evidence**. Native actor containment is checked only after this binding; it never chooses an invocation. All matching events share one clock descriptor with top-level proof.invocation_id, actual packet identity, verified actor list and a common origin from the selected programs' bound unique native actors. Individual native record/containment is retained as event evidence. Unknown events retain raw ticks. `read_hwts_frequency` derives period from the actual SDK hwts report; absent report leaves nanoseconds unknown. SDK converted-nanosecond SQLite task times alone do not prove the source SYS_CNT epoch. Generic same-call packet collection through the formal entry is still a hardware/integration requirement.
 
-Current Debugger finalization does not collect/read the SDK packet or invoke an automatic exact-proof builder. `align_same_call` accepts declared evidence for descriptor processing; that input is not itself authenticated producer evidence. The missing producer and public finalization integration must be implemented before M3 acceptance. The preferred investigation uses one native ACLprof owner with actual host MSTX scope/API connection linkage and official raw SYS/program decoding. External application-replay is conditional on supported identity retention and disabling conflicting inner ACLprof. Collector compatibility must be tested after restoration.
+The formal worker/SDK producer now reads actual sealed capture TASK/HostTask connection tables; raw SYS extraction uses `stars_soc.data`, whose original task endpoints have a distinct channel from `stars_soc_profile` sampling. `cann_source_clock` independently rereads receipt/SDK proof, requires the actual compiled adapted LLVM hash and MOV SYS_CNT instruction, installed c220 GetSystemCycleImpl, and documented rate matching actual device HWTS frequency. It computes local nanosecond durations without setting a global origin or upgrading alignment. Caller-provided declared `align_same_call` evidence is still not a producer certificate. Final public retention/report wiring, full operator matrix, and MIX coverage must pass before full M3 acceptance.
 
 The old Study has valid campaign/source-buffer provenance: three OS application processes, each with one target call and logical program0 actor logs, under one SDK application-replay command. Its exact all-actor integer SYS-window matching gives a unique recorded invocation under a common reported-epoch assumption. `Pid=NA` does not invalidate that campaign or conditional match; the unfilled link is an independent source scope/connection/PID→specific packet proof. See repository-root `artifacts/method-run/ascend/JOINT_CLOCK_AUDIT.md` for the bounded audit and minimum implementation gates.
 
@@ -91,6 +114,6 @@ The old Study has valid campaign/source-buffer provenance: three OS application 
 
 `acceptance.py --suite operators` fixes six original math operators at three shapes/two configurations, plus preselected RMSNorm at three shapes/two configurations. It reuses only the original mathematical workload/oracle and frozen input bytes; every binary compiles through current tooling. Original tolerances remain: GEMM/fused `atol=.002, rtol=.02`, row ops/RMSNorm `.0005/.002`, transpose exact. No Trace parameter or old Study binary substitution is allowed.
 
-T5 fixes RMSNorm127×769, seed1729, random phase order, three batches ×30 calls per off/native/detailed phase. Prewarm/first compile, host launch, stream envelope, native task records, finalization/export and trace bytes remain separate. CPU math/input/canary checks occur after profiling. Native task statistics require actual scope identity; incomplete matching remains partial. Off-mode task duration is unavailable, so the NPU stream envelope cannot establish the ≤5%/≤10% device-task goals. A separate real reference is required for that comparison.
+T5 fixes RMSNorm127×769, seed1729, random phase order, three batches ×30 calls per off/native/detailed phase. Prewarm/first compile, host launch, stream envelope, native task records, finalization/export and trace bytes remain separate. CPU math/input/canary checks occur after profiling. Native task statistics require exact invocation/binary identity from the retained worker proof; incomplete matching remains partial. Off-mode task duration is unavailable, so the NPU stream envelope cannot establish the ≤5%/≤10% device-task goals. A separate real reference is required for that comparison.
 
 Successful jobs resume only under the same source/core/plugin/native-library plan hashes. Failed or incomplete job directories and logs are retained and stop execution; choose a new output after fixing the mechanism. Partial source identity is recorded separately and leaves per-task timing unknown; it does not turn a narrow math/native result into full capability acceptance. `completed_math_native_matrix` means that narrow result only. Zero selected detailed events, missing native identity, unverified clock, hidden ABI failure or absent precise source-region relation cannot be presented as method completion.

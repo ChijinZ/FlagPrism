@@ -139,6 +139,12 @@ def _take_instrumentation_runs() -> list[dict]:
             runtime_metadata,
             "decoded":
             decoded,
+            "capture_status":
+            run.get("capture_status", "decoded"),
+            "decode_error":
+            run.get("decode_error"),
+            "recovery_export_error":
+            run.get("recovery_export_error"),
             "debug_kernel_name":
             run.get("debug_kernel_name", ""),
             "debug_tracked_table":
@@ -884,6 +890,12 @@ def _augment_instrumentation_artifacts(
                 'observations':
                 from_ir_runs(runs),
                 'captures': [{
+                    'capture_status':
+                    run.get('capture_status', 'decoded'),
+                    'decode_error':
+                    run.get('decode_error'),
+                    'recovery_export_error':
+                    run.get('recovery_export_error'),
                     'capture_id': (run.get('runtime_metadata') or {}).get(
                         'capture_id') or f'ir-capture-{index}',
                     'runtime_metadata':
@@ -905,6 +917,9 @@ def _augment_instrumentation_artifacts(
                 } for index, run in enumerate(runs)]
             },
             indent=2) + '\n')
+    runs = [
+        run for run in runs if run.get("capture_status") != "decode_failed"
+    ]
     _augment_timeline(
         base.with_suffix(".timeline.json"),
         runs,
@@ -937,21 +952,251 @@ def _export_session(state):
                        context=state.get("metadata"))
 
 
+def _snapshot_cann_launch_receipts(state):
+    if not _is_cann_backend(str(state.get("backend") or "")):
+        return
+    supports = getattr(profiler_native, "supports_cann_launch_receipts", None)
+    if supports is None or not supports():
+        return
+    receipts = profiler_native.drain_cann_launch_receipts(state["session"])
+    launches = LaunchHook.snapshot(state["session"])["launches"]
+    for receipt in receipts:
+        worker = receipt.get("worker") or {}
+        worker_ok = (worker.get("abi_version") == 1
+                     and worker.get("struct_size") == 64 and all(
+                         type(worker.get(key)) is int and worker[key] == 0
+                         for key in ("launch_status", "task_query_status",
+                                     "stream_query_status",
+                                     "device_query_status"))
+                     and all(
+                         type(worker.get(key)) is int and worker[key] > 0
+                         for key in ("process_id", "thread_id")) and all(
+                             type(worker.get(key)) is int and worker[key] >= 0
+                             for key in ("device_id", "stream_id", "task_id",
+                                         "stream_handle")))
+        candidates = [
+            row for row in launches
+            if row.get("scope_id") == receipt.get("scope_id")
+            and row.get("status") != "rejected_before_launch"
+        ]
+        if (receipt.get("session_id") == state["session"]
+                and receipt.get("status") == "collected"
+                and not receipt.get("late_callback")
+                and receipt.get("publish_count") == 1 and worker_ok
+                and len(candidates) == 1 and candidates[0].get("binary_id")):
+            launch = candidates[0]
+            receipt["invocation_identity"] = {
+                "invocation_id": launch["id"],
+                "binary_id": launch["binary_id"],
+                "scope_id": launch["scope_id"],
+                "session_id": state["session"],
+                "evidence": "retained_per_launch_worker_receipt",
+            }
+        else:
+            receipt["invocation_identity"] = None
+    Path(state["name"]).with_suffix(".cann-launch-receipts.json").write_text(
+        json.dumps(
+            {
+                "schema_version":
+                1,
+                "receipts":
+                receipts,
+                "semantics":
+                "Actual SDK worker queries bound to retained launch tokens. Native SDK task matching and clock-domain validation are separate requirements.",
+            },
+            allow_nan=False,
+            indent=2) + "\n")
+
+
+def _export_cann_task_identities(state):
+    if not _is_cann_backend(str(state.get("backend") or "")):
+        return
+    receipt_file = Path(
+        state["name"]).with_suffix(".cann-launch-receipts.json")
+    if not receipt_file.is_file():
+        return
+    document = json.loads(receipt_file.read_text())
+    receipts = document.get("receipts", [])
+    roots = {
+        str(Path(row["collector_output_path"]).resolve())
+        for row in receipts
+        if row.get("sdk_capture_binding_status") == "sealed_unique_sdk_capture"
+        and isinstance(row.get("collector_output_path"), str)
+        and row["collector_output_path"]
+    }
+    if len(roots) == 1:
+        from .cann_joint import build_native_task_proofs
+        proof = build_native_task_proofs(next(iter(roots)), receipt_file)
+    else:
+        proof = {
+            "schema_version": 1,
+            "producer": "cann_native_worker_connection_tables_v1",
+            "task_identity_proofs": [],
+            "clock_status": "unverified",
+            "status": "unassociated",
+            "reason": "Missing or ambiguous owned SDK capture root",
+            "receipt_file": str(receipt_file),
+        }
+    # Exact SDK task identity never certifies the internal logger's clock.
+    Path(state["name"]).with_suffix(".cann-task-identities.json").write_text(
+        json.dumps(proof, allow_nan=False, indent=2) + "\n")
+    if len(roots) == 1:
+        from .cann_raw_sys import build_raw_task_sys
+        try:
+            raw_sys = build_raw_task_sys(next(iter(roots)), receipt_file)
+        except (FileNotFoundError, ValueError) as error:
+            # An unsupported SDK schema does not erase native task evidence.
+            # The unverified source-clock descriptor remains unchanged.
+            raw_sys = {
+                "schema_version": 1,
+                "producer": "cann_raw_acsq_sys_v1",
+                "status": "unavailable",
+                "clock_status": "unverified",
+                "reason": str(error),
+                "task_sys_envelopes": [],
+            }
+        Path(state["name"]).with_suffix(".cann-raw-sys.json").write_text(
+            json.dumps(raw_sys, allow_nan=False, indent=2) + "\n")
+
+
 def _export_native_observations(state):
-    captures = InstrumentationHook.take_observation_captures(state["session"])
+    captures = InstrumentationHook.peek_observation_captures(state["session"])
     if not captures:
         return
-    path = Path(state["name"]).with_suffix(".observations.json")
-    existing = json.loads(path.read_text()) if path.exists() else {
-        "schema_version": 1,
-        "observations": [],
-        "captures": []
-    }
-    existing.setdefault("captures", []).extend(captures)
-    existing.setdefault("observations", []).extend(
-        record for capture in captures
-        for record in capture["decoded"]["observations"])
-    path.write_text(json.dumps(existing, indent=2, allow_nan=False) + "\n")
+    path = Path(state["name"]).with_suffix(".observations.json").absolute()
+
+    def sync_directory(directory):
+        descriptor = os.open(directory,
+                             os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+
+    def atomic_write(destination, data):
+        descriptor, temporary = tempfile.mkstemp(
+            prefix=".native-observations-", dir=destination.parent)
+        try:
+            with os.fdopen(descriptor, "wb") as stream:
+                stream.write(data)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, destination)
+            sync_directory(destination.parent)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+
+    # Preserve the original packet bytes before parsing or rewriting a possibly
+    # damaged sidecar. A fallback journal is independent of automatic stage
+    # cleanup and its explicit path is included in every subsequent error.
+    try:
+        recovery = json.dumps(
+            {
+                "schema_version": 1,
+                "kind": "native_observation_recovery",
+                "session_id": state["session"],
+                "intended_sidecar": str(path),
+                "captures": captures,
+            },
+            indent=2,
+            allow_nan=False).encode() + b"\n"
+        # Compiler scope metadata can contain tuples. Compare complete payloads
+        # in their persisted JSON representation when an export is retried.
+        captures = json.loads(recovery)["captures"]
+    except (TypeError, ValueError) as error:
+        raise RuntimeError(
+            f"Native observations are not serializable for durable recovery; "
+            f"session {state['session']} captures remain unacknowledged in memory: {error}"
+        ) from error
+    journal = None
+    owned = state.get("_native_observation_recovery_owned")
+    if owned is not None:
+        previous, device, inode = owned
+        try:
+            identity = Path(previous).parent.stat()
+            if ((identity.st_dev, identity.st_ino) == (device, inode)
+                    and Path(previous).read_bytes() == recovery):
+                journal = Path(previous)
+        except OSError:
+            pass
+    recovery_errors = []
+    for parent in (path.parent, None):
+        if journal is not None:
+            break
+        directory = None
+        try:
+            directory = Path(
+                tempfile.mkdtemp(prefix="flagprism-observation-recovery-",
+                                 dir=parent))
+            journal = directory / "captures.json"
+            atomic_write(journal, recovery)
+            sync_directory(directory.parent)
+            break
+        except OSError as error:
+            recovery_errors.append(error)
+            journal = None
+            if directory is not None:
+                shutil.rmtree(directory, ignore_errors=True)
+    if journal is None:
+        raise RuntimeError(
+            f"Native observations could not be durably saved; session {state['session']} "
+            f"captures remain unacknowledged in memory: {recovery_errors}"
+        ) from recovery_errors[-1]
+    state["native_observation_recovery_path"] = str(journal)
+    identity = journal.parent.stat()
+    state["_native_observation_recovery_owned"] = (str(journal),
+                                                   identity.st_dev,
+                                                   identity.st_ino)
+    try:
+        identifiers = [capture["capture_id"] for capture in captures]
+        if (len(set(identifiers)) != len(identifiers)
+                or any(not isinstance(value, str) or not value
+                       for value in identifiers)):
+            raise ValueError(
+                "Native observations require unique nonempty capture IDs")
+        existing = json.loads(path.read_text()) if path.exists() else {
+            "schema_version": 1,
+            "observations": [],
+            "captures": []
+        }
+        if (not isinstance(existing, dict)
+                or not isinstance(existing.get("captures", []), list)
+                or not isinstance(existing.get("observations", []), list)):
+            raise ValueError(
+                "Invalid existing native observation sidecar structure")
+        previous = existing.setdefault("captures", [])
+        observations = existing.setdefault("observations", [])
+        for capture in captures:
+            matches = [
+                old for old in previous
+                if old.get("capture_id") == capture["capture_id"]
+            ]
+            if matches:
+                if any(old != capture for old in matches):
+                    raise ValueError(
+                        f"Conflicting native observation capture ID: {capture['capture_id']}"
+                    )
+                continue
+            previous.append(capture)
+            observations.extend(capture["decoded"]["observations"])
+        atomic_write(
+            path,
+            json.dumps(existing, indent=2, allow_nan=False).encode() + b"\n")
+        InstrumentationHook.ack_observation_captures(state["session"],
+                                                     identifiers)
+    except Exception as error:
+        raise RuntimeError(
+            f"Native observation export failed: {type(error).__name__}: {error}. "
+            f"Original captures durably retained at {journal}") from error
+    try:
+        shutil.rmtree(journal.parent)
+    except OSError as error:
+        raise RuntimeError(
+            f"Native observations saved at {path}; recovery cleanup failed at {journal}: {error}"
+        ) from error
+    state.pop("native_observation_recovery_path", None)
+    state.pop("_native_observation_recovery_owned", None)
 
 
 def _drop_sessions(session=None):
@@ -1406,12 +1651,15 @@ def finalize(session: Optional[int] = None,
             Invalid JSON updates are rejected after saving the capture and cleanup;
             serializable structure issues are preserved as metadata diagnostics.
         session (int, optional): The session ID to finalize. If None, all sessions are finalized. Defaults to None.
+            An unknown or already finalized explicit ID is a no-op.
         output_format (str, optional): The output format for the profiling results.
                                        Available options are ["hatchet", "chrome_trace"].
 
     Returns:
         None
     """
+    if session is not None and session not in _active_sessions:
+        return
     metadata_error = None
     if metadata is not None:
         if session is None and len(_active_sessions) > 1:
@@ -1489,11 +1737,17 @@ def finalize(session: Optional[int] = None,
             native_ok = attempt(
                 "native finalize", lambda: profiler_native.finalize(
                     state.get("session", session), output_format), state)
-            if not (native_ok and snapshot_ok and stopped and
+            receipts_ok = attempt(
+                "CANN worker receipts",
+                lambda: _snapshot_cann_launch_receipts(state), state)
+            if not (native_ok and snapshot_ok and stopped and receipts_ok and
                     (have_runs or not state.get("instrumentation_hook"))):
+                attempt("native observation recovery",
+                        lambda: _export_native_observations(state), state)
                 continue
 
             def export():
+                _export_cann_task_identities(state)
                 if state.get("instrumentation_hook"):
                     session_runs = [
                         run for run in runs
@@ -1513,7 +1767,9 @@ def finalize(session: Optional[int] = None,
                 _export_session(state)
                 state["exported"] = True
 
-            attempt("export", export, state)
+            if not attempt("export", export, state):
+                attempt("native observation recovery",
+                        lambda: _export_native_observations(state), state)
     finally:
         attempt(
             "cleanup", _drop_all_sessions

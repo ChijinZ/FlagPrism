@@ -1,0 +1,10 @@
+--- a/setup.py
++++ b/setup.py
+@@ -902,6 +902,7 @@
+     package_dir=dict(get_package_dirs()),
+     entry_points=get_entry_points(),
+     include_package_data=True,
++    package_data={"flagtree.profiler": ["_cann_launch_receipt.h"]} if FLAGPRISM_SETUP.enabled else {},
+     ext_modules=[CMakeExtension("triton", "triton/_C/")],
+     cmdclass={
+         "bdist_wheel": plugin_bdist_wheel,

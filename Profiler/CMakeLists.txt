@@ -240,6 +240,9 @@ endif()
 if(FLAGPRISM_PYTHON_DIR)
   set(_profiler_output_dir "${FLAGPRISM_PYTHON_DIR}/flagtree/profiler")
   file(MAKE_DIRECTORY "${_profiler_output_dir}")
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/csrc/include/Profiler/Vendor/CannLaunchReceipt.h"
+    "${_profiler_output_dir}/_cann_launch_receipt.h" COPYONLY)
   set_target_properties(flagtree_profiler_native PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${_profiler_output_dir}"
     RUNTIME_OUTPUT_DIRECTORY "${_profiler_output_dir}")

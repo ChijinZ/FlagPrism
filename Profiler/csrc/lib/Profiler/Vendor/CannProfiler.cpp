@@ -1,12 +1,13 @@
 #include "Profiler/Vendor/CannProfiler.h"
+#include "Profiler/Vendor/CannLaunchReceipt.h"
 
 #include "Data/Data.h"
 #include "Data/Metric.h"
 #include "Device.h"
 #include "Utility/String.h"
 
-#include <nlohmann/json.hpp>
 #include <algorithm>
+#include <atomic>
 #include <cctype>
 #include <chrono>
 #include <cmath>
@@ -14,9 +15,11 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <limits>
 #include <map>
 #include <memory>
+#include <nlohmann/json.hpp>
 #include <optional>
 #include <set>
 #include <stdexcept>
@@ -1713,6 +1716,123 @@ void exportMsprofCsv(const std::string &outputPath,
     }
   }
 }
+
+std::vector<std::string> snapshotSdkCaptureRoots(const std::string &outputPath,
+                                                 bool &complete) {
+  complete = true;
+  std::vector<std::string> roots;
+  std::error_code error;
+  auto root = std::filesystem::absolute(outputPath, error);
+  if (error) {
+    complete = false;
+    return roots;
+  }
+  if (!std::filesystem::exists(root, error)) {
+    complete = !error;
+    return roots;
+  }
+  std::filesystem::recursive_directory_iterator iterator(root, error);
+  if (error)
+    complete = false;
+  const std::filesystem::recursive_directory_iterator end;
+  while (iterator != end) {
+    std::error_code entryError;
+    if (iterator->is_directory(entryError) && !entryError &&
+        iterator->path().filename().string().find("PROF_") == 0) {
+      roots.push_back(iterator->path().lexically_normal().string());
+      iterator.disable_recursion_pending();
+    }
+    if (entryError)
+      complete = false;
+    iterator.increment(error);
+    if (error) {
+      complete = false;
+      error.clear();
+    }
+  }
+  std::sort(roots.begin(), roots.end());
+  return roots;
+}
+
+void sealSdkCaptureDirectory(uint64_t epoch, const std::string &outputPath,
+                             const std::vector<std::string> &before,
+                             uint32_t selectedDevice, bool beforeScanComplete) {
+  bool afterScanComplete;
+  const auto after = snapshotSdkCaptureRoots(outputPath, afterScanComplete);
+  std::vector<std::string> created;
+  std::set_difference(after.begin(), after.end(), before.begin(), before.end(),
+                      std::back_inserter(created));
+  nlohmann::json evidence = {
+      {"kind", "owned_native_sdk_directory_lifetime_v1"},
+      {"owned_output_root", std::filesystem::absolute(outputPath).string()},
+      {"capture_epoch", epoch},
+      {"existing_at_sdk_start", before},
+      {"before_scan_complete", beforeScanComplete},
+      {"after_scan_complete", afterScanComplete},
+      {"observed_after_sdk_close", after},
+      {"new_capture_paths", created},
+      {"selected_device_id", selectedDevice}};
+  if (!beforeScanComplete || !afterScanComplete) {
+    sealCannLaunchReceiptCapture(epoch, "", "capture_directory_scan_incomplete",
+                                 evidence.dump());
+    return;
+  }
+  if (created.size() != 1) {
+    sealCannLaunchReceiptCapture(epoch, "", "missing_or_ambiguous_capture",
+                                 evidence.dump());
+    return;
+  }
+  try {
+    const auto capture = std::filesystem::path(created[0]);
+    const auto hostPath = capture / "host" / "info.json";
+    const auto devicePath = capture /
+                            ("device_" + std::to_string(selectedDevice)) /
+                            ("info.json." + std::to_string(selectedDevice));
+    nlohmann::json hostInfo, deviceInfo;
+    std::ifstream hostInput(hostPath), deviceInput(devicePath);
+    if (!hostInput || !deviceInput) {
+      sealCannLaunchReceiptCapture(epoch, "", "capture_metadata_missing",
+                                   evidence.dump());
+      return;
+    }
+    hostInput >> hostInfo;
+    deviceInput >> deviceInfo;
+    std::optional<uint64_t> process;
+    if (hostInfo.contains("pid")) {
+      const auto &value = hostInfo["pid"];
+      if (value.is_number_unsigned())
+        process = value.get<uint64_t>();
+      else if (value.is_number_integer() && value.get<int64_t>() >= 0)
+        process = static_cast<uint64_t>(value.get<int64_t>());
+      else if (value.is_string())
+        process = parseU64(value.get<std::string>());
+    }
+    size_t deviceMatches = 0;
+    for (const auto &device :
+         deviceInfo.value("DeviceInfo", nlohmann::json::array()))
+      if (device.is_object() && device.contains("id") &&
+          device["id"].is_number_integer() &&
+          device["id"].get<int64_t>() == selectedDevice)
+        ++deviceMatches;
+    evidence["host_info_path"] = hostPath.string();
+    evidence["device_info_path"] = devicePath.string();
+    evidence["host_info_snapshot"] = hostInfo;
+    evidence["device_info_snapshot"] = deviceInfo;
+    evidence["collector_process_id"] = static_cast<uint64_t>(getpid());
+    if (!process || *process != static_cast<uint64_t>(getpid()) ||
+        deviceMatches != 1) {
+      sealCannLaunchReceiptCapture(epoch, "", "capture_identity_mismatch",
+                                   evidence.dump());
+      return;
+    }
+    sealCannLaunchReceiptCapture(epoch, created[0], "sealed_unique_sdk_capture",
+                                 evidence.dump());
+  } catch (const std::exception &error) {
+    evidence["metadata_error"] = error.what();
+    sealCannLaunchReceiptCapture(epoch, "", "capture_metadata_invalid",
+                                 evidence.dump());
+  }
+}
 #endif
 
 } // namespace
@@ -1904,6 +2024,8 @@ void CannProfiler::doStart() {
     return;
   }
 
+  launchReceiptSdkRootsBefore =
+      snapshotSdkCaptureRoots(outputPath, launchReceiptSdkRootScanComplete);
   auto initRet = api.init(outputPath.c_str(), outputPath.size());
   if (initRet != 0) {
     runtimeDegradeReasons.push_back("aclprofInit failed with error code " +
@@ -1947,6 +2069,39 @@ void CannProfiler::doStart() {
   }
 
   aclprofActive = true;
+  auto rollbackStartedSdk = [&](void *config) {
+    (void)api.stop(reinterpret_cast<const AclProfConfig *>(config));
+    (void)api.destroyConfig(reinterpret_cast<const AclProfConfig *>(config));
+    (void)api.finalize();
+    aclprofConfig = nullptr;
+    aclprofActive = false;
+    launchReceiptCaptureEpoch = 0;
+    auto &mstx = mstxApi();
+    if (mstxDomain && mstx.domainDestroy)
+      mstx.domainDestroy(mstxDomain);
+    mstxDomain = nullptr;
+    if (mstxStreamOwned && mstxStream) {
+      auto &runtime = aclRuntimeApi();
+      if (runtime.loaded && runtime.destroyStream)
+        (void)runtime.destroyStream(mstxStream);
+    }
+    mstxStream = nullptr;
+    mstxStreamOwned = false;
+    mstxActive = false;
+  };
+  std::unique_ptr<void, decltype(rollbackStartedSdk)> rollback(
+      aclprofConfig, rollbackStartedSdk);
+  launchReceiptCaptureEpoch =
+      beginCannLaunchReceiptCapture(deviceId, outputPath);
+  if (!launchReceiptCaptureEpoch) {
+    appendUniqueReason(
+        runtimeDegradeReasons,
+        "SDK started but launch receipt epoch initialization failed: "
+        "bounded registry exhausted or epoch counter overflowed.");
+    throw std::runtime_error("CANN launch receipt epoch initialization failed; "
+                             "SDK startup rolled back");
+  }
+  rollback.release();
 #else
   if (msproftxEnabled) {
     runtimeDegradeReasons.push_back(
@@ -1964,6 +2119,12 @@ void CannProfiler::doStart() {
 void CannProfiler::doFlush() {}
 
 void CannProfiler::doStop() {
+  const auto receiptEpoch = launchReceiptCaptureEpoch;
+  if (launchReceiptCaptureEpoch) {
+    endCannLaunchReceiptCapture(launchReceiptCaptureEpoch,
+                                "SDK collector closed");
+    launchReceiptCaptureEpoch = 0;
+  }
   std::unordered_map<size_t, MsProfTxRange> ranges;
   void *domain = nullptr;
   void *stream = nullptr;
@@ -2058,6 +2219,10 @@ void CannProfiler::doStop() {
     if (autoExport) {
       exportMsprofCsv(exportPath, localReasons);
     }
+    if (receiptEpoch)
+      sealSdkCaptureDirectory(receiptEpoch, exportPath,
+                              launchReceiptSdkRootsBefore, deviceId,
+                              launchReceiptSdkRootScanComplete);
   }
 #endif
 
@@ -2335,6 +2500,285 @@ CannProfiler::importMsprofOutput(const SessionProfileMetadata &metadata,
   addAssociationQualityReasons(artifact);
 
   return artifact;
+}
+
+namespace {
+
+struct ReceiptCaptureState;
+struct ReceiptContext {
+  std::atomic<uint64_t> references{1};
+  CannLaunchReceiptSinkV1 sink;
+  std::weak_ptr<ReceiptCaptureState> capture;
+  std::mutex mutex;
+  CannLaunchWorkerRecordV1 worker;
+  uint64_t publishCount{0};
+  bool lateCallback{false};
+  bool cancelled{false};
+  uint32_t cancellationCode{0};
+  std::string cancellationReason;
+  bool malformed{false};
+  bool drainedAfterClose{false};
+};
+
+void retainReceipt(void *opaque) noexcept {
+  static_cast<ReceiptContext *>(opaque)->references.fetch_add(
+      1, std::memory_order_relaxed);
+}
+
+void releaseReceipt(void *opaque) noexcept {
+  auto *context = static_cast<ReceiptContext *>(opaque);
+  if (context->references.fetch_sub(1, std::memory_order_acq_rel) == 1)
+    delete context;
+}
+
+struct ReceiptCaptureState {
+  uint64_t epoch{0};
+  uint32_t selectedDevice{0};
+  std::string outputPath;
+  std::string sdkCapturePath;
+  std::string sdkCaptureBindingStatus{"unsealed"};
+  std::string sdkCaptureBindingEvidence;
+  std::atomic<bool> active{true};
+  std::mutex acceptance;
+  std::vector<ReceiptContext *> contexts;
+  ~ReceiptCaptureState() {
+    for (auto *context : contexts)
+      releaseReceipt(context);
+  }
+};
+
+struct ReceiptRegistry {
+  std::mutex mutex;
+  uint64_t nextEpoch{1};
+  uint64_t nextToken{1};
+  std::shared_ptr<ReceiptCaptureState> current;
+  std::vector<std::shared_ptr<ReceiptCaptureState>> captures;
+};
+
+ReceiptRegistry &receiptRegistry() {
+  static ReceiptRegistry registry;
+  return registry;
+}
+
+void cancelReceipt(void *opaque, uint32_t reasonCode) noexcept {
+  auto *context = static_cast<ReceiptContext *>(opaque);
+  std::lock_guard<std::mutex> lock(context->mutex);
+  context->cancelled = true;
+  context->cancellationCode = reasonCode;
+}
+
+void publishReceipt(void *opaque,
+                    const CannLaunchWorkerRecordV1 *worker) noexcept {
+  auto *context = static_cast<ReceiptContext *>(opaque);
+  auto capture = context->capture.lock();
+  std::unique_lock<std::mutex> acceptance;
+  if (capture)
+    acceptance = std::unique_lock<std::mutex>(capture->acceptance);
+  std::lock_guard<std::mutex> lock(context->mutex);
+  // A retained worker may outlive its capsule/SDK collector. It can record a
+  // late audit flag, but must never overwrite a closed epoch's payload.
+  if (!capture || !capture->active.load(std::memory_order_acquire)) {
+    context->lateCallback = true;
+    return;
+  }
+  ++context->publishCount;
+  if (!worker || worker->abiVersion != kCannLaunchReceiptAbiVersion ||
+      worker->structSize != sizeof(CannLaunchWorkerRecordV1)) {
+    context->malformed = true;
+    return;
+  }
+  if (context->cancelled || context->publishCount != 1)
+    return;
+  context->worker = *worker;
+}
+
+void closeReceiptCapture(const std::shared_ptr<ReceiptCaptureState> &capture,
+                         const std::string &reason) {
+  std::lock_guard<std::mutex> acceptance(capture->acceptance);
+  capture->active.store(false, std::memory_order_release);
+  for (auto *context : capture->contexts) {
+    std::lock_guard<std::mutex> lock(context->mutex);
+    if (!context->publishCount) {
+      context->cancelled = true;
+      context->cancellationReason = reason;
+    }
+  }
+}
+
+} // namespace
+
+uint64_t beginCannLaunchReceiptCapture(uint32_t selectedDevice,
+                                       const std::string &outputPath) {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  if (registry.current && registry.current->active.load())
+    closeReceiptCapture(registry.current, "SDK collector replaced");
+  registry.current.reset();
+  registry.captures.erase(
+      std::remove_if(registry.captures.begin(), registry.captures.end(),
+                     [](const auto &capture) {
+                       if (capture->active.load())
+                         return false;
+                       return std::all_of(
+                           capture->contexts.begin(), capture->contexts.end(),
+                           [](auto *context) {
+                             return context->drainedAfterClose &&
+                                    context->references.load() == 1;
+                           });
+                     }),
+      registry.captures.end());
+  if (registry.captures.size() >= 4096 || !registry.nextEpoch)
+    return 0;
+  auto capture = std::make_shared<ReceiptCaptureState>();
+  capture->epoch = registry.nextEpoch++;
+  capture->selectedDevice = selectedDevice;
+  capture->outputPath = outputPath;
+  registry.captures.push_back(capture);
+  registry.current = capture;
+  return capture->epoch;
+}
+
+void endCannLaunchReceiptCapture(uint64_t captureEpoch,
+                                 const std::string &reason) {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  for (const auto &capture : registry.captures)
+    if (capture->epoch == captureEpoch)
+      closeReceiptCapture(capture, reason);
+}
+
+void sealCannLaunchReceiptCapture(uint64_t captureEpoch,
+                                  const std::string &sdkCapturePath,
+                                  const std::string &bindingStatus,
+                                  const std::string &bindingEvidence) {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  for (const auto &capture : registry.captures) {
+    if (capture->epoch != captureEpoch)
+      continue;
+    if (capture->active.load())
+      return;
+    if (capture->sdkCaptureBindingStatus != "unsealed")
+      return;
+    capture->sdkCapturePath = sdkCapturePath;
+    capture->sdkCaptureBindingStatus = bindingStatus;
+    capture->sdkCaptureBindingEvidence = bindingEvidence;
+  }
+}
+
+CannLaunchReceiptSinkV1 *createCannLaunchReceiptSink(uint64_t scopeId,
+                                                     uint64_t sessionId) {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  auto capture = registry.current;
+  if (!capture || !capture->active.load() ||
+      capture->contexts.size() >= (1u << 20) || !registry.nextToken)
+    return nullptr;
+  auto *context = new ReceiptContext();
+  context->capture = capture;
+  auto &sink = context->sink;
+  sink.structSize = sizeof(CannLaunchReceiptSinkV1);
+  sink.context = context;
+  sink.retain = retainReceipt;
+  sink.release = releaseReceipt;
+  sink.publish = publishReceipt;
+  sink.cancel = cancelReceipt;
+  sink.tokenId = registry.nextToken++;
+  sink.scopeId = scopeId;
+  sink.sessionId = sessionId;
+  sink.captureEpoch = capture->epoch;
+  try {
+    capture->contexts.push_back(context);
+  } catch (...) {
+    releaseReceipt(context);
+    throw;
+  }
+  retainReceipt(context); // Transfer this additional owning ref to the capsule.
+  return &sink;
+}
+
+bool cannLaunchReceiptCaptureActive() noexcept {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  return registry.current && registry.current->active.load();
+}
+
+void cancelCannLaunchReceiptSink(CannLaunchReceiptSinkV1 *sink,
+                                 const std::string &reason) {
+  if (!sink || sink->abiVersion != kCannLaunchReceiptAbiVersion ||
+      sink->structSize != sizeof(CannLaunchReceiptSinkV1) || !sink->context)
+    return;
+  auto *context = static_cast<ReceiptContext *>(sink->context);
+  std::lock_guard<std::mutex> lock(context->mutex);
+  context->cancelled = true;
+  context->cancellationReason = reason;
+}
+
+std::vector<CannLaunchReceipt> drainCannLaunchReceipts(uint64_t sessionId) {
+  auto &registry = receiptRegistry();
+  std::lock_guard<std::mutex> lock(registry.mutex);
+  std::vector<CannLaunchReceipt> receipts;
+  for (const auto &capture : registry.captures) {
+    for (auto *context : capture->contexts) {
+      if (context->sink.sessionId != sessionId)
+        continue;
+      std::lock_guard<std::mutex> contextLock(context->mutex);
+      CannLaunchReceipt receipt;
+      receipt.tokenId = context->sink.tokenId;
+      receipt.scopeId = context->sink.scopeId;
+      receipt.sessionId = context->sink.sessionId;
+      receipt.captureEpoch = context->sink.captureEpoch;
+      receipt.collectorOutputPath = capture->outputPath;
+      receipt.sdkCapturePath = capture->sdkCapturePath;
+      receipt.sdkCaptureBindingStatus = capture->sdkCaptureBindingStatus;
+      receipt.sdkCaptureBindingEvidence = capture->sdkCaptureBindingEvidence;
+      receipt.worker = context->worker;
+      receipt.publishCount = context->publishCount;
+      receipt.lateCallback = context->lateCallback;
+      if (context->lateCallback) {
+        receipt.status = "late_callback";
+        receipt.reason = "worker callback arrived after SDK collector closed";
+      } else if (context->cancelled) {
+        receipt.status = "cancelled";
+        receipt.reason = context->cancellationReason.empty()
+                             ? "cancelled with code " +
+                                   std::to_string(context->cancellationCode)
+                             : context->cancellationReason;
+      } else if (context->publishCount > 1) {
+        receipt.status = "duplicate_publish";
+        receipt.reason =
+            "one source invocation published multiple worker receipts";
+      } else if (context->malformed) {
+        receipt.status = "malformed_record";
+        receipt.reason = "worker receipt ABI version or size mismatch";
+      } else if (!context->publishCount) {
+        receipt.status = "pending";
+        receipt.reason = "actual SDK launch worker has not published";
+      } else if (receipt.worker.launchStatus != 0) {
+        receipt.status = "launch_failed";
+        receipt.reason = "original SDK launch returned failure";
+      } else if (receipt.worker.deviceQueryStatus != 0 ||
+                 receipt.worker.streamQueryStatus != 0 ||
+                 receipt.worker.taskQueryStatus != 0 ||
+                 receipt.worker.deviceId < 0 || receipt.worker.streamId < 0 ||
+                 !receipt.worker.processId || !receipt.worker.threadId) {
+        receipt.status = "query_failed";
+        receipt.reason =
+            "actual worker identity query failed or was not attempted";
+      } else if (static_cast<uint32_t>(receipt.worker.deviceId) !=
+                 capture->selectedDevice) {
+        receipt.status = "device_mismatch";
+        receipt.reason =
+            "actual SDK launch device differs from selected collector device";
+      } else {
+        receipt.status = "collected";
+      }
+      receipts.push_back(std::move(receipt));
+      if (!capture->active.load())
+        context->drainedAfterClose = true;
+    }
+  }
+  return receipts;
 }
 
 } // namespace proton

@@ -1,0 +1,200 @@
+diff --git a/python/flagtree/_flagprism.py b/python/flagtree/_flagprism.py
+index f47380fda..54a664f80 100644
+--- a/python/flagtree/_flagprism.py
++++ b/python/flagtree/_flagprism.py
+@@ -19,6 +19,7 @@ HOST_API_VERSION = (2, 0)
+ HOST_CAPABILITIES = frozenset({
+     "compiler.dialects.v1",
+     "compiler.events.v1",
++    "compiler.driver.v1",
+     "compiler.options.v1",
+     "frontend.statement_events.v1",
+     "language.debug_collect.v1",
+@@ -309,3 +310,48 @@ def debugger_launch_context(
+             kernel_args=kernel_args,
+         ),
+     )
++
++
++@dataclass
++class CompilerDriverEvent:
++    """A per-compile external-driver handoff; command and environment are private copies."""
++    backend: str
++    command: list[str]
++    environment: dict[str, str]
++    metadata: dict[str, Any]
++
++
++def prepare_compiler_driver(*, backend: str, command: list[str], environment: dict[str, str], metadata: dict[str, Any]) -> CompilerDriverEvent:
++    event = CompilerDriverEvent(str(backend), list(command), dict(environment), metadata)
++    for callback in _registered_callbacks("on_prepare_compiler_driver"):
++        callback(event)
++    return event
++
++
++def finish_compiler_driver(event: CompilerDriverEvent, *, returncode: int) -> None:
++    for callback in _registered_callbacks("on_finish_compiler_driver"):
++        callback(event, returncode=int(returncode))
++
++
++def compiler_driver_cache_key() -> str:
++    """Components identify codegen-affecting driver configuration before caching."""
++    values = []
++    for callback in _registered_callbacks("compiler_driver_cache_key"):
++        values.append(str(callback()))
++    return "|".join(values)
++
++
++def get_cann_launch_receipt_abi() -> str:
++    """Optional authoritative C ABI for generated SDK launch-worker receipts."""
++    values = []
++    for callback in _registered_callbacks("get_cann_launch_receipt_abi"):
++        value = callback()
++        if value:
++            if not isinstance(value, str):
++                raise TypeError("CANN receipt ABI provider must return header text")
++            values.append(value)
++    if not values:
++        return ""
++    if len(set(values)) != 1:
++        raise RuntimeError("multiple incompatible CANN receipt ABI providers")
++    return values[0]
+diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend/compiler.py
+index ea9c0b594..426bae507 100644
+--- a/third_party/ascend/backend/compiler.py
++++ b/third_party/ascend/backend/compiler.py
+@@ -550,7 +550,13 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata)
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -746,7 +752,13 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata)
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -902,7 +914,7 @@ class NPUOptions:
+ 
+     def hash(self):
+         key = "_".join([f"{name}-{val}" for name, val in self.__dict__.items()])
+-        key = "_".join([key, get_cann_version_file_hash()])
++        key = "_".join([key, get_cann_version_file_hash(), _flagprism.compiler_driver_cache_key()])
+         return hashlib.sha256(key.encode("utf-8")).hexdigest()
+ 
+ 
+diff --git a/third_party/ascend/backend/driver.py b/third_party/ascend/backend/driver.py
+index ce3a73ee2..fbb483df6 100644
+--- a/third_party/ascend/backend/driver.py
++++ b/third_party/ascend/backend/driver.py
+@@ -40,6 +40,15 @@ from triton.backends.ascend.utils import (_precompile_npu_hash, _precompile_npu_
+                                           get_backend_func)
+ 
+ 
++
++
++def _flagprism_cann_receipt_cpp(abi):
++    """Embed exact provider bytes; wrapper_src cache identity includes this ABI."""
++    common = '\n#include <memory>\n#include <dlfcn.h>\n#include <unistd.h>\n#include <sys/syscall.h>\n\nstatic PyObject* flagprism_receipt_capsule(PyObject* metadata) {\n  if (!metadata || metadata == Py_None) return nullptr;\n  if (PyDict_Check(metadata)) {\n    PyObject* value = PyDict_GetItemString(metadata, "_flagprism_cann_launch_receipt_v1");\n    if (value) { Py_INCREF(value); return value; }\n  }\n  PyObject* value = PyObject_GetAttrString(metadata, "_flagprism_cann_launch_receipt_v1");\n  if (!value && PyErr_ExceptionMatches(PyExc_AttributeError)) PyErr_Clear();\n  return value;\n}\n'
++    supported = '\nusing FlagPrismReceiptSinkHandle = std::shared_ptr<proton::CannLaunchReceiptSinkV1>;\n\nstatic FlagPrismReceiptSinkHandle flagprism_get_receipt_sink(PyObject* metadata) {\n  PyObject* capsule = flagprism_receipt_capsule(metadata);\n  if (!capsule) return {};\n  if (capsule == Py_None) { Py_DECREF(capsule); return {}; }\n  if (!PyCapsule_IsValid(capsule, proton::kCannLaunchReceiptCapsuleName)) {\n    Py_DECREF(capsule);\n    PyErr_SetString(PyExc_TypeError, "CANN launch receipt capsule name/version mismatch");\n    return {};\n  }\n  auto* sink = static_cast<proton::CannLaunchReceiptSinkV1*>(\n      PyCapsule_GetPointer(capsule, proton::kCannLaunchReceiptCapsuleName));\n  if (!sink || sink->abiVersion != proton::kCannLaunchReceiptAbiVersion ||\n      sink->structSize != sizeof(proton::CannLaunchReceiptSinkV1) ||\n      !sink->context || !sink->retain || !sink->release || !sink->publish || !sink->cancel) {\n    Py_DECREF(capsule);\n    PyErr_SetString(PyExc_ValueError, "CANN launch receipt capsule ABI is incomplete");\n    return {};\n  }\n  sink->retain(sink->context);\n  Py_DECREF(capsule);\n  try {\n    return FlagPrismReceiptSinkHandle(sink, [](auto* retained) {\n      retained->release(retained->context);\n    });\n  } catch (const std::bad_alloc&) {\n    // shared_ptr\'s constructor invokes the deleter on allocation failure.\n    PyErr_NoMemory();\n    return {};\n  }\n}\n\nstatic void flagprism_publish_receipt(const FlagPrismReceiptSinkHandle& sink,\n                                     rtStream_t stream, rtError_t launchStatus,\n                                     uint32_t actualBlockNum) {\n  if (!sink) return;\n  proton::CannLaunchWorkerRecordV1 record;\n  record.processId = static_cast<uint64_t>(getpid());\n  record.threadId = static_cast<uint64_t>(syscall(SYS_gettid));\n  record.streamHandle = reinterpret_cast<uint64_t>(stream);\n  record.launchStatus = static_cast<int32_t>(launchStatus);\n  if (launchStatus == RT_ERROR_NONE && actualBlockNum) {\n    // Read the last task before any other SDK call, on this actual worker.\n    using TaskQuery = aclError (*)(uint32_t*);\n    using StreamQuery = aclError (*)(aclrtStream, int32_t*);\n    using DeviceQuery = aclError (*)(int32_t*);\n    static auto taskQuery = reinterpret_cast<TaskQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtGetThreadLastTaskId"));\n    static auto streamQuery = reinterpret_cast<StreamQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtStreamGetId"));\n    static auto deviceQuery = reinterpret_cast<DeviceQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtGetDevice"));\n    record.taskQueryStatus = taskQuery ? taskQuery(&record.taskId) : -2;\n    record.streamQueryStatus = streamQuery ? streamQuery(stream, &record.streamId) : -2;\n    record.deviceQueryStatus = deviceQuery ? deviceQuery(&record.deviceId) : -2;\n  }\n  sink->publish(sink->context, &record);\n}\n'
++    legacy = '\nusing FlagPrismReceiptSinkHandle = std::shared_ptr<void>;\nstatic FlagPrismReceiptSinkHandle flagprism_get_receipt_sink(PyObject* metadata) {\n  PyObject* capsule = flagprism_receipt_capsule(metadata);\n  if (!capsule) return {};\n  bool present = capsule != Py_None;\n  Py_DECREF(capsule);\n  if (present) PyErr_SetString(PyExc_RuntimeError,\n      "CANN receipt capsule supplied but its ABI provider is unavailable; rebuild the profiler/launcher");\n  return {};\n}\nstatic void flagprism_publish_receipt(const FlagPrismReceiptSinkHandle&,\n                                     rtStream_t, rtError_t, uint32_t) {}\n'
++    return common + (abi + supported if abi else legacy)
++
+ class NPUUtils(object):
+ 
+     def __new__(cls):
+@@ -563,6 +572,7 @@ def make_launcher(constants, signature, metadata):
+         *args_expand
+     """
+     debug_abi = _DebuggerHiddenArgABI.from_metadata(metadata)  # FlagPrism
++    receipt_cpp = _flagprism_cann_receipt_cpp(_flagprism.get_cann_launch_receipt_abi())
+ 
+     args_format = ''.join([format_of(ty) for ty in signature.values()])
+     format = "iiiKKOOOO" + args_format + debug_abi.parse_format  # FlagPrism
+@@ -844,11 +854,12 @@ extern "C" {
+ #define TENSOR_KIND_INPUT_OUTPUT 2
+ 
+ {cpp_msprof_extern}
++{receipt_cpp}
+ 
+ {cpp_device_pointer}
+ 
+ // FlagPrism: append the optional debugger pointer to the generated launch ABI.
+-static void _launch(const char* kernelName, const void* func, rtStream_t stream, int gridX, int gridY, int gridZ, std::vector<std::vector<int64_t>> &tensorShapes, std::vector<int> &tensorKinds{', ' + arg_decls if len(signature) > 0 else ''}{debug_abi.launch_declaration}) {{
++static void _launch(const char* kernelName, const void* func, rtStream_t stream, int gridX, int gridY, int gridZ, FlagPrismReceiptSinkHandle receiptSink, std::vector<std::vector<int64_t>> &tensorShapes, std::vector<int> &tensorKinds{', ' + arg_decls if len(signature) > 0 else ''}{debug_abi.launch_declaration}) {{
+   // only 1D parallelization is supported for NPU
+   // Pointer type becomes flattend 1-D Memref tuple: base_ptr, data_ptr, offset, shape, stride
+   // base_ptr offset shape and stride are not used, arbitrarily set for now
+@@ -923,6 +934,7 @@ static void _launch(const char* kernelName, const void* func, rtStream_t stream,
+     }};
+     {cpp_msprof_call_before_launch}
+     {cpp_kernel_launch}
++    flagprism_publish_receipt(receiptSink, stream, ret, blockNum);
+     {'void *&stream_ref = const_cast<void*&>(stream);' if enable_device_print else ''}
+     {'cce::internal::DebugTunnel::Close(DTData, stream_ref);' if enable_device_print else ''}
+     {cpp_msprof_call_after_launch}
+@@ -1001,6 +1013,9 @@ static PyObject* launch(PyObject* self, PyObject* args) {{
+       return NULL;
+   }}
+ 
++  auto receiptSink = flagprism_get_receipt_sink(launch_metadata);
++  if (PyErr_Occurred()) return NULL;
++
+   // get kernel_name
+   PyObject *kernelNameObj = PyDict_GetItemString(packedMetadata, "kernel_name");
+   const char *kernelName = PyUnicode_AsUTF8(kernelNameObj);
+@@ -1018,7 +1033,7 @@ static PyObject* launch(PyObject* self, PyObject* args) {{
+   // raise exception asap
+   {newline.join(ptr_decls)}
+   // FlagPrism: forward the optional pointer after all user arguments.
+-  _launch(kernelName, function, stream, gridX, gridY, gridZ, tensorShapes, tensorKinds{', ' + ', '.join(internal_args_list) if len(internal_args_list) > 0 else ''}{debug_abi.call_argument});
++  _launch(kernelName, function, stream, gridX, gridY, gridZ, receiptSink, tensorShapes, tensorKinds{', ' + ', '.join(internal_args_list) if len(internal_args_list) > 0 else ''}{debug_abi.call_argument});
+   if (PyErr_Occurred()) {{
+     return NULL;
+   }}
+diff --git a/third_party/ascend/bin/CMakeLists.txt b/third_party/ascend/bin/CMakeLists.txt
+index 627d5d6b1..1ab9d9793 100644
+--- a/third_party/ascend/bin/CMakeLists.txt
++++ b/third_party/ascend/bin/CMakeLists.txt
+@@ -3,6 +3,13 @@ get_property(triton_libs GLOBAL PROPERTY TRITON_LIBS)
+ include_directories(
+     ${PROJECT_SOURCE_DIR}/third_party/ascend/AscendNPU-IR/bishengir/include
+     ${PROJECT_BINARY_DIR}/third_party/ascend/AscendNPU-IR/bishengir/include
++    # RegisterTritonDialects.h includes configured AMD/NVIDIA generated headers.
++    ${PROJECT_SOURCE_DIR}/third_party/amd/include
++    ${PROJECT_BINARY_DIR}/third_party/amd/include
++    ${PROJECT_SOURCE_DIR}/third_party/nvidia/include
++    ${PROJECT_BINARY_DIR}/third_party/nvidia/include
++    ${PROJECT_SOURCE_DIR}/third_party/nvidia/hopper/include
++    ${PROJECT_BINARY_DIR}/third_party/nvidia/hopper/include
+   )
+ 
+ add_llvm_executable(triton-opt triton-opt.cpp PARTIAL_SOURCES_INTENDED)
+@@ -183,6 +190,8 @@ llvm_update_compile_flags(triton-mlir-opt)
+ 
+ target_link_libraries(triton-mlir-opt PRIVATE
+   ${triton_libs}
++  # TLE lowering uses the configured NVIDIA PTXBuilder implementation.
++  TritonNVIDIAGPUToLLVM
+   # MLIR core
+   MLIROptLib
+   MLIRPass

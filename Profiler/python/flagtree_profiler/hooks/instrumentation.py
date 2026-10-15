@@ -172,6 +172,39 @@ class InstrumentationHook(Hook):
     observation_capture_sequence = 0
 
     @classmethod
+    def peek_observation_captures(cls, session=None):
+        """Snapshot captures without consuming any session membership."""
+        import copy
+
+        return [
+            copy.deepcopy({
+                key: value
+                for key, value in capture.items() if key != 'session_ids'
+            }) for capture in cls.observation_captures
+            if session is None or session in capture['session_ids']
+        ]
+
+    @classmethod
+    def ack_observation_captures(cls, session, capture_ids):
+        """Acknowledge only specified, durably saved captures for one session."""
+        capture_ids = set(capture_ids)
+        if any(not isinstance(value, str) or not value
+               for value in capture_ids):
+            raise ValueError(
+                'Native observation acknowledgements require capture IDs')
+        retained = []
+        for capture in cls.observation_captures:
+            members = capture['session_ids']
+            if capture.get('capture_id') in capture_ids:
+                if session is None:
+                    members.clear()
+                elif session in members:
+                    members.remove(session)
+            if members:
+                retained.append(capture)
+        cls.observation_captures = retained
+
+    @classmethod
     def take_observation_captures(cls, session=None):
         """Drain one session's immutable per-launch ring captures."""
         result, retained = [], []
@@ -529,64 +562,79 @@ class InstrumentationHook(Hook):
         cls.observation_capture_sequence += 1
         capture_id = f'proton-{os.getpid()}-{sequence}'
         metadata = self.observation_metadata.get(function, {})
-        scopes = dict(metadata.get('scope_id_names', []))
-        decoded = decode_proton_ring(
-            raw,
-            capture_id=capture_id,
-            invocation_id=launch['invocation_id'],
-            association_evidence=launch['association_evidence'],
-            scopes=scopes,
-            granularity=str(self.mode.granularity).lower().split('.')[-1],
-            clock_bits=32
-            if mode.Optimize.CLOCK32 in self.mode.optimizations else 43)
-        if self.observation_plan is not None:
-            decoded = select_observations(decoded, self.observation_plan)
-        for value in decoded['observations']:
-            value['compiler_site'] = {
-                'kind':
-                'explicit_proton_scope',
-                'binary_id':
-                metadata.get('binary_id'),
+
+        def retain(decoded, error=None):
+            capture = {
+                'capture_id':
+                capture_id,
                 'scope_id':
-                value['site'],
-                'origin':
-                metadata.get('scope_id_origins',
-                             {}).get(str(value['site']), {
-                                 'status': 'unknown',
-                                 'semantic': 'source_region_origin'
-                             }),
+                launch['scope_id'],
+                'process_id':
+                os.getpid(),
+                'stream_handle':
+                launch.get('stream_handle'),
+                'invocation_id':
+                launch['invocation_id'],
+                'session_ids':
+                launch['session_ids'],
+                **metadata,
+                'raw_encoding':
+                'base64_proton_ring_v1',
+                'raw_sha256':
+                hashlib.sha256(raw).hexdigest(),
+                'raw_base64':
+                base64.b64encode(raw).decode('ascii'),
+                'decoded':
+                decoded,
+                'collection_boundary':
+                'after_inherited_native_buffer_synchronization',
+                'capture_notes': [
+                    'Raw export reuses the inherited native parser host transfer; owned bytes are copied before its callback returns.'
+                ],
             }
-        decoded['observations'] = [
-            observation(value) for value in decoded['observations']
-        ]
-        cls.observation_captures.append({
-            'capture_id':
-            capture_id,
-            'scope_id':
-            launch['scope_id'],
-            'process_id':
-            os.getpid(),
-            'stream_handle':
-            launch.get('stream_handle'),
-            'invocation_id':
-            launch['invocation_id'],
-            'session_ids':
-            launch['session_ids'],
-            **metadata,
-            'raw_encoding':
-            'base64_proton_ring_v1',
-            'raw_sha256':
-            hashlib.sha256(raw).hexdigest(),
-            'raw_base64':
-            base64.b64encode(raw).decode('ascii'),
-            'decoded':
-            decoded,
-            'collection_boundary':
-            'after_inherited_native_buffer_synchronization',
-            'capture_notes': [
-                'Raw export reuses the inherited native parser host transfer; owned bytes are copied before its callback returns.'
-            ],
-        })
+            if error is not None:
+                capture['capture_status'] = 'decode_failed'
+                capture['decode_error'] = {
+                    'type': type(error).__name__,
+                    'message': str(error)
+                }
+            cls.observation_captures.append(capture)
+
+        try:
+            scopes = dict(metadata.get('scope_id_names', []))
+            decoded = decode_proton_ring(
+                raw,
+                capture_id=capture_id,
+                invocation_id=launch['invocation_id'],
+                association_evidence=launch['association_evidence'],
+                scopes=scopes,
+                granularity=str(self.mode.granularity).lower().split('.')[-1],
+                clock_bits=32
+                if mode.Optimize.CLOCK32 in self.mode.optimizations else 43)
+            if self.observation_plan is not None:
+                decoded = select_observations(decoded, self.observation_plan)
+            for value in decoded['observations']:
+                value['compiler_site'] = {
+                    'kind':
+                    'explicit_proton_scope',
+                    'binary_id':
+                    metadata.get('binary_id'),
+                    'scope_id':
+                    value['site'],
+                    'origin':
+                    metadata.get('scope_id_origins',
+                                 {}).get(str(value['site']), {
+                                     'status': 'unknown',
+                                     'semantic': 'source_region_origin'
+                                 }),
+                }
+            decoded['observations'] = [
+                observation(value) for value in decoded['observations']
+            ]
+        except BaseException as error:
+            retain({'observations': []}, error)
+            raise
+        retain(decoded)
 
     def _populate_host_buffer(self, function: Any, stream: Any = None) -> None:
         if function and self.metadata_path[function]:

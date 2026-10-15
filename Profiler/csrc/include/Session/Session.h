@@ -117,6 +117,9 @@ public:
 
   size_t getContextDepth(size_t sessionId);
 
+  bool isActiveSessionForProfiler(size_t sessionId,
+                                  const std::string &profilerName) const;
+
   void enterScope(const Scope &scope);
 
   void exitScope(const Scope &scope);

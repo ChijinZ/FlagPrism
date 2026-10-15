@@ -1,0 +1,24 @@
+{
+  "scope": "functional and quality milestone, not complete three-backend or MIX-native identity acceptance",
+  "source_sha256": "28af9ba0772066ac32d44e670737789e776fddec349a20b3141531e938303cd0",
+  "source_files": 463,
+  "source_matches_canonical_before_commit": true,
+  "common_cpu": {
+    "passed": 346,
+    "skipped": 4,
+    "skip_reason": "opt-in browser",
+    "exit": 0
+  },
+  "quality_exit": 0,
+  "nvidia_perf": "explicitly deferred; no new measurements",
+  "nvidia_gpu": "r23 selectedrequest/overflow functional exit0; r24 CANN analysis changes do not alter NV path; core after pureformat bitwise matches",
+  "ascend": "actual four single-task calls/two binaries/two streams and formal row hidden-only32/local durations pass; MIX math/dynamic232 pass but TASK/HostTask identity unassociated; no clock alignment claim",
+  "limits": [
+    "Ascend full operator matrix and heldout pending",
+    "MIX task/connection mapping under active investigation",
+    "Source origins remain partial",
+    "Cross-actor SYS offset not certified",
+    "Ascend wheel metadata blocker pending"
+  ],
+  "paper_source": "single maintained paper/main.tex and referenced sections in workspace; final paper snapshot not yet frozen"
+}

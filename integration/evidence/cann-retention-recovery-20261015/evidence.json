@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "evidence_id": "cann-retention-recovery-20261015",
+  "status": "immutable_snapshot",
+  "scope": "Opaque CANN SDK artifact retention and native observation failure recovery; five owned Python source/test files only.",
+  "claims": {
+    "cpu_tests": {
+      "passed": 161,
+      "skipped": 4,
+      "skip_reason": "Opt-in browser tests",
+      "seconds": 4.55
+    },
+    "new_helper_cases": 40,
+    "new_recovery_cases": 17,
+    "gpu_executed": false,
+    "three_backend_complete_acceptance": false,
+    "native_sdk_or_device_acceptance_claimed": false
+  },
+  "environment": {
+    "execution": "CPU-only inside existing flagprism-enflame-dev Docker on zhiyuan_suiyuan",
+    "python": "3.12.3",
+    "pytest": "9.0.1",
+    "yapf": "0.43.0",
+    "ruff": "0.9.1",
+    "venv_changed": false
+  },
+  "source_files": [
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_artifacts.py",
+      "sha256": "465b591c3ab31d5b467ba7671e847fbb149b6e35763419e81bf263dce767d277"
+    },
+    {
+      "path": "Profiler/test/test_cann_artifacts.py",
+      "sha256": "09a47b44d1621a1448e106be9bc84b55397371eae4dfec7cb1ce794749c569bd"
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/profile.py",
+      "sha256": "bfede300475a0975e17f9225efaec0a77fc2a2899d88ed4254f3d5dd63e4911d"
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/instrumentation.py",
+      "sha256": "7b885318e0804ff6f774bd99f004f7aa3f5724b71d218cda9ee10dfced2926a5"
+    },
+    {
+      "path": "Profiler/test/test_native_observation_recovery.py",
+      "sha256": "218b201ae731348f6d21363cc11e8999ecb5e70770d36e920dadecce036a8886"
+    }
+  ],
+  "test_entry": {
+    "documentation": "Profiler/docs/method_testing.md",
+    "section": "Contracts and recovery",
+    "focused_command": "python -m pytest Profiler/test/test_native_observation_recovery.py Profiler/test/test_cann_artifacts.py Profiler/test/test_portable_capture.py Profiler/test/test_report.py -ra",
+    "requires": "Current source with matching built runtime; run in Docker, no GPU session or SDK activation."
+  },
+  "format": {
+    "new_files": "Full-file YAPF; AST equivalence and idempotence checked.",
+    "existing_files": "Changed ranges relative to c207f6e5f2c511ef5c20f6a25e67a4c106f077c5; AST equivalence and changed-range idempotence checked.",
+    "ruff": "Passed on cann_artifacts.py, profile.py and hooks/instrumentation.py."
+  },
+  "recovery_oracles": [
+    {
+      "test": "test_unknown_finalize_is_noop_before_metadata_and_all_side_effects",
+      "cases": 1,
+      "oracle": "Unknown explicit session ID exits before metadata parsing or state/native effects."
+    },
+    {
+      "test": "test_actual_finalize_twice_keeps_output_and_other_session",
+      "cases": 1,
+      "oracle": "Repeated finalize preserves output and another active session."
+    },
+    {
+      "test": "test_peek_ack_are_exact_and_legacy_take_remains_compatible",
+      "cases": 1,
+      "oracle": "Peek is non-destructive; ack removes only selected capture IDs/session membership; legacy take remains usable."
+    },
+    {
+      "test": "test_success_ack_follows_atomic_file_and_directory_sync",
+      "cases": 1,
+      "oracle": "Acknowledgement follows durable atomic publication and directory sync; another session remains queued."
+    },
+    {
+      "test": "test_bad_existing_json_keeps_original_and_durable_raw",
+      "cases": 1,
+      "oracle": "Corrupt old JSON remains unchanged; raw bytes recover from a journal in a new process."
+    },
+    {
+      "test": "test_atomic_write_failure_keeps_old_sidecar_and_raw",
+      "cases": 2,
+      "oracle": "Allocation/replace failures preserve old sidecar and recoverable raw."
+    },
+    {
+      "test": "test_fallback_journal_survives_finalize_state_drop",
+      "cases": 1,
+      "oracle": "Fallback journal remains independently readable after state drop and staging removal."
+    },
+    {
+      "test": "test_all_recovery_locations_fail_without_false_durability",
+      "cases": 1,
+      "oracle": "All storage failures explicitly report not durable and preserve unacknowledged in-process captures."
+    },
+    {
+      "test": "test_retry_after_ack_failure_deduplicates_identical_capture",
+      "cases": 1,
+      "oracle": "Retry merges only identical full payloads, avoids duplicate observations, and cleans owned journal after success."
+    },
+    {
+      "test": "test_directory_sync_failure_after_replace_can_retry_without_duplicates",
+      "cases": 1,
+      "oracle": "A post-replace sync failure can retry without duplicating the capture."
+    },
+    {
+      "test": "test_same_id_different_payload_is_not_silently_dropped",
+      "cases": 1,
+      "oracle": "Conflicting payload for the same ID fails with original sidecar, queue and journal retained."
+    },
+    {
+      "test": "test_unserializable_packet_is_explicitly_not_durable",
+      "cases": 1,
+      "oracle": "Serialization failure explicitly reports not durable and does not acknowledge raw."
+    },
+    {
+      "test": "test_actual_truncated_proton_decode_retains_raw_and_original_exception",
+      "cases": 1,
+      "oracle": "Real truncated Proton CPU decoder preserves original exception identity and raw SHA; export yields no execution events."
+    },
+    {
+      "test": "test_earlier_finalize_failure_still_durably_saves_completed_host_capture",
+      "cases": 3,
+      "oracle": "Native finalize, launch snapshot or task producer failure still durably saves completed host raw and preserves original cause without claiming a full bundle."
+    }
+  ],
+  "limitations": [
+    "All storage locations failing leaves captures unacknowledged in process memory and reports explicitly not durable.",
+    "Malformed native packets preserve raw bytes and decoder error without fabricated observations.",
+    "CPU lifecycle tests and a real CPU decoder establish neither GPU execution nor actual SDK/native backend support.",
+    "Four browser tests remain skipped."
+  ],
+  "historical_negative": {
+    "file": "native-recovery-decoder-tests-historical-negative.log",
+    "result": "13 passed / 1 failed",
+    "reason": "Test incorrectly required events.jsonl for an empty bundle; corrected assertion checks empty report events/untimed and absent or empty event file. Final real decoder case passes."
+  },
+  "content_audit": {
+    "allowed_content": "Small JSON summaries and UTF-8 test/tool logs only.",
+    "excluded": "No SDK headers or libraries, databases, PDF/copyright paper content, device raw buffers, credentials or large raw archives.",
+    "private_key_and_access_key_pattern_scan": "No matches; selected files manually reviewed."
+  },
+  "files": [
+    {
+      "path": "native-recovery-final-manifest.json",
+      "original_log_or_summary": "artifacts/method-run/enflame/native-recovery-final-manifest.json",
+      "bytes": 2416,
+      "sha256": "69853f979c8a60f879df83989d14b63d6e5443e2a7f6891123b07ae993329a63"
+    },
+    {
+      "path": "cann-artifacts-format.json",
+      "original_log_or_summary": "artifacts/method-run/enflame/cann-artifacts-format.json",
+      "bytes": 742,
+      "sha256": "83e6db31ad63eebfd01fe81076f7605bd17b372b1f6f460182535dfd4b02142f"
+    },
+    {
+      "path": "native-recovery-format-applied.json",
+      "original_log_or_summary": "artifacts/method-run/enflame/native-recovery-format-applied.json",
+      "bytes": 556,
+      "sha256": "ae49798cb18b607c58cfec4301104557a35107785bcf57539ae883e2b7989f17"
+    },
+    {
+      "path": "recovery-format-ranged-summary.json",
+      "original_log_or_summary": "artifacts/method-run/nvidia/observer-quality-r23gcufinal/results/format-ranged-summary.json",
+      "bytes": 3045,
+      "sha256": "41cc0312eab4dc23fd26638f20321b7ed1a665b076ce084a65f9c2af254e8e6f"
+    },
+    {
+      "path": "native-recovery-postformat-tests.log",
+      "original_log_or_summary": "artifacts/method-run/enflame/native-recovery-postformat-tests.log",
+      "bytes": 1322,
+      "sha256": "dce0716f5205ea332292ae9b55b985084a4cdf60c7f79cad202094f4626d92e5"
+    },
+    {
+      "path": "native-recovery-postformat-ruff.log",
+      "original_log_or_summary": "artifacts/method-run/enflame/native-recovery-postformat-ruff.log",
+      "bytes": 19,
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18"
+    },
+    {
+      "path": "native-recovery-decoder-tests-historical-negative.log",
+      "original_log_or_summary": "artifacts/method-run/enflame/native-recovery-decoder-tests.log",
+      "bytes": 5332,
+      "sha256": "fc412edaca2f1b8ce93d6a18aea7506380b248e3d0e8a921a0da6c2f4594e890"
+    }
+  ],
+  "historical_negative_verbatim_archive": {
+    "file": "native-recovery-decoder-tests-historical-negative.log.gz",
+    "compression": "gzip",
+    "original_sha256": "fc412edaca2f1b8ce93d6a18aea7506380b248e3d0e8a921a0da6c2f4594e890",
+    "reason": "Preserve original pytest bytes, including whitespace, without modifying the raw historical log."
+  }
+}

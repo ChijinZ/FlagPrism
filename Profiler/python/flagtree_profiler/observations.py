@@ -181,6 +181,8 @@ def from_ir_runs(runs):
     """Keep append traces and legacy snapshots distinct; never invent calibration."""
     events = []
     for run_index, run in enumerate(runs):
+        if run.get('capture_status') == 'decode_failed':
+            continue
         events.extend(
             observation(event)
             for event in run.get('semantic_observations', []))

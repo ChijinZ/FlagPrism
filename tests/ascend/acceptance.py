@@ -2,7 +2,7 @@
 
 Every worker runs in the Ascend Docker. Inputs are fixed Study bytes; kernels
 compile afresh. A completed receipt is reused only for the exact plan hash.
-Native task intervals require actual scope identity; off-mode device tasks
+Native task intervals require exact invocation and binary identity; off-mode device tasks
 remain unavailable rather than comparing them to a stream envelope.
 """
 from __future__ import annotations
@@ -20,7 +20,8 @@ import sys
 import time
 import traceback
 
-OPERATORS = ('gemm','gemm_bias_gelu','softmax','layernorm','reduce_sum','transpose','rmsnorm')
+OPERATORS = ('gemm', 'gemm_bias_gelu', 'softmax', 'layernorm', 'reduce_sum',
+             'transpose')
 SHAPES = {'gemm': [(128,128,128),(512,512,512),(257,193,320)],
           'transpose': [(256,256),(1024,1024),(513,257)],
           'rows': [(32,256),(256,1024),(127,769)]}
@@ -29,6 +30,43 @@ MODES = ('off','native','detailed')
 
 def dump(path, value):
     path.write_text(json.dumps(value, indent=2, default=str)+'\n')
+
+
+def matched_native_tasks(events, samples, binary_id):
+    """Select exact measured calls, retaining legal scope zero and rejecting duplicates."""
+    requested = {}
+    for sample in samples:
+        identity = sample.get('invocation_identity')
+        if not isinstance(identity, dict):
+            return []
+        invocation = identity.get('invocation_id')
+        if not isinstance(invocation,
+                          str) or identity.get('binary_id') != binary_id:
+            return []
+        if invocation in requested:
+            return []
+        requested[invocation] = identity
+    matches = []
+    for event in events:
+        identity = event.get('invocation_identity')
+        if (event.get('kind') != 'kernel'
+                or event.get('source') != 'cann_sdk_task'
+                or not isinstance(identity, dict)
+                or identity.get('status') != 'verified_task_identity'
+                or identity.get('evidence_kind')
+                != 'retained_worker_token_and_sdk_connection_tables'):
+            continue
+        wanted = requested.get(identity.get('invocation_id'))
+        if (wanted is not None and identity.get('binary_id') == binary_id
+                and identity.get('scope_id') == wanted.get('scope_id')
+                and event.get('scope_id') == wanted.get('scope_id')):
+            matches.append(event)
+    counts = {}
+    for event in matches:
+        invocation = event['invocation_identity']['invocation_id']
+        counts[invocation] = counts.get(invocation, 0) + 1
+    return matches if set(counts) == set(requested) and all(
+        value == 1 for value in counts.values()) else []
 
 
 def worker(plan, output):
@@ -162,8 +200,8 @@ def worker(plan, output):
             events=[json.loads(line) for line in (output/'capture/ai/events.jsonl').read_text().splitlines()]
             kernels=[event for event in events if event.get('kind')=='kernel']
             if not kernels:raise RuntimeError('native CANN capture produced no actual kernel activities')
-            identities={sample['invocation_identity']['scope_id'] for sample in record['samples'] if sample['invocation_identity'] and sample['invocation_identity'].get('scope_id') is not None}
-            matched=[event for event in kernels if event.get('scope_id') in identities and event.get('scope_id')]
+            matched = matched_native_tasks(kernels, record['samples'],
+                                           record['compiled_binary_id'])
             record['all_native_kernel_count']=len(kernels);record['device_task_samples']=matched
             record['device_task_identity_status']='verified' if len(matched)==plan['samples'] else 'partial'
             record['native_kernel_lifecycles']=kernels

@@ -281,6 +281,29 @@ class LaunchHook(Hook):
         }
         profiler_native.enter_op(id.get(), lazy_metadata["name"])
         profiler_native.add_metrics(id.get(), fn_metrics)
+        if bridge and getattr(profiler_native, "supports_cann_launch_receipts",
+                              lambda: False)():
+            kernel = bridge["kernel"]
+            target = getattr(kernel.metadata, "target", None)
+            if str(getattr(target, "backend",
+                           "")).lower() in {"ascend", "cann", "npu"}:
+                identity = metadata._flagprism_invocation_identity
+                active = [
+                    sid for sid in identity["session_ids"]
+                    if profiler_native.cann_launch_receipts_active(sid)
+                ]
+                if len(active) > 1:
+                    raise RuntimeError(
+                        "CANN launch receipt requires one SDK collector owner")
+                if active:
+                    metadata._flagprism_cann_launch_receipt_v1 = (
+                        profiler_native.make_cann_launch_receipt(
+                            id.get(), active[0]))
+                    identity[
+                        "native_receipt_status"] = "queued_worker_receipt_pending"
+                else:
+                    identity[
+                        "native_receipt_status"] = "native_sdk_collector_inactive"
 
     def exit(self, metadata: LazyDict) -> None:
         if not isinstance(metadata, LazyDict):
@@ -288,6 +311,10 @@ class LaunchHook(Hook):
         profiler_native.exit_op(id.get(), op_name.get())
 
     def abort_enter(self, metadata: LazyDict, error: BaseException) -> None:
+        receipt = getattr(metadata, "_flagprism_cann_launch_receipt_v1", None)
+        if receipt is not None:
+            profiler_native.cancel_cann_launch_receipt(
+                receipt, f"rejected_before_launch:{type(error).__name__}")
         identity = getattr(metadata, "_flagprism_invocation_identity", None)
         if identity:
             identity["status"] = "rejected_before_launch"

@@ -69,13 +69,27 @@ A filtered output alone does not establish lower device cost.
   has unknown frequency; its ticks are not TCU compute cycles.
   Compiler debug-location chains retain source-origin candidates, including
   ambiguous and missing origins, without claiming exclusive cost ownership.
+  The default publisher writes scalar record words. For SDK compilation that
+  expands this path excessively, set
+  `FLAGPRISM_GCU_DYNAMIC_PUBLISHER=vector16_per_work_item` before compiling to
+  select the alternate vector publisher. Its actual work-item count and mode
+  are recorded and enter the JIT cache key. This is an explicit compilation
+  option: it does not guarantee lower perturbation or faster compilation.
 * Ascend `backend="cann"` lowers `issue`, `wait_bracket` and
   `control_checkpoint` at late SDK LLVM sites through a hidden observer ABI.
-  The new hidden-only route is **pending full hardware acceptance** while the
-  server gateway is unavailable. Automatic same-call clock alignment also
-  requires an SDK identity/domain producer that is **not yet implemented**;
-  the clock-proof validator alone does not provide that service. Existing
-  explicit-source-buffer experiments do not establish this product path.
+  The hidden-only row-kernel smoke passes numerical/input/canary checks and
+  exports actual dynamic records; the full matrix and fused-actor acceptance
+  remain pending. The generated launch worker and SDK connection-table path
+  pass four actual calls across two binaries and two streams, including task
+  zero. Default temporary SDK retention and public normalized task association
+  are being integrated and require a new combined hardware acceptance.
+  Verified A2/c220 source records can obtain local duration conversion from
+  retained task/device frequency evidence and the actual compiled SYS counter
+  instruction. The conversion keeps an actor-local clock and supplies no
+  shared epoch or absolute placement.
+  Automatic same-call clock alignment additionally requires raw counter/domain
+  evidence that remains **pending**; a task identity or clock-proof validator
+  alone does not provide that service.
 
 An issue bracket around asynchronous work does not measure completion or engine
 busy time. A wait bracket includes control waiting; a checkpoint is instantaneous.
@@ -92,8 +106,13 @@ barrier to manufacture a measured pipeline.
 | `ai/launches.json`, `ai/binaries.json` | Actual launch, argument and compiled binary identities |
 | `ai/observations.json` | Typed records, captures, clock scope, selection/loss and raw-buffer hashes |
 | `ai/reconstruction.json` | Invocation/program/actor groups and verified clock alignment sets |
+| `ai/cann_native_tasks.json` | Canonical CANN tasks, superseded export views and unclassified native rows with their association evidence |
+| `ai/native_task_sys.json` | Original SDK task SYS endpoints, packet offsets/hashes, or explicit unavailable reasons; separate from source-clock alignment |
 | `report/observations.html` | Source site, occurrence and control timestamps with explicit limits |
 | `raw/native/` | Original collector outputs, including unverified legacy traces |
+| `raw/native/capture.cann-launch-receipts.json` | CANN retained worker tokens, original query status/IDs and SDK capture lifetime metadata when supported |
+| `raw/native/capture.cann-task-identities.json` | SDK task identity candidates and exact connection-table evidence; clock status remains separate |
+| `raw/native/cann_sdk/`, `raw/native/cann-sdk-retention.json` | Original SDK session files and original-to-bundle path/SHA mapping; temporary source removal is deferred until successful bundle export |
 | `raw/compiler/` | Captured kernel IR/PTX text, linked and hashed from `ai/binaries.json` |
 | `manifest.json` | Relative paths, sizes and SHA-256 hashes |
 
@@ -109,6 +128,15 @@ or stretches intervals to a native task duration. Same invocation identity does
 not establish timestamp alignment. Cross-actor alignment requires explicit
 shared-counter/domain evidence and still describes control, not engine occupancy.
 
+CANN task identity uses a token retained by the actual SDK launch worker,
+successful worker-local device/stream/task queries, and a unique connection
+tuple within the collector's sealed SDK capture. Missing, duplicate, late or
+failed receipts are retained without certified association. Sealing requires
+a uniquely created capture directory and matching collector PID/device metadata;
+choosing the latest directory is insufficient. Task IDs of zero are legitimate
+when their query succeeds. The whole native task envelope is not per-program
+occupancy, and task association does not calibrate an internal logger clock.
+
 ## Counters, replay and development status
 
 ```bash
@@ -123,8 +151,11 @@ Application replay runs the application again, including its side effects.
 
 NVIDIA and Enflame have real native/dynamic captures, six operator families with
 varied shapes/configurations, and held-out RMSNorm checks. Full acceptance still
-requires frozen-source fidelity, lifecycle and overhead runs. All-site detailed
-collection has measured overhead above the engineering target; reduced modes
-must be measured before claiming low overhead. Ascend hidden-only acceptance is
+requires frozen-source fidelity, lifecycle and overhead runs. The controlled
+Enflame scalar one-store experiment measured about 3% device-task perturbation,
+whereas its vector alternative measured about 26%. Host and stream latency were
+much higher, and neither result establishes the cost of all-site collection.
+NVIDIA performance remains deferred by the user; functional development continues.
+Ascend hidden-only acceptance is
 pending environment restoration. See [method tests](method_testing.md) and the
 backend evidence manifests for actual results and supported versions.
