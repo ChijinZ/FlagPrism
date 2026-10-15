@@ -91,3 +91,29 @@ def test_prepare_retains_exact_crlf_source_bytes(tmp_path, monkeypatch):
     assert snapshot['ir'].encode('utf-8') == source
     assert snapshot['ir_sha256'] == hashlib.sha256(source).hexdigest()
     assert (Path(handoff['output']) / 'source.mlir').read_bytes() == source
+
+
+def test_finish_embeds_exact_manifest_bytes_for_portable_validation(tmp_path):
+    import hashlib
+    llir = 'define void @actual_actor() { ret void }\n'
+    module_sha = hashlib.sha256(llir.encode()).hexdigest()
+    metadata = {
+        'module_sha256': module_sha,
+        'compile_id': 'fixture-compile',
+        'actors': []
+    }
+    raw = (json.dumps(metadata, sort_keys=True, indent=2) + '\r\n').encode()
+    (tmp_path / 'actor.ll').write_bytes(llir.encode())
+    (tmp_path / 'actor.json').write_bytes(raw)
+    handoff = {
+        'compile_id': 'fixture-compile',
+        'output': str(tmp_path),
+        'phase': 'prepared'
+    }
+    event = SimpleNamespace(backend='ascend',
+                            metadata={'flagprism_ascend_handoff': handoff})
+    m.finish(event, returncode=0)
+    artifact, = handoff['artifacts']
+    assert artifact['manifest_text'].encode('utf-8') == raw
+    assert artifact['manifest_sha256'] == hashlib.sha256(raw).hexdigest()
+    assert artifact['metadata'] == metadata

@@ -161,8 +161,32 @@ def finish(event, *, returncode):
         manifest = path.with_suffix('.json')
         if not manifest.is_file():
             continue
-        metadata = json.loads(manifest.read_text())
-        artifact = {'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'llir': path.read_text(), 'manifest_path': str(manifest), 'manifest_sha256': hashlib.sha256(manifest.read_bytes()).hexdigest(), 'metadata': metadata, 'representation': 'original_pre_instrumentation_canonical_llvm', 'actor_kinds': [actor.get('actor_kind') for actor in metadata.get('actors', [])], 'argument_roles': [actor.get('argument_roles', []) for actor in metadata.get('actors', [])]}
+        manifest_text = manifest.read_bytes().decode('utf-8')
+        metadata = json.loads(manifest_text)
+        artifact = {
+            'path':
+            str(path),
+            'sha256':
+            hashlib.sha256(path.read_bytes()).hexdigest(),
+            'llir':
+            path.read_text(),
+            'manifest_path':
+            str(manifest),
+            'manifest_sha256':
+            hashlib.sha256(manifest_text.encode('utf-8')).hexdigest(),
+            'manifest_text':
+            manifest_text,
+            'metadata':
+            metadata,
+            'representation':
+            'original_pre_instrumentation_canonical_llvm',
+            'actor_kinds':
+            [actor.get('actor_kind') for actor in metadata.get('actors', [])],
+            'argument_roles': [
+                actor.get('argument_roles', [])
+                for actor in metadata.get('actors', [])
+            ]
+        }
         receipt_path = path.parent / 'receipt.json'
         if receipt_path.exists():
             receipt = json.loads(receipt_path.read_text())
@@ -221,7 +245,7 @@ def cache_key():
                 'line_info':
                 os.environ.get('TRITON_DISABLE_LINE_INFO'),
                 'readiness_descriptor_version':
-                'source_bytes_enclosing_compile_v2',
+                'source_bytes_manifest_enclosing_compile_v3',
                 'sdk_ir_print_flag':
                 '--bishengir-print-ir-after=hivm-graph-sync-solver',
                 'capture_sources': {

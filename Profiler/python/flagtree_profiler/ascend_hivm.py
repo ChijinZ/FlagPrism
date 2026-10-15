@@ -1,6 +1,7 @@
 """Typed SDK HIVM readiness channels; static relations, never dynamic pairing."""
 from __future__ import annotations
 import hashlib
+import json
 import re
 
 PRINT_FLAG = '--bishengir-print-ir-after=hivm-graph-sync-solver'
@@ -13,21 +14,18 @@ _SYNC = re.compile(
 _LOCATION = re.compile(r'"([^"\n]+)":(\d+):(\d+)')
 
 
-def build_static_readiness(capture,
-                           artifacts,
-                           *,
-                           source_snapshot=None,
-                           compile_id=None,
-                           phase=None,
-                           returncode=None):
-    """Require the retained same-compile SDK stream and actor LLVM inventory."""
+def validate_compiler_provenance(capture,
+                                 artifacts,
+                                 *,
+                                 source_snapshot=None,
+                                 compile_id=None,
+                                 phase=None,
+                                 returncode=None):
+    """Validate portable source/manifest bytes and their enclosing compile facts."""
     result = {
-        'schema_version': 1,
         'state': 'unavailable',
-        'channels': [],
-        'sites': [],
-        'semantics': 'compiler_static_readiness_not_dynamic_generation',
-        'clock_alignment': 'not_established'
+        'verified_artifact_indices': [],
+        'artifact_rejections': {}
     }
     if not isinstance(capture, dict):
         result['reason'] = 'missing_sdk_ir_capture'
@@ -48,13 +46,97 @@ def build_static_readiness(capture,
     if source_sha256 != source_snapshot.get('ir_sha256'):
         result['reason'] = 'retained_source_hash_mismatch'
         return result
-    receipt = capture.get('receipt', {})
+    receipt = capture.get('receipt')
+    if not isinstance(receipt, dict):
+        result['reason'] = 'missing_or_invalid_sdk_compile_receipt'
+        return result
     if receipt.get('compile_id') != compile_id:
         result['reason'] = 'enclosing_compile_identity_mismatch'
         return result
     if receipt.get('source_ir_sha256') != source_sha256:
         result['reason'] = 'sdk_input_source_hash_mismatch'
         return result
+    if (receipt.get('state') != 'finished'
+            or type(receipt.get('returncode')) is not int
+            or receipt['returncode'] != 0):
+        result['reason'] = 'unsuccessful_sdk_compile'
+        return result
+    result.update(
+        state='verified_source_binding',
+        source_binding='verified_durable_bytes_and_enclosing_compile',
+        source_ir_sha256=source_sha256,
+        compile_id=compile_id)
+    for index, artifact in enumerate(artifacts):
+        reason = None
+        metadata = artifact.get('metadata')
+        manifest_text = artifact.get('manifest_text')
+        if not isinstance(manifest_text, str):
+            reason = 'missing_durable_manifest_bytes'
+        elif hashlib.sha256(manifest_text.encode(
+                'utf-8')).hexdigest() != artifact.get('manifest_sha256'):
+            reason = 'retained_manifest_hash_mismatch'
+        else:
+            try:
+                parsed = json.loads(manifest_text)
+                if (not isinstance(metadata, dict) or json.dumps(
+                        parsed,
+                        sort_keys=True,
+                        separators=(',', ':'),
+                        allow_nan=False) != json.dumps(metadata,
+                                                       sort_keys=True,
+                                                       separators=(',', ':'),
+                                                       allow_nan=False)):
+                    reason = 'parsed_manifest_metadata_mismatch'
+            except (TypeError, ValueError):
+                reason = 'invalid_retained_manifest_json'
+        job = artifact.get('driver_job')
+        if not isinstance(job, dict):
+            job = {}
+        if reason is None and (job.get('state') != 'finished' or type(
+                job.get('exit_code')) is not int or job['exit_code'] != 0
+                               or job.get('compile_id') != compile_id
+                               or metadata.get('compile_id') != compile_id):
+            reason = 'artifact_enclosing_compile_mismatch'
+        if reason is None and (
+                not isinstance(artifact.get('llir'), str) or hashlib.sha256(
+                    artifact['llir'].encode('utf-8')).hexdigest()
+                != artifact.get('sha256')
+                or metadata.get('module_sha256') != artifact.get('sha256')):
+            reason = 'artifact_llvm_hash_mismatch'
+        if reason is None:
+            result['verified_artifact_indices'].append(index)
+        else:
+            result['artifact_rejections'][str(index)] = reason
+    return result
+
+
+def build_static_readiness(capture,
+                           artifacts,
+                           *,
+                           source_snapshot=None,
+                           compile_id=None,
+                           phase=None,
+                           returncode=None):
+    """Require the retained same-compile SDK stream and actor LLVM inventory."""
+    result = {
+        'schema_version': 1,
+        'state': 'unavailable',
+        'channels': [],
+        'sites': [],
+        'semantics': 'compiler_static_readiness_not_dynamic_generation',
+        'clock_alignment': 'not_established'
+    }
+    provenance = validate_compiler_provenance(capture,
+                                              artifacts,
+                                              source_snapshot=source_snapshot,
+                                              compile_id=compile_id,
+                                              phase=phase,
+                                              returncode=returncode)
+    if provenance['state'] != 'verified_source_binding':
+        result['reason'] = provenance['reason']
+        return result
+    source_sha256 = provenance['source_ir_sha256']
+    receipt = capture['receipt']
     text = capture.get('stderr', '')
     stream = receipt.get('streams', {}).get('stderr', {})
     if (receipt.get('state') != 'finished' or receipt.get('returncode') != 0
@@ -70,16 +152,8 @@ def build_static_readiness(capture,
     result['source_ir_sha256'] = source_sha256
     result['source_binding'] = 'verified_durable_bytes_and_enclosing_compile'
     actors = {}
-    for artifact in artifacts:
-        if (artifact.get('driver_job', {}).get('state') != 'finished'
-                or artifact['driver_job'].get('exit_code') != 0
-                or artifact['driver_job'].get('compile_id') != compile_id
-                or artifact.get('metadata', {}).get('compile_id') != compile_id
-                or not isinstance(artifact.get('llir'), str)
-                or hashlib.sha256(artifact['llir'].encode()).hexdigest()
-                != artifact.get('sha256')
-                or artifact.get('metadata', {}).get('module_sha256')
-                != artifact.get('sha256')):
+    for index, artifact in enumerate(artifacts):
+        if index not in provenance['verified_artifact_indices']:
             continue
         for actor in artifact.get('metadata', {}).get('actors', []):
             key = (actor.get('function'), actor.get('actor_kind'))

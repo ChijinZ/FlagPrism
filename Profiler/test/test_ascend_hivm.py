@@ -67,6 +67,12 @@ def fixtures(text=DUMP):
                 'compile_id': 'actual-test-compile'
             }
         })
+    for artifact in artifacts:
+        text = json.dumps(artifact['metadata'], sort_keys=True,
+                          indent=2) + '\n'
+        artifact.update(manifest_text=text,
+                        manifest_sha256=hashlib.sha256(
+                            text.encode()).hexdigest())
     return capture, artifacts
 
 
@@ -168,6 +174,10 @@ def test_pipeline_is_part_of_channel_identity():
         artifact['sha256'] = hashlib.sha256(
             artifact['llir'].encode()).hexdigest()
         artifact['metadata']['module_sha256'] = artifact['sha256']
+        artifact['manifest_text'] = json.dumps(
+            artifact['metadata'], sort_keys=True, indent=2) + '\n'
+        artifact['manifest_sha256'] = hashlib.sha256(
+            artifact['manifest_text'].encode()).hexdigest()
     result = readiness(capture, artifacts + extra)
     assert len(result['channels']) == 2
     assert len({channel['id'] for channel in result['channels']}) == 2

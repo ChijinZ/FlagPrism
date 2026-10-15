@@ -129,21 +129,63 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
                 source_id = metadata_ids.get(source_ref[1]) if source_ref else None
                 sites.append({'id': site_id, 'actor_id': actor_id, 'block': block, 'line': line_number, 'callee': callee, 'semantics': _SEMANTICS.get(callee, 'static_issue_site'), 'operands': operands, 'operand_expressions': values, 'evidence': line.strip(), 'source_op_id': source_id, 'dynamic_observation': False})
                 block_sites.setdefault(block, []).append(site_id)
-                if source_id and (not source_ids or source_id in source_ids):
-                    associations.append({'source_op_id': source_id, 'lowered_site_id': site_id, 'basis': 'surviving_compiler_metadata'})
             for number, blocks in enumerate(_components(graph)):
                 loops.append({'id': actor_id + f':cycle{number}', 'actor_id': actor_id, 'blocks': blocks, 'induction_candidates': [phi for phi in phis if phi['block'] in blocks], 'sites': [site for label in blocks for site in block_sites.get(label, [])], 'dynamic_iteration_count': None})
     # The real LLVM pass manifest is authoritative when the driver handoff is
     # available. It also works when CompiledKernel.asm omits temporary LLVM.
     handoff = compiler_metadata.get('flagprism_ascend_handoff') or {}
-    native_manifests = [item.get('metadata') for item in handoff.get('artifacts', []) if isinstance(item.get('metadata'), dict)]
+    from .ascend_hivm import build_static_readiness, validate_compiler_provenance
+    provenance = validate_compiler_provenance(
+        handoff.get('sdk_ir_capture'),
+        handoff.get('artifacts', []),
+        source_snapshot=handoff.get('source_snapshot'),
+        compile_id=handoff.get('compile_id'),
+        phase=handoff.get('phase'),
+        returncode=handoff.get('returncode'))
+    snapshot = handoff.get('source_snapshot') or {}
+    tracked = list(source_operations.values()) if isinstance(
+        source_operations, Mapping) else None
+    table_hash = hashlib.sha256(
+        json.dumps(tracked, sort_keys=True, separators=(
+            ',', ':')).encode()).hexdigest() if tracked is not None else None
+    snapshot_verified = (provenance['state'] == 'verified_source_binding'
+                         and table_hash is not None
+                         and snapshot.get('tracked_ops_sha256') == table_hash)
+    provenance[
+        'tracked_table_state'] = 'verified' if snapshot_verified else 'unverified_or_missing'
+    native_items = [(index, item.get('metadata'))
+                    for index, item in enumerate(handoff.get('artifacts', []))
+                    if isinstance(item.get('metadata'), dict)]
+    native_manifests = [manifest for _, manifest in native_items]
     if native_manifests:
         actors, sites, loops, pointers, associations = [], [], [], [], []
-        for manifest in native_manifests:
+        for artifact_index, manifest in native_items:
+            artifact_verified = artifact_index in provenance[
+                'verified_artifact_indices']
+            source_verified = snapshot_verified and artifact_verified
+            artifact_state = 'verified_same_compile_artifact' if artifact_verified else 'unverified_manifest_inventory'
             module_id = manifest.get('module_sha256')
             for raw_actor in manifest.get('actors', []):
                 actor_id = f'late_llvm:{module_id}:{raw_actor["function"]}'
-                actors.append({'id': actor_id, 'kind': raw_actor.get('actor_kind') or None, 'kind_basis': 'actual_sdk_target_argument', 'function': raw_actor['function'], 'artifact': module_id, 'mapping_status': 'symbolic', 'compiler_manifest': raw_actor})
+                actors.append({
+                    'id':
+                    actor_id,
+                    'kind':
+                    raw_actor.get('actor_kind') or None,
+                    'kind_basis':
+                    'actual_sdk_target_argument'
+                    if artifact_verified else 'unverified_manifest_claim',
+                    'function':
+                    raw_actor['function'],
+                    'artifact':
+                    module_id,
+                    'mapping_status':
+                    'symbolic',
+                    'native_artifact_provenance':
+                    artifact_state,
+                    'compiler_manifest':
+                    raw_actor
+                })
                 roles = {role['final_formal_index']: role for role in raw_actor.get('argument_roles', [])}
                 for argument in raw_actor.get('arguments', []):
                     if argument.get('address_space') != 1:
@@ -153,9 +195,30 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
                 for raw_site in raw_actor.get('sites', []):
                     site_id = actor_id+f':site{raw_site["id"]}'
                     source_id = raw_site.get('source_op_id')
-                    site = {'id': site_id, 'actor_id': actor_id, 'callee': raw_site['callee'], 'semantics': _SEMANTICS.get(raw_site['callee'], 'static_issue_site'), 'operand_expressions': raw_site['operands'], 'source_op_id': source_id, 'compiler_evidence': raw_site, 'dynamic_observation': False}
+                    site = {
+                        'id':
+                        site_id,
+                        'actor_id':
+                        actor_id,
+                        'callee':
+                        raw_site['callee'],
+                        'semantics':
+                        _SEMANTICS.get(raw_site['callee'],
+                                       'static_issue_site'),
+                        'operand_expressions':
+                        raw_site['operands'],
+                        'source_op_id':
+                        source_id,
+                        'compiler_evidence':
+                        raw_site,
+                        'native_artifact_provenance':
+                        artifact_state,
+                        'dynamic_observation':
+                        False
+                    }
                     sites.append(site)
-                    if source_id and (not source_ids or source_id in source_ids):
+                    if source_verified and source_id and (
+                            not source_ids or source_id in source_ids):
                         associations.append({'source_op_id': source_id, 'lowered_site_id': site_id, 'basis': 'surviving_compiler_metadata'})
                 for index, loop in enumerate(raw_actor.get('loops', [])):
                     loops.append({'id': actor_id+f':loop{index}', 'actor_id': actor_id, 'blocks': loop['blocks'], 'dynamic_iteration_count': None, 'compiler_evidence': loop})
@@ -163,14 +226,31 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
                     for raw_site in manifest.get('dynamic_sites', []):
                         callee = raw_site.get('callee')
                         semantic = 'control_checkpoint' if raw_site.get('semantics') == 'loop_header_occurrence' else 'wait_bracket' if callee and '.WAIT.' in callee else 'issue'
-                        sites.append({'id': actor_id+f':dynamic{raw_site["site_id"]}',
-                                      'actor_id': actor_id, 'dynamic_site_id': raw_site['site_id'],
-                                      'callee': callee, 'semantics': semantic,
-                                      'operand_expressions': [],
-                                      'source_op_id': raw_site.get('source_op_id'),
-                                      'compiler_evidence': raw_site,
-                                      'dynamic_observation': True})
-                        if raw_site.get('source_op_id') and (not source_ids or raw_site['source_op_id'] in source_ids):
+                        sites.append({
+                            'id':
+                            actor_id + f':dynamic{raw_site["site_id"]}',
+                            'actor_id':
+                            actor_id,
+                            'dynamic_site_id':
+                            raw_site['site_id'],
+                            'callee':
+                            callee,
+                            'semantics':
+                            semantic,
+                            'operand_expressions': [],
+                            'source_op_id':
+                            raw_site.get('source_op_id'),
+                            'compiler_evidence':
+                            raw_site,
+                            'native_artifact_provenance':
+                            artifact_state,
+                            'dynamic_observation':
+                            True
+                        })
+                        if source_verified and raw_site.get(
+                                'source_op_id') and (
+                                    not source_ids
+                                    or raw_site['source_op_id'] in source_ids):
                             associations.append({'source_op_id': raw_site['source_op_id'],
                                                  'lowered_site_id': sites[-1]['id'],
                                                  'basis': 'surviving_compiler_metadata'})
@@ -178,10 +258,6 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
     # retained compiler snapshot. Debug origin never grants exclusive cost.
     origin_associations = []
     if isinstance(source_operations, Mapping) and native_manifests:
-        tracked = list(source_operations.values())
-        snapshot = handoff.get('source_snapshot') or {}
-        table_hash = hashlib.sha256(json.dumps(tracked, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
-        snapshot_verified = bool(snapshot.get('ir_sha256') and snapshot.get('tracked_ops_sha256') == table_hash)
         location_pattern = re.compile(r'"((?:\\.|[^"\\])+)":(\d+):(\d+)')
         def entry_locations(entry):
             return [(posixpath.normpath(file), int(line), int(column)) for file, line, column in location_pattern.findall(entry.get('sourceLoc', ''))]
@@ -192,13 +268,17 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
             if file:
                 frames.append((posixpath.normpath(posixpath.join(raw.get('debug_directory', ''), file)), raw.get('debug_line'), raw.get('debug_column')))
                 frames += [(posixpath.normpath(posixpath.join(frame.get('directory', ''), frame['file'])), frame['line'], frame['column']) for frame in raw.get('inline_chain', [])]
-            candidates = [str(identity) for identity, entry in source_operations.items() if frames and entry_locations(entry) == frames] if snapshot_verified else []
+            candidates = [
+                str(identity) for identity, entry in source_operations.items()
+                if frames and entry_locations(entry) == frames
+            ] if snapshot_verified and site.get(
+                'native_artifact_provenance'
+            ) == 'verified_same_compile_artifact' else []
             site['debug_origin_status'] = 'verified_origin' if len(candidates) == 1 else 'ambiguous' if candidates else 'unassociated'
             site['debug_origin_candidates'] = candidates
             if len(candidates) == 1:
                 origin_associations.append({'source_op_id': candidates[0], 'lowered_site_id': site['id'], 'basis': 'unique_full_debug_location_in_verified_compiler_snapshot', 'status': 'verified_origin', 'cost_ownership': 'not_established', 'source_ir_sha256': snapshot['ir_sha256']})
         associations.extend(origin_associations)
-    from .ascend_hivm import build_static_readiness
     static_readiness = build_static_readiness(
         handoff.get('sdk_ir_capture'),
         handoff.get('artifacts', []),
@@ -253,6 +333,8 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
         dependencies,
         'static_readiness':
         static_readiness,
+        'compiler_provenance':
+        provenance,
         'resources': {
             'basis': 'compiler_metadata',
             'values': dict(compiler_metadata),

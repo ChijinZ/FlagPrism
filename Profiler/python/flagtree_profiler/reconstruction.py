@@ -220,6 +220,7 @@ def render(document):
         'Zero-tick intervals are unresolved at the counter granularity, '
         'rather than evidence of zero execution cost. '
         'Source-control intervals measure instrumented control, not engine occupancy. '
+        'They do not establish uninstrumented costs; collection can redistribute waiting. '
         'Retained occurrences may omit sampled or truncated executions.</p>' +
         ''.join(panels) +
         f'<p>Rejected observations: {len(document["rejected"])}; details preserved in JSON.</p>'
