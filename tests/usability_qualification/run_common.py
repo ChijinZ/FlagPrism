@@ -20,6 +20,12 @@ COHORT = HERE / 'common-cohort-baseline-freeze-Q2.json'
 COHORT_SHA = 'e07fd43544532cb0abc25cc22615d18dd1e43188cf8076c0d999e09b80395432'
 
 
+def workload_device(backend, device):
+    # These prefixes are the actual successful ordinary-baseline argv values.
+    prefix = {'nvidia': 'cuda', 'enflame': 'gcu', 'ascend': 'npu'}[backend]
+    return f'{prefix}:{device}'
+
+
 def write(path, value):
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + '\n')
 
@@ -81,7 +87,7 @@ def main():
             receipt, ledger, bundle = [directory / n for n in ['receipt.json', 'startup-ledger.jsonl', 'bundle']]
             command = [sys.executable, '-m', 'flagtree.profiler.cli', '--detail', 'auto', '--device', str(args.device),
                        '-n', str(bundle.resolve()), str(HERE / script), *case_args,
-                       '--backend', args.backend, '--device', str(args.device), '--shape-index', str(si),
+                       '--backend', args.backend, '--device', workload_device(args.backend, args.device), '--shape-index', str(si),
                        '--config-index', str(ci), '--receipt', str(receipt.resolve()), '--startup-ledger', str(ledger.resolve())]
             result = {'case': case, 'shape_index': si, 'config_index': ci, 'repetition': repetition,
                       'baseline_eligible': True, 'status': 'fail', 'command': command}
