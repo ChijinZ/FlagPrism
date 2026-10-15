@@ -1,47 +1,35 @@
 {
-  "schema_version": 1,
   "baseline": "0364ed4bc39d1dfae483741ec272298297fa5bda",
-  "patch_sha256": "3658850f8a042354dc6f75aff2ef14e3b6e2e2ad6976af920c5268ee52f258a1",
+  "integration_commit": "00650233fcaa9c55134e8aae690067a32d97ad45",
+  "branch": "flagprism-method-ascend-handoff",
+  "full_baseline_patch_sha256": "d18294b2e01805de1f18d395bf5ef88e95763499883957b1db56c17ec7cb68c3",
+  "tracked_worktree_clean": true,
   "dependencies": {
-    "flir": "ff91e64b6042a27e0db053f28ea3741be65d24d0",
-    "ascend/AscendNPU-IR": "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9"
-  },
-  "validated": {
-    "core_and_standalone_tool": "compiled",
-    "new_core_contracts": "80 passed",
-    "native_public_receipt_smoke": {
-      "invocations": 4,
-      "binaries": 2,
-      "streams": [
-        5,
-        6
-      ],
-      "task_ids": [
-        0,
-        1
-      ],
-      "worker_tids": [
-        181655
-      ],
-      "process_ids": [
-        181346
-      ],
-      "clock_status": "unverified"
+    "AscendNPU-IR": {
+      "commit": "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9",
+      "tracked_clean": true
+    },
+    "FLIR": {
+      "commit": "ff91e64b6042a27e0db053f28ea3741be65d24d0",
+      "tracked_clean": true
     }
   },
-  "build_artifacts": {
-    "compiler-build/libtriton.so": "4fa158e2d08c6bbe3ac952e1ebb5fae7909beb23bde4588cd5677da7956a3a6e",
-    "compiler-build/third_party/ascend/bin/triton-mlir-opt": "72e6764ce12c9272563f08b5679ef5ef5d1ddb6ad65a443f0eb7ac17b81d2b4e",
-    "compiler-python/flagtree/profiler/_native.so": "73f70a31c6f216dfcfc7686c0646b1587187e561759c26aec63b7482ff64f9f5",
-    "compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so": "fa0247db88154be3da3d17ccad20074c3360048abc0be2747ad984cc719426ba",
-    "llvm-build/FlagPrismAscendLateObserver.so": "6acb4f2b7166ba18b46e8ec277907db49b231c1a405ab40e2e7d968e2864e3e1"
-  },
-  "evidence_archive": "artifacts/method-run/ascend/native-receipt-evidence-r3.tgz",
-  "evidence_archive_sha256": "6d61cfdec74816062e37b5f0ac8c5e8ea6fa0e6273960568a8dc3b0f8c867eaa",
-  "pending": [
-    "Detailed hidden-only hardware: metadata allocation bug repair and rerun required",
-    "Native task proof integration into normalized report",
-    "Clock domain/globality/error-budget proof",
-    "Full operator and heldout matrix"
-  ]
+  "binaries": {
+    "core": {
+      "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+      "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+    },
+    "debugger": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+    },
+    "profiler": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+      "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+    },
+    "late_llvm15": {
+      "path": "/tmp/flagprism-method-ascend/llvm-build/FlagPrismAscendLateObserver.so",
+      "sha256": "6acb4f2b7166ba18b46e8ec277907db49b231c1a405ab40e2e7d968e2864e3e1"
+    }
+  }
 }

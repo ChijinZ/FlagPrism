@@ -1,7 +1,17 @@
 """General LLVM mapping cases, independent of Study kernel names/SSA slots."""
 import importlib.util
+import sys
+import types
 from pathlib import Path
-spec = importlib.util.spec_from_file_location('execution_ascend_test', Path(__file__).parents[1]/'python/flagtree_profiler/execution_ascend.py')
+
+namespace = types.ModuleType('_ascend_test_package')
+namespace.__path__ = [
+    str(Path(__file__).parents[1] / 'python/flagtree_profiler')
+]
+sys.modules['_ascend_test_package'] = namespace
+spec = importlib.util.spec_from_file_location(
+    '_ascend_test_package.execution_ascend',
+    Path(__file__).parents[1] / 'python/flagtree_profiler/execution_ascend.py')
 module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
 
 LLVM = '''define dso_local void @totally_new_symbol(ptr addrspace(1) %workspace, i64 %limit) {

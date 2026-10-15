@@ -1,119 +1,117 @@
-# Ascend method acceptance: recovery and boundaries
+# Ascend functional acceptance and measurement boundaries
 
-The new core links and its actual hidden-only ABI/backend contracts pass
-80/80 in the Ascend Docker. The public native worker-receipt smoke passes four
-calls over two binaries and two streams, including legitimate task zero and
-exact SDK connection proofs. A common metadata-capacity overwrite was found by
-the first actual observer launch and fixed: the final preallocation guard and
-metadata regressions pass 11/11; a correct 49248-byte three-actor allocation
-exports an all-zero buffer before any kernel launch. The faulty configuration
-is retained as a failure and is never launched again.
+All builds, Python imports/tests, CPU oracles and hardware runs use the user's
+existing `chijin_v3.5.x` Docker, via host user chijin, explicitly on device4.
+The user's original FlagTree checkout and other users' processes are untouched.
+SSH gateway failures without the command sentinel are not executions; inspect
+existing PID/log/terminal state before resuming. Each failed/incomplete output
+is retained and never silently reused.
 
-A fresh ordinary Softmax32x256 hidden-only run now passes original CPU math,
-input and canary checks and exports 32 actual dynamic records across four calls
-(one warmup, three samples). This is a functional smoke, not the full matrix or
-a cross-actor clock certificate. Native SDK cleanup is now deferred until Python
-bundle export. A fresh default-output hidden smoke exports four exact task
-proofs, including task zero, while retaining the original SDK directory.
-Canonical report/SDK bundle retention integration awaits its final public rerun.
-The actual retained r3 bundle passes automatic raw task SYS extraction and local
-duration calibration for all 32 source events; this does not assign a shared
-clock epoch or turn source-control brackets into engine occupancy.
+The pinned full integration patch/dependencies and exact binaries are in
+[`integration/patches/ascend`](../../integration/patches/ascend/README.md).
+The full core, both native modules and isolated LLVM15 observer are required;
+a runtime-only build does not supply the hidden compiler ABI.
 
-The SSH gateway is intermittent; recent sentinel-verified commands succeeded.
-Check the specific recorded process/terminal status after a disconnect rather
-than restarting a job. All builds, imports, tests, CPU oracles and workloads run
-inside `chijin_v3.5.x`; physical device4 is reserved.
+## Public entry
 
-## What is established, what remains pending
-
-| Path | Evidence and boundary |
-| --- | --- |
-| Native CANN tasks | Public native r3 captures four calls across two binaries/two streams with exact retained-worker/SDK connection proofs. Default detailed r3 also has four exact proofs after deferred cleanup. Final canonical report/retention entry awaits a fresh public run. |
-| msprof PMU | Earlier real vector-add replay produced Arithmetic/Pipe actor aggregates. Every replay has its own directory/UUID; raw CSV rows and unknown values are retained. Latest explicit SDK kernel-replay/device checks await rerun. PMU records are independent replay aggregates, never foreground busy intervals. |
-| Final actor handoff | The private FlagTree driver patch and upstream opt15 pass captured real SDK-generated actor LLVM and role/loop/wait manifests. Original and adapted LLVM/object hashes are separate. |
-| LLVM dynamic64 | The formal hidden-only Softmax smoke emits 32 real source-control records over four calls and passes CPU math/input/canary checks. Historical explicit-buffer adapter tests remain separate evidence. |
-| Public detailed request | Frontend appends a compiler-owned hidden pointer; actual final SDK formal roles and the safe actor allocation/export passed the Softmax smoke. Full operator/heldout and MIX validation remain pending. |
-| Source origin | Full `(file,line,column,inline chain)` may match the exact retained TrackedOpTable snapshot. A unique candidate establishes debug origin, not exclusive source-region cost. Missing/multiple candidates remain unassociated/ambiguous. |
-| SYS counter service | `cann_raw_sys` rebuilds exact task identity from raw SDK/receipt files and extracts unique original ACSQ SYS endpoints. `cann_source_clock` validates same-call binary/LLVM/logger, installed c220 getter and actual sealed SDK frequency to calibrate local durations. Actual r3: 32/32 converted; 15 contracts pass. Alignment remains actor-local/instance-local; MIX actor coverage and shared-axis relations remain unverified. |
-
-The three-slot dynamic ABI currently supports actual `dav-c220-cube`/`dav-c220-vec` targets (910B): AIC slot0 and AIV subblocks in slots1/2. Other dynamic targets are rejected. Supported request semantics are `issue`, `wait_bracket`, `control_checkpoint`; exactly one logical program, all sites, `sample_every=1`. Capacity must be 1..1,000,000. Natural loop-header records are zero-length checkpoints and their occurrence is not an induction variable. Signal/wait brackets measure scalar source control, not engine busy or engine completion.
-
-The compiler rejects missing/ambiguous main LLVM input, multiple kernel entries, absent/conflicting compiler synchronization/workspace roles, invalid hidden formal identity/type/role, snapshot instrumentation already inserted, missing textual source ABI, missing plugin/capture dependency, or absent dynamic-ABI manifests. Unsupported scalar-prefix types/MLIR bytecode exports remain explicit failures. Do not use a guessed final argument index: `FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX` is permitted only with the explicit test-adapter opt-in and cannot establish formal product completion.
-
-## Required toolchains and source identity
-
-The earlier environment was Triton3.5.1, CANN9.0.0, torch2.9.0+torch_npu, Ascend910B4. Import order is torch, torch_npu, then triton, with `TORCH_DEVICE_BACKEND_AUTOLOAD=0`.
-
-Two LLVM installations have distinct jobs:
-
-- FlagTree/compiler Debugger plugin: the LLVM22 cache at `/root/.triton/llvm/llvm-ubuntu-arm64`. The Debugger compiler binding lives inside newly linked `FlagTree/python/triton/_C/libtriton.so`; building a runtime `_native.so` alone cannot provide it.
-- Late actor pass: upstream LLVM15.0.7 development files and `/usr/bin/opt-15`. Build `Profiler/llvm` with `/usr/lib/llvm-15/lib/cmake/llvm`. The pass executes **out of process**, then the private driver forwards validated IR to the SDK compiler. Loading this upstream plugin directly into the vendor bisheng LLVM fork previously crashed; do not repeat that path or overwrite SDK binaries.
-
-Pinned independent core worktree:
-
-```text
-/tmp/flagprism-method-ascend/FlagTree
-branch: flagprism-method-ascend-handoff
-baseline: 0364ed4bc39d1dfae483741ec272298297fa5bda
-shared component source: /tmp/flagprism-method-ascend/source
-```
-
-FlagTree declares AscendNPU-IR through `python/setup_tools/utils/ascend.py`: official GitCode repository, commit `4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9`. FLIR is the official `flagos-ai/flir` dependency declared unpinned by this baseline; recover and record the actual existing FLIR HEAD before a reproducibility claim. Do not replace the user's `/workspace/FlagTree` checkout or its untracked files.
-
-Recovery inputs live in repository-root `artifacts/method-run/ascend/`:
-
-- `flagtree-driver-handoff.patch`: initial driver-event patch, SHA256 `9a67673d0e55c3ae1e8941552a5f924b3117f101231568231d90e892fcc20c0d`.
-- `cache_patch.py`: exact later cache callback addition; the initial exported patch predates this change. The old script appends code and is not safe to rerun indiscriminately.
-- `restore_core_handoff.py/.sh`: idempotent recovery on the pinned independent worktree. Copy the script and initial patch into remote `/tmp/flagprism-method-ascend/recovery-input/` first. It restores prepare/finish callbacks and cache key, then writes `recovery/flagtree-driver-handoff-complete.patch` and `recovery/core-handoff.json` with full diff/source/dependency hashes. These outputs have not yet been generated after gateway restoration.
-- `RECOVERY_INPUT_SHA256.txt`: local recovery-input identities. The preserved remote independent branch contains the actual later cache modifications; recover that branch preferentially.
-
-The protocol is `compiler.driver.v1`: private command/environment copies plus compiler metadata in `CompilerDriverEvent`; prepare and finish callbacks bracket both Ascend SDK driver paths. `compiler_driver_cache_key()` includes codegen-affecting component state in `AscendOptions.hash`. Original artifact hashes and retained compiler snapshots are provenance; an adapted instrumentation hash must never be presented as unmodified performance.
-
-## Shortest restore/build/run order
-
-1. Restore access; preserve the existing independent worktree and receipts. Synchronize current complete FlagPrism source, including root/GCU edits, to `source`. Restore/verify the core patch and dependencies; retain source/hash manifests. Ensure `FlagTree/third_party/FlagPrism` points to this current source. A CMake source variable alone does not satisfy generated `RegisterTritonDialects.h` includes.
-2. Through `scripts/study_remote.py zhiyuan_ascend --command-file ...`, run `compiler_configure.sh`, then `compiler_build.sh`, then `llvm_plugin_build.sh`. The actual core target is **triton**, not libtriton. `ascend;nvidia` supplies the NVGPU/NVWS generated headers needed by this baseline's common targets; it does not authorize NVIDIA execution. The build also needs newly linked profiler/debugger runtime libraries in `compiler-python/flagtree/{profiler,debugger}`. Preserve actual linking logs and library hashes.
-3. Run `tests_all.sh` in Docker. Then run `Debugger/test/python/language/test_prepare_late_observation_abi.py` against the newly built core and current source package. This regression intentionally requires the new binding and covers true formal index, idempotency, snapshot guard, stale role/type/index and multiple-entry rejection. It must not skip a missing binding.
-4. Run one fresh formal `ObservationRequest` vector/row smoke, with native MSTX and actual task collection enabled. Verify math/inputs/canaries, new core/runtime hashes, source-formal→final role manifest, nonempty records where selected native sites exist, exact per-actor protocol statistics, and absence of unrequested TTIR snapshot stores. Failures are preserved. Only after this passes proceed to the matrix.
-5. Send `canonical-inputs-r007.tgz` through `acceptance_inputs_sync.sh`; run `acceptance_run.sh` (operators, then T5). The scripts use device4 explicitly. Add the two long-K Study cases and independent PMU CLI run only after the formal smoke; inspect clock/identity evidence separately before claiming internal timing acceptance.
-
-Do not run the earlier runtime-only `build.sh` as a substitute for the full compiler build. Compiler objects named `TritonDebugger` alone are also insufficient; `triton` must actually link the new compiler plugin. Current compiler sources use `llvm::Expected`/`llvm::Error` failures so the common `-fno-exceptions` core target remains legal; Python binding lambdas translate errors at the boundary. This source change awaits rebuild.
-
-## Public detailed entry and native device selection
-
-After the new packages/core have been made visible, supply both late dependencies before first compilation:
+Set the independent compiler/component paths and these dependencies before first
+kernel compilation:
 
 ```sh
 export FLAGPRISM_ASCEND_LATE_PLUGIN=/tmp/flagprism-method-ascend/llvm-build/FlagPrismAscendLateObserver.so
 export FLAGPRISM_ASCEND_OPT=/usr/bin/opt-15
-export FLAGPRISM_ASCEND_COMPILER_CAPTURE=/tmp/flagprism-method-ascend/compiler-captures
+export FLAGPRISM_ASCEND_COMPILER_CAPTURE=/tmp/flagprism-method-ascend/new-compiler-captures
 ```
 
-An explicit public request uses `backend='cann', hook='instrumentation'`, e.g. `ObservationRequest(semantics=('issue','wait_bracket','control_checkpoint'), programs=(0,), max_events_per_instance=256)`. The caller does not add a Trace parameter or choose a final formal index. The frontend returns the real TTIR hidden argument index; actual emitted SDK role attributes and final LLVM types/runtime FFTS configuration validate the global-pointer prefix. Trailing removed launch-coordinate scalars remain partial.
+A detailed `backend='cann', hook='instrumentation'` session accepts an explicit
+`ObservationRequest(semantics=('issue','wait_bracket','control_checkpoint'),
+programs=(0,), max_events_per_instance=256)`. The caller adds no Trace formal or
+final argument index. The frontend/compiler/actual SDK launch roles resolve the
+hidden global-pointer ABI. Select `device_id=4`, MSTX/ACLprof MSProftx enabled and
+`runtime_host_timing_fallback=false`; the application selects the same device.
+The runner's native-only phase uses the public legacy native hook to avoid TTIR
+snapshot stores; its detailed phase uses the explicit instrumentation request.
+This difference is recorded and does not certify a default IR joint-capture path.
 
-The native mode should explicitly contain `device_id=4`, `mstx_enabled=true`, `aclprof_msproftx_enabled=true`, `runtime_host_timing_fallback=false`. A profiler started before an application sets its device sees the current device at start, which may legitimately be device0. Current-device querying does not follow later application device changes. CLI and external counter child must carry the explicit mode; the application also sets torch.npu device4.
+The actor buffer has three independent segments, each 32+64*C bytes. Valid
+C=256 requires **49248 bytes**; C=2048 requires **393312 bytes**. Symmetric native
+metadata/runtime checks reject stale or inconsistent layouts before allocation.
+11 rejection/metadata tests and both valid zero-buffer allocation/export gates
+passed. The earlier underallocation failure remains archived and is never run
+again. Per-actor attempted/committed/dropped/saturation headers are checked;
+empty capture, decode failure or missing identity cannot count as a detailed pass.
 
-The acceptance runner uses the public native-only `FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY=1` option for its native phase to avoid the default IR snapshot path. Its detailed phase uses `hook='instrumentation'` and the explicit request. This configuration difference is recorded; it does not establish that the default IR path provides a same-call native joint capture.
+## Completed fixed workloads
 
-## Independent counters and joint clock proof
+| Suite | Fixed requests and actual result |
+| --- | --- |
+| Native receipt/relative path | Four calls, two binaries, two streams, legal task0; exact worker/SDK identity, original math/inputs/canaries. Relative SDK root survives application chdir. |
+| Original operators | **108**: GEMM, GEMM+bias+GELU, Softmax, LayerNorm, row sum, transpose × three shapes × two configurations × off/native/detailed. All original mathematical oracles/input bytes retained; 36 detailed requests produced 7788 records. |
+| Fixed T5 | **9** RMSNorm127×769 requests: three batches × off/native/detailed, 30 measured calls each. All 270 measured calls passed math/input/canary checks; 180 native/detailed calls had exact task identities. This suite is not heldout shape/config coverage. |
+| Heldout | **18** RMSNorm requests: three row shapes × variants0/1 × off/native/detailed. All passed;12 native/detailed identities verified and six nonempty detailed traces. |
+| Formal Study | Same canonical 512×512×4096 fused GEMM+bias+GELU at 32/32/32,32/32/256,64/64/256 tiles; stages4/warps4. Three detailed cases and three native controls, each three measured calls, passed unchanged CPU math/inputs/canaries. |
+| Typed HIVM/source origin | Fresh ordinary fused128³ detailed capture, optional line info only: exact four tasks,232 source-control records and same-compile typed readiness channel in the public execution manifest.23/23 dynamic sites retain debug locations; explicit source_op_id remains partial. |
 
-`cann.collect_msprof([...], fresh_output, replay_mode='independent', expected_device_id=4)` invokes SDK `--replay-mode=kernel` explicitly. `expected_device_id` validates actual `OpBasicInfo` device metadata; it **does not select or switch** the application's device. Receipts preserve selected expectation and actual SDK device IDs. Missing/mismatched expected device fails. Each new output directory owns its raw captures and replay UUID. The public CLI/backend currently passes replay command/environment; caller-level expected-device validation is optional until common routing forwards it. Always preserve explicit child device selection.
+`acceptance.py --suite operators`, `--suite t5` and `--suite heldout` generate
+the fixed plans; workers can consume a JSON plan with general BM/BN/BK/stages/
+warps overrides. New17 CPU plan/identity contracts confirm the original108+9
+plans are unchanged and reject invalid overrides. Resume requires identical
+plan/source/core/plugin/native hashes; incomplete directories stop execution.
+Original tolerances remain GEMM/fused atol.002/rtol.02, row/RMS .0005/.002,
+transpose exact. CPU references run in the same Docker. No old instrumented
+Study binary or special source/LLVM rewrite substitutes for the public entry.
 
-Actor PMU activities can overlap. Ratios/cycles may describe several SDK measurement passes or replays, never the busy interval of a foreground logical invocation. A same-looking binary/kernel name/task number across replay directories cannot join them. Capture raw output, collector version, receipts and bytes; incomplete/failed collection remains failure.
+The formal long-K native medians are308.00/160.64/61.58us; detailed medians
+313.98/159.82/61.18us. Three-sample controls preserve the optimization direction
+and do not constitute a 3×30 performance acceptance campaign. The AIV wait
+brackets decrease from approximately54–56us to11–13us with BK256, but these
+source observations do not isolate every contributor to total kernel time.
 
-`ascend_clock.import_deviceprof` implements the public msopprof 910B/A2 128-byte schema, including hardware stream/task encoding normalization. Schema source is pinned Ascend/msopprof `b28488fa3ac6e42683bf2917c9d3149993942332` `data_bean.cpp`. Historical packet fixture provenance retains original/fixture SHA and exact record offsets. Device/capture IDs are not in those records and cannot be invented.
+## Identity, static relationships and clocks
 
-`align_same_call` needs a producer-established invocation/capture/device/stream/task/connection/scope/packetSHA binding, nonempty actual identity evidence **and counter-domain evidence**. Native actor containment is checked only after this binding; it never chooses an invocation. All matching events share one clock descriptor with top-level proof.invocation_id, actual packet identity, verified actor list and a common origin from the selected programs' bound unique native actors. Individual native record/containment is retained as event evidence. Unknown events retain raw ticks. `read_hwts_frequency` derives period from the actual SDK hwts report; absent report leaves nanoseconds unknown. SDK converted-nanosecond SQLite task times alone do not prove the source SYS_CNT epoch. Generic same-call packet collection through the formal entry is still a hardware/integration requirement.
+Canonical native tasks use retained generated-worker identity and sealed SDK
+HostTask/connection/TASK tables. MIX dispatch context membership and
+COMPUTE_TASK_INFO.globalTaskId select the compute member; parent views remain
+extensions. Multiple compute members are explicitly unsupported rather than
+arbitrarily selecting one. Task/scope0 are legal. SDK marker/copy/event views
+are classified from exact SDK types and do not inflate kernel hotspots.
 
-The formal worker/SDK producer now reads actual sealed capture TASK/HostTask connection tables; raw SYS extraction uses `stars_soc.data`, whose original task endpoints have a distinct channel from `stars_soc_profile` sampling. `cann_source_clock` independently rereads receipt/SDK proof, requires the actual compiled adapted LLVM hash and MOV SYS_CNT instruction, installed c220 GetSystemCycleImpl, and documented rate matching actual device HWTS frequency. It computes local nanosecond durations without setting a global origin or upgrading alignment. Caller-provided declared `align_same_call` evidence is still not a producer certificate. Final public retention/report wiring, full operator matrix, and MIX coverage must pass before full M3 acceptance.
+The actual SDK graph-sync-solver dump is captured with bounded files, stream
+SHA/command/tool/input provenance, and both original/adapted actor LLVM.
+Typed same-compile sync_block_set/wait records produce static actor/pipeline/
+flag channels. Repeated or ambiguous static sites are not dynamically paired.
+Source debug locations can be matched to the exact retained tracked table as
+origin candidates. They never imply exclusive source-operation cost.
+Use `TRITON_DISABLE_LINE_INFO=false` to retain these locations without enabling
+TRITON_DEBUG assertion/debug compilation. The setting invalidates compiler cache.
+Missing compiler dump/actor/source provenance stays unavailable or partial.
 
-The old Study has valid campaign/source-buffer provenance: three OS application processes, each with one target call and logical program0 actor logs, under one SDK application-replay command. Its exact all-actor integer SYS-window matching gives a unique recorded invocation under a common reported-epoch assumption. `Pid=NA` does not invalidate that campaign or conditional match; the unfilled link is an independent source scope/connection/PID→specific packet proof. See repository-root `artifacts/method-run/ascend/JOINT_CLOCK_AUDIT.md` for the bounded audit and minimum implementation gates.
+`cann_raw_sys` retains original 64B stars_soc ACSQ packet bytes, exact installed
+StructDecoder standard-size schema, hardware stream/task normalization and
+whole-dispatch endpoints. Such packets are not AIC/AIV occupancy envelopes.
+`cann_source_clock` independently verifies actual worker/task/binary provenance,
+compiled MOV SYS_CNT, installed c220 GetSystemCycleImpl, documented50MHz semantics
+and the sealed actual device frequency. It computes20ns/tick **local durations**;
+actor alignment stays instance_local and absolute/shared origin stays unknown.
+Frequency equality, raw window containment or similarly named SYS fields do not
+certify a shared epoch. The old Study's unique integer-window match is conditional
+on a reported shared-frame assumption, separate from this exact identity path.
 
-## Matrix and T5 interpretation
+Independent msprof PMU replay remains a distinct capture/UUID: it measures actor
+aggregates from separate SDK passes, not foreground busy intervals. Do not join
+replay tasks by name or task number or treat ratios as a same-call pipeline.
 
-`acceptance.py --suite operators` fixes six original math operators at three shapes/two configurations, plus preselected RMSNorm at three shapes/two configurations. It reuses only the original mathematical workload/oracle and frozen input bytes; every binary compiles through current tooling. Original tolerances remain: GEMM/fused `atol=.002, rtol=.02`, row ops/RMSNorm `.0005/.002`, transpose exact. No Trace parameter or old Study binary substitution is allowed.
+## Cost and unsupported selection
 
-T5 fixes RMSNorm127×769, seed1729, random phase order, three batches ×30 calls per off/native/detailed phase. Prewarm/first compile, host launch, stream envelope, native task records, finalization/export and trace bytes remain separate. CPU math/input/canary checks occur after profiling. Native task statistics require exact invocation/binary identity from the retained worker proof; incomplete matching remains partial. Off-mode task duration is unavailable, so the NPU stream envelope cannot establish the ≤5%/≤10% device-task goals. A separate real reference is required for that comparison.
+The fixed short RMS T5 exposed real overhead: native device-task medians
+6.60/6.33/6.44us versus detailed10.64/10.61/10.49us, increases
+**61.21/67.61/62.89%**. Host launch medians were about218–222us versus1.79–1.81ms;
+finalization/export costs are recorded separately. These negative results remain.
+Off-mode isolated task duration is unavailable, so its NPU stream envelope cannot
+certify the native≤5% device-task target. Detailed≤10% is not met here.
 
-Successful jobs resume only under the same source/core/plugin/native-library plan hashes. Failed or incomplete job directories and logs are retained and stop execution; choose a new output after fixing the mechanism. Partial source identity is recorded separately and leaves per-task timing unknown; it does not turn a narrow math/native result into full capability acceptance. `completed_math_native_matrix` means that narrow result only. Zero selected detailed events, missing native identity, unverified clock, hidden ABI failure or absent precise source-region relation cannot be presented as method completion.
+Current all-site capture supports compiler-fixed program publication predicates;
+timestamps still execute before that predicate. Semantic output filtering occurs
+after capture. Arbitrary sites and sample_every!=1 explicitly reject; do not claim
+on-device event/site sampling or cross-actor engine occupancy. Missing dynamic
+iterations, exclusive source cost and shared-clock alignment remain explicit.

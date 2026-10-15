@@ -1,0 +1,31 @@
+{
+  "status": "independent_retained_M1_capture_audit_passed",
+  "bundle_manifest_files": 149,
+  "binary": "ec741e15143ec60fe7d33ea4a75c8d38e54319ec4efdd4ddc145d89d422b12c5",
+  "actual_compile_id": "44f9d6f8-9482-4c44-b17b-3bba22599af5",
+  "source_ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5",
+  "sdk_ir_sha256": "5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a",
+  "static_channels": 1,
+  "dynamic_sites_with_debug_origins": 23,
+  "events": 232,
+  "captures": 4,
+  "actor_counts": {
+    "0": 192,
+    "1": 20,
+    "2": 20
+  },
+  "quality_source_files": [
+    "Profiler/python/flagtree_profiler/ascend_compiler.py",
+    "Profiler/python/flagtree_profiler/execution_ascend.py",
+    "Profiler/python/flagtree_profiler/ascend_sdk_driver.py",
+    "Profiler/python/flagtree_profiler/ascend_hivm.py",
+    "Profiler/test/test_ascend_compiler.py",
+    "Profiler/test/test_execution_ascend.py",
+    "Profiler/test/test_ascend_hivm.py"
+  ],
+  "limits": [
+    "Source locations are origin candidates, not exclusive source costs.",
+    "Static readiness does not pair dynamic generations or verify clock origin.",
+    "This is offline audit of real Docker data, not a new hardware execution."
+  ]
+}

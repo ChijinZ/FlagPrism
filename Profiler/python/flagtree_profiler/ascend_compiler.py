@@ -90,7 +90,28 @@ def prepare(event):
         event.environment['FLAGPRISM_ASCEND_SOURCE_ABI'] = str(abi_path)
     event.environment['FLAGPRISM_ASCEND_COMPILER_OUTPUT'] = str(output)
     event.environment['FLAGPRISM_ASCEND_COMPILE_ID'] = compile_id
-    provenance = {'compile_id': compile_id, 'phase': 'prepared', 'plugin_sha256': hashlib.sha256(plugin.read_bytes()).hexdigest(), 'command': event.command, 'output': str(output), 'source_association': 'surviving_explicit_metadata_only'}
+    from .ascend_hivm import PRINT_FLAG
+    if PRINT_FLAG not in event.command:
+        event.command.append(PRINT_FLAG)
+    sdk_driver = Path(__file__).with_name('ascend_sdk_driver.py')
+    sdk_command = list(event.command)
+    event.command[:] = [sys.executable, str(sdk_driver), *sdk_command]
+    provenance = {
+        'compile_id':
+        compile_id,
+        'phase':
+        'prepared',
+        'plugin_sha256':
+        hashlib.sha256(plugin.read_bytes()).hexdigest(),
+        'command':
+        sdk_command,
+        'sdk_capture_wrapper_sha256':
+        hashlib.sha256(sdk_driver.read_bytes()).hexdigest(),
+        'output':
+        str(output),
+        'source_association':
+        'surviving_explicit_metadata_only'
+    }
     if source_inputs:
         tracked = event.metadata.get('debug_tracked_table')
         if isinstance(tracked, str):
@@ -128,6 +149,15 @@ def finish(event, *, returncode):
                         artifact['adapted'] = {'path': str(adapted_path), 'sha256': hashlib.sha256(adapted_path.read_bytes()).hexdigest(), 'llir': adapted_path.read_text(), 'representation': 'instrumented_llvm_compiled_by_sdk'}
         artifacts.append(artifact)
     provenance['artifacts'] = artifacts
+    sdk_receipt = output / 'sdk-compiler.json'
+    if sdk_receipt.is_file():
+        provenance['sdk_ir_capture'] = {
+            'receipt': json.loads(sdk_receipt.read_text()),
+            'stderr': (output / 'sdk-stderr.txt').read_text(errors='replace')
+        }
+    from .ascend_hivm import build_static_readiness
+    provenance['static_readiness'] = build_static_readiness(
+        provenance.get('sdk_ir_capture'), artifacts)
     (output / 'driver.json').write_text(json.dumps(provenance, indent=2))
     if not returncode and not artifacts:
         raise RuntimeError('CANN driver produced no final actor LLVM capture; verify the selected SDK plugin extension point')
@@ -142,11 +172,32 @@ def cache_key():
     plugin = os.environ.get('FLAGPRISM_ASCEND_LATE_PLUGIN')
     if not plugin:
         return ''
-    return hashlib.sha256(json.dumps({
-        'plugin': hashlib.sha256(Path(plugin).read_bytes()).hexdigest(),
-        'trace_argument': os.environ.get('FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX'),
-        'trace_source_argument': os.environ.get('FLAGPRISM_ASCEND_TRACE_SOURCE_ARGUMENT'),
-        'capacity': os.environ.get('FLAGPRISM_ASCEND_TRACE_CAPACITY'),
-        'program': os.environ.get('FLAGPRISM_ASCEND_TRACE_PROGRAM'),
-        'line_info': os.environ.get('TRITON_DISABLE_LINE_INFO'),
-    }, sort_keys=True).encode()).hexdigest()
+    return hashlib.sha256(
+        json.dumps(
+            {
+                'plugin':
+                hashlib.sha256(Path(plugin).read_bytes()).hexdigest(),
+                'trace_argument':
+                os.environ.get('FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX'),
+                'trace_source_argument':
+                os.environ.get('FLAGPRISM_ASCEND_TRACE_SOURCE_ARGUMENT'),
+                'capacity':
+                os.environ.get('FLAGPRISM_ASCEND_TRACE_CAPACITY'),
+                'program':
+                os.environ.get('FLAGPRISM_ASCEND_TRACE_PROGRAM'),
+                'line_info':
+                os.environ.get('TRITON_DISABLE_LINE_INFO'),
+                'sdk_ir_print_flag':
+                '--bishengir-print-ir-after=hivm-graph-sync-solver',
+                'capture_sources': {
+                    name:
+                    hashlib.sha256(
+                        Path(__file__).with_name(
+                            name).read_bytes()).hexdigest()
+                    for name in [
+                        'ascend_compiler.py', 'ascend_sdk_driver.py',
+                        'ascend_hivm.py'
+                    ]
+                },
+            },
+            sort_keys=True).encode()).hexdigest()

@@ -1,0 +1,134 @@
+{
+  "yapf": "0.43.0",
+  "ruff": "ruff 0.9.1",
+  "files": [
+    {
+      "file": "Profiler/python/flagtree_profiler/ascend_compiler.py",
+      "new_file": false,
+      "baseline": "42bd4ae",
+      "before_sha256": "5c248c6add9a13fae90f91a3564aa728346bf1e58e4533563bfe54df142e0e9f",
+      "after_sha256": "5c248c6add9a13fae90f91a3564aa728346bf1e58e4533563bfe54df142e0e9f",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          93,
+          114
+        ],
+        [
+          152,
+          160
+        ],
+        [
+          175,
+          203
+        ]
+      ],
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/execution_ascend.py",
+      "new_file": false,
+      "baseline": "42bd4ae",
+      "before_sha256": "01e3f45ea03d267b2e0eebc3b00a12d9a621a8273d30491ba81ddf2439736e67",
+      "after_sha256": "01e3f45ea03d267b2e0eebc3b00a12d9a621a8273d30491ba81ddf2439736e67",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          201,
+          217
+        ],
+        [
+          222,
+          263
+        ]
+      ],
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/ascend_sdk_driver.py",
+      "new_file": true,
+      "baseline": null,
+      "before_sha256": "079ccc903a97999f84b0dc96b62aa913bcbc302e027f2d587fb6f4bc20ffca00",
+      "after_sha256": "7738ebd55929987ed20f342f58a8b0e75cea0a05069b33e95baedfa077ec0292",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": null,
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/ascend_hivm.py",
+      "new_file": true,
+      "baseline": null,
+      "before_sha256": "360065705de979caf4c81eb98031578804efdbec93dc771fb090fa6cc2ca8869",
+      "after_sha256": "a3f865bd2346d54a628535cd726d18c373a8ec8ef33286e1230c732473a68a56",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": null,
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    },
+    {
+      "file": "Profiler/test/test_ascend_compiler.py",
+      "new_file": false,
+      "baseline": "42bd4ae",
+      "before_sha256": "af19a9680c44b83fb47bec14ebe303562021001c05bb91336fce90c37b890883",
+      "after_sha256": "af19a9680c44b83fb47bec14ebe303562021001c05bb91336fce90c37b890883",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          3,
+          4
+        ],
+        [
+          10,
+          17
+        ],
+        [
+          28,
+          32
+        ]
+      ],
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 9
+    },
+    {
+      "file": "Profiler/test/test_execution_ascend.py",
+      "new_file": false,
+      "baseline": "42bd4ae",
+      "before_sha256": "3e2d3b809beb32769afa390188e67483e0a19c8949548e226a79fcec1e2733ab",
+      "after_sha256": "3e2d3b809beb32769afa390188e67483e0a19c8949548e226a79fcec1e2733ab",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          3,
+          4
+        ],
+        [
+          6,
+          14
+        ]
+      ],
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 4
+    },
+    {
+      "file": "Profiler/test/test_ascend_hivm.py",
+      "new_file": true,
+      "baseline": null,
+      "before_sha256": "61bc3ae94f3e88a9b64ad8af2a986e16cb6399ac341ecba180808c7a78292cde",
+      "after_sha256": "fb4bc6dbb18f4e0b43931bbbbddd2510d2d1a046e8048352ff6ba9f7d8e3894f",
+      "ast_equal": true,
+      "idempotent": true,
+      "changed_ranges": null,
+      "ruff_new_diagnostics": [],
+      "ruff_inherited_count": 0
+    }
+  ]
+}

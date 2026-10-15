@@ -198,8 +198,66 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
             if len(candidates) == 1:
                 origin_associations.append({'source_op_id': candidates[0], 'lowered_site_id': site['id'], 'basis': 'unique_full_debug_location_in_verified_compiler_snapshot', 'status': 'verified_origin', 'cost_ownership': 'not_established', 'source_ir_sha256': snapshot['ir_sha256']})
         associations.extend(origin_associations)
+    from .ascend_hivm import build_static_readiness
+    static_readiness = build_static_readiness(handoff.get('sdk_ir_capture'),
+                                              handoff.get('artifacts', []))
+    for channel in static_readiness['channels']:
+        producers = [
+            actor for actor in actors
+            if actor['function'] == channel['producer_function']
+            and actor['kind'] == channel['producer_actor_kind']
+        ]
+        consumers = [
+            actor for actor in actors
+            if actor['function'] == channel['consumer_function']
+            and actor['kind'] == channel['consumer_actor_kind']
+        ]
+        if len(producers) == 1 and len(consumers) == 1:
+            channel['producer_actor_id'] = producers[0]['id']
+            channel['consumer_actor_id'] = consumers[0]['id']
     dependencies = []
     for site in sites:
         if site['semantics'] in {'readiness_signal_issue', 'readiness_wait'}:
             dependencies.append({'site_id': site['id'], 'actor_id': site['actor_id'], 'semantics': site['semantics'], 'native_operands': site['operand_expressions'], 'peer_site_id': None, 'state': 'unresolved_native_event_encoding'})
-    return {'schema_version': 1, 'backend': 'ascend', 'binary_id': binary_id, 'status': 'partial' if actors else 'unsupported', 'execution_model': 'AIC_AIV_actors', 'artifacts': evidence, 'actors': actors, 'sites': sites, 'source_associations': associations, 'loops': loops, 'global_arguments': pointers, 'workspace': [item for item in pointers if item['role'] == 'workspace'], 'dependencies': dependencies, 'resources': {'basis': 'compiler_metadata', 'values': dict(compiler_metadata), 'measured': False}, 'limitations': ['Final actor LLVM must be supplied by an actual compiler output hook; ttadapter is pre actor expansion.', 'Unknown actor type, workspace role and source identity remain unknown.', 'Cross-core encoded event operands are preserved; peer dependencies require a verified SDK encoding.', 'CFG cycles and phi expressions are static; occurrences and buffer rotation are not inferred.', 'Issue/readiness/barrier sites are compiler evidence, not engine busy intervals.']}
+    return {
+        'schema_version':
+        1,
+        'backend':
+        'ascend',
+        'binary_id':
+        binary_id,
+        'status':
+        'partial' if actors else 'unsupported',
+        'execution_model':
+        'AIC_AIV_actors',
+        'artifacts':
+        evidence,
+        'actors':
+        actors,
+        'sites':
+        sites,
+        'source_associations':
+        associations,
+        'loops':
+        loops,
+        'global_arguments':
+        pointers,
+        'workspace':
+        [item for item in pointers if item['role'] == 'workspace'],
+        'dependencies':
+        dependencies,
+        'static_readiness':
+        static_readiness,
+        'resources': {
+            'basis': 'compiler_metadata',
+            'values': dict(compiler_metadata),
+            'measured': False
+        },
+        'limitations': [
+            'Final actor LLVM must be supplied by an actual compiler output hook; ttadapter is pre actor expansion.',
+            'Unknown actor type, workspace role and source identity remain unknown.',
+            'Typed same-compile HIVM readiness channels are static actor relations; encoded LLVM sites and dynamic generations are not paired by name, order or time.',
+            'CFG cycles and phi expressions are static; occurrences and buffer rotation are not inferred.',
+            'Issue/readiness/barrier sites are compiler evidence, not engine busy intervals.'
+        ]
+    }

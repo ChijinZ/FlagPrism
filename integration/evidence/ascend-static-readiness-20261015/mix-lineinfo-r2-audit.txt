@@ -1,0 +1,241 @@
+ASC_NEW_M1_AUDIT_R27
+MAPPING_KEYS ['schema_version', 'backend', 'binary_id', 'status', 'execution_model', 'artifacts', 'actors', 'sites', 'source_associations', 'loops', 'global_arguments', 'workspace', 'dependencies', 'static_readiness', 'resources', 'limitations']
+{
+  "status": "PASS_formal_MIX_math_identity_dynamic_capture_static_peer",
+  "math_max_abs_error": 1.341104507446289e-07,
+  "records": 232,
+  "actor_counts": {
+    "0": 192,
+    "1": 20,
+    "2": 20
+  },
+  "task_samples_us": [
+    22.2,
+    22.96,
+    22.64
+  ],
+  "binaries": [
+    {
+      "binary_id": "ec741e15143ec60fe7d33ea4a75c8d38e54319ec4efdd4ddc145d89d422b12c5",
+      "source_snapshot": {
+        "ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5",
+        "tracked_ops_sha256": "a150c4fc1749964a743e3e73f3562a1104c7e82d7067d44ed722e650ffe58149",
+        "phase": "pre_backend_driver"
+      },
+      "sdk_capture_receipt": {
+        "schema_version": 1,
+        "command": [
+          "/usr/local/Ascend/ascend-toolkit/latest/bin/bishengir-compile",
+          "/tmp/tmp64tz7mlu/kernel.mlir",
+          "--target=Ascend910B4-1",
+          "--enable-auto-multi-buffer=False",
+          "--enable-auto-bind-sub-block=True",
+          "--enable-debug-info=true",
+          "--link-aicore-bitcode=/tmp/flagprism-method-ascend/FlagTree/python/triton/backends/ascend/lib/libdevice.10.bc",
+          "--enable-hfusion-compile=true",
+          "--enable-hivm-compile=true",
+          "--enable-triton-kernel-compile=true",
+          "-o",
+          "/tmp/tmp64tz7mlu/kernel",
+          "--bishengir-print-ir-after=hivm-graph-sync-solver"
+        ],
+        "state": "finished",
+        "streams": {
+          "stdout": {
+            "bytes": 0,
+            "retained_bytes": 0,
+            "truncated": false,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "bytes": 27353,
+            "retained_bytes": 27353,
+            "truncated": false,
+            "sha256": "5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a"
+          }
+        },
+        "compile_id": "44f9d6f8-9482-4c44-b17b-3bba22599af5",
+        "sdk_tool_sha256": "4a1312e7d3aa2d21a220b3acd081e90d7b4a3d043af5da98e8cfc681c13048ef",
+        "source_ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5",
+        "returncode": 0
+      },
+      "static_readiness": {
+        "schema_version": 1,
+        "state": "compiler_static",
+        "channels": [
+          {
+            "id": "hivm-channel:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:0:PIPE_FIX:PIPE_S",
+            "state": "compiler_static",
+            "producer_site_id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:107",
+            "consumer_site_id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:154",
+            "producer_function": "matmul_mix_aic",
+            "consumer_function": "matmul_mix_aiv",
+            "producer_actor_kind": "AIC",
+            "consumer_actor_kind": "AIV",
+            "flag_id": 0,
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "dynamic_generation": null,
+            "dynamic_pairing": "not_established"
+          }
+        ],
+        "sites": [
+          {
+            "id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:107",
+            "operation": "sync_block_set",
+            "function": "matmul_mix_aic",
+            "actor_kind": "AIC",
+            "native_core": "CUBE",
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "flag_id": 0,
+            "dump_line": 107,
+            "source_locations": [],
+            "source_cost_ownership": "not_established",
+            "raw_ir": "hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+            "actor_artifacts": [
+              {
+                "module_sha256": "99ed6c6b5b2c332a064a6977c379163540e8e4bd812963d665a1f563e105aa4a",
+                "artifact_sha256": "99ed6c6b5b2c332a064a6977c379163540e8e4bd812963d665a1f563e105aa4a",
+                "adapted_sha256": "d8ebef150a8cca1fb68700851d1846ff5a358697b9ed499789e7d65f560b61cf"
+              }
+            ],
+            "state": "verified_same_compile_actor"
+          },
+          {
+            "id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:154",
+            "operation": "sync_block_wait",
+            "function": "matmul_mix_aiv",
+            "actor_kind": "AIV",
+            "native_core": "VECTOR",
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "flag_id": 0,
+            "dump_line": 154,
+            "source_locations": [],
+            "source_cost_ownership": "not_established",
+            "raw_ir": "hivm.hir.sync_block_wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+            "actor_artifacts": [
+              {
+                "module_sha256": "a6e4e424f8cc8f3d0fed65fd257b27b6e4d7cab6e13bfc201f610188eca3cf96",
+                "artifact_sha256": "a6e4e424f8cc8f3d0fed65fd257b27b6e4d7cab6e13bfc201f610188eca3cf96",
+                "adapted_sha256": "09ace660b9f42c7b90586c99db897d2dc2f354f53fdbe0a2b12d3c51dade76ca"
+              }
+            ],
+            "state": "verified_same_compile_actor"
+          }
+        ],
+        "semantics": "compiler_static_readiness_not_dynamic_generation",
+        "clock_alignment": "not_established",
+        "sdk_ir_sha256": "5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a",
+        "compile_id": "44f9d6f8-9482-4c44-b17b-3bba22599af5",
+        "source_ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5"
+      },
+      "public_execution_readiness": {
+        "schema_version": 1,
+        "state": "compiler_static",
+        "channels": [
+          {
+            "id": "hivm-channel:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:0:PIPE_FIX:PIPE_S",
+            "state": "compiler_static",
+            "producer_site_id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:107",
+            "consumer_site_id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:154",
+            "producer_function": "matmul_mix_aic",
+            "consumer_function": "matmul_mix_aiv",
+            "producer_actor_kind": "AIC",
+            "consumer_actor_kind": "AIV",
+            "flag_id": 0,
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "dynamic_generation": null,
+            "dynamic_pairing": "not_established",
+            "producer_actor_id": "late_llvm:99ed6c6b5b2c332a064a6977c379163540e8e4bd812963d665a1f563e105aa4a:matmul_mix_aic",
+            "consumer_actor_id": "late_llvm:a6e4e424f8cc8f3d0fed65fd257b27b6e4d7cab6e13bfc201f610188eca3cf96:matmul_mix_aiv"
+          }
+        ],
+        "sites": [
+          {
+            "id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:107",
+            "operation": "sync_block_set",
+            "function": "matmul_mix_aic",
+            "actor_kind": "AIC",
+            "native_core": "CUBE",
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "flag_id": 0,
+            "dump_line": 107,
+            "source_locations": [],
+            "source_cost_ownership": "not_established",
+            "raw_ir": "hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+            "actor_artifacts": [
+              {
+                "module_sha256": "99ed6c6b5b2c332a064a6977c379163540e8e4bd812963d665a1f563e105aa4a",
+                "artifact_sha256": "99ed6c6b5b2c332a064a6977c379163540e8e4bd812963d665a1f563e105aa4a",
+                "adapted_sha256": "d8ebef150a8cca1fb68700851d1846ff5a358697b9ed499789e7d65f560b61cf"
+              }
+            ],
+            "state": "verified_same_compile_actor"
+          },
+          {
+            "id": "hivm:5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a:154",
+            "operation": "sync_block_wait",
+            "function": "matmul_mix_aiv",
+            "actor_kind": "AIV",
+            "native_core": "VECTOR",
+            "producer_pipeline": "PIPE_FIX",
+            "consumer_pipeline": "PIPE_S",
+            "flag_id": 0,
+            "dump_line": 154,
+            "source_locations": [],
+            "source_cost_ownership": "not_established",
+            "raw_ir": "hivm.hir.sync_block_wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+            "actor_artifacts": [
+              {
+                "module_sha256": "a6e4e424f8cc8f3d0fed65fd257b27b6e4d7cab6e13bfc201f610188eca3cf96",
+                "artifact_sha256": "a6e4e424f8cc8f3d0fed65fd257b27b6e4d7cab6e13bfc201f610188eca3cf96",
+                "adapted_sha256": "09ace660b9f42c7b90586c99db897d2dc2f354f53fdbe0a2b12d3c51dade76ca"
+              }
+            ],
+            "state": "verified_same_compile_actor"
+          }
+        ],
+        "semantics": "compiler_static_readiness_not_dynamic_generation",
+        "clock_alignment": "not_established",
+        "sdk_ir_sha256": "5108b6ef9b4ceb5f87481332ed5afb56436b41fa69daf895caec1e24b418934a",
+        "compile_id": "44f9d6f8-9482-4c44-b17b-3bba22599af5",
+        "source_ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5"
+      },
+      "dynamic_sites": 23,
+      "dynamic_debug_origin_known": 23,
+      "dynamic_source_op_known": 0,
+      "public_origin_status": {
+        "unassociated": 13,
+        "ambiguous": 27,
+        "verified_origin": 34
+      }
+    }
+  ],
+  "source_hashes": {
+    "runner": "87839b1f5ecb09c457f66da869c081340e6f72f24f1048976d7f0c7c9e05eb90",
+    "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+    "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+  },
+  "compiler": {
+    "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+    "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+  },
+  "native_bindings": {
+    "debugger": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+    },
+    "profiler": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+      "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+    }
+  },
+  "limits": [
+    "Static typed readiness does not establish dynamic flag generations, encoded LLVM site pairing or shared actor clock.",
+    "Debug locations are origin candidates, not exclusive operation cost."
+  ]
+}

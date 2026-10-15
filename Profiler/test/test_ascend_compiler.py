@@ -1,11 +1,20 @@
 """Driver isolation, failure, and compile identity regressions."""
 import importlib.util
+import sys
+import types
 import json
 from pathlib import Path
 from types import SimpleNamespace
 import pytest
 
-spec=importlib.util.spec_from_file_location('ascend_compiler_test',Path(__file__).parents[1]/'python/flagtree_profiler/ascend_compiler.py')
+namespace = types.ModuleType('_ascend_test_package')
+namespace.__path__ = [
+    str(Path(__file__).parents[1] / 'python/flagtree_profiler')
+]
+sys.modules['_ascend_test_package'] = namespace
+spec = importlib.util.spec_from_file_location(
+    '_ascend_test_package.ascend_compiler',
+    Path(__file__).parents[1] / 'python/flagtree_profiler/ascend_compiler.py')
 m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
 
 
@@ -16,7 +25,11 @@ def test_prepare_copies_compile_configuration_and_uses_unique_output(tmp_path, m
     events=[SimpleNamespace(backend='ascend',metadata={},command=['bishengir-compile','input.mlir'],environment={'PATH':'/sdk'}) for _ in range(2)]
     for event in events:m.prepare(event)
     assert events[0].metadata['flagprism_ascend_handoff']['compile_id']!=events[1].metadata['flagprism_ascend_handoff']['compile_id']
-    assert events[0].command==['bishengir-compile','input.mlir']
+    assert events[0].command[2:] == [
+        'bishengir-compile', 'input.mlir',
+        '--bishengir-print-ir-after=hivm-graph-sync-solver'
+    ]
+    assert events[0].command[1].endswith('ascend_sdk_driver.py')
     assert events[0].environment['FLAGPRISM_ASCEND_REAL_BISHENG']=='/sdk/bisheng'
     output=Path(events[0].metadata['flagprism_ascend_handoff']['output'])
     assert (output/'bin/bisheng').stat().st_mode&0o111

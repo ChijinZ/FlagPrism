@@ -1,0 +1,56 @@
+--- a/python/setup_tools/utils/tools.py
++++ b/python/setup_tools/utils/tools.py
+@@ -303,27 +303,32 @@
+ 
+     def handle_triton_origin_toolkits(self):
+ 
+-        # detect system/arch/version, the same with setup.py
+-        system = platform.system()
+-        arch = platform.machine()
+-        arch = {"arm64": "sbsa", "aarch64": "sbsa"}.get(arch, arch)
+-        supported = {"Linux": "linux", "Darwin": "linux"}
+-        system = supported[system]
+-        nvidia_version_path = os.path.join(get_base_dir(), "cmake", "nvidia-toolchain-version.json")
+-        with open(nvidia_version_path, "r") as nvidia_version_file:
+-            # parse this json file to get the version of the nvidia toolchain
+-            NVIDIA_TOOLCHAIN_VERSION = json.load(nvidia_version_file)
+-
+-        ptxas_cache_path = os.path.join("nvidia/nvcc",
+-                                        f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas']}-archive")
+-        ptxas_blackwell_cache_path = os.path.join(
+-            "nvidia/nvcc", f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas-blackwell']}-archive")
+-        cudacrt_cache_path = os.path.join("nvidia/nvcc",
+-                                          f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['cudacrt']}-archive")
+-        triton_origin_toolkits = [
+-            ptxas_cache_path, ptxas_blackwell_cache_path, cudacrt_cache_path, "nvidia/nvdisasm", "nvidia/cuobjdump",
+-            "nvidia/cudart", "nvidia/cupti", "json"
+-        ]
++        # Ascend does not consume the NVIDIA toolchain. Keep the shared JSON
++        # offline dependency check, without constructing unrelated CUDA keys.
++        if flagtree_configs.flagtree_backend == "ascend":
++            triton_origin_toolkits = ["json"]
++        else:
++            # detect system/arch/version, the same with setup.py
++            system = platform.system()
++            arch = platform.machine()
++            arch = {"arm64": "sbsa", "aarch64": "sbsa"}.get(arch, arch)
++            supported = {"Linux": "linux", "Darwin": "linux"}
++            system = supported[system]
++            nvidia_version_path = os.path.join(get_base_dir(), "cmake", "nvidia-toolchain-version.json")
++            with open(nvidia_version_path, "r") as nvidia_version_file:
++                # parse this json file to get the version of the nvidia toolchain
++                NVIDIA_TOOLCHAIN_VERSION = json.load(nvidia_version_file)
++
++            ptxas_cache_path = os.path.join("nvidia/nvcc",
++                                            f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas']}-archive")
++            ptxas_blackwell_cache_path = os.path.join(
++                "nvidia/nvcc", f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas-blackwell']}-archive")
++            cudacrt_cache_path = os.path.join("nvidia/nvcc",
++                                              f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['cudacrt']}-archive")
++            triton_origin_toolkits = [
++                ptxas_cache_path, ptxas_blackwell_cache_path, cudacrt_cache_path, "nvidia/nvdisasm", "nvidia/cuobjdump",
++                "nvidia/cudart", "nvidia/cupti", "json"
++            ]
+         for toolkit in triton_origin_toolkits:
+             toolkit_cache_path = os.path.join(self.triton_cache_path, toolkit)
+             if os.path.exists(toolkit_cache_path):

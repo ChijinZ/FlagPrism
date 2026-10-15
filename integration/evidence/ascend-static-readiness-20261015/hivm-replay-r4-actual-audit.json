@@ -1,0 +1,99 @@
+{
+  "status": "PASS_actual_sdk_typed_channel_and_unmodified_codegen",
+  "static_readiness": {
+    "schema_version": 1,
+    "state": "compiler_static",
+    "channels": [
+      {
+        "id": "hivm-channel:4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0:0",
+        "state": "compiler_static",
+        "producer_site_id": "hivm:4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0:107",
+        "consumer_site_id": "hivm:4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0:154",
+        "producer_function": "matmul_mix_aic",
+        "consumer_function": "matmul_mix_aiv",
+        "producer_actor_kind": "AIC",
+        "consumer_actor_kind": "AIV",
+        "flag_id": 0,
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "dynamic_generation": null,
+        "dynamic_pairing": "not_established"
+      }
+    ],
+    "sites": [
+      {
+        "id": "hivm:4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0:107",
+        "operation": "sync_block_set",
+        "function": "matmul_mix_aic",
+        "actor_kind": "AIC",
+        "native_core": "CUBE",
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "flag_id": 0,
+        "dump_line": 107,
+        "source_locations": [],
+        "source_cost_ownership": "not_established",
+        "raw_ir": "hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+        "actor_artifacts": [
+          {
+            "module_sha256": "17c2c17b5d99ac3da5361a1232dfea628807097c9f37458bdb9106a30f628480",
+            "artifact_sha256": "17c2c17b5d99ac3da5361a1232dfea628807097c9f37458bdb9106a30f628480",
+            "adapted_sha256": "95d73136da70e55b83cacead265d3cf7f77d42f539a8db73a8923811a3465599"
+          }
+        ],
+        "state": "verified_same_compile_actor"
+      },
+      {
+        "id": "hivm:4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0:154",
+        "operation": "sync_block_wait",
+        "function": "matmul_mix_aiv",
+        "actor_kind": "AIV",
+        "native_core": "VECTOR",
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "flag_id": 0,
+        "dump_line": 154,
+        "source_locations": [],
+        "source_cost_ownership": "not_established",
+        "raw_ir": "hivm.hir.sync_block_wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 0",
+        "actor_artifacts": [
+          {
+            "module_sha256": "3f9dbf4b543b633802c796fae6fdbdafaa68e11ad1f689d064f4a86ac93a2dda",
+            "artifact_sha256": "3f9dbf4b543b633802c796fae6fdbdafaa68e11ad1f689d064f4a86ac93a2dda",
+            "adapted_sha256": "6b04718cad874ce292bbd86371e7fd6af8629f2b88a6f4bb300776519ac975aa"
+          }
+        ],
+        "state": "verified_same_compile_actor"
+      }
+    ],
+    "semantics": "compiler_static_readiness_not_dynamic_generation",
+    "clock_alignment": "not_established",
+    "sdk_ir_sha256": "4b1e99942608c4b51541827fd5aa3f19960d64dd4e81aa1c9c580e5ec115f3a0",
+    "compile_id": "372e8dfc-1a8c-4aad-91fc-434f98b678b7",
+    "source_ir_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5"
+  },
+  "llvm_comparisons": [
+    {
+      "replay_input": {
+        "name": "kernel.mix_aiv.ll",
+        "sha256": "48e1a101534d16835dabd67a8c875feeb225fd34f864f8b4b55481e728aabded",
+        "path": "/tmp/flagprism-method-ascend/m1-hivm-replay-r4/jobs/f5ff6cb3-b685-422b-9c20-dc99d66c1d08/kernel.mix_aiv.ll"
+      },
+      "original_input": "/tmp/flagprism-method-ascend/mix-smoke-compiler-captures-r2/372e8dfc-1a8c-4aad-91fc-434f98b678b7/jobs/22ec9b95-94f3-4d37-b726-c2397c14ac62/original-input-0.ll",
+      "normalization": "Only ModuleID temporary filename line omitted",
+      "remaining_bytes_identical": true
+    },
+    {
+      "replay_input": {
+        "name": "kernel.mix_aic.ll",
+        "sha256": "9b9c0dfc6d0de4d31a2ed202d1a5d3f253cde349def829b2f83531b5a62b8426",
+        "path": "/tmp/flagprism-method-ascend/m1-hivm-replay-r4/jobs/c153979c-608a-4e0c-bca9-30c51137002c/kernel.mix_aic.ll"
+      },
+      "original_input": "/tmp/flagprism-method-ascend/mix-smoke-compiler-captures-r2/372e8dfc-1a8c-4aad-91fc-434f98b678b7/jobs/89dc842e-9667-49b7-8ef7-0b9418d932e7/original-input-0.ll",
+      "normalization": "Only ModuleID temporary filename line omitted",
+      "remaining_bytes_identical": true
+    }
+  ],
+  "source_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5",
+  "probe": "CPU print-only replay, not a new hardware capture"
+}
