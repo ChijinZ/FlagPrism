@@ -1,0 +1,4064 @@
+{
+  "Q0_manifest_sha256": "0ded893431aa7aedf5174b46c07ed1d857f31f8fe763a7e87410300f52fc8c4b",
+  "additional_runtime_loop_combinations": 12,
+  "backend_evidence": {
+    "ascend": {
+      "common_combinations": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.481144452933222,
+              "compiled_kernel_hash": "9fe1eca10d822572c0cb7cb36a872d233f0b825d1bc597c2e05737d5da256b53",
+              "input_unchanged": true,
+              "max_abs_error": 7.479798558307493e-08,
+              "output_sha256": "a25f84712ca734a6f2134789861b4ecf7c84dc52e93b19c560d30414d83389ca",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/rational_blend-s0-c0/receipt.json",
+          "receipt_sha256": "6fe463aa118996eb445c0596bd0923a8f28304e0349920871ae60dd679e22695",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.763207675889134,
+              "compiled_kernel_hash": "37baadc4f1f6403492aa3aaeca905ff06188aefabe3f99f0d6e3d93184959443",
+              "input_unchanged": true,
+              "max_abs_error": 7.479798558307493e-08,
+              "output_sha256": "a25f84712ca734a6f2134789861b4ecf7c84dc52e93b19c560d30414d83389ca",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/rational_blend-s0-c1/receipt.json",
+          "receipt_sha256": "d276b0163e0708e015d972314ef4e6a2306f48e7d94ed96ad7828231601ad79a",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.33960572630167,
+              "compiled_kernel_hash": "2c0f085e2facd05b1eee5c1ed2e4b89dd1785db242739bc16b60e22917f9d501",
+              "input_unchanged": true,
+              "max_abs_error": 7.479798558307493e-08,
+              "output_sha256": "4e963399a07efa78688aa0c846613441936d0e298af7a813c3a07f2cfcf7c3bf",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/rational_blend-s1-c0/receipt.json",
+          "receipt_sha256": "144a426ece9c3e0af4acf40c991f50df419536fbbda181a528627b85e6f99186",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.135111385025084,
+              "compiled_kernel_hash": "3c016dc12fbae5607626e65e0031eb4d5ec61ae35eb35aa31319edab0a6ebea9",
+              "input_unchanged": true,
+              "max_abs_error": 7.479798558307493e-08,
+              "output_sha256": "4e963399a07efa78688aa0c846613441936d0e298af7a813c3a07f2cfcf7c3bf",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/rational_blend-s1-c1/receipt.json",
+          "receipt_sha256": "9326fd175dc0a1f424a7584c9aecbbaf6245373a42fa703521b8ecc9684941be",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.23203824320808,
+              "compiled_kernel_hash": "2b25d3e35a7511a6573a9d3e5f5565b273657595a369e65d2ef4b95cd285d4a1",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "ascend-final-baseline-Q2/window-reserve-Q0a/cubic_window-s0-c0/receipt.json",
+          "receipt_sha256": "9d357ec5fb2eac4a06f82854d83f276f473e42d877d1ae67069d7a0781b5285a",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 21.732035865075886,
+              "compiled_kernel_hash": "a16e459c0d77b34cdcee25609ce14e37ac2d07aeb244db0bfbe5673344b9fece",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "ascend-final-baseline-Q2/window-reserve-Q0a/cubic_window-s0-c1/receipt.json",
+          "receipt_sha256": "2db3f262bc5ef9ea94a72399994ff8ae0eef1a91ac144abb5883f6f3d412649c",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.43417249293998,
+              "compiled_kernel_hash": "dfb7dc4365394b3554c1e0bd935db4338a8c6ffe0bfe2f38fefd86fdb5917618",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "ascend-final-baseline-Q2/window-reserve-Q0a/cubic_window-s1-c0/receipt.json",
+          "receipt_sha256": "1b764708e51e12ad0c762b7b6884d5a65a7f92e97b59642cf9986bbc149adc00",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.559442188125104,
+              "compiled_kernel_hash": "2e36d72290d7e453ad2ac0046f737223a16d67c4057db833b416affb6ac168e3",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "ascend-final-baseline-Q2/window-reserve-Q0a/cubic_window-s1-c1/receipt.json",
+          "receipt_sha256": "0e68922cae77dca4f9db589f891ca5fcc6bf52708f6c06a71cf90bb14d0884e7",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.57445959467441,
+              "compiled_kernel_hash": "ea55263916d93db1a748658f5847272544aa9e994d5c9284afd00b0c8ee92353",
+              "input_unchanged": true,
+              "max_abs_error": 1.9051421433491367e-08,
+              "output_sha256": "c47ed0dbab7a644d379f811269d668b246d94017ee554c17d2f59c487a1bdd01",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/weighted_covariance-s0-c0/receipt.json",
+          "receipt_sha256": "3251614ee8e884ba0802f4ee7138545ea774bbb4d34260cade2ddd48a1b2db68",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.71415387885645,
+              "compiled_kernel_hash": "28db9ef6d5e0db1d5fdb333adceeeba9697fe0a67cb98e110a95ff0c4a3550b0",
+              "input_unchanged": true,
+              "max_abs_error": 1.9051421433491367e-08,
+              "output_sha256": "c47ed0dbab7a644d379f811269d668b246d94017ee554c17d2f59c487a1bdd01",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/weighted_covariance-s0-c1/receipt.json",
+          "receipt_sha256": "0377f55609e0fdd7926b70b278c4281dfaae36dd176b4aad330db8064b392090",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.842939163092524,
+              "compiled_kernel_hash": "a182e2bc8d1b25e47f3153df10e315313d499074154fee14f0643e2f70f4f56f",
+              "input_unchanged": true,
+              "max_abs_error": 1.6779163382069778e-08,
+              "output_sha256": "54bb8e383dc6bd47782008d6f8c4a243060103ea0f52f293be7ed8177fc6c51f",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/weighted_covariance-s1-c0/receipt.json",
+          "receipt_sha256": "f8891a6d99f55e27270773c27b188b8a52de8b92a56912ec2c493fe66402d085",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.73733373498544,
+              "compiled_kernel_hash": "8347e90118554b7caad077e7fe8e1b94de2b8205aab15f942710c2306c67392c",
+              "input_unchanged": true,
+              "max_abs_error": 1.6779163382069778e-08,
+              "output_sha256": "54bb8e383dc6bd47782008d6f8c4a243060103ea0f52f293be7ed8177fc6c51f",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/weighted_covariance-s1-c1/receipt.json",
+          "receipt_sha256": "4046f077aa2eed9068abc505a327fa138011345c64b4b2d15a7a2756775fa681",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.686538856010884,
+              "compiled_kernel_hash": "ceec30b60b38e5a0eb477905f7eb2b5ead0c13571a5e0c76bcd928ec5b948a0d",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/absolute_deviation-s0-c0/receipt.json",
+          "receipt_sha256": "426d4d8b1deaf55ed94358935641df9b7de06487d39547df6021a0ce02cf9e54",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.52625677967444,
+              "compiled_kernel_hash": "fac25cdf8a7506c271bf9e514315469f39741b9fe470f91bcfa447cba2e72c5b",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/absolute_deviation-s0-c1/receipt.json",
+          "receipt_sha256": "566bd50bd5e7fa0a81a15397f6cba5301b905b548a5c1006745f6dea0f1d068f",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.880311901215464,
+              "compiled_kernel_hash": "1fe735f3ed413e541b60c42f927f7692151c816d8b2a498eba7e5f77ae468bca",
+              "input_unchanged": true,
+              "max_abs_error": 4.264123443231682e-08,
+              "output_sha256": "9a82609ca15a3d02c3d769362e58ca74a60c9e62877a054d2db68ba5d905d2c6",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/absolute_deviation-s1-c0/receipt.json",
+          "receipt_sha256": "5cd970458ad2bca9e60ce3e226e4d75d3768665faa11c5aa44bcaf0ff9a3e8ca",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 24.075952779036015,
+              "compiled_kernel_hash": "f3b497a80efa4d9410be93054225bee5e00ed66ec726ccb62252c0350da07ead",
+              "input_unchanged": true,
+              "max_abs_error": 4.264123443231682e-08,
+              "output_sha256": "9a82609ca15a3d02c3d769362e58ca74a60c9e62877a054d2db68ba5d905d2c6",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/absolute_deviation-s1-c1/receipt.json",
+          "receipt_sha256": "ed46b703a21c9d32d9abcc336844c5293ad613a5c3de9af49383eae05598e9d3",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.4936058036983,
+              "compiled_kernel_hash": "66a12204e6a91193c4f48c75a668871f0b7bbb9c5eeb2fd6dc8333f3ff273c48",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s0-c0/receipt.json",
+          "receipt_sha256": "07db547a2632d531151a3df37fbb5e58960d13e1c52d3633800f745ae99f0634",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.800624325871468,
+              "compiled_kernel_hash": "7caf2f116afc33144b9152214ee20e3fbceab34381a50cf84443699d694ab368",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s0-c1/receipt.json",
+          "receipt_sha256": "61d9aed4fdd26cdc652a4d8f121b1019d51bff5229aff894526c9cb1ed15a4ec",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.481610211078078,
+              "compiled_kernel_hash": "5b3f20ce325a9e183aae5247eb264144394f6c6c09275bdcaacf033f1438bf0e",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s1-c0/receipt.json",
+          "receipt_sha256": "c8752c33b9146b932f46b363dc581b09f7cbfe9c44d8ae02722efeab718cedd6",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.57604986662045,
+              "compiled_kernel_hash": "8f7009a242663150e75d5edffd19bb88d31f911cc4cb93d0e90e0c4798cdf49a",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s1-c1/receipt.json",
+          "receipt_sha256": "86ca8e1fdaa68c04236a967790f6d54c4e2cf7c27a1a4e5c6e9e4ac29a4aef96",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.408634721767157,
+              "compiled_kernel_hash": "f27c8daeabf6833ac30975708492bbf3bee089a1a27a67446f8db9fc3649d5f9",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s0-c0/receipt.json",
+          "receipt_sha256": "f0da383a6a0d48ee8c9f846e25a5b201c40e59e18acd0abc745000e2e1c11b71",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.958958878181875,
+              "compiled_kernel_hash": "454dd1730b602c61b6d3c319c7c16fc24f688c361e5ddb34256f5f31a111d93d",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s0-c1/receipt.json",
+          "receipt_sha256": "b97616188ce32f0b60780966d81db41bd488148dc639cc596a8caf8c6238aa3a",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.03776334458962,
+              "compiled_kernel_hash": "a388ff280781d8e667a9b7dd804610743061a555a54fe5572727f9aeca908494",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s1-c0/receipt.json",
+          "receipt_sha256": "2e6e871ede1291215911c1e16c13699a5296e6179028c89cc6ce9b4ccf9e282f",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 23.042339463252574,
+              "compiled_kernel_hash": "df36d000925849a3c0ccf4a71e3a347c7ec146b1c8ace6e1478ed0b2a45d128b",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "ascend-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s1-c1/receipt.json",
+          "receipt_sha256": "16122c3327274bf5044e00e12c7eabd6af4be35af099ba9b7fef3b57d01b6659",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        }
+      ],
+      "eligibility_sources": {
+        "matrix": {
+          "path": "ascend-final-baseline-Q2/matrix-reserve-Q2/eligibility.json",
+          "sha256": "71e11571620e946eefa9914c9bbf6105f9c160fa3a55c11b74a34623c0eab080"
+        },
+        "primary": {
+          "path": "ascend-final-baseline-Q2/results-Q1/eligibility.json",
+          "sha256": "074a0cac16581cb47c1df829c5750708d472cc5009e4f40778d9656ebee20120"
+        },
+        "window": {
+          "path": "ascend-final-baseline-Q2/window-reserve-Q0a/eligibility.json",
+          "sha256": "d6b454520b12d9bfdd3d8bb236963617ebcc511400b27607002a7e0a340c83e1"
+        }
+      },
+      "runtime_probe": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.337841674219817,
+              "compiled_kernel_hash": "cff617a1ee1c89c402a9f4e2b9b3478e2e5fe6142cc78be663e3b76d4ba39634",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0003698347136378288,
+              "compiled_kernel_hash": "cff617a1ee1c89c402a9f4e2b9b3478e2e5fe6142cc78be663e3b76d4ba39634",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/runtime_recurrence-s0-c0/receipt.json",
+          "receipt_sha256": "58455abadaade8a8fa7253d47a028e567667dfb25bc8042388f94c5ea6ee5d34",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.057499634101987,
+              "compiled_kernel_hash": "d0ce2b35642ee55881c0f63ad09ace60baf39854079d7571861c2a8096f53379",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.00035811541602015495,
+              "compiled_kernel_hash": "d0ce2b35642ee55881c0f63ad09ace60baf39854079d7571861c2a8096f53379",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/runtime_recurrence-s0-c1/receipt.json",
+          "receipt_sha256": "d523e5032d2e21dd2e66d24d0dce2e1c473c8490728ab8d5979b979e044bca6d",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.414336709771305,
+              "compiled_kernel_hash": "919c8c3220edb28e20b59660e737d79ea8723412041af2a4671239dd9983b556",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0003548343665897846,
+              "compiled_kernel_hash": "919c8c3220edb28e20b59660e737d79ea8723412041af2a4671239dd9983b556",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/runtime_recurrence-s1-c0/receipt.json",
+          "receipt_sha256": "857c828f77751bc63d09e520a6d9792e460c3045c671b694c01d97ee60d1b172",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 22.03632685309276,
+              "compiled_kernel_hash": "9b7c518bba9bf499bccccc4a0f2d1262c64c63a41df198e039885e0d2f7e9636",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.000620757695287466,
+              "compiled_kernel_hash": "9b7c518bba9bf499bccccc4a0f2d1262c64c63a41df198e039885e0d2f7e9636",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "ascend-final-baseline-Q2/results-Q1/baseline/runtime_recurrence-s1-c1/receipt.json",
+          "receipt_sha256": "b66cc045d8eab7510ee8162254b00a7c783cd31443537c60ede68dfefd1e45bf",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        }
+      ]
+    },
+    "enflame": {
+      "common_combinations": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.596196735277772,
+              "compiled_kernel_hash": "ef5106c47d3feacfaf6f200c94711dc4ba07d44c5317cdff41a2a3ba3214e706",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "b51e32962391759f0de66452f9e3b1ed84ea44dc9a464e89af278d3388a2c272",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/rational_blend-s0-c0/receipt.json",
+          "receipt_sha256": "d3bb46f92e15494fbc878132404b938feade8540e3eb1c7a80d94078f6a7db41",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3412050418555737,
+              "compiled_kernel_hash": "6ac28185eb83b007907186bf2873e8d57e407fb8e16b7b58c7976c39ad471e4a",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "b51e32962391759f0de66452f9e3b1ed84ea44dc9a464e89af278d3388a2c272",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/rational_blend-s0-c1/receipt.json",
+          "receipt_sha256": "0399bb2ab44bf47691f3cc45c3e7c3045d7342659fa608f0da6c753d70b366d5",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3117262125015259,
+              "compiled_kernel_hash": "f0ce67fff7566a08982f4d2c5a5d15e01494cb98fc41101d4297607aaac2adb8",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "625e4180198847e614193999ca59982c6a3834f2e9059601324a0f8fceaf6814",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/rational_blend-s1-c0/receipt.json",
+          "receipt_sha256": "a364c722f51ef8cd3863ecd563cbc17680fcd79f4a249fa1c26a943eaa986223",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3655498754233122,
+              "compiled_kernel_hash": "3a433ac2373e4dc4e7d34ed9ac3c15b95fa387eaaea3f2609446eaead498afed",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "625e4180198847e614193999ca59982c6a3834f2e9059601324a0f8fceaf6814",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/rational_blend-s1-c1/receipt.json",
+          "receipt_sha256": "9b3ef1fff7167870754e9d9131681dd621538e73fbc89415eb3ba3e1195cb6dd",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3071345631033182,
+              "compiled_kernel_hash": "5ee64d7250f7ad76c0f4af9f85a5912cae84d48b0c0edb8594521cace7ba684d",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "gcu-final-baseline-Q2/reserve-baseline/cubic_window-s0-c0/receipt.json",
+          "receipt_sha256": "a0f0e9838de04ad664285237f15c8d45f937d02ee7fb0cbcaffb96b22f78e60d",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3518389854580164,
+              "compiled_kernel_hash": "4802d6f1b2f393cbb152b90899e0cf6c16f0bf6892a71d9f4e38274b20137e56",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "gcu-final-baseline-Q2/reserve-baseline/cubic_window-s0-c1/receipt.json",
+          "receipt_sha256": "71003c1b7d298a2a397c7bf958bbde71d95342956f60479f6b6c0cecb07fd9d4",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.327021587640047,
+              "compiled_kernel_hash": "fae4ab3fc079c3a6f4bb7e4019c705a90e0e8613e7677c8ece99ab74ca13ee46",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "gcu-final-baseline-Q2/reserve-baseline/cubic_window-s1-c0/receipt.json",
+          "receipt_sha256": "930d36710ba715581b284f5bb98cce5d57f84fc44a8ceae5b4e1a9b884f5a7fe",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3666261155158281,
+              "compiled_kernel_hash": "1ab28de5c2054ee257424afe2890d65491650d9aa2376d85ecdc2f2ce65a39ea",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "gcu-final-baseline-Q2/reserve-baseline/cubic_window-s1-c1/receipt.json",
+          "receipt_sha256": "ece38675bdf646c29d080ea778f3fffb6a65a4e039f2dc73be107ce3ac799f8c",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.6880703996866941,
+              "compiled_kernel_hash": "d18704316c1d55f5cbda0830ab87b81944a55c49ce4b7a16bbab7c1f0b0b2293",
+              "input_unchanged": true,
+              "max_abs_error": 1.6843203505534365e-08,
+              "output_sha256": "45851c1232a0843c54cf2a59b7c1f39e6981f9de3f446ef4f8891b2ceae8de69",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/weighted_covariance-s0-c0/receipt.json",
+          "receipt_sha256": "b90d090dfde999c592bf88a0f04cf0ffa5ebd1c0fc82e420df20da4e6201c303",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.375226054340601,
+              "compiled_kernel_hash": "b4e6702d91c38b3c390abaf01fbc2f5580e49c7208a386f137f9489afe0f7b5b",
+              "input_unchanged": true,
+              "max_abs_error": 1.655453416363195e-08,
+              "output_sha256": "bbe1037b34fa11286bb069a4a12979bc964017c2644e577880bd0e537e11bdd2",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/weighted_covariance-s0-c1/receipt.json",
+          "receipt_sha256": "11db3037c6d9fcdf42b4e7339c72b8729b30da248730e282c05d1af1df12a4bf",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.4692179635167122,
+              "compiled_kernel_hash": "5dfb71a0d0b7ea72a5ddb02b0fc8a1f53fe9f7c1d5bd53c7fd97c68fff98d2ac",
+              "input_unchanged": true,
+              "max_abs_error": 1.1277911306228905e-08,
+              "output_sha256": "396695bfc5fae70e4ddcd4ccf5e8d03108d6a064565fd9b818c0756dd1036f5f",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/weighted_covariance-s1-c0/receipt.json",
+          "receipt_sha256": "6458ceb1744800cad817aa9ac6c0fa9b519588b843cbe205db46948fcd58492c",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.4867705255746841,
+              "compiled_kernel_hash": "a410d4df611984135433c811e93f2518e46ed70b85e3dd03019f81b49e8b9353",
+              "input_unchanged": true,
+              "max_abs_error": 1.3140556455459862e-08,
+              "output_sha256": "0894507eabaed27d3fc895aed3ad80881221087cfc98301e9259571cc4c67cc4",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/weighted_covariance-s1-c1/receipt.json",
+          "receipt_sha256": "f318832f146dabbfbff4f0105dfe93c96032bd5b5391ec1afde02742ad202865",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.22541288100183,
+              "compiled_kernel_hash": "bb9772a63a2b0ee52d21a3bf4d0d7199ebbaaf0af8063fa52d70fe748ccee5fa",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/absolute_deviation-s0-c0/receipt.json",
+          "receipt_sha256": "4cbc44b334995ea3ef144d8648ca0ccb8bf387708a8bbc145ae019d08681c657",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2422551680356264,
+              "compiled_kernel_hash": "1fdfc79cd44efe8521427a5d2a071dab0b86a4f4bb66ef72e6d82fb94a7102f2",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/absolute_deviation-s0-c1/receipt.json",
+          "receipt_sha256": "c65c2d4b84b9382db5c14a4d71db6be7bf27925c634844660b478e131cdd535a",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2447298243641853,
+              "compiled_kernel_hash": "4e2bd0362aa0fd90fde176098b410368a9e9dfc24bf6788fc59a5ec623b914d7",
+              "input_unchanged": true,
+              "max_abs_error": 4.2641234543339124e-08,
+              "output_sha256": "9a82609ca15a3d02c3d769362e58ca74a60c9e62877a054d2db68ba5d905d2c6",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/absolute_deviation-s1-c0/receipt.json",
+          "receipt_sha256": "87b3d088b0962f406f2e5021226f9b1dfa22f5b9926ecd4163ea0c752361c713",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.3034836314618587,
+              "compiled_kernel_hash": "be9feb4075f5ad5eeaba3eb7c28cb788a15082cade72d17e8383b282bae2ca3f",
+              "input_unchanged": true,
+              "max_abs_error": 5.2783158621672044e-08,
+              "output_sha256": "c1b5e9ebf331264807cf43f5381b2ef6a3e08863b7cdab1293fad4079470ccc3",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/absolute_deviation-s1-c1/receipt.json",
+          "receipt_sha256": "741695b9ff938d657c609cd228c817ed7037a3c648c1046d8b81715372c4ace1",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 3.2371008694171906,
+              "compiled_kernel_hash": "4636f1cc16c4f5e9282b15a6985394697a0a8241061ed554b8c1eaf6c171a5c7",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s0-c0/receipt.json",
+          "receipt_sha256": "421cf6c1c56c232baf3aff378477dbfa58349732b6e9580d31497bc04196bd53",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 2.0496357642114162,
+              "compiled_kernel_hash": "dfc001eda192e2e51a6f4692bea569451b2cb7a04a0cc11bcfbcfcb25533698d",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s0-c1/receipt.json",
+          "receipt_sha256": "0cf6771fbd723ab47e68ebf0c0a7a4cb2a4283baeafc6c4535f3ca978b5f22bd",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 2.989208111539483,
+              "compiled_kernel_hash": "0d6b26757d83fe930524a5c760b8f08b4a4676b03f3d77755799b84831ddc06d",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s1-c0/receipt.json",
+          "receipt_sha256": "1c153e29ffb8f0addd220a5f1f76e9a37dd65b117b5642de5fcf51256bb5e9f5",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 2.070320574566722,
+              "compiled_kernel_hash": "00be0cdcb8a02326b44f1535588758e0ae62cdc5527a8b332bfc6c4e3993de96",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/symmetric_cross-s1-c1/receipt.json",
+          "receipt_sha256": "2de2227acb77abd959d11f6f374cd4a7de1710688612fdcfad31823fdf098be0",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 2.7506347093731165,
+              "compiled_kernel_hash": "ad4c4c9fd940e9d48c50157b61dd2040c080ee40d8ecd59c0c7494cc67d22e30",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s0-c0/receipt.json",
+          "receipt_sha256": "aac11aa951ef1d7dc0c5f8c681bcb70a65ffb16f629985fa8fd8dc89b20f71e2",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.912926534190774,
+              "compiled_kernel_hash": "e61fb5e75926c7136a6ad9691ef78cc0fa71962a3914475f076ab92de196ad82",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s0-c1/receipt.json",
+          "receipt_sha256": "99d105f1cfa97beffad1e70070c14441f5a438f17b87dccb6cfe89a63b4cf83b",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 2.557012280449271,
+              "compiled_kernel_hash": "ab52466a13a5a6cc1afc190364854e359cf2fb1d05738d44144fccbdead0bad9",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s1-c0/receipt.json",
+          "receipt_sha256": "f07e7fc9a818175d81134d382659f6bf59aeed4c776f7e3a638060c97cd4233f",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.9100911431014538,
+              "compiled_kernel_hash": "ad691e85444ad0141d5e8273040480e80a2a3ecc58f51673c983ca6208c45f47",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "gcu-final-baseline-Q2/matrix-reserve-Q2/bilinear_difference-s1-c1/receipt.json",
+          "receipt_sha256": "457f93e9867aa8b52658d10a1b279037c5695b80470f36fca89ee8f000b10b09",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        }
+      ],
+      "eligibility_sources": {
+        "matrix": {
+          "path": "gcu-final-baseline-Q2/matrix-reserve-Q2/eligibility.json",
+          "sha256": "ce2b5ed4241466943766ccd3d5e59adcc761461f36b9dc9063037296d0b86553"
+        },
+        "primary": {
+          "path": "gcu-final-baseline-Q2/results-selected-backend/eligibility.json",
+          "sha256": "18f3aa8d1e4d14eef39d84c22cf571936e0f5c413d2f0ed2788240728407b08f"
+        },
+        "window": {
+          "path": "gcu-final-baseline-Q2/reserve-eligibility.json",
+          "sha256": "8455404f6a6334617d6dadcfadd88fe38d74d4e89844c6a2b12d6e6ea68f248a"
+        }
+      },
+      "runtime_probe": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2809591926634312,
+              "compiled_kernel_hash": "045270a9cb0a831a983a0cfdc9be78a823a050b2b3e2ca8ef694f91c0c44ccd5",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.00041135214269161224,
+              "compiled_kernel_hash": "045270a9cb0a831a983a0cfdc9be78a823a050b2b3e2ca8ef694f91c0c44ccd5",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/runtime_recurrence-s0-c0/receipt.json",
+          "receipt_sha256": "8c90846ffeafd046da9234a71e0777e260a09ec133094d4939af167ee565afb9",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2854482345283031,
+              "compiled_kernel_hash": "f90ef98a48fc5e41601de253062d1a49faaf3ed2a044d3b60c24d9f8a8c0263f",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0004119444638490677,
+              "compiled_kernel_hash": "f90ef98a48fc5e41601de253062d1a49faaf3ed2a044d3b60c24d9f8a8c0263f",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/runtime_recurrence-s0-c1/receipt.json",
+          "receipt_sha256": "bf3cd28ee418939f2014924cac5051366f3003c02b0aa5f71aaf56ea05432b86",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2695706654340029,
+              "compiled_kernel_hash": "48a6e80892293365196b900a80630d7da138470c1bb71e0e72f83ae2e5f39cec",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0003157835453748703,
+              "compiled_kernel_hash": "48a6e80892293365196b900a80630d7da138470c1bb71e0e72f83ae2e5f39cec",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/runtime_recurrence-s1-c0/receipt.json",
+          "receipt_sha256": "71fde1fa15cb1ca8f0e06f87d255bc7749c92f1e3ebf4027f1a34bf79cf15825",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.2910708487033844,
+              "compiled_kernel_hash": "51df52cf47b2e3ff358dffdf5a3429e5e92e09107fad1bf02ba3267256767c41",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0003288518637418747,
+              "compiled_kernel_hash": "51df52cf47b2e3ff358dffdf5a3429e5e92e09107fad1bf02ba3267256767c41",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "gcu-final-baseline-Q2/results-selected-backend/baseline/runtime_recurrence-s1-c1/receipt.json",
+          "receipt_sha256": "67b0c0132db3f3e0c82ee2a58444028595f21fe0d56a951e973480dc1fc7fcf4",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        }
+      ]
+    },
+    "nvidia": {
+      "common_combinations": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0359911229461432,
+              "compiled_kernel_hash": "846be6b6200907987872bf5e0f8fa5c108c51b28b070795c6bd2d4d4b79d2192",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "7f783161ae3b1412344d6682bf3553d74d907fae9868d0e36d764c78c011a87c",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/rational_blend-s0-c0/receipt.json",
+          "receipt_sha256": "bac1c7db658849ef659bf3808268f200261f25a08394ff9394fe1d52a7c85931",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0485608763992786,
+              "compiled_kernel_hash": "10a1fb69ca180f487ad879e6d840631af26b57e1686df5ca1ff6e87252321015",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "7f783161ae3b1412344d6682bf3553d74d907fae9868d0e36d764c78c011a87c",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d",
+            "124f795efe5ede815b20a575803236c53323d0090aab033b2bd2a147ddee466b"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/rational_blend-s0-c1/receipt.json",
+          "receipt_sha256": "40aac3d0c225a9ce17e41d1f64bfe724865d7c1d92bfef160f5cdb2f5bd7e877",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0494990348815918,
+              "compiled_kernel_hash": "e005fc3cd0c4705030d44f9ae8de82a6615013d808d975bad1d484454f6ae121",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "fe6bb0d2ebc668622473f6c69578d6d972b6dbbfad61eaeaba0ea91071259b68",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/rational_blend-s1-c0/receipt.json",
+          "receipt_sha256": "9e0113326a4c8b245b8885fdec361ff5d27f28e2fe17c91098c95b22958ab7ea",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.048369249328971,
+              "compiled_kernel_hash": "b4d7cac58a394d94f6733ec58a3d55eef496ff6a374e61e3cd91427bc54b588c",
+              "input_unchanged": true,
+              "max_abs_error": 5.183012596887693e-08,
+              "output_sha256": "fe6bb0d2ebc668622473f6c69578d6d972b6dbbfad61eaeaba0ea91071259b68",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "rational_blend",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee",
+            "974561f7ec33f92a8782975960a7447c4e3a4de9759050f76f523e5086f53c26"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/rational_blend-s1-c1/receipt.json",
+          "receipt_sha256": "dc72333f7a02c726da7e7438c9df1f2d81aebdb3a5b5d441d93c4ee8dd65e063",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.051369022578001,
+              "compiled_kernel_hash": "f20aab2ef9e8ebd91e43ac36fc3737a6072e48475e7dc4c87c2dcda06d7ca274",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "nvidia-reserves-Q2/window-reserve-Q0a/cubic_window-s0-c0/receipt.json",
+          "receipt_sha256": "68d907a9f0025af0b542944a8f0010d12c056ce5c09657b7be14ea4bf9dd5c8b",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0514153819531202,
+              "compiled_kernel_hash": "34a6098afc4c161d76e4a27e7ffd1bd64b0b6c07ff3e1e55353d1ae956667c9f",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "270d38e9d596fc4737feda0167e12dec8a51cca061d6b080ee907b91014f3e3d",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c5825b1afe11bc6daf1aa8745680107ab783105f9925099edbdbdbc014984ac2",
+            "e0fac5938482ab1cdd0fdc3e5d95ac3926d1c262514c34822c33e0c1a1829284"
+          ],
+          "receipt": "nvidia-reserves-Q2/window-reserve-Q0a/cubic_window-s0-c1/receipt.json",
+          "receipt_sha256": "db0829d4a7d323a0e997e1ae7b604c3a2d3a8024ef404ba969ca564f73a0dfb8",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0528228487819433,
+              "compiled_kernel_hash": "48145b136fa5bbd984a5371c0f415ffd598ad3593c6ab1e58e6400fa10799038",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "nvidia-reserves-Q2/window-reserve-Q0a/cubic_window-s1-c0/receipt.json",
+          "receipt_sha256": "04380b75fac47dff57283b407156e9cafe5d1d589998c56fc185bf92d61aa6c2",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0496902503073215,
+              "compiled_kernel_hash": "ceb38b410bbb1e997e14923f22be680618c768297708d8e12f65c9731466e7c4",
+              "input_unchanged": true,
+              "max_abs_error": 7.008202373981476e-08,
+              "output_sha256": "0a962eca60e7b37a88bb3cf741f6aeeac227c66e4aec88dbf5d36669346499d5",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "cubic_window",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "04fdfdca43a545d65c0d2218dc56fe19131db53c1d2fca9d05add8ae021f01e5",
+            "a1fd031f0801fc0f242dd2f63520124e788cc7516816c58417335397fcb54d30"
+          ],
+          "receipt": "nvidia-reserves-Q2/window-reserve-Q0a/cubic_window-s1-c1/receipt.json",
+          "receipt_sha256": "51f0f215d8e392490402faa361b8f1c38a99101b5d174f9295d1aa0936bbdbf4",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0745657961815596,
+              "compiled_kernel_hash": "a7de81caf19e70ca91980de85707f6851c9af58a8d05406c0388a099d6ef61fb",
+              "input_unchanged": true,
+              "max_abs_error": 1.532613114890724e-08,
+              "output_sha256": "cc81d4cb28af55bf3d5bb02b064dd87c431107f2666221b47ee246ba6acb9824",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/weighted_covariance-s0-c0/receipt.json",
+          "receipt_sha256": "669742be5ac8bce349d936ed1916947f385c4790651a221092d2941854690ff8",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.06058400683105,
+              "compiled_kernel_hash": "41a2ed6b658b5a744c605e8666f800aa9536ddf29274e453e94804299b27242e",
+              "input_unchanged": true,
+              "max_abs_error": 1.9051421447369155e-08,
+              "output_sha256": "c07a49cfff19ba133c4250562ffc2d72009aabad92f7b767128aa880e5ee119f",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114",
+            "7d817415b7b69385d785545979efdfc4999282565b58f2cdbd4621285f5056be",
+            "efd16b9ea764140d5c976b2590664adc928e635fd351e6b9ddb5d74954758b6e"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/weighted_covariance-s0-c1/receipt.json",
+          "receipt_sha256": "8cfef0ded2b1b5b2ba7a837ddc19be70f74882cac199a25f83d1e4765b85980a",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0714043844491243,
+              "compiled_kernel_hash": "44306d4a7655eb6afe70e7d7c6a7a6c15d935bcd91fec810a2912fa8716f583f",
+              "input_unchanged": true,
+              "max_abs_error": 1.945671578430612e-08,
+              "output_sha256": "e6bb07416e557d1e3691fd1dcfc5e29bfb53a75892a307f93aca52fc266d37e9",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/weighted_covariance-s1-c0/receipt.json",
+          "receipt_sha256": "e579a7e0c812d7c1c047375e253344cc14c0c12e4f6786ac18b6d71cb5529255",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0728839691728354,
+              "compiled_kernel_hash": "18e347b95f815bda01feaed42ff73b274aacc4d5663a7ab8701f0467e81e99d5",
+              "input_unchanged": true,
+              "max_abs_error": 1.945671578430612e-08,
+              "output_sha256": "e6bb07416e557d1e3691fd1dcfc5e29bfb53a75892a307f93aca52fc266d37e9",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "weighted_covariance",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7",
+            "473d89e5881bd5dcbdc386cef9c6b9f2a9b1e4c2bdae39d5538104e3c836ad90",
+            "41c5a21a07833746f634775debe0b6839f32eee8e9db45cc357592cf7d46bdfa"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/weighted_covariance-s1-c1/receipt.json",
+          "receipt_sha256": "cd24ab323bbac23fbb17476a451e251ab6ccd71648a78a3525e56da487703795",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.042632332071662,
+              "compiled_kernel_hash": "a27a5a92a74917ab3078b636b53ec8228d01299026771934ea7d1555f68617ce",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/absolute_deviation-s0-c0/receipt.json",
+          "receipt_sha256": "620373a995cb855f2ace194b3deb21d08c71751a63e7d2079756f6c0f38568a0",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.041756147518754,
+              "compiled_kernel_hash": "54d86d4c6a11f529394b74d5223246c37d4e430403b2bc4797747f594839bc18",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "5459cfe90ea2455cb8d89024a2d0271c56204d6e1f30e34231ae49a4721d9604",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            8
+          ],
+          "input_sha256": [
+            "295681f77da824b0cafc9a7f7c6bf6179985f5b2209a7cfeeb6fac03a5533114"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/absolute_deviation-s0-c1/receipt.json",
+          "receipt_sha256": "7c9bc5b9c0f5c34a4963f47615cf67924f4d074a6b41e649c597babc4d8e99dc",
+          "shape": [
+            8,
+            128
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0448040086776018,
+              "compiled_kernel_hash": "e20b2b6f0f4e06dfdf3c62a04e6f52d30280d60f203d5926d0eeee1fc4870862",
+              "input_unchanged": true,
+              "max_abs_error": 4.2641234543339124e-08,
+              "output_sha256": "9a82609ca15a3d02c3d769362e58ca74a60c9e62877a054d2db68ba5d905d2c6",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/absolute_deviation-s1-c0/receipt.json",
+          "receipt_sha256": "4182ad574be759495fdc72284dc816a393f76f8fc80f7a3bc3eb7d7edc95176e",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0602397434413433,
+              "compiled_kernel_hash": "e3953643e5073bbfbd185400eed11d16ad19e1bc24c85fda362ae146dc03f3af",
+              "input_unchanged": true,
+              "max_abs_error": 4.2641234543339124e-08,
+              "output_sha256": "9a82609ca15a3d02c3d769362e58ca74a60c9e62877a054d2db68ba5d905d2c6",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": null
+            }
+          ],
+          "case": "absolute_deviation",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 512,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            7
+          ],
+          "input_sha256": [
+            "8a8139655346b77c2c51e7fa79f12d3efb1972b2d6aa56e0f073c1f18ecd03b7"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/absolute_deviation-s1-c1/receipt.json",
+          "receipt_sha256": "1a191d7b90fe627495be26fb93772d3e292f3848e079354d92e9afc2f54506b5",
+          "shape": [
+            7,
+            131
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1724342163652182,
+              "compiled_kernel_hash": "1733ad419d3f1c94cabe9e0cd552684f4c516a8f074222fa00f4d60a5946af43",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/symmetric_cross-s0-c0/receipt.json",
+          "receipt_sha256": "b877407167d9deb72a5601f3c0998cbfa6e2d7ce318db320c55575ce0efee313",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1503688488155603,
+              "compiled_kernel_hash": "62ceb01906843fb41f4e7c8d625680a031988e46c7f5ac3baf8f4df7e0804786",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "2f83d2699b7e10dd629459dbc417f6557727c6c7b503af123549cb70464208ba",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "81cb2f5d6f189f3de45ac0a7ff5b25e115026a836db535cf13f317ce9413466f",
+            "3966185b5825bb5d88bffdb55080ee49c0922fcb1f46575cecfa83e190f607f9"
+          ],
+          "non_idempotence_witness_max_abs": 36.953125,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/symmetric_cross-s0-c1/receipt.json",
+          "receipt_sha256": "083386b2169e9ddba4ea93019e2a5a19bd772073277ec8a96353358b9f09b417",
+          "shape": [
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.16401881352067,
+              "compiled_kernel_hash": "8052cd1ee163a003a9241006d96f8e28cbadfc70af380e7ad8f2d6b7caf8d40a",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/symmetric_cross-s1-c0/receipt.json",
+          "receipt_sha256": "a53aec4deb18775d8413dbc894a62357c8f59411ba9bfc3cf7aa203c4fdf262e",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1956386007368565,
+              "compiled_kernel_hash": "1480b2e413b858bd4b8562d4a34162367329ac552e129a1a1485873e1e429aca",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "58d0c1f120325684beafea02297b105c3df93550c0388e8e51f5872fcb7b00b2",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "symmetric_cross",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "dce2f16958ecd52fce917ea6213dba748f9ff545eecea829a84de45623092b81",
+            "73b4bd699c40e03eb21a25a8b62f2e17076b36214080c5c590514e6f54238f34"
+          ],
+          "non_idempotence_witness_max_abs": 26.626953125,
+          "output_initial_sha256": "318c5e964e28e0bbd8cc517245687a48c034bb642d3b03861244d290ee371b04",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/symmetric_cross-s1-c1/receipt.json",
+          "receipt_sha256": "4204b711c882cda386902b6460ac0a5fee569be4e2df89d983f8801a1a8d5552",
+          "shape": [
+            35,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1766361556947231,
+              "compiled_kernel_hash": "b9642a09a8212577f5d5e26a5320c5fa0db1506ddb9e1eaf43804096ee864078",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/bilinear_difference-s0-c0/receipt.json",
+          "receipt_sha256": "a17f0a3c9d33f7e101b81d0ce60a4a9cd45e4df0197ec6c820557b9b39f581e5",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1665904950350523,
+              "compiled_kernel_hash": "16dd548c669cee72b4729745ccdbf541a72cff4cb4dea2ff1b79278e4fe91810",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "23e1339cb4639e58bb84bcc9a3492d36e28a9b539ac819f480a8ebeb88c88034",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "253569af5e948edc89b13b5fab218b2d9b4b78ffa4e924a0f8c3a6173842d0e5",
+            "83750a0bb314f0c3f8190ca93eeb86b25be3737d1795227f425f165ca9e36e97",
+            "2cf87a554cb3f74de36781e18b4556ace3bb9fe68a737bc10cd708d1d39751a0",
+            "0e66bf15e86df9293cc28c66ce123770e934142df605f7f2a6f375fb1a5dc082"
+          ],
+          "non_idempotence_witness_max_abs": 20.515625,
+          "output_initial_sha256": "050ccf331dc27ab168a14c44be66ea829d7856c6998112f57c1675d5719881ad",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/bilinear_difference-s0-c1/receipt.json",
+          "receipt_sha256": "d481984379657c8e92f7848ebb1bb89a21424298e4bd558259dc36bc713add32",
+          "shape": [
+            64,
+            64,
+            64
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1725595518946648,
+              "compiled_kernel_hash": "cda00f7deef4fb5bbe7b633f755294344a372452502b15e87ff7712ef1c62e61",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 32,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/bilinear_difference-s1-c0/receipt.json",
+          "receipt_sha256": "479950544291267f44bdfd89c32b430148c7b03b7005dfb3052fa447f0315e09",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 0.003,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.1994345765560865,
+              "compiled_kernel_hash": "eb9ff732d0e97fde1141505c24c72d4f883a215b8d5340294f946add1ac6b386",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "fd5d5d559d4018bdfc6bbf61297ce262192730d9e4a7bfa235c66d75789ede46",
+              "rtol": 0.003,
+              "runtime_steps": null
+            }
+          ],
+          "case": "bilinear_difference",
+          "cold_timeout_s": 120,
+          "config": {
+            "BK": 64,
+            "BM": 32,
+            "BN": 32,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "b43fd7fa575765d7a92992dcd1957e778e702c1cd2747dc9cf69301bf855ab34",
+            "d75402804b96a8611ac684a4f0367301dfbc158085711257bdce47a987c3f091",
+            "4aca1c42e994f579a970131b97359ef963e7460f9a77412e45321076b7e4cb65",
+            "8a1cff9dd75904695107324c2d68ab14be11cf516c97dafd2ca274af5f899aae"
+          ],
+          "non_idempotence_witness_max_abs": 14.8603515625,
+          "output_initial_sha256": "78f701820c18e4405f09b67262c88dde868e8216d583be0597c217b55b599318",
+          "receipt": "nvidia-reserves-Q2/matrix-reserve-Q2/bilinear_difference-s1-c1/receipt.json",
+          "receipt_sha256": "bec105e49fc6495debb01f1ff2031c83c423f1de7b886215c2146ca324fc9fd4",
+          "shape": [
+            35,
+            37,
+            45
+          ],
+          "shape_index": 1
+        }
+      ],
+      "eligibility_sources": {
+        "matrix": {
+          "path": "nvidia-reserves-Q2/matrix-reserve-Q2/eligibility.json",
+          "sha256": "b1fe101911f7943aef9030de956463d140b3979d8ed63806e5c8d5c07e86cc28"
+        },
+        "primary": {
+          "path": "nvidia-baseline-Q0/results/eligibility.json",
+          "sha256": "a57a1d1b897a7f406982648473d9f9d8c570ed10079535cf981e709902367d2f"
+        },
+        "window": {
+          "path": "nvidia-reserves-Q2/window-reserve-Q0a/eligibility.json",
+          "sha256": "b599478ea5dca0095f98fa9bbff112c961d924ddb6c00b667b3089ed83d59f77"
+        }
+      },
+      "runtime_probe": [
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.041201127693057,
+              "compiled_kernel_hash": "57227ab11b0ca294aa2540e2d2a97826346e1737d54c8b6099d176f80de14083",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.0001557823270559311,
+              "compiled_kernel_hash": "57227ab11b0ca294aa2540e2d2a97826346e1737d54c8b6099d176f80de14083",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            4
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/runtime_recurrence-s0-c0/receipt.json",
+          "receipt_sha256": "b0b31c2e2512cc6dbd4db26d49d021ad0705e6f2c651577f262c99930cdf74ff",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.051236316561699,
+              "compiled_kernel_hash": "ad1230a698dc9110b387c047e0dadd508c7e7f929167778d7db546cbb14d7d3b",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "3dd587911f1b0be8182b121e8a283085008f60c9eb9aa034c7af6eca9e8a11b5",
+              "program_state_counts": [
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.00016885250806808472,
+              "compiled_kernel_hash": "ad1230a698dc9110b387c047e0dadd508c7e7f929167778d7db546cbb14d7d3b",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "b8303b1bce900966178fb97d17e14a8e4385c4a5bb2ef2c788d8112126d7889e",
+              "program_state_counts": [
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            2
+          ],
+          "input_sha256": [
+            "c3d380d25355d2aa62360e007d8b5e95e62b25e5094717db12fd70ade4ba643d"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/runtime_recurrence-s0-c1/receipt.json",
+          "receipt_sha256": "179f76b3f783ccb639f9c4582386bbc713965e703cc5427f6c49d349141b5deb",
+          "shape": [
+            512
+          ],
+          "shape_index": 0
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.041636697947979,
+              "compiled_kernel_hash": "b89a08abbf4720ca53e4ec735daeae68a21f6895de9f248255531ad49d68626f",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.00016599521040916443,
+              "compiled_kernel_hash": "b89a08abbf4720ca53e4ec735daeae68a21f6895de9f248255531ad49d68626f",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 128,
+            "num_warps": 4
+          },
+          "config_index": 0,
+          "grid": [
+            5
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/runtime_recurrence-s1-c0/receipt.json",
+          "receipt_sha256": "bb62709732af2dd8d2734e2f7059b8e7b9a857a80d86c4eed5cdb97b4cc8086c",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        },
+        {
+          "calls": [
+            {
+              "atol": 3e-05,
+              "call_index": 0,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 1.0544496644288301,
+              "compiled_kernel_hash": "ce5764c308ccc092ba227db6312422af3a6be5c43b1f919e9d5d01ed1c7180fe",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "aec4038e99bfb1546f4e8ebbe39114a2fcd5efffdf0318fb37d67d1e5cc71409",
+              "program_state_counts": [
+                1,
+                1,
+                1
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 2
+            },
+            {
+              "atol": 3e-05,
+              "call_index": 1,
+              "canaries": true,
+              "compile_launch_sync_wall_s": 0.00014062784612178802,
+              "compiled_kernel_hash": "ce5764c308ccc092ba227db6312422af3a6be5c43b1f919e9d5d01ed1c7180fe",
+              "input_unchanged": true,
+              "max_abs_error": 0.0,
+              "output_sha256": "99d3720c90ed1efc0be103cd174a43d7931d71d34ccfeb47c01d1efb74b1dc88",
+              "program_state_counts": [
+                2,
+                2,
+                2
+              ],
+              "rtol": 3e-05,
+              "runtime_steps": 5
+            }
+          ],
+          "case": "runtime_recurrence",
+          "cold_timeout_s": 120,
+          "config": {
+            "B": 256,
+            "num_warps": 4
+          },
+          "config_index": 1,
+          "grid": [
+            3
+          ],
+          "input_sha256": [
+            "a29c3c2a6f7cc93c92bce9cd23279840a3684ea89f7a2fb64683b4f1110e0cee"
+          ],
+          "receipt": "nvidia-baseline-Q0/results/baseline/runtime_recurrence-s1-c1/receipt.json",
+          "receipt_sha256": "57a34cede79719a36c8eeec761e55b9df4a17b444dfbc3e4d9752dd24279336f",
+          "shape": [
+            517
+          ],
+          "shape_index": 1
+        }
+      ]
+    }
+  },
+  "candidate_executed": false,
+  "cases": [
+    {
+      "case": "rational_blend",
+      "category": "pointwise_fused_memory",
+      "function_end_line_exclusive": 24,
+      "function_start_line": 11,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "kernels.py",
+      "source_anchors": [
+        {
+          "line": 14,
+          "name": "blend_load"
+        },
+        {
+          "line": 17,
+          "name": "blend_select"
+        },
+        {
+          "line": 18,
+          "name": "blend_store"
+        }
+      ]
+    },
+    {
+      "case": "cubic_window",
+      "category": "pointwise_fused_memory",
+      "function_end_line_exclusive": 34,
+      "function_start_line": 22,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "reserve_window.py",
+      "source_anchors": [
+        {
+          "line": 25,
+          "name": "window_load"
+        },
+        {
+          "line": 28,
+          "name": "window_polynomial"
+        },
+        {
+          "line": 29,
+          "name": "window_store"
+        }
+      ]
+    },
+    {
+      "case": "weighted_covariance",
+      "category": "reduction",
+      "function_end_line_exclusive": 55,
+      "function_start_line": 38,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "kernels.py",
+      "source_anchors": [
+        {
+          "line": 42,
+          "name": "covariance_load"
+        },
+        {
+          "line": 47,
+          "name": "covariance_means"
+        },
+        {
+          "line": 49,
+          "name": "covariance_store"
+        }
+      ]
+    },
+    {
+      "case": "absolute_deviation",
+      "category": "reduction",
+      "function_end_line_exclusive": 69,
+      "function_start_line": 55,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "kernels.py",
+      "source_anchors": [
+        {
+          "line": 59,
+          "name": "deviation_load"
+        },
+        {
+          "line": 60,
+          "name": "deviation_mean"
+        },
+        {
+          "line": 63,
+          "name": "deviation_store"
+        }
+      ]
+    },
+    {
+      "case": "symmetric_cross",
+      "category": "matrix_fusion",
+      "function_end_line_exclusive": 55,
+      "function_start_line": 27,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "reserve_matrix.py",
+      "source_anchors": [
+        {
+          "line": 46,
+          "name": "symmetric_left_dot"
+        },
+        {
+          "line": 47,
+          "name": "symmetric_right_dot"
+        },
+        {
+          "line": 51,
+          "name": "symmetric_update"
+        }
+      ]
+    },
+    {
+      "case": "bilinear_difference",
+      "category": "matrix_fusion",
+      "function_end_line_exclusive": 83,
+      "function_start_line": 55,
+      "minimum_distinct_dynamic_internal_positions": 2,
+      "source": "reserve_matrix.py",
+      "source_anchors": [
+        {
+          "line": 75,
+          "name": "bilinear_positive_dot"
+        },
+        {
+          "line": 76,
+          "name": "bilinear_negative_dot"
+        },
+        {
+          "line": 80,
+          "name": "bilinear_update"
+        }
+      ]
+    }
+  ],
+  "common_kernel_count": 6,
+  "configs_per_backend": 2,
+  "cross_backend_input_hashes_identical": true,
+  "expected_common_combinations": 72,
+  "exposure": "Owner read public docs and baseline compiler driver configuration only; no product implementation inspected. Names/structures/hashes disclosed to root/engineers; math bodies not disclosed before freeze.",
+  "original_outcomes_retained": {
+    "ascend": {
+      "initially_eligible": 23,
+      "ordinary_repeat_failures": 2,
+      "original_passing_matrix_repeats": 3,
+      "resolved": 28,
+      "state_only_matrix_failures": 5
+    },
+    "enflame": {
+      "compile_timeouts": 4,
+      "eligible": 24,
+      "resolved": 28
+    },
+    "nvidia": {
+      "eligible": 28,
+      "resolved": 28
+    }
+  },
+  "revision": "Q2-common6-before-candidate",
+  "schema": "flagprism-common-heldout-baseline-freeze-v1",
+  "shapes_per_kernel": 2,
+  "source_sha256": {
+    "ascend_startup.py": "54b7480f0ecfaa23ca2857ae028a399eeaaefb0eb2e03d97df2928b3f695ce73",
+    "ascend_window_startup.py": "a40ce80bcc9b5c33769f4f0868be4f7a88db0df7f2cb7cb1f13b9b92ea711165",
+    "kernels.py": "d1d4d471dfa17c4921a52fb9d2ecd299f74dd590eae28467d5662286e183bbb8",
+    "reserve_matrix.py": "fcae494e70ba8c23a31cb8d6de3318c98722eea9eb7d46662d741564c19755fa",
+    "reserve_window.py": "43c6d0756b467a94a1c1579d1eefe68f36b6f4f563a045de68fbe904cd91814f",
+    "workload.py": "ac359215da139e0b22e9dc7c4936f0b17c56081a32aa35ea9493e99bc61bb833"
+  },
+  "status": "baseline_qualified_not_profiler_qualified"
+}
