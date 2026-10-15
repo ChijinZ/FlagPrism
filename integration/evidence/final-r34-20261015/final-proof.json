@@ -1,0 +1,93 @@
+{
+  "state": "final_pass_all_owned_jobs_terminal",
+  "canonical_git_commit": "2d7eb9565bb339fdfd6e6413ed8aedd6c7eda76a",
+  "canonical_code_files_sha_verified": 469,
+  "runtime_python_files_sha_verified": 52,
+  "parent_pid": 525617,
+  "parent_present": false,
+  "all_phase_exit_codes": 0,
+  "focused_cpu": {
+    "passed": 99,
+    "seconds": 0.5,
+    "case_count_unchanged": true
+  },
+  "full_cpu": {
+    "passed": 477,
+    "skipped": 20,
+    "seconds": 4.53,
+    "skips": "4browser,11Enflame-native-dependent,2selectedGCUhardware,3optionalretainedCANNfixture env"
+  },
+  "new_hardware_or_performance_experiments": 0,
+  "pre_fix": {
+    "state": "public_count_bug_reproduced",
+    "module_sha256": "eb9e328b9f8e75cf85f81d7a4b0817640b0d1ec33d989b7c40b0132bac6082e5",
+    "top_origin_count": 0,
+    "combined_count": 34,
+    "site_origin_status_counts": {
+      "unassociated": 13,
+      "ambiguous": 27,
+      "verified_origin": 34
+    },
+    "original_result_sha256": "46a40d4a4d6c1466aaefcf42b967d22a4b1a8676abae2db7a4cf8bb05a77050c"
+  },
+  "post_fix_derived_only": {
+    "state": "public_count_consistent_after_fix_derived_only",
+    "module_sha256": "0d8dd9a68d0828e9ecf17e3811205d018531b15d5d48816ef56b86eb4cccceae",
+    "top_origin_count": 34,
+    "combined_count": 34,
+    "site_origin_status_counts": {
+      "unassociated": 13,
+      "ambiguous": 27,
+      "verified_origin": 34
+    },
+    "original_result_sha256": "46a40d4a4d6c1466aaefcf42b967d22a4b1a8676abae2db7a4cf8bb05a77050c",
+    "original_raw_capture_sha256": "76769e7f79d858930114eccd9dd80fe58b54db55109efd5366b260f277d7c159",
+    "derived_public_manifest_sha256": "e6b560439c23c31b39a17485ba398d884151d92c2d43a552ce96fac428d203c1",
+    "lineage": "Current public execution.build_manifest exported from original genuine retained compiler metadata; no original bundle mutation and no new GPU experiment."
+  },
+  "public_origin_count": 34,
+  "public_combined_count": 34,
+  "site_status_counts": {
+    "unassociated": 13,
+    "ambiguous": 27,
+    "verified_origin": 34
+  },
+  "original_result_and_raw_bundle_unchanged": true,
+  "wheel": {
+    "path": "/tmp/flagprism-method-ascend/wheel-header-r9/dist/flagtree-0.6.0+ascend.git00650233-cp311-cp311-linux_aarch64.whl",
+    "bytes": 141878124,
+    "sha256": "66fb52002e8463a1439712cd2e8a410849eaa2526c651f3c1d6a136a197a40d7",
+    "exact_current_python_modules": 52,
+    "accepted_binary_checks": {
+      "core": {
+        "entry": "triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d",
+        "byte_identical_to_verified_runtime": true
+      },
+      "debugger": {
+        "entry": "flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+        "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c",
+        "byte_identical_to_verified_runtime": true
+      },
+      "profiler": {
+        "entry": "flagtree/profiler/_native.so",
+        "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a",
+        "byte_identical_to_verified_runtime": true
+      }
+    },
+    "header_sha256": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540",
+    "python_I_isolated_public_bindings": {
+      "status": "PASS",
+      "triton": "/tmp/flagprism-method-ascend/wheel-header-r9/isolated-install/triton/__init__.py",
+      "core": "/tmp/flagprism-method-ascend/wheel-header-r9/isolated-install/triton/_C/libtriton.so",
+      "debugger": "/tmp/flagprism-method-ascend/wheel-header-r9/isolated-install/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "profiler": "/tmp/flagprism-method-ascend/wheel-header-r9/isolated-install/flagtree/profiler/_native.so",
+      "abi_provider": "/tmp/flagprism-method-ascend/wheel-header-r9/isolated-install/flagtree/profiler/ascend_launch.py",
+      "hidden_compiler_abi": "actual MLIR preparation index2/idempotence",
+      "native_preallocation_guard": "actual rejection without device allocation",
+      "cann_receipt_capability": true,
+      "source_fallback": false
+    },
+    "no_core_rebuild_guard": true
+  }
+}
