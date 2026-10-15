@@ -1,0 +1,38 @@
+{
+  "status": "passed",
+  "scope": "independent read-only stored-byte/static/output analysis, no new math or hardware experiment",
+  "archive_sha256": "0249bf9e672e442ae8dbafe278dd869bcd8ad8677ad6d6e7caa6bfd671309744",
+  "skipped_absolute_pytest_links": 2,
+  "bundle_files": 110,
+  "raw_buffers": 2,
+  "raw_records": 2,
+  "native_samples": 270,
+  "rows_AST_equal": true,
+  "native_controls_and_current_enable_i64": false,
+  "medians_us": {
+    "4": [
+      114.8685,
+      115.064,
+      115.209
+    ],
+    "1": [
+      71.14500000000001,
+      71.12450000000001,
+      71.055
+    ],
+    "2": [
+      73.553,
+      73.653,
+      73.777
+    ]
+  },
+  "w4_to_w1_ratios": [
+    1.614568838288003,
+    1.6177829018130176,
+    1.6214059531348954
+  ],
+  "limits": [
+    "Old90samples/config retain historical nativecollector-on/sourceobserver-off context, not final-source performance.",
+    "Static ownership is not measured utilization; no exclusive barrier cost or shared clocks inferred."
+  ]
+}

@@ -1,0 +1,190 @@
+{
+  "status": "completed_bounded_GCU_round2_tool_usefulness_replay",
+  "new_test": {
+    "path": "Profiler/test/test_enflame_softmax_diagnostic_hardware.py",
+    "sha256": "e093fe7b0b607b5f222edc0d9c14fac2e230ebaaa866f3fa43177d96f569fb78"
+  },
+  "current_tool_evidence": {
+    "public_runtime_commit": "1cb15d729e4bed52d27c19b996f97b7ab88ffa80",
+    "runtime_python_files_verified": 52,
+    "native_libraries": "Original frozen GCU core/debugger/profiler byte hashes verified unchanged; public Python imports match all52 r29/1cb modules.",
+    "actual_gpu_captures": 2,
+    "test_results": [
+      {
+        "work_items": 4,
+        "passed": true,
+        "test_wall_seconds": 4.41
+      },
+      {
+        "work_items": 1,
+        "passed": true,
+        "test_wall_seconds": 4.41
+      }
+    ],
+    "request": {
+      "programs": [
+        0
+      ],
+      "sites": [
+        29
+      ],
+      "max_events_per_instance": 64
+    },
+    "source_math_AST_equal_to_historical": true,
+    "input_hashes": [
+      "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+      "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+      "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+    ],
+    "shape": [
+      127,
+      769
+    ],
+    "organization_held_fixed": {
+      "ROWS": 1,
+      "BLOCK": 1024,
+      "grid": [
+        127
+      ],
+      "num_stages": 1
+    },
+    "w4_compiler_evidence": {
+      "barrier_static_sites": 2,
+      "shared_storage_static_sites": 10,
+      "scratch_buffers": 2,
+      "scratch_type": "memref<1x4xf32, 2>",
+      "useful_columns_per_work_item": [
+        256,
+        256,
+        256,
+        1
+      ]
+    },
+    "w1_compiler_evidence": {
+      "barrier_static_sites": 0,
+      "shared_storage_static_sites": 0,
+      "useful_columns_per_work_item": [
+        769
+      ]
+    },
+    "site_count_semantics": "Ten = two each of alloc/store/reinterpret/load/dealloc for two reduction scratch buffers; not ten hardware messages or source-exclusive timing.",
+    "acceptance": "Each actual public request retains one store29 dynamic event with exact same-LazyDict/native launch and binary association; CPU FP32 tolerance, unchanged inputs and output canaries passed."
+  },
+  "decision": "Use actual organization/shared-scratch/static ownership output to choose testing work-items4\u21921 with input/math/rows/grid unchanged.",
+  "existing_controlled_outcomes": {
+    "version": "Historical2026-10-13 Study source/runtime preserved; not current1cb performance reruns.",
+    "instrumentation": "Source observer disabled, native TOPSPTI enabled; not allprofilingdisabled.",
+    "samples_per_configuration": 90,
+    "three_batches_samples_each": 30,
+    "w4_median_us": [
+      114.8685,
+      115.064,
+      115.209
+    ],
+    "w1_median_us": [
+      71.14500000000001,
+      71.12450000000001,
+      71.055
+    ],
+    "w4_to_w1_ratios": [
+      1.614568838288003,
+      1.6177829018130176,
+      1.6214059531348954
+    ],
+    "w2_median_us": [
+      73.553,
+      73.653,
+      73.777
+    ],
+    "w2_control": "Two barriers and ten shared-storage sites retained, yet close to w1; prevents barrier-only causal explanation.",
+    "all270_samples_and_original_native_event_refs": "retained-controls-audit.json + rawarchive round2-offline-study/native/b{0,1,2}-w{4,1,2}"
+  },
+  "historical_formal_timing_boundary": [
+    {
+      "work_items": 4,
+      "enable_i64": true,
+      "detailed_task_us": [
+        567.973,
+        547.229,
+        546.75
+      ]
+    },
+    {
+      "work_items": 1,
+      "enable_i64": true,
+      "detailed_task_us": [
+        336.03,
+        317.79,
+        318.3
+      ]
+    }
+  ],
+  "controlled_T5_reference": {
+    "audit": "artifacts/method-run/enflame/t5-i32-scalar-controlled-audit.json",
+    "sha256": "bf5dc87486d3c5c4033ae3b9e0f76f6e29283cc9fe10af2c40234cdb6cf6dd5c",
+    "raw": "artifacts/method-run/enflame/i32-matrix-and-controlled-T5-scalar.tar.gz",
+    "raw_sha256": "a39781e3457b64762b9d420d718c7dde8ebbf0bcde12ae7f5ebffac5603eb513",
+    "scope": "Independent historical source-observer cost experiment, not the w4\u2192w1 recovery baseline; off/native LLVM matching and detailed observer perturbation retained."
+  },
+  "boundaries": [
+    "Retrospective replay linking a current public diagnostic to a retained controlled intervention; not proof the current tool first discovered this optimization.",
+    "Static ownership is not measured worker utilization; origin candidates remain partial/ambiguous and carry no exclusive cost.",
+    "No new performance experiment, no shared clock/engine-busy attribution and no universal low-overhead claim.",
+    "Original all-site detailed tasks ~547us(w4)/~318us(w1), enable_i64True, have strong observer distortion and are not recovery baseline or quantitative cause.",
+    "Old source versions retain original hashes and are never relabeled current1cb."
+  ],
+  "raw_archive": {
+    "path": "artifacts/method-run/enflame/round2/diagnostic-raw-evidence.tar.gz",
+    "sha256": "0249bf9e672e442ae8dbafe278dd869bcd8ad8677ad6d6e7caa6bfd671309744",
+    "bytes": 3790078,
+    "contents": [
+      "Current two full bundles/asm/metadata/publictest/source/nativehashes/diagnostics",
+      "Canonical3 input binaries",
+      "Historical9 native-control metadata/asm/nativeeventfiles/fullsampleaudit",
+      "Original formalw4/w1 bundles/asm/metadata/plan with originalsource versions"
+    ]
+  },
+  "evidence": [
+    {
+      "path": "artifacts/method-run/enflame/round2/diagnostic-chain.json",
+      "sha256": "4c9fce387aa43b179478a9707927391c48803b354cbbd498eafc405bdf68b6fa"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/validation-manifest.json",
+      "sha256": "b777ba2d3ebd12d24142caf74357d89afc7556e742815b9940e6ff44b019e3bc"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/retained-controls-audit.json",
+      "sha256": "e2a6933677528a2b903102046e09c0ed4b77eb8dc9ab45df9f85fd8a46c678f8"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/initial-runtime-inventory.log",
+      "sha256": "8ae0bdc9aa243a6a0cd24c43d3c5a52a7f3c2b316787f07d2408b3a482fb0666"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/public-controller.json",
+      "sha256": "d812aff72248b1298afb814e7306134e662a002b8b48893037efde994a75d8f9"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/ownership-and-chain.log",
+      "sha256": "649295213d7ae444f37eec41ac68c7014c63aed25e404e38d5660282fe7e3102"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/offline-audit.log",
+      "sha256": "216c55ed9c43e6c906049ad8e665e0aaa43d3b67582a0518a85e27de23426465"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/final-validation-quality.log",
+      "sha256": "468b46c1db70d9672799434f616dd05f2ae0bfacbd6125646f8143adbbfd9c99"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/diagnostic-raw-evidence.tar.gz",
+      "sha256": "0249bf9e672e442ae8dbafe278dd869bcd8ad8677ad6d6e7caa6bfd671309744"
+    },
+    {
+      "path": "artifacts/method-run/enflame/round2/public-two-captures.command",
+      "sha256": "02b5c12a7837ef5ee31588eb0b8ff34a6c84baa2348207a9e32615dd704b49ee"
+    }
+  ],
+  "terminal": "Two capture controller exit0/0; no ownGPUtest left active; no common/paper source modifications or Git staging."
+}

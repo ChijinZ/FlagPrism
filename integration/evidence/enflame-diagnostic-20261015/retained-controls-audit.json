@@ -1,0 +1,4286 @@
+{
+  "status": "retained_bytes_independently_verified",
+  "canonical_input_hashes": [
+    "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+    "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+    "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+  ],
+  "old_math_file_sha256": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6",
+  "current_fixture_sha256": "b48a1247af0808063e40c793aafccd9e235d60711c98e8e81e7a8f75207f642e",
+  "rows_function_AST_equal": true,
+  "disabled_semantics": "Source observer disabled; TOPSPTI native collector enabled. Not all profiling disabled.",
+  "historical_native_controls": [
+    {
+      "work_items": 4,
+      "sample_count": 90,
+      "batches": [
+        {
+          "batch": 0,
+          "native_source_observer_disabled_samples_us": [
+            123.659,
+            117.269,
+            114.268,
+            115.725,
+            115.799,
+            115.019,
+            115.365,
+            115.799,
+            115.919,
+            112.935,
+            114.433,
+            114.765,
+            116.129,
+            114.972,
+            113.085,
+            113.939,
+            113.189,
+            115.215,
+            114.283,
+            115.272,
+            114.195,
+            115.169,
+            115.499,
+            114.299,
+            113.549,
+            112.814,
+            113.009,
+            112.815,
+            113.985,
+            115.543
+          ],
+          "median_us": 114.8685,
+          "binary_id": "b5506f24df77e39cc8b3723f80ee656fcb4a6e911cfd8e77562cebcd8036073c",
+          "binary_sha256": "183d3c0b06debfe8322e595531275e8bea7b3bd819498a4d01070656e2510dc5",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 4
+          },
+          "result_sha256": "13cfec6c9c093373febe6b2b42be4b0b086ba6778a4dde2ffd30514a9a55824f",
+          "asm_sha256": {
+            "ttir": "3e63da952813c386c1c9742a0c66da25803e6359cfdf9727a37c0aed656cb4b7",
+            "gcuir": "ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b",
+            "llir": "ec21d1c2f5ab19880d5a552143a277fa753a7c95f88ddb0e1aeeeb098d0e2a12"
+          },
+          "native_event_file_sha256": "9c3cc3b092967bf8ad27a802714874944f77ce8f759771f955030b512ffe5197",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 31,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:58",
+              "line": 58,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%11",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "%11",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%27, %133, %3, %126, %0, %130, %11, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:63",
+              "line": 63,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%3",
+                "%3",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "0",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%27, %133, %3, %126, %0, %130, %3, %3, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:77",
+              "line": 77,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%14",
+                "%8",
+                "%129"
+              ],
+              "operand_expressions": [
+                "%14",
+                "0",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%14, %8, %129) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:225",
+              "line": 225,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%118",
+                "%99",
+                "%3",
+                "%3",
+                "%0",
+                "%116",
+                "%3",
+                "%112",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%118",
+                "%99",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%118, %99, %3, %3, %0, %116, %3, %112, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x256xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:95",
+              "line": 95,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%36 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:100",
+              "line": 100,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%40 = \"memref.reinterpret_cast\"(%36) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:102",
+              "line": 102,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%40",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%40",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%41 = \"vector.load\"(%40, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:111",
+              "line": 111,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%36) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:164",
+              "line": 164,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%84 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:167",
+              "line": 167,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:168",
+              "line": 168,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%86 = \"memref.reinterpret_cast\"(%84) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:169",
+              "line": 169,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%86",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%86",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%87 = \"vector.load\"(%86, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:178",
+              "line": 178,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%84) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        },
+        {
+          "batch": 1,
+          "native_source_observer_disabled_samples_us": [
+            123.359,
+            119.159,
+            115.423,
+            114.313,
+            115.363,
+            115.558,
+            115.379,
+            116.203,
+            115.259,
+            114.315,
+            115.439,
+            115.365,
+            115.633,
+            114.239,
+            113.025,
+            112.949,
+            115.333,
+            114.314,
+            115.679,
+            113.729,
+            114.869,
+            113.893,
+            115.335,
+            114.015,
+            112.859,
+            112.769,
+            113.925,
+            112.649,
+            114.389,
+            116.399
+          ],
+          "median_us": 115.064,
+          "binary_id": "b5506f24df77e39cc8b3723f80ee656fcb4a6e911cfd8e77562cebcd8036073c",
+          "binary_sha256": "183d3c0b06debfe8322e595531275e8bea7b3bd819498a4d01070656e2510dc5",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 4
+          },
+          "result_sha256": "a6675b92ec18156b9b2a6a3b99dd3e33bde9657e275dfe6ccdf8feafdc5f1445",
+          "asm_sha256": {
+            "ttir": "3e63da952813c386c1c9742a0c66da25803e6359cfdf9727a37c0aed656cb4b7",
+            "gcuir": "ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b",
+            "llir": "ec21d1c2f5ab19880d5a552143a277fa753a7c95f88ddb0e1aeeeb098d0e2a12"
+          },
+          "native_event_file_sha256": "a4155cec6825b27b91d6a3230f4bb35601c0f9bad7344df8260b643b2ed4f2ae",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 31,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:58",
+              "line": 58,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%11",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "%11",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%27, %133, %3, %126, %0, %130, %11, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:63",
+              "line": 63,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%3",
+                "%3",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "0",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%27, %133, %3, %126, %0, %130, %3, %3, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:77",
+              "line": 77,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%14",
+                "%8",
+                "%129"
+              ],
+              "operand_expressions": [
+                "%14",
+                "0",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%14, %8, %129) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:225",
+              "line": 225,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%118",
+                "%99",
+                "%3",
+                "%3",
+                "%0",
+                "%116",
+                "%3",
+                "%112",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%118",
+                "%99",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%118, %99, %3, %3, %0, %116, %3, %112, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x256xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:95",
+              "line": 95,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%36 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:100",
+              "line": 100,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%40 = \"memref.reinterpret_cast\"(%36) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:102",
+              "line": 102,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%40",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%40",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%41 = \"vector.load\"(%40, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:111",
+              "line": 111,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%36) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:164",
+              "line": 164,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%84 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:167",
+              "line": 167,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:168",
+              "line": 168,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%86 = \"memref.reinterpret_cast\"(%84) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:169",
+              "line": 169,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%86",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%86",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%87 = \"vector.load\"(%86, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:178",
+              "line": 178,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%84) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        },
+        {
+          "batch": 2,
+          "native_source_observer_disabled_samples_us": [
+            123.511,
+            115.5,
+            115.787,
+            115.636,
+            115.591,
+            115.277,
+            115.59,
+            115.441,
+            115.74,
+            113.837,
+            114.301,
+            114.57,
+            115.577,
+            115.141,
+            112.904,
+            113.027,
+            113.594,
+            115.891,
+            115.621,
+            114.104,
+            116.657,
+            113.79,
+            115.291,
+            113.775,
+            114.014,
+            112.861,
+            114.211,
+            113.64,
+            113.401,
+            115.304
+          ],
+          "median_us": 115.209,
+          "binary_id": "b5506f24df77e39cc8b3723f80ee656fcb4a6e911cfd8e77562cebcd8036073c",
+          "binary_sha256": "183d3c0b06debfe8322e595531275e8bea7b3bd819498a4d01070656e2510dc5",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 4
+          },
+          "result_sha256": "8300fd55aa1208f307b925fa3a68d73da40a3a4eee4fc42112e36eb9bcf33a41",
+          "asm_sha256": {
+            "ttir": "3e63da952813c386c1c9742a0c66da25803e6359cfdf9727a37c0aed656cb4b7",
+            "gcuir": "ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b",
+            "llir": "ec21d1c2f5ab19880d5a552143a277fa753a7c95f88ddb0e1aeeeb098d0e2a12"
+          },
+          "native_event_file_sha256": "fa797f6afa84bf0f2e07725ca4eb6924004b528dbf35eaa3e18b9fce33c5b78a",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 31,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:58",
+              "line": 58,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%11",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "%11",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%27, %133, %3, %126, %0, %130, %11, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:63",
+              "line": 63,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%27",
+                "%133",
+                "%3",
+                "%126",
+                "%0",
+                "%130",
+                "%3",
+                "%3",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%27",
+                "%133",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "0",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%27, %133, %3, %126, %0, %130, %3, %3, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x256xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:77",
+              "line": 77,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%14",
+                "%8",
+                "%129"
+              ],
+              "operand_expressions": [
+                "%14",
+                "0",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%14, %8, %129) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:225",
+              "line": 225,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%118",
+                "%99",
+                "%3",
+                "%3",
+                "%0",
+                "%116",
+                "%3",
+                "%112",
+                "%14",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%118",
+                "%99",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%19, 769) - ((work_item.x % 4) * 256)), 0), 256)",
+                "0",
+                "((work_item.x % 4) * 256)",
+                "%14",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%118, %99, %3, %3, %0, %116, %3, %112, %14, %8) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x256xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:95",
+              "line": 95,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%36 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:99",
+              "line": 99,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%39",
+                "%36",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%39",
+                "%36",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%39, %36, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:100",
+              "line": 100,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%40 = \"memref.reinterpret_cast\"(%36) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:102",
+              "line": 102,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%40",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%40",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%41 = \"vector.load\"(%40, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:111",
+              "line": 111,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%36"
+              ],
+              "operand_expressions": [
+                "%36"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%36) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:164",
+              "line": 164,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%84 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:166",
+              "line": 166,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%85",
+                "%84",
+                "%8",
+                "%38"
+              ],
+              "operand_expressions": [
+                "%85",
+                "%84",
+                "0",
+                "(work_item.x % 4)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%85, %84, %8, %38) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:167",
+              "line": 167,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:168",
+              "line": 168,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%86 = \"memref.reinterpret_cast\"(%84) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:169",
+              "line": 169,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%86",
+                "%8",
+                "%8",
+                "%8"
+              ],
+              "operand_expressions": [
+                "%86",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%87 = \"vector.load\"(%86, %8, %8, %8) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:ba0b9a9d554960c3c381137729d28dc20d16b87721537a97c463bbdf3147727b:178",
+              "line": 178,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%84"
+              ],
+              "operand_expressions": [
+                "%84"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%84) : (memref<1x4xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "work_items": 1,
+      "sample_count": 90,
+      "batches": [
+        {
+          "batch": 0,
+          "native_source_observer_disabled_samples_us": [
+            79.98,
+            73.77,
+            72.734,
+            71.07,
+            72.344,
+            71.176,
+            70.994,
+            70.786,
+            71.07,
+            73.186,
+            71.22,
+            71.144,
+            73.86,
+            72.48,
+            74.22,
+            72.314,
+            72.524,
+            73.44,
+            70.77,
+            70.996,
+            71.55,
+            71.086,
+            71.146,
+            70.904,
+            71.07,
+            70.994,
+            70.966,
+            71.07,
+            70.786,
+            71.13
+          ],
+          "median_us": 71.14500000000001,
+          "binary_id": "f702ce95a09b55b230b518bf14b8121875d3482d93a6cab71fff95eaab087eac",
+          "binary_sha256": "d9107bddec205439b6585e8a106e1c5111f0a8440b89c30004e24e1556b2e2ff",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 1
+          },
+          "result_sha256": "78d5d75adfd0eaa0dcb845c0c9ff37b5a2cc31cae4a66ff980d8a6298d81de45",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "bb68fe94e2f7a786b2f360da0c73c5ecfb795173c2eeb47d8f00cff6989c97b9",
+            "llir": "9ce72bdf1b736e9fc70350ecf6c2cc113d7d4dafebd948400d6e07bc6a267574"
+          },
+          "native_event_file_sha256": "0ee798d777cca2b1f3be92f4642dc1d5503a2ee193e0963184953fcbc1244dea",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 75,
+            "vector_exchange": 4
+          },
+          "symbolic_ownership": [],
+          "shared_buffer_and_barrier_sites": []
+        },
+        {
+          "batch": 1,
+          "native_source_observer_disabled_samples_us": [
+            77.298,
+            73.727,
+            72.991,
+            73.952,
+            74.356,
+            71.685,
+            70.952,
+            71.237,
+            70.728,
+            70.982,
+            73.292,
+            73.005,
+            69.902,
+            71.147,
+            71.102,
+            71.222,
+            71.025,
+            71.566,
+            70.651,
+            71.702,
+            71.102,
+            70.861,
+            70.966,
+            72.061,
+            71.582,
+            71.071,
+            70.817,
+            70.846,
+            71.087,
+            70.892
+          ],
+          "median_us": 71.12450000000001,
+          "binary_id": "f702ce95a09b55b230b518bf14b8121875d3482d93a6cab71fff95eaab087eac",
+          "binary_sha256": "d9107bddec205439b6585e8a106e1c5111f0a8440b89c30004e24e1556b2e2ff",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 1
+          },
+          "result_sha256": "248adfc860b026a1e4d2781ed556ea374bbdb4c3b742c53686d18b77dcb6cf97",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "bb68fe94e2f7a786b2f360da0c73c5ecfb795173c2eeb47d8f00cff6989c97b9",
+            "llir": "9ce72bdf1b736e9fc70350ecf6c2cc113d7d4dafebd948400d6e07bc6a267574"
+          },
+          "native_event_file_sha256": "b20198693d4e952c55a4488a38b89b8591aa9b77e66abc6233344374c0d0ddbb",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 75,
+            "vector_exchange": 4
+          },
+          "symbolic_ownership": [],
+          "shared_buffer_and_barrier_sites": []
+        },
+        {
+          "batch": 2,
+          "native_source_observer_disabled_samples_us": [
+            80.926,
+            75.389,
+            72.854,
+            72.975,
+            72.826,
+            70.89,
+            70.695,
+            72.06,
+            70.693,
+            71.146,
+            72.299,
+            72.21,
+            70.636,
+            70.723,
+            70.786,
+            70.543,
+            70.8,
+            72.12,
+            70.859,
+            71.97,
+            70.56,
+            71.653,
+            69.764,
+            71.264,
+            70.709,
+            71.91,
+            70.723,
+            70.964,
+            70.62,
+            71.923
+          ],
+          "median_us": 71.055,
+          "binary_id": "f702ce95a09b55b230b518bf14b8121875d3482d93a6cab71fff95eaab087eac",
+          "binary_sha256": "d9107bddec205439b6585e8a106e1c5111f0a8440b89c30004e24e1556b2e2ff",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 1
+          },
+          "result_sha256": "726019f81087fcc24cf52a6392de5cd6f2e0aab6d1e1baf3fe13f4d3d0b42109",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "bb68fe94e2f7a786b2f360da0c73c5ecfb795173c2eeb47d8f00cff6989c97b9",
+            "llir": "9ce72bdf1b736e9fc70350ecf6c2cc113d7d4dafebd948400d6e07bc6a267574"
+          },
+          "native_event_file_sha256": "1a6e1e8effdfd083c809aa623d17628855db585f2609412a44f034aa8d367eda",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 75,
+            "vector_exchange": 4
+          },
+          "symbolic_ownership": [],
+          "shared_buffer_and_barrier_sites": []
+        }
+      ]
+    },
+    {
+      "work_items": 2,
+      "sample_count": 90,
+      "batches": [
+        {
+          "batch": 0,
+          "native_source_observer_disabled_samples_us": [
+            105.27,
+            76.005,
+            75.69,
+            73.59,
+            73.86,
+            73.485,
+            73.724,
+            72.134,
+            73.306,
+            73.8,
+            73.649,
+            73.2,
+            77.52,
+            73.993,
+            73.576,
+            73.306,
+            75.66,
+            72.719,
+            73.5,
+            71.91,
+            73.05,
+            73.529,
+            73.724,
+            73.74,
+            73.636,
+            71.624,
+            73.499,
+            73.53,
+            73.53,
+            73.514
+          ],
+          "median_us": 73.553,
+          "binary_id": "cfedfdbb1d11030d012af38e9ae2eb7b4dc06365b9447416037eeb5b86cf7cec",
+          "binary_sha256": "35e9f43b0e0794c8ea37495623b88b3952b7188cef28f7ed9e899cb9e245c356",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 2
+          },
+          "result_sha256": "6b4d68aee2cc2e994bd882bf084ba40708534e5a540cee46374997b53542a822",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5",
+            "llir": "806183cc1187025e1c30aa983b3152f3b98d60086614db45616d8a895abe2572"
+          },
+          "native_event_file_sha256": "0cfc21e7497b39bd6880b1537901118603b40f9cb289aed449204a9638d547e5",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 47,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:60",
+              "line": 60,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%13",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "%13",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%29, %155, %5, %148, %0, %152, %13, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:65",
+              "line": 65,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%5",
+                "%5",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "0",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%29, %155, %5, %148, %0, %152, %5, %5, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:79",
+              "line": 79,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%16",
+                "%10",
+                "%151"
+              ],
+              "operand_expressions": [
+                "%16",
+                "0",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%16, %10, %151) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:251",
+              "line": 251,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%140",
+                "%115",
+                "%5",
+                "%5",
+                "%0",
+                "%138",
+                "%5",
+                "%134",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%140",
+                "%115",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%140, %115, %5, %5, %0, %138, %5, %134, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x512xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%42 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:106",
+              "line": 106,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:107",
+              "line": 107,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%46 = \"memref.reinterpret_cast\"(%42) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:108",
+              "line": 108,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%46",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%46",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%47 = \"vector.load\"(%46, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:116",
+              "line": 116,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%42) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:183",
+              "line": 183,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%101 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:186",
+              "line": 186,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:187",
+              "line": 187,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%103 = \"memref.reinterpret_cast\"(%101) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:188",
+              "line": 188,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%103",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%103",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%104 = \"vector.load\"(%103, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:196",
+              "line": 196,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%101) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        },
+        {
+          "batch": 1,
+          "native_source_observer_disabled_samples_us": [
+            81.586,
+            76.098,
+            73.982,
+            75.106,
+            76.052,
+            74.086,
+            72.378,
+            72.408,
+            73.502,
+            72.212,
+            74.612,
+            75.962,
+            72.618,
+            73.772,
+            73.862,
+            72.482,
+            72.752,
+            73.892,
+            72.422,
+            73.696,
+            74.416,
+            73.096,
+            73.668,
+            74.042,
+            72.902,
+            73.576,
+            72.752,
+            73.546,
+            73.636,
+            73.638
+          ],
+          "median_us": 73.653,
+          "binary_id": "cfedfdbb1d11030d012af38e9ae2eb7b4dc06365b9447416037eeb5b86cf7cec",
+          "binary_sha256": "35e9f43b0e0794c8ea37495623b88b3952b7188cef28f7ed9e899cb9e245c356",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 2
+          },
+          "result_sha256": "43134200595a15a1ec79f5033f618082c427b542303413ef568c0a660aef290f",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5",
+            "llir": "806183cc1187025e1c30aa983b3152f3b98d60086614db45616d8a895abe2572"
+          },
+          "native_event_file_sha256": "ebe467c8b65d67e203b513bc272e677ac55ec0c57a42c81aef2c6883a6db1359",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 47,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:60",
+              "line": 60,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%13",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "%13",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%29, %155, %5, %148, %0, %152, %13, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:65",
+              "line": 65,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%5",
+                "%5",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "0",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%29, %155, %5, %148, %0, %152, %5, %5, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:79",
+              "line": 79,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%16",
+                "%10",
+                "%151"
+              ],
+              "operand_expressions": [
+                "%16",
+                "0",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%16, %10, %151) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:251",
+              "line": 251,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%140",
+                "%115",
+                "%5",
+                "%5",
+                "%0",
+                "%138",
+                "%5",
+                "%134",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%140",
+                "%115",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%140, %115, %5, %5, %0, %138, %5, %134, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x512xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%42 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:106",
+              "line": 106,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:107",
+              "line": 107,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%46 = \"memref.reinterpret_cast\"(%42) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:108",
+              "line": 108,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%46",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%46",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%47 = \"vector.load\"(%46, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:116",
+              "line": 116,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%42) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:183",
+              "line": 183,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%101 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:186",
+              "line": 186,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:187",
+              "line": 187,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%103 = \"memref.reinterpret_cast\"(%101) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:188",
+              "line": 188,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%103",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%103",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%104 = \"vector.load\"(%103, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:196",
+              "line": 196,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%101) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        },
+        {
+          "batch": 2,
+          "native_source_observer_disabled_samples_us": [
+            81.239,
+            76.784,
+            75.839,
+            72.346,
+            73.906,
+            75.825,
+            73.904,
+            72.285,
+            73.814,
+            73.606,
+            75.706,
+            75.09,
+            74.159,
+            72.15,
+            73.62,
+            74.19,
+            73.876,
+            74.025,
+            73.754,
+            72.12,
+            73.349,
+            73.546,
+            73.8,
+            74.235,
+            73.74,
+            72.06,
+            73.679,
+            73.71,
+            73.529,
+            73.456
+          ],
+          "median_us": 73.777,
+          "binary_id": "cfedfdbb1d11030d012af38e9ae2eb7b4dc06365b9447416037eeb5b86cf7cec",
+          "binary_sha256": "35e9f43b0e0794c8ea37495623b88b3952b7188cef28f7ed9e899cb9e245c356",
+          "source_hashes": {
+            "run_case.py": "9a4f7479ed363fec7bfd373e3d5a97fd76187de75b75b87e1271db3c1842c991",
+            "kernels.py": "920e2682b1d853e10c90d79c1e530b43aa0421ceb6287d20cb2116a6a0922aa6"
+          },
+          "input_hashes": [
+            "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+            "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+            "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+          ],
+          "config": {
+            "ROWS": 1,
+            "BLOCK": 1024,
+            "num_stages": 1,
+            "num_warps": 2
+          },
+          "result_sha256": "42120e89924d8fdd50db9e520e3e8e7e89de1db40f4f32d255dcfac8176032d5",
+          "asm_sha256": {
+            "ttir": "d0d7743de6ad00019795b2c943bfa834d367709ed6ddcc2d4c1840c32d7d5a26",
+            "gcuir": "eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5",
+            "llir": "806183cc1187025e1c30aa983b3152f3b98d60086614db45616d8a895abe2572"
+          },
+          "native_event_file_sha256": "50eb055b211073f0e4222c04293eee5cad9c2e791217e279823980145ad28829",
+          "native_launch_ids": [
+            "launch-1",
+            "launch-2",
+            "launch-3",
+            "launch-4",
+            "launch-5",
+            "launch-6",
+            "launch-7",
+            "launch-8",
+            "launch-9",
+            "launch-10",
+            "launch-11",
+            "launch-12",
+            "launch-13",
+            "launch-14",
+            "launch-15",
+            "launch-16",
+            "launch-17",
+            "launch-18",
+            "launch-19",
+            "launch-20",
+            "launch-21",
+            "launch-22",
+            "launch-23",
+            "launch-24",
+            "launch-25",
+            "launch-26",
+            "launch-27",
+            "launch-28",
+            "launch-29",
+            "launch-30"
+          ],
+          "compiler_static_site_counts": {
+            "allocation": 8,
+            "memory": 47,
+            "partial_exchange_storage": 10,
+            "barrier": 2,
+            "vector_exchange": 12
+          },
+          "symbolic_ownership": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:60",
+              "line": 60,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_pad_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%13",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "%13",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_pad_start\"(%29, %155, %5, %148, %0, %152, %13, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 1, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, f32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:65",
+              "line": 65,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%29",
+                "%155",
+                "%5",
+                "%148",
+                "%0",
+                "%152",
+                "%5",
+                "%5",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%29",
+                "%155",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "0",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%29, %155, %5, %148, %0, %152, %5, %5, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<1x512xf32>, memref<?x?xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:79",
+              "line": 79,
+              "function_scope": 1,
+              "opcode": "memref.dma_wait",
+              "kind": "memory",
+              "operands": [
+                "%16",
+                "%10",
+                "%151"
+              ],
+              "operand_expressions": [
+                "%16",
+                "0",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.dma_wait\"(%16, %10, %151) : (memref<1xi32>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:251",
+              "line": 251,
+              "function_scope": 1,
+              "opcode": "memref_ext.slice_deslice_start",
+              "kind": "memory",
+              "operands": [
+                "%140",
+                "%115",
+                "%5",
+                "%5",
+                "%0",
+                "%138",
+                "%5",
+                "%134",
+                "%16",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%140",
+                "%115",
+                "0",
+                "0",
+                "1",
+                "min(max((min(%21, 769) - ((work_item.x % 2) * 512)), 0), 512)",
+                "0",
+                "((work_item.x % 2) * 512)",
+                "%16",
+                "0"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref_ext.slice_deslice_start\"(%140, %115, %5, %5, %0, %138, %5, %134, %16, %10) <{operandSegmentSizes = array<i32: 1, 1, 2, 2, 2, 1, 1>}> : (memref<?x?xf32>, memref<1x512xf32>, i32, i32, i32, i32, i32, i32, memref<1xi32>, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ],
+          "shared_buffer_and_barrier_sites": [
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:101",
+              "line": 101,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%42 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:105",
+              "line": 105,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%45",
+                "%42",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%45",
+                "%42",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%45, %42, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:106",
+              "line": 106,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:107",
+              "line": 107,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%46 = \"memref.reinterpret_cast\"(%42) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:108",
+              "line": 108,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%46",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%46",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%47 = \"vector.load\"(%46, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:116",
+              "line": 116,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%42"
+              ],
+              "operand_expressions": [
+                "%42"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%42) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:183",
+              "line": 183,
+              "function_scope": 1,
+              "opcode": "memref.alloc",
+              "kind": "partial_exchange_storage",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "%101 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:185",
+              "line": 185,
+              "function_scope": 1,
+              "opcode": "memref.store",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%102",
+                "%101",
+                "%10",
+                "%44"
+              ],
+              "operand_expressions": [
+                "%102",
+                "%101",
+                "0",
+                "(work_item.x % 2)"
+              ],
+              "ownership_status": "symbolic",
+              "evidence": "\"memref.store\"(%102, %101, %10, %44) <{nontemporal = false}> : (f32, memref<1x2xf32, 2>, index, index) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:186",
+              "line": 186,
+              "function_scope": 1,
+              "opcode": "gpu.barrier",
+              "kind": "barrier",
+              "operands": [],
+              "operand_expressions": [],
+              "ownership_status": "unknown",
+              "evidence": "\"gpu.barrier\"() : () -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:187",
+              "line": 187,
+              "function_scope": 1,
+              "opcode": "memref.reinterpret_cast",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%103 = \"memref.reinterpret_cast\"(%101) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 2>, static_strides = array<i64: 2, 2, 1>}> : (memref<1x2xf32, 2>) -> memref<1x1x2xf32, 2>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:188",
+              "line": 188,
+              "function_scope": 1,
+              "opcode": "vector.load",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%103",
+                "%10",
+                "%10",
+                "%10"
+              ],
+              "operand_expressions": [
+                "%103",
+                "0",
+                "0",
+                "0"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "%104 = \"vector.load\"(%103, %10, %10, %10) <{nontemporal = false}> : (memref<1x1x2xf32, 2>, index, index, index) -> vector<32xf32>",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            },
+            {
+              "id": "gcuir:eecfd7ddb50b401bf0ea45f281084bd064766269db9941205e309efc6e416bf5:196",
+              "line": 196,
+              "function_scope": 1,
+              "opcode": "memref.dealloc",
+              "kind": "partial_exchange_storage",
+              "operands": [
+                "%101"
+              ],
+              "operand_expressions": [
+                "%101"
+              ],
+              "ownership_status": "unknown",
+              "evidence": "\"memref.dealloc\"(%101) : (memref<1x2xf32, 2>) -> ()",
+              "source_op_id": null,
+              "location": {
+                "raw": null,
+                "expanded": "",
+                "locations": [],
+                "unresolved_aliases": []
+              },
+              "source_origin_status": "missing",
+              "source_origin_candidates": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "historical_formal_public_captures": [
+    {
+      "work_items": 4,
+      "binary_id": "732ad5634caa78b7d77b344f68c3ede964e9dd3fc543df8e50bd040e143ceda6",
+      "input_hashes": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "enable_i64": true,
+      "result_sha256": "2782028426d13eba946e68abb930f8288f181c70c6ee0ac8f8515c92ca4ac0cb",
+      "mapping_artifacts": {
+        "ttir": {
+          "sha256": "bd5b7f92cde5c3286d57a81ec61c1f0ebfd11676cb6608c1f8c1ef02a6de00d1",
+          "bytes": 294117
+        },
+        "ttgir": {
+          "sha256": "bd5b7f92cde5c3286d57a81ec61c1f0ebfd11676cb6608c1f8c1ef02a6de00d1",
+          "bytes": 294117
+        },
+        "gcuir": {
+          "sha256": "1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d",
+          "bytes": 1190314
+        },
+        "llir": {
+          "sha256": "ef783a661fbc3687ca30d7f7017e298753c3c83507cda012cf455fc07615eab6",
+          "bytes": 1484672
+        }
+      },
+      "execution_sha256": "41ae7794af0ca05366d9ba94cbddb4f413f3acffd9a9fb5140e097a6081a61ab",
+      "static_site_counts": {
+        "allocation": 610,
+        "memory": 1940,
+        "partial_exchange_storage": 10,
+        "barrier": 2,
+        "vector_exchange": 12
+      },
+      "math": {
+        "reference": "PyTorch CPU float32",
+        "rtol": 0.002,
+        "atol": 0.0005,
+        "max_abs_error": 4.656612873077393e-10,
+        "passed": true
+      },
+      "detailed_task_us_not_recovery_baseline": [
+        567.973,
+        547.229,
+        546.75
+      ],
+      "shared_buffer_and_barrier_sites": [
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4801",
+          "line": 4801,
+          "opcode": "memref.alloc",
+          "kind": "partial_exchange_storage",
+          "operands": [],
+          "operand_expressions": [],
+          "ownership_status": "unknown",
+          "evidence": "%121 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4804",
+          "line": 4804,
+          "opcode": "memref.store",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%123",
+            "%121",
+            "%6",
+            "%122"
+          ],
+          "operand_expressions": [
+            "%123",
+            "%121",
+            "0",
+            "(work_item.x % 4)"
+          ],
+          "ownership_status": "symbolic",
+          "evidence": "\"memref.store\"(%123, %121, %6, %122) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4805",
+          "line": 4805,
+          "opcode": "gpu.barrier",
+          "kind": "barrier",
+          "operands": [],
+          "operand_expressions": [],
+          "ownership_status": "unknown",
+          "evidence": "\"gpu.barrier\"() : () -> ()",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4806",
+          "line": 4806,
+          "opcode": "memref.reinterpret_cast",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%121"
+          ],
+          "operand_expressions": [
+            "%121"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "%124 = \"memref.reinterpret_cast\"(%121) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4807",
+          "line": 4807,
+          "opcode": "vector.load",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%124",
+            "%6",
+            "%6",
+            "%6"
+          ],
+          "operand_expressions": [
+            "%124",
+            "0",
+            "0",
+            "0"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "%125 = \"vector.load\"(%124, %6, %6, %6) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:4816",
+          "line": 4816,
+          "opcode": "memref.dealloc",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%121"
+          ],
+          "operand_expressions": [
+            "%121"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "\"memref.dealloc\"(%121) : (memref<1x4xf32, 2>) -> ()",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6813",
+          "line": 6813,
+          "opcode": "memref.alloc",
+          "kind": "partial_exchange_storage",
+          "operands": [],
+          "operand_expressions": [],
+          "ownership_status": "unknown",
+          "evidence": "%177 = \"memref.alloc\"() <{operandSegmentSizes = array<i32: 0, 0>}> : () -> memref<1x4xf32, 2>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6815",
+          "line": 6815,
+          "opcode": "memref.store",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%178",
+            "%177",
+            "%6",
+            "%122"
+          ],
+          "operand_expressions": [
+            "%178",
+            "%177",
+            "0",
+            "(work_item.x % 4)"
+          ],
+          "ownership_status": "symbolic",
+          "evidence": "\"memref.store\"(%178, %177, %6, %122) <{nontemporal = false}> : (f32, memref<1x4xf32, 2>, index, index) -> ()",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6816",
+          "line": 6816,
+          "opcode": "gpu.barrier",
+          "kind": "barrier",
+          "operands": [],
+          "operand_expressions": [],
+          "ownership_status": "unknown",
+          "evidence": "\"gpu.barrier\"() : () -> ()",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6817",
+          "line": 6817,
+          "opcode": "memref.reinterpret_cast",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%177"
+          ],
+          "operand_expressions": [
+            "%177"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "%179 = \"memref.reinterpret_cast\"(%177) <{operandSegmentSizes = array<i32: 1, 0, 0, 0>, static_offsets = array<i64: 0>, static_sizes = array<i64: 1, 1, 4>, static_strides = array<i64: 4, 4, 1>}> : (memref<1x4xf32, 2>) -> memref<1x1x4xf32, 2>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6818",
+          "line": 6818,
+          "opcode": "vector.load",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%179",
+            "%6",
+            "%6",
+            "%6"
+          ],
+          "operand_expressions": [
+            "%179",
+            "0",
+            "0",
+            "0"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "%180 = \"vector.load\"(%179, %6, %6, %6) <{nontemporal = false}> : (memref<1x1x4xf32, 2>, index, index, index) -> vector<32xf32>",
+          "source_op_id": null
+        },
+        {
+          "id": "gcuir:1a3447437efb64d99ca22a980cb9754e0053d2c95bf319be018b86ad937f2e7d:6827",
+          "line": 6827,
+          "opcode": "memref.dealloc",
+          "kind": "partial_exchange_storage",
+          "operands": [
+            "%177"
+          ],
+          "operand_expressions": [
+            "%177"
+          ],
+          "ownership_status": "unknown",
+          "evidence": "\"memref.dealloc\"(%177) : (memref<1x4xf32, 2>) -> ()",
+          "source_op_id": null
+        }
+      ]
+    },
+    {
+      "work_items": 1,
+      "binary_id": "322a63f04b11c2c8529de600c027bc6bc0c79fde3f66a26047b3e84f37747374",
+      "input_hashes": [
+        "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d",
+        "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e",
+        "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+      ],
+      "enable_i64": true,
+      "result_sha256": "3a4e7bf9385507f1e79903395da21034a5e0f163d4984849fd8c1e90537d30b7",
+      "mapping_artifacts": {
+        "ttir": {
+          "sha256": "3b0c1d7b49eceac8eddae6905398eaf638f5cdce1cd8a9eafe1db2c00b5c1823",
+          "bytes": 294115
+        },
+        "ttgir": {
+          "sha256": "3b0c1d7b49eceac8eddae6905398eaf638f5cdce1cd8a9eafe1db2c00b5c1823",
+          "bytes": 294115
+        },
+        "gcuir": {
+          "sha256": "604aca4b9efe722fdce0c28a6f855bc6ec38eb22bf09ee2bcc28c2efe476e39a",
+          "bytes": 1210185
+        },
+        "llir": {
+          "sha256": "7c42c2d6be7f01eb2455084179808cf9ac5b0c4b83493b9da7577edc1eba8569",
+          "bytes": 1500462
+        }
+      },
+      "execution_sha256": "160edd9589dc47178e23ea14828841712d00198d6475c1178eb287689271d0cd",
+      "static_site_counts": {
+        "allocation": 610,
+        "memory": 1996,
+        "vector_exchange": 4
+      },
+      "math": {
+        "reference": "PyTorch CPU float32",
+        "rtol": 0.002,
+        "atol": 0.0005,
+        "max_abs_error": 5.820766091346741e-10,
+        "passed": true
+      },
+      "detailed_task_us_not_recovery_baseline": [
+        336.03,
+        317.79,
+        318.3
+      ],
+      "shared_buffer_and_barrier_sites": []
+    }
+  ],
+  "quantities": "Static IR sites and symbolically assigned elements; never measured worker utilization or exclusive barrier cost.",
+  "version_boundary": "Historical 2026-10-13 Study native vs 2026-10-14 original formal allsite; neither relabeled as final1cb reruns."
+}

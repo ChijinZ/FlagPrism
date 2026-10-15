@@ -1,0 +1,37 @@
+{"yapf": "0.43.0", "ruff": "0.9.1", "idempotent": true, "test_sha256": "e093fe7b0b607b5f222edc0d9c14fac2e230ebaaa866f3fa43177d96f569fb78"}
+{
+  "status": "verified_two_public_captures_and_offline_control_chain",
+  "runtime_python_count": 52,
+  "cases": [
+    {
+      "work_items": 4,
+      "seconds": 4.41
+    },
+    {
+      "work_items": 1,
+      "seconds": 4.41
+    }
+  ],
+  "recovery": [
+    {
+      "batch": 0,
+      "w4_median_us": 114.8685,
+      "w1_median_us": 71.14500000000001,
+      "ratio": 1.614568838288003
+    },
+    {
+      "batch": 1,
+      "w4_median_us": 115.064,
+      "w1_median_us": 71.12450000000001,
+      "ratio": 1.6177829018130176
+    },
+    {
+      "batch": 2,
+      "w4_median_us": 115.209,
+      "w1_median_us": 71.055,
+      "ratio": 1.6214059531348954
+    }
+  ]
+}
+OWN_GPU_TEST_PROCESS_CHECK
+

@@ -1,0 +1,28 @@
+[
+  {
+    "work_items": 4,
+    "command": [
+      "python",
+      "-m",
+      "pytest",
+      "-ra",
+      "--basetemp=/workspace/method-enflame-20261014/i3-evidence/round2-softmax/w4",
+      "Profiler/test/test_enflame_softmax_diagnostic_hardware.py::test_public_softmax_organization_diagnostic[4]"
+    ],
+    "timeout_seconds": 240,
+    "exit_code": 0
+  },
+  {
+    "work_items": 1,
+    "command": [
+      "python",
+      "-m",
+      "pytest",
+      "-ra",
+      "--basetemp=/workspace/method-enflame-20261014/i3-evidence/round2-softmax/w1",
+      "Profiler/test/test_enflame_softmax_diagnostic_hardware.py::test_public_softmax_organization_diagnostic[1]"
+    ],
+    "timeout_seconds": 240,
+    "exit_code": 0
+  }
+]
