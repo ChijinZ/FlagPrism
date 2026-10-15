@@ -105,7 +105,7 @@ def test_automatic_policy_version_is_in_frozen_compiler_cache_options(
         compiler.set_instrumentation_mode(original)
     frozen = json.loads(options['instrumentation_mode'].split('|config=',
                                                               1)[1])
-    assert frozen['debug_automatic_plan_version'] == 2
+    assert frozen['debug_automatic_plan_version'] == 3
     assert frozen['debug_control_flow_metadata_version'] == 1
     legacy = dict(frozen)
     del legacy['debug_automatic_plan_version']
@@ -128,3 +128,29 @@ def test_old_compiler_without_structural_metadata_cannot_silently_profile(
             None, {'target': {
                 'backend': 'gcu'
             }})
+
+
+@pytest.mark.parametrize("automatic", [False, True])
+@pytest.mark.parametrize("publisher", ["scalar16", "vector16_per_work_item"])
+def test_dynamic_lowering_revision_invalidates_every_dynamic_cache(
+        monkeypatch, automatic, publisher):
+    import flagtree.debugger.api as api
+    monkeypatch.setenv("FLAGPRISM_GCU_DYNAMIC_PUBLISHER", publisher)
+    config = {"debug_observation_request": {
+        "automatic": automatic, "semantics": ["source_control_interval"],
+        "sample_every": 3}}
+    monkeypatch.setattr(api, "current_compile_config", lambda: config)
+    options = {"instrumentation_mode": "debugger_auto" if automatic else "debugger"}
+    compiler.apply_compile_options(options)
+    first = options["instrumentation_mode"]
+    frozen = json.loads(first.split("|config=", 1)[1])
+    assert frozen["debug_dynamic_lowering_revision"] == compiler.GCU_DYNAMIC_LOWERING_REVISION
+    assert frozen["debug_dynamic_publication_mode"] == publisher
+    assert ("debug_automatic_plan_version" in frozen) is automatic
+    monkeypatch.setattr(compiler, "GCU_DYNAMIC_LOWERING_REVISION",
+                        compiler.GCU_DYNAMIC_LOWERING_REVISION + 1)
+    compiler.apply_compile_options(options)
+    assert options["instrumentation_mode"] != first
+    assert config == {"debug_observation_request": {
+        "automatic": automatic, "semantics": ["source_control_interval"],
+        "sample_every": 3}}

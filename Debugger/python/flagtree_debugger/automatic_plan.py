@@ -5,7 +5,7 @@ operation ID intervals or earlier executions. Selection precedes instrumentation
 """
 from collections.abc import Mapping
 
-AUTOMATIC_PLAN_VERSION = 2
+AUTOMATIC_PLAN_VERSION = 3
 CONTROL_FLOW_METADATA_VERSION = 1
 
 
@@ -44,8 +44,13 @@ def plan_operations(table, max_sites):
         reason = None
         if type(identity) is not int or not 0 < identity <= 0x7fffffff:
             reason = 'not_a_device_observer_id'
+        elif row.get('isSyntheticStatementCapture') or operation.startswith(
+            ('flagtree.debug.', 'flagtree_debug.')):
+            # Metadata-only operand captures do not name an instrumentable IR
+            # operation. Their IDs cannot be passed to the timeline selector.
+            reason = 'synthetic_metadata_without_device_operation'
         elif operation == 'arith.constant' or operation.startswith(
-            ('scf.', 'cf.', 'func.', 'flagtree_debug.')):
+            ('scf.', 'cf.', 'func.')):
             reason = 'control_container_or_nonobservable_operation'
         elif '.call' in operation or operation.endswith(('return', 'yield')):
             reason = 'call_or_terminator'

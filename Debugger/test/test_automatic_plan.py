@@ -38,6 +38,42 @@ def test_no_observers_is_actionable_failure(planner):
         planner([{'opId': 1, 'mlirOpName': 'arith.constant'}], 8)
 
 
+@pytest.mark.parametrize('name,synthetic', [
+    ('flagtree.debug.operand_capture', True),
+    ('flagtree.debug.operand_capture', False),
+    ('flagtree_debug.record_summary', False),
+    ('arith.addf', True),
+])
+def test_metadata_only_capture_ids_never_enter_device_plan(
+        planner, name, synthetic):
+    table = [
+        {
+            'opId': 901,
+            'mlirOpName': name,
+            'isSyntheticStatementCapture': synthetic
+        },
+        {
+            'opId': 1,
+            'mlirOpName': 'tt.load'
+        },
+        {
+            'opId': 2,
+            'mlirOpName': 'arith.addf'
+        },
+        {
+            'opId': 3,
+            'mlirOpName': 'tt.store'
+        },
+    ]
+    plan = planner(table, 8)
+    assert set(plan['selected_sites']) == {1, 2, 3}
+    row = plan['inventory'][0]
+    assert not row['automatic_eligible'] and not row['selected']
+    assert row[
+        'exclusion_reason'] == 'synthetic_metadata_without_device_operation'
+    assert table[0]['isSyntheticStatementCapture'] is synthetic
+
+
 def test_selection_covers_tail_of_ir(planner):
     table = [{'opId': i, 'mlirOpName': 'arith.addf'} for i in range(1, 30)]
     result = planner(table, 4)
@@ -64,7 +100,7 @@ def test_dynamic_condition_and_body_cannot_be_crowded_out_by_outer_ops(
     assert len(result['selected_sites']) == 8
     assert all(row['coverage_status'] == 'direct_representative'
                for row in result['control_regions'])
-    assert result['policy_version'] == 2
+    assert result['policy_version'] == 3
     assert table[11].get('selected') is None
 
 

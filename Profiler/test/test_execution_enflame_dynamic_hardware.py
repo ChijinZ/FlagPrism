@@ -157,6 +157,23 @@ def test_cooperative_work_items_keep_single_writer(tmp_path):
     assert document["captures"][0]["header"]["reserved0"] == len(events)
 
 
+def test_cooperative_sampling_keeps_unselected_programs_and_workers_safe(
+        tmp_path):
+    # Cross both predicates: the selected program is not program zero, and only
+    # one of four cooperative work items owns the sampled dynamic cursor.
+    full, events, _ = _run(tmp_path / "full", 5, work_items=4)
+    sampled, sparse, _ = _run(tmp_path / "sampled",
+                              5,
+                              work_items=4,
+                              sample_every=3)
+    attempted = full["captures"][0]["header"]["reserved0"]
+    assert attempted == len(events)
+    assert sampled["captures"][0]["header"]["reserved0"] == attempted
+    assert [e["attempted_ordinal"]
+            for e in sparse] == list(range(0, attempted, 3))
+    assert sampled["captures"][0]["header"]["overflow_count"] == 0
+
+
 def test_repeated_same_binary_launch_identity(tmp_path):
     document, events, stores = _run(tmp_path, 5, launches=2)
     assert len(document["captures"]) == 2

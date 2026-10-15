@@ -9,6 +9,8 @@ from triton._C.libtriton import ir, passes
 from .native import compiler_binding
 
 _instrumentation_mode = ""
+# Compiler lowering changes must invalidate both automatic and advanced caches.
+GCU_DYNAMIC_LOWERING_REVISION = 2
 _DISABLED_BUILD_MESSAGE = (
     "FlagPrism debugger compiler support is unavailable. Reinstall FlagTree "
     "with `TRITON_BUILD_FLAGPRISM=ON`.")
@@ -40,6 +42,7 @@ def _gcu_publication_config(config):
         if mode not in {"scalar16", "vector16_per_work_item"}:
             raise ValueError("Unknown GCU dynamic publisher mode")
         result["debug_dynamic_publication_mode"] = mode
+        result["debug_dynamic_lowering_revision"] = GCU_DYNAMIC_LOWERING_REVISION
         if request.get("automatic"):
             from .automatic_plan import (AUTOMATIC_PLAN_VERSION,
                                          CONTROL_FLOW_METADATA_VERSION)

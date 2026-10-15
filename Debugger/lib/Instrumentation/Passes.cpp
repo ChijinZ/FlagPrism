@@ -1286,16 +1286,15 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     builder.getContext()->getOrLoadDialect<memref::MemRefDialect>();
     ctx.dynamicCursor = builder.create<memref::AllocaOp>(
         loc, MemRefType::get({2}, builder.getI32Type()));
-    auto initialize = builder.create<scf::IfOp>(loc, ctx.selectedWriter, false);
-    {
-      OpBuilder::InsertionGuard nested(builder);
-      builder.setInsertionPointToStart(initialize.thenBlock());
-      Value zero = createI32Constant(builder, loc, 0);
-      for (int i = 0; i < 2; ++i)
-        builder.create<memref::StoreOp>(
-            loc, zero, ctx.dynamicCursor,
-            ValueRange{builder.create<arith::ConstantIndexOp>(loc, i)});
-    }
+    // The sampling predicate below reads this private cursor on every work
+    // item, including unselected writers. Initialize every private instance;
+    // otherwise sampleEvery > 1 branches on an undefined value. This adds no
+    // global observer/header traffic for unselected programs or work items.
+    Value zero = createI32Constant(builder, loc, 0);
+    for (int i = 0; i < 2; ++i)
+      builder.create<memref::StoreOp>(
+          loc, zero, ctx.dynamicCursor,
+          ValueRange{builder.create<arith::ConstantIndexOp>(loc, i)});
     if (ctx.sampleEvery > 1) {
       SmallVector<Operation *> reads;
       func.walk([&](Operation *op) {
