@@ -1,0 +1,64 @@
+[
+  {
+    "archive": "longk-cost-r29-evidence.tgz",
+    "sha256": "b20bdaa1a8e4376279c43d9b360f185a5582e6c315485e26cdf8070b3db48cee",
+    "counts": {
+      "manifest_files": 873,
+      "bundles": 6,
+      "detailed_bundles": 3,
+      "result_files": 6,
+      "mode_detailed": 3,
+      "mode_native": 3
+    },
+    "observations": 40194,
+    "raw_buffers": 99,
+    "actors": {
+      "0": 39204,
+      "1": 495,
+      "2": 495
+    },
+    "results": [
+      {
+        "path": "longk-cost-r29-3/result.json",
+        "sha256": "414a6d11bdfa6123b9cfbc36ac8537b6b93384a3b132fa275e749013fb516ac8",
+        "mode": "detailed",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "longk-cost-r29-5/result.json",
+        "sha256": "88e6e2145914bf5541832d2b76951e1aa207c1bf67991e4b3252f8dc2e7af750",
+        "mode": "detailed",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "longk-cost-r29-0/result.json",
+        "sha256": "548a26aefb2d5b36c4ab14a88e6e6917b7415af79b432df7a7e5fceae27a0cbd",
+        "mode": "native",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "longk-cost-r29-4/result.json",
+        "sha256": "175b32c54373e9fbae6d2d41a59c5516b2fada7ff7b1b96d8d44ed4deb2daaae",
+        "mode": "native",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "longk-cost-r29-2/result.json",
+        "sha256": "d0e0386d187b28d246be3941fd905646ee374f611a398785871d05770c06b753",
+        "mode": "native",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "longk-cost-r29-1/result.json",
+        "sha256": "9066a3adc4c702400fa0d47cedb86a5e77e658e5188148e6040f5c9df22a4d61",
+        "mode": "detailed",
+        "operator": "gemm_bias_gelu"
+      }
+    ],
+    "status": "independent_raw_hash_record_identity_and_local_duration_audit_passed",
+    "limits": [
+      "Does not certify shared clock origin or exclusive source cost.",
+      "Hardware mathematical outcomes are recorded assertions; original numerical execution occurred in Docker."
+    ]
+  }
+]

@@ -1,0 +1,53 @@
+{
+  "status": "final_handoff",
+  "source_runtime_py_count": 52,
+  "component_code_commit": "1cb15d729e4bed52d27c19b996f97b7ab88ffa80",
+  "integration_commit": "00650233fcaa9c55134e8aae690067a32d97ad45",
+  "full_patch_sha256": "d18294b2e01805de1f18d395bf5ef88e95763499883957b1db56c17ec7cb68c3",
+  "source_late_cpp_sha256": "376a8222440e86c673983561935571223d863e8b862c151be0c7f989585a08aa",
+  "wheel_sha256": "405e2919f16be7f0fe58b9698a08e87965b6ac23eb0dc1ed8115f25a6641cfee",
+  "native_core_binaries": {
+    "core": {
+      "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+      "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+    },
+    "debugger": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+    },
+    "profiler": {
+      "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+      "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+    },
+    "late_llvm15": {
+      "path": "/tmp/flagprism-method-ascend/llvm-build/FlagPrismAscendLateObserver.so",
+      "sha256": "46f420c4c5adb389b2b84193a346c69f2baf794c53baddde9247e0ff8b87c372",
+      "source_sha256": "376a8222440e86c673983561935571223d863e8b862c151be0c7f989585a08aa"
+    }
+  },
+  "archives": {
+    "M2": {
+      "path": "/tmp/flagprism-method-ascend/m2-semantic-r28-evidence.tgz",
+      "size": 14118987,
+      "sha256": "5a18249352bbc73566d114fa0a27416c40d9a09b83cd7a31d76ac54bc608341e"
+    },
+    "longK": {
+      "path": "/tmp/flagprism-method-ascend/longk-cost-r29-evidence.tgz",
+      "size": 22712496,
+      "sha256": "b20bdaa1a8e4376279c43d9b360f185a5582e6c315485e26cdf8070b3db48cee"
+    }
+  },
+  "own_processes": "397400/410703/418345/419285 all NOT_LIVE; terminal0 retained",
+  "remaining_limits": {
+    "shared_actor_clock": "unverified; instance_local durations only",
+    "dynamic_flag_generations": "not established",
+    "exclusive_source_cost": "not established",
+    "arbitrary_site_selection_and_sampling": "unsupported; explicit rejection",
+    "short_RMS_device_overhead": "allsite61-68percent and wait-only60-78percent, <=10percent not met",
+    "longK_device_overhead": "-0.08,+1.30,+0.87percent only preselected P32_K32",
+    "longK_host_overhead": "12.33-12.46ms detailed versus267-272us native",
+    "longK_export_and_bytes": "15.62-17.21s detailed export;221-229MB complete traces per33 calls",
+    "native_le_5percent": "unverified; no isolated SDK-off task reference",
+    "historical_failures": "preserved, including underallocation failure and debug triton-opt dependency failure"
+  }
+}

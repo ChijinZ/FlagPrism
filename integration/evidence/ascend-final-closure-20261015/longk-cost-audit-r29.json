@@ -1,0 +1,874 @@
+{
+  "status": "PASS_prespecified_longK_functional_and_cost_measurement",
+  "requests": [
+    {
+      "case": "longk-cost-r29-0",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 2,
+        "mode": "native",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        312.68,
+        315.66,
+        312.78,
+        312.36,
+        305.24,
+        306.44,
+        316.56,
+        315.68,
+        308.52,
+        313.94,
+        312.82,
+        309.58,
+        307.04,
+        304.42,
+        309.78,
+        308.3,
+        306.64,
+        309.98,
+        305.62,
+        316.28,
+        312.0,
+        304.52,
+        306.84,
+        312.46,
+        318.56,
+        308.5,
+        316.08,
+        308.04,
+        312.6,
+        306.18
+      ],
+      "host_samples_us": [
+        353.864,
+        297.364,
+        294.914,
+        289.164,
+        313.904,
+        282.424,
+        271.733,
+        283.024,
+        276.663,
+        268.774,
+        286.554,
+        268.033,
+        368.115,
+        280.504,
+        271.253,
+        269.184,
+        266.783,
+        268.233,
+        264.024,
+        263.113,
+        264.544,
+        265.053,
+        276.124,
+        271.163,
+        263.004,
+        264.823,
+        267.064,
+        267.023,
+        265.713,
+        273.614
+      ],
+      "first_compile_and_launch_ns": 23421025531,
+      "prepare_compile_warmup_ns": 23422447469,
+      "finalization_export_ns": 5821032013,
+      "trace_bytes": 45024964,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 309.88,
+      "host_median_us": 271.20799999999997
+    },
+    {
+      "case": "longk-cost-r29-1",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ]
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        313.38,
+        311.28,
+        313.62,
+        305.8,
+        311.92,
+        307.24,
+        311.28,
+        304.98,
+        314.94,
+        316.08,
+        313.54,
+        307.64,
+        315.74,
+        312.06,
+        309.68,
+        307.0,
+        305.14,
+        304.74,
+        303.36,
+        308.14,
+        311.66,
+        312.28,
+        312.76,
+        312.56,
+        310.6,
+        316.36,
+        310.6,
+        306.36,
+        307.8,
+        307.68
+      ],
+      "host_samples_us": [
+        13619.295,
+        14758.71,
+        198478.549,
+        14065.851,
+        12390.419,
+        12231.247,
+        14005.43,
+        12318.349,
+        13496.933,
+        12291.128,
+        12191.316,
+        14720.35,
+        12426.059,
+        13613.355,
+        12124.116,
+        12502.06,
+        13977.91,
+        12296.298,
+        13465.143,
+        12219.847,
+        12237.747,
+        13932.089,
+        12281.798,
+        15707.392,
+        12249.127,
+        12366.879,
+        14086.531,
+        12298.458,
+        13402.012,
+        12363.069
+      ],
+      "first_compile_and_launch_ns": 6274504217,
+      "prepare_compile_warmup_ns": 6302029921,
+      "finalization_export_ns": 17210137320,
+      "trace_bytes": 228541034,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 310.94,
+      "host_median_us": 12464.0595,
+      "records": 13398,
+      "raw_captures": 33,
+      "bytes_per_capture": 393312,
+      "actor_counts": {
+        "0": 13068,
+        "1": 165,
+        "2": 165
+      },
+      "zero_drop_saturation": true,
+      "all_instance_local": true,
+      "actual_public_selection_labels_verified": true
+    },
+    {
+      "case": "longk-cost-r29-2",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 1,
+        "mode": "native",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        311.88,
+        306.6,
+        314.34,
+        311.18,
+        311.36,
+        306.68,
+        310.98,
+        309.4,
+        310.7,
+        305.9,
+        304.0,
+        309.76,
+        314.4,
+        310.4,
+        311.88,
+        314.82,
+        305.62,
+        304.28,
+        308.92,
+        303.9,
+        302.24,
+        309.68,
+        314.42,
+        312.38,
+        309.98,
+        308.16,
+        313.74,
+        309.72,
+        307.46,
+        305.5
+      ],
+      "host_samples_us": [
+        343.325,
+        299.103,
+        308.194,
+        287.833,
+        314.094,
+        278.953,
+        268.124,
+        283.723,
+        268.174,
+        262.953,
+        264.764,
+        261.583,
+        261.803,
+        264.654,
+        260.663,
+        260.844,
+        258.153,
+        267.983,
+        356.305,
+        266.403,
+        261.724,
+        279.183,
+        269.074,
+        260.213,
+        259.354,
+        269.293,
+        264.034,
+        259.863,
+        261.483,
+        269.144
+      ],
+      "first_compile_and_launch_ns": 253212652,
+      "prepare_compile_warmup_ns": 254615330,
+      "finalization_export_ns": 3886890572,
+      "trace_bytes": 16118437,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 309.74,
+      "host_median_us": 267.193
+    },
+    {
+      "case": "longk-cost-r29-3",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 1,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ]
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        313.68,
+        316.44,
+        313.84,
+        314.42,
+        309.08,
+        320.46,
+        313.96,
+        315.48,
+        312.12,
+        308.34,
+        315.48,
+        316.34,
+        308.38,
+        310.5,
+        312.56,
+        315.62,
+        319.3,
+        314.96,
+        306.84,
+        308.4,
+        313.94,
+        313.34,
+        315.38,
+        312.42,
+        312.52,
+        314.44,
+        307.8,
+        310.84,
+        311.16,
+        314.08
+      ],
+      "host_samples_us": [
+        14003.1,
+        12300.508,
+        12417.12,
+        12288.137,
+        13942.219,
+        13712.566,
+        12366.299,
+        12271.637,
+        13971.83,
+        12255.737,
+        13632.725,
+        12272.138,
+        12290.868,
+        14007.49,
+        12390.969,
+        13625.025,
+        12284.208,
+        12241.627,
+        14006.53,
+        12275.738,
+        13591.204,
+        12198.577,
+        12378.189,
+        14152.912,
+        12528.971,
+        13577.154,
+        12613.802,
+        12347.929,
+        14042.4,
+        12390.799
+      ],
+      "first_compile_and_launch_ns": 309521436,
+      "prepare_compile_warmup_ns": 523784637,
+      "finalization_export_ns": 15731219266,
+      "trace_bytes": 221511553,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 313.76,
+      "host_median_us": 12404.0445,
+      "records": 13398,
+      "raw_captures": 33,
+      "bytes_per_capture": 393312,
+      "actor_counts": {
+        "0": 13068,
+        "1": 165,
+        "2": 165
+      },
+      "zero_drop_saturation": true,
+      "all_instance_local": true,
+      "actual_public_selection_labels_verified": true
+    },
+    {
+      "case": "longk-cost-r29-4",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        312.82,
+        312.3,
+        314.62,
+        308.38,
+        315.4,
+        304.58,
+        310.54,
+        312.34,
+        315.54,
+        315.06,
+        314.5,
+        310.96,
+        318.92,
+        305.58,
+        311.42,
+        307.76,
+        307.82,
+        308.68,
+        309.64,
+        312.12,
+        303.82,
+        312.5,
+        310.82,
+        307.84,
+        306.32,
+        302.98,
+        311.84,
+        305.72,
+        314.2,
+        314.24
+      ],
+      "host_samples_us": [
+        361.444,
+        301.534,
+        295.294,
+        300.254,
+        318.404,
+        276.644,
+        269.853,
+        267.054,
+        269.283,
+        266.844,
+        269.073,
+        272.004,
+        265.013,
+        266.454,
+        272.773,
+        270.354,
+        275.643,
+        276.284,
+        363.345,
+        273.523,
+        273.144,
+        269.203,
+        268.314,
+        266.733,
+        264.013,
+        273.314,
+        266.493,
+        266.344,
+        280.594,
+        280.953
+      ],
+      "first_compile_and_launch_ns": 252044027,
+      "prepare_compile_warmup_ns": 253427034,
+      "finalization_export_ns": 3908767643,
+      "trace_bytes": 16092308,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 311.19,
+      "host_median_us": 272.3885
+    },
+    {
+      "case": "longk-cost-r29-5",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 2,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 30,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ]
+      },
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "max_abs_error": 2.86102294921875e-06,
+      "device_samples_us": [
+        318.64,
+        310.62,
+        316.0,
+        312.72,
+        322.22,
+        312.72,
+        312.44,
+        312.2,
+        313.14,
+        311.18,
+        310.74,
+        309.56,
+        310.68,
+        312.28,
+        317.16,
+        319.92,
+        314.16,
+        316.2,
+        307.24,
+        312.26,
+        308.74,
+        308.86,
+        311.66,
+        309.62,
+        319.88,
+        312.96,
+        313.28,
+        314.82,
+        310.46,
+        313.56
+      ],
+      "host_samples_us": [
+        13970.739,
+        12340.389,
+        12323.998,
+        12195.576,
+        13850.388,
+        13500.103,
+        12327.438,
+        12119.926,
+        13905.768,
+        12198.277,
+        13439.873,
+        12266.257,
+        12263.478,
+        14009.28,
+        12293.658,
+        12172.466,
+        13437.803,
+        12253.967,
+        13936.979,
+        12202.407,
+        12294.338,
+        13360.431,
+        12397.6,
+        13891.178,
+        12458.48,
+        12099.836,
+        13509.263,
+        12155.356,
+        14047.701,
+        12310.868
+      ],
+      "first_compile_and_launch_ns": 301202659,
+      "prepare_compile_warmup_ns": 510677769,
+      "finalization_export_ns": 15616440872,
+      "trace_bytes": 221509986,
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "device_median_us": 312.58000000000004,
+      "host_median_us": 12333.913499999999,
+      "records": 13398,
+      "raw_captures": 33,
+      "bytes_per_capture": 393312,
+      "actor_counts": {
+        "0": 13068,
+        "1": 165,
+        "2": 165
+      },
+      "zero_drop_saturation": true,
+      "all_instance_local": true,
+      "actual_public_selection_labels_verified": true
+    }
+  ],
+  "comparisons": [
+    {
+      "batch": 0,
+      "native_median_us": 311.19,
+      "allsite_median_us": 310.94,
+      "percent_increase": -0.08033677174716924,
+      "detail_le_10percent": true,
+      "native_host_median_us": 272.3885,
+      "allsite_host_median_us": 12464.0595,
+      "native_export_s": 3.908767643,
+      "allsite_export_s": 17.21013732,
+      "native_trace_bytes": 16092308,
+      "allsite_trace_bytes": 228541034
+    },
+    {
+      "batch": 1,
+      "native_median_us": 309.74,
+      "allsite_median_us": 313.76,
+      "percent_increase": 1.2978627235745943,
+      "detail_le_10percent": true,
+      "native_host_median_us": 267.193,
+      "allsite_host_median_us": 12404.0445,
+      "native_export_s": 3.886890572,
+      "allsite_export_s": 15.731219266,
+      "native_trace_bytes": 16118437,
+      "allsite_trace_bytes": 221511553
+    },
+    {
+      "batch": 2,
+      "native_median_us": 309.88,
+      "allsite_median_us": 312.58000000000004,
+      "percent_increase": 0.871305021298574,
+      "detail_le_10percent": true,
+      "native_host_median_us": 271.20799999999997,
+      "allsite_host_median_us": 12333.913499999999,
+      "native_export_s": 5.821032013,
+      "allsite_export_s": 15.616440872,
+      "native_trace_bytes": 45024964,
+      "allsite_trace_bytes": 221509986
+    }
+  ],
+  "limits": [
+    "Single preselected original P32_K32 shape/config; no claim about all operators.",
+    "Original short RMS allsite and wait-only negative overhead results remain.",
+    "No SDK-off isolated task reference, so native <=5percent not certified.",
+    "Local source durations are not shared-axis engine busy times."
+  ]
+}

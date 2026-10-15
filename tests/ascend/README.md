@@ -47,7 +47,7 @@ empty capture, decode failure or missing identity cannot count as a detailed pas
 | --- | --- |
 | Native receipt/relative path | Four calls, two binaries, two streams, legal task0; exact worker/SDK identity, original math/inputs/canaries. Relative SDK root survives application chdir. |
 | Original operators | **108**: GEMM, GEMM+bias+GELU, Softmax, LayerNorm, row sum, transpose × three shapes × two configurations × off/native/detailed. All original mathematical oracles/input bytes retained; 36 detailed requests produced 7788 records. |
-| Fixed T5 | **9** RMSNorm127×769 requests: three batches × off/native/detailed, 30 measured calls each. All 270 measured calls passed math/input/canary checks; 180 native/detailed calls had exact task identities. This suite is not heldout shape/config coverage. |
+| Fixed T5 | **9** RMSNorm127×769 requests: three batches × off/native/detailed, 30 measured calls each. All nine requests, covering270 measured calls, passed post-profile math/input/canary checks; 180 native/detailed calls had exact task identities. This suite is not heldout shape/config coverage. |
 | Heldout | **18** RMSNorm requests: three row shapes × variants0/1 × off/native/detailed. All passed;12 native/detailed identities verified and six nonempty detailed traces. |
 | Formal Study | Same canonical 512×512×4096 fused GEMM+bias+GELU at 32/32/32,32/32/256,64/64/256 tiles; stages4/warps4. Three detailed cases and three native controls, each three measured calls, passed unchanged CPU math/inputs/canaries. |
 | Typed HIVM/source origin | Fresh ordinary fused128³ detailed capture, optional line info only: exact four tasks,232 source-control records and same-compile typed readiness channel in the public execution manifest.23/23 dynamic sites retain debug locations; explicit source_op_id remains partial. |
@@ -110,8 +110,35 @@ finalization/export costs are recorded separately. These negative results remain
 Off-mode isolated task duration is unavailable, so its NPU stream envelope cannot
 certify the native≤5% device-task target. Detailed≤10% is not met here.
 
-Current all-site capture supports compiler-fixed program publication predicates;
-timestamps still execute before that predicate. Semantic output filtering occurs
-after capture. Arbitrary sites and sample_every!=1 explicitly reject; do not claim
-on-device event/site sampling or cross-actor engine occupancy. Missing dynamic
+Requested issue/wait_bracket/control_checkpoint classes are now selected by the
+late compiler before inserting timestamps or records. Original site IDs remain
+stable, including sparse wait-only IDs. Actual pass manifests expose the effective
+set; the finalizer upgrades its description only when every successful actor
+receipt and original/adapted hash agrees. It retains the legacy output-filter
+field for compatibility and filters the exported semantic view. Compiler-fixed
+program predicates gate record publication; selected timestamps still execute
+before that predicate. Arbitrary sites and sample_every!=1 explicitly reject;
+do not claim event sampling or cross-actor engine occupancy. Missing dynamic
 iterations, exclusive source cost and shared-clock alignment remain explicit.
+
+The additional original RMS wait-only/native campaign retains three batches ×30
+measured calls per mode. Wait-only halves records from12 to6 per invocation,
+with actual unselected classes containing no counter reads or event writes.
+Device-task medians were native6.62/6.39/6.00us versus wait-only10.60/10.78/10.68us
+(**+60.12/+68.70/+78.00%**); the≤10% target still fails. Host medians remain
+about1.71–1.76ms detailed versus216–220us native. Fewer records therefore do
+not establish an overhead improvement. The same public wait-only fused smoke
+exports100 selected records and exact identities. Final metadata-label correction
+is separately CPU-checked against these real manifests; original bundles are
+not retroactively rewritten.
+
+The additional preselected P32_K32 long-K cost campaign uses the same canonical
+512×512×4096 inputs/config/grid/capacity2048, three batches ×30 measured calls
+per native/all-site mode. Device-task native medians311.19/309.74/309.88us versus
+310.94/313.76/312.58us detailed yield−0.08/+1.30/+0.87% only for this case.
+Detailed host launch remains12.33–12.46ms versus267–272us native; detailed
+export15.62–17.21s and complete traces221–229MB per33 calls. Low kernel-task
+perturbation is therefore not low end-to-end cost. All six requests retain
+original math/input/canary checks and exact identity; each detailed request has
+13398 local records and33 valid393312-byte zero-loss captures. The final actual
+public metadata describes compiler semantic selection plus output filtering.

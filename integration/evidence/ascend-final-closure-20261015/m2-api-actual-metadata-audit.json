@@ -1,0 +1,69 @@
+{
+  "status": "PASS",
+  "new_requests": [
+    {
+      "case": "m2-rms-r28-1",
+      "description": {
+        "collection_scope": "requested_semantic_sites_of_selected_program",
+        "selection_stage": "semantic_output_filter_after_capture",
+        "program_selection_stage": "device_record_publication_predicate",
+        "semantic_selection_stage": "compiler_semantic_site_selection_then_output_filter",
+        "program_selection_limit": "counter_reads_may_execute_for_unselected_programs",
+        "effective_semantics": [
+          "wait_bracket"
+        ],
+        "semantic_selection_evidence_status": "verified_actual_actor_manifests"
+      }
+    },
+    {
+      "case": "m2-rms-r28-2",
+      "description": {
+        "collection_scope": "requested_semantic_sites_of_selected_program",
+        "selection_stage": "semantic_output_filter_after_capture",
+        "program_selection_stage": "device_record_publication_predicate",
+        "semantic_selection_stage": "compiler_semantic_site_selection_then_output_filter",
+        "program_selection_limit": "counter_reads_may_execute_for_unselected_programs",
+        "effective_semantics": [
+          "wait_bracket"
+        ],
+        "semantic_selection_evidence_status": "verified_actual_actor_manifests"
+      }
+    },
+    {
+      "case": "m2-rms-r28-5",
+      "description": {
+        "collection_scope": "requested_semantic_sites_of_selected_program",
+        "selection_stage": "semantic_output_filter_after_capture",
+        "program_selection_stage": "device_record_publication_predicate",
+        "semantic_selection_stage": "compiler_semantic_site_selection_then_output_filter",
+        "program_selection_limit": "counter_reads_may_execute_for_unselected_programs",
+        "effective_semantics": [
+          "wait_bracket"
+        ],
+        "semantic_selection_evidence_status": "verified_actual_actor_manifests"
+      }
+    },
+    {
+      "case": "m2-fused-r28",
+      "description": {
+        "collection_scope": "requested_semantic_sites_of_selected_program",
+        "selection_stage": "semantic_output_filter_after_capture",
+        "program_selection_stage": "device_record_publication_predicate",
+        "semantic_selection_stage": "compiler_semantic_site_selection_then_output_filter",
+        "program_selection_limit": "counter_reads_may_execute_for_unselected_programs",
+        "effective_semantics": [
+          "wait_bracket"
+        ],
+        "semantic_selection_evidence_status": "verified_actual_actor_manifests"
+      }
+    }
+  ],
+  "old_M1_capture_unchanged": {
+    "collection_scope": "all_existing_wait_signal_and_loop_sites_of_selected_program",
+    "selection_stage": "semantic_output_filter_after_capture",
+    "program_selection_stage": "device_record_publication_predicate",
+    "semantic_selection_stage": "semantic_output_filter_after_capture",
+    "program_selection_limit": "counter_reads_may_execute_for_unselected_programs"
+  },
+  "validation": "CPU-only metadata description using original real compile manifests; raw capture files not modified."
+}

@@ -71,7 +71,10 @@ Validated functional evidence and remaining limits are in
 local SYS_CNT durations are calibrated from actual sealed device frequency,
 compiled instruction and official c220 rate semantics; the source/ACSQ shared
 epoch is not certified. Source-control brackets are not engine-busy intervals.
-Unknown source operations, dynamic generation, sampling and unsupported site
+Requested primitive classes are selected at compile time before timestamps and
+event writes; pass manifests preserve original site IDs and the effective set.
+Program predicates still gate publication rather than all counter reads. Unknown
+source operations, dynamic generation, sampling and unsupported arbitrary site
 selection remain explicit. Historical failed builds, unsafe-capacity rejection
 and incomplete captures remain archived rather than reclassified as passes.
 

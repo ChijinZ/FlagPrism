@@ -1,0 +1,70 @@
+[
+  {
+    "archive": "m2-semantic-r28-evidence.tgz",
+    "sha256": "5a18249352bbc73566d114fa0a27416c40d9a09b83cd7a31d76ac54bc608341e",
+    "counts": {
+      "manifest_files": 1029,
+      "bundles": 7,
+      "detailed_bundles": 4,
+      "result_files": 7,
+      "mode_native": 3,
+      "mode_detailed": 4
+    },
+    "observations": 694,
+    "raw_buffers": 103,
+    "actors": {
+      "0": 76,
+      "1": 606,
+      "2": 12
+    },
+    "results": [
+      {
+        "path": "m2-rms-r28-4/result.json",
+        "sha256": "6e82ec6f927a772b95d47d726833c25e14ffbfe2acacb54c31bb050801e994c9",
+        "mode": "native",
+        "operator": "rmsnorm"
+      },
+      {
+        "path": "m2-fused-r28/result.json",
+        "sha256": "c575377fad698dafea8380d53da030a785338b41fac5ea60a66749c78896dd94",
+        "mode": "detailed",
+        "operator": "gemm_bias_gelu"
+      },
+      {
+        "path": "m2-rms-r28-3/result.json",
+        "sha256": "31ff1e59960ffe8105c4cb22fe890c1b12b14a57c90c2714ab6070c5668b8eee",
+        "mode": "native",
+        "operator": "rmsnorm"
+      },
+      {
+        "path": "m2-rms-r28-0/result.json",
+        "sha256": "59473a828c6b55c6a86fa6282ef1d5d8460c3a30a8c359b2182f9378269409f5",
+        "mode": "native",
+        "operator": "rmsnorm"
+      },
+      {
+        "path": "m2-rms-r28-5/result.json",
+        "sha256": "24b13080e69963f01a5d63a6b8a786b9293cbbcaa8f4f4d1c7d3a21b1a81eb6a",
+        "mode": "detailed",
+        "operator": "rmsnorm"
+      },
+      {
+        "path": "m2-rms-r28-2/result.json",
+        "sha256": "684ca9be37cb9184df6fc23d97d5eb1ed2334021899dfa405be9010eb1aaa395",
+        "mode": "detailed",
+        "operator": "rmsnorm"
+      },
+      {
+        "path": "m2-rms-r28-1/result.json",
+        "sha256": "5872cba05c730d3fe1361548dc33721004700a9d88a500a9200ceec31cf618eb",
+        "mode": "detailed",
+        "operator": "rmsnorm"
+      }
+    ],
+    "status": "independent_raw_hash_record_identity_and_local_duration_audit_passed",
+    "limits": [
+      "Does not certify shared clock origin or exclusive source cost.",
+      "Hardware mathematical outcomes are recorded assertions; original numerical execution occurred in Docker."
+    ]
+  }
+]

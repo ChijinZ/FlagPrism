@@ -1,0 +1,39 @@
+{
+  "status": "recorded_wheel_module_and_runtime_provenance_audit_passed",
+  "input_sha256": "8282ad6d09c5257e9fd46cde981ed8679f77fb417d2b128f43f12e5060c78189",
+  "python_modules_checked": 52,
+  "wheel_sha256": "405e2919f16be7f0fe58b9698a08e87965b6ac23eb0dc1ed8115f25a6641cfee",
+  "native_binary_checks": {
+    "core": {
+      "entry": "triton/_C/libtriton.so",
+      "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d",
+      "byte_identical_to_verified_runtime": true
+    },
+    "debugger": {
+      "entry": "flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+      "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c",
+      "byte_identical_to_verified_runtime": true
+    },
+    "profiler": {
+      "entry": "flagtree/profiler/_native.so",
+      "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a",
+      "byte_identical_to_verified_runtime": true
+    }
+  },
+  "isolated_test": {
+    "status": "PASS",
+    "triton": "/tmp/flagprism-method-ascend/wheel-header-r5/isolated-install/triton/__init__.py",
+    "core": "/tmp/flagprism-method-ascend/wheel-header-r5/isolated-install/triton/_C/libtriton.so",
+    "debugger": "/tmp/flagprism-method-ascend/wheel-header-r5/isolated-install/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+    "profiler": "/tmp/flagprism-method-ascend/wheel-header-r5/isolated-install/flagtree/profiler/_native.so",
+    "abi_provider": "/tmp/flagprism-method-ascend/wheel-header-r5/isolated-install/flagtree/profiler/ascend_launch.py",
+    "hidden_compiler_abi": "actual MLIR preparation index2/idempotence",
+    "native_preallocation_guard": "actual rejection without device allocation",
+    "cann_receipt_capability": true,
+    "source_fallback": false
+  },
+  "limits": [
+    "Independent check of recorded ZIP module hashes versus current canonical sources; original actual ZIP/load probes ran inside Ascend Docker.",
+    "Repack of already built validated binaries, not a fresh clean-source build."
+  ]
+}
