@@ -473,7 +473,7 @@ class InstrumentationHook(Hook):
             if self.observation_plan is not None and not self.observation_metadata.get(
                     func, {}).get('scope_id_names'):
                 raise RuntimeError(
-                    'NVIDIA collection found no internal observation locations; automatic mode requires the FlagTree ttgpuir_complete compiler hook, while manual mode requires Proton scopes'
+                    'NVIDIA collection found no internal observation locations; automatic mode requires the FlagTree ttgpuir_complete compiler hook, while manual mode requires explicit Proton scopes'
                 )
             if self.capture_observations:
                 from .launch import LaunchHook, id as launch_scope
