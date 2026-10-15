@@ -51,6 +51,17 @@ struct StatementValueInfo {
   StaticValueInfo value;
 };
 
+// Actual structured-control ownership, outermost first. IDs are local to the
+// compiled module; region/block indices are taken from the owning IR objects.
+struct ControlFlowAncestor {
+  uint32_t controlId = 0;
+  uint32_t parentOpId = 0;
+  std::string operation;
+  uint32_t regionIndex = 0;
+  uint32_t blockIndex = 0;
+  bool repeated = false;
+};
+
 struct TrackedOpEntry {
   uint32_t opId = 0;
   uint32_t scopeId = 0;
@@ -65,6 +76,8 @@ struct TrackedOpEntry {
   std::string tritonStatement;
   std::string statementResultName;
   std::string inlineCallPath;
+  uint32_t controlFlowSchemaVersion = 1;
+  std::vector<ControlFlowAncestor> controlFlowAncestors;
   StaticValueInfo result;
   std::vector<OperandStaticInfo> operands;
   std::vector<StatementValueInfo> statementValues;

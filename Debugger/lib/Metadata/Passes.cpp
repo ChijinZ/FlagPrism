@@ -1098,6 +1098,8 @@ makeSyntheticOperandCaptureEntry(const TrackedOpEntry &anchor,
   entry.tritonStatement = anchor.tritonStatement;
   entry.statementResultName = sourceName.str();
   entry.inlineCallPath = anchor.inlineCallPath;
+  entry.controlFlowSchemaVersion = anchor.controlFlowSchemaVersion;
+  entry.controlFlowAncestors = anchor.controlFlowAncestors;
   entry.result = operand.value;
   return entry;
 }
@@ -1288,11 +1290,46 @@ LogicalResult assignDebugOpIdsAndMetadataWithoutPassManager(ModuleOp module) {
   });
 
   uint32_t nextSyntheticOpId = nextOpId;
+  llvm::DenseMap<Operation *, uint32_t> controlIds;
+  uint32_t nextControlId = 1;
+  module.walk<WalkOrder::PreOrder>([&](Operation *op) {
+    if (op->getName().getDialectNamespace() == "scf" && op->getNumRegions())
+      controlIds[op] = nextControlId++;
+  });
   for (Operation *op : trackedOps) {
     uint32_t opId = getIntegerAttr(op, kAttrOpId);
     llvm::SmallVector<TrackedOpEntry, 1> syntheticEntries;
     table.push_back(makeEntry(op, opId, producerOpIds, nextSyntheticOpId,
                               builder, syntheticEntries));
+    auto &entry = table.back();
+    Operation *child = op;
+    for (Operation *parent = op->getParentOp(); parent;
+         child = parent, parent = parent->getParentOp()) {
+      auto owner = controlIds.find(parent);
+      if (owner == controlIds.end())
+        continue;
+      uint32_t regionIndex = 0, blockIndex = 0;
+      for (Region &region : parent->getRegions()) {
+        if (&region == child->getParentRegion())
+          break;
+        ++regionIndex;
+      }
+      for (Block &block : child->getParentRegion()->getBlocks()) {
+        if (&block == child->getBlock())
+          break;
+        ++blockIndex;
+      }
+      StringRef name = parent->getName().getStringRef();
+      bool repeated = name == "scf.for" || name == "scf.while" ||
+                      name == "scf.parallel" || name == "scf.forall";
+      entry.controlFlowAncestors.push_back(
+          {owner->second, getIntegerAttr(parent, kAttrOpId), name.str(),
+           regionIndex, blockIndex, repeated});
+    }
+    std::reverse(entry.controlFlowAncestors.begin(),
+                 entry.controlFlowAncestors.end());
+    for (TrackedOpEntry &synthetic : syntheticEntries)
+      synthetic.controlFlowAncestors = entry.controlFlowAncestors;
     for (TrackedOpEntry &synthetic : syntheticEntries)
       table.push_back(std::move(synthetic));
   }

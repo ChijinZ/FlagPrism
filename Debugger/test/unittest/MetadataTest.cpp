@@ -125,6 +125,27 @@ TEST(FlagTreeDebuggerMetadataTest, StatementValueMetadataJsonRoundTrips) {
   EXPECT_EQ(parsed[0].statementValues[1].captureOpId, 5u);
 }
 
+TEST(FlagTreeDebuggerMetadataTest, ControlRegionOwnershipJsonRoundTrips) {
+  auto entry = makeEntry(9, false);
+  entry.controlFlowAncestors = {{1, 22, "scf.while", 1, 0, true},
+                                {2, 0, "scf.if", 0, 0, false}};
+  TrackedOpTable parsed;
+  std::string error;
+  ASSERT_TRUE(parseTrackedOpTableFromJson(
+      serializeTrackedOpTableToJson({entry}), parsed, &error))
+      << error;
+  ASSERT_EQ(parsed.size(), 1u);
+  EXPECT_EQ(parsed[0].controlFlowSchemaVersion, 1u);
+  ASSERT_EQ(parsed[0].controlFlowAncestors.size(), 2u);
+  EXPECT_EQ(parsed[0].controlFlowAncestors[0].controlId, 1u);
+  EXPECT_EQ(parsed[0].controlFlowAncestors[0].parentOpId, 22u);
+  EXPECT_EQ(parsed[0].controlFlowAncestors[0].regionIndex, 1u);
+  EXPECT_TRUE(parsed[0].controlFlowAncestors[0].repeated);
+  EXPECT_EQ(parsed[0].controlFlowAncestors[1].operation, "scf.if");
+  EXPECT_EQ(parsed[0].controlFlowAncestors[1].parentOpId, 0u);
+  EXPECT_FALSE(parsed[0].controlFlowAncestors[1].repeated);
+}
+
 TEST(FlagTreeDebuggerMetadataTest, KernelMetadataJsonRoundTrips) {
   KernelDebugMetadata metadata;
   metadata.debugKernelId = 17;

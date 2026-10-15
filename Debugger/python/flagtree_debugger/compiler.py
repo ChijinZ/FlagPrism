@@ -40,6 +40,12 @@ def _gcu_publication_config(config):
         if mode not in {"scalar16", "vector16_per_work_item"}:
             raise ValueError("Unknown GCU dynamic publisher mode")
         result["debug_dynamic_publication_mode"] = mode
+        if request.get("automatic"):
+            from .automatic_plan import (AUTOMATIC_PLAN_VERSION,
+                                         CONTROL_FLOW_METADATA_VERSION)
+            result["debug_automatic_plan_version"] = AUTOMATIC_PLAN_VERSION
+            result[
+                "debug_control_flow_metadata_version"] = CONTROL_FLOW_METADATA_VERSION
     return result
 
 
@@ -205,6 +211,13 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     }
 
     if auto_collect:
+        if _target_backend(metadata) in {"gcu", "enflame"}:
+            from .automatic_plan import CONTROL_FLOW_METADATA_VERSION
+            if getattr(fd, "CONTROL_FLOW_METADATA_VERSION",
+                       0) != CONTROL_FLOW_METADATA_VERSION:
+                raise RuntimeError(
+                    "Automatic GCU profiling requires matching compiler control-flow metadata; rebuild and install FlagTree/FlagPrism together"
+                )
         if not has_markers and _target_backend(metadata) in {"gcu", "enflame"}:
             # Discover operations in ordinary JIT helpers before assigning
             # entry-function scope/site IDs. Inlining after metadata loses
