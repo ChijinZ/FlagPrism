@@ -1,0 +1,36 @@
+{
+  "audit": "independent_offline_arithmetic_and_identity_of_retained_small_summary",
+  "input": "artifacts/method-run/ascend/recovery-functional/small-final-audit-r27.json",
+  "sha256": "0a78b5462a8f62ecfc1eb2d1982fb5b717d7d9ee2ce4df6945b39dbd3a46b3e2",
+  "results": [
+    {
+      "case": "P32_K32",
+      "native_us": 308.0,
+      "detailed_us": 313.98,
+      "detail_vs_native_percent": 1.9415584415584553,
+      "same_inputs_and_math_source": true,
+      "samples_per_mode": 3
+    },
+    {
+      "case": "R_K32_K256",
+      "native_us": 160.64,
+      "detailed_us": 159.82,
+      "detail_vs_native_percent": -0.5104581673306741,
+      "same_inputs_and_math_source": true,
+      "samples_per_mode": 3
+    },
+    {
+      "case": "R_KMN64_K256",
+      "native_us": 61.58,
+      "detailed_us": 61.18,
+      "detail_vs_native_percent": -0.6495615459564785,
+      "same_inputs_and_math_source": true,
+      "samples_per_mode": 3
+    }
+  ],
+  "limits": [
+    "Full raw archive audit is separate and pending.",
+    "Three samples are a functional directional control, not a 3x30 performance acceptance.",
+    "No NVIDIA performance experiment."
+  ]
+}

@@ -1,0 +1,1023 @@
+{
+  "status": "PASS_functional_and_trace_fidelity",
+  "heldout_requests": [
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified",
+      "records": 48,
+      "actor_counts": {
+        "1": 48
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified",
+      "records": 48,
+      "actor_counts": {
+        "1": 48
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          32,
+          256
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 256,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        32
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified",
+      "records": 48,
+      "actor_counts": {
+        "1": 48
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified",
+      "records": 48,
+      "actor_counts": {
+        "1": 48
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 12,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "verified"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          256,
+          1024
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        256
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.1920928955078125e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "verified"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 1
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "verified",
+      "records": 72,
+      "actor_counts": {
+        "1": 72
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 18,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 18,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "verified",
+      "records": 72,
+      "actor_counts": {
+        "1": 72
+      },
+      "raw_captures": 6,
+      "bytes_per_capture": 49248,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 18,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 18,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        }
+      ]
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "off",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "unavailable"
+    },
+    {
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 1,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 3
+      },
+      "config": {
+        "ROWS": 1,
+        "BLOCK": 1024,
+        "num_stages": 1,
+        "num_warps": 4
+      },
+      "grid": [
+        127
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 1.7881393432617188e-07,
+      "task_identity_status": "verified"
+    }
+  ],
+  "study_cases": [
+    {
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 1,
+        "samples": 3,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "grid": [
+        16,
+        16
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 2.86102294921875e-06,
+      "task_identity_status": "verified",
+      "records": 1624,
+      "actor_counts": {
+        "0": 1584,
+        "1": 20,
+        "2": 20
+      },
+      "raw_captures": 4,
+      "bytes_per_capture": 393312,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 0,
+          "callee": null,
+          "count": 387,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.CROSS.CORE",
+          "count": 3,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 783,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 15,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 55800.0,
+          "max_ns": 56800.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 53980.0,
+          "max_ns": 55300.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        }
+      ],
+      "case": "P32_K32"
+    },
+    {
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 1,
+        "samples": 3,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "grid": [
+        16,
+        16
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 2.86102294921875e-06,
+      "task_identity_status": "verified",
+      "records": 280,
+      "actor_counts": {
+        "0": 240,
+        "1": 20,
+        "2": 20
+      },
+      "raw_captures": 4,
+      "bytes_per_capture": 393312,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 0,
+          "callee": null,
+          "count": 51,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.CROSS.CORE",
+          "count": 3,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 111,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 15,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 12760.0,
+          "max_ns": 13020.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 11480.0,
+          "max_ns": 11500.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        }
+      ],
+      "case": "R_K32_K256"
+    },
+    {
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 1,
+        "samples": 3,
+        "config": {
+          "BM": 64,
+          "BN": 64,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        }
+      },
+      "config": {
+        "BM": 64,
+        "BN": 64,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "grid": [
+        8,
+        8
+      ],
+      "math_status": "passed_math_and_native",
+      "max_abs_error": 2.86102294921875e-06,
+      "task_identity_status": "verified",
+      "records": 280,
+      "actor_counts": {
+        "0": 240,
+        "1": 20,
+        "2": 20
+      },
+      "raw_captures": 4,
+      "bytes_per_capture": 393312,
+      "zero_drop_saturation": true,
+      "all_local_durations": true,
+      "measured_source_control_brackets": [
+        {
+          "actor_slot": 0,
+          "callee": null,
+          "count": 51,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.CROSS.CORE",
+          "count": 3,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 111,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 0,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 15,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 15960.0,
+          "max_ns": 17140.0
+        },
+        {
+          "actor_slot": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 20.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.DEV.REG",
+          "count": 3,
+          "median_ns": 14160.0,
+          "max_ns": 15420.0
+        },
+        {
+          "actor_slot": 2,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "count": 6,
+          "median_ns": 0.0,
+          "max_ns": 0.0
+        }
+      ],
+      "case": "R_KMN64_K256"
+    }
+  ],
+  "limits": [
+    "Default source_op_id mapping remains partial.",
+    "Actor clocks are instance_local; no shared timeline or engine busy claim.",
+    "Source brackets and controlled configuration changes do not isolate every contribution to total kernel latency."
+  ]
+}
