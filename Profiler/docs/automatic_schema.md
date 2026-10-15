@@ -6,8 +6,9 @@ ignore additional fields they do not consume, and reject other major versions.
 IDs are local to a bundle unless a field explicitly identifies a binary digest.
 Lists preserve records, not a global ordering across devices or actors.
 
-The default CLI succeeds only after at least one source-linked, verified internal
-dynamic record has been exported. This is a minimum validity check, not proof of
+The CLI with `--detail auto` succeeds only after at least one source-linked,
+verified internal dynamic record has been exported. Omitting `--detail` keeps
+native collection mode; that mode can succeed without internal records. This is a minimum validity check, not proof of
 complete coverage. A multi-operation workload should normally have multiple
 distinct internal sites. Inspect the plan and loss evidence before interpreting
 absence. Failed automatic selection retains `ai/selection_status.json` with
