@@ -959,53 +959,147 @@ def _snapshot_cann_launch_receipts(state):
     if supports is None or not supports():
         return
     receipts = profiler_native.drain_cann_launch_receipts(state["session"])
-    launches = LaunchHook.snapshot(state["session"])["launches"]
-    for receipt in receipts:
-        worker = receipt.get("worker") or {}
-        worker_ok = (worker.get("abi_version") == 1
-                     and worker.get("struct_size") == 64 and all(
-                         type(worker.get(key)) is int and worker[key] == 0
-                         for key in ("launch_status", "task_query_status",
-                                     "stream_query_status",
-                                     "device_query_status"))
-                     and all(
-                         type(worker.get(key)) is int and worker[key] > 0
-                         for key in ("process_id", "thread_id")) and all(
+    path = Path(
+        state["name"]).with_suffix(".cann-launch-receipts.json").absolute()
+
+    def sync_directory(directory):
+        descriptor = os.open(directory,
+                             os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+        try:
+            os.fsync(descriptor)
+        finally:
+            os.close(descriptor)
+
+    def atomic_write(destination, data):
+        descriptor, temporary = tempfile.mkstemp(prefix=".cann-receipts-",
+                                                 dir=destination.parent)
+        try:
+            with os.fdopen(descriptor, "wb") as stream:
+                stream.write(data)
+                stream.flush()
+                os.fsync(stream.fileno())
+            os.replace(temporary, destination)
+            sync_directory(destination.parent)
+        finally:
+            if os.path.exists(temporary):
+                os.unlink(temporary)
+
+    # Native drain permits closed contexts to be collected. Preserve its exact
+    # returned payload before source lookup or augmentation can fail/mutate it.
+    state["cann_receipt_recovery_undurable_raw"] = receipts
+    try:
+        raw = json.dumps(receipts, allow_nan=False, sort_keys=True).encode()
+        recovery = json.dumps(
+            {
+                "schema_version": 1,
+                "kind": "cann_launch_receipt_recovery",
+                "session_id": state["session"],
+                "intended_sidecar": str(path),
+                "raw_receipts_sha256": hashlib.sha256(raw).hexdigest(),
+                "raw_receipts": receipts,
+            },
+            allow_nan=False,
+            indent=2).encode() + b"\n"
+    except (TypeError, ValueError) as error:
+        note = "Drained CANN receipts are not durable: serialization failed; raw is retained only in session state."
+        if hasattr(error, "add_note"):
+            error.add_note(note)
+        else:
+            error.__notes__ = [*getattr(error, "__notes__", []), note]
+            print(note, file=sys.stderr)
+        raise
+    journal = None
+    failures = []
+    for parent in (path.parent, None):
+        directory = None
+        try:
+            directory = Path(
+                tempfile.mkdtemp(prefix="flagprism-cann-receipt-recovery-",
+                                 dir=parent))
+            atomic_write(directory / "receipts.json", recovery)
+            sync_directory(directory.parent)
+            journal = directory / "receipts.json"
+            break
+        except OSError as error:
+            failures.append(error)
+            if directory is not None:
+                shutil.rmtree(directory, ignore_errors=True)
+    if journal is None:
+        error = failures[-1]
+        note = "Drained CANN receipts are not durable: every recovery location failed; raw is retained only in session state."
+        if hasattr(error, "add_note"):
+            error.add_note(note)
+        else:
+            error.__notes__ = [*getattr(error, "__notes__", []), note]
+            print(note, file=sys.stderr)
+        raise error
+    state["cann_receipt_recovery_path"] = str(journal)
+    state.pop("cann_receipt_recovery_undurable_raw", None)
+    try:
+        launches = LaunchHook.snapshot(state["session"])["launches"]
+        for receipt in receipts:
+            worker = receipt.get("worker") or {}
+            worker_ok = (worker.get("abi_version") == 1
+                         and worker.get("struct_size") == 64 and all(
+                             type(worker.get(key)) is int and worker[key] == 0
+                             for key in ("launch_status", "task_query_status",
+                                         "stream_query_status",
+                                         "device_query_status"))
+                         and all(
+                             type(worker.get(key)) is int and worker[key] > 0
+                             for key in ("process_id", "thread_id"))
+                         and all(
                              type(worker.get(key)) is int and worker[key] >= 0
                              for key in ("device_id", "stream_id", "task_id",
                                          "stream_handle")))
-        candidates = [
-            row for row in launches
-            if row.get("scope_id") == receipt.get("scope_id")
-            and row.get("status") != "rejected_before_launch"
-        ]
-        if (receipt.get("session_id") == state["session"]
-                and receipt.get("status") == "collected"
-                and not receipt.get("late_callback")
-                and receipt.get("publish_count") == 1 and worker_ok
-                and len(candidates) == 1 and candidates[0].get("binary_id")):
-            launch = candidates[0]
-            receipt["invocation_identity"] = {
-                "invocation_id": launch["id"],
-                "binary_id": launch["binary_id"],
-                "scope_id": launch["scope_id"],
-                "session_id": state["session"],
-                "evidence": "retained_per_launch_worker_receipt",
-            }
+            candidates = [
+                row for row in launches
+                if row.get("scope_id") == receipt.get("scope_id")
+                and row.get("status") != "rejected_before_launch"
+            ]
+            if (receipt.get("session_id") == state["session"]
+                    and receipt.get("status") == "collected"
+                    and not receipt.get("late_callback")
+                    and receipt.get("publish_count") == 1 and worker_ok
+                    and len(candidates) == 1
+                    and candidates[0].get("binary_id")):
+                launch = candidates[0]
+                receipt["invocation_identity"] = {
+                    "invocation_id": launch["id"],
+                    "binary_id": launch["binary_id"],
+                    "scope_id": launch["scope_id"],
+                    "session_id": state["session"],
+                    "evidence": "retained_per_launch_worker_receipt",
+                }
+            else:
+                receipt["invocation_identity"] = None
+        atomic_write(
+            path,
+            json.dumps(
+                {
+                    "schema_version":
+                    1,
+                    "receipts":
+                    receipts,
+                    "semantics":
+                    "Actual SDK worker queries bound to retained launch tokens. Native SDK task matching and clock-domain validation are separate requirements.",
+                },
+                allow_nan=False,
+                indent=2).encode() + b"\n")
+
+    except BaseException as error:
+        note = f"Original drained CANN receipts are durably recoverable at {journal}"
+        if hasattr(error, "add_note"):
+            error.add_note(note)
         else:
-            receipt["invocation_identity"] = None
-    Path(state["name"]).with_suffix(".cann-launch-receipts.json").write_text(
-        json.dumps(
-            {
-                "schema_version":
-                1,
-                "receipts":
-                receipts,
-                "semantics":
-                "Actual SDK worker queries bound to retained launch tokens. Native SDK task matching and clock-domain validation are separate requirements.",
-            },
-            allow_nan=False,
-            indent=2) + "\n")
+            error.__notes__ = [*getattr(error, "__notes__", []), note]
+            print(note, file=sys.stderr)
+        raise
+    # Only this invocation's private journal is removed, after durable sidecar.
+    journal.unlink()
+    journal.parent.rmdir()
+    sync_directory(journal.parent.parent)
+    state.pop("cann_receipt_recovery_path", None)
 
 
 def _export_cann_task_identities(state):

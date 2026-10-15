@@ -74,13 +74,15 @@ def test_original_zero_task_sys_bytes_do_not_certify_alignment(tmp_path):
     output = module.build_raw_task_sys(capture, receipts, schema)
     envelope = output['task_sys_envelopes'][0]
     assert envelope['status'] == 'raw_task_envelope_extracted'
+    assert envelope['duration_scope'] == 'whole_dispatch_not_compute_or_actor'
     assert envelope['start']['raw_sys_counter'] == 100
     assert envelope['end']['raw_sys_counter'] == 120
     assert bytes.fromhex(
         envelope['start']['raw_record_hex']) == raw.read_bytes()[:64]
     assert envelope['end']['byte_offset'] == 64
     assert output['clock_status'] == envelope['clock_alignment'] == 'unverified'
-    assert output['receipt_sha256'] and len(output['schema']['sources']) == 6
+    assert output['receipt_sha256'] and len(
+        output['schema']['sources']) == len(module._SCHEMA_FILES)
 
 
 @pytest.mark.parametrize('payload,reason', [
@@ -121,3 +123,35 @@ def test_native_alignment_format_is_rejected(tmp_path):
      ).write_text("BYTE_ORDER_CHAR = '@'\nACSQ_TASK_FMT = '4HQHH11L'\n")
     with pytest.raises(ValueError, match='unsupported installed'):
         module.build_raw_task_sys(capture, receipts, schema)
+
+
+def test_sdk_nonexpanded_bit13_swap_retains_original_fields(tmp_path):
+    module, capture, receipts, raw, schema = prepare(tmp_path)
+    # Encoded low task0 in stream bit13, physical stream0 in task field.
+    raw.write_bytes(
+        record(0, 100, stream=0x2000, task=0) +
+        record(1, 120, stream=0x2000, task=0))
+    output = module.build_raw_task_sys(capture, receipts, schema)
+    entry = output['task_sys_envelopes'][0]
+    assert entry['status'] == 'raw_task_envelope_extracted'
+    assert entry['start']['encoded_stream_id'] == 0x2000
+    assert entry['start']['stream_id'] == entry['start']['task_id'] == 0
+    assert entry['stream_encoding']['expand_status'] == 0
+    assert entry['duration_scope'] == 'whole_dispatch_not_compute_or_actor'
+
+
+@pytest.mark.parametrize('values', [(1, ), (0, 1)])
+def test_expanded_or_ambiguous_sdk_mode_is_not_guessed(tmp_path, values):
+    import sqlite3
+    module, capture, receipts, raw, schema = prepare(tmp_path)
+    database = capture / 'device_4/stream_expand_spec.db'
+    connection = sqlite3.connect(database)
+    connection.execute('CREATE TABLE StreamExpandSpec(expand_status)')
+    connection.executemany('INSERT INTO StreamExpandSpec VALUES (?)',
+                           [(value, ) for value in values])
+    connection.commit()
+    connection.close()
+    entry = module.build_raw_task_sys(capture, receipts,
+                                      schema)['task_sys_envelopes'][0]
+    assert entry['status'] == 'unassociated'
+    assert 'stream mode' in entry['reason']

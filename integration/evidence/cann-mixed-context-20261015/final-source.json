@@ -1,0 +1,2540 @@
+{
+  "source_files": {
+    ".pre-commit-config.yaml": "60d5dce34e9f309a29aee3d2e3ec4ae68fa879bb422a4dda792f421e2954d036",
+    "Debugger/CMakeLists.txt": "c3620f616dd5cdd0cfc04459a7fd41fe5ec7157e6705672ceb8c545e7d712a55",
+    "Debugger/README.md": "b33bd935cbd767d40373fe65704c7fda3289d0c215c1c23f2a1f523119415bc3",
+    "Debugger/examples/abs_level1.py": "4fc602bf52f8734f32359f8675b3ff61720fe07a91d9abdf67efc7ec4321e012",
+    "Debugger/examples/abs_level2.py": "6c2cd698358f7e0e0c75df3b9c089dddc7819a790fe25ff506ade8ae93143cc0",
+    "Debugger/examples/softmax_dim1_level1.py": "93a18102045d546f21f5d54cff0cd84a6d5890fcbdfb4f76e5b84c002560c6fd",
+    "Debugger/examples/softmax_dim1_level2.py": "cf47a796c16014e94995990a8fad75786479737daae68b703eb2471ef4abbfac",
+    "Debugger/examples/tianshu_corex_vector_add.py": "682d7eb137c77fdede4eec8484ad2eb481b62e58bbf9abdf4f7e8ff1cf1f4184",
+    "Debugger/examples/tianshu_corex_vector_add_debug.py": "0044a0ed44b81f9991449ab5cd3d7d2266974c8eae0faaadbc3a596b1c32bdbc",
+    "Debugger/include/Debugger/CMakeLists.txt": "1cf8cfc933248898356c0bb43193fca9d8097bc862027d85afaa5ae37eda4078",
+    "Debugger/include/Debugger/Common/Protocol.h": "04b1aeca4b77a93acdea060779a201717344e15f9a80a33537099a5e03484dfe",
+    "Debugger/include/Debugger/Common/README.md": "ccf1c718899499e0f757d73b7c4c33d622aba4484ea1199186a541e7c78a110b",
+    "Debugger/include/Debugger/Debugger.h": "04ea345b71834c274e460ef8ea651aa574e39230511605a7fe7af64e78e247d9",
+    "Debugger/include/Debugger/Decode/Decoder.h": "e5a5b14a526b2cc414c53f4025ecb071b4655b72c4c4ea26a9f38b04a9acd173",
+    "Debugger/include/Debugger/Decode/README.md": "e5c82268c69fbc2e10fb578431a95a3b1eb246a00b697d6da44dd0f808abb5af",
+    "Debugger/include/Debugger/Decode/Reporter.h": "d27e7ccc4dc72b9cca276194cc4e0c5e300eafa3646d7de06836970194642be3",
+    "Debugger/include/Debugger/Frontend/Bridge.h": "94026c3f0df1b7cd92c7f210ffdc19f13bbfbd194a43ed9e16c9162b08ff1b85",
+    "Debugger/include/Debugger/Frontend/README.md": "25cf9b74714ad8272e2aecb8f505b0549acf6566d87c03b89324b88dc755bc02",
+    "Debugger/include/Debugger/IR/CMakeLists.txt": "53ca84c1d9737c02f73cd2128bb4592bf440c30744206cca3106fb1b8ea1c09e",
+    "Debugger/include/Debugger/IR/Dialect.h": "2b83d94e2e8432463024b0e44e73424a55478ebaf9498cfe269ae9c81b22a275",
+    "Debugger/include/Debugger/IR/FlagTreeDebugDialect.td": "ae391913e061a74b9caf4d1f76cf41648659ad49da14c631ccf8ed030836d500",
+    "Debugger/include/Debugger/IR/FlagTreeDebugOps.td": "e5efe593d576dea84ad64ad5fafce29eed934977fb10d569e98e50adb28e4d26",
+    "Debugger/include/Debugger/Instrumentation/Collectors.h": "d27448c742b197b98bc674be085c72fc388b5dd7b4a7c4bf57a81a5437195426",
+    "Debugger/include/Debugger/Instrumentation/Passes.h": "7b8a6c8c5e920e6ddd525cf49fe21df39e12ab6adba879bfbc392a3dd458f436",
+    "Debugger/include/Debugger/Instrumentation/README.md": "78f7553f6de044e5b07a351dbe54b6d1e8e72ba1bf92a7d12523d457e1d6aa0a",
+    "Debugger/include/Debugger/Instrumentation/RecordBuilder.h": "d47401ea2361358d706e212ccb374e4e6bc309c7a2e11a4cd946c63728695e28",
+    "Debugger/include/Debugger/Instrumentation/Writer.h": "458485d8efa9df41963d38270f424680d6e7c66c74054c4386e7f1876aaad533",
+    "Debugger/include/Debugger/Metadata/Passes.h": "2f129e6bd0e1c240226f545e59b4e5b1db5e8d88647598c1147ac325fd1559d2",
+    "Debugger/include/Debugger/Metadata/README.md": "0b718adef4cf6dbfbfc4ff77e4808142a3412f9ce8b2b53d7a009cfd7d476491",
+    "Debugger/include/Debugger/Metadata/TrackedOpTable.h": "9245ec08fda16236eb1c5f4a3cd63f051a9ce82e927228605b6203037fa8bddf",
+    "Debugger/include/Debugger/README.md": "aac98b4fba84c8e358c56cbdb07efa3b6373d59ce928aa2151df4c3789f703c2",
+    "Debugger/include/Debugger/Runtime/BufferLayout.h": "38d17778f9756bab1ed1d4dc75e1fa1e846f3cac5bbf4c0decc43fb52feaaa50",
+    "Debugger/include/Debugger/Runtime/README.md": "ba3b2781988051158454d9c10c6a3746a4f2fed033b8dbb7d1f8b8a381ab3ffe",
+    "Debugger/include/Debugger/Runtime/TransferEngine.h": "48c87e21f5b6cffed9b00462f9e6611426021c0e5165154a4f291170ad0b6d33",
+    "Debugger/lib/CMakeLists.txt": "e79043a4091c1e86590c1be24d13b9e55e1713e5d60e2a4f19cfcbaf51c429dd",
+    "Debugger/lib/Decode/Decoder.cpp": "67e6ee3b53392700f51647ec19b23c80e553e1a7aaa69f4df4f365afda299641",
+    "Debugger/lib/Decode/README.md": "1111dd8209e07a43af9fb3cd724080e0f9c8f8f79f0b7527733c6398a33f5c89",
+    "Debugger/lib/Decode/Reporter.cpp": "c70f824cb103a9f05d1a2b5aac3221cc901e910223d86a384320167ca8f63978",
+    "Debugger/lib/Frontend/Bridge.cpp": "b30abd8b0de222bfd528e380a4cea5d5aafb415aa2aaaa4ed731a83ca5dd0035",
+    "Debugger/lib/Frontend/README.md": "18bed73a42fd8ec26cf66d79acb8426fd646e437fc90fb2ea0dffbfee545da63",
+    "Debugger/lib/IR/CMakeLists.txt": "c7c5aae612640094bdf773a55a4c5f7dd23ea7c44910162fa633978541a58f5d",
+    "Debugger/lib/IR/Dialect.cpp": "656419487425c69bb7dde6dec8e21bca40723865a4c8ebe6942bfb54519c9c95",
+    "Debugger/lib/IR/Ops.cpp": "4319073c2f16cd30050a4aeab80e3ab2f9464633a6365e8f2d975270693234be",
+    "Debugger/lib/Instrumentation/Collectors.cpp": "e9832392a9176071431d429098e6859f0821bbb8786dd59d2fe21fe7aad38fb4",
+    "Debugger/lib/Instrumentation/IMPLEMENTATION_NOTES.md": "6a6e896ef6e1583ec7d411684d3cfe5a977686a103fa55ab938bd725d2c9b890",
+    "Debugger/lib/Instrumentation/Passes.cpp": "cdf5ba97bf0b4e5e1e30a9a83466e2f70f447434b69c859d0650184a31fcf326",
+    "Debugger/lib/Instrumentation/README.md": "0c4f678b00d2203ad20c0bbcbf5b8082c785997b983f802a545759e28220198a",
+    "Debugger/lib/Instrumentation/RecordBuilder.cpp": "0d609ae1aba1cee621138bcf5a88ef0ccf20475d33c45f0916f0f807d8856477",
+    "Debugger/lib/Instrumentation/Writer.cpp": "79aab36385eb44dbea00b9c5df2f30361a39b0d38bdc3d846a19fa6429f82746",
+    "Debugger/lib/Metadata/Passes.cpp": "d09d7e5418fc90f5bd7c55c5f1cc19aaabf8d34e9d9336f875169246970361e6",
+    "Debugger/lib/Metadata/README.md": "70d87cf07b55f57471a100efec8c32d767105cac32af857402b021ba677d5eed",
+    "Debugger/lib/Metadata/TrackedOpTable.cpp": "5b46406b9b7520aaaa7863700c49ef2e00645c8ad53ecbb1daccb95047975dba",
+    "Debugger/lib/Runtime/AsyncExportLoopTest.cpp": "c5b30fe70b2f3329b7a402164034e7640b4d63d77076e7068cc6d6857d4f41cb",
+    "Debugger/lib/Runtime/BackendAdapter.h": "ec19ac91fe48c95c5e55864e204f6fb0cb7c3b5e8245bbc46df672daef1e7ec2",
+    "Debugger/lib/Runtime/BufferLayout.cpp": "5222eb796c5fa88b21219292e1ded338cfec05eb824d7b2c1c1982d016440855",
+    "Debugger/lib/Runtime/CANN.cmake": "0027019769cf228927437e389ae9e09e03e541e028b8687ea4448f2d85e64158",
+    "Debugger/lib/Runtime/CMakeLists.txt": "0c3b5b88c0efd1db82da217e7dccf0449461d5e726786b6f174495b2d61c5c3c",
+    "Debugger/lib/Runtime/CoreX.cmake": "7b8358a5e2d08652b5bb3411baf65a4144619767279e1d1dfb28709dc58fc53e",
+    "Debugger/lib/Runtime/Enflame.cmake": "030b743e90bb6523b0cc83ded4dd844da2b4e9fda5f6c9ac6e06bd3cba62e5e0",
+    "Debugger/lib/Runtime/EnflameSmokeTest.cpp": "3ce33a56f243dc0026775622bb4cf2cf58321c5381d2a674019bb2eb77d75e73",
+    "Debugger/lib/Runtime/MUSA.cmake": "ff92fe1bad811430f62ed1008f9509b1c0f62fa9f05d01a6b82243c8317d0cb5",
+    "Debugger/lib/Runtime/README.md": "6c638f4b6a219c9006d068fb46c90005adb8a52f2433f6abc6c133e066a09214",
+    "Debugger/lib/Runtime/RuntimeTraceDemo.cpp": "e36d89f584ec16e4310b9e2e028876492fe19620b4e82653cc83cae3fd384bdb",
+    "Debugger/lib/Runtime/SmokeTest.cpp": "719f6e5ae564978853aeac17d7e462a3ee61b35ef7414719b51e2ab0c7343d53",
+    "Debugger/lib/Runtime/TransferEngine.cpp": "43545c331527bf2304598fec2717e232482d173597c92ac659feb7a2dffcaef0",
+    "Debugger/native/CMakeLists.txt": "8526c673b039868a2082ed1945af7372d44f33fa24b75011bf684355b3c8dc64",
+    "Debugger/python/Bindings.cpp": "85d6bcd9272e43f6a94c8d8dd44c8920e5f5372a66624bf1ce407f5f8770bf39",
+    "Debugger/python/CompilerBindings.cpp": "849de3973ebc42c8d1e47b9a774b164d1e8168ee635c5ac754b7c1e2cb9f587b",
+    "Debugger/python/CompilerPlugin.cpp": "d8f91816399a07726c6ad6ff9602bad2e6bd95886f1e560c3142fe5d4ccf2b29",
+    "Debugger/python/NativeModule.cpp": "40f944fb531b7da0082a2ab83267956363d8c7e4bb1a56c2a08b499f2fc5daa2",
+    "Debugger/python/flagtree_debugger/__init__.py": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db",
+    "Debugger/python/flagtree_debugger/api.py": "f43c371c512f681852e9ba4825470cceb8d5e0ea95fddd12858594a56b5b4269",
+    "Debugger/python/flagtree_debugger/compiler.py": "3ff595c5205e9fc5b3ece4b2d24c794fb2ab545b388b02796325ee44fb8d3c8b",
+    "Debugger/python/flagtree_debugger/language.py": "f8a3784178ccd25cf4756d0d700d513d08f273dd8c040f9c3f66e7e94e9ae7c7",
+    "Debugger/python/flagtree_debugger/native.py": "5e129eb3c3cd8241b1a4213f5f336aa179f8c088d9f8e18bfb90cd11a7e720ea",
+    "Debugger/python/flagtree_debugger/runtime.py": "d04e9003d8713fb7c87c088c4779f859c1c56bd9e23984145ef7b8cacd1855f8",
+    "Debugger/python/flagtree_debugger/statement.py": "7f66e41fb70c7f28b1b141f68e1a5d376f57bd1f7bd3dfef06eade0e148ca80b",
+    "Debugger/test/lit/CMakeLists.txt": "1f2e4e9e3c8011e03fbb71bd63e88b86f4e795c67e6ea55b9f5a9a51ea8361b0",
+    "Debugger/test/lit/Inputs/filecheck.py": "4f6b0af0cbc92bc8b4841437139e96b27c00a17cef25c859392e1166bba69c0a",
+    "Debugger/test/lit/Inputs/not.py": "314b8464391ecb6e25d63bf1a40d3fc230914244c033c282fd1759da10163233",
+    "Debugger/test/lit/complex_ascend_debugger_probe.py": "49b84a4f572a6cd3a2875086b8f3cef7229e3dbf3c487eabada81d9f2a75809f",
+    "Debugger/test/lit/lit.cfg.py": "3695992568e97d7ca3f3d757d51662ed9cba7b4c454fbdfd92fec46d08b4b497",
+    "Debugger/test/lit/non_debug_abs_check.py": "2628c5d5dfd4570acc6f7ae544b4cb00d5f23f685e68ce8cf14486d5b8a010e5",
+    "Debugger/test/lit/statement_report_example.cpp": "3e397938e19b1f9ca73028438db6aa7b96167cd0a4c1d3d2a2cc78606dbd4240",
+    "Debugger/test/python/_module_a_doc.py": "0ede3205d2d006f20341600441b0f579afa36310f54425e52298a86dd3c1ae13",
+    "Debugger/test/python/ascend/README.md": "34af53e89c951d1a40eb58aeb89e2b01053b275b4cacf2c45af604e82c2d8e47",
+    "Debugger/test/python/ascend/__init__.py": "43ba29079c11150a0704ec203b7059e342291ceb49f0b4547bf06d82099d751e",
+    "Debugger/test/python/ascend/conftest.py": "fd7f1cc765e3345ea3852699264ac692a72c2bb0b01b8d4d3b3abbd9301df2ec",
+    "Debugger/test/python/ascend/operator_test_utils.py": "c9106f8663d0f24fa9a02a70613ffab4d139158093232a7d2011024d022f61d1",
+    "Debugger/test/python/ascend/test_debugger_metrics.py": "cb8874c2e1815db10d324c7d98c2aad3e8e0ce2317f6efdaabd060d95c155447",
+    "Debugger/test/python/ascend/test_operator_linear_memory.py": "eaa69dc3fc71534e61f2c99d6262993e3e35d778c5ca18ceadd7392fa231cf13",
+    "Debugger/test/python/ascend/test_operator_nn.py": "46757e058a762c66865f845fbad6f262ca9682c378dcf55d3490576d63266b47",
+    "Debugger/test/python/ascend/test_operator_pointwise.py": "4bd2828285ba261accfcebdcdcd37efd218f50daa50e542f7974a3ce0032d5b2",
+    "Debugger/test/python/ascend/test_operator_tensor_reduction.py": "e906e3a669e49614be542a29a9bd6636eced5629a2a86bb1c6a5a8728aa17e2f",
+    "Debugger/test/python/conftest.py": "6bda83dff20d6bae0d09efa1661a36ba282266dceab4d055161219bb505236f7",
+    "Debugger/test/python/language/test_debug_collect.py": "6f08df46a4b47c91595d6a6d727dac82070ab50dc2ed7ffc5e6ab073e34e136e",
+    "Debugger/test/python/language/test_module_a_A1_markers_ttir.py": "85fb0740125d606ac16354ebcea19825bf3248a2a4e1da6665c10b0b54d67b86",
+    "Debugger/test/python/language/test_module_a_A1_negative_pairing.py": "df0d5534a0df4f7670fcdf6d7968e36ce2cdd80aacbde2021f25f7fb284ae432",
+    "Debugger/test/python/language/test_module_a_A2_metadata_contract.py": "35f29743248a4dae6e8912f02a80f8c79d37e0cd05ffd14e2beec0870fb4a2fe",
+    "Debugger/test/python/language/test_module_a_CTT1_scope_id.py": "15f1893dbc0f8cb40acd5f93e03603a383de30e7abf050328b30716ff7ab8431",
+    "Debugger/test/python/language/test_module_a_design_example_ir_flag.py": "7ff351a46db3a6da5ed4acfb59244907c655af9fae3e9a7c5cec4fc90db37b6c",
+    "Debugger/test/python/language/test_module_a_pass_registration_smoke.py": "54037a395f4701cc7643aa4fa03ec7616df2161a33bbd8723719e089bc743f73",
+    "Debugger/test/python/language/test_module_a_phase1_compile_run_smoke.py": "f056d5e49a0a7c61b7533cad924d87b1dde1813dff237db231307c0043d92c06",
+    "Debugger/test/python/language/test_prepare_late_observation_abi.py": "dff2e86b8fafe877dd5b62e7ebd718edbe1e8ca6fce04e32cba8220a8f314d33",
+    "Debugger/test/python/module_a_contract_checklist.py": "d70921c3fa5ad245da15c4bcb5831c761c5cf3970444704cda58dc4e0cd04733",
+    "Debugger/test/python/mthreads/test_debugger_mthreads.py": "5e0e531c615e09d0f32c3a53a37a7a401db33f52c1923993b1c2488d2f0ec05b",
+    "Debugger/test/python/runtime/test_debug_collect_runtime.py": "cbc2e66bddf725f0380b0e9b9fec625fbcebcf388557e5b48a3363058f244f8e",
+    "Debugger/test/python/runtime/test_debug_deferred_modules_CFD.py": "083fc5c1aa6080da66b05f74c613fdaae08444f88638ec80df8debdfa1f5041b",
+    "Debugger/test/python/runtime/test_debugger_launch.py": "7c861509f7105721adb1572811c6f4a226359010887c86971e489f1d324069a2",
+    "Debugger/test/python/runtime/test_module_a_A3_launcher_cuda.py": "58f7ae4195bd6486e328beb481bcb82c7b67a056884e2ed3b17de6b734ae79a0",
+    "Debugger/test/python/runtime/test_module_a_CTT3_hidden_arg_abi.py": "776a041b6193dba19fecfff6ac848f9dc93f3cccffbe59b1c3073572a1b6be6d",
+    "Debugger/test/python/test_native_bindings.py": "e11b581921f74d67bc0c8debb609ade8c20ba2eee82afa01857ff7d87662b094",
+    "Debugger/test/unittest/CMakeLists.txt": "d15f98b1e0a278faab2de8971a9d616ee4c608176b7c7435be2d5114bd66cf89",
+    "Debugger/test/unittest/DecodeTest.cpp": "7640293eb5e105b399fa3ebd6ca70bebee26fadc903344ecf35a0621b7891885",
+    "Debugger/test/unittest/FrontendBridgeTest.cpp": "12c05e477573f1cf2e2e9b16d083c7ce98c6eaa0f3d43e38d1c43913121edde8",
+    "Debugger/test/unittest/InstrumentationTest.cpp": "b4fe9a24bd0d5c5f756f414ec67424c8de352a7b43cfdf638eb5bb4f851f5095",
+    "Debugger/test/unittest/MetadataTest.cpp": "6f2c69f5f18fbbe725da35a894f2c2527566cc5efa8b20f888757f6a73543e91",
+    "Debugger/test/unittest/RuntimeTransferEngineTest.cpp": "8e2c09e58820a85d14c4e3ae5cae11e2d2d4982949208d3991a2af2775b8a1f3",
+    "Debugger/test/unittest/TestFixtures.h": "b425166b24ea6e1f758329dc25fc0d77084a62817de06608cb8a06db4189401c",
+    "Debugger/todo.md": "409fa4648e0ba5e2a36656f6b2af06c769101084eed81e32dd79e551f45497c7",
+    "Profiler/CMakeLists.txt": "e8ced9273d0335aa1b16f7bf20e31bf5cf98ec3f40cb79c252f33e85348000ef",
+    "Profiler/Dialect/CMakeLists.txt": "d4cb44ca0bd3a0edebc6d28da92afcd053f2e3500049c13202786394e6cc96db",
+    "Profiler/Dialect/include/Analysis/ScopeIdAllocation.h": "0b31d8a5995fe776b616a2ddcf47934e0fb974898f2b74845e532deeca694155",
+    "Profiler/Dialect/include/CMakeLists.txt": "1f7f4c02331a650cbee66c638aff5c4a0f2c014a68456a55223a94cb15432569",
+    "Profiler/Dialect/include/Conversion/CMakeLists.txt": "e27d0f4b419116c62a526a7f21632c881dfa890ab22311255821291b4e128bc5",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt": "72d16ea5be61cb94d3539cd3e0909adc083f84b543c7505b7e72525f1cf0e7b0",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Passes.h": "4f7971f691af63ebf08e17202cdec36c775cd43eb68ce1a4efd2110556e6e07e",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Passes.td": "cf0a472769a5344d32a3b542049a41b71d8699a995dd4552e53e44e1a81045ff",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/PatternProtonGPUOpToLLVM.h": "e04893ca1557e91809cc0c2c8b67b2310dbdb5c1bd4096f6a50bf12b545b0732",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AMDPatternProtonGPUOpToLLVM.h": "9b84ad2406f58827817bf39c5eb421c36d2ea9fe2fa212c9286f909d56bba30b",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/CMakeLists.txt": "1fb874d9bb9f87f59f80572ff60100d524bbe7a4c17166e53fcf4a619f86a900",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/Passes.h": "81c3aa5574692d0aae86aaaf958c37aa736b476bde26673edbd2e9fc8b718971",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/Passes.td": "a3345ce9ad5ad7d1f0d4ff1101c1a77a6938e016af1386bef2ea557b876a1a97",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/TargetInfo.h": "b5300ec3bd3eda8ef62c285d02ffdeb7024449fcffb54819510692cc065f0cd1",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/CMakeLists.txt": "eba09357caa1dbe1ab26cb42b1865ddf4b5cc70df51f97d3aa3e03c042a2c3f9",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/NvidiaPatternProtonGPUOpToLLVM.h": "c0f0e57e96e8497401ef07419dfd5d1a80c8387566dfe062762b9e20b075e3d4",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/Passes.h": "c16b29b751dc73f0035c40dea0c1d10ae500f4fcd0932d94f7d5e166affb86c0",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/Passes.td": "6f2c5f45948cdab53e17cb490151a9a68a0ec22f9b88043ff4cd2083102c7295",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.h": "1f7e95c0be35ae05f9148a6b04215d4848c56ec97cf690da83fe817561fcf0ab",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/TargetInfoBase.h": "46b5dde3797838ebba1452edbbb42e2cd35c59486c1a504374bb661048b9405a",
+    "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Utility.h": "1f342c400f81e761a365ab92ac974be6afc4a93feeaf245844158b78f9537607",
+    "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/CMakeLists.txt": "de2865ea56ba22b1aa1b790fd59642df65f31e3e50a2dd56cbf8b16879f62f60",
+    "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/Passes.h": "3352e4423c67de8ce379af8f2c8f9b9b1c6bcc05572090aab7dccc059cd9c96b",
+    "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/Passes.td": "b84eecc21a5f5ac5a0af7a89efa3bb85bef1ab57cc39058477e5aba5eafe9c42",
+    "Profiler/Dialect/include/Dialect/CMakeLists.txt": "45fe2d5bdaec6eb634346b03ae53cb10a18081dfeb233143b8fdbcb6de86e2da",
+    "Profiler/Dialect/include/Dialect/Proton/CMakeLists.txt": "eba9ec1a29e615acb508f3bf73f29f5c353d8475568ab8a4da155dd96e6f08ce",
+    "Profiler/Dialect/include/Dialect/Proton/IR/CMakeLists.txt": "03ff9286882724c452609bdea6ac700897c0f6f7f3f3a492e63c8eff1168d561",
+    "Profiler/Dialect/include/Dialect/Proton/IR/Dialect.h": "3393aebdabbbcd4e565bf28acacd30b81d90f9c5a30583c5f536e7c8bb236305",
+    "Profiler/Dialect/include/Dialect/Proton/IR/ProtonAttrDefs.td": "0799682fc96caaec5a75e21da51c112377938f29c044a787e7bbd4656088b846",
+    "Profiler/Dialect/include/Dialect/Proton/IR/ProtonDialect.td": "3a1a3568d6ca03cd88627ba8beb92ac0a00a32c54c128d82f9184b843d80c792",
+    "Profiler/Dialect/include/Dialect/Proton/IR/ProtonOps.td": "57418683bfc5aed2c98b64b8a294ea66f5346c66f02928f01bf4ec366f0fb724",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/CMakeLists.txt": "488a485d253425e1db2aee4e0725f80afce617201939e009759a898b6360c552",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/CMakeLists.txt": "af1f02ad4dfd06ba6eea9a8466f5214fa3ceb630eb4ccf6e405c754409c83ab4",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/Dialect.h": "1b95f07e3c55e2d2bff5bd62e64bd90aa1c61f7c6c0382b5333355c00e3a2534",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUAttrDefs.td": "9ecc15a0e94249b5460a2ccdf6e0ba5295cd0b96b64ea2440cd390e16c78eef9",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUDialect.td": "342e0f63ad6b59f69491e80c1cc364feec80cad5d73dca461a663fef3e3c1147",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUOps.td": "404c16311b190e2cbff991160bdba7685079ddb03523f2a34b62dfeb8494d47c",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUTypes.td": "7cfafe9906d9c4a2b681b4f3472808674bb644e7c6fcbbaebb61f1e04df8b897",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/IR/Types.h": "b7af34363f81a94214bad9addb3a322ae5af3f7595bde23faabcb09685d36ba0",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/CMakeLists.txt": "3ac9a1de6b566fa44bfdcdba5b342f95dd15d1c49830b24734f876500b9f9234",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/Passes.h": "589f0622e1d91d520cc19ed86b130a5b9f3ef8e3a023719645d66d61dec606bf",
+    "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/Passes.td": "be7545bf011944ad51b5b8373683b7515480fa5a7e432aa98922c7ba75a8aea8",
+    "Profiler/Dialect/include/Integration/Registration.h": "c6a5e6db7839ac1d60bc2af1d1dd0c85d3f82b514d36179539d387df0002791b",
+    "Profiler/Dialect/lib/Analysis/CMakeLists.txt": "0c1d419c9f5aa4d4fa9c1ca2e6149a207cc9cb44a0d31cb5e60e061c7cc33926",
+    "Profiler/Dialect/lib/Analysis/ScopeIdAllocation.cpp": "7c6a1d2d906050e137e531b075aff27c2af795da14011e11a09cbb43bda6c576",
+    "Profiler/Dialect/lib/CMakeLists.txt": "1b4dac9add6e54e91e7f1386b417d99dcfd815cdd6e661af34de9fd788471051",
+    "Profiler/Dialect/lib/Dialect/CMakeLists.txt": "45fe2d5bdaec6eb634346b03ae53cb10a18081dfeb233143b8fdbcb6de86e2da",
+    "Profiler/Dialect/lib/Dialect/Proton/CMakeLists.txt": "eba9ec1a29e615acb508f3bf73f29f5c353d8475568ab8a4da155dd96e6f08ce",
+    "Profiler/Dialect/lib/Dialect/Proton/IR/CMakeLists.txt": "7607a8c0d4b40f9b865f83d4c6f6e0fc50d998e3fad849c63e5472b3132f470a",
+    "Profiler/Dialect/lib/Dialect/Proton/IR/Dialect.cpp": "0da9f3ab2873d81c1b4d8bcf16f2f1d2175ce530e580497fbc89ad5a075429ec",
+    "Profiler/Dialect/lib/Dialect/Proton/IR/Ops.cpp": "ce027ff200ef558b414e8a56195ae1296a291bd0bb2ff7a2659d669c7d6b37ec",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/CMakeLists.txt": "488a485d253425e1db2aee4e0725f80afce617201939e009759a898b6360c552",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/CMakeLists.txt": "4ee520f9411815f3fa389142bd5de9b99a5a1baebcd67c0aba009ff13ddb1b61",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Dialect.cpp": "78b97883525323d77c9b99712b12270bb5285cd2a32b46460eb6bbed5b72aa09",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Ops.cpp": "cb4432f38d19ea59099f9c821c38a35c48ba3e8f1880ee507ec5968e1f65bf0a",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Types.cpp": "5912bcb8c8614541311c20bd251aba1a07aeee7a18294f6ac7a7876ea8a2c137",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/Transforms/CMakeLists.txt": "1e6d18d26843bbbc80d1deca4ec0359d6c9e6b768ee7463b831f8dbc5dec5432",
+    "Profiler/Dialect/lib/Dialect/ProtonGPU/Transforms/ProtonGPUTransformsPass.cpp": "caa471436472deb2472329abfb586e02ed93e105546c193794c8f80be4726c9d",
+    "Profiler/Dialect/lib/Integration/Registration.cpp": "4beedb224e098aeb92d0239bd657e6012f30643c6274273e32a6a8a7d4d17c2d",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/AllocateProtonGlobalScratchBuffer.cpp": "e192865a0557164024cd2c9755c8f921e7eb0362af8782d8e5dfc48f9bc7aecf",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/AllocateProtonSharedMemory.cpp": "2043ef7f10f765593d8d57115924e6a4d0a1f0e5cf32882e95539a9a2140beb1",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt": "6015635b7c12908f87693ecda4a643e7da5a514e035ceda0134bcbae919a63fe",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/PatternProtonGPUOpToLLVM.cpp": "32d5ed6d88db02583756d72ef0d5442b20e500367762af2b4cabe1e33870f8d5",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AMDPatternProtonGPUOpToLLVM.cpp": "0891f7aeb4772eb9c9c3b44c17080e280a0e641c80af40ab045764d0192eb929",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp": "16a21a4a2050695cd1d7634380dfc81264c8ad27e95bf6e99a9515a294f8a0ad",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/CMakeLists.txt": "6433c78abcc3e9f2874c96617a6aee8f8d84c70a6bc2616e61bcbede7fc63b25",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/ConvertProtonGPUToLLVM.cpp": "b7160bcc332ad7894eb159a181134f5cfcc892dcec65051ec047100d57b2e00d",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/TargetInfo.cpp": "c98eda27f83c34373126a7577c86ce573ec06826b8cea808c46710a55bd33656",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/CMakeLists.txt": "35c0eab74e60364e4e5d9f32ff2322b05c17ee8536872ba6cef52de9d7c7badb",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/ConvertProtonGPUToLLVM.cpp": "c6ab6ff951435798f9caba834b20a7c83de08c0fc9daa9e6f8a527b6e00f4fa7",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/NvidiaPatternProtonGPUOpToLLVM.cpp": "28ac121c1992ce5b971e42ad905c497af896009773e86ef2afa782e045c71e39",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.cpp": "a263f6f833654ae811853360b9a8acdaa698f5996b91ad68266447774f498a76",
+    "Profiler/Dialect/lib/ProtonGPUToLLVM/Utility.cpp": "e6dc32ec37583bf92f97da8d810ffab491343cfe426aaf5bb084a22375452cdd",
+    "Profiler/Dialect/lib/ProtonToProtonGPU/CMakeLists.txt": "dc9812a12fab553f91e8ae27fa81432f5adb119092664cf63ef765200a4c3016",
+    "Profiler/Dialect/lib/ProtonToProtonGPU/ProtonToProtonGPUPass.cpp": "ba02c06e24cd123c1b47665ac7862c96bab0fea548cf451f96ea09a7eaf31f34",
+    "Profiler/Dialect/test/CMakeLists.txt": "5f86e18e2d452fed7e1dcb7253c1b047464bfb095ce25eb639dd19b1bf2d5a1f",
+    "Profiler/Dialect/test/TestScopeIdAllocation.cpp": "69a720df763da8dc92da7c07f7acd96fe9c90fe755e22993fbca359f3a87c7d2",
+    "Profiler/README.md": "675f9ef712d6989f6735dad0c704be9671dbde1bab4bb23ae717a86fa5f721f6",
+    "Profiler/cmake/ProtonDialectObjects.cmake": "bf064cb1e0bdc594c2a947777bd90ee0ece400f7bb65fe081fa17ed2ab125bbd",
+    "Profiler/common/CMakeLists.txt": "94a3aaf4494aef5f58017bc1d590255693e25cbe79cbf6575376186953442628",
+    "Profiler/common/include/Device.h": "07acb8b4d37c506c499553ec58c0ae7541368cef564eb7723e5d0bc6bc4ecf0a",
+    "Profiler/common/include/TraceDataIO/ByteSpan.h": "795ee53327f8be1254589c12011269b58a879e80eb332617be85a9f533865901",
+    "Profiler/common/include/TraceDataIO/CircularLayoutParser.h": "d6e7fed9830868fdd0eee2d038876b51efd2b6732192b9b530a5718af6143116",
+    "Profiler/common/include/TraceDataIO/EntryDecoder.h": "76f519d749f3408a9d90ed1f33b168e8209df29db51bd4cb3bd82ce15217466e",
+    "Profiler/common/include/TraceDataIO/Parser.h": "9df2b7b1a9adb5d00e0548a117ccfa660eec251f19e89b511398d41ae25a4c7e",
+    "Profiler/common/include/TraceDataIO/TraceWriter.h": "a26e93b76b78ece7ab3ee517e245ab0f42e0da50da239ab7179b212fc9189a37",
+    "Profiler/common/lib/CMakeLists.txt": "821d2204d0ac701ecb367b4174ac246de47f924b26084f3affd4ac8606edcaf8",
+    "Profiler/common/lib/TraceDataIO/ByteSpan.cpp": "42e363d0cf16bcf7d89e997d7c08758e2e95f8283156bfcb8d4023ea6a8edb29",
+    "Profiler/common/lib/TraceDataIO/CMakeLists.txt": "fedb9775caf08b07f79ec1e1206f87208b8bc14cf0912799888aa3cadf456b62",
+    "Profiler/common/lib/TraceDataIO/CircularLayoutParser.cpp": "7efc38c48a2446d088a3128212044cc9b9ff7345085465f2db7112c9602125b6",
+    "Profiler/common/lib/TraceDataIO/EntryDecoder.cpp": "bd0454e508c5fbf8b2cfe3b7cc0feab0723bc007ed777e2115cf349ead333de1",
+    "Profiler/common/lib/TraceDataIO/Parser.cpp": "c38fe50879e2d6d902bf30331953238993f39888a4244b2fee8de98858e98d90",
+    "Profiler/common/lib/TraceDataIO/TraceWriter.cpp": "f909b6f270539905e2ea306a536bbacc993e82551a95964d275990ec7160b911",
+    "Profiler/csrc/CMakeLists.txt": "9a3f6375dade2bf6141d202b7f384d18a8d22e6817543a32638bfc0f78c08608",
+    "Profiler/csrc/Profiler.cpp": "c2b1f47ecb372c95bfceac4fa3f050918a07b8e36e9bbac11079d92bbb94d9f7",
+    "Profiler/csrc/include/Context/Context.h": "13047660c19093b7dae83748021fe6afb3d26058647b2594d71148c0b6dbd06e",
+    "Profiler/csrc/include/Context/Python.h": "ca2e743e200be56e9504715642007c814744c45c23b186e6ed9b6f457e39dcb3",
+    "Profiler/csrc/include/Context/Shadow.h": "25b9b54d142b7b1251059f1e1cd8d3684898c011df3d9aab05d35a3fb8ad397b",
+    "Profiler/csrc/include/Data/Artifacts.h": "646d3a295868eb265b14037d95b0c28648a94c4786a85265bdb223942bd90de2",
+    "Profiler/csrc/include/Data/Data.h": "ed09bb5a3ca57584b686ef4a9cbfd182a2ca92fd4eacf734e00ef87fbb14f501",
+    "Profiler/csrc/include/Data/Metric.h": "9ca3a016afafd489d6322ccbbb0605622737852ad53bf03777ba64eab931db64",
+    "Profiler/csrc/include/Data/TraceData.h": "75cb7fa4a63596994f1e517e7dfe4bdd6e6d52221e3abd855b94208ea89f4698",
+    "Profiler/csrc/include/Data/TreeData.h": "620661578338cf5a26ca45ad2a0fdc25c3fcfbedcaf272456c63bc2cc7a11ab0",
+    "Profiler/csrc/include/Driver/Ascend/AscendApi.h": "6b222a578fa8c28d30703f9a9ec109b7c972c6e41e5fe06fdef28571f7d8adee",
+    "Profiler/csrc/include/Driver/Dispatch.h": "14d983f91d91525fa02a6f14b2d3897dffdadacec077806121da16a665211575",
+    "Profiler/csrc/include/Driver/GPU/CudaApi.h": "6352752109d611f78d37329615d5d041a49451f264cd1ba53e7f6560b4f7d941",
+    "Profiler/csrc/include/Driver/GPU/CuptiApi.h": "86ddca1f9bba397f3b5dc11eea33f759fc5ff8a1b7fc77aa14b602d75796b1a3",
+    "Profiler/csrc/include/Driver/GPU/HipApi.h": "2e21bc3aeffc7a36dda453dc9b576a06dc4903c6793a8888a99c3fa3e3f4e0bc",
+    "Profiler/csrc/include/Driver/GPU/HsaApi.h": "082a88b7bda998f8b0c98cd17f544cc199d2246ab3800092d8990d5fe005cd2c",
+    "Profiler/csrc/include/Driver/GPU/RoctracerApi.h": "668c53c09b878aa36f081fa9870527a3d33e36cc2d22cf567877de6a23cbfa14",
+    "Profiler/csrc/include/Driver/Mthreads/MthreadsApi.h": "727f986f805ecb8e3b53c2a277d359112460de1588ad9861ea73ef445f1918df",
+    "Profiler/csrc/include/Driver/Tianshu/TianshuApi.h": "a53e2d8ace05ee3e689ca043cedd6c25234cf7d0705222435d5ef6e8dacdc2b7",
+    "Profiler/csrc/include/Profiler.h": "22ac3ca299892422e505d757b58047962bb4289093371ac2b50e3b17f933b3d1",
+    "Profiler/csrc/include/Profiler/Cupti/CuptiPCSampling.h": "76384d0346c366c5ad9787d14c649290a1c22f8cea665ac65ed6b1d3e03af4cd",
+    "Profiler/csrc/include/Profiler/Cupti/CuptiProfiler.h": "d3c66dca3b8b56f924d636f1f9a52379f43d0ceee341db3dfb7f90ec74817aa9",
+    "Profiler/csrc/include/Profiler/GPUProfiler.h": "2ba4ed261a6381e09f173dbed4489f79890a06d6f7aa6e9f7051e63c28dcf596",
+    "Profiler/csrc/include/Profiler/Instrumentation/CudaRuntime.h": "ab4e715c70f30e1c1e8286e521272486a367e0dfd96597c6e32ac08cdae93a5e",
+    "Profiler/csrc/include/Profiler/Instrumentation/HipRuntime.h": "f72cd36a0c73485c219f3a4cb82294b1d4edea4f9facd3890e41e5d0c2c11565",
+    "Profiler/csrc/include/Profiler/Instrumentation/InstrumentationProfiler.h": "d128148cc570e7fdeac96a90dbff5e9422877b558485985dd3699c9cb04197a7",
+    "Profiler/csrc/include/Profiler/Instrumentation/Metadata.h": "fcadd5d6c69bd70a3d167db9568e0cd16311c5b1d39ffa48f3960ea52f219b1d",
+    "Profiler/csrc/include/Profiler/Instrumentation/Runtime.h": "30533c8b4975ee6628f0afb6b9a7d6d6e99c5f093e30d661b5c858d6f27a1715",
+    "Profiler/csrc/include/Profiler/Profiler.h": "4245aa03e152b48b05cb2db3a21646fa9c5197745beb257e4cd9ea45a0c5e940",
+    "Profiler/csrc/include/Profiler/Roctracer/RoctracerProfiler.h": "5673da98941bfc2beac41e9cf09f8c315049fa669778fdbc2a5d27d75744a316",
+    "Profiler/csrc/include/Profiler/Vendor/Adapter.h": "c9fe013054df60eabb1be802186a1b5b4eba19bca285d93c554545d653c7a4df",
+    "Profiler/csrc/include/Profiler/Vendor/CannAdapter.h": "499c4a5e3594406ee3a13704152ef4a626c0597a4b5d117f593a44c70a79f759",
+    "Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540",
+    "Profiler/csrc/include/Profiler/Vendor/CannProfiler.h": "a2173cf2c7034108c2c8e175420e127779c00ac92debe5056269843430b7fe51",
+    "Profiler/csrc/include/Profiler/Vendor/EnflameProfiler.h": "99b2fce96814393fb9c349dbfae861c0f32df8409560b6c144e47b7cdae2f020",
+    "Profiler/csrc/include/Profiler/Vendor/Mode.h": "bd88046c3989a6f39944e0af15d835ff8f02e232a4b44b5f2701ddbec3075abb",
+    "Profiler/csrc/include/Profiler/Vendor/MthreadsAdapter.h": "76f1f137132c34935c6a052afc95a3a08c67f90438231fbdc596982b16ce2b70",
+    "Profiler/csrc/include/Profiler/Vendor/MthreadsProfiler.h": "d641e5bed22f6b3267aa66903aea1d795f8c8763157f4a4c5de750ce8499fb5d",
+    "Profiler/csrc/include/Profiler/Vendor/TianshuAdapter.h": "5d4680562f08aa71e1368bb6963041a52fb13bc1600b2ac246e3c829029685e2",
+    "Profiler/csrc/include/Profiler/Vendor/TianshuProfiler.h": "a54eb6b3a25cdaf3a8dbb2818b2ebac8dab0ece39cc8bf09aa162f416e396801",
+    "Profiler/csrc/include/Session/Session.h": "7c10de581b7eed01ba4610f23a698dc1b25840dcb8c59f3448b6bb85b68d2b6d",
+    "Profiler/csrc/include/TraceDataIO/TraceWriter.h": "616674708bee68d4c8d432b08281ad9af0a633438a95464bb0f2f13b41bbe7b9",
+    "Profiler/csrc/include/Utility/Atomic.h": "a3597f0c60e4109eb130f7912739d6c688c367aeb93677809a33bfea7b6d2b1f",
+    "Profiler/csrc/include/Utility/Errors.h": "ee50238be367ea8458dd54c31fa38f086b1fb0b4494bff67950689d7036b1cb7",
+    "Profiler/csrc/include/Utility/Map.h": "0dc2223d3565f35e8a7be58005504bd5ae166dd6ca808c6392585a9cf2cd90f4",
+    "Profiler/csrc/include/Utility/Numeric.h": "7933be62935847001fe09471ec1f3ee9615ea60fadd8790e80cc77feb868f206",
+    "Profiler/csrc/include/Utility/Set.h": "ad16801732b4e2cf180c3137adef8746c2dde247595e70436428375a238118fc",
+    "Profiler/csrc/include/Utility/Singleton.h": "426717bacd46ac6c77949a8bbb9339d0fe25b088b9303173afccb5a4ba848c3d",
+    "Profiler/csrc/include/Utility/String.h": "619f1afeb410fafba09732ec58bdb31a91946a520d6fa23b8eb74df0c49a47c3",
+    "Profiler/csrc/include/Utility/Traits.h": "dce9ffb92d317fe2e68b044b2690ec67704c87cf667faf95691dfc41f3344354",
+    "Profiler/csrc/lib/CMakeLists.txt": "df6949464e16da3e794c0e7a50a9180c90003f99697f34b65b5a9a3aca72f020",
+    "Profiler/csrc/lib/Context/CMakeLists.txt": "8f5788275d5f89e143fe170c0c6529083bca104e5c188173a379665718c0e82b",
+    "Profiler/csrc/lib/Context/Context.cpp": "afc557cf5b2e5284ad6634aead8c80daa5e398622d8e9ca55dfd4b116220d1d5",
+    "Profiler/csrc/lib/Context/Python.cpp": "ec02794ca7a7f1ea64097a8aaba5e7ada887ff369d856bee2afe8f0cd622d4ce",
+    "Profiler/csrc/lib/Context/Shadow.cpp": "23521147fe0181a7876c822b16eaabbfb0278748ab137f3b170b8cf52b021c60",
+    "Profiler/csrc/lib/Data/CMakeLists.txt": "83e3da529a116d067bb1b1893967bc4b18a93690ca1f53fbfbe701b6be90443f",
+    "Profiler/csrc/lib/Data/Data.cpp": "6ff7558ebaf96c10b9d7dcfcdb22cd0daf79991bdfc913e2847f87465260a32e",
+    "Profiler/csrc/lib/Data/TraceData.cpp": "288a498e588dd52bda049ac846f2ca6b2b0c773f03099abcd508014a7401a639",
+    "Profiler/csrc/lib/Data/TreeData.cpp": "e3c97322a4388e5b9b3068bc614cff35f6afc7d9a2d0d926d5c1f0fd900ebbee",
+    "Profiler/csrc/lib/Driver/Ascend/AscendApi.cpp": "cfcfa11b817744d40c383885b422222def2e2eaca94f4055f8b10c1df8362a27",
+    "Profiler/csrc/lib/Driver/CMakeLists.txt": "3528532d48210293104ea4f6ee2346ce2978b51efe1deff5c6dca9009f93f845",
+    "Profiler/csrc/lib/Driver/Device.cpp": "e7572dfe738f3b3356edf9e521423e4548317a73c9d676e6fcbc1f5b23267a32",
+    "Profiler/csrc/lib/Driver/GPU/CudaApi.cpp": "d8ed0b5b4eab22d4e49922fbf0213509cfb27319ead8769e8d1bd233e313a636",
+    "Profiler/csrc/lib/Driver/GPU/CuptiApi.cpp": "d08915e331c1d7736073a2e4cbdaf8a69dfd4fb0accdad548ee29f09ab7bb092",
+    "Profiler/csrc/lib/Driver/GPU/HipApi.cpp": "99574372beb6f639835df4c8a984cb0014c28f90b287d66b52c529c62996bdf4",
+    "Profiler/csrc/lib/Driver/GPU/HsaApi.cpp": "948336528f6707153c02dc6724cccb869152b78f91d66c608292bcb1681169cb",
+    "Profiler/csrc/lib/Driver/GPU/RoctracerApi.cpp": "ddc50ae332f07eddb0dc6ff5342884bc4dee2c60af5af5ce89f07dedfdbac468",
+    "Profiler/csrc/lib/Driver/Mthreads/MthreadsApi.cpp": "8345f77b77ea91f4e50808708c045043463ba5c67b79b905f30223147a391e23",
+    "Profiler/csrc/lib/Driver/Tianshu/TianshuApi.cpp": "84287d83ae1b6ee87e78208ee9668f59da8927104e5bbc9d26a4e99a544c05bb",
+    "Profiler/csrc/lib/Profiler/CMakeLists.txt": "8c8832b5f0bbfe6c56284c4c5bcbfdf7e324aea45e69a5a5d000e9337d2bc47a",
+    "Profiler/csrc/lib/Profiler/Cupti/CuptiPCSampling.cpp": "d42c4057ff1c39356f9322352b1ce965328ecc42883f1a3d047161f101f5a5ab",
+    "Profiler/csrc/lib/Profiler/Cupti/CuptiProfiler.cpp": "98f218278f454b41ea68cc396847563cf5db887884c721607bb01b690ad6a855",
+    "Profiler/csrc/lib/Profiler/Instrumentation/CudaRuntime.cpp": "45108c4a528aec607fb55ff1f3ff9b101489746bb7cb0637a9f0a58d9635fb41",
+    "Profiler/csrc/lib/Profiler/Instrumentation/HipRuntime.cpp": "1efc401879c789fe159a71968490b3590fb7b6a010a9f7a5b0c0fa62203f1e9b",
+    "Profiler/csrc/lib/Profiler/Instrumentation/InstrumentationProfiler.cpp": "fef0baa9d2259ce62aac3a6742bb0b0a7d2de5bf56de235c428418995da5cecc",
+    "Profiler/csrc/lib/Profiler/Instrumentation/Metadata.cpp": "e4d798d8e340259671a9ff9defc37e84e0edcc72b1f945948558eae1ec6bc631",
+    "Profiler/csrc/lib/Profiler/RocTracer/RoctracerProfiler.cpp": "b9f868314d7870274f96e508d7c4181fe7a9496b42115ec7bf3b18e8fe8fd0bb",
+    "Profiler/csrc/lib/Profiler/Vendor/Adapter.cpp": "3e2f2f1b503d2fb1d8dbe1106237204264addbf41de4bd32642fa218d43485d0",
+    "Profiler/csrc/lib/Profiler/Vendor/CannAdapter.cpp": "529d04bb154fd131e96647e61797b2e566e1570e389041df407a348abfc832c7",
+    "Profiler/csrc/lib/Profiler/Vendor/CannProfiler.cpp": "154359df2b7ca9b8a8af154c42a14334c95bb57b85d061001cca9635917d495d",
+    "Profiler/csrc/lib/Profiler/Vendor/EnflameProfiler.cpp": "6cf759b2222a877431ca460aaa3a83b240cdaa12fad5b52962968aa68d199486",
+    "Profiler/csrc/lib/Profiler/Vendor/Mode.cpp": "bab4092da989e583bbccfbe41b7c70aaab31f52882a4751ce67a3051b70f9191",
+    "Profiler/csrc/lib/Profiler/Vendor/MthreadsAdapter.cpp": "5e2a4c025fc7b3cd81a7439d413de359242f67270ce1838b803ea17bcddb906e",
+    "Profiler/csrc/lib/Profiler/Vendor/MthreadsProfiler.cpp": "ce4715e6f97bcd844abc589a54403a01d61ace313c7f854708c56f61cc6c11d0",
+    "Profiler/csrc/lib/Profiler/Vendor/TianshuAdapter.cpp": "0c116705277ad7a0cbe9864a14fd5eba609466aec3462d97c91e892806369800",
+    "Profiler/csrc/lib/Profiler/Vendor/TianshuProfiler.cpp": "cd2e4b6df2a8ca5bbe6609bb46bbbdab5e21b30c86a7982dadfb6796959ca3fe",
+    "Profiler/csrc/lib/Session/CMakeLists.txt": "7d4f251793d0f58df6f673216c9d15b1795a00b74513d19d2e23048fc89ada60",
+    "Profiler/csrc/lib/Session/Session.cpp": "a25bb766132b19d8e8aca4129da668d346ea7c4a02481a7cfc5407497ae66cde",
+    "Profiler/docs/activity_report.md": "addb5c0cc4f51579614c48c877a671c88f8983a89300006a3ada7c223a6daf46",
+    "Profiler/docs/ascend.md": "7e54a85cfe3e1d32acb809e9ad293f012355642d2fa8e574b2e14e620a0e8217",
+    "Profiler/docs/cann_acceptance_status.md": "37b5ed23351faa5f2252f65c173ae2b30c60b56e4f9e702b9feee0e0fc6b40a2",
+    "Profiler/docs/directory_structure.md": "830d13fc3550282acdd93ebe0ca58380c383945ca45f69a1951e77e90fcf3ec8",
+    "Profiler/docs/method_testing.md": "08c5b3718bf62b9e19ed4d6ea10b7e4b8376c94317656ced9bc76cd5fa1b93d3",
+    "Profiler/docs/mthreads.md": "d7ec1489ef603487df3a2c005f4de0dcc3f73a934c5f9f2f2504a07dd65207a7",
+    "Profiler/docs/semantic_profiling.md": "774329e024e2f84a8be01caa9a0123978fec633eef2d67199cf8f40f9ea97ed8",
+    "Profiler/docs/testing.md": "49bbfce9905a3b4a2a54b4b315cb7dd3dbf23f074d46bba385a75d83782df6ee",
+    "Profiler/docs/tianshu.md": "20a6691e9cff54b16fd80097773d5cb629c731efc803685e97fc5739b66cd469",
+    "Profiler/docs/vendor_adapter_minimal_patch.md": "3fa777358093a938561bdb776125d3b29a8bbb636f3e2f232c6a07df7c25e2b5",
+    "Profiler/examples/complex_matmul_profile.py": "db290917808beffb0d8b25d05ec676389f801df01c3f8d7977f8370c7aa354d2",
+    "Profiler/examples/internal_timeline_profile.py": "6da6182a68f7f72c69efd27468e425a6fe81aead4f54ac7f10fd45ddf6882baa",
+    "Profiler/examples/medium_softmax_profile.py": "f51a12d3e5d79b4e568fdcae48cbb4e689a25dad47f3e506f93fb5a295ba969c",
+    "Profiler/examples/simple_vector_add_profile.py": "268e66b27447b067317a9695328e8c10701642fd658829e422a9aa3eae9520f9",
+    "Profiler/examples/tianshu_corex_python_operator.py": "ad5dbd3e9c5c9affa05086093b6fcb6de651c02aecf93c68679cc778cdaaf0dd",
+    "Profiler/examples/timeline_showcase_profile.py": "a3719494d620624a482195a52e6b479a7e476705c30bbecbb826ef13608a79e4",
+    "Profiler/examples/tiny_mlp_profile.py": "06d2319c93d3881468cf5d4831d8bf49dfdbcc7819f23df993b7e86709a09b90",
+    "Profiler/llvm/AscendLateObserver.cpp": "a2911575e08a671f2be34094c560347f85c78dc33460ffc520c01c8805a5f9e2",
+    "Profiler/llvm/CMakeLists.txt": "54d173913111e3299526329d83fa16ce3f8f0dce2eff6cb8b64a97c522f5f925",
+    "Profiler/python/flagtree_profiler/__init__.py": "e5458ed9555994957e3c50df769c9f2661370813ff27eeedb9bcd31b3619afee",
+    "Profiler/python/flagtree_profiler/_backends.py": "fe47e0baa03a21a9263929d2ce7d1c88250066cef56ed50dd30a7538fc4feb99",
+    "Profiler/python/flagtree_profiler/_capture.py": "e01c45b05ecf1b1119b247aa3e7432b332228566c8aaa63f9ddb6f72f8660491",
+    "Profiler/python/flagtree_profiler/_metadata.py": "a59bef29569aab461d1842a02711b460bc0cd36cc65a6d14542ce8aeac5bac04",
+    "Profiler/python/flagtree_profiler/_report.py": "7b3d7b3c751a4ae666956b4e5a8323e112c0729c2f9de0e1440158fc8eddc071",
+    "Profiler/python/flagtree_profiler/ascend_abi.py": "bc7376d0c2c255ee5fb2fe973f26f2d3b9a2b50f3576529b5145c0012cabe47e",
+    "Profiler/python/flagtree_profiler/ascend_clock.py": "b73451d0a456bd0934219803873a21024afc2022aa82171c00d4357f24fb49a5",
+    "Profiler/python/flagtree_profiler/ascend_compiler.py": "93a075324ee431406936439c98336db9090d293c0dc8ea3ee7746dace25d0849",
+    "Profiler/python/flagtree_profiler/ascend_driver.py": "6cc13f03aa3b3e39a70e136de11d9f3975308ca8b108838c08f3b46571d16eb7",
+    "Profiler/python/flagtree_profiler/ascend_launch.py": "03bba9dca24cdefaad2d4fc2c670bfcfdefab1d248c25c58d7c25e3359b13c76",
+    "Profiler/python/flagtree_profiler/cann.py": "d63d2d173024a93a077d1f2287ebb854e24b548729fcc0c166ad0356ec84bfc0",
+    "Profiler/python/flagtree_profiler/cann_artifacts.py": "465b591c3ab31d5b467ba7671e847fbb149b6e35763419e81bf263dce767d277",
+    "Profiler/python/flagtree_profiler/cann_joint.py": "26b4f22c84b06c70165bedf6acc279f466f8daf3bdd5ea0d71996707dac0deb3",
+    "Profiler/python/flagtree_profiler/cann_native.py": "806e63b9f5648b37b93e9e52721e22045656726838a0a9103ede205fd65abee8",
+    "Profiler/python/flagtree_profiler/cann_raw_sys.py": "d259239bee16f02fe1604054097c1000e34b5f47964d6d61843043bf70aec23c",
+    "Profiler/python/flagtree_profiler/cann_source_clock.py": "f9c2048c4d672995561e3e3cbe66bf185355db18cc81cd27cf3a2ded3e3f754f",
+    "Profiler/python/flagtree_profiler/cli.py": "01b940748102f613accb46fe6d6ac7239b11bd53c69492dee95cc15971920f42",
+    "Profiler/python/flagtree_profiler/context.py": "7d398c8a89aa967b1a113474dc18fb1551731e837ca607bd596a9177cdc3d8bb",
+    "Profiler/python/flagtree_profiler/execution.py": "c2c19ea881e89aed972f25657b8b36da1d797d061a99433878d242a42a905759",
+    "Profiler/python/flagtree_profiler/execution_ascend.py": "caa6f57e40d01f8c309743b18afed6e960abbbd595d48c6ecf86034197413e8c",
+    "Profiler/python/flagtree_profiler/execution_enflame.py": "20f0434887a30e25662a6b112f06d237ef6630f4275fe17780efc0c605632c1a",
+    "Profiler/python/flagtree_profiler/execution_nvidia.py": "b75b1e1cfc576cf4cf89f01dfc8b42183dd1d08de8f04144476bb5d74406d4db",
+    "Profiler/python/flagtree_profiler/flags.py": "42911adf7411294b65e0862ab1c763b3c17e41bcb5be5baaa5f59179c1a157bb",
+    "Profiler/python/flagtree_profiler/hooks/__init__.py": "ab06fcca92d0d2838503787d33746d5353a1251ff07761194ca276a453477aea",
+    "Profiler/python/flagtree_profiler/hooks/hook.py": "cc884a520eac9d009b9a5e6d2402fc9c3384ea41adc1fa307a36aa68835b7c68",
+    "Profiler/python/flagtree_profiler/hooks/instrumentation.py": "7b885318e0804ff6f774bd99f004f7aa3f5724b71d218cda9ee10dfced2926a5",
+    "Profiler/python/flagtree_profiler/hooks/launch.py": "13548f09d52a4b5cc03685d41ef3db7f3a2046348b423ad7ad927ee2906f75d7",
+    "Profiler/python/flagtree_profiler/language.py": "2abf18ed559e4f2c19df9a3622f3debbe410ff236d12c903811e3d19d2ab3988",
+    "Profiler/python/flagtree_profiler/mode.py": "00fbf53edef15bb421a87fc32292694385bf150d4c87b05e5643edf58b645a12",
+    "Profiler/python/flagtree_profiler/mthreads.py": "abc3502c47196c2c5e3d4b7a770c8fa8e5475028f1ef192774083160ea5d9076",
+    "Profiler/python/flagtree_profiler/native.py": "46670c7e47d022bb1a40267c6ede67c548f03c74444cbf03a10578af976e0654",
+    "Profiler/python/flagtree_profiler/observations.py": "44a9610c8c837b65bf4cf1e4f5e95e11ef3cb9c3c7b0252872a295e2008c27e1",
+    "Profiler/python/flagtree_profiler/observations_ascend.py": "d22ac5f4413b51161867a29f644fa442e96a7006e333bd1d5e839d2cf37f2c55",
+    "Profiler/python/flagtree_profiler/observations_nvidia.py": "036228a7beab5a8393906771f5d875ddd9078c07ad175c791a68eba3d059efce",
+    "Profiler/python/flagtree_profiler/profile.py": "92395f2e00a83de1378a3d4b1580278dd11f08555b02c47b3980c23578a140f5",
+    "Profiler/python/flagtree_profiler/reconstruction.py": "8574650104b995ee5a947a5f4c8731ce7086974e0dc3e5bcf7612f04eaf965b5",
+    "Profiler/python/flagtree_profiler/scope.py": "2844e349352cb986c32d2c0062ccdfe25fb48ed74dc87c9ec4b510f626b149a8",
+    "Profiler/python/flagtree_profiler/source_origins_nvidia.py": "b969d0d9dae13821f9739557c2cfc3c4b1196c49995fc77df6301b76c78ae360",
+    "Profiler/python/flagtree_profiler/specs.py": "87a2739559bb1ef022a03026bb4acf152b0a890b3220e6181697543b3c6e430c",
+    "Profiler/python/flagtree_profiler/state.py": "3bef03466c7cb93a5e6bc07d0e02f92a5ced94c4ef630926d905a55cbdb3bb27",
+    "Profiler/python/flagtree_profiler/tcu.py": "5dbc968a57fdc022b376da4fc616fc604f0c9d2c4d79fda326c65c72dce17950",
+    "Profiler/python/flagtree_profiler/tianshu.py": "d06fe37a431bdd363a7a11c526a06b236457ad52e8f3a3fbac499cba667e79d3",
+    "Profiler/python/flagtree_profiler/viewer.py": "df7f2f376955c3a29674cf7e85c8e0627cfde5bbd5acce8ab40518ec10ab754a",
+    "Profiler/scripts/cann_native_acl_mstx_validate.py": "b67513968fa284c3822df596373927210e5ab0ae1c444fa69ef99408328e4748",
+    "Profiler/scripts/cann_post_import_msprof.py": "0162735a108fe8923b258f82bef23e49eb400febaf2f29c044138fbd1e2f2448",
+    "Profiler/scripts/cann_real_msprof_validate.py": "9781cbd6dfdfb935563a029eb0193bbaaf06d765606748d8560fa0bc2c7dc246",
+    "Profiler/scripts/cann_real_npu_workload.py": "f635fcb325daa2979867e3059b83896488e161c954d576e12aa343ba1f0c133b",
+    "Profiler/scripts/cann_vendor_raw_report.py": "957e2856d03880b8d4cbd8abd221173decf27dd2838971973fad620a1060ab10",
+    "Profiler/scripts/gpt_triton_profile_runner.py": "9d280a20712ac2b91d70535531918999b4829c0355f3189c0bed1d2c87f43222",
+    "Profiler/scripts/hatchet_summary_report.py": "02305848b737d83ddca9c990c6e4a5f1a00b010903eef79566f703567c82b104",
+    "Profiler/test/CMakeLists.txt": "4343baa81ff75480abb1d15983e771d4c2047ae980e7837ff230e660ddfaeacd",
+    "Profiler/test/cann_smoke_workload.py": "f4f684cd73e92ad4b044e310084ecdb01013b6c1f2e33ad9b0a2b05f921b473a",
+    "Profiler/test/enflame_llvm_clock_legality_probe.py": "e95f7c79f4c7b9f53909bc4cbfff3a57bdbf0c77e5f16962439de4dfd5e2b21e",
+    "Profiler/test/enflame_method_fidelity.py": "9cc9fe23c58b76f748d5fd4d62057dd5913460b69d915cd57a938f3e09613523",
+    "Profiler/test/enflame_method_matrix.py": "a2f2c0cf824735e579fa891a26469e7ffd9f9cbfd6ac290a4fe4b177ab858a00",
+    "Profiler/test/fixtures/enflame_method/kernels.py": "b48a1247af0808063e40c793aafccd9e235d60711c98e8e81e7a8f75207f642e",
+    "Profiler/test/fixtures/enflame_method/run_case.py": "d453cf065ee656baf9f0acfaae98a40c2b80849d0cdb62db06143085026d5f8b",
+    "Profiler/test/helper.py": "e8c1c1f78e995b59fe7c25264f35ca1323ea6cda2aadf14fd4b0e18f5de37dc4",
+    "Profiler/test/helper_kernels.py": "1c1907ecf842e81a77d94283a3861dcdd57b0ea15c85e529773e5c3fc009c4a9",
+    "Profiler/test/override_helper.py": "ca28b0d541b2a0862e085ae72efe527a7f503c6835ad7b089da3ff41f1ba83ac",
+    "Profiler/test/test_api.py": "ffd58e2e22dc4492143b7a745bef16218a552ef741b34b65f20716b2c5213a18",
+    "Profiler/test/test_ascend_abi.py": "be71047746e0236292807ba56547fad99d320981e4c22b7d12d2eb7f56f0a4c2",
+    "Profiler/test/test_ascend_acceptance_identity.py": "e672ae362b00f65a123e58e002851991e5290bf8602b5b8774e79b1c21e44a9e",
+    "Profiler/test/test_ascend_clock.py": "e18e172187c57bbf11ca40e8751faff431f51966c14126c4bbf1813a0f53b910",
+    "Profiler/test/test_ascend_compiler.py": "cb20d4d50d5eaf7f4edd9d3b62f8a2d648e51731ff23ee182b589eca24536b69",
+    "Profiler/test/test_ascend_launch.py": "b0a8b428d0baac31b1542cae955ad5e7fd326dc4593f6e61c6ba1ba330932031",
+    "Profiler/test/test_cann_artifacts.py": "09a47b44d1621a1448e106be9bc84b55397371eae4dfec7cb1ce794749c569bd",
+    "Profiler/test/test_cann_importer.py": "17a2c2a6afbc8ea3794da7316ab12b47575c727579e64f1b695e2c95e80f5251",
+    "Profiler/test/test_cann_joint.py": "b71e9563ec9f319280c2787631860e650bbb8436ca290bad0a2c447d73373215",
+    "Profiler/test/test_cann_launch_receipts.py": "3e02194ff036381f0b95fd0b626a1b5bde51f983d8f91f4bbaf596acf2ccd447",
+    "Profiler/test/test_cann_native.py": "6d207bd61ad94bddefcaebf1daca30e1cf3837c71fe2cb3ad36b59c0884ccf98",
+    "Profiler/test/test_cann_raw_sys.py": "c7e726ee35b48b5cd7de9707ef9b39a4f4a9dc842e57615b02f5087c945ef3c5",
+    "Profiler/test/test_cann_receipt_recovery.py": "d7bbc2959c0d672c0d10e6028859db0728ce978aad39d3d6e2d8abba71a12cd2",
+    "Profiler/test/test_cann_smoke.py": "03c77950366c574d257b7844858f1047e4b017d32ed03dd18827f7e54953a147",
+    "Profiler/test/test_cann_source_clock.py": "26a8ea136ec5e120cc8fbebb60c7c9cb0858b2f20818162830ee592c775d9fc6",
+    "Profiler/test/test_cmd.py": "8c153d4a0566d9407a6f97c3f567adfd4da8aeccf9c9f432ddbe36da8b509bfe",
+    "Profiler/test/test_enflame.py": "601a19893791abdec0100f5d206301d2b7e70cec371b5ece45685a62083d23fd",
+    "Profiler/test/test_enflame_dynamic_bounds_hardware.py": "04c3b3da349fbddd0790f32c70fd188388630f81134417f89201871c6768f172",
+    "Profiler/test/test_enflame_publication_hardware.py": "a97d1271012abf7bd96ce4711d560f979d5ac13c1faf3c7d85464d7cdcc3bc36",
+    "Profiler/test/test_execution_ascend.py": "76e405096456c77c1b701f68cfc76b71b0ac3c8252d03d2b59df8f22a16902ad",
+    "Profiler/test/test_execution_enflame.py": "7331a1dc077423558093297f9efea6f4f6ec9ca577880c1e359d1cede0af0e68",
+    "Profiler/test/test_execution_enflame_dynamic_hardware.py": "5802c497e3efc4e5030cb4bbf3a03d7f7c1916af7e6f1b2421901f4017f2d900",
+    "Profiler/test/test_execution_enflame_hardware.py": "8a8bf96ba82e56ae7275a565d8f0457a164354d2a7b3341958160d5abee52dba",
+    "Profiler/test/test_hook_rollback.py": "b0e325fbc05bc238f39382ef7675eef7b36ea9033c95c56eff8b60f1635b2f22",
+    "Profiler/test/test_instrumentation.py": "a08ee71399d70a6c9b7424ad91cfcb36caf847bb830331912a65683d0f854345",
+    "Profiler/test/test_internal_time_semantics.py": "e5f0c46b6af3141fbd784c0ff6ae2edbe5bb801c0a44e4dccaf6d7fb506105f9",
+    "Profiler/test/test_launch_metadata.py": "8dcab7e564b83595d94aa88767c4a21829bc2900ed1d4c9f2cce5fe6610b596f",
+    "Profiler/test/test_lib.py": "be5be1caddc1146e8ab25861c002c27bad428b21f0ab7aade5154768958e0c4b",
+    "Profiler/test/test_mthreads.py": "3683e01840715c7baf2cbf0d09122c1086387d83de994113ea2e83db12ec9369",
+    "Profiler/test/test_native_observation_recovery.py": "218b201ae731348f6d21363cc11e8999ecb5e70770d36e920dadecce036a8886",
+    "Profiler/test/test_observation_contract.py": "26150763677d2dbafde3bf68ecef623cc6963d43f6dd9549b28a60bd8c476fda",
+    "Profiler/test/test_observations_ascend.py": "1ee900aee8fc0701e5a79d114c9495d7c5c2e348247b42624432a01824978d91",
+    "Profiler/test/test_observer_allocation_contract.py": "1dcc382557f43cf75ed25ca1ffda9ea7cc2bff7d4f025bda7030af6c235dcfd4",
+    "Profiler/test/test_observer_decode_recovery.py": "77910d07527a6cea74a5dc6766cb4cec5e9ad47240b4e493529e91e886697897",
+    "Profiler/test/test_override.py": "0cc3774a81a3e6dde64cbe9cef0393e13e0cd22eb366eb3d4fa7efad52ae1505",
+    "Profiler/test/test_portable_capture.py": "19f4bb3c2e1cf188646537ad9b0e168fd38366153a2f3022b1b21596c7ca09e4",
+    "Profiler/test/test_profile.py": "0b500bded3a8d1252e94a6bd00bf9e3054ff6a564ec179372d008b4444b42d47",
+    "Profiler/test/test_reconstruction.py": "d9cf162bd28740c4659cc8308539f7cfa02715ca66b9c4bbaac05f786e5b6d45",
+    "Profiler/test/test_report.py": "219b46e4679a385ef45485bc682b10331a578b6dcfc62ac55fde89f1e4ff881d",
+    "Profiler/test/test_tcu.py": "b7ba4ab06c5cd31f6c17868d37f6174802bf26cce6fd6f127a74fbd898dab77a",
+    "Profiler/test/test_tianshu.py": "7b9afc67b463d47efd89a68d15ced712ce676a23757b4c56fca73447371119fd",
+    "Profiler/test/test_viewer.py": "f74476ff9f1724f80684c02620e5db67b643d4ee9cdcffcf7cf98d4a097dafe2",
+    "Profiler/test/unittest/CMakeLists.txt": "26f3750e1bd7628e320bd5a460a440be2c0d1afe57bcdc4ea6abb007f134f3f7",
+    "Profiler/test/unittest/CannLaunchReceiptTest.cpp": "fcf50c7c3e13d469e508e689de0ff5a35f140a8901b76c8cfb501352c4a9c424",
+    "Profiler/test/unittest/ProfilerStartRecoveryTest.cpp": "7ec30a661b4f18207db807b50700ed0c2c60ce3877844c933e7eb4d90fc8fed4",
+    "Profiler/test/unittest/README.md": "4441add9b3b43d84fde37faa23983025f40abc9e5ee63d749e2cd02b5ea6b6af",
+    "Profiler/test/unittest/TraceDataIO/ByteSpanTest.cpp": "4b8baabc97971c62ac71656189a169d261f2ad0e432d5c15366ff2ccc3f927a1",
+    "Profiler/test/unittest/TraceDataIO/CMakeLists.txt": "278b5b1c3fd54c396d9e114e68f1be7d2eeaf5afe2ff1cdd2aaee391459c1995",
+    "Profiler/test/unittest/TraceDataIO/ChromeTraceWriterTest.cpp": "8f5061f2d21404a77c539f4ebd662b53586e6c0c5f688648b6e9d05a341e412d",
+    "Profiler/test/unittest/TraceDataIO/CircularLayoutParserTest.cpp": "34713ded55a52bc92e11bff6ad1643dbbd76d05d4aae35f27d8c12e964811e9e",
+    "Profiler/test/unittest/TraceDataIO/DecoderTest.cpp": "001d39467efedb2386bcdf79450d30f1e36d22552d3f286c0de147cb8697961a",
+    "Profiler/test/unittest/util/trace_gen.py": "92cc079581c02f68070c1fa009e1e9d7deb445ecdc509b905ce6c77e21f1fb89",
+    "Profiler/tutorials/dynamic-net.py": "dde15b6fb81f6731416e3e2ee2afaa0c791dc85d257ba3c269b255d8b2aca593",
+    "Profiler/tutorials/matmul.py": "c54663af279f456f82c052e9f22460944896ee01ab73f5f5a2cb6483f5c03983",
+    "Profiler/tutorials/ttgir_override/vector-add-instrumented.py": "f16798bace4f383dc7dc28c26aec6988657aedb6955b721328f39ed0e5a4f2f4",
+    "Profiler/tutorials/ttgir_override/vector-add.py": "1a4bf60c5e9b15f8d757cabd17cf368f79c42303c5a7f7fe4cba22a7cc6aa671",
+    "cmake/FlagPrism.cmake": "14dbaf04bc10e1712b07e6389451a22963ec2067e6c3510ff68b2afe6af14e8a",
+    "integration/patches/README.md": "d73760af3b1424127437609f7b792ea25532fb896224468181ffc39a5db48b36",
+    "integration/patches/ascend/README.md": "e23a3ab6005158a2337d91d0b9ba9bc1af1f0097bcbe34c9d1036a99ad354cba",
+    "integration/patches/ascend/patch_launch_receipts.py": "a24be6e58fdabeaa7d57ac5da0b0545671f6b3424b5f296832a3f55aa82e33ac",
+    "integration/patches/ascend/restore_core_handoff.py": "072b57acb2956066de63c310c7c101d215fe8846ca41e9ef412bfe2452c72da5",
+    "tests/ascend/README.md": "d985eb54b97e998637381f1b6dd3625439705984848bfc126eafad738a12c154",
+    "tests/ascend/acceptance.py": "a0e60e8166a67d7f71f4bf746a2747922f314d167380d02c1558b0f4f4a7bec3",
+    "tests/ascend/heldout_workloads.py": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef",
+    "tests/ascend/native_receipt_smoke.py": "0027204e70c052689b6133b8d6731b8b1cb1f6b1ca6e65714e1e9ccb0de0135f",
+    "tests/nvidia/execution_hardware.py": "6980ccf58a89da7bab1008c30419a5ee6692872e39a6a49acd78e41e9ccac9b4",
+    "tests/nvidia/graph_hardware.py": "71fcb80eb99e1bb94f84eb94cf699ab0f05b061927614d12cb91be567eaf947b",
+    "tests/nvidia/instrumentation_hardware.py": "e4a0b2c3645ff61a4c473d8ad9c99eb246e615c769e156e3d7035e518771db40",
+    "tests/nvidia/lifecycle_hardware.py": "203b772c3f4518dfa8f30b4a2e3df519c0f3f4d7f1ac857b3e64808b4b70fbbc",
+    "tests/nvidia/native_smoke.py": "726444d575e460e52599eb7ff5fe83eb8ddf97d63e28463deaac48246b9dbaa7",
+    "tests/nvidia/operator_validation.py": "ea0e36762f2c8eaab9683e66465c32cff91c7d051e503c1e318d42d5b561f707",
+    "tests/nvidia/overhead_hardware.py": "4068978ba59655809750e0a3ca063c24fbe221d5fe619fc55207f65f121f05cf",
+    "tests/nvidia/reference_cupti.cpp": "85810db38cf4eb236d9034e92bd7765a97c7c11edf377cb66d3b1c67c1d2a7b0",
+    "tests/nvidia/reference_workloads.py": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+    "tests/nvidia/request_hardware.py": "0c96b21b50e17a5a5cf732a9ec3ccfdf08415bb5a7b626aa7a6211332d815789",
+    "tests/nvidia/run_proton_lit.py": "578e04f81b134769aaa993e03407f3e05ad073d7fbe11684abdd3bd05f88a5a7",
+    "tests/nvidia/run_pytest.py": "c855876ed117b859804f36b522c57abe5649ca9f640c9f4c9e9a983634cc3c15",
+    "tests/nvidia/source_location_contracts.py": "038e0bb5f0efd45dcc4ad2f49e1964ae7b1553fc1a8875762cd6b41bbb733e67",
+    "tests/nvidia/source_origins_hardware.py": "f137a31823b977e26125a4c10c6ed7bbbf361f2c37d9a88cbdf77555f66f0155",
+    "tests/nvidia/test_execution_nvidia.py": "2016ccc57bfd8049dd23c7ce0ec150b059d05b4578ee83f0cdcc35c3cc507eff",
+    "tests/nvidia/test_proton_ring.py": "15fde950b4391c37fec331d07e70370ea2a51625ae0e5f447409e2e70f998378",
+    "tests/nvidia/test_source_origins_nvidia.py": "58e79a87a8469530227f9890d67642a7215cd1bc11ff281ffd1fefe14f8997db",
+    "tests/operators.py": "395d2592169ab839143061b902da422997a354491b32e1946926c9f9dd4dc6bb",
+    "tests/test_runner.py": "24f1ac71263dbe984385295a45385e0d962e3ee83d27ebfa85b5095cd4394908"
+  },
+  "source_sha256": "62429a678a07bdbef5a393fa04b913a91c9e8178a97142a7e29737631e1b9d64",
+  "prepost_match": true,
+  "pythonAST_checked": 181,
+  "format_checks": [
+    {
+      "file": "Debugger/python/Bindings.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          575,
+          601
+        ]
+      ]
+    },
+    {
+      "file": "Debugger/python/flagtree_debugger/api.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          1324,
+          1353
+        ],
+        [
+          1433,
+          1473
+        ],
+        [
+          1475,
+          1485
+        ]
+      ]
+    },
+    {
+      "file": "Debugger/python/flagtree_debugger/compiler.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          458,
+          462
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/Dialect/lib/ProtonToProtonGPU/ProtonToProtonGPUPass.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          285,
+          288
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/Profiler.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          2,
+          4
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          39,
+          53
+        ],
+        [
+          84,
+          163
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/include/Profiler/Profiler.h",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          32,
+          39
+        ],
+        [
+          41,
+          41
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/csrc/include/Profiler/Vendor/CannProfiler.h",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          67,
+          69
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/include/Session/Session.h",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          120,
+          122
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/lib/Profiler/Vendor/CannProfiler.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          2,
+          2
+        ],
+        [
+          10,
+          10
+        ],
+        [
+          18,
+          18
+        ],
+        [
+          22,
+          22
+        ],
+        [
+          1719,
+          1835
+        ],
+        [
+          2027,
+          2028
+        ],
+        [
+          2072,
+          2104
+        ],
+        [
+          2122,
+          2127
+        ],
+        [
+          2222,
+          2225
+        ],
+        [
+          2505,
+          2783
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/csrc/lib/Session/Session.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          420,
+          422
+        ],
+        [
+          429,
+          429
+        ],
+        [
+          438,
+          439
+        ],
+        [
+          449,
+          453
+        ],
+        [
+          737,
+          737
+        ],
+        [
+          905,
+          905
+        ],
+        [
+          958,
+          967
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/__init__.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          68,
+          72
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/_capture.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          66,
+          68
+        ],
+        [
+          94,
+          99
+        ],
+        [
+          147,
+          149
+        ],
+        [
+          153,
+          154
+        ],
+        [
+          168,
+          174
+        ],
+        [
+          176,
+          179
+        ],
+        [
+          186,
+          189
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/_report.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          94,
+          99
+        ],
+        [
+          173,
+          173
+        ],
+        [
+          225,
+          229
+        ],
+        [
+          256,
+          259
+        ],
+        [
+          264,
+          289
+        ],
+        [
+          1104,
+          1122
+        ],
+        [
+          1162,
+          1163
+        ],
+        [
+          1537,
+          1540
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/ascend_launch.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/cann_artifacts.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/cann_joint.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/cann_native.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/cann_raw_sys.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/cann_source_clock.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/hooks/instrumentation.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          173,
+          205
+        ],
+        [
+          565,
+          569
+        ],
+        [
+          571,
+          593
+        ],
+        [
+          595,
+          637
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/hooks/launch.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          284,
+          306
+        ],
+        [
+          314,
+          317
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/observations.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          184,
+          185
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/profile.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          142,
+          147
+        ],
+        [
+          893,
+          898
+        ],
+        [
+          920,
+          922
+        ],
+        [
+          955,
+          1155
+        ],
+        [
+          1157,
+          1157
+        ],
+        [
+          1160,
+          1293
+        ],
+        [
+          1748,
+          1748
+        ],
+        [
+          1755,
+          1756
+        ],
+        [
+          1834,
+          1837
+        ],
+        [
+          1839,
+          1840
+        ],
+        [
+          1844,
+          1844
+        ],
+        [
+          1864,
+          1866
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/reconstruction.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          163,
+          178
+        ]
+      ]
+    },
+    {
+      "file": "Profiler/test/test_ascend_acceptance_identity.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_ascend_launch.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_artifacts.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_joint.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_launch_receipts.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_native.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_raw_sys.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_receipt_recovery.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_cann_source_clock.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_native_observation_recovery.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_observer_allocation_contract.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/test_observer_decode_recovery.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/unittest/CannLaunchReceiptTest.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "Profiler/test/unittest/ProfilerStartRecoveryTest.cpp",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "integration/patches/ascend/patch_launch_receipts.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    },
+    {
+      "file": "tests/ascend/acceptance.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": [
+        [
+          5,
+          5
+        ],
+        [
+          23,
+          24
+        ],
+        [
+          33,
+          69
+        ],
+        [
+          203,
+          204
+        ]
+      ]
+    },
+    {
+      "file": "tests/ascend/native_receipt_smoke.py",
+      "idempotent_in_changed_ranges": true,
+      "ranges": null
+    }
+  ],
+  "text_errors": [],
+  "ruff_exit": 0,
+  "ruff_output": "Package/new/changed-line errors: 0",
+  "ruff_introduced": [],
+  "ruff_inherited_outside_ranges": [
+    {
+      "cell": null,
+      "code": "F401",
+      "end_location": {
+        "column": 21,
+        "row": 78
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "",
+            "end_location": {
+              "column": 1,
+              "row": 79
+            },
+            "location": {
+              "column": 1,
+              "row": 78
+            }
+          }
+        ],
+        "message": "Remove unused import: `torch_npu`"
+      },
+      "location": {
+        "column": 12,
+        "row": 78
+      },
+      "message": "`torch_npu` imported but unused",
+      "noqa_row": 78,
+      "url": "https://docs.astral.sh/ruff/rules/unused-import"
+    },
+    {
+      "cell": null,
+      "code": "F401",
+      "end_location": {
+        "column": 33,
+        "row": 80
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": {
+        "applicability": "safe",
+        "edits": [
+          {
+            "content": "",
+            "end_location": {
+              "column": 1,
+              "row": 81
+            },
+            "location": {
+              "column": 1,
+              "row": 80
+            }
+          }
+        ],
+        "message": "Remove unused import: `triton.language`"
+      },
+      "location": {
+        "column": 31,
+        "row": 80
+      },
+      "message": "`triton.language` imported but unused",
+      "noqa_row": 80,
+      "url": "https://docs.astral.sh/ruff/rules/unused-import"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 36,
+        "row": 85
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 35,
+        "row": 85
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 85,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 54,
+        "row": 88
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 53,
+        "row": 88
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 88,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 79,
+        "row": 88
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 78,
+        "row": 88
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 88,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 53,
+        "row": 100
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 52,
+        "row": 100
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 100,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 86,
+        "row": 100
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 85,
+        "row": 100
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 100,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 51,
+        "row": 103
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 50,
+        "row": 103
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 103,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 82,
+        "row": 103
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 81,
+        "row": 103
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 103,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 30,
+        "row": 114
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 29,
+        "row": 114
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 114,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 19,
+        "row": 116
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 18,
+        "row": 116
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 116,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 36,
+        "row": 116
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 35,
+        "row": 116
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 116,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 31,
+        "row": 120
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 30,
+        "row": 120
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 120,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 34,
+        "row": 121
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 33,
+        "row": 121
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 121,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 33,
+        "row": 122
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 32,
+        "row": 122
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 122,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 62,
+        "row": 122
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 61,
+        "row": 122
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 122,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 31,
+        "row": 123
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 30,
+        "row": 123
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 123,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 51,
+        "row": 123
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 50,
+        "row": 123
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 123,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 21,
+        "row": 125
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 20,
+        "row": 125
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 125,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 54,
+        "row": 125
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 53,
+        "row": 125
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 125,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 87,
+        "row": 125
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 86,
+        "row": 125
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 125,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 39,
+        "row": 127
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 38,
+        "row": 127
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 127,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 37,
+        "row": 128
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 36,
+        "row": 128
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 128,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 43,
+        "row": 128
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 42,
+        "row": 128
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 128,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 49,
+        "row": 128
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 48,
+        "row": 128
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 128,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 66,
+        "row": 128
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 65,
+        "row": 128
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 128,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 19,
+        "row": 134
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 18,
+        "row": 134
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 134,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 38,
+        "row": 134
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 37,
+        "row": 134
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 134,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 64,
+        "row": 134
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 63,
+        "row": 134
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 134,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 92,
+        "row": 134
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 91,
+        "row": 134
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 134,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 63,
+        "row": 135
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 62,
+        "row": 135
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 135,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 19,
+        "row": 139
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 18,
+        "row": 139
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 139,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 38,
+        "row": 139
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 37,
+        "row": 139
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 139,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 56,
+        "row": 139
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 55,
+        "row": 139
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 139,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 32,
+        "row": 140
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 31,
+        "row": 140
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 140,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 36,
+        "row": 141
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 35,
+        "row": 141
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 141,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 34,
+        "row": 142
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 33,
+        "row": 142
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 142,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 14,
+        "row": 143
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 13,
+        "row": 143
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 143,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 41,
+        "row": 144
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 40,
+        "row": 144
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 144,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 56,
+        "row": 144
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 55,
+        "row": 144
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 144,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 18,
+        "row": 164
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 17,
+        "row": 164
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 164,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 14,
+        "row": 170
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 13,
+        "row": 170
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 170,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 41,
+        "row": 176
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 40,
+        "row": 176
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 176,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 50,
+        "row": 179
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 49,
+        "row": 179
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 179,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 26,
+        "row": 180
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 25,
+        "row": 180
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 180,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 33,
+        "row": 181
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 32,
+        "row": 181
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 181,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 42,
+        "row": 187
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 41,
+        "row": 187
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 187,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 59,
+        "row": 187
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 58,
+        "row": 187
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 187,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 44,
+        "row": 188
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 43,
+        "row": 188
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 188,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 22,
+        "row": 190
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 21,
+        "row": 190
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 190,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 40,
+        "row": 190
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 39,
+        "row": 190
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 190,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 32,
+        "row": 193
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 31,
+        "row": 193
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 193,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 59,
+        "row": 193
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 58,
+        "row": 193
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 193,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 30,
+        "row": 196
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 29,
+        "row": 196
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 196,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 57,
+        "row": 197
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 56,
+        "row": 197
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 197,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 28,
+        "row": 202
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 27,
+        "row": 202
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 202,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 60,
+        "row": 205
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 59,
+        "row": 205
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 205,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 91,
+        "row": 216
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 90,
+        "row": 216
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 216,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 36,
+        "row": 219
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 35,
+        "row": 219
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 219,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 38,
+        "row": 229
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 37,
+        "row": 229
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 229,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 94,
+        "row": 229
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 93,
+        "row": 229
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 229,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 83,
+        "row": 230
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 82,
+        "row": 230
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 230,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 59,
+        "row": 231
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 58,
+        "row": 231
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 231,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 50,
+        "row": 233
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 49,
+        "row": 233
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 233,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 97,
+        "row": 233
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 96,
+        "row": 233
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 233,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 122,
+        "row": 233
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 121,
+        "row": 233
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 233,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 14,
+        "row": 235
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 13,
+        "row": 235
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 235,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 39,
+        "row": 241
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 38,
+        "row": 241
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 241,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 39,
+        "row": 242
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 38,
+        "row": 242
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 242,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 30,
+        "row": 251
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 29,
+        "row": 251
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 251,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 82,
+        "row": 253
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 81,
+        "row": 253
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 253,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 73,
+        "row": 256
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 72,
+        "row": 256
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 256,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 29,
+        "row": 257
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 28,
+        "row": 257
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 257,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 50,
+        "row": 259
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 49,
+        "row": 259
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 259,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 96,
+        "row": 259
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 95,
+        "row": 259
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 259,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 93,
+        "row": 263
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 92,
+        "row": 263
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 263,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 118,
+        "row": 263
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 117,
+        "row": 263
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 263,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 31,
+        "row": 264
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 30,
+        "row": 264
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 264,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 131,
+        "row": 266
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 130,
+        "row": 266
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 266,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 25,
+        "row": 274
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 24,
+        "row": 274
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 274,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 63,
+        "row": 276
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 62,
+        "row": 276
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 276,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 54,
+        "row": 278
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 53,
+        "row": 278
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 278,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 42,
+        "row": 279
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 41,
+        "row": 279
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 279,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 70,
+        "row": 279
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 69,
+        "row": 279
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 279,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 43,
+        "row": 280
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 42,
+        "row": 280
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 280,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E702",
+      "end_location": {
+        "column": 70,
+        "row": 280
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 69,
+        "row": 280
+      },
+      "message": "Multiple statements on one line (semicolon)",
+      "noqa_row": 280,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-semicolon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 43,
+        "row": 282
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 42,
+        "row": 282
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 282,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    },
+    {
+      "cell": null,
+      "code": "E701",
+      "end_location": {
+        "column": 25,
+        "row": 299
+      },
+      "filename": "/workspace/FlagPrism-method-nvidia/tests/ascend/acceptance.py",
+      "fix": null,
+      "location": {
+        "column": 24,
+        "row": 299
+      },
+      "message": "Multiple statements on one line (colon)",
+      "noqa_row": 299,
+      "url": "https://docs.astral.sh/ruff/rules/multiple-statements-on-one-line-colon"
+    }
+  ],
+  "ruff_raw_exit": 1,
+  "tools": {
+    "yapf": "0.43.0",
+    "ruff": "ruff 0.9.1",
+    "clang_format": "clang-format version 19.1.6"
+  },
+  "binary_files": {
+    "profiler_native": {
+      "path": "/workspace/FlagPrism-method-nvidia/Profiler/python/flagtree_profiler/_native.so",
+      "sha256": "73cadbefc0b4412b2e319ff4970dd751684e5fdf9dab49b8ab393dbad2c91634"
+    },
+    "compiler": {
+      "path": "/workspace/FlagTree-method-nvidia/python/triton/_C/libtriton.so",
+      "sha256": "48ced086ce666911562ce1f66855d70305d5816f82cf0f8370ee550dab96a6e6"
+    },
+    "debugger_native": {
+      "path": "/workspace/FlagPrism-method-nvidia/Debugger/python/flagtree_debugger/_native.cpython-310-x86_64-linux-gnu.so",
+      "sha256": "6118c72090d5732abc9ce30b20988387f4144c7d61f08b93ff6a32babf996e4a"
+    }
+  }
+}

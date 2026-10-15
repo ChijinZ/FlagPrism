@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import struct
+import sqlite3
 import sys
 
 from .cann_joint import build_native_task_proofs
@@ -21,6 +22,10 @@ _SCHEMA_FILES = (
     'msparser/stars/stars_log_parser.py',
     'profiling_bean/stars/stars_common.py',
     'common_func/file_name_manager.py',
+    'common_func/utils.py',
+    'common_func/db_name_constant.py',
+    'msparser/compact_info/stream_expand_spec_reader.py',
+    'msmodel/compact_info/stream_expand_spec_model.py',
 )
 _ANALYSIS_SUFFIX = 'tools/profiler/profiler_tool/analysis'
 
@@ -85,6 +90,52 @@ def _schema(analysis_root):
     }
 
 
+def _nonexpanded_encoding(capture, root):
+    """Read SDK stream-expansion state; the installed reader defaults to zero."""
+    paths = sorted(capture.rglob('stream_expand_spec.db'))
+    if not paths:
+        return {
+            'kind': 'sdk_stream_expand_spec_v1',
+            'expand_status': 0,
+            'source': 'installed_reader_default_no_database',
+            'databases': []
+        }
+    if len(paths) != 1:
+        raise ValueError('ambiguous SDK stream-expansion state')
+    path = paths[0]
+    connection = sqlite3.connect(path.resolve().as_uri() + '?mode=ro',
+                                 uri=True)
+    try:
+        tables = [
+            row[0] for row in connection.execute(
+                "SELECT name FROM sqlite_master WHERE type='table'")
+        ]
+        rows = (connection.execute(
+            'SELECT expand_status FROM "StreamExpandSpec"').fetchall()
+                if 'StreamExpandSpec' in tables else [])
+    finally:
+        connection.close()
+    # SDK uses its default when this table is absent/empty. Multiple distinct
+    # states are rejected instead of trusting whichever row happened to be first.
+    values = {row[0] for row in rows}
+    if values and values != {0}:
+        raise ValueError(
+            'expanded or ambiguous SDK stream mode is unsupported')
+    return {
+        'kind':
+        'sdk_stream_expand_spec_v1',
+        'expand_status':
+        0,
+        'source':
+        'actual_sdk_database'
+        if rows else 'installed_reader_default_empty_database',
+        'databases': [{
+            'path': str(path.relative_to(root)),
+            'sha256': _digest(path.read_bytes())
+        }]
+    }
+
+
 def _decode_records(raw, provenance):
     """Decode SDK's 64-byte records; reject encodings we cannot certify."""
     if len(raw) % 64:
@@ -101,8 +152,15 @@ def _decode_records(raw, provenance):
         if func_type not in (0, 1):
             continue
         fields = struct.unpack('=4HQHH11L', payload)
-        stream, task = fields[2:4]
-        if stream >= 4096 or task >= 4096:
+        encoded_stream, encoded_task = fields[2:4]
+        stream, task = encoded_stream, encoded_task
+        # Installed StarsCommon non-expanded FFTS encoding, bit13 branch.
+        # Restrict support to the actual proved low task/stream range; other
+        # SDK modes remain failures rather than guessed masks.
+        if stream & 0xF000 == 0x2000 and task < 4096:
+            stream, task = (encoded_task & 0x0FFF) % (1 << 11), (
+                (encoded_stream & 0x0FFF) | (encoded_task & 0xF000))
+        elif stream >= 2048 or task >= 4096:
             raise ValueError(
                 'expanded STARS stream/task encoding is unsupported')
         decoded.append(
@@ -111,6 +169,8 @@ def _decode_records(raw, provenance):
                  raw_record_hex=payload.hex(),
                  raw_record_sha256=_digest(payload),
                  function_type=func_type,
+                 encoded_stream_id=encoded_stream,
+                 encoded_task_id=encoded_task,
                  stream_id=stream,
                  task_id=task,
                  raw_sys_counter=fields[4]))
@@ -159,6 +219,7 @@ def build_raw_task_sys(capture_root, receipt_file, analysis_root=None):
             continue
         records = []
         try:
+            encoding = _nonexpanded_encoding(capture, root)
             paths = sorted((capture / ('device_%d/data' % worker['device_id'])
                             ).glob('stars_soc.data.*.slice_*'))
             for path in paths:
@@ -190,12 +251,17 @@ def build_raw_task_sys(capture_root, receipt_file, analysis_root=None):
             elif ends[0]['raw_sys_counter'] < starts[0]['raw_sys_counter']:
                 result['reason'] = 'raw task SYS counter reverses or wraps'
             else:
-                result.update(status='raw_task_envelope_extracted',
-                              reason=None,
-                              native_identity=proof['native'],
-                              start=starts[0],
-                              end=ends[0],
-                              evidence_kind='sealed_sdk_task_and_raw_acsq_sys')
+                result.update(
+                    status='raw_task_envelope_extracted',
+                    reason=None,
+                    native_identity=proof['native'],
+                    start=starts[0],
+                    end=ends[0],
+                    evidence_kind='sealed_sdk_task_and_raw_acsq_sys',
+                    duration_scope='whole_dispatch_not_compute_or_actor',
+                    stream_encoding=encoding,
+                    dispatch_context_evidence=proof.get(
+                        'dispatch_context_evidence'))
         except ValueError as error:
             result['reason'] = str(error)
         results.append(result)

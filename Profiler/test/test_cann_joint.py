@@ -217,3 +217,122 @@ def test_duplicate_token_cannot_bind_two_native_tasks(tmp_path):
         proof['status'] for proof in run(tmp_path, capture, [receipt, other])
         ['task_identity_proofs']
     ] == ['ambiguous', 'ambiguous']
+
+
+def contextual_fixture(tmp_path,
+                       *,
+                       compute_ids=(0, ),
+                       context_ids=(0, 4294967295)):
+    capture, receipt = fixture(tmp_path)
+    connection = sqlite3.connect(capture / 'host/sqlite/runtime.db')
+    connection.execute('ALTER TABLE HostTask ADD COLUMN context_ids')
+    connection.execute('ALTER TABLE HostTask ADD COLUMN model_id')
+    connection.execute('ALTER TABLE HostTask ADD COLUMN batch_id')
+    connection.execute('DELETE FROM HostTask')
+    for context in context_ids:
+        connection.execute(
+            'INSERT INTO HostTask VALUES (4,0,0,0,9,?,4294967295,0)',
+            (str(context), ))
+    connection.commit()
+    connection.close()
+    connection = sqlite3.connect(capture / 'msprof_fixture.db')
+    connection.execute('ALTER TABLE TASK ADD COLUMN contextId')
+    connection.execute('ALTER TABLE TASK ADD COLUMN modelId')
+    connection.execute('DELETE FROM TASK')
+    for index, context in enumerate(context_ids):
+        connection.execute(
+            'INSERT INTO TASK VALUES (7,4,0,0,0,?,100,120,?,4294967295)',
+            (index, context))
+    connection.execute(
+        'CREATE TABLE COMPUTE_TASK_INFO(globalTaskId,blockNum,mixBlockNum)')
+    for index in compute_ids:
+        connection.execute('INSERT INTO COMPUTE_TASK_INFO VALUES (?,64,128)',
+                           (index, ))
+    connection.commit()
+    connection.close()
+    return capture, receipt
+
+
+def test_mix_context_membership_and_compute_fk_select_zero_keep_all_views(
+        tmp_path):
+    capture, receipt = contextual_fixture(tmp_path)
+    output = run(tmp_path, capture, [receipt])
+    proof = output['task_identity_proofs'][0]
+    assert proof['status'] == 'verified_task_identity'
+    assert proof['native']['sdk_task']['globalTaskId'] == 0
+    evidence = proof['dispatch_context_evidence']
+    assert evidence['compute_member_count'] == 1
+    assert evidence['selected_compute_global_task_id'] == 0
+    assert len(evidence['all_context_views']) == 2
+    assert 'context_id' not in evidence['dispatch_key']
+    assert output['raw_compute_task_inventory'] == [{
+        'capture_id': '.',
+        'sdk_compute_task_info': {
+            'globalTaskId': 0,
+            'blockNum': 64,
+            'mixBlockNum': 128
+        }
+    }]
+    assert output['compute_task_info_captures'] == ['.']
+
+
+def test_uintmax_context_can_be_real_compute_and_singleton_has_evidence(
+        tmp_path):
+    capture, receipt = contextual_fixture(tmp_path, context_ids=(4294967295, ))
+    proof = run(tmp_path, capture, [receipt])['task_identity_proofs'][0]
+    assert proof['status'] == 'verified_task_identity'
+    assert proof['native']['sdk_task']['contextId'] == 4294967295
+    assert len(proof['dispatch_context_evidence']['all_context_views']) == 1
+
+
+def test_multi_compute_dispatch_is_explicitly_unsupported(tmp_path):
+    capture, receipt = contextual_fixture(tmp_path, compute_ids=(0, 1))
+    proof = run(tmp_path, capture, [receipt])['task_identity_proofs'][0]
+    assert proof['status'] == 'compound_dispatch_unsupported'
+    assert 'native' not in proof
+    assert proof['dispatch_context_evidence']['compute_member_count'] == 2
+    assert proof['dispatch_context_evidence'][
+        'selected_compute_global_task_id'] is None
+
+
+def test_empty_compute_table_does_not_promote_container_to_compute(tmp_path):
+    capture, receipt = contextual_fixture(tmp_path, compute_ids=())
+    output = run(tmp_path, capture, [receipt])
+    assert output['compute_task_info_captures'] == ['.']
+    assert output['task_identity_proofs'][0]['status'] == 'unassociated'
+
+
+@pytest.mark.parametrize('mutation', [
+    'model', 'wrong_context', 'nondecimal', 'duplicate', 'out_of_range',
+    'negative'
+])
+def test_context_membership_rejects_invalid_sdk_join(tmp_path, mutation):
+    capture, receipt = contextual_fixture(tmp_path, context_ids=(0, ))
+    connection = sqlite3.connect(capture / 'host/sqlite/runtime.db')
+    if mutation == 'model':
+        connection.execute('UPDATE HostTask SET model_id=3')
+    else:
+        value = {
+            'wrong_context': '1',
+            'nondecimal': '0x0',
+            'duplicate': '0,0',
+            'out_of_range': '4294967296',
+            'negative': '-1'
+        }[mutation]
+        connection.execute('UPDATE HostTask SET context_ids=?', (value, ))
+    connection.commit()
+    connection.close()
+    assert run(
+        tmp_path, capture,
+        [receipt])['task_identity_proofs'][0]['status'] == 'unassociated'
+
+
+def test_compute_fk_ambiguity_does_not_select_by_first_row(tmp_path):
+    capture, receipt = contextual_fixture(tmp_path, context_ids=(0, ))
+    connection = sqlite3.connect(capture / 'msprof_fixture.db')
+    connection.execute('INSERT INTO COMPUTE_TASK_INFO VALUES (0,32,64)')
+    connection.commit()
+    connection.close()
+    output = run(tmp_path, capture, [receipt])
+    assert len(output['raw_compute_task_inventory']) == 2
+    assert output['task_identity_proofs'][0]['status'] == 'unassociated'

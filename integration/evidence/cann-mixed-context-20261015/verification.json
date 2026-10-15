@@ -1,0 +1,30 @@
+{
+  "baseline": "0ef0adf2c891ad616442f9cd4d8b72a9df04057f",
+  "scope": "Mixed SDK dispatch/context association and retained worker receipt failure recovery",
+  "source_manifest": "final-source.json",
+  "verified_local_files": 464,
+  "source_mismatches": [],
+  "cpu": "382 passed / 4 opt-in browser skipped; final rawSYS-only SDK mode delta 53 passed",
+  "fresh_hardware": "Ascend MIX-r2 GEMM+bias+GELU128^3; four task identities; 232 actor-local records; math/input/canary passed",
+  "raw_archive": "artifacts/method-run/ascend/mix-smoke-r2-complete-evidence.tgz",
+  "raw_archive_sha256": "9550b1c8bfd2ed6d92c6224a5f0291a30c9c1fdc5bbfbc99af1a2df0e85b9c91",
+  "original_failures": [
+    "NV r25: 369 passed, 4 failed, 4 skipped before preserving original Py3.10 exception types; fixed without weakening tests",
+    "MIX initial fixture oracle counts/binary assumptions corrected to original retained proof; historical failures retained in workspace"
+  ],
+  "remaining": [
+    "Ascend full matrix/RMS/Study/T5 and wheel not accepted at this milestone",
+    "Ascend source origins partial; source-local rate does not certify shared actor epoch",
+    "NVIDIA performance explicitly deferred; no new NVIDIA GPU tests for Python-only change"
+  ],
+  "evidence_files": {
+    "r25-review-handoff.json": "f9bdf10a604ba1698994c4c91759a67a04c690a28f943b227ff350267d1a92fb",
+    "cpu-final.log": "18b14b469372c3d5a587436c51048e3e4614bee2a651f956489aecbe463d556e",
+    "cpu-exact-sdk.log": "c32be78dfdc4c3b89afa42faae78908a63e2ead33fb6245cfb7419faded3fbbe",
+    "final-source.json": "d8b17e09414b44af925bf44b33774cdb5b7d21c2a4593495cf938b4528605008",
+    "mix-offline-audit.json": "c34e8a92c0cbdb47e8b6c7963ddfa905fb43f619d4a0712e4c889dadc90b65f0",
+    "receipt-recovery.json": "031af5ba6dede0b41f89d72dfe08b7c01cd73e1ccddf744a363ae470a3c393d6",
+    "receipt-recovery.log": "ad08d172c1ad05946bff2bc57b089e1772b7f8503afd56cdb842179397fe9095",
+    "mix-r2-independent-audit.json": "63fa088fdc98f524317b8166512c9b2b614a305e659655ece0750c658f1a2d55"
+  }
+}

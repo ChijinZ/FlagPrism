@@ -1,0 +1,29 @@
+{
+  "scope": "ROOT independent offline audit of actual fresh MIX-r2 retained bytes; no new GPU or clock certification",
+  "manifest_files": 151,
+  "manifest_mismatch": [],
+  "retained_sdk_files": 118,
+  "retention_mismatch": [],
+  "observations": 232,
+  "raw_observations": 232,
+  "raw_identity_tick_changes": [],
+  "duration_formula_mismatch": [],
+  "actor_counts": {
+    "0": 192,
+    "1": 20,
+    "2": 20
+  },
+  "alignment_counts": {
+    "instance_local": 232
+  },
+  "tick_ns_counts": {
+    "20.0": 232
+  },
+  "archive_sha256": "9550b1c8bfd2ed6d92c6224a5f0291a30c9c1fdc5bbfbc99af1a2df0e85b9c91",
+  "limits": [
+    "instance_local clock; common epoch not certified",
+    "source_op IDs missing; compiler mapping partial",
+    "full Ascend matrix and wheel not yet accepted",
+    "NVIDIA performance deferred by user"
+  ]
+}

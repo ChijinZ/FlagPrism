@@ -494,3 +494,212 @@ def test_actual_hidden_r4_taxonomy_without_task_or_source_proof(tmp_path):
     saved = json.loads(
         (tmp_path / 'hidden-r4-offline/ai/cann_native_tasks.json').read_text())
     assert len(saved['activity_extensions']) == 10
+
+
+def mix_fixture(tmp_path, *, compute_contexts=(0, )):
+    capture, receipt, receipt_file, _, document = fixture(tmp_path)
+    with sqlite3.connect(capture / 'host/sqlite/runtime.db') as db:
+        for name in ('context_ids', 'model_id', 'batch_id'):
+            db.execute('ALTER TABLE HostTask ADD COLUMN ' + name)
+        db.execute(
+            "UPDATE HostTask SET task_type='KERNEL_MIX_AIC', context_ids='0', model_id=4294967295, batch_id=0"
+        )
+        db.execute(
+            "INSERT INTO HostTask VALUES (4,0,0,0,9,'KERNEL_MIX_AIC','4294967295',4294967295,0)"
+        )
+    with sqlite3.connect(capture / 'msprof_fixture.db') as db:
+        db.execute('ALTER TABLE TASK ADD COLUMN contextId')
+        db.execute('ALTER TABLE TASK ADD COLUMN modelId')
+        db.execute('UPDATE TASK SET contextId=0,modelId=4294967295')
+        db.execute(
+            'INSERT INTO TASK VALUES (7,4,0,0,0,1,90,130,19,4294967295,4294967295)'
+        )
+        db.execute(
+            'CREATE TABLE COMPUTE_TASK_INFO(globalTaskId,blockNum,mixBlockNum)'
+        )
+        for context in compute_contexts:
+            db.execute('INSERT INTO COMPUTE_TASK_INFO VALUES (?,64,128)',
+                       (0 if context == 0 else 1, ))
+    proof = json.loads(
+        json.dumps(build_native_task_proofs(capture, receipt_file)))
+    return capture, proof, document
+
+
+def test_mix_exact_context_compute_fk_and_dispatch_extension(tmp_path):
+    capture, proof, document = mix_fixture(tmp_path)
+    parent = legacy(capture, **{'activity.context_id': 4294967295})
+    ambiguous = legacy(capture)
+    compute = legacy(capture, **{'activity.context_id': 0})
+    document['associations'] = [parent, ambiguous, compute]
+    output = augment_native_tasks(document, proof)
+    events = analyze(output)['events']
+    assert len(events) == 1
+    assert events[0]['launch_id'] == 'launch-0'
+    assert events[0]['context_id'] == 0
+    assert len(output['cann_native_dispatch_contexts']) == 1
+    assert len(output['cann_native_superseded_views']) == 1
+    assert {
+        item['kind']
+        for item in output['cann_native_dispatch_extensions']
+    } == {'dispatch_context_view', 'unclassified_device_task'}
+    assert all('launch_id' not in item['normalized_row']
+               for item in output['cann_native_dispatch_extensions'])
+    assert analyze(augment_native_tasks(output, proof))['events'] == events
+
+
+@pytest.mark.parametrize('mutation', [
+    'host_context', 'context_join', 'compute_fk', 'compute_inventory',
+    'dispatch_views', 'dispatch_key', 'selected_global_id'
+])
+def test_mix_inconsistent_context_or_fk_never_binds(tmp_path, mutation):
+    _, proof, document = mix_fixture(tmp_path)
+    native = proof['task_identity_proofs'][0]['native']
+    target = next(entry for entry in proof['native_task_candidates']
+                  if entry == native)
+    if mutation == 'host_context':
+        target['sdk_host_task']['context_ids'] = '4294967295'
+    elif mutation == 'context_join':
+        target['context_join']['task_context_id'] = 1
+    elif mutation == 'compute_fk':
+        target['sdk_compute_task_info']['globalTaskId'] = 100
+    elif mutation == 'compute_inventory':
+        proof['raw_compute_task_inventory'] = []
+    else:
+        evidence = proof['task_identity_proofs'][0][
+            'dispatch_context_evidence']
+        if mutation == 'dispatch_views':
+            evidence['all_context_views'] = evidence['all_context_views'][:1]
+        elif mutation == 'dispatch_key':
+            evidence['dispatch_key']['connection_id'] += 1
+        else:
+            evidence['selected_compute_global_task_id'] = 1
+    rows = canonical(augment_native_tasks(document, proof))
+    assert all(row['invocation_identity'] is None for row in rows)
+
+
+def test_mix_multiple_compute_tasks_preserved_without_single_source_claim(
+        tmp_path):
+    _, proof, document = mix_fixture(tmp_path,
+                                     compute_contexts=(0, 4294967295))
+    output = augment_native_tasks(document, proof)
+    assert len(canonical(output)) == 2
+    assert all(row['invocation_identity'] is None for row in canonical(output))
+    assert len(analyze(output)['events']) == 2
+    assert proof['task_identity_proofs'][0][
+        'status'] == 'compound_dispatch_unsupported'
+
+
+def test_uintmax_context_can_be_actual_single_compute_not_globally_filtered(
+        tmp_path):
+    capture, _, receipt_file, _, document = fixture(tmp_path)
+    with sqlite3.connect(capture / 'host/sqlite/runtime.db') as db:
+        db.execute('ALTER TABLE HostTask ADD COLUMN context_ids')
+        db.execute("UPDATE HostTask SET context_ids='4294967295'")
+    with sqlite3.connect(capture / 'msprof_fixture.db') as db:
+        db.execute('ALTER TABLE TASK ADD COLUMN contextId')
+        db.execute('UPDATE TASK SET contextId=4294967295')
+        db.execute('CREATE TABLE COMPUTE_TASK_INFO(globalTaskId)')
+        db.execute('INSERT INTO COMPUTE_TASK_INFO VALUES (0)')
+    proof = build_native_task_proofs(capture, receipt_file)
+    rows = canonical(augment_native_tasks(document, proof))
+    assert len(rows) == 1 and rows[0]['invocation_identity'][
+        'invocation_id'] == 'launch-0'
+    assert not augment_native_tasks(document,
+                                    proof)['cann_native_dispatch_contexts']
+
+
+def test_actual_mix_archive_context_compute_and_source_proofs(tmp_path):
+    value = os.environ.get('FLAGPRISM_CANN_NATIVE_MIX_FIXTURE')
+    if not value:
+        pytest.skip(
+            'Set FLAGPRISM_CANN_NATIVE_MIX_FIXTURE to retained actual MIX archive'
+        )
+    raw = Path(value) / 'capture/raw/native'
+    receipt_file = raw / 'capture.cann-launch-receipts.json'
+    receipts = json.loads(receipt_file.read_text())['receipts']
+    root = Path(receipts[0]['collector_output_path'])
+    proof = json.loads(json.dumps(build_native_task_proofs(root,
+                                                           receipt_file)))
+    assert len([
+        entry for entry in proof['native_task_candidates']
+        if entry['sdk_host_task']['task_type'] == 'KERNEL_MIX_AIC'
+    ]) == 8
+    assert len(proof['raw_compute_task_inventory']) == 4
+    assert all(item['status'] == 'verified_task_identity'
+               for item in proof['task_identity_proofs'])
+    document = json.loads((raw / 'capture.vendor.json').read_text())
+    snapshot = json.loads((raw / 'capture.launches.json').read_text())
+    document.update({
+        key: snapshot[key]
+        for key in ('launches', 'binaries', 'software', 'metadata_rejections')
+    })
+    output = augment_native_tasks(normalize_legacy_activity_kinds(document),
+                                  proof)
+    events = [
+        event for event in analyze(output)['events']
+        if event['kind'] == 'kernel'
+    ]
+    assert len(events) == 4
+    assert len({event['launch_id'] for event in events}) == 4
+    assert {event['binary_id']
+            for event in events
+            } == {item['binary_id']
+                  for item in proof['task_identity_proofs']}
+    assert {event['stream_id']
+            for event in events} == {
+                item['worker']['stream_id']
+                for item in proof['task_identity_proofs']
+            }
+    assert all(event['metrics']['sdk_task']['contextId'] == 0
+               for event in events)
+    assert all(event['metrics']['sdk_compute_task_info']['globalTaskId'] ==
+               event['metrics']['sdk_task']['globalTaskId']
+               for event in events)
+    assert len(output['cann_native_dispatch_contexts']) == 4
+    assert all(item['native']['sdk_task']['contextId'] == 4294967295
+               for item in output['cann_native_dispatch_contexts'])
+    write_bundle(analyze(output), output, tmp_path / 'mix-offline-bundle')
+    assert (tmp_path /
+            'mix-offline-bundle/ai/cann_native_tasks.json').is_file()
+
+
+@pytest.mark.parametrize(
+    'label', ['unavailable', 'verified_global_task_id', 'not_compute', None])
+def test_compute_membership_label_never_overrides_actual_fk_inventory(
+        tmp_path, label):
+    _, proof, document = mix_fixture(tmp_path)
+    for entry in proof['native_task_candidates']:
+        entry['compute_membership'] = label
+    output = augment_native_tasks(document, proof)
+    assert len(canonical(output)) == 1
+    assert canonical(output)[0]['metrics']['sdk_task']['contextId'] == 0
+    assert len(output['cann_native_dispatch_contexts']) == 1
+
+
+def test_missing_parent_candidate_cannot_bypass_full_inventory_source_guard(
+        tmp_path):
+    _, proof, document = mix_fixture(tmp_path)
+    item = proof['task_identity_proofs'][0]
+    entry = item['native']
+    entry['compute_membership'] = 'unavailable'
+    proof['native_task_candidates'] = [deepcopy(entry)]
+    proof['raw_compute_task_inventory'] = []
+    proof['compute_task_info_captures'] = []
+    rows = canonical(augment_native_tasks(document, proof))
+    assert len(rows) == 1 and rows[0]['invocation_identity'] is None
+    assert 'complete SDK TASK inventory' in rows[0]['metrics'][
+        'activity.association_reason']
+
+
+def test_removed_context_columns_cannot_hide_other_raw_dispatch_views(
+        tmp_path):
+    _, proof, document = mix_fixture(tmp_path)
+    item = proof['task_identity_proofs'][0]
+    entry = item['native']
+    entry.pop('context_join')
+    entry['sdk_host_task'].pop('context_ids')
+    proof['native_task_candidates'] = [deepcopy(entry)]
+    rows = canonical(augment_native_tasks(document, proof))
+    assert len(rows) == 1 and rows[0]['invocation_identity'] is None
+    assert 'complete SDK TASK inventory' in rows[0]['metrics'][
+        'activity.association_reason']

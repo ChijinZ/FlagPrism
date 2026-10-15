@@ -1,0 +1,33 @@
+{
+  "base_commit": "0ef0adf2c891ad616442f9cd4d8b72a9df04057f",
+  "source_sha256": "62429a678a07bdbef5a393fa04b913a91c9e8178a97142a7e29737631e1b9d64",
+  "source_file_count": 464,
+  "changed_source_files": {
+    "Profiler/python/flagtree_profiler/_report.py": "7b3d7b3c751a4ae666956b4e5a8323e112c0729c2f9de0e1440158fc8eddc071",
+    "Profiler/python/flagtree_profiler/cann_joint.py": "26b4f22c84b06c70165bedf6acc279f466f8daf3bdd5ea0d71996707dac0deb3",
+    "Profiler/python/flagtree_profiler/cann_native.py": "806e63b9f5648b37b93e9e52721e22045656726838a0a9103ede205fd65abee8",
+    "Profiler/python/flagtree_profiler/cann_raw_sys.py": "d259239bee16f02fe1604054097c1000e34b5f47964d6d61843043bf70aec23c",
+    "Profiler/python/flagtree_profiler/profile.py": "92395f2e00a83de1378a3d4b1580278dd11f08555b02c47b3980c23578a140f5",
+    "Profiler/test/test_cann_joint.py": "b71e9563ec9f319280c2787631860e650bbb8436ca290bad0a2c447d73373215",
+    "Profiler/test/test_cann_native.py": "6d207bd61ad94bddefcaebf1daca30e1cf3837c71fe2cb3ad36b59c0884ccf98",
+    "Profiler/test/test_cann_raw_sys.py": "c7e726ee35b48b5cd7de9707ef9b39a4f4a9dc842e57615b02f5087c945ef3c5",
+    "Profiler/test/test_cann_receipt_recovery.py": "d7bbc2959c0d672c0d10e6028859db0728ce978aad39d3d6e2d8abba71a12cd2"
+  },
+  "own_files": [
+    "Profiler/python/flagtree_profiler/cann_native.py",
+    "Profiler/python/flagtree_profiler/_report.py",
+    "Profiler/test/test_cann_native.py"
+  ],
+  "tests": {
+    "common": "final-common-cpu-r25-final.log",
+    "common_count": "382passed/4opt-in-browser-skips",
+    "exactSDKtable_delta": "final-common-cpu-r25-exact.log",
+    "delta_count": "53passed",
+    "quality": "final-quality-r25-exact.log",
+    "target_consumer": "mix-preliminary-r25-r3.log",
+    "target_count": "104passed/1opt-in-browser-skip"
+  },
+  "actual_mix_audit": "cann-mix-audit-r25-final/audit.json",
+  "no_new_native_build_needed": "Python-only r25; unchanged actualbinarySHA checked by pytest bootstrap/quality",
+  "no_gpu_or_performance_experiments": true
+}

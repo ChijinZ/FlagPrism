@@ -1,0 +1,96 @@
+{
+  "status": "PASS",
+  "scope": "offline actual retained MIX-r1 bytes; no new hardware/performance or clock alignment",
+  "kernel_tasks": 4,
+  "source_launches": 4,
+  "binary_ids": [
+    "cef43809c58400ae6552851233b4dcaab630d5bd073789457beaf69e97cae70e"
+  ],
+  "stream_ids": [
+    3
+  ],
+  "compute_global_task_ids": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "compute_context_ids": [
+    0
+  ],
+  "dispatch_context_views": 4,
+  "dispatch_legacy_extensions": 4,
+  "superseded_views": 0,
+  "input_sha256": {
+    "capture.cann-launch-receipts.json": "88c1276a55dac7affdb79876dd2e682ae223057417251ee2fc0a393ed3f630f3",
+    "capture.vendor.json": "5ae71aa349cd7f928e22046f27c596b4a3821713685f9b1368a10a6978eda910",
+    "capture.launches.json": "d5283e7ecbe12871764bcbf4c7cca0156db9d5183aa0729dc255ca2bae1a2dd7"
+  },
+  "raw_sdk_inputs": [
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/info.json",
+      "sha256": "09391f3eb18bbca1d09b4247c6e0319e1da0bfcb148284b658b4f6e470956569"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/sqlite/runtime.db",
+      "sha256": "db1936da83133719331d6b84ac37794b4eddf820e24a16db6bb75f206f7cb1c7",
+      "table": "HostTask"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/msprof_20261015130150.db",
+      "sha256": "2160fcaff38f3d20f8348660fa6a2de3ed19afc7d71f108d663d65bc17a1f4d2",
+      "table": "TASK"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/msprof_20261015130150.db",
+      "sha256": "2160fcaff38f3d20f8348660fa6a2de3ed19afc7d71f108d663d65bc17a1f4d2",
+      "table": "COMPUTE_TASK_INFO"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/info.json",
+      "sha256": "09391f3eb18bbca1d09b4247c6e0319e1da0bfcb148284b658b4f6e470956569",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/device_4/info.json.4",
+      "sha256": "e795565dc0e27644ef689c1deb896f12a5e9d060054249ce8b9f0942e83d6286",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/info.json",
+      "sha256": "09391f3eb18bbca1d09b4247c6e0319e1da0bfcb148284b658b4f6e470956569",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/device_4/info.json.4",
+      "sha256": "e795565dc0e27644ef689c1deb896f12a5e9d060054249ce8b9f0942e83d6286",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/info.json",
+      "sha256": "09391f3eb18bbca1d09b4247c6e0319e1da0bfcb148284b658b4f6e470956569",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/device_4/info.json.4",
+      "sha256": "e795565dc0e27644ef689c1deb896f12a5e9d060054249ce8b9f0942e83d6286",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/host/info.json",
+      "sha256": "09391f3eb18bbca1d09b4247c6e0319e1da0bfcb148284b658b4f6e470956569",
+      "kind": "sealed_sdk_metadata"
+    },
+    {
+      "path": "PROF_000001_20261015130125195_00236634CBLOROMK/device_4/info.json.4",
+      "sha256": "e795565dc0e27644ef689c1deb896f12a5e9d060054249ce8b9f0942e83d6286",
+      "kind": "sealed_sdk_metadata"
+    }
+  ],
+  "source_sha256": {
+    "Profiler/python/flagtree_profiler/cann_native.py": "806e63b9f5648b37b93e9e52721e22045656726838a0a9103ede205fd65abee8",
+    "Profiler/python/flagtree_profiler/cann_joint.py": "26b4f22c84b06c70165bedf6acc279f466f8daf3bdd5ea0d71996707dac0deb3",
+    "Profiler/python/flagtree_profiler/_report.py": "7b3d7b3c751a4ae666956b4e5a8323e112c0729c2f9de0e1440158fc8eddc071"
+  },
+  "clock_alignment": "unverified"
+}

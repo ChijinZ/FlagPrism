@@ -46,6 +46,58 @@ def _capture_path(root, capture_id):
     return path if path == root or root in path.parents else None
 
 
+def _context_valid(entry):
+    """Validate the SDK's explicit HostTask context membership, when present."""
+    task, host = entry['sdk_task'], entry['sdk_host_task']
+    if 'context_ids' not in host and 'context_join' not in entry:
+        return True  # Older single-task SDK fixtures have no context columns.
+    raw = host.get('context_ids')
+    if not isinstance(raw, str) or not raw:
+        return False
+    parts = [part.strip() for part in raw.split(',')]
+    if any(not part.isascii() or not part.isdecimal() for part in parts):
+        return False
+    contexts = [int(part) for part in parts]
+    if len(set(contexts)) != len(contexts) or any(value >= 2**32
+                                                  for value in contexts):
+        return False
+    context = task.get('contextId')
+    expected = {
+        'kind': 'sdk_host_context_membership_v1',
+        'task_context_id': context,
+        'host_context_ids': contexts,
+        'model_id': task.get('modelId')
+    }
+    return (_uint(context) and context < 2**32 and context in contexts
+            and entry.get('context_join') == expected
+            and (('model_id' not in host and 'modelId' not in task) or
+                 (_uint(task.get('modelId')) and _uint(host.get('model_id'))
+                  and host['model_id'] == task['modelId'])))
+
+
+def _dispatch_family(entry):
+    task, host = entry['sdk_task'], entry['sdk_host_task']
+    return (entry.get('capture_id'), task['globalPid'], task['deviceId'],
+            task['streamId'], task['taskId'], task['connectionId'],
+            task.get('modelId'), host.get('batch_id'), host['thread_id'])
+
+
+def _compute_valid(entry, inventory):
+    info = entry.get('sdk_compute_task_info')
+    if not isinstance(info, dict) or not _uint(info.get('globalTaskId')):
+        return False
+    matches = [
+        row for row in inventory
+        if isinstance(row, dict) and row.get('capture_id') ==
+        entry['capture_id'] and isinstance(row.get(
+            'sdk_compute_task_info'), dict) and row['sdk_compute_task_info'].
+        get('globalTaskId') == entry['sdk_task'].get('globalTaskId')
+    ]
+    return (info['globalTaskId'] == entry['sdk_task'].get('globalTaskId')
+            and len(matches) == 1
+            and matches[0]['sdk_compute_task_info'] == info)
+
+
 def _candidate_valid(entry):
     if not isinstance(entry, dict):
         return False
@@ -57,7 +109,7 @@ def _candidate_valid(entry):
                                          'taskId', 'connectionId', 'startNs',
                                          'endNs')) or task['globalPid'] == 0:
         return False
-    return (task['endNs'] >= task['startNs']
+    return (_context_valid(entry) and task['endNs'] >= task['startNs']
             and type(host.get('thread_id')) is int and host['thread_id'] > 0
             and all(
                 host.get(left) == task[right] and _uint(host.get(left))
@@ -65,6 +117,58 @@ def _candidate_valid(entry):
                                     ('stream_id', 'streamId'),
                                     ('task_id', 'taskId'),
                                     ('connection_id', 'connectionId'))))
+
+
+def _verify_dispatch(item, entry, candidates, inventory, compute_inventory):
+    """Recheck all same-dispatch context views before source attribution."""
+    family = _dispatch_family(entry)
+    views = [
+        view for view in candidates
+        if _candidate_valid(view) and _dispatch_family(view) == family
+    ]
+    contextual = any('context_join' in view for view in views)
+    evidence = item.get('dispatch_context_evidence')
+    task = entry['sdk_task']
+    key = dict(
+        zip(('capture_id', 'process_id', 'device_id', 'stream_id', 'task_id',
+             'connection_id', 'model_id', 'batch_id', 'worker_thread_id'),
+            family))
+    members = [
+        view for view in views if _compute_valid(view, compute_inventory)
+    ]
+    raw_views = [
+        row for row in inventory
+        if isinstance(row, dict) and row.get('capture_id') ==
+        entry['capture_id'] and isinstance(row.get('sdk_task'), dict) and all(
+            row['sdk_task'].get(field) == task.get(field)
+            for field in ('globalPid', 'deviceId', 'streamId', 'taskId',
+                          'connectionId', 'modelId'))
+    ]
+    if ({_key(row['sdk_task'])
+         for row in raw_views} != {_key(view['sdk_task'])
+                                   for view in views}):
+        return 'dispatch context views do not cover the complete SDK TASK inventory'
+    if not contextual and len(views) == 1:
+        return None
+    if (len(views) == 1 and entry.get('compute_membership') == 'unavailable'
+            and not any(
+                row.get('capture_id') == entry['capture_id']
+                for row in compute_inventory if isinstance(row, dict))):
+        return None
+    if (not isinstance(evidence, dict) or evidence.get('kind')
+            != 'sdk_context_membership_and_compute_global_task_id_v1'
+            or evidence.get('dispatch_key') != key
+            or not isinstance(evidence.get('all_context_views'), list)
+            or sorted(_key(view)
+                      for view in evidence['all_context_views']) != sorted(
+                          _key(view) for view in views)):
+        return 'dispatch context evidence differs from complete native candidates'
+    if (len(members) != 1 or evidence.get('compute_member_count') != 1
+            or members[0] != entry
+            or evidence.get('selected_compute_global_task_id')
+            != task.get('globalTaskId')):
+        return 'compound or unverified compute membership cannot bind one source invocation'
+    return None
 
 
 def _kernel_task(entry):
@@ -214,7 +318,11 @@ def _native_row(entry, identity, reason, receipt_sha256):
         'sdk_task':
         deepcopy(task),
         'sdk_host_task':
-        deepcopy(host)
+        deepcopy(host),
+        'sdk_compute_task_info':
+        deepcopy(entry.get('sdk_compute_task_info')),
+        'sdk_context_join':
+        deepcopy(entry.get('context_join'))
     }
     return {
         'source':
@@ -240,7 +348,13 @@ def _native_row(entry, identity, reason, receipt_sha256):
     }
 
 
-def _legacy_match(row, inventory, canonical, root, sealed):
+def _legacy_match(row,
+                  inventory,
+                  canonical,
+                  root,
+                  sealed,
+                  *,
+                  return_matches=False):
     """Only exact capture/declared IDs may supersede an older export view."""
     if row.get('source') not in ('aclprof_op_summary', 'msprof_native_trace'):
         return None
@@ -336,6 +450,8 @@ def _legacy_match(row, inventory, canonical, root, sealed):
             entry['sdk_task'].get(k) == value for k, value in values.items())
     ]
     unique = {_key(entry): entry for entry in matches}
+    if return_matches:
+        return list(unique.values())
     if len(unique) != 1:
         return None
     selected = next(iter(unique.values()))
@@ -466,12 +582,46 @@ def augment_native_tasks(document, proof):
     inventory = proof.get('raw_native_task_inventory', [])
     if not isinstance(candidates, list) or not isinstance(inventory, list):
         return result
-    canonical, unclassified = [], []
+    compute_inventory = proof.get('raw_compute_task_inventory', [])
+    compute_inventory = compute_inventory if isinstance(
+        compute_inventory, list) else []
+    compute_captures = proof.get('compute_task_info_captures', [])
+    compute_captures = {
+        value
+        for value in compute_captures if isinstance(value, str)
+    } if isinstance(compute_captures, list) else set()
+    compute_captures.update(
+        row.get('capture_id') for row in compute_inventory
+        if isinstance(row, dict) and isinstance(row.get('capture_id'), str))
+    canonical, unclassified, dispatch = [], [], []
     for entry in candidates:
         if (_candidate_valid(entry) and entry.get('capture_id') in sealed
                 and entry not in canonical):
             if _kernel_task(entry):
-                canonical.append(entry)
+                if entry['capture_id'] in compute_captures:
+                    if _compute_valid(entry, compute_inventory):
+                        canonical.append(entry)
+                    else:
+                        dispatch.append({
+                            'native':
+                            deepcopy(entry),
+                            'reason':
+                            'SDK context has no unique consistent COMPUTE_TASK_INFO globalTaskId membership'
+                        })
+                else:
+                    family_views = [
+                        view for view in candidates if _candidate_valid(view)
+                        and _dispatch_family(view) == _dispatch_family(entry)
+                    ]
+                    if 'context_join' in entry and len(family_views) > 1:
+                        dispatch.append({
+                            'native':
+                            deepcopy(entry),
+                            'reason':
+                            'Multiple SDK context views have no verified compute membership'
+                        })
+                    else:
+                        canonical.append(entry)
             else:
                 unclassified.append({
                     'native':
@@ -499,15 +649,21 @@ def augment_native_tasks(document, proof):
                 entry)] == 1:
             item = peers[0]
             if invocation_counts[_key(item.get('invocation_id'))] == 1:
+                dispatch_error = _verify_dispatch(item, entry, candidates,
+                                                  inventory, compute_inventory)
                 identity, reason = _verify_source(item, entry, receipts,
                                                   result.get('launches', []),
                                                   result.get('binaries', []),
                                                   root)
+                if dispatch_error:
+                    identity, reason = None, dispatch_error
             else:
                 reason = 'multiple native tasks claim the same source invocation'
         rows.append(
             _native_row(entry, identity, reason, proof.get('receipt_sha256')))
     retained, superseded = [], []
+    dispatch_extensions = deepcopy(
+        result.get('cann_native_dispatch_extensions', []))
     for original_index, row in enumerate(result.get('associations', [])):
         if row.get('source') == 'cann_sdk_task' and any(
                 row.get('metrics', {}).get('activity.capture_id') ==
@@ -517,7 +673,42 @@ def augment_native_tasks(document, proof):
                 for entry in canonical):
             continue  # Re-export updates the same exact canonical inventory.
         index = _legacy_match(row, inventory, canonical, root, sealed)
-        if index is None:
+        matches = _legacy_match(
+            row, inventory, canonical, root, sealed,
+            return_matches=True) or []
+        parent_matches = [
+            view for view in dispatch
+            if any(view['native']['capture_id'] == match['capture_id']
+                   and view['native']['sdk_task'] == match['sdk_task']
+                   for match in matches)
+        ]
+        if index is None and parent_matches:
+            original = deepcopy(row)
+            ambiguous = len(matches) > 1
+            kind = 'unclassified_device_task' if ambiguous else 'dispatch_context_view'
+            reason = (
+                'context_ambiguous: legacy view lacks a unique compute/context identity'
+                if ambiguous else
+                'exact SDK dispatch context view; not a compute task')
+            row['metrics']['activity.kind'] = kind
+            row['metrics']['activity.association'] = 'unassociated'
+            row['metrics']['activity.association_reason'] = reason
+            row.pop('invocation_identity', None)
+            extension = {
+                'original_index': original_index,
+                'original_source': row.get('source'),
+                'kind': kind,
+                'reason': reason,
+                'original_row': original,
+                'normalized_row': deepcopy(row),
+                'matching_native_inventory': deepcopy(matches)
+            }
+            if not any(
+                    old.get('normalized_row') == row
+                    for old in dispatch_extensions):
+                dispatch_extensions.append(extension)
+            retained.append(row)
+        elif index is None:
             retained.append(row)
         else:
             superseded.append({
@@ -530,6 +721,8 @@ def augment_native_tasks(document, proof):
             })
     result['associations'] = retained + rows
     result['cann_native_unclassified_tasks'] = unclassified
+    result['cann_native_dispatch_contexts'] = dispatch
+    result['cann_native_dispatch_extensions'] = dispatch_extensions
     result.setdefault('cann_native_superseded_views', []).extend(superseded)
     result.setdefault('capture', {})['cann_native_tasks'] = {
         'canonical_tasks':
@@ -538,6 +731,10 @@ def augment_native_tasks(document, proof):
         sum(row['invocation_identity'] is not None for row in rows),
         'unclassified_tasks':
         len(unclassified),
+        'dispatch_context_views':
+        len(dispatch),
+        'dispatch_legacy_extensions':
+        len(dispatch_extensions),
         'kernel_classification_source':
         deepcopy(_TYPE_SOURCE),
         'superseded_export_views':

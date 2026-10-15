@@ -1,0 +1,36 @@
+{
+  "status": "frozen_py310_compatibility_correction",
+  "supersedes_current_source_claim": "cann-receipt-recovery-final-manifest.json",
+  "historical_negative": "artifacts/method-run/nvidia/final-common-cpu-r25.log:369passed/4failed/4skipped; Py3.10 exception wrapping changed original type/identity. Preserve this log.",
+  "change": "Only 3 diagnostic branches inside _snapshot_cann_launch_receipts; Python3.10 records __notes__ attribute and prints stderr without replacing original error object/type. Tests unchanged.",
+  "source_files": [
+    {
+      "path": "Profiler/python/flagtree_profiler/profile.py",
+      "sha256": "92395f2e00a83de1378a3d4b1580278dd11f08555b02c47b3980c23578a140f5"
+    },
+    {
+      "path": "Profiler/test/test_cann_receipt_recovery.py",
+      "sha256": "d7bbc2959c0d672c0d10e6028859db0728ce978aad39d3d6e2d8abba71a12cd2"
+    }
+  ],
+  "validation": {
+    "environment": "GCU Docker Python3.12.3 CPU",
+    "passed": 44,
+    "seconds": 4.59,
+    "ruff": "passed",
+    "yapf": "0.43.0",
+    "AST_equivalent_and_idempotent": true,
+    "actual_Py310": "NV owner validation pending; not claimed by this Py3.12 run",
+    "GPU_run": false
+  },
+  "evidence": [
+    {
+      "path": "artifacts/method-run/enflame/cann-receipt-recovery-py310-fix-tests.log",
+      "sha256": "ad08d172c1ad05946bff2bc57b089e1772b7f8503afd56cdb842179397fe9095"
+    },
+    {
+      "path": "artifacts/method-run/enflame/cann-receipt-recovery-py310-fix-format.json",
+      "sha256": "e2c6de26997fc408f3c1e939a9f8dcf9aa54bfdd77b5c0075506b16ee7b3bad2"
+    }
+  ]
+}

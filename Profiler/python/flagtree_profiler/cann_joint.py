@@ -128,6 +128,65 @@ def _sealed_capture(receipt, inputs, root):
     return str(capture.relative_to(root))
 
 
+def _host_context_ids(host):
+    """Parse the SDK HostTaskCollector's comma-separated context IDs."""
+    if 'context_ids' not in host:
+        return None
+    value = host['context_ids']
+    if not isinstance(value, str) or not value:
+        raise ValueError('invalid SDK HostTask context_ids')
+    values = value.split(',')
+    if any(not item.strip().isascii() or not item.strip().isdecimal()
+           for item in values):
+        raise ValueError('invalid SDK HostTask context_ids')
+    parsed = [int(item.strip()) for item in values]
+    if len(set(parsed)) != len(parsed) or any(value >= 2**32
+                                              for value in parsed):
+        raise ValueError('ambiguous or out-of-range SDK HostTask context_ids')
+    return parsed
+
+
+def _context_join(task, host):
+    """SDK context membership disambiguates views, never a context preference."""
+    if 'contextId' not in task and 'context_ids' not in host:
+        return {}
+    context = task.get('contextId')
+    if type(context) is not int or not 0 <= context < 2**32:
+        return None
+    try:
+        contexts = _host_context_ids(host)
+    except ValueError:
+        return None
+    if contexts is None or context not in contexts:
+        return None
+    model = task.get('modelId')
+    if ('modelId' in task
+            or 'model_id' in host) and (type(model) is not int or model < 0
+                                        or model != host.get('model_id')):
+        return None
+    return {
+        'kind': 'sdk_host_context_membership_v1',
+        'task_context_id': context,
+        'host_context_ids': contexts,
+        'model_id': model
+    }
+
+
+def _dispatch_key(entry):
+    task, host = entry['sdk_task'], entry['sdk_host_task']
+    return {
+        'capture_id': entry['capture_id'],
+        'process_id': task.get('globalPid'),
+        'device_id': task.get('deviceId'),
+        'stream_id': task.get('streamId'),
+        'task_id': task.get('taskId'),
+        'connection_id': task.get('connectionId'),
+        'model_id': task.get('modelId'),
+        'batch_id': host.get('batch_id'),
+        'worker_thread_id': host.get('thread_id')
+    }
+
+
 def build_native_task_proofs(capture_root, receipt_file):
     """Read actual SDK export plus the native finalizer's receipt artifact.
 
@@ -151,6 +210,8 @@ def build_native_task_proofs(capture_root, receipt_file):
     inputs = []
     native = []
     inventory = []
+    compute_inventory = []
+    compute_captures = []
     for capture in capture_paths:
         host_info = capture / 'host/info.json'
         if not host_info.is_file():
@@ -167,8 +228,24 @@ def build_native_task_proofs(capture_root, receipt_file):
         host_tasks = _database_rows(capture / 'host/sqlite/runtime.db',
                                     'HostTask', inputs, root)
         consolidated = []
+        computes = []
+        capture_id = str(capture.relative_to(root))
+        input_start = len(inputs)
         for database in sorted(capture.glob('msprof_*.db')):
             consolidated.extend(_database_rows(database, 'TASK', inputs, root))
+            for row in _database_rows(database, 'COMPUTE_TASK_INFO', inputs,
+                                      root):
+                if row not in computes:
+                    computes.append(row)
+        compute_available = any(
+            item.get('table') == 'COMPUTE_TASK_INFO'
+            for item in inputs[input_start:])
+        if compute_available:
+            compute_captures.append(capture_id)
+        compute_inventory.extend({
+            'capture_id': capture_id,
+            'sdk_compute_task_info': row
+        } for row in computes)
         for task in consolidated:
             inventory_entry = {
                 'capture_id': str(capture.relative_to(root)),
@@ -178,11 +255,11 @@ def build_native_task_proofs(capture_root, receipt_file):
                 inventory.append(inventory_entry)
             peers = [
                 row for row in host_tasks if all(
-                    row.get(left) == task.get(right)
-                    for left, right in (('connection_id', 'connectionId'),
-                                        ('device_id', 'deviceId'),
-                                        ('stream_id', 'streamId'), ('task_id',
-                                                                    'taskId')))
+                    row.get(left) == task.get(right) for left, right in (
+                        ('connection_id', 'connectionId'),
+                        ('device_id', 'deviceId'), ('stream_id', 'streamId'),
+                        ('task_id',
+                         'taskId'))) and _context_join(task, row) is not None
             ]
             if len(peers) != 1:
                 continue
@@ -193,6 +270,20 @@ def build_native_task_proofs(capture_root, receipt_file):
                 'sdk_task': task,
                 'sdk_host_task': peers[0]
             }
+            context = _context_join(task, peers[0])
+            if context:
+                entry['context_join'] = context
+            matches = [
+                row for row in computes
+                if type(row.get('globalTaskId')) is int and row['globalTaskId']
+                >= 0 and row['globalTaskId'] == task.get('globalTaskId')
+            ]
+            entry['sdk_compute_task_info'] = matches[0] if len(
+                matches) == 1 else None
+            entry['compute_membership'] = (
+                'unavailable' if not compute_available else
+                'verified_global_task_id' if len(matches) == 1 else
+                'not_compute' if not matches else 'ambiguous')
             if entry not in native:
                 native.append(entry)
     proofs = []
@@ -238,6 +329,34 @@ def build_native_task_proofs(capture_root, receipt_file):
                                        ('taskId', 'task_id'))) and
                 entry['sdk_host_task'].get('thread_id') == worker['thread_id']
             ]
+            all_contexts = list(matches)
+            dispatches = {
+                json.dumps(_dispatch_key(entry), sort_keys=True)
+                for entry in all_contexts
+            }
+            if sdk_capture in compute_captures:
+                if len(dispatches) == 1 and all_contexts:
+                    members = [
+                        entry for entry in all_contexts
+                        if entry['compute_membership'] ==
+                        'verified_global_task_id'
+                    ]
+                    result['dispatch_context_evidence'] = {
+                        'kind':
+                        'sdk_context_membership_and_compute_global_task_id_v1',
+                        'dispatch_key':
+                        _dispatch_key(all_contexts[0]),
+                        'all_context_views':
+                        all_contexts,
+                        'compute_member_count':
+                        len(members),
+                        'selected_compute_global_task_id':
+                        (members[0]['sdk_task']['globalTaskId']
+                         if len(members) == 1 else None)
+                    }
+                    matches = members
+                else:
+                    matches = []
             if len(matches) == 1:
                 selected = matches[0]
                 result.update(
@@ -253,6 +372,10 @@ def build_native_task_proofs(capture_root, receipt_file):
             else:
                 result['reason'] = 'SDK task identity is missing or ambiguous'
                 result['candidate_count'] = len(matches)
+                if len(matches) > 1 and 'dispatch_context_evidence' in result:
+                    result['status'] = 'compound_dispatch_unsupported'
+                    result[
+                        'reason'] = 'one SDK dispatch has multiple compute contexts; no unique compute task was selected'
         proofs.append(result)
     # A stale last-task query or reused token cannot bind one SDK task to two
     # source calls. Reject all collisions; never choose by timestamp or order.
@@ -293,6 +416,10 @@ def build_native_task_proofs(capture_root, receipt_file):
         native,
         'raw_native_task_inventory':
         inventory,
+        'raw_compute_task_inventory':
+        compute_inventory,
+        'compute_task_info_captures':
+        sorted(set(compute_captures)),
         'task_identity_proofs':
         proofs,
         'clock_status':

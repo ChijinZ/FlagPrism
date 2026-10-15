@@ -222,8 +222,8 @@ def analyze(path):
     rejected = Counter()
     for index, row in enumerate(rows):
         kind = row.get("metrics", {}).get("activity.kind")
-        if kind in ("profiler_marker", "device_event_record",
-                    "unclassified_device_task"):
+        if kind in ("dispatch_context_view", "profiler_marker",
+                    "device_event_record", "unclassified_device_task"):
             rejected[
                 f"{kind} retained as raw SDK extension; not kernel activity"] += 1
             continue
@@ -1110,6 +1110,10 @@ def write_bundle(report, source, output, context=None, *, complete=True):
                 document.get("cann_native_unclassified_tasks", []),
                 "activity_extensions":
                 document.get("cann_native_activity_extensions", []),
+                "dispatch_contexts":
+                document.get("cann_native_dispatch_contexts", []),
+                "dispatch_extensions":
+                document.get("cann_native_dispatch_extensions", []),
                 "activity_classification":
                 document.get("capture", {}).get("cann_native_activity_kinds",
                                                 {}),
