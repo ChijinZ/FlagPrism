@@ -4,23 +4,23 @@
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/Analysis/LoopInfo.h"
 #include "llvm/IR/DebugInfoMetadata.h"
-#include "llvm/IR/Instructions.h"
-#include "llvm/IR/Module.h"
+#include "llvm/IR/Dominators.h"
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/InlineAsm.h"
-#include "llvm/IR/Dominators.h"
-#include "llvm/Transforms/Utils/BasicBlockUtils.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 #include "llvm/Support/FileSystem.h"
+#include "llvm/Support/Format.h"
+#include "llvm/Support/FormatVariadic.h"
 #include "llvm/Support/JSON.h"
 #include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/SHA256.h"
-#include "llvm/Support/Format.h"
-#include "llvm/Support/FormatVariadic.h"
 #include "llvm/Support/raw_ostream.h"
+#include "llvm/Transforms/Utils/BasicBlockUtils.h"
 #include <algorithm>
 #include <cstdlib>
 #include <functional>
@@ -48,8 +48,8 @@ std::string environment(const char *name) {
 // (version, committed cursor, attempted, dropped), followed by capacity*8
 // record words. Program selection is fixed per compilation; callers allocate
 // distinct buffers per invocation. An actor exclusively writes its segment.
-static void appendRecord(Instruction *position, Value *pointer,
-                         Value *program, Value *actor, Value *start, Value *end,
+static void appendRecord(Instruction *position, Value *pointer, Value *program,
+                         Value *actor, Value *start, Value *end,
                          uint64_t capacity, uint64_t site, uint64_t semantic) {
   LLVMContext &context = position->getContext();
   IRBuilder<> builder(position);
@@ -58,33 +58,53 @@ static void appendRecord(Instruction *position, Value *pointer,
   auto address = [&](IRBuilder<> &b, Value *offset) {
     return b.CreateGEP(i64, pointer, offset);
   };
-  Value *cursorAddress = address(builder, builder.CreateAdd(base, builder.getInt64(1)));
-  Value *attemptAddress = address(builder, builder.CreateAdd(base, builder.getInt64(2)));
-  Value *dropAddress = address(builder, builder.CreateAdd(base, builder.getInt64(3)));
+  Value *cursorAddress =
+      address(builder, builder.CreateAdd(base, builder.getInt64(1)));
+  Value *attemptAddress =
+      address(builder, builder.CreateAdd(base, builder.getInt64(2)));
+  Value *dropAddress =
+      address(builder, builder.CreateAdd(base, builder.getInt64(3)));
   auto *attempt = builder.CreateLoad(i64, attemptAddress);
   attempt->setVolatile(true);
-  auto *attemptStore = builder.CreateStore(builder.CreateAdd(attempt, builder.getInt64(1)), attemptAddress);
+  auto *attemptStore = builder.CreateStore(
+      builder.CreateAdd(attempt, builder.getInt64(1)), attemptAddress);
   attemptStore->setVolatile(true);
   auto *cursor = builder.CreateLoad(i64, cursorAddress);
   cursor->setVolatile(true);
   Instruction *thenTerminator = nullptr;
   Instruction *elseTerminator = nullptr;
-  SplitBlockAndInsertIfThenElse(builder.CreateICmpULT(cursor, builder.getInt64(capacity)), position, &thenTerminator, &elseTerminator);
+  SplitBlockAndInsertIfThenElse(
+      builder.CreateICmpULT(cursor, builder.getInt64(capacity)), position,
+      &thenTerminator, &elseTerminator);
   IRBuilder<> success(thenTerminator);
-  Value *offset = success.CreateAdd(base, success.CreateAdd(success.getInt64(4), success.CreateMul(cursor, success.getInt64(8))));
-  Value *values[] = {success.getInt64(site | (semantic << 32)), attempt, start, end, program, actor, success.getInt64(UINT64_MAX), success.getInt64(UINT64_MAX)};
+  Value *offset = success.CreateAdd(
+      base, success.CreateAdd(success.getInt64(4),
+                              success.CreateMul(cursor, success.getInt64(8))));
+  Value *values[] = {success.getInt64(site | (semantic << 32)),
+                     attempt,
+                     start,
+                     end,
+                     program,
+                     actor,
+                     success.getInt64(UINT64_MAX),
+                     success.getInt64(UINT64_MAX)};
   for (uint64_t word = 0; word < 8; ++word) {
-    auto *store = success.CreateStore(values[word], address(success, success.CreateAdd(offset, success.getInt64(word))));
+    auto *store = success.CreateStore(
+        values[word],
+        address(success, success.CreateAdd(offset, success.getInt64(word))));
     store->setVolatile(true);
   }
-  auto *version = success.CreateStore(success.getInt64(1), address(success, base));
+  auto *version =
+      success.CreateStore(success.getInt64(1), address(success, base));
   version->setVolatile(true);
-  auto *commit = success.CreateStore(success.CreateAdd(cursor, success.getInt64(1)), cursorAddress);
+  auto *commit = success.CreateStore(
+      success.CreateAdd(cursor, success.getInt64(1)), cursorAddress);
   commit->setVolatile(true);
   IRBuilder<> overflow(elseTerminator);
   auto *dropped = overflow.CreateLoad(i64, dropAddress);
   dropped->setVolatile(true);
-  auto *drop = overflow.CreateStore(overflow.CreateAdd(dropped, overflow.getInt64(1)), dropAddress);
+  auto *drop = overflow.CreateStore(
+      overflow.CreateAdd(dropped, overflow.getInt64(1)), dropAddress);
   drop->setVolatile(true);
 }
 static Value *timestamp(IRBuilder<> &builder) {
@@ -92,7 +112,8 @@ static Value *timestamp(IRBuilder<> &builder) {
   auto *clock = InlineAsm::get(type, "MOV $0, SYS_CNT", "=l", true);
   return builder.CreateCall(type, clock, {});
 }
-static void attachSourceOrigin(json::Object &site, const Instruction &instruction) {
+static void attachSourceOrigin(json::Object &site,
+                               const Instruction &instruction) {
   if (MDNode *source = instruction.getMetadata("flagprism.source_op_id"))
     if (source->getNumOperands() && isa<MDString>(source->getOperand(0)))
       site["source_op_id"] = cast<MDString>(source->getOperand(0))->getString();
@@ -110,23 +131,34 @@ static void attachSourceOrigin(json::Object &site, const Instruction &instructio
     site["debug_file"] = location->getFilename();
     site["debug_directory"] = location->getDirectory();
     json::Array chain;
-    for (const DILocation *parent = location->getInlinedAt(); parent; parent = parent->getInlinedAt())
-      chain.push_back(json::Object{{"file", parent->getFilename()}, {"directory", parent->getDirectory()}, {"line", static_cast<int64_t>(parent->getLine())}, {"column", static_cast<int64_t>(parent->getColumn())}});
+    for (const DILocation *parent = location->getInlinedAt(); parent;
+         parent = parent->getInlinedAt())
+      chain.push_back(
+          json::Object{{"file", parent->getFilename()},
+                       {"directory", parent->getDirectory()},
+                       {"line", static_cast<int64_t>(parent->getLine())},
+                       {"column", static_cast<int64_t>(parent->getColumn())}});
     site["inline_chain"] = std::move(chain);
   }
 }
-static json::Object describeOperation(Instruction &instruction, uint64_t siteId) {
+static json::Object describeOperation(Instruction &instruction,
+                                      uint64_t siteId) {
   const bool call = isa<CallInst>(instruction);
-  const char *kind = call ? "compiler_call" : isa<LoadInst>(instruction) ? "load" : isa<StoreInst>(instruction) ? "store" : "compute";
+  const char *kind = call                          ? "compiler_call"
+                     : isa<LoadInst>(instruction)  ? "load"
+                     : isa<StoreInst>(instruction) ? "store"
+                                                   : "compute";
   json::Object site{{"site_id", static_cast<int64_t>(siteId)},
                     {"semantics", "source_operation_checkpoint"},
+                    {"public_semantic", "operation_checkpoint"},
                     {"operation_class", kind},
                     {"compiler_opcode", instruction.getOpcodeName()},
                     {"operation", instruction.getOpcodeName()},
                     {"source_op_id", nullptr}};
   if (call) {
     site["callee"] = cast<CallInst>(instruction).getCalledFunction()->getName();
-    site["operation"] = cast<CallInst>(instruction).getCalledFunction()->getName();
+    site["operation"] =
+        cast<CallInst>(instruction).getCalledFunction()->getName();
   }
   attachSourceOrigin(site, instruction);
   return site;
@@ -139,11 +171,11 @@ static uint64_t selectedSemantics() {
   StringRef(option).split(names, ',', -1, false);
   uint64_t mask = 0;
   for (StringRef name : names) {
-    uint64_t bit = name == "issue"                ? 1
-                   : name == "wait_bracket"       ? 2
-                   : name == "control_checkpoint" ? 4
+    uint64_t bit = name == "issue"                  ? 1
+                   : name == "wait_bracket"         ? 2
+                   : name == "control_checkpoint"   ? 4
                    : name == "operation_checkpoint" ? 8
-                                                  : 0;
+                                                    : 0;
     if (!bit || (mask & bit))
       report_fatal_error(
           "FlagPrism trace semantics must be unique supported names");
@@ -157,19 +189,27 @@ static uint64_t selectedSemantics() {
 static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             uint64_t capacity, uint64_t selectedProgram,
                             StringRef actorKind, uint64_t semanticMask,
-                            json::Array &sites, json::Object &operationPlan) {
-  if (argumentIndex >= function.arg_size() || !function.getArg(argumentIndex)->getType()->isPointerTy())
-    report_fatal_error("FlagPrism trace argument must identify a compiler-mapped pointer formal");
-  auto *pointerType = cast<PointerType>(function.getArg(argumentIndex)->getType());
+                            json::Array &sites, json::Object &operationPlan,
+                            json::Object &controlPlan) {
+  if (argumentIndex >= function.arg_size() ||
+      !function.getArg(argumentIndex)->getType()->isPointerTy())
+    report_fatal_error("FlagPrism trace argument must identify a "
+                       "compiler-mapped pointer formal");
+  auto *pointerType =
+      cast<PointerType>(function.getArg(argumentIndex)->getType());
   if (pointerType->getAddressSpace() != 1)
-    report_fatal_error("FlagPrism trace argument must use global address space 1");
+    report_fatal_error(
+        "FlagPrism trace argument must use global address space 1");
   SmallVector<CallInst *, 32> selected;
   for (BasicBlock &block : function)
     for (Instruction &instruction : block)
       if (auto *call = dyn_cast<CallInst>(&instruction))
         if (Function *callee = call->getCalledFunction()) {
           StringRef name = callee->getName();
-          if (name == "llvm.hivm.WAIT.FLAG.IMM" || name == "llvm.hivm.WAIT.FLAG.DEV.REG" || name == "llvm.hivm.SET.CROSS.CORE" || name == "llvm.hivm.SET.FLAG.IMM")
+          if (name == "llvm.hivm.WAIT.FLAG.IMM" ||
+              name == "llvm.hivm.WAIT.FLAG.DEV.REG" ||
+              name == "llvm.hivm.SET.CROSS.CORE" ||
+              name == "llvm.hivm.SET.FLAG.IMM")
             selected.push_back(call);
         }
   // Snapshot original operations before adding the logger. Calls are compiler
@@ -192,15 +232,15 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         if (name.startswith("llvm.hivm.GET.") ||
             name.startswith("llvm.hivm.SET.") ||
             name.startswith("llvm.hivm.WAIT.") ||
-            name.startswith("llvm.hivm.PIPE.") ||
-            name.startswith("llvm.dbg."))
+            name.startswith("llvm.hivm.PIPE.") || name.startswith("llvm.dbg."))
           continue;
         kind = "compiler_call";
       } else if (isa<LoadInst>(instruction)) {
         kind = "load";
       } else if (isa<StoreInst>(instruction)) {
         kind = "store";
-      } else if (isa<BinaryOperator>(instruction) || isa<UnaryOperator>(instruction)) {
+      } else if (isa<BinaryOperator>(instruction) ||
+                 isa<UnaryOperator>(instruction)) {
         kind = "compute";
       } else {
         continue;
@@ -212,12 +252,17 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   uint64_t maxSites = 32;
   const std::string budget = environment("FLAGPRISM_ASCEND_TRACE_MAX_SITES");
   if (!budget.empty() && (StringRef(budget).getAsInteger(10, maxSites) ||
-                         !maxSites || maxSites > 256))
+                          !maxSites || maxSites > 256))
     report_fatal_error("FlagPrism operation site budget must be 1..256");
   SmallVector<Instruction *, 64> operationSites;
-  const uint64_t selectedCount = std::min<uint64_t>(maxSites, operationCandidates.size());
+  const uint64_t selectedCount =
+      std::min<uint64_t>(maxSites, operationCandidates.size());
   for (uint64_t index = 0; index < selectedCount; ++index)
-    operationSites.push_back(operationCandidates[selectedCount == 1 ? 0 : index * (operationCandidates.size() - 1) / (selectedCount - 1)]);
+    operationSites.push_back(
+        operationCandidates[selectedCount == 1
+                                ? 0
+                                : index * (operationCandidates.size() - 1) /
+                                      (selectedCount - 1)]);
   DominatorTree dominance(function);
   LoopInfo loopInfo(dominance);
   SmallVector<std::pair<BasicBlock *, Instruction *>, 16> loopHeaders;
@@ -238,21 +283,46 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   IRBuilder<> entry(&*function.getEntryBlock().getFirstInsertionPt());
   Type *i64 = entry.getInt64Ty();
   FunctionType *coordinateType = FunctionType::get(i64, false);
-  auto blockFunction = function.getParent()->getOrInsertFunction("llvm.hivm.GET.BLOCK.IDX", coordinateType);
+  auto blockFunction = function.getParent()->getOrInsertFunction(
+      "llvm.hivm.GET.BLOCK.IDX", coordinateType);
   Value *program = entry.CreateCall(blockFunction, {});
   Value *actor = entry.getInt64(0);
   if (actorKind == "AIV") {
-    auto subFunction = function.getParent()->getOrInsertFunction("llvm.hivm.GET.SUBBLOCKID", coordinateType);
-    actor = entry.CreateAdd(entry.CreateCall(subFunction, {}), entry.getInt64(1));
+    auto subFunction = function.getParent()->getOrInsertFunction(
+        "llvm.hivm.GET.SUBBLOCKID", coordinateType);
+    actor =
+        entry.CreateAdd(entry.CreateCall(subFunction, {}), entry.getInt64(1));
   } else if (actorKind != "AIC") {
-    report_fatal_error("FlagPrism trace needs an actual SDK cube/vector target");
+    report_fatal_error(
+        "FlagPrism trace needs an actual SDK cube/vector target");
   }
-  uint64_t siteNumber = 0;
+  uint64_t siteNumber = 0, selectedControls = 0;
+  json::Array controlInventory;
   for (CallInst *call : selected) {
     const bool wait = call->getCalledFunction()->getName().contains("WAIT");
     const uint64_t siteId = siteNumber++;
-    if (!(semanticMask & (wait ? 2 : 1)))
+    const bool enabled = semanticMask & (wait ? 2 : 1);
+    auto describe = [&]() {
+      json::Object site{
+          {"site_id", static_cast<int64_t>(siteId)},
+          {"callee", call->getCalledFunction()->getName()},
+          {"operation", call->getCalledFunction()->getName()},
+          {"operation_class", "existing_control_primitive"},
+          {"public_semantic", wait ? "wait_bracket" : "issue"},
+          {"semantics", wait ? "existing_readiness_wait_source_control"
+                             : "signal_issue_source_control"},
+          {"source_op_id", nullptr}};
+      attachSourceOrigin(site, *call);
+      return site;
+    };
+    json::Object item = describe();
+    item["selected"] = enabled;
+    item["selection_reason"] = enabled ? "requested_existing_control_primitive"
+                                       : "semantic_not_requested";
+    controlInventory.push_back(std::move(item));
+    if (!enabled)
       continue;
+    ++selectedControls;
     Instruction *after = call->getNextNode();
     IRBuilder<> beforeBuilder(call);
     Value *start = timestamp(beforeBuilder);
@@ -260,62 +330,108 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     Value *end = timestamp(afterBuilder);
     // Only the chosen program touches global log memory. The timestamps are
     // source-control observations around the existing primitive, no new wait.
-    auto *selectedTerminator = SplitBlockAndInsertIfThen(afterBuilder.CreateICmpEQ(program, afterBuilder.getInt64(selectedProgram)), after, false);
+    auto *selectedTerminator = SplitBlockAndInsertIfThen(
+        afterBuilder.CreateICmpEQ(program,
+                                  afterBuilder.getInt64(selectedProgram)),
+        after, false);
     appendRecord(selectedTerminator, function.getArg(argumentIndex), program,
                  actor, start, end, capacity, siteId, wait ? 2 : 1);
-    json::Object site{
-        {"site_id", static_cast<int64_t>(siteId)},
-        {"callee", call->getCalledFunction()->getName()},
-        {"semantics", wait ? "existing_readiness_wait_source_control"
-                           : "signal_issue_source_control"},
-        {"source_op_id", nullptr}};
-    attachSourceOrigin(site, *call);
-    sites.push_back(std::move(site));
+    sites.push_back(describe());
   }
   for (const auto &loopHeader : loopHeaders) {
     const uint64_t siteId = siteNumber++;
-    if (!(semanticMask & 4))
-      continue;
+    const bool enabled = semanticMask & 4;
     BasicBlock *header = loopHeader.first;
+    auto describe = [&]() {
+      json::Array blocks;
+      const Loop *loop = loopInfo.getLoopFor(header);
+      for (const BasicBlock *block : loop->blocks())
+        blocks.push_back(printValue(*block));
+      json::Object site{
+          {"site_id", static_cast<int64_t>(siteId)},
+          {"block", printValue(*header)},
+          {"loop_depth", static_cast<int64_t>(loop->getLoopDepth())},
+          {"loop_blocks", std::move(blocks)},
+          {"semantics", "loop_header_occurrence"},
+          {"public_semantic", "control_checkpoint"},
+          {"operation", "loop_header_occurrence"},
+          {"operation_class", "original_loop_header"},
+          {"iteration_identity", nullptr},
+          {"source_op_id", nullptr},
+          {"origin_semantics", "loop_header_control_checkpoint"}};
+      attachSourceOrigin(site, *loopHeader.second);
+      return site;
+    };
+    json::Object site = describe();
+    json::Object item = describe();
+    item["selected"] = enabled;
+    item["selection_reason"] = enabled ? "all_requested_original_loop_headers"
+                                       : "semantic_not_requested";
+    controlInventory.push_back(std::move(item));
+    if (!enabled)
+      continue;
+    ++selectedControls;
     Instruction *position = &*header->getFirstInsertionPt();
-    json::Object site{{"site_id", static_cast<int64_t>(siteId)},
-                      {"block", printValue(*header)},
-                      {"semantics", "loop_header_occurrence"},
-                      {"iteration_identity", nullptr},
-                      {"source_op_id", nullptr},
-                      {"origin_semantics", "loop_header_control_checkpoint"}};
-    attachSourceOrigin(site, *loopHeader.second);
     IRBuilder<> builder(position);
     Value *tick = timestamp(builder);
-    auto *terminator = SplitBlockAndInsertIfThen(builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)), position, false);
+    auto *terminator = SplitBlockAndInsertIfThen(
+        builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)),
+        position, false);
     appendRecord(terminator, function.getArg(argumentIndex), program, actor,
                  tick, tick, capacity, siteId, 3);
     sites.push_back(std::move(site));
   }
+  controlPlan["plan_kind"] = "control";
+  controlPlan["policy"] = "all_requested_original_control_sites";
+  controlPlan["budget_scope"] = "existing_primitives_and_original_loop_headers";
+  controlPlan["max_sites"] = nullptr;
+  controlPlan["operation_max_sites_applies"] = false;
+  controlPlan["record_capacity_per_actor"] = static_cast<int64_t>(capacity);
+  controlPlan["candidate_count"] =
+      static_cast<int64_t>(selected.size() + loopHeaders.size());
+  controlPlan["selected_count"] = static_cast<int64_t>(selectedControls);
+  controlPlan["inventory"] = std::move(controlInventory);
   if (semanticMask & 8) {
     json::Array inventory;
     for (uint64_t index = 0; index < operationCandidates.size(); ++index) {
       Instruction *candidate = operationCandidates[index];
       json::Object item = describeOperation(*candidate, siteNumber + index);
-      const bool selected = std::find(operationSites.begin(), operationSites.end(), candidate) != operationSites.end();
+      const bool selected =
+          std::find(operationSites.begin(), operationSites.end(), candidate) !=
+          operationSites.end();
       item["selected"] = selected;
-      item["selection_reason"] = selected ? "source_location_class_evenly_spaced" : "static_site_budget";
+      item["selection_reason"] = selected
+                                     ? "source_location_class_evenly_spaced"
+                                     : "static_site_budget";
       inventory.push_back(std::move(item));
     }
-    operationPlan["policy"] = "source_location_class_per_original_block_evenly_spaced";
+    operationPlan["plan_kind"] = "operation";
+    operationPlan["budget_scope"] = "source_operation_candidates_only";
+    operationPlan["control_sites_included"] = false;
+    operationPlan["policy"] =
+        "source_location_class_per_original_block_evenly_spaced";
     operationPlan["max_sites"] = static_cast<int64_t>(maxSites);
-    operationPlan["candidate_count"] = static_cast<int64_t>(operationCandidates.size());
+    operationPlan["candidate_count"] =
+        static_cast<int64_t>(operationCandidates.size());
     operationPlan["selected_count"] = static_cast<int64_t>(selectedCount);
     operationPlan["inventory"] = std::move(inventory);
     for (Instruction *position : operationSites) {
-      const uint64_t siteId = siteNumber + std::distance(operationCandidates.begin(), std::find(operationCandidates.begin(), operationCandidates.end(), position));
+      const uint64_t siteId =
+          siteNumber +
+          std::distance(operationCandidates.begin(),
+                        std::find(operationCandidates.begin(),
+                                  operationCandidates.end(), position));
       json::Object site = describeOperation(*position, siteId);
-      site["candidate_count"] = static_cast<int64_t>(operationCandidates.size());
+      site["candidate_count"] =
+          static_cast<int64_t>(operationCandidates.size());
       site["selected_count"] = static_cast<int64_t>(selectedCount);
-      site["selection_policy"] = "source_location_class_per_original_block_evenly_spaced";
+      site["selection_policy"] =
+          "source_location_class_per_original_block_evenly_spaced";
       IRBuilder<> builder(position);
       Value *tick = timestamp(builder);
-      auto *terminator = SplitBlockAndInsertIfThen(builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)), position, false);
+      auto *terminator = SplitBlockAndInsertIfThen(
+          builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)),
+          position, false);
       appendRecord(terminator, function.getArg(argumentIndex), program, actor,
                    tick, tick, capacity, siteId, 4);
       sites.push_back(std::move(site));
@@ -346,7 +462,8 @@ public:
         kernelEntries.insert(function);
     }
     if (kernelEntries.size() > 1)
-      report_fatal_error("FlagPrism actor module has multiple kernel entries; actor/site identity is ambiguous");
+      report_fatal_error("FlagPrism actor module has multiple kernel entries; "
+                         "actor/site identity is ambiguous");
     std::string ir;
     raw_string_ostream irStream(ir);
     module.print(irStream, nullptr);
@@ -354,10 +471,12 @@ public:
     const auto moduleHash = digest(ir);
     json::Array actors;
     json::Array dynamicSites;
-    json::Object operationPlan;
+    json::Object operationPlan, controlPlan;
     bool changed = false;
     SmallPtrSet<Function *, 4> processedEntries;
-    auto &functions = analysis.getResult<FunctionAnalysisManagerModuleProxy>(module).getManager();
+    auto &functions =
+        analysis.getResult<FunctionAnalysisManagerModuleProxy>(module)
+            .getManager();
     for (MDNode *annotation : annotations->operands()) {
       if (annotation->getNumOperands() < 2)
         continue;
@@ -372,9 +491,12 @@ public:
         continue;
       json::Array arguments, sites, loops;
       for (const Argument &argument : function->args()) {
-        json::Object item{{"position", static_cast<int64_t>(argument.getArgNo())}, {"ssa", printValue(argument)}};
+        json::Object item{
+            {"position", static_cast<int64_t>(argument.getArgNo())},
+            {"ssa", printValue(argument)}};
         if (auto *pointer = dyn_cast<PointerType>(argument.getType()))
-          item["address_space"] = static_cast<int64_t>(pointer->getAddressSpace());
+          item["address_space"] =
+              static_cast<int64_t>(pointer->getAddressSpace());
         item["role"] = nullptr;
         arguments.push_back(std::move(item));
       }
@@ -390,18 +512,30 @@ public:
           json::Array operands;
           for (const Use &operand : call->args())
             operands.push_back(printValue(*operand.get()));
-          json::Object site{{"id", static_cast<int64_t>(siteNumber++)}, {"block", printValue(block)}, {"callee", callee}, {"operands", std::move(operands)}, {"source_op_id", nullptr}};
-          if (MDNode *source = instruction.getMetadata("flagprism.source_op_id"))
-            if (source->getNumOperands() && isa<MDString>(source->getOperand(0)))
-              site["source_op_id"] = cast<MDString>(source->getOperand(0))->getString();
+          json::Object site{{"id", static_cast<int64_t>(siteNumber++)},
+                            {"block", printValue(block)},
+                            {"callee", callee},
+                            {"operands", std::move(operands)},
+                            {"source_op_id", nullptr}};
+          if (MDNode *source =
+                  instruction.getMetadata("flagprism.source_op_id"))
+            if (source->getNumOperands() &&
+                isa<MDString>(source->getOperand(0)))
+              site["source_op_id"] =
+                  cast<MDString>(source->getOperand(0))->getString();
           if (const DebugLoc &location = instruction.getDebugLoc()) {
             site["debug_line"] = static_cast<int64_t>(location.getLine());
             site["debug_column"] = static_cast<int64_t>(location.getCol());
             site["debug_file"] = location->getFilename();
             site["debug_directory"] = location->getDirectory();
             json::Array inlineChain;
-            for (const DILocation *parent = location->getInlinedAt(); parent; parent = parent->getInlinedAt())
-              inlineChain.push_back(json::Object{{"file", parent->getFilename()}, {"directory", parent->getDirectory()}, {"line", static_cast<int64_t>(parent->getLine())}, {"column", static_cast<int64_t>(parent->getColumn())}});
+            for (const DILocation *parent = location->getInlinedAt(); parent;
+                 parent = parent->getInlinedAt())
+              inlineChain.push_back(json::Object{
+                  {"file", parent->getFilename()},
+                  {"directory", parent->getDirectory()},
+                  {"line", static_cast<int64_t>(parent->getLine())},
+                  {"column", static_cast<int64_t>(parent->getColumn())}});
             site["inline_chain"] = std::move(inlineChain);
           }
           sites.push_back(std::move(site));
@@ -412,7 +546,11 @@ public:
         json::Array blocks;
         for (const BasicBlock *block : loop->blocks())
           blocks.push_back(printValue(*block));
-        loops.push_back(json::Object{{"header", printValue(*loop->getHeader())}, {"depth", static_cast<int64_t>(loop->getLoopDepth())}, {"blocks", std::move(blocks)}, {"dynamic_iterations", nullptr}});
+        loops.push_back(
+            json::Object{{"header", printValue(*loop->getHeader())},
+                         {"depth", static_cast<int64_t>(loop->getLoopDepth())},
+                         {"blocks", std::move(blocks)},
+                         {"dynamic_iterations", nullptr}});
         for (const Loop *nested : loop->getSubLoops())
           addLoop(nested);
       };
@@ -429,7 +567,8 @@ public:
         if (!sourceValue)
           report_fatal_error("FlagPrism compiler source ABI JSON is invalid");
         auto *sourceObject = sourceValue->getAsObject();
-        auto *formals = sourceObject ? sourceObject->getArray("formals") : nullptr;
+        auto *formals =
+            sourceObject ? sourceObject->getArray("formals") : nullptr;
         if (!formals)
           report_fatal_error("FlagPrism compiler source ABI requires formals");
         std::optional<uint64_t> fftsArgument;
@@ -437,17 +576,24 @@ public:
           for (Instruction &instruction : block)
             if (auto *call = dyn_cast<CallBase>(&instruction))
               if (Function *callee = call->getCalledFunction())
-                if (callee->getName() == "llvm.hivm.SET.FFTS.BASE.ADDR" && call->arg_size() == 1)
-                  if (auto *argument = dyn_cast<Argument>(call->getArgOperand(0)))
+                if (callee->getName() == "llvm.hivm.SET.FFTS.BASE.ADDR" &&
+                    call->arg_size() == 1)
+                  if (auto *argument =
+                          dyn_cast<Argument>(call->getArgOperand(0)))
                     fftsArgument = argument->getArgNo();
-        const auto declaredFfts = sourceObject->getBoolean("ffts_control_present");
+        const auto declaredFfts =
+            sourceObject->getBoolean("ffts_control_present");
         if (!declaredFfts)
-          report_fatal_error("FlagPrism source ABI requires actual runtime FFTS configuration");
+          report_fatal_error("FlagPrism source ABI requires actual runtime "
+                             "FFTS configuration");
         const uint64_t prefix = *declaredFfts ? 1 : 0;
-        if (prefix && (!function->arg_size() || !function->getArg(0)->getType()->isIntegerTy(64)))
-          report_fatal_error("FlagPrism final FFTS control formal type does not match runtime ABI");
+        if (prefix && (!function->arg_size() ||
+                       !function->getArg(0)->getType()->isIntegerTy(64)))
+          report_fatal_error("FlagPrism final FFTS control formal type does "
+                             "not match runtime ABI");
         if (fftsArgument && !prefix)
-          report_fatal_error("FlagPrism LLVM FFTS use contradicts runtime launch ABI");
+          report_fatal_error(
+              "FlagPrism LLVM FFTS use contradicts runtime launch ABI");
         size_t pointerPrefix = 0;
         for (size_t index = 0; index < formals->size(); ++index)
           if (auto *formal = (*formals)[index].getAsObject())
@@ -456,10 +602,16 @@ public:
         // CANN removes implicit program-coordinate scalar tail arguments.
         // Verify the complete prefix through the last global pointer; trailing
         // scalar/launch-coordinate mapping remains partial and unclaimed.
-        if ((fftsArgument && *fftsArgument != 0) || function->arg_size() < pointerPrefix + prefix)
-          report_fatal_error("FlagPrism source/final pointer ABI relation is unsupported or ambiguous");
+        if ((fftsArgument && *fftsArgument != 0) ||
+            function->arg_size() < pointerPrefix + prefix)
+          report_fatal_error("FlagPrism source/final pointer ABI relation is "
+                             "unsupported or ambiguous");
         if (prefix)
-          argumentRoles.push_back(json::Object{{"final_formal_index", 0}, {"role", "ffts_control"}, {"basis", "actual_runtime_launch_ABI_and_optional_FFTS_operand"}});
+          argumentRoles.push_back(json::Object{
+              {"final_formal_index", 0},
+              {"role", "ffts_control"},
+              {"basis",
+               "actual_runtime_launch_ABI_and_optional_FFTS_operand"}});
         for (size_t index = 0; index < pointerPrefix; ++index) {
           auto *formal = (*formals)[index].getAsObject();
           if (!formal)
@@ -468,7 +620,9 @@ public:
           if (!kind)
             report_fatal_error("FlagPrism source ABI formal kind is missing");
           Type *type = function->getArg(index + prefix)->getType();
-          const bool pointerMatch = *kind == "global_pointer" && type->isPointerTy() && cast<PointerType>(type)->getAddressSpace() == 1;
+          const bool pointerMatch =
+              *kind == "global_pointer" && type->isPointerTy() &&
+              cast<PointerType>(type)->getAddressSpace() == 1;
           bool scalarMatch = false;
           if (kind->startswith("i")) {
             unsigned width = 0;
@@ -485,9 +639,15 @@ public:
             std::string finalType;
             raw_string_ostream typeStream(finalType);
             type->print(typeStream);
-            report_fatal_error(Twine("FlagPrism source/final formal types do not match at ") + Twine(index) + ": source=" + *kind + ", final=" + finalType);
+            report_fatal_error(
+                Twine("FlagPrism source/final formal types do not match at ") +
+                Twine(index) + ": source=" + *kind + ", final=" + finalType);
           }
-          json::Object role{{"source_formal_index", static_cast<int64_t>(index)}, {"final_formal_index", static_cast<int64_t>(index + prefix)}, {"basis", "compiler_signature_verified_bare_pointer_prefix_abi"}, {"role", nullptr}};
+          json::Object role{
+              {"source_formal_index", static_cast<int64_t>(index)},
+              {"final_formal_index", static_cast<int64_t>(index + prefix)},
+              {"basis", "compiler_signature_verified_bare_pointer_prefix_abi"},
+              {"role", nullptr}};
           if (auto name = formal->getString("role")) {
             role["role"] = name->str();
             if (*name == "dynamic_trace")
@@ -498,28 +658,47 @@ public:
           argumentRoles.push_back(std::move(role));
         }
       }
-      const auto traceArgument = mappedTraceArgument ? std::to_string(*mappedTraceArgument) : environment("FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX");
+      const auto traceArgument =
+          mappedTraceArgument
+              ? std::to_string(*mappedTraceArgument)
+              : environment("FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX");
       if (!traceArgument.empty()) {
         uint64_t argumentIndex = 0, capacity = 0, selectedProgram = 0;
         if (StringRef(traceArgument).getAsInteger(10, argumentIndex) ||
-            StringRef(environment("FLAGPRISM_ASCEND_TRACE_CAPACITY")).getAsInteger(10, capacity) || !capacity || capacity > 1'000'000)
-          report_fatal_error("FlagPrism trace argument/capacity must be explicit positive integers");
-        const auto programOption = environment("FLAGPRISM_ASCEND_TRACE_PROGRAM");
-        if (!programOption.empty() && StringRef(programOption).getAsInteger(10, selectedProgram))
+            StringRef(environment("FLAGPRISM_ASCEND_TRACE_CAPACITY"))
+                .getAsInteger(10, capacity) ||
+            !capacity || capacity > 1'000'000)
+          report_fatal_error("FlagPrism trace argument/capacity must be "
+                             "explicit positive integers");
+        const auto programOption =
+            environment("FLAGPRISM_ASCEND_TRACE_PROGRAM");
+        if (!programOption.empty() &&
+            StringRef(programOption).getAsInteger(10, selectedProgram))
           report_fatal_error("FlagPrism selected program must be an integer");
-        changed |=
-            instrumentActor(*function, argumentIndex, capacity, selectedProgram,
-                            environment("FLAGPRISM_ASCEND_ACTOR_KIND"),
-                            selectedSemantics(), dynamicSites, operationPlan);
+        changed |= instrumentActor(
+            *function, argumentIndex, capacity, selectedProgram,
+            environment("FLAGPRISM_ASCEND_ACTOR_KIND"), selectedSemantics(),
+            dynamicSites, operationPlan, controlPlan);
       }
-      const auto targetCpu = function->getFnAttribute("target-cpu").getValueAsString();
-      actors.push_back(json::Object{{"dynamic_observation_prepared", !traceArgument.empty()}, {"argument_roles", std::move(argumentRoles)}, {"function", function->getName()}, {"target_cpu", targetCpu}, {"actor_kind", environment("FLAGPRISM_ASCEND_ACTOR_KIND")}, {"arguments", std::move(arguments)}, {"sites", std::move(sites)}, {"loops", std::move(loops)}});
+      const auto targetCpu =
+          function->getFnAttribute("target-cpu").getValueAsString();
+      actors.push_back(json::Object{
+          {"dynamic_observation_prepared", !traceArgument.empty()},
+          {"argument_roles", std::move(argumentRoles)},
+          {"function", function->getName()},
+          {"target_cpu", targetCpu},
+          {"actor_kind", environment("FLAGPRISM_ASCEND_ACTOR_KIND")},
+          {"arguments", std::move(arguments)},
+          {"sites", std::move(sites)},
+          {"loops", std::move(loops)}});
     }
     if (actors.empty())
       return PreservedAnalyses::all();
     std::error_code error = sys::fs::create_directories(output);
     if (error)
-      report_fatal_error(Twine("FlagPrism cannot create compiler artifact output: ") + error.message());
+      report_fatal_error(
+          Twine("FlagPrism cannot create compiler artifact output: ") +
+          error.message());
     SmallString<256> base(output);
     sys::path::append(base, moduleHash);
     std::error_code fileError;
@@ -550,6 +729,8 @@ public:
         {"dynamic_record_layout", "actor_header4_record8_v1"},
         {"dynamic_sites", std::move(dynamicSites)},
         {"operation_plan", std::move(operationPlan)},
+        {"control_plan", std::move(controlPlan)},
+        {"observation_plan_version", 2},
         {"instrumented", changed},
         {"schema_version", 1},
         {"backend", "ascend"},
@@ -558,26 +739,32 @@ public:
         {"module_identifier", module.getModuleIdentifier()},
         {"target_triple", module.getTargetTriple()},
         {"compile_id", environment("FLAGPRISM_ASCEND_COMPILE_ID")},
-        {"source_association", "surviving_source_metadata_and_full_debug_locations"},
+        {"source_association",
+         "surviving_source_metadata_and_full_debug_locations"},
         {"actors", std::move(actors)}};
-    raw_fd_ostream jsonFile((base + ".json").str(), fileError, sys::fs::OF_None);
+    raw_fd_ostream jsonFile((base + ".json").str(), fileError,
+                            sys::fs::OF_None);
     if (fileError)
       report_fatal_error("FlagPrism cannot retain compiler manifest");
     jsonFile << formatv("{0:2}", json::Value(std::move(manifest)));
     return changed ? PreservedAnalyses::none() : PreservedAnalyses::all();
   }
 };
-}
+} // namespace
 extern "C" LLVM_ATTRIBUTE_WEAK PassPluginLibraryInfo llvmGetPassPluginInfo() {
-  return {LLVM_PLUGIN_API_VERSION, "FlagPrismAscendLateObserver", "1", [](PassBuilder &builder) {
-    builder.registerPipelineStartEPCallback([](ModulePassManager &manager, OptimizationLevel) {
-      manager.addPass(AscendLateObserver());
-    });
-    builder.registerPipelineParsingCallback([](StringRef name, ModulePassManager &manager, ArrayRef<PassBuilder::PipelineElement>) {
-      if (name != "flagprism-ascend-late-observer")
-        return false;
-      manager.addPass(AscendLateObserver());
-      return true;
-    });
-  }};
+  return {LLVM_PLUGIN_API_VERSION, "FlagPrismAscendLateObserver", "1",
+          [](PassBuilder &builder) {
+            builder.registerPipelineStartEPCallback(
+                [](ModulePassManager &manager, OptimizationLevel) {
+                  manager.addPass(AscendLateObserver());
+                });
+            builder.registerPipelineParsingCallback(
+                [](StringRef name, ModulePassManager &manager,
+                   ArrayRef<PassBuilder::PipelineElement>) {
+                  if (name != "flagprism-ascend-late-observer")
+                    return false;
+                  manager.addPass(AscendLateObserver());
+                  return true;
+                });
+          }};
 }
