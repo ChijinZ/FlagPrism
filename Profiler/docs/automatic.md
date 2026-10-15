@@ -50,8 +50,23 @@ python -m flagtree.profiler.cli --detail auto -n profile-run my_kernel_script.py
 ```
 
 Normal arguments after the script name belong to the script. Use a fresh output
-directory for each capture. The script executes once; the basic command does
-not request an application replay or external counter collection.
+directory for each capture. The script executes once in a supervised worker; the basic command does
+not request an application replay or external counter collection. The CLI
+preserves Python interpreter flags such as `-I` and `-O` in that worker.
+
+Automatic CLI compilation phases default to a 120-second deadline (explicit
+`--compile-timeout` values may be 1–300). The cumulative export budget in a
+worker defaults to 60 seconds (`--export-timeout` may select 1–60). Application
+runtime between these phases is unbounded. A timeout returns status 124 and
+retains a diagnostic directory and capture paths; cancellation also cleans up
+the invocation's worker/descendants, including SDK children in separate sessions.
+Other server processes are not terminated. Successful CLI captures include
+`ai/deadlines.json`, whose bytes are covered by the bundle manifest.
+
+Direct session API calls remain in the caller's process. They report measured
+finalization cost, and external SDK compiler jobs have their own watchdog, but
+Python cannot safely preempt a native collector holding the GIL. Use the CLI
+when a hard compile/export deadline is required.
 
 Alternatively, initialize the device in your ordinary script and wrap the
 launches at the outer level:
@@ -97,6 +112,9 @@ Machine-readable counterparts are:
   only materialization time and explicitly reports incomplete total timing.
   These values measure host engineering cost, not GPU/kernel latency.
 
+See the [version 1 JSON field contract](automatic_schema.md) for field types,
+identity namespaces, backend loss accounting and a read-only inspection example.
+
 Read the semantic and clock columns together. NVIDIA records instrumented
 source-control intervals in SM-local counter ticks. Enflame records source
 control using the SDK timer; its frequency is not assumed. Ascend can record
@@ -110,8 +128,12 @@ clock frames are not overlaid on native timelines.
 it is not automatically a loop iteration number. Loop conditions may execute
 once more than their bodies. Sampling, unselected sites and dropped records
 have different meanings. Use the original capture statistics; an unselected
-site is not proof of nonexecution. An empty internal-record view does not
-establish successful fine-grained profiling.
+site is not proof of nonexecution. An automatic capture with no verified source-linked internal records fails
+explicitly as incomplete, retaining `ai/selection_status.json`, the plan and raw
+capture. This includes a selected program that does not execute the region;
+inspect the selection and loss state and, when appropriate, use a public
+`ObservationRequest` to select an executing program. The tool does not replay
+the application to discover another selection.
 
 ## Diagnose installation provenance
 
@@ -120,7 +142,12 @@ Run this in the environment used for capture, before running a workload:
 ```bash
 python - <<'PY'
 import hashlib
+import os
 import torch
+# Initialize the Ascend runtime before importing its vendor Triton compiler.
+# Set FLAGTREE_BACKEND=ascend in this installed environment as described above.
+if os.environ.get('FLAGTREE_BACKEND') == 'ascend':
+    import torch_npu
 import triton
 import flagtree.profiler
 import flagtree.debugger

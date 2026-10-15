@@ -53,6 +53,12 @@ def capture_software(backend=None):
 
 
 def export_capture(base, output, counters=None, context=None):
+    from ._deadline import export_phase
+    with export_phase():
+        return _export_capture_impl(base, output, counters, context)
+
+
+def _export_capture_impl(base, output, counters=None, context=None):
     export_started = time.monotonic()
     base = Path(base)
     if not any(
@@ -74,9 +80,13 @@ def export_capture(base, output, counters=None, context=None):
         document["session_metadata"]["session_name"] = str(output)
         document["session_metadata"].get("config",
                                          {}).pop("artifact_layout", None)
+    automatic_request = None
     launches_path = base.with_suffix(".launches.json")
     if launches_path.exists():
         snapshot = json.loads(launches_path.read_text())
+        request = snapshot.get("observation_request")
+        if isinstance(request, dict) and request.get("automatic"):
+            automatic_request = request
         # The hook snapshot already filters by active session membership. Keep
         # launches even when a backend cannot associate device events yet.
         launches = snapshot["launches"]
@@ -184,6 +194,9 @@ def export_capture(base, output, counters=None, context=None):
     if payload is not None:
         (Path(output) /
          "ai/call_tree.json").write_text(json.dumps(payload) + "\n")
+    if automatic_request is not None:
+        from .fine_grained import require_automatic_records
+        require_automatic_records(output, automatic_request)
     _report.write_manifest(output, result)
     # The source is retained if any preceding export step failed. Cleanup is
     # allowed only after the full bundle and verified SDK copy are present.
@@ -199,9 +212,11 @@ def export_capture(base, output, counters=None, context=None):
                 and recorded.get('includes_bundle_export') is False):
             phases['collector_finalize_s'] = recorded['collector_finalize_s']
             complete = True
-    write_receipt(output, phases=phases, complete=complete,
-                  scope='collector_finalize_then_bundle_export' if complete
-                  else 'bundle_materialization_only')
+    write_receipt(output,
+                  phases=phases,
+                  complete=complete,
+                  scope='collector_finalize_then_bundle_export'
+                  if complete else 'bundle_materialization_only')
 
 
 def run_capture(args, target_args, execute):
@@ -219,6 +234,8 @@ def run_capture(args, target_args, execute):
         context = metadata_snapshot(context)
     output.mkdir(parents=True, exist_ok=False)
     stage = tempfile.mkdtemp(prefix="flagprism-capture-")
+    from ._deadline import phase
+    phase('startup', output=str(output), staging=stage)
     try:
         base = str(Path(stage) / "capture")
         counters = None

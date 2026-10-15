@@ -14,7 +14,8 @@ from .tianshu import merge_ixkn_vendor_artifact, run_ixkn_profile
 def _nonnegative_device(value):
     number = int(value)
     if number < 0:
-        raise argparse.ArgumentTypeError("device must be a nonnegative integer")
+        raise argparse.ArgumentTypeError(
+            "device must be a nonnegative integer")
     return number
 
 
@@ -35,7 +36,9 @@ def _set_runtime_device(backend, device):
         'roctracer': (None, 'cuda'),
     }
     if backend not in runtimes:
-        raise ValueError(f"--device runtime selection is unavailable for {backend!r}; select the device before using the session API")
+        raise ValueError(
+            f"--device runtime selection is unavailable for {backend!r}; select the device before using the session API"
+        )
     extension, runtime = runtimes[backend]
     torch = importlib.import_module('torch')
     if extension:
@@ -68,8 +71,13 @@ def parse_arguments():
                             "tianshu", "corex", "iluvatar", "enflame", "gcu",
                             "tops"
                         ])
-    parser.add_argument("--device", type=_nonnegative_device, default=None,
-                        help="Application runtime device selected before collection; use the same device in the application")
+    parser.add_argument(
+        "--device",
+        type=_nonnegative_device,
+        default=None,
+        help=
+        "Application runtime device selected before collection; use the same device in the application"
+    )
     parser.add_argument("-c",
                         "--context",
                         type=str,
@@ -100,8 +108,21 @@ def parse_arguments():
         "Enable external hardware counters (TCU on Enflame or msprof on Ascend; off by default)"
     )
     parser.add_argument("--counter-metrics", default=None)
-    parser.add_argument("--detail", choices=("auto",), default=None,
-                        help="Automatically select source-linked internal observations")
+    parser.add_argument(
+        "--compile-timeout",
+        type=int,
+        default=120,
+        help="Automatic CLI compile phase deadline in seconds (1..300)")
+    parser.add_argument(
+        "--export-timeout",
+        type=int,
+        default=60,
+        help="Automatic CLI export phase deadline in seconds (1..60)")
+    parser.add_argument(
+        "--detail",
+        choices=("auto", ),
+        default=None,
+        help="Automatically select source-linked internal observations")
     parser.add_argument(
         "--observation-request",
         help="JSON file describing a typed detailed observation request")
@@ -177,14 +198,18 @@ def execute_as_main(script, args):
         with open(script_path, 'rb') as file:
             code = compile(file.read(), script_path, 'exec')
         exec(code, clean_globals)
-    except Exception as e:
-        print(f"An error occurred while executing the script: {e}")
-        sys.exit(1)
+    except SystemExit as error:
+        # A normal explicit application exit still needs collection/export.
+        # Other exceptions retain their original type, cause and traceback.
+        if error.code not in (None, 0):
+            raise
     finally:
         sys.argv = original_argv
 
 
 def do_setup_and_execute(target_args):
+    from ._deadline import phase
+    phase("application")
     # Set the command line mode to avoid any `start` calls in the script.
     set_command_line()
 
@@ -372,7 +397,22 @@ def run_profiling(args, target_args):
 
 def main():
     args, target_args = parse_arguments()
-    run_profiling(args, target_args)
+    if getattr(args, 'detail', None) == 'auto':
+        from ._deadline import WORKER, bind_worker, supervise, worker_command
+        if os.environ.get(WORKER) != '1':
+            code = supervise(worker_command(__package__ + '.cli',
+                                            sys.argv[1:]),
+                             compile_seconds=args.compile_timeout,
+                             export_seconds=args.export_timeout)
+            raise SystemExit(code)
+        bind_worker()
+    try:
+        run_profiling(args, target_args)
+    finally:
+        # Native SDK/Python interpreter shutdown is part of finishing capture,
+        # rather than an unbounded continuation of the user's application.
+        from ._deadline import _restore_phase
+        _restore_phase('export')
 
 
 if __name__ == "__main__":

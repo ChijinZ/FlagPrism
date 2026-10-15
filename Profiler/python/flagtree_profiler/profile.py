@@ -937,11 +937,12 @@ def _snapshot_session(state):
     if state.get("name"):
         from ._capture import capture_software
         Path(state["name"]).with_suffix(".launches.json").write_text(
-            json.dumps(dict(LaunchHook.snapshot(state["session"]),
-                            software=capture_software(state.get("backend")),
-                            context=state.get("metadata"),
-                            metadata_rejections=state.get(
-                                "metadata_rejections", [])),
+            json.dumps(dict(
+                LaunchHook.snapshot(state["session"]),
+                software=capture_software(state.get("backend")),
+                context=state.get("metadata"),
+                observation_request=state.get("observation_request"),
+                metadata_rejections=state.get("metadata_rejections", [])),
                        allow_nan=False))
 
 
@@ -1396,7 +1397,8 @@ def _automatic_backend(backend=None):
         return "instrumentation"
     if _is_cann_backend(backend) or _is_enflame_backend(backend):
         return backend
-    raise ValueError(f"Automatic fine-grained profiling is unavailable for {backend!r}")
+    raise ValueError(
+        f"Automatic fine-grained profiling is unavailable for {backend!r}")
 
 
 def start(
@@ -1469,18 +1471,23 @@ def start(
         raise ValueError("detail must be None or 'auto'")
     if detail == "auto":
         if observation_request is not None or mode is not None:
-            raise ValueError("detail='auto' cannot be combined with a request or explicit mode")
+            raise ValueError(
+                "detail='auto' cannot be combined with a request or explicit mode"
+            )
         if hook not in (None, "instrumentation"):
             raise ValueError("detail='auto' requires the instrumentation hook")
         backend = _automatic_backend(backend)
         if _is_cann_backend(backend):
-            mode = ("runtime_base:mstx_enabled=true:aclprof_msproftx_enabled=true:"
-                    "runtime_host_timing_fallback=false")
+            mode = (
+                "runtime_base:mstx_enabled=true:aclprof_msproftx_enabled=true:"
+                "runtime_host_timing_fallback=false")
         hook = "instrumentation"
         from .observations import ObservationRequest
-        semantics = (("operation_checkpoint", "control_checkpoint")
-                     if _is_cann_backend(backend) else ("source_control_interval",))
-        observation_request = ObservationRequest(semantics=semantics, automatic=True)
+        semantics = (("operation_checkpoint",
+                      "control_checkpoint") if _is_cann_backend(backend) else
+                     ("source_control_interval", ))
+        observation_request = ObservationRequest(semantics=semantics,
+                                                 automatic=True)
     if backend is None:
         backend = _select_backend()
 
@@ -1765,6 +1772,20 @@ def finalize(session: Optional[int] = None,
              output_format: Optional[str] = "",
              *,
              metadata: Optional[dict] = None) -> None:
+    """Flush, export and clean up a capture; CLI export phases have a deadline.
+
+    Direct API callers retain control of their process. Native SDK calls cannot
+    safely be interrupted in a Python thread; use the CLI for hard deadlines.
+    """
+    from ._deadline import export_phase
+    with export_phase():
+        return _finalize_impl(session, output_format, metadata=metadata)
+
+
+def _finalize_impl(session: Optional[int] = None,
+                   output_format: Optional[str] = "",
+                   *,
+                   metadata: Optional[dict] = None) -> None:
     """
     Finalizes a profiling session.
     Flush and write the profiling data to the file specified by the session name.

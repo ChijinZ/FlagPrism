@@ -18,6 +18,9 @@ tests. Backend build and test entry points live in `tests/` and
 and preservation of explicit instrumentation mode in JIT options/cache identity.
 This patch was used by the actual NVIDIA full-core build. Do not use its build
 success as evidence of compatibility with another FlagTree baseline.
+Layer `nvidia/automatic-scopes.patch` afterwards for automatic unannotated
+profiling. The [NVIDIA build/install recipe](nvidia/README.md) and
+`nvidia/build_automatic_wheel.sh` use the actual integrated native build.
 
 ## Enflame
 
@@ -33,9 +36,14 @@ here. The hardware is ZIXIAOC200; `gcu300` is the compiler/SDK target name.
 
 ## Ascend
 
-See `ascend/` for pinned recovery inputs and their pending status. The gateway
-interruption prevents a final hardware-validated combined patch at this stage.
+See [Ascend pinned integration and packaging](ascend/README.md). Apply its
+complete patch first, then `automatic-source-origins.patch` and
+`automatic-import-order.patch`. These layered changes preserve automatic source
+locations and initialize the vendor Torch runtime before importing Triton.
+The earlier gateway interruption has been resolved; independent API/CLI and
+native task/source checks have run in the existing server Docker.
 The upstream LLVM15 observer must run out of process before the SDK toolchain;
-loading it directly into the vendor LLVM15 fork is unsupported. Native task
-collection and the automatic same-call raw-counter identity/domain producer
-remain separate acceptance items.
+loading it directly into the vendor LLVM15 fork is unsupported. Independent developer checks do not substitute for the common held-out
+qualification or final code reviews. The late plugin is packaged in the wheel;
+normal automatic profiling uses its package-local path and retains compiler
+receipts without developer-only environment variables.

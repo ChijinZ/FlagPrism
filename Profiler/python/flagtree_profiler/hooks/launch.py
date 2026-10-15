@@ -245,6 +245,8 @@ class LaunchHook(Hook):
         cls._metadata_state = None
 
     def enter(self, metadata: LazyDict) -> None:
+        from .._deadline import phase
+        phase("application")
         if not isinstance(metadata, LazyDict):
             return  # Keep native activity capture without an unsupported scope.
         # Consume the private context before invoking user callbacks, including

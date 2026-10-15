@@ -26,7 +26,16 @@ Native activity can be collected without a detailed request. Compiler and
 source evidence is present only when the corresponding launch metadata survives;
 empty or partial mapping is reported rather than filled from a kernel name.
 
-## Public interface
+## Basic automatic interface
+
+Use `python -m flagtree.profiler.cli --detail auto -n profile-run my_script.py`
+or `profiler.start("profile-run", detail="auto")` for ordinary unannotated
+kernels on the supported NVIDIA, Enflame and Ascend integrations. See
+[automatic profiling](automatic.md) for installation, device selection, source
+views, budgets and error semantics. Automatic discovery is distinct from the
+advanced explicit request examples below.
+
+## Advanced explicit requests
 
 ```python
 from flagtree import profiler
@@ -54,7 +63,7 @@ Choose the backend explicitly when comparing collection modes:
 | NVIDIA explicit source scopes | `"instrumentation"` | `"instrumentation"`, `source_control_interval` |
 | Enflame native activity | `"enflame"` | `"triton"`, no request |
 | Enflame source-site intervals | `"enflame"` | `"instrumentation"`, `source_control_interval` |
-| Ascend late LLVM source control | `"cann"` | `"instrumentation"`, `issue`, `wait_bracket`, `control_checkpoint` |
+| Ascend late LLVM source control | `"cann"` | `"instrumentation"`, `issue`, `wait_bracket`, `control_checkpoint`, `operation_checkpoint` |
 
 The API can select a backend from the active runtime when `backend=None`, but
 that does not replace a deliberate native-versus-instrumented choice. A CUDA
@@ -62,7 +71,7 @@ request is not accepted with `backend="cupti"` and is never silently redirected
 to that collector. Do not supply both an explicit CUDA instrumentation `mode`
 and `observation_request`.
 
-For NVIDIA, change the example above to `backend="instrumentation"` and ensure
+For manual NVIDIA source scopes, change the example above to `backend="instrumentation"` and ensure
 the kernel contains explicit profiling scopes. For a simple Triton DSL kernel,
 opt in to that frontend before compilation and bracket the region in its body:
 
