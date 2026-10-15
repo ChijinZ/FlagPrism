@@ -152,6 +152,148 @@ protocols. Retained visits, sampled instances, unselected sites, overflow, inval
 publication and capture failure are separate conditions. Raw bytes/encoding and
 digests remain available in capture objects or referenced `raw/` artifacts.
 
+The following small examples show the exact nesting and literal key names used
+by a reader. They are projections: raw bytes, additional metadata and additional
+inventory entries are omitted for readability. They are not replacement capture
+files or evidence of an actual run.
+
+NVIDIA plan entry and matching original capture:
+
+```json
+{
+  "binary_id": "compiler-cache-hash",
+  "capture_id": "capture-a",
+  "plan": {
+    "schema_version": 2,
+    "proton.automatic_candidates": 2,
+    "proton.automatic_selected": 1,
+    "max_sites": 1,
+    "inventory": [
+      {"candidate_ordinal": 0, "operation": "tt.load", "location": {"kind": "file_line_column", "file": "/app/kernel.py", "line": 12, "column": 4}, "selected": true, "candidate_class": "source_statement", "selection_reason": "source_statement_priority", "selected_scope_name": "auto/0/tt.load", "scope_id": 0},
+      {"candidate_ordinal": 1, "operation": "arith.addf", "location": {"kind": "file_line_column", "file": "/app/kernel.py", "line": 13, "column": 4}, "selected": false, "candidate_class": "internal_operation", "selection_reason": "site_budget_excluded", "selected_scope_name": null, "scope_id": null}
+    ]
+  }
+}
+```
+
+```json
+{
+  "capture_id": "capture-a",
+  "invocation_id": "launch-1",
+  "binary_id": "compiler-cache-hash",
+  "decoded": {
+    "losses": [{"program": 0, "sm": 0, "warp": 0, "written_records": 2, "retained_records": 2, "dropped_records": 0, "capacity_records": 256}],
+    "unpaired_records": [],
+    "dropped_records": 0
+  }
+}
+```
+
+Ascend plan entries contain the operation plan directly as `plan`; they do not
+contain another `plan.operation_plan` wrapper. Actor counters are directly in
+each element of `captures[].actors`:
+
+```json
+{
+  "binary_id": "compiler-cache-hash",
+  "compile_id": "compile-a",
+  "module_sha256": "actual-module-digest",
+  "plan": {
+    "candidate_count": 1,
+    "selected_count": 1,
+    "max_sites": 8,
+    "policy": "source_location_class_per_original_block_evenly_spaced",
+    "inventory": [{"site_id": 6, "operation": "mul", "compiler_opcode": "mul", "source_file": "/app/kernel.py", "line": 12, "column": 4, "selected": true, "selection_reason": "source_location_class_evenly_spaced"}]
+  }
+}
+```
+
+```json
+{
+  "capture_id": "capture-a",
+  "capture_status": "decoded",
+  "decode_error": null,
+  "record_layout": "ascend_actor_dynamic_v1",
+  "counter_saturated": false,
+  "actors": [{"actor_slot": 1, "state": "complete", "attempted": 2, "committed": 2, "dropped": 0}],
+  "dropped": 0
+}
+```
+
+Enflame capture `record_layout` is a string. `header.capacity` is an integer
+record capacity; `capture_id` is the capture identity. The automatic plan is
+found in `plans[].plan`, bound to `binary_id`:
+
+```json
+{
+  "binary_id": "compiler-cache-hash",
+  "plan": {
+    "schema_version": 1,
+    "candidate_count": 1,
+    "max_sites": 8,
+    "policy": "bounded_class_round_robin",
+    "selected_sites": [3],
+    "inventory": [{"opId": 3, "mlirOpName": "arith.addf", "sourceLoc": "loc(\"/app/kernel.py\":12:4)", "automatic_eligible": true, "exclusion_reason": null, "selected": true, "selection_reason": "bounded_class_round_robin"}]
+  }
+}
+```
+
+```json
+{
+  "capture_id": "capture-a",
+  "capture_status": "decoded",
+  "decode_error": null,
+  "record_layout": "selected_dynamic_timeline_v1",
+  "counter_saturated": false,
+  "runtime_metadata": {"profiler_invocation_id": "launch-1"},
+  "header": {"write_idx": 2, "capacity": 256, "overflow_count": 0, "flags": 0, "record_size": 64, "payload_offset": 16416, "reserved0": 2, "reserved1": 0}
+}
+```
+
+## Binary, launch and source identities
+
+`ai/launches.json` and `ai/binaries.json` are top-level JSON arrays, not wrapped
+objects. A launch has string `id` (for example `launch-1`), `binary_id`, numeric
+`scope_id`, `name`, `grid` and `argument_id`. Join the normalized record's
+`invocation_id` to the launch's `id`, and its `binary_id` to the binary's `id`.
+Names are labels, not join evidence.
+
+For a compiler-linked binary, `identity` is `compiler_cache_hash` and `id` is the
+actual `CompiledKernel.hash`. `binary_sha256` separately hashes the actual binary
+bytes; it is not the compiler cache hash. Different instrumented configurations
+can produce different cache identities. A baseline uninstrumented hash is not
+expected to equal its instrumented specialization's hash.
+
+The binary's `source` object contains `path` (capture-machine path), `line`,
+`sha256` (JIT function text digest), `file_sha256` (full captured source file
+digest), `text_file` and `file_snapshot_file` (bundle-relative exported paths).
+Verify each digest against its corresponding file; function text and full file
+are different byte sequences. Null source fields mean unavailable. A source
+file snapshot describes what was read during capture, not every external Python
+dependency or a separately compiled caller. For example:
+
+```json
+{
+  "id": "compiler-cache-hash",
+  "identity": "compiler_cache_hash",
+  "binary_sha256": "actual-device-binary-digest",
+  "source": {
+    "path": "/app/kernel.py",
+    "line": 9,
+    "sha256": "jit-text-digest",
+    "file_sha256": "whole-file-digest",
+    "text_file": "ai/sources/jit-text-digest.py",
+    "file_snapshot_file": "ai/sources/whole-file-digest.py"
+  }
+}
+```
+
+`compiler_artifact_files` maps actual stages such as `ttir`, `ttgir`, `llir` or
+`ptx` to objects with `file`, `sha256`, `bytes` and `basis`. These are captured
+compiled artifacts. A source location identifies the original absolute source
+path, while the source snapshot is found using the binary record above; a
+consumer must not try to open that original path on a different machine.
+
 ## `ai/export_timing.json`
 
 | Field | Type | Meaning |
