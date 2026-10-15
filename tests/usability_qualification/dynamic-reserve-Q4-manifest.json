@@ -1,0 +1,26 @@
+{
+  "schema": "flagprism-heldout-dynamic-repair-reserve-v1",
+  "sealed_utc": "2026-10-15 19:18:37 UTC",
+  "phase": "source_and_oracle_frozen_before_any_reserve_execution",
+  "source_sha256": {
+    "reserve_dynamic.py": "85e5c10abd07c4a106894b9bfd27dd5f98fd89f867e22159f2a367979458e39e"
+  },
+  "cases": [
+    {"case": "coupled_logistic", "structure": "two coupled loop-carried tensor states with nonlinear register arithmetic"},
+    {"case": "neighbor_accumulation", "structure": "runtime-varying neighborhood gathers and loop-carried weighted accumulation"}
+  ],
+  "shapes": [512, 517],
+  "configurations": [{"B": 128, "num_warps": 4}, {"B": 256, "num_warps": 4}],
+  "runtime_bounds_in_one_process": [2, 5],
+  "same_actual_compiled_kernel_hash_required": true,
+  "atol": 0.00003,
+  "rtol": 0.00003,
+  "sideeffect_protocol": "non-idempotent per-element output dependency plus exactly one fsynced application-start ledger entry",
+  "input_integrity": "two input SHA256 comparisons per call; runtime-bound scalar unchanged; guards on both sides of output",
+  "oracle": "independent CPU double vectors; register recurrence uses simultaneous state updates; gather reference uses CPU roll instead of GPU address/mask expressions",
+  "acceptance_protocol": "ordinary original-compiler baseline eligibility first, no profiler; freeze receipts/input hashes without removing failures; repaired default-public-CLI cold and warm only after new freeze and booking; unchanged public minimum of two actual internal sites/two valid source positions per invocation, backend loss/clock/bundle/deadline checks, and exact same-binary per-site/program/actor visits 2/5 body or 3/6 header",
+  "baseline_timeout_seconds": 300,
+  "candidate_export_limit_seconds": 60,
+  "original_C0_runtime_probe": "retained unchanged with its eight GCU first-pass failures; these reserves supplement rather than replace it",
+  "exposure": "Owner observed C0 public artifacts and failure structure, not repaired implementation. Reserve bodies withheld from root/engineers. C1 engineering had been assigned when this seal was written; no claim that authoring preceded all engineering edits, and no repaired candidate or reserve execution has occurred."
+}
