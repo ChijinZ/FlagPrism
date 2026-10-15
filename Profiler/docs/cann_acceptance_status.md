@@ -1,5 +1,14 @@
 # FlagTree Profiler CANN Adapter Acceptance Status
 
+> Historical validation record for the earlier minimal CANN adapter. The
+> environment and capability statements below describe that stage, rather than
+> the current semantic-profiling implementation. For current API/CLI usage,
+> hidden observer integration, retained task identity, clock limits, and raw
+> recovery, see [semantic profiling](semantic_profiling.md) and
+> [Ascend validation](../../tests/ascend/README.md). Hardware-qualified
+> milestones are stored under `integration/evidence/`; later validation does
+> not retroactively change these historical results.
+
 ## Purpose
 
 This document records the current validation status for the FlagTree Profiler CANN vendor
