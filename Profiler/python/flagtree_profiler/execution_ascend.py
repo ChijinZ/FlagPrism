@@ -199,8 +199,13 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
                 origin_associations.append({'source_op_id': candidates[0], 'lowered_site_id': site['id'], 'basis': 'unique_full_debug_location_in_verified_compiler_snapshot', 'status': 'verified_origin', 'cost_ownership': 'not_established', 'source_ir_sha256': snapshot['ir_sha256']})
         associations.extend(origin_associations)
     from .ascend_hivm import build_static_readiness
-    static_readiness = build_static_readiness(handoff.get('sdk_ir_capture'),
-                                              handoff.get('artifacts', []))
+    static_readiness = build_static_readiness(
+        handoff.get('sdk_ir_capture'),
+        handoff.get('artifacts', []),
+        source_snapshot=handoff.get('source_snapshot'),
+        compile_id=handoff.get('compile_id'),
+        phase=handoff.get('phase'),
+        returncode=handoff.get('returncode'))
     for channel in static_readiness['channels']:
         producers = [
             actor for actor in actors

@@ -44,3 +44,92 @@ def test_same_site_id_on_different_actors_is_disambiguated():
     duplicate=m.decode_dynamic64(records,capacity=1,actor_slots=2,capture_id='capture',site_manifest=manifests+[manifests[0]])
     assert duplicate['observations'][0]['compiler_site'] is None
     assert duplicate['observations'][0]['source_mapping_status']=='ambiguous'
+
+
+@pytest.mark.parametrize('value', [-1, True, 1.5, '0', 1 << 64])
+def test_invalid_expected_program_is_rejected(value):
+    with pytest.raises(ValueError, match='expected_program'):
+        m.decode_dynamic64([0] * 12,
+                           capacity=1,
+                           actor_slots=1,
+                           capture_id='capture',
+                           expected_program=value)
+
+
+def test_record_program_must_agree_with_compiled_selection():
+    raw = [1, 1, 1, 0] + [(2 << 32) | 7, 0, 100, 120, 1, 0, UNKNOWN, UNKNOWN]
+    with pytest.raises(ValueError, match='program contradicts'):
+        m.decode_dynamic64(raw,
+                           capacity=1,
+                           actor_slots=1,
+                           capture_id='capture',
+                           expected_program=0)
+    old = m.decode_dynamic64(raw,
+                             capacity=1,
+                             actor_slots=1,
+                             capture_id='capture')
+    assert old['observations'][0][
+        'program_selection_status'] == 'unverified_legacy'
+    valid = m.decode_dynamic64(raw,
+                               capacity=1,
+                               actor_slots=1,
+                               capture_id='capture',
+                               expected_program=1)
+    assert valid['observations'][0][
+        'program_selection_status'] == 'consistent_with_expected_program'
+
+
+@pytest.mark.parametrize(
+    'code,callee,semantic',
+    [(1, 'llvm.hivm.WAIT.FLAG.IMM', 'existing_readiness_wait_source_control'),
+     (2, 'llvm.hivm.SET.FLAG.IMM', 'signal_issue_source_control'),
+     (2, 'llvm.hivm.SET.CROSS.CORE', 'existing_readiness_wait_source_control'),
+     (1, 'llvm.hivm.SET.FLAG.IMM', 'existing_readiness_wait_source_control'),
+     (3, 'llvm.hivm.WAIT.FLAG.IMM', 'loop_header_occurrence')])
+def test_authoritative_native_site_contradiction_is_rejected(
+        code, callee, semantic):
+    raw = [1, 1, 1, 0] + [(code << 32) | 7, 0, 100, 100, 0, 0, UNKNOWN, UNKNOWN
+                          ]
+    manifest = [{
+        'actor_slot': 0,
+        'site_id': 7,
+        'callee': callee,
+        'semantics': semantic
+    }]
+    with pytest.raises(ValueError,
+                       match='semantic contradicts|checkpoint compiler'):
+        m.decode_dynamic64(raw,
+                           capacity=1,
+                           actor_slots=1,
+                           capture_id='capture',
+                           site_manifest=manifest,
+                           expected_program=0)
+
+
+def test_unknown_and_duplicate_legacy_sites_do_not_gain_semantic_certification(
+):
+    raw = [1, 1, 1, 0] + [(2 << 32) | 7, 0, 100, 120, 0, 0, UNKNOWN, UNKNOWN]
+    unknown = [{
+        'actor_slot': 0,
+        'site_id': 7,
+        'callee': 'unknown_future_primitive'
+    }]
+    result = m.decode_dynamic64(raw,
+                                capacity=1,
+                                actor_slots=1,
+                                capture_id='capture',
+                                site_manifest=unknown)
+    assert result['observations'][0]['source_mapping_status'] == 'partial'
+    assert result['program_selection']['status'] == 'unverified_legacy'
+    known = {
+        'actor_slot': 0,
+        'site_id': 7,
+        'callee': 'llvm.hivm.WAIT.FLAG.IMM',
+        'semantics': 'existing_readiness_wait_source_control'
+    }
+    result = m.decode_dynamic64(raw,
+                                capacity=1,
+                                actor_slots=1,
+                                capture_id='capture',
+                                site_manifest=[known, known])
+    assert result['observations'][0]['source_mapping_status'] == 'ambiguous'

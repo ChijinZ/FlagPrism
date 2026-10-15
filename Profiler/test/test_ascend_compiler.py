@@ -56,3 +56,38 @@ def test_requested_finish_cannot_accept_an_old_compiler_route():
     event=SimpleNamespace(backend='ascend',metadata={'flagprism_ascend_observation_request':{'semantics':['issue']}})
     with pytest.raises(RuntimeError,match='did not prepare a late compiler handoff'):
         m.finish(event,returncode=0)
+
+
+def test_prepare_retains_exact_crlf_source_bytes(tmp_path, monkeypatch):
+    import hashlib
+    source = b'func.func @source(%lock: memref<?xi8>, %work: memref<?xi8>, %x: memref<?xf32>) attributes {SyncBlockLockArgIdx = 0 : i64, WorkspaceArgIdx = 1 : i64, global_kernel = "local"} {\r\n return\r\n}\r\n'
+    input_path = tmp_path / 'input.mlir'
+    input_path.write_bytes(source)
+    plugin = tmp_path / 'plugin.so'
+    plugin.write_bytes(b'fixture-plugin')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE',
+                       str(tmp_path / 'captures'))
+    monkeypatch.setattr(
+        m.shutil, 'which', lambda name, **kw: '/sdk/bisheng'
+        if name == 'bisheng' else '/llvm/opt-15')
+    fake_driver = tmp_path / 'driver.py'
+    fake_driver.write_bytes(b'actual fixture launch source')
+    utils = SimpleNamespace(__file__=str(tmp_path / 'utils.py'),
+                            get_ascend_arch_from_env=lambda: 'c220',
+                            is_ffts_supported=lambda arch: True,
+                            force_disable_ffts=lambda: False)
+    backend = types.ModuleType('triton.backends.ascend')
+    backend.utils = utils
+    monkeypatch.setitem(sys.modules, 'triton.backends.ascend', backend)
+    event = SimpleNamespace(backend='ascend',
+                            metadata={},
+                            command=['bishengir-compile',
+                                     str(input_path)],
+                            environment={'PATH': '/sdk'})
+    m.prepare(event)
+    handoff = event.metadata['flagprism_ascend_handoff']
+    snapshot = handoff['source_snapshot']
+    assert snapshot['ir'].encode('utf-8') == source
+    assert snapshot['ir_sha256'] == hashlib.sha256(source).hexdigest()
+    assert (Path(handoff['output']) / 'source.mlir').read_bytes() == source

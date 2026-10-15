@@ -3,14 +3,16 @@ import base64
 import hashlib
 import importlib
 import json
+import struct
 from types import SimpleNamespace
 
 import pytest
 
 
 @pytest.mark.parametrize("handler_fails", [False, True])
+@pytest.mark.parametrize("failure", ["truncated", "semantic", "program"])
 def test_finalize_preserves_truncated_actor_trace_and_original_error(
-        monkeypatch, tmp_path, handler_fails):
+        monkeypatch, tmp_path, handler_fails, failure):
     from flagtree import debugger
     from flagtree.debugger import api
     from flagtree.debugger.runtime import default_debug_collect_runtime
@@ -18,6 +20,16 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
     profile = importlib.import_module("flagtree.profiler.profile")
 
     raw = b"\x00" * 8
+    expected_error = 'truncated dynamic64 allocation'
+    if failure != 'truncated':
+        descriptor = (1 if failure == 'semantic' else 2) << 32 | 7
+        program = 1 if failure == 'program' else 0
+        words = [
+            1, 1, 1, 0, descriptor, 0, 100, 120, program, 0, (1 << 64) - 1,
+            (1 << 64) - 1
+        ] + [0] * 24
+        raw = struct.pack('<36Q', *words)
+        expected_error = 'dynamic64 event semantic contradicts authoritative compiler site' if failure == 'semantic' else 'dynamic64 program contradicts compiled program selection'
     calls = []
 
     def export_handler(run):
@@ -37,12 +49,23 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
         "debug_addr_level": 0,
         "debug_record_layout": "ascend_actor_dynamic_v1",
         "flagprism_ascend_trace_capacity": 1,
+        "flagprism_ascend_trace_program": 0,
         "flagprism_ascend_handoff": {
-            "phase": "finished",
+            "phase":
+            "finished",
             "artifacts": [{
                 "metadata": {
-                    "actors": [],
-                    "dynamic_sites": []
+                    "actors": [{
+                        "actor_kind": "AIC"
+                    }],
+                    "dynamic_sites": [{
+                        "site_id":
+                        7,
+                        "callee":
+                        "llvm.hivm.WAIT.FLAG.IMM",
+                        "semantics":
+                        "existing_readiness_wait_source_control"
+                    }]
                 }
             }]
         }
@@ -61,7 +84,7 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
         api, "_load_binding",
         lambda: SimpleNamespace(prepare_launch=lambda *args: handle))
     prepared = api._default_launch_prepare_hook(SimpleNamespace(), 0, None, ())
-    with pytest.raises(ValueError, match="truncated dynamic64 allocation"):
+    with pytest.raises(ValueError, match=expected_error):
         prepared.finalize(None)
     assert finishes == [True]
     assert len(calls) == 1
@@ -90,8 +113,7 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
     assert payload["observations"] == []
     capture = payload["captures"][0]
     assert capture["capture_status"] == "decode_failed"
-    assert capture["decode_error"][
-        "message"] == "truncated dynamic64 allocation"
+    assert capture["decode_error"]["message"] == expected_error
     assert base64.b64decode(capture["raw_base64"]) == raw
     view = reconstruction.reconstruct(payload, [], [], [])
     assert view["groups"] == []

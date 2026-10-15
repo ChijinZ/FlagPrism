@@ -1531,7 +1531,9 @@ def _default_launch_prepare_hook(
                         "profiler_invocation_id"),
                     association_evidence=exported_runtime_metadata.get(
                         "profiler_association_evidence"),
-                    site_manifest=sites)
+                    site_manifest=sites,
+                    expected_program=metadata_dict.get(
+                        'flagprism_ascend_trace_program'))
                 requested = set(
                     (metadata_dict.get("flagprism_ascend_observation_request")
                      or {}).get("semantics", []))

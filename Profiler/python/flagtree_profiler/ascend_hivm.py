@@ -13,7 +13,13 @@ _SYNC = re.compile(
 _LOCATION = re.compile(r'"([^"\n]+)":(\d+):(\d+)')
 
 
-def build_static_readiness(capture, artifacts):
+def build_static_readiness(capture,
+                           artifacts,
+                           *,
+                           source_snapshot=None,
+                           compile_id=None,
+                           phase=None,
+                           returncode=None):
     """Require the retained same-compile SDK stream and actor LLVM inventory."""
     result = {
         'schema_version': 1,
@@ -26,7 +32,29 @@ def build_static_readiness(capture, artifacts):
     if not isinstance(capture, dict):
         result['reason'] = 'missing_sdk_ir_capture'
         return result
+    if (not isinstance(compile_id, str) or not compile_id
+            or phase != 'finished' or type(returncode) is not int
+            or returncode != 0):
+        result['reason'] = 'missing_or_unsuccessful_enclosing_compile'
+        return result
+    if (not isinstance(source_snapshot, dict)
+            or source_snapshot.get('phase') != 'pre_backend_driver'
+            or source_snapshot.get('encoding') != 'utf-8'
+            or not isinstance(source_snapshot.get('ir'), str)):
+        result['reason'] = 'missing_durable_source_bytes'
+        return result
+    source_sha256 = hashlib.sha256(
+        source_snapshot['ir'].encode('utf-8')).hexdigest()
+    if source_sha256 != source_snapshot.get('ir_sha256'):
+        result['reason'] = 'retained_source_hash_mismatch'
+        return result
     receipt = capture.get('receipt', {})
+    if receipt.get('compile_id') != compile_id:
+        result['reason'] = 'enclosing_compile_identity_mismatch'
+        return result
+    if receipt.get('source_ir_sha256') != source_sha256:
+        result['reason'] = 'sdk_input_source_hash_mismatch'
+        return result
     text = capture.get('stderr', '')
     stream = receipt.get('streams', {}).get('stderr', {})
     if (receipt.get('state') != 'finished' or receipt.get('returncode') != 0
@@ -39,12 +67,14 @@ def build_static_readiness(capture, artifacts):
         return result
     result['sdk_ir_sha256'] = stream['sha256']
     result['compile_id'] = receipt['compile_id']
-    result['source_ir_sha256'] = receipt.get('source_ir_sha256')
+    result['source_ir_sha256'] = source_sha256
+    result['source_binding'] = 'verified_durable_bytes_and_enclosing_compile'
     actors = {}
     for artifact in artifacts:
         if (artifact.get('driver_job', {}).get('state') != 'finished'
-                or artifact['driver_job'].get('compile_id')
-                != receipt['compile_id']
+                or artifact['driver_job'].get('exit_code') != 0
+                or artifact['driver_job'].get('compile_id') != compile_id
+                or artifact.get('metadata', {}).get('compile_id') != compile_id
                 or not isinstance(artifact.get('llir'), str)
                 or hashlib.sha256(artifact['llir'].encode()).hexdigest()
                 != artifact.get('sha256')

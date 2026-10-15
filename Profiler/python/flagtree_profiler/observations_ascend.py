@@ -5,9 +5,44 @@ from .observations import observation, validate_clock
 
 _UNKNOWN = (1 << 64) - 1
 _SEMANTICS = {1: 'issue', 2: 'wait_bracket', 3: 'control_checkpoint'}
+_MANIFEST_SEMANTICS = {
+    'signal_issue_source_control': 1,
+    'existing_readiness_wait_source_control': 2,
+    'loop_header_occurrence': 3
+}
+_CALLEE_SEMANTICS = {
+    'llvm.hivm.SET.FLAG.IMM': 1,
+    'llvm.hivm.SET.CROSS.CORE': 1,
+    'llvm.hivm.WAIT.FLAG.IMM': 2,
+    'llvm.hivm.WAIT.FLAG.DEV.REG': 2
+}
 
 
-def decode_dynamic64(data, *, capacity, actor_slots=3, capture_id, invocation_id=None, association_evidence=None, clock=None, site_manifest=None):
+def _validate_site_semantic(manifest, code):
+    if manifest is None:
+        return False
+    declared = _MANIFEST_SEMANTICS.get(manifest.get('semantics'))
+    callee = manifest.get('callee')
+    native = _CALLEE_SEMANTICS.get(callee)
+    if declared is not None and declared != code or native is not None and native != code:
+        raise ValueError(
+            'dynamic64 event semantic contradicts authoritative compiler site')
+    if declared == 3 and callee is not None:
+        raise ValueError(
+            'dynamic64 checkpoint compiler site has a native callee')
+    return declared is not None and (native is not None or declared == 3)
+
+
+def decode_dynamic64(data,
+                     *,
+                     capacity,
+                     actor_slots=3,
+                     capture_id,
+                     invocation_id=None,
+                     association_evidence=None,
+                     clock=None,
+                     site_manifest=None,
+                     expected_program=None):
     """Decode actor_header4_record8_v1 with independent cursor/overflow counts.
 
     Zero headers denote no recorded selected event; actor execution is unknown.
@@ -17,6 +52,11 @@ def decode_dynamic64(data, *, capacity, actor_slots=3, capture_id, invocation_id
     """
     if type(capacity) is not int or capacity < 1 or type(actor_slots) is not int or actor_slots < 1:
         raise ValueError('capacity and actor_slots must be positive integers')
+    if expected_program is not None and (
+            type(expected_program) is not int
+            or not 0 <= expected_program <= _UNKNOWN):
+        raise ValueError(
+            'expected_program must be an unsigned64 integer or None')
     if not isinstance(capture_id, str) or not capture_id:
         raise ValueError('capture_id must be nonempty')
     if isinstance(data, (bytes, bytearray, memoryview)):
@@ -70,8 +110,83 @@ def decode_dynamic64(data, *, capacity, actor_slots=3, capture_id, invocation_id
                 raise ValueError('dynamic64 actor/occurrence identity mismatch')
             if code == 3 and start != end:
                 raise ValueError('loop-header point record has nonzero interval')
+            if expected_program is not None and program != expected_program:
+                raise ValueError(
+                    'dynamic64 program contradicts compiled program selection')
             prior = occurrence
             manifest = None if (actor, site) in ambiguous_sites else sites.get((actor, site))
-            event = {'id': f'{capture_id}:actor{actor}:record{index}', 'capture_id': capture_id, 'invocation_id': invocation_id, 'source': 'ascend_llvm_dynamic64', 'semantic': _SEMANTICS[code], 'event_kind': 'loop_header_occurrence' if code == 3 else 'native_primitive_bracket', 'program': program, 'actor_slot': actor, 'site': site, 'occurrence': occurrence, 'start_tick': start, 'end_tick': end, 'buffer_slot': None if buffer_slot == _UNKNOWN else buffer_slot, 'iteration': None if iteration == _UNKNOWN else iteration, 'clock': native_clock, 'association_status': 'verified' if invocation_id and association_evidence else 'unassociated', 'association_evidence': association_evidence, 'original_record': record, 'compiler_site': manifest, 'source_mapping_status': 'ambiguous' if (actor, site) in ambiguous_sites else 'partial' if manifest is None else 'compiler_site_identified', 'limits': ['An issue/wait bracket measures source control; it is not engine busy.', 'Actor occurrence order does not identify a source loop induction variable.']}
+            site_semantic_verified = _validate_site_semantic(manifest, code)
+            event = {
+                'program_selection_status':
+                'consistent_with_expected_program'
+                if expected_program is not None else 'unverified_legacy',
+                'expected_program':
+                expected_program,
+                'id':
+                f'{capture_id}:actor{actor}:record{index}',
+                'capture_id':
+                capture_id,
+                'invocation_id':
+                invocation_id,
+                'source':
+                'ascend_llvm_dynamic64',
+                'semantic':
+                _SEMANTICS[code],
+                'event_kind':
+                'loop_header_occurrence'
+                if code == 3 else 'native_primitive_bracket',
+                'program':
+                program,
+                'actor_slot':
+                actor,
+                'site':
+                site,
+                'occurrence':
+                occurrence,
+                'start_tick':
+                start,
+                'end_tick':
+                end,
+                'buffer_slot':
+                None if buffer_slot == _UNKNOWN else buffer_slot,
+                'iteration':
+                None if iteration == _UNKNOWN else iteration,
+                'clock':
+                native_clock,
+                'association_status':
+                'verified'
+                if invocation_id and association_evidence else 'unassociated',
+                'association_evidence':
+                association_evidence,
+                'original_record':
+                record,
+                'compiler_site':
+                manifest,
+                'source_mapping_status':
+                'ambiguous' if
+                (actor,
+                 site) in ambiguous_sites else 'partial' if manifest is None
+                or not site_semantic_verified else 'compiler_site_identified',
+                'limits': [
+                    'An issue/wait bracket measures source control; it is not engine busy.',
+                    'Actor occurrence order does not identify a source loop induction variable.'
+                ]
+            }
             events.append(observation(event))
-    return {'schema_version': 1, 'backend': 'ascend', 'layout': 'actor_header4_record8_v1', 'capture_id': capture_id, 'invocation_id': invocation_id, 'actors': actors, 'observations': events, 'dropped': sum(actor['dropped'] for actor in actors)}
+    return {
+        'schema_version': 1,
+        'backend': 'ascend',
+        'layout': 'actor_header4_record8_v1',
+        'capture_id': capture_id,
+        'invocation_id': invocation_id,
+        'actors': actors,
+        'observations': events,
+        'dropped': sum(actor['dropped'] for actor in actors),
+        'program_selection': {
+            'expected_program':
+            expected_program,
+            'status':
+            'checked_against_expected_program'
+            if expected_program is not None else 'unverified_legacy'
+        }
+    }

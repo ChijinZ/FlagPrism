@@ -1,0 +1,637 @@
+{
+  "state": "result_and_actual_retained_bytes_verified",
+  "result_sha256": "372b68fe43fba9bddfd4e6f0b464f389748c0b6df4bd81bba73cfa2bffafa9bf",
+  "source_sha256": "3a6511c277f5a606f93851fea3d307872d962965ae2ee6a637140a4cbaa36ee5",
+  "source_retained_bytes": 372244,
+  "compile_id": "280f7a28-5cec-4cb5-b4c9-a613fd8b1573",
+  "dynamic_count": 232,
+  "measured_task_count": 3,
+  "channels": [
+    {
+      "id": "hivm-channel:d9264be605feac61af41608b12bc6d3b2b319a2647ab8eadeb2b4bc5c7a6ce8b:0:PIPE_FIX:PIPE_S",
+      "state": "compiler_static",
+      "producer_site_id": "hivm:d9264be605feac61af41608b12bc6d3b2b319a2647ab8eadeb2b4bc5c7a6ce8b:107",
+      "consumer_site_id": "hivm:d9264be605feac61af41608b12bc6d3b2b319a2647ab8eadeb2b4bc5c7a6ce8b:154",
+      "producer_function": "matmul_mix_aic",
+      "consumer_function": "matmul_mix_aiv",
+      "producer_actor_kind": "AIC",
+      "consumer_actor_kind": "AIV",
+      "flag_id": 0,
+      "producer_pipeline": "PIPE_FIX",
+      "consumer_pipeline": "PIPE_S",
+      "dynamic_generation": null,
+      "dynamic_pairing": "not_established"
+    }
+  ],
+  "max_abs_error": 1.341104507446289e-07,
+  "trace_files": [
+    {
+      "path": "capture/manifest.json",
+      "bytes": 31956
+    },
+    {
+      "path": "capture/raw/native/README.txt",
+      "bytes": 163
+    },
+    {
+      "path": "capture/raw/native/cann-sdk-retention.json",
+      "bytes": 44318
+    },
+    {
+      "path": "capture/raw/native/capture.observations.json",
+      "bytes": 780832
+    },
+    {
+      "path": "capture/raw/native/capture.cann-raw-sys.json",
+      "bytes": 33042
+    },
+    {
+      "path": "capture/raw/native/capture.cann-task-identities.json",
+      "bytes": 85969
+    },
+    {
+      "path": "capture/raw/native/capture.cann-launch-receipts.json",
+      "bytes": 17723
+    },
+    {
+      "path": "capture/raw/native/capture.launches.json",
+      "bytes": 2706610
+    },
+    {
+      "path": "capture/raw/native/capture.timeline.json",
+      "bytes": 2125297
+    },
+    {
+      "path": "capture/raw/native/capture.hatchet",
+      "bytes": 35416
+    },
+    {
+      "path": "capture/raw/native/capture.meta.json",
+      "bytes": 2289
+    },
+    {
+      "path": "capture/raw/native/capture.vendor.json",
+      "bytes": 2128443
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/msprof_20261015162833.db",
+      "bytes": 3584000
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/task_time_20261015162834.csv",
+      "bytes": 1454
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/op_summary_20261015162834.csv",
+      "bytes": 979
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/op_statistic_20261015162834.csv",
+      "bytes": 146
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/npu_module_mem_20261015162834.csv",
+      "bytes": 1059294
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/npu_mem_20261015162834.csv",
+      "bytes": 33090
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/msprof_tx_20261015162834.csv",
+      "bytes": 855
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/msprof_tx_20261015162833.json",
+      "bytes": 3203
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/msprof_20261015162833.json",
+      "bytes": 10565527
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/llc_read_write_20261015162834.csv",
+      "bytes": 127
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/hbm_20261015162834.csv",
+      "bytes": 126
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/api_statistic_20261015162834.csv",
+      "bytes": 2104
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_output/README.txt",
+      "bytes": 4420
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/msprof_analysis_456835.log",
+      "bytes": 48354
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/msprof_analysis_456785.log",
+      "bytes": 74954
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/msprof_analysis_456753.log",
+      "bytes": 13887
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/msprof_analysis_456664.log",
+      "bytes": 14557
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/collection_host.log",
+      "bytes": 4092
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/mindstudio_profiler_log/collection_device_4.log",
+      "bytes": 10521
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/start_info.done",
+      "bytes": 13
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/start_info",
+      "bytes": 178
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sample.json.done",
+      "bytes": 14
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sample.json",
+      "bytes": 2940
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/info.json.done",
+      "bytes": 13
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/info.json",
+      "bytes": 730
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/host_start.log.done",
+      "bytes": 12
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/host_start.log",
+      "bytes": 84
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/end_info.done",
+      "bytes": 13
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/end_info",
+      "bytes": 178
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/time.db",
+      "bytes": 8192
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/runtime.db",
+      "bytes": 12288
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/rts_track.db",
+      "bytes": 8192
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/msproftx.db",
+      "bytes": 12288
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/ge_info.db",
+      "bytes": 8192
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/ge_hash.db",
+      "bytes": 36864
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/sqlite/api_event.db",
+      "bytes": 16384
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.compact.node_basic_info.slice_0.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.compact.node_basic_info.slice_0",
+      "bytes": 256
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.api_event.data.slice_0.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.api_event.data.slice_0",
+      "bytes": 160
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.type_info_dic.slice_0.done",
+      "bytes": 39
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.type_info_dic.slice_0",
+      "bytes": 19842
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.tensor_info.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.tensor_info.slice_0",
+      "bytes": 1024
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_2.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_2",
+      "bytes": 178
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_1.done",
+      "bytes": 36
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_1",
+      "bytes": 57
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_0.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.hash_dic.slice_0",
+      "bytes": 121
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.context_id_info.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/unaging.additional.context_id_info.slice_0",
+      "bytes": 1024
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/all_file.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.compact.task_track.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.compact.task_track.slice_0",
+      "bytes": 1216
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.compact.memcpy_info.slice_0.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.compact.memcpy_info.slice_0",
+      "bytes": 256
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.api_event.data.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.api_event.data.slice_0",
+      "bytes": 5240
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.additional.msproftx.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/host/data/aging.additional.msproftx.slice_0",
+      "bytes": 1024
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/start_info.4.done",
+      "bytes": 13
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/start_info.4",
+      "bytes": 178
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sample.json.done",
+      "bytes": 14
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sample.json",
+      "bytes": 2973
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/info.json.4.done",
+      "bytes": 14
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/info.json.4",
+      "bytes": 1075
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/host_start.log.4.done",
+      "bytes": 12
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/host_start.log.4",
+      "bytes": 87
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/end_info.4.done",
+      "bytes": 13
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/end_info.4",
+      "bytes": 178
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/dev_start.log.4.done",
+      "bytes": 12
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/dev_start.log.4",
+      "bytes": 62
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/trace.db",
+      "bytes": 20480
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/time.db",
+      "bytes": 8192
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/step_trace.db",
+      "bytes": 16384
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/soc_profiler.db",
+      "bytes": 16384
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/qos.db",
+      "bytes": 2617344
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/op_counter.db",
+      "bytes": 16384
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/npu_module_mem.db",
+      "bytes": 696320
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/npu_mem.db",
+      "bytes": 28672
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/llc.db",
+      "bytes": 196608
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/hbm.db",
+      "bytes": 192512
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/biu_perf.db",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/ascend_task.db",
+      "bytes": 8192
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/ai_core_op_summary.db",
+      "bytes": 12288
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/sqlite/acc_pmu.db",
+      "bytes": 1097728
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/ts_track.data.4.slice_0.done",
+      "bytes": 37
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/ts_track.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/ts_track.data.4.slice_0",
+      "bytes": 360
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc_profile.data.4.slice_1.done",
+      "bytes": 40
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc_profile.data.4.slice_1",
+      "bytes": 632000
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc_profile.data.4.slice_0.done",
+      "bytes": 41
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc_profile.data.4.slice_0",
+      "bytes": 2618880
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc.data.4.slice_0.done",
+      "bytes": 38
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/stars_soc.data.4.slice_0",
+      "bytes": 2816
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_1.done",
+      "bytes": 40
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_1.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_1",
+      "bytes": 213248
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_0.done",
+      "bytes": 41
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/qos.data.4.slice_0",
+      "bytes": 2104320
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_module_mem.data.4.slice_0.done",
+      "bytes": 40
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_module_mem.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_module_mem.data.4.slice_0",
+      "bytes": 670824
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.data.4.slice_0.done",
+      "bytes": 39
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.data.4.slice_0",
+      "bytes": 11616
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.app.4.slice_0.done",
+      "bytes": 39
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.app.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/npu_mem.app.4.slice_0",
+      "bytes": 11616
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/llc.data.4.slice_0.done",
+      "bytes": 40
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/llc.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/llc.data.4.slice_0",
+      "bytes": 139392
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/hbm.data.4.slice_0.done",
+      "bytes": 39
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/hbm.data.4.slice_0.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/hbm.data.4.slice_0",
+      "bytes": 69696
+    },
+    {
+      "path": "capture/raw/native/cann_sdk/PROF_000001_20261015162807971_00455696OBLAAILM/device_4/data/all_file.complete",
+      "bytes": 0
+    },
+    {
+      "path": "capture/raw/compiler/2eb5510d3f102e993be5493829d873f47d11c765c0206147fffd4ab555c924ad.ttir.txt",
+      "bytes": 388132
+    },
+    {
+      "path": "capture/report/observations.html",
+      "bytes": 55009
+    },
+    {
+      "path": "capture/report/index.html",
+      "bytes": 6173391
+    },
+    {
+      "path": "capture/report/timeline.json",
+      "bytes": 283832
+    },
+    {
+      "path": "capture/report/report.json",
+      "bytes": 3321997
+    },
+    {
+      "path": "capture/ai/call_tree.json",
+      "bytes": 20020
+    },
+    {
+      "path": "capture/ai/native_task_sys.json",
+      "bytes": 33042
+    },
+    {
+      "path": "capture/ai/reconstruction.json",
+      "bytes": 1411757
+    },
+    {
+      "path": "capture/ai/observations.json",
+      "bytes": 1057824
+    },
+    {
+      "path": "capture/ai/README.md",
+      "bytes": 8231
+    },
+    {
+      "path": "capture/ai/rejected.jsonl",
+      "bytes": 1270766
+    },
+    {
+      "path": "capture/ai/events.jsonl",
+      "bytes": 592499
+    },
+    {
+      "path": "capture/ai/cann_native_tasks.json",
+      "bytes": 86692
+    },
+    {
+      "path": "capture/ai/summary.json",
+      "bytes": 40412
+    },
+    {
+      "path": "capture/ai/kernels.json",
+      "bytes": 38443
+    },
+    {
+      "path": "capture/ai/execution.json",
+      "bytes": 1592044
+    },
+    {
+      "path": "capture/ai/binaries.json",
+      "bytes": 2733894
+    },
+    {
+      "path": "capture/ai/arguments.json",
+      "bytes": 1368
+    },
+    {
+      "path": "capture/ai/launches.json",
+      "bytes": 1127
+    },
+    {
+      "path": "capture/ai/context.json",
+      "bytes": 99036
+    },
+    {
+      "path": "capture/ai/sources/f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823.py",
+      "bytes": 2821
+    },
+    {
+      "path": "capture/ai/sources/f134e7f93394216d50615e71680ba531f5b9b4d7839462091d37092771d1923a.py",
+      "bytes": 1008
+    }
+  ]
+}

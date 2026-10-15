@@ -29,9 +29,14 @@ def fixtures(text=DUMP):
     capture = {
         'stderr': text,
         'receipt': {
-            'state': 'finished',
-            'returncode': 0,
-            'compile_id': 'actual-test-compile',
+            'state':
+            'finished',
+            'returncode':
+            0,
+            'compile_id':
+            'actual-test-compile',
+            'source_ir_sha256':
+            hashlib.sha256(b'actual retained source').hexdigest(),
             'command': ['sdk', m.PRINT_FLAG],
             'streams': {
                 'stderr': {
@@ -50,6 +55,7 @@ def fixtures(text=DUMP):
             'llir': llir,
             'metadata': {
                 'module_sha256': digest,
+                'compile_id': 'actual-test-compile',
                 'actors': [{
                     'function': function,
                     'actor_kind': kind
@@ -57,14 +63,31 @@ def fixtures(text=DUMP):
             },
             'driver_job': {
                 'state': 'finished',
+                'exit_code': 0,
                 'compile_id': 'actual-test-compile'
             }
         })
     return capture, artifacts
 
 
+def readiness(capture, artifacts, **overrides):
+    context = {
+        'source_snapshot': {
+            'ir': 'actual retained source',
+            'encoding': 'utf-8',
+            'phase': 'pre_backend_driver',
+            'ir_sha256': hashlib.sha256(b'actual retained source').hexdigest()
+        },
+        'compile_id': 'actual-test-compile',
+        'phase': 'finished',
+        'returncode': 0
+    }
+    context.update(overrides)
+    return m.build_static_readiness(capture, artifacts, **context)
+
+
 def test_general_typed_static_channel_without_llvm_encoding_guess():
-    result = m.build_static_readiness(*fixtures())
+    result = readiness(*fixtures())
     assert result['state'] == 'compiler_static'
     channel, = result['channels']
     assert channel['flag_id'] == 7 and channel[
@@ -94,7 +117,7 @@ def test_invalid_capture_or_actor_cannot_certify_channel(change):
     if change == 'compile_id':
         artifacts[-1]['driver_job']['compile_id'] = 'another-compile'
     if change == 'llvm_sha': artifacts[-1]['llir'] += ' changed'
-    assert not m.build_static_readiness(capture, artifacts)['channels']
+    assert not readiness(capture, artifacts)['channels']
 
 
 def test_duplicate_static_set_is_not_dynamically_paired_by_order():
@@ -102,14 +125,13 @@ def test_duplicate_static_set_is_not_dynamically_paired_by_order():
         ' hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 7',
         ' hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 7\n hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 7'
     )
-    assert not m.build_static_readiness(*fixtures(text))['channels']
+    assert not readiness(*fixtures(text))['channels']
 
 
 def test_unexecuted_pass_and_unmatched_flag_remain_partial():
-    assert m.build_static_readiness(
-        *fixtures(DUMP.replace('GraphSyncSolver',
-                               'OtherPass')))['state'] == 'unavailable'
-    assert not m.build_static_readiness(*fixtures(
+    assert readiness(*fixtures(DUMP.replace(
+        'GraphSyncSolver', 'OtherPass')))['state'] == 'unavailable'
+    assert not readiness(*fixtures(
         DUMP.replace(
             'wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 7',
             'wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 8')))['channels']
@@ -146,7 +168,7 @@ def test_pipeline_is_part_of_channel_identity():
         artifact['sha256'] = hashlib.sha256(
             artifact['llir'].encode()).hexdigest()
         artifact['metadata']['module_sha256'] = artifact['sha256']
-    result = m.build_static_readiness(capture, artifacts + extra)
+    result = readiness(capture, artifacts + extra)
     assert len(result['channels']) == 2
     assert len({channel['id'] for channel in result['channels']}) == 2
 
@@ -156,7 +178,7 @@ def test_pipeline_is_part_of_channel_identity():
 def test_untyped_function_or_new_dump_does_not_inherit_actor(boundary):
     text = DUMP.replace(' hivm.hir.sync_block_set',
                         boundary + '\n hivm.hir.sync_block_set', 1)
-    assert not m.build_static_readiness(*fixtures(text))['channels']
+    assert not readiness(*fixtures(text))['channels']
 
 
 @pytest.mark.parametrize('failure', ['open', 'write'])
@@ -191,3 +213,39 @@ sys.exit(m.main())
     assert receipt['streams']['stdout']['bytes'] == 262144
     assert receipt['streams']['stdout']['truncated'] is True
     assert receipt['streams']['stderr']['retained_bytes'] == 32
+
+
+@pytest.mark.parametrize('change', [
+    'missing_source', 'hash_only', 'wrong_bytes', 'wrong_source_hash',
+    'wrong_sdk_source', 'missing_compile', 'stale_compile', 'failed_enclosing',
+    'prepared_enclosing', 'stale_manifest'
+])
+def test_source_bytes_and_enclosing_compile_are_independent_requirements(
+        change):
+    capture, artifacts = fixtures()
+    snapshot = {
+        'ir': 'actual retained source',
+        'encoding': 'utf-8',
+        'phase': 'pre_backend_driver',
+        'ir_sha256': hashlib.sha256(b'actual retained source').hexdigest()
+    }
+    kwargs = {'source_snapshot': snapshot}
+    if change == 'missing_source': kwargs['source_snapshot'] = None
+    if change == 'hash_only': snapshot.pop('ir')
+    if change == 'wrong_bytes': snapshot['ir'] += 'changed'
+    if change == 'wrong_source_hash': snapshot['ir_sha256'] = 'wrong'
+    if change == 'wrong_sdk_source':
+        capture['receipt']['source_ir_sha256'] = 'wrong'
+    if change == 'missing_compile': kwargs['compile_id'] = None
+    if change == 'stale_compile':
+        kwargs['compile_id'] = 'another-compile-with-identical-source'
+    if change == 'failed_enclosing': kwargs['returncode'] = 1
+    if change == 'prepared_enclosing': kwargs['phase'] = 'prepared'
+    if change == 'stale_manifest':
+        artifacts[-1]['metadata']['compile_id'] = 'another-compile'
+    assert not readiness(capture, artifacts, **kwargs)['channels']
+
+
+def test_old_hash_only_capture_is_unavailable_without_durable_source():
+    result = m.build_static_readiness(*fixtures())
+    assert result['state'] == 'unavailable' and result['channels'] == []

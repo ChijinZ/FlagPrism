@@ -84,10 +84,11 @@ def prepare(event):
     if source_inputs:
         from .ascend_abi import source_abi
         try:
-            source = source_inputs[0].read_text()
+            source_bytes = source_inputs[0].read_bytes()
+            source = source_bytes.decode('utf-8')
         except UnicodeDecodeError as error:
             raise RuntimeError('Ascend source ABI handoff requires a textual compiler source module; MLIR bytecode export is currently unsupported') from error
-        (output / 'source.mlir').write_text(source)
+        (output / 'source.mlir').write_bytes(source_bytes)
         abi = source_abi(source, trace_source_argument=trace_source_argument)
         from triton.backends.ascend import utils as ascend_utils
         runtime_arch = ascend_utils.get_ascend_arch_from_env()
@@ -127,7 +128,21 @@ def prepare(event):
         tracked = event.metadata.get('debug_tracked_table')
         if isinstance(tracked, str):
             tracked = json.loads(tracked)
-        provenance['source_snapshot'] = {'ir_sha256': abi['source_sha256'], 'tracked_ops_sha256': hashlib.sha256(json.dumps(tracked, sort_keys=True, separators=(',', ':')).encode()).hexdigest() if isinstance(tracked, list) else None, 'phase': 'pre_backend_driver'}
+        provenance['source_snapshot'] = {
+            'ir_sha256':
+            abi['source_sha256'],
+            'tracked_ops_sha256':
+            hashlib.sha256(
+                json.dumps(tracked, sort_keys=True,
+                           separators=(',', ':')).encode()).hexdigest()
+            if isinstance(tracked, list) else None,
+            'phase':
+            'pre_backend_driver',
+            'encoding':
+            'utf-8',
+            'ir':
+            source
+        }
     (output / 'driver.json').write_text(json.dumps(provenance, indent=2))
     event.metadata['flagprism_ascend_handoff'] = provenance
 
@@ -168,7 +183,12 @@ def finish(event, *, returncode):
         }
     from .ascend_hivm import build_static_readiness
     provenance['static_readiness'] = build_static_readiness(
-        provenance.get('sdk_ir_capture'), artifacts)
+        provenance.get('sdk_ir_capture'),
+        artifacts,
+        source_snapshot=provenance.get('source_snapshot'),
+        compile_id=provenance.get('compile_id'),
+        phase=provenance.get('phase'),
+        returncode=provenance.get('returncode'))
     (output / 'driver.json').write_text(json.dumps(provenance, indent=2))
     if not returncode and not artifacts:
         raise RuntimeError('CANN driver produced no final actor LLVM capture; verify the selected SDK plugin extension point')
@@ -200,6 +220,8 @@ def cache_key():
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_SEMANTICS'),
                 'line_info':
                 os.environ.get('TRITON_DISABLE_LINE_INFO'),
+                'readiness_descriptor_version':
+                'source_bytes_enclosing_compile_v2',
                 'sdk_ir_print_flag':
                 '--bishengir-print-ir-after=hivm-graph-sync-solver',
                 'capture_sources': {
