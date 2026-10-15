@@ -766,6 +766,10 @@ def test_start_activation_failure_restores_flags_and_original_error(
     monkeypatch.setattr(profile.LaunchHook, 'reset_capture', lambda: None)
     monkeypatch.setattr(flags, 'profiling_on', False)
     calls = []
+    # This CPU fixture models an eager runtime; activation remains the failure.
+    graph_guard = importlib.import_module('flagtree.debugger.graph_guard')
+    monkeypatch.setattr(graph_guard, 'require_eager',
+                        lambda *args, **kwargs: None)
     original = RuntimeError('compiler activation rejected')
 
     def activate(*args, **kwargs):

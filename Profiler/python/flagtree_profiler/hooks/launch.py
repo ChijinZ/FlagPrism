@@ -218,10 +218,11 @@ class LaunchHook(Hook):
 
         @wraps(previous)
         def launch_metadata(kernel, grid, stream, *args, **kwargs):
-            if state["enabled"] and getattr(kernel.metadata, "debug_enabled",
+            kernel_metadata = getattr(kernel, "metadata", None)
+            if state["enabled"] and getattr(kernel_metadata, "debug_enabled",
                                             False):
                 from flagtree.debugger.graph_guard import require_eager
-                target = getattr(kernel.metadata, "target", None)
+                target = getattr(kernel_metadata, "target", None)
                 require_eager(getattr(target, "backend", None), stream=stream)
             metadata = previous(kernel, grid, stream, *args, **kwargs)
             if state["enabled"] and isinstance(metadata, LazyDict):

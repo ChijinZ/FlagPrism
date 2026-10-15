@@ -29,6 +29,12 @@ add_triton_library(FlagTreeDebuggerFrontend
 )
 flagprism_enable_debugger_runtime(FlagTreeDebuggerFrontend)
 flagprism_apply_backend_compile_definitions(FlagTreeDebuggerFrontend)
+# Bridge owns prepare rollback and preserves SDK exceptions across cleanup.
+# Its LLVM add_triton_library target also inherits -fno-exceptions.
+target_compile_options(FlagTreeDebuggerFrontend PRIVATE
+  $<$<COMPILE_LANG_AND_ID:CXX,GNU,Clang,AppleClang>:-fexceptions>
+  $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/EHsc>
+)
 
 add_library(FlagTreeDebuggerDecode STATIC
   Metadata/TrackedOpTable.cpp
