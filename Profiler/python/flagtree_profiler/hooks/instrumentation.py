@@ -231,6 +231,10 @@ class InstrumentationHook(Hook):
         # Mapping of function objects to their scope ID pairs
         self.mode: mode.InstrumentationMode = _interpret_mode(mode_obj)
         self.observation_plan = observation_plan
+        self.automatic = bool(observation_plan
+                              and observation_plan.get('automatic'))
+        self.max_sites = observation_plan.get('max_sites',
+                                              8) if observation_plan else 8
         self.selected_programs = None if observation_plan is None else observation_plan[
             "output_selection"]["programs"]
 
@@ -250,6 +254,11 @@ class InstrumentationHook(Hook):
         if InstrumentationHook.active_count > 0:
             raise RuntimeError(
                 "Only one instance of the instrumentation hook can be active at a time."
+            )
+        if self.automatic and (_get_backend_name() != 'nvidia' or not hasattr(
+                triton_proton, 'add_automatic_proton_scopes')):
+            raise RuntimeError(
+                'Automatic NVIDIA profiling requires the matching FlagPrism compiler plugin'
             )
 
         InstrumentationHook.active_count += 1
@@ -298,6 +307,9 @@ class InstrumentationHook(Hook):
                 triton_proton.add_convert_proton_amd_gpu_to_llvm(pm, arch)
 
         backends[backend_name].compiler.instrumentation = Instrumentation({
+            "ttgpuir_complete":
+            lambda pm: triton_proton.add_automatic_proton_scopes(
+                pm, self.max_sites) if self.automatic else None,
             "ttgpuir_to_llvmir":
             lambda pm: to_llvmir_passes(pm),
             "llvmir_to_llvm":
@@ -324,6 +336,9 @@ class InstrumentationHook(Hook):
                 )
             try:
                 kwargs["instrumentation_mode"] = str(original_mode)
+                if instrumentation_hook.automatic:
+                    kwargs[
+                        "instrumentation_mode"] += f':automatic=1:max_sites={instrumentation_hook.max_sites}'
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(
@@ -404,6 +419,15 @@ class InstrumentationHook(Hook):
                 hash,
                 'scope_id_names':
                 list(scope_id_names),
+                'automatic_plan': {
+                    **triton_proton.get_automatic_proton_plan(module),
+                    'max_sites':
+                    self.max_sites,
+                    'policy':
+                    'source_statements_then_evenly_spaced_internal_operations',
+                    'semantics':
+                    'compiler_operation_control_intervals_without_completion_barriers',
+                } if self.automatic else None,
                 'scope_id_origins':
                 scope_origins,
                 'scope_origin_sources':
@@ -449,7 +473,7 @@ class InstrumentationHook(Hook):
             if self.observation_plan is not None and not self.observation_metadata.get(
                     func, {}).get('scope_id_names'):
                 raise RuntimeError(
-                    'NVIDIA source_control_interval requires explicit Proton scopes; annotate the kernel with enter_scope/exit_scope and enable Triton semantics'
+                    'NVIDIA collection found no internal observation locations; automatic mode requires the FlagTree ttgpuir_complete compiler hook, while manual mode requires Proton scopes'
                 )
             if self.capture_observations:
                 from .launch import LaunchHook, id as launch_scope
@@ -614,9 +638,15 @@ class InstrumentationHook(Hook):
             if self.observation_plan is not None:
                 decoded = select_observations(decoded, self.observation_plan)
             for value in decoded['observations']:
+                origin = metadata.get('scope_id_origins',
+                                      {}).get(str(value['site']), {})
+                if origin.get('automatic'):
+                    value[
+                        'collection_site'] = 'automatic_compiler_operation_boundaries'
                 value['compiler_site'] = {
                     'kind':
-                    'explicit_proton_scope',
+                    'automatic_compiler_operation'
+                    if origin.get('automatic') else 'explicit_proton_scope',
                     'binary_id':
                     metadata.get('binary_id'),
                     'scope_id':

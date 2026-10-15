@@ -243,6 +243,12 @@ def lower_request(request):
     num_ctas=1. Site selection remains a postcapture output filter.
     """
     value = request.as_dict() if hasattr(request, 'as_dict') else dict(request)
+    automatic = value.get('automatic', False)
+    max_sites = value.get('max_sites', 8)
+    if type(automatic) is not bool:
+        raise ValueError('automatic must be a boolean')
+    if automatic and (type(max_sites) is not int or not 2 <= max_sites <= 128):
+        raise ValueError('Automatic site budget must be between 2 and 128')
     if value.get('semantics',
                  ['source_control_interval']) != ['source_control_interval']:
         raise ValueError(
@@ -272,7 +278,7 @@ def lower_request(request):
     value.setdefault('semantics', ['source_control_interval'])
     value.setdefault('sample_every', 1)
     value['max_events_per_instance'] = count
-    return {
+    plan = {
         'backend':
         'cuda',
         'status':
@@ -302,6 +308,15 @@ def lower_request(request):
             'No verified conversion to nanoseconds or alignment to CUPTI is supplied.'
         ]
     }
+
+    if automatic:
+        plan.update(automatic=True, max_sites=max_sites)
+        plan['collection_scope'].update(
+            sites='bounded_automatic_compiler_operations', max_sites=max_sites)
+        plan['requirements'] = [
+            'Matching FlagTree automatic-scope compiler integration is required.'
+        ]
+    return plan
 
 
 def select_observations(decoded, plan):

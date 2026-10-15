@@ -1,4 +1,5 @@
 #include "Analysis/ScopeIdAllocation.h"
+#include "Analysis/AutomaticScopes.h"
 #include "Conversion/ProtonGPUToLLVM/Passes.h"
 #if !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
     !defined(FLAGPRISM_BACKEND_TIANSHU) &&                                     \
@@ -136,6 +137,15 @@ void init_triton_proton(py::module &&m) {
         result[key] = origin;
       }
       auto origin = result[key].cast<py::dict>();
+      if (auto operation = record->getAttrOfType<mlir::StringAttr>(
+              "proton.automatic_operation")) {
+        origin["automatic"] = true;
+        origin["operation"] = operation.str();
+        origin["basis"] = "automatic_compiler_operation_boundaries";
+        if (auto statement = record->getAttrOfType<mlir::StringAttr>(
+                "proton.automatic_statement"))
+          origin["source_statement"] = statement.str();
+      }
       origin[record.getIsStart() ? "entry" : "exit"].cast<py::list>().append(
           locationOrigin(record.getLoc()));
     });
@@ -154,6 +164,20 @@ void init_triton_proton(py::module &&m) {
       },
       py::arg("op_builder"), py::arg("is_start"), py::arg("name"),
       py::arg("location") = py::none());
+
+  m.def("add_automatic_proton_scopes", [](mlir::PassManager &pm, unsigned maxSites) {
+    if (maxSites < 2 || maxSites > 128)
+      throw std::invalid_argument("Automatic site budget must be between 2 and 128");
+    pm.addPass(proton::createAutomaticScopesPass(maxSites));
+  }, py::arg("pm"), py::arg("max_sites") = 8);
+
+  m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
+    py::dict result;
+    for (auto name : {"proton.automatic_candidates", "proton.automatic_selected"})
+      if (auto value = module->getAttrOfType<mlir::IntegerAttr>(name))
+        result[py::str(name)] = value.getInt();
+    return result;
+  });
 
   m.def("add_select_proton_programs", [](mlir::PassManager &pm,
                                          const std::vector<int32_t> &programs) {

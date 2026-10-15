@@ -1,0 +1,20 @@
+--- a/third_party/nvidia/backend/compiler.py
++++ b/third_party/nvidia/backend/compiler.py
+@@ -430,6 +430,8 @@
+         if hasattr(passes.ttgpuir, "add_expand_concat_dot_operand"):
+             passes.ttgpuir.add_expand_concat_dot_operand(pm)
+ 
++        if CUDABackend.instrumentation:
++            CUDABackend.instrumentation.patch('ttgpuir_complete', pm, mod.context)
+         pm.run(mod, 'make_ttgir')
+         metadata["tle_node_buffer_bindings"] = mod.get_operation().get_str_attr("tle.node_buffer_bindings") or ""
+         # begin flagtree tle
+@@ -457,6 +459,8 @@
+         passes.gluon.add_canonicalizer(pm)
+         passes.ttgpuir.add_combine_tensor_select_and_if(pm)
+ 
++        if CUDABackend.instrumentation:
++            CUDABackend.instrumentation.patch('ttgpuir_complete', pm, mod.context)
+         pm.run(mod, 'gluon_to_ttgir')
+         metadata["tensordesc_meta"] = mod.get_tensordesc_metadata()
+         return mod
