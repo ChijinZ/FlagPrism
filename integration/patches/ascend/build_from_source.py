@@ -312,7 +312,7 @@ class Recipe:
             cmake_cache_sha256=digest(self.root / 'core-build/CMakeCache.txt'),
             build_graph_sha256=digest(self.root / 'core-build/build.ninja'))
 
-    def build_install(self):
+    def build_native(self):
         a = self.args
         self.run('build-core', [
             'cmake', '--build', self.root / 'core-build', '--target', 'triton',
@@ -328,6 +328,20 @@ class Recipe:
                            'component') != self.document['component_files']:
             raise ValueError(
                 'Source changed during build; artifacts cannot be certified')
+        artifacts = [
+            self.root / 'core-build/libtriton.so',
+            self.root / 'core-build/third_party/ascend/bin/triton-mlir-opt',
+            self.root / 'observer-build/FlagPrismAscendLateObserver.so', *list(
+                (self.root / 'native-python/flagtree').rglob('*.so')),
+            self.root /
+            'native-python/flagtree/profiler/_cann_launch_receipt.h'
+        ]
+        self.save(state='native_built',
+                  native_artifacts={str(p): digest(p)
+                                    for p in artifacts})
+
+    def build_install(self):
+        self.build_native()
         self.run('assemble-wheel', [
             sys.executable, self.root /
             'component/integration/patches/ascend/build_automatic_wheel.py',
@@ -427,7 +441,7 @@ def main():
     p.add_argument('--jobs', type=int, default=4)
     p.add_argument('--command-timeout', type=int, default=7200)
     p.add_argument('--stop-after',
-                   choices=('prepare', 'configure', 'install'),
+                   choices=('prepare', 'configure', 'native', 'install'),
                    default='install')
     p.add_argument('--resume', action='store_true')
     p.add_argument('--refresh-component', action='store_true')
@@ -450,7 +464,9 @@ def main():
         recipe.prepare()
         if a.stop_after != 'prepare':
             recipe.configure()
-        if a.stop_after == 'install':
+        if a.stop_after == 'native':
+            recipe.build_native()
+        elif a.stop_after == 'install':
             recipe.build_install()
     except BaseException as error:
         recipe.save(state='failed', error=repr(error))

@@ -232,6 +232,7 @@ bytes against the ZIP. This is CPU installation evidence, not a kernel or
 independent qualification pass.
 
 To inspect configuration before a long build, add `--stop-after configure`.
+To compile and seal the native outputs before packaging, use `--stop-after native`.
 Resume with the same inputs and `--resume`; when intentionally updating the
 component source, also pass `--refresh-component`. The latter replaces the
 snapshot, regenerates the graph and rebuilds affected targets, including common
