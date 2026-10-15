@@ -280,7 +280,17 @@ Enflame scalar one-store experiment measured about 3% device-task perturbation,
 whereas its vector alternative measured about 26%. Host and stream latency were
 much higher, and neither result establishes the cost of all-site collection.
 NVIDIA performance remains deferred by the user; functional development continues.
-Ascend hidden-only functional smokes and retained single-task/MIX identity
-evidence are available; full matrix and shared-clock acceptance
-remain separate pending items. See [method tests](method_testing.md) and the
-backend evidence manifests for actual results and supported versions.
+Ascend completes the six-family, three-shape, two-configuration matrix in
+all three modes (108 requests), the separate fixed-shape T5 experiment,
+and held-out RMSNorm at three shapes and two configurations (18 requests).
+The long-K fusion additionally passes three detailed and three native-only
+configuration controls. Independent retained-buffer and bundle audits are in
+`integration/evidence/ascend-final-raw-20261015/`. These observations provide
+local-duration conversion, not a verified shared actor/native clock origin.
+All-site detailed collection increased small RMSNorm device-task medians by
+61.2–67.6% in the controlled experiment; bounded output is not a low-overhead
+guarantee. Long-K short controls do not supersede this negative result.
+See [method tests](method_testing.md) and the backend evidence manifests for
+actual results and supported versions. Compiler-static dependency extraction
+is being completed separately; the earlier capture audits do not certify that
+new implementation.
