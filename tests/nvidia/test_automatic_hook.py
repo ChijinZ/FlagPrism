@@ -1,4 +1,15 @@
 """Automatic NVIDIA activation and pre-launch rejection contracts."""
+import pytest
+
+
+@pytest.fixture(autouse=True)
+def require_nvidia_compiler():
+    # Do not import the NVIDIA hook in a vendor-only compiler installation.
+    # These are NVIDIA binding tests; a skip is not NVIDIA qualification.
+    from triton._C import libtriton
+    if not hasattr(libtriton, 'nvidia'):
+        pytest.skip(
+            'NVIDIA compiler bindings are required for NVIDIA hook tests')
 
 
 def test_old_inventory_plugin_is_rejected_before_activation(monkeypatch):
@@ -27,7 +38,7 @@ def test_old_control_policy_plugin_is_rejected_before_activation(monkeypatch):
     hook = instrumentation.InstrumentationHook(None, observation_plan=plan)
     monkeypatch.setattr(instrumentation, '_get_backend_name', lambda: 'nvidia')
     monkeypatch.setattr(instrumentation.triton_proton,
-                        'AUTOMATIC_SELECTION_POLICY_VERSION', 0)
+                        'AUTOMATIC_SELECTION_POLICY_VERSION', 1)
     with pytest.raises(RuntimeError,
                        match='matching FlagPrism compiler plugin'):
         hook.activate()

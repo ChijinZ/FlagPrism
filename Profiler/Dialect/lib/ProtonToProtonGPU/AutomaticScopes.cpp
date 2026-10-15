@@ -147,8 +147,28 @@ public:
           regions.push_back(std::move(group));
         }
     }
-    // Dynamic repeating regions have first claim on a bounded plan. Keep real
-    // branch and nested-region positions before spending on outer statements.
+    // Keep entry-block control evidence when the budget can also retain body
+    // detail. Otherwise many untaken regions can exhaust the entire default
+    // budget before the selected program records any control activity. Narrow
+    // one/two-site requests retain their explicit region-priority behavior.
+    if (selected >= 3) {
+      for (size_t i = 0; i < candidates.size() && ordinals.size() < 2; ++i) {
+        auto *op = candidates[i];
+        if (!controlSlice.contains(op) && !llvm::is_contained(controls, op))
+          continue;
+        bool nested = false;
+        for (auto *parent = op->getParentOp(); parent;
+             parent = parent->getParentOp()) {
+          if (parent->getName().getDialectNamespace() == "scf") {
+            nested = true;
+            break;
+          }
+        }
+        if (!nested)
+          select(i, "entry_control_context");
+      }
+    }
+    // Repeating and branch region detail uses the remaining bounded capacity.
     for (bool repeated : {true, false})
       for (auto &group : regions) {
         if (group.repeated != repeated)

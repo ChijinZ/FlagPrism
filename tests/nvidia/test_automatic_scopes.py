@@ -277,7 +277,7 @@ def test_nested_regions_and_insufficient_budget_have_explicit_coverage():
 def test_control_selection_policy_binding_matches_compiled_plan():
     binding = compiler_binding()
     plan = binding.get_automatic_proton_plan(instrument(parse(PROGRAM)))
-    assert binding.AUTOMATIC_SELECTION_POLICY_VERSION == 1
+    assert binding.AUTOMATIC_SELECTION_POLICY_VERSION == 2
     assert plan[
         'selection_policy_version'] == binding.AUTOMATIC_SELECTION_POLICY_VERSION
     assert plan[
@@ -314,3 +314,37 @@ def test_while_condition_and_body_are_separate_repeating_regions():
     core.passes.convert.add_scf_to_cf(pm)
     pm.run(module, 'automatic-while-cfg-test')
     assert compiler_binding().get_automatic_proton_plan(module) == plan
+
+
+def test_many_untaken_regions_cannot_exhaust_default_entry_context_budget():
+    arms = []
+    for index in range(1, 10):
+        arms.append(f'''%c{index} = arith.constant {index} : i32
+        %p{index} = arith.cmpi eq, %pid, %c{index} : i32 loc("many.py":{10 + index}:7)
+        scf.if %p{index} {{
+          %v{index} = arith.mulf %input, %input : tensor<32xf32> loc("many.py":{30 + index}:4)
+          tt.store %out, %v{index} : tensor<32x!tt.ptr<f32>> loc("many.py":{50 + index}:4)
+        }} loc("many.py":{10 + index}:4)''')
+    text = '''module {
+      tt.func public @branches(%input: tensor<32xf32>, %out: tensor<32x!tt.ptr<f32>>) {
+        %pid = tt.get_program_id x : i32 loc("many.py":5:10)
+        ARMS
+        tt.return
+      }
+    }'''.replace('ARMS', '\n'.join(arms))
+    plan = compiler_binding().get_automatic_proton_plan(instrument(
+        parse(text)))
+    selected = [row for row in plan['inventory'] if row['selected']]
+    anchors = [
+        row for row in selected
+        if row['selection_reason'] == 'entry_control_context'
+    ]
+    assert len(selected) == 8 and len(anchors) == 2
+    assert [row['operation']
+            for row in anchors] == ['tt.get_program_id', 'arith.cmpi']
+    assert {row['location']['line'] for row in anchors} == {5, 11}
+    assert len(plan['control_regions']) == 9
+    assert sum(row['coverage_status'] == 'direct_representative'
+               for row in plan['control_regions']) == 6
+    assert sum(row['coverage_status'] == 'budget_excluded'
+               for row in plan['control_regions']) == 3

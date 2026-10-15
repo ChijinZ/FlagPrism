@@ -37,7 +37,7 @@ profiler_native = runtime_binding()
 VERSION = 1
 # Part of the compilation cache identity: old auto binaries have no inventory.
 AUTOMATIC_INVENTORY_VERSION = 2
-AUTOMATIC_SELECTION_POLICY_VERSION = 1
+AUTOMATIC_SELECTION_POLICY_VERSION = 2
 
 
 class CudaAllocator:

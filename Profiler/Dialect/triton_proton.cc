@@ -69,7 +69,7 @@ py::dict locationOrigin(mlir::Location loc) {
 void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
   m.attr("AUTOMATIC_INVENTORY_VERSION") = 2;
-  m.attr("AUTOMATIC_SELECTION_POLICY_VERSION") = 1;
+  m.attr("AUTOMATIC_SELECTION_POLICY_VERSION") = 2;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -192,7 +192,7 @@ void init_triton_proton(py::module &&m) {
             "proton.automatic_control_regions")) {
       result["selection_policy"] =
           "bounded_control_regions_then_source_statements";
-      result["selection_policy_version"] = 1;
+      result["selection_policy_version"] = 2;
       py::list rows;
       for (auto attribute : regions) {
         auto region = mlir::cast<mlir::DictionaryAttr>(attribute);

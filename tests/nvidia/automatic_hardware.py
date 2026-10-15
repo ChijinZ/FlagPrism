@@ -43,7 +43,7 @@ def validate_bundle(base):
     assert plan['schema_version'] == 2
     assert plan['binary_id'] == capture['binary_id']
     assert plan['compiler_ir_sha256'] == capture['compiler_ir_sha256']
-    assert ':automatic=2:control_policy=1:source_metadata=1:' in capture[
+    assert ':automatic=2:control_policy=2:source_metadata=1:' in capture[
         'compiler_metadata']['instrumentation_mode']
     inventory = plan['inventory']
     assert len(inventory) == plan['proton.automatic_candidates']
