@@ -88,6 +88,7 @@ private:
   std::unique_ptr<Data> timelineData{};
 
   friend class SessionManager;
+  friend struct SessionLifecycleTestPeer;
 };
 
 /// A session manager is responsible for managing the lifecycle of sessions.
@@ -180,9 +181,13 @@ private:
   void unregisterInterface(size_t sessionId, Counter &interfaceCounts) {
     auto interfaces = sessions[sessionId]->getInterfaces<Interface>();
     for (auto *interface : interfaces) {
-      interfaceCounts[interface] -= 1;
+      auto it = interfaceCounts.find(interface);
+      if (it != interfaceCounts.end() && --it->second == 0)
+        interfaceCounts.erase(it);
     }
   }
+
+  friend struct SessionLifecycleTestPeer;
 
   mutable std::shared_mutex mutex;
 

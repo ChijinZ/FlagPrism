@@ -18,6 +18,7 @@
 #include <cctype>
 #include <chrono>
 #include <filesystem>
+#include <exception>
 #include <fstream>
 #include <iostream>
 #include <limits>
@@ -48,8 +49,7 @@ Profiler *getProfiler(const std::string &profilerName,
     return &RoctracerProfiler::instance();
   }
   if (proton::toLower(profilerName) == "instrumentation") {
-    return InstrumentationProfiler::instance().setMode(
-        proton::split(mode, ":"));
+    return &InstrumentationProfiler::instance();
   }
 #endif
   throw std::runtime_error("Unknown profiler: " + profilerName);
@@ -81,6 +81,12 @@ Profiler *validateAndSetProfilerMode(
       throw std::runtime_error("Cannot reuse a profiler with a different mode "
                                "across active sessions");
     }
+  }
+  // An existing shared session owns this configuration. Do not reset its
+  // runtime, buffers, or options merely because another session reuses it.
+  for (const auto &[id, session] : sessions) {
+    if (session->getProfiler() == profiler)
+      return profiler;
   }
   return profiler->setMode(modeAndOptions);
 }
@@ -640,29 +646,50 @@ void throwIfSessionNotInitialized(
   }
 }
 
+// Cleanup steps must all run without replacing the first operational failure.
+template <class Action>
+void attemptCleanup(std::exception_ptr &failure, Action &&action) {
+  try {
+    action();
+  } catch (...) {
+    if (!failure)
+      failure = std::current_exception();
+  }
+}
+
 } // namespace
 
 void Session::activate() {
-  profiler->start();
-  profiler->flush();
-  profiler->registerData(data.get());
-  if (timelineData) {
-    profiler->registerData(timelineData.get());
+  try {
+    profiler->start();
+    profiler->flush();
+    profiler->registerData(data.get());
+    if (timelineData)
+      profiler->registerData(timelineData.get());
+  } catch (...) {
+    auto failure = std::current_exception();
+    attemptCleanup(failure, [&] { profiler->unregisterData(data.get()); });
+    if (timelineData)
+      attemptCleanup(failure, [&] { profiler->unregisterData(timelineData.get()); });
+    // stop() leaves a shared profiler running when another session owns data.
+    attemptCleanup(failure, [&] { profiler->stop(); });
+    std::rethrow_exception(failure);
   }
 }
 
 void Session::deactivate() {
-  profiler->flush();
+  std::exception_ptr failure;
+  attemptCleanup(failure, [&] { profiler->flush(); });
   if (timelineData) {
-    profiler->unregisterData(timelineData.get());
-    if (!vendorAdapter) {
-      timelineData->clear();
-    }
+    attemptCleanup(failure, [&] { profiler->unregisterData(timelineData.get()); });
+    if (!vendorAdapter)
+      attemptCleanup(failure, [&] { timelineData->clear(); });
   }
-  profiler->unregisterData(data.get());
-  if (!vendorAdapter) {
-    data->clear();
-  }
+  attemptCleanup(failure, [&] { profiler->unregisterData(data.get()); });
+  if (!vendorAdapter)
+    attemptCleanup(failure, [&] { data->clear(); });
+  if (failure)
+    std::rethrow_exception(failure);
 }
 
 void Session::finalize(const std::string &outputFormat) {
@@ -893,22 +920,41 @@ void SessionManager::deactivateSession(size_t sessionId) {
 
 void SessionManager::deactivateAllSessions() {
   std::unique_lock<std::shared_mutex> lock(mutex);
-  for (const auto &[sessionId, _] : activeSessions) {
-    deActivateSessionImpl(sessionId);
-  }
+  std::exception_ptr failure;
+  for (const auto &[sessionId, _] : activeSessions)
+    attemptCleanup(failure, [&] { deActivateSessionImpl(sessionId); });
+  if (failure)
+    std::rethrow_exception(failure);
 }
 
 void SessionManager::activateSessionImpl(size_t sessionId) {
   throwIfSessionNotInitialized(sessions, sessionId);
   if (activeSessions[sessionId])
     return;
+  // Prepare rollback copies before starting a collector. Allocation failure in
+  // interface registration must not leave only part of this session attached.
+  auto previousScopeCounts = scopeInterfaceCounts;
+  auto previousOpCounts = opInterfaceCounts;
+  auto previousInstrumentationCounts = instrumentationInterfaceCounts;
+  auto previousContextCounts = contextSourceCounts;
   sessions[sessionId]->activate();
-  activeSessions[sessionId] = true;
-  registerInterface<ScopeInterface>(sessionId, scopeInterfaceCounts);
-  registerInterface<OpInterface>(sessionId, opInterfaceCounts);
-  registerInterface<InstrumentationInterface>(sessionId,
-                                              instrumentationInterfaceCounts);
-  registerInterface<ContextSource>(sessionId, contextSourceCounts);
+  try {
+    registerInterface<ScopeInterface>(sessionId, scopeInterfaceCounts);
+    registerInterface<OpInterface>(sessionId, opInterfaceCounts);
+    registerInterface<InstrumentationInterface>(sessionId,
+                                                instrumentationInterfaceCounts);
+    registerInterface<ContextSource>(sessionId, contextSourceCounts);
+    activeSessions[sessionId] = true;
+  } catch (...) {
+    auto failure = std::current_exception();
+    scopeInterfaceCounts.swap(previousScopeCounts);
+    opInterfaceCounts.swap(previousOpCounts);
+    instrumentationInterfaceCounts.swap(previousInstrumentationCounts);
+    contextSourceCounts.swap(previousContextCounts);
+    attemptCleanup(failure, [&] { sessions[sessionId]->deactivate(); });
+    attemptCleanup(failure, [&] { sessions[sessionId]->profiler->stop(); });
+    std::rethrow_exception(failure);
+  }
 }
 
 void SessionManager::deActivateSessionImpl(size_t sessionId) {
@@ -916,13 +962,16 @@ void SessionManager::deActivateSessionImpl(size_t sessionId) {
   if (!activeSessions[sessionId]) {
     return;
   }
+  std::exception_ptr failure;
+  attemptCleanup(failure, [&] { sessions[sessionId]->deactivate(); });
   activeSessions[sessionId] = false;
-  sessions[sessionId]->deactivate();
   unregisterInterface<ScopeInterface>(sessionId, scopeInterfaceCounts);
   unregisterInterface<OpInterface>(sessionId, opInterfaceCounts);
   unregisterInterface<InstrumentationInterface>(sessionId,
                                                 instrumentationInterfaceCounts);
   unregisterInterface<ContextSource>(sessionId, contextSourceCounts);
+  if (failure)
+    std::rethrow_exception(failure);
 }
 
 void SessionManager::removeSession(size_t sessionId) {
@@ -970,12 +1019,13 @@ bool SessionManager::isActiveSessionForProfiler(
 void SessionManager::finalizeSession(size_t sessionId,
                                      const std::string &outputFormat) {
   std::unique_ptr<Session> session;
+  std::exception_ptr failure;
   {
     std::unique_lock<std::shared_mutex> lock(mutex);
     if (!hasSession(sessionId)) {
       return;
     }
-    deActivateSessionImpl(sessionId);
+    attemptCleanup(failure, [&] { deActivateSessionImpl(sessionId); });
     auto sessionIt = sessions.find(sessionId);
     auto path = sessionIt->second->path;
     sessionPaths.erase(path);
@@ -983,11 +1033,14 @@ void SessionManager::finalizeSession(size_t sessionId,
     session = std::move(sessionIt->second);
     sessions.erase(sessionIt);
   }
-  session->finalize(outputFormat);
+  attemptCleanup(failure, [&] { session->finalize(outputFormat); });
+  if (failure)
+    std::rethrow_exception(failure);
 }
 
 void SessionManager::finalizeAllSessions(const std::string &outputFormat) {
   std::vector<std::unique_ptr<Session>> sessionsToFinalize;
+  std::exception_ptr failure;
   {
     std::unique_lock<std::shared_mutex> lock(mutex);
     auto sessionIds = std::vector<size_t>{};
@@ -996,7 +1049,7 @@ void SessionManager::finalizeAllSessions(const std::string &outputFormat) {
       sessionIds.push_back(sessionId);
     }
     for (auto sessionId : sessionIds) {
-      deActivateSessionImpl(sessionId);
+      attemptCleanup(failure, [&] { deActivateSessionImpl(sessionId); });
     }
     for (auto &[sessionId, session] : sessions) {
       (void)sessionId;
@@ -1006,9 +1059,10 @@ void SessionManager::finalizeAllSessions(const std::string &outputFormat) {
     sessionPaths.clear();
     activeSessions.clear();
   }
-  for (auto &session : sessionsToFinalize) {
-    session->finalize(outputFormat);
-  }
+  for (auto &session : sessionsToFinalize)
+    attemptCleanup(failure, [&] { session->finalize(outputFormat); });
+  if (failure)
+    std::rethrow_exception(failure);
 }
 
 void SessionManager::enterScope(const Scope &scope) {

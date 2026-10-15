@@ -19,7 +19,6 @@ public:
   InstrumentationProfiler() = default;
   virtual ~InstrumentationProfiler();
 
-  InstrumentationProfiler *setMode(const std::vector<std::string> &mode);
   void setRawCaptureEnabled(bool enabled);
   void setObservationPrograms(const std::vector<uint32_t> &programs);
   std::vector<uint8_t> takeRawHostBuffer(uint64_t functionId,
@@ -30,6 +29,7 @@ protected:
   virtual void doStart() override;
   virtual void doFlush() override;
   virtual void doStop() override;
+  void doSetMode(const std::vector<std::string> &mode) override;
 
   // InstrumentationInterface
   void initFunctionMetadata(

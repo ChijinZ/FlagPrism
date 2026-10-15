@@ -54,6 +54,7 @@ InstrumentationProfiler::takeRawHostBuffer(uint64_t functionId,
 }
 
 void InstrumentationProfiler::doStop() {
+  dataScopeIdMap.clear();
   rawHostBytes.clear();
   // Stop the instrumentation profiler.
   // FIXME: Also we should ensure the context is valid before releasing the
@@ -64,15 +65,17 @@ void InstrumentationProfiler::doStop() {
   }
 }
 
-InstrumentationProfiler *
-InstrumentationProfiler::setMode(const std::vector<std::string> &mode) {
+void
+InstrumentationProfiler::doSetMode(const std::vector<std::string> &mode) {
   if (mode.empty()) {
     throw std::runtime_error("Mode cannot be empty");
   }
+  std::unique_ptr<Runtime> nextRuntime;
+  std::map<std::string, std::string> nextOptions;
   if (toLower(mode[0]) == toLower(DeviceTraits<DeviceType::CUDA>::name)) {
-    runtime = std::make_unique<CudaRuntime>();
+    nextRuntime = std::make_unique<CudaRuntime>();
   } else if (toLower(mode[0]) == toLower(DeviceTraits<DeviceType::HIP>::name)) {
-    runtime = std::make_unique<HipRuntime>();
+    nextRuntime = std::make_unique<HipRuntime>();
   } else {
     throw std::runtime_error("Unknown device type: " + mode[0]);
   }
@@ -81,13 +84,14 @@ InstrumentationProfiler::setMode(const std::vector<std::string> &mode) {
     if (delimiterPos != std::string::npos) {
       std::string key = mode[i].substr(0, delimiterPos);
       std::string value = mode[i].substr(delimiterPos + 1);
-      modeOptions[key] = value;
+      nextOptions[key] = value;
     } else {
-      modeOptions[mode[i]] = "";
+      nextOptions[mode[i]] = "";
     }
   }
 
-  return this;
+  runtime.swap(nextRuntime);
+  modeOptions.swap(nextOptions);
 }
 namespace {
 
@@ -202,6 +206,12 @@ void InstrumentationProfiler::enterInstrumentedOp(uint64_t streamId,
 void InstrumentationProfiler::exitInstrumentedOp(uint64_t streamId,
                                                  uint64_t functionId,
                                                  uint8_t *buffer, size_t size) {
+  // An exit hook can fail in synchronization, parsing, or a data sink. Scope
+  // pointers belong to this launch only and must never survive into a new one.
+  struct ScopeCleanup {
+    std::map<Data *, size_t> &scopes;
+    ~ScopeCleanup() { scopes.clear(); }
+  } scopeCleanup{dataScopeIdMap};
   rawHostBytes.clear();
   if (!buffer || !hostBuffer)
     return;
@@ -287,7 +297,6 @@ void InstrumentationProfiler::exitInstrumentedOp(uint64_t streamId,
         }
       });
 
-  dataScopeIdMap.clear();
 }
 
 } // namespace proton

@@ -86,8 +86,11 @@ public:
 
   Profiler *setMode(const std::vector<std::string> &modeAndOptions) {
     std::unique_lock<std::shared_mutex> lock(mutex);
-    this->modeAndOptions = modeAndOptions;
-    this->doSetMode(modeAndOptions);
+    // Allocate first; a rejected backend configuration must leave the public
+    // configuration unchanged, and committing it must not allocate.
+    auto nextMode = modeAndOptions;
+    this->doSetMode(nextMode);
+    this->modeAndOptions.swap(nextMode);
     return this;
   }
 
