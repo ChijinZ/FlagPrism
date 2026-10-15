@@ -88,3 +88,57 @@ def test_inactive_instance_cannot_deactivate_someone_elses_hook(
     assert module.InstrumentationHook.active_count == 1
     active.deactivate()
     assert module.InstrumentationHook.active_count == 0
+
+
+@pytest.mark.parametrize('cycles', [2, 3])
+def test_reactivation_keeps_retained_activations_permanently_disabled(
+        hook_module, monkeypatch, cycles):
+    module = hook_module
+    monkeypatch.setattr(module, '_get_backend_name', lambda: 'nvidia')
+    module.backends['nvidia'] = module.backends['amd']
+    monkeypatch.setattr(
+        module, 'profiler_native',
+        SimpleNamespace(set_raw_capture_enabled=lambda value: None,
+                        set_observation_programs=lambda value: None))
+    monkeypatch.setitem(
+        sys.modules, 'torch',
+        SimpleNamespace(cuda=SimpleNamespace(
+            is_current_stream_capturing=lambda: False)))
+    calls = []
+
+    def original(jit_function, *args, **kwargs):
+        calls.append((args, kwargs))
+        return 'original-result'
+
+    monkeypatch.setattr(module.JITFunction, 'run', original)
+    hook = module.InstrumentationHook(None)
+    retained = []
+    try:
+        for cycle in range(cycles):
+            hook.activate()
+            current = module.JITFunction.run
+            before = len(calls)
+            assert current(object(), cycle,
+                           user_option=23) == 'original-result'
+            assert len(calls) == before + 1
+            assert 'instrumentation_mode' in calls[-1][1]
+            # A new activation must not revive any previous closure, even while
+            # that new activation owns the same nonreentrant NVIDIA run lock.
+            for old in retained:
+                assert old(object(), cycle,
+                           user_option=29) == 'original-result'
+                assert calls[-1] == ((cycle, ), {'user_option': 29})
+
+            def third_party(jit_function, *args, delegate=current, **kwargs):
+                return delegate(jit_function, *args, **kwargs)
+
+            monkeypatch.setattr(module.JITFunction, 'run', third_party)
+            hook.deactivate()
+            assert module.JITFunction.run is third_party
+            assert current(object(), cycle,
+                           user_option=31) == 'original-result'
+            assert calls[-1] == ((cycle, ), {'user_option': 31})
+            retained.append(current)
+    finally:
+        hook.deactivate()
+    assert module.InstrumentationHook.active_count == 0

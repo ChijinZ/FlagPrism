@@ -254,7 +254,7 @@ class InstrumentationHook(Hook):
                                              default=())
         self.capture_observations = False
         self._activated = False
-        self._run_enabled = False
+        self._run_activation = None
         self._previous_run = None
         self._installed_run = None
 
@@ -343,13 +343,16 @@ class InstrumentationHook(Hook):
 
         original_mode = self.mode
         instrumentation_hook = self
+        # Each closure owns one activation epoch. Reactivating this hook must
+        # never revive an older closure retained by a third-party wrapper.
+        run_activation = {'enabled': False}
 
         @functools.wraps(original_run)
         def instrumented_run(jit_function, *args, **kwargs):
             # A third-party wrapper may still retain this closure after our
             # session ends. Disabled wrappers are transparent and never inject
             # options for compiler passes/allocators that have been removed.
-            if not instrumentation_hook._run_enabled:
+            if not run_activation['enabled']:
                 return original_run(jit_function, *args, **kwargs)
             # Own the shared scratch allocator before compilation/allocation,
             # not just after the launcher has already chosen a device buffer.
@@ -382,11 +385,13 @@ class InstrumentationHook(Hook):
 
         self._previous_run = original_run
         self._installed_run = instrumented_run
-        self._run_enabled = True
+        self._run_activation = run_activation
+        run_activation['enabled'] = True
         JITFunction.run = instrumented_run
 
     def deactivate(self):
-        self._run_enabled = False
+        if self._run_activation is not None:
+            self._run_activation['enabled'] = False
         if not self._activated:
             return
 
