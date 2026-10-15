@@ -4,6 +4,8 @@
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 #include "mlir/Pass/Pass.h"
+#include "llvm/ADT/SmallPtrSet.h"
+#include <functional>
 
 namespace mlir::triton::proton {
 // Source-linked checkpoints around compiler operations. This pass does not
@@ -31,11 +33,38 @@ public:
     module.walk([&](RecordOp) { hasRecords = true; });
     if (hasRecords)
       return;
+    // Observe actual scalar control computations even when the selected program
+    // takes an empty branch. This records that program's control activity only;
+    // it does not claim to have observed tensor work on another program.
+    llvm::SmallPtrSet<Operation *, 32> controlSlice;
+    SmallVector<Operation *> controls;
+    std::function<void(Value)> visitDefinition = [&](Value value) {
+      auto *definition = value.getDefiningOp();
+      if (!definition || !controlSlice.insert(definition).second)
+        return;
+      for (Value operand : definition->getOperands())
+        visitDefinition(operand);
+    };
+    module.walk<WalkOrder::PreOrder>([&](Operation *op) {
+      auto name = op->getName().getStringRef();
+      if (name == "scf.if" || name == "scf.for" || name == "scf.while") {
+        controls.push_back(op);
+        unsigned conditionOperands = name == "scf.if"    ? 1
+                                     : name == "scf.for" ? 3
+                                                         : 0;
+        for (Value operand : op->getOperands().take_front(conditionOperands))
+          visitDefinition(operand);
+      }
+      // A while condition is defined inside its before region.
+      if (name == "scf.condition" && op->getNumOperands())
+        visitDefinition(op->getOperand(0));
+    });
     SmallVector<Operation *> candidates;
     module.walk<WalkOrder::PreOrder>([&](Operation *op) {
       auto dialect = op->getName().getDialectNamespace();
       if (dialect != "tt" && dialect != "ttg" && dialect != "ttng" &&
-          dialect != "arith" && dialect != "math")
+          dialect != "arith" && dialect != "math" &&
+          !llvm::is_contained(controls, op))
         return;
       // Reduction/scan combiners and other non-control regions must remain
       // pure. Their enclosing tensor operation is observed instead.
@@ -61,7 +90,8 @@ public:
       bool tensorOperand = llvm::any_of(op->getOperandTypes(), [](Type type) {
         return isa<RankedTensorType>(type);
       });
-      if (!tensorResult && !tensorOperand && isMemoryEffectFree(op))
+      if (!tensorResult && !tensorOperand && isMemoryEffectFree(op) &&
+          !controlSlice.contains(op) && !llvm::is_contained(controls, op))
         return;
       candidates.push_back(op);
     });
@@ -86,13 +116,74 @@ public:
            : helpers)
           .push_back(i);
     }
-    auto choose = [&](const SmallVector<size_t> &pool, size_t count) {
-      for (size_t i = 0; i < count; ++i)
-        ordinals.push_back(
-            pool[count == 1 ? 0 : i * (pool.size() - 1) / (count - 1)]);
+    SmallVector<std::string> reasons(candidates.size(), "site_budget_excluded");
+    auto select = [&](size_t ordinal, StringRef reason) {
+      if (ordinals.size() < selected &&
+          !llvm::is_contained(ordinals, ordinal)) {
+        ordinals.push_back(ordinal);
+        reasons[ordinal] = reason.str();
+      }
     };
-    choose(statements, std::min(selected, statements.size()));
-    choose(helpers, selected - ordinals.size());
+    struct ControlRegion {
+      size_t control, region, block;
+      bool repeated;
+      SmallVector<size_t> direct, descendants;
+    };
+    SmallVector<ControlRegion> regions;
+    for (size_t control = 0; control < controls.size(); ++control) {
+      auto *owner = controls[control];
+      bool repeated = owner->getName().getStringRef() != "scf.if";
+      for (auto [regionIndex, region] : llvm::enumerate(owner->getRegions()))
+        for (auto [blockIndex, block] : llvm::enumerate(region)) {
+          ControlRegion group{control,  regionIndex, blockIndex,
+                              repeated, {},          {}};
+          for (size_t i = 0; i < candidates.size(); ++i) {
+            auto *op = candidates[i];
+            if (op->getBlock() == &block)
+              group.direct.push_back(i);
+            if (region.isAncestor(op->getParentRegion()))
+              group.descendants.push_back(i);
+          }
+          regions.push_back(std::move(group));
+        }
+    }
+    // Dynamic repeating regions have first claim on a bounded plan. Keep real
+    // branch and nested-region positions before spending on outer statements.
+    for (bool repeated : {true, false})
+      for (auto &group : regions) {
+        if (group.repeated != repeated)
+          continue;
+        auto &pool = group.direct.empty() ? group.descendants : group.direct;
+        if (pool.empty() || llvm::any_of(pool, [&](size_t ordinal) {
+              return llvm::is_contained(ordinals, ordinal);
+            }))
+          continue;
+        auto best = llvm::find_if(pool, [&](size_t ordinal) {
+          return llvm::is_contained(statements, ordinal) &&
+                 !llvm::is_contained(controls, candidates[ordinal]);
+        });
+        select(best == pool.end() ? pool.front() : *best,
+               "control_flow_region_representative");
+      }
+    // Reserve control computation and container intervals. An empty arm still
+    // leaves truthful internal condition/control evidence for this program.
+    for (size_t i = 0; i < candidates.size(); ++i)
+      if (controlSlice.contains(candidates[i]) ||
+          llvm::is_contained(controls, candidates[i]))
+        select(i, "control_flow_context");
+    auto choose = [&](const SmallVector<size_t> &pool, StringRef reason) {
+      SmallVector<size_t> remaining;
+      for (size_t ordinal : pool)
+        if (!llvm::is_contained(ordinals, ordinal))
+          remaining.push_back(ordinal);
+      size_t count = std::min(selected - ordinals.size(), remaining.size());
+      for (size_t i = 0; i < count; ++i)
+        select(remaining[count == 1 ? 0
+                                    : i * (remaining.size() - 1) / (count - 1)],
+               reason);
+    };
+    choose(statements, "source_statement_priority");
+    choose(helpers, "evenly_spaced_internal_operation");
     llvm::sort(ordinals);
     OpBuilder builder(&getContext());
     SmallVector<Attribute> inventory;
@@ -110,14 +201,13 @@ public:
           builder.getNamedAttr("selected", builder.getBoolAttr(chosen)),
           builder.getNamedAttr(
               "candidate_class",
-              builder.getStringAttr(statement ? "source_statement"
-                                              : "internal_operation")),
-          builder.getNamedAttr(
-              "selection_reason",
               builder.getStringAttr(
-                  chosen ? (statement ? "source_statement_priority"
-                                      : "evenly_spaced_internal_operation")
-                         : "site_budget_excluded"))};
+                  llvm::is_contained(controls, op) ? "control_region"
+                  : controlSlice.contains(op)      ? "control_computation"
+                  : statement                      ? "source_statement"
+                                                   : "internal_operation")),
+          builder.getNamedAttr("selection_reason",
+                               builder.getStringAttr(reasons[ordinal]))};
       if (chosen)
         fields.push_back(builder.getNamedAttr(
             "selected_scope_name",
@@ -127,6 +217,48 @@ public:
         fields.push_back(builder.getNamedAttr("source_statement", text));
       inventory.push_back(builder.getDictionaryAttr(fields));
     }
+    SmallVector<Attribute> regionInventory;
+    for (auto &group : regions) {
+      auto integers = [&](const SmallVector<size_t> &values) {
+        SmallVector<Attribute> attrs;
+        for (size_t value : values)
+          attrs.push_back(builder.getI64IntegerAttr(value));
+        return builder.getArrayAttr(attrs);
+      };
+      SmallVector<size_t> retained, directRetained;
+      for (size_t ordinal : ordinals) {
+        if (llvm::is_contained(group.descendants, ordinal))
+          retained.push_back(ordinal);
+        if (llvm::is_contained(group.direct, ordinal))
+          directRetained.push_back(ordinal);
+      }
+      auto status = group.descendants.empty() ? "no_eligible_operation"
+                    : !directRetained.empty() ? "direct_representative"
+                    : !retained.empty()       ? "descendant_only"
+                                              : "budget_excluded";
+      regionInventory.push_back(builder.getDictionaryAttr(
+          {builder.getNamedAttr("control_id",
+                                builder.getI64IntegerAttr(group.control)),
+           builder.getNamedAttr(
+               "operation",
+               builder.getStringAttr(
+                   controls[group.control]->getName().getStringRef())),
+           builder.getNamedAttr("location", controls[group.control]->getLoc()),
+           builder.getNamedAttr("region_index",
+                                builder.getI64IntegerAttr(group.region)),
+           builder.getNamedAttr("block_index",
+                                builder.getI64IntegerAttr(group.block)),
+           builder.getNamedAttr("repeated",
+                                builder.getBoolAttr(group.repeated)),
+           builder.getNamedAttr("eligible_candidates",
+                                integers(group.descendants)),
+           builder.getNamedAttr("direct_candidates", integers(group.direct)),
+           builder.getNamedAttr("selected_candidates", integers(retained)),
+           builder.getNamedAttr("coverage_status",
+                                builder.getStringAttr(status))}));
+    }
+    module->setAttr("proton.automatic_control_regions",
+                    builder.getArrayAttr(regionInventory));
     module->setAttr("proton.automatic_inventory_schema",
                     builder.getI32IntegerAttr(2));
     module->setAttr("proton.automatic_inventory",

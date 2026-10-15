@@ -1,5 +1,5 @@
-#include "Analysis/ScopeIdAllocation.h"
 #include "Analysis/AutomaticScopes.h"
+#include "Analysis/ScopeIdAllocation.h"
 #include "Conversion/ProtonGPUToLLVM/Passes.h"
 #if !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
     !defined(FLAGPRISM_BACKEND_TIANSHU) &&                                     \
@@ -69,6 +69,7 @@ py::dict locationOrigin(mlir::Location loc) {
 void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
   m.attr("AUTOMATIC_INVENTORY_VERSION") = 2;
+  m.attr("AUTOMATIC_SELECTION_POLICY_VERSION") = 1;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -166,11 +167,15 @@ void init_triton_proton(py::module &&m) {
       py::arg("op_builder"), py::arg("is_start"), py::arg("name"),
       py::arg("location") = py::none());
 
-  m.def("add_automatic_proton_scopes", [](mlir::PassManager &pm, unsigned maxSites) {
-    if (maxSites < 1 || maxSites > 128)
-      throw std::invalid_argument("Automatic site budget must be between 1 and 128");
-    pm.addPass(proton::createAutomaticScopesPass(maxSites));
-  }, py::arg("pm"), py::arg("max_sites") = 8);
+  m.def(
+      "add_automatic_proton_scopes",
+      [](mlir::PassManager &pm, unsigned maxSites) {
+        if (maxSites < 1 || maxSites > 128)
+          throw std::invalid_argument(
+              "Automatic site budget must be between 1 and 128");
+        pm.addPass(proton::createAutomaticScopesPass(maxSites));
+      },
+      py::arg("pm"), py::arg("max_sites") = 8);
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
@@ -183,6 +188,33 @@ void init_triton_proton(py::module &&m) {
     if (auto schema = module->getAttrOfType<mlir::IntegerAttr>(
             "proton.automatic_inventory_schema"))
       result["schema_version"] = schema.getInt();
+    if (auto regions = module->getAttrOfType<mlir::ArrayAttr>(
+            "proton.automatic_control_regions")) {
+      result["selection_policy"] =
+          "bounded_control_regions_then_source_statements";
+      result["selection_policy_version"] = 1;
+      py::list rows;
+      for (auto attribute : regions) {
+        auto region = mlir::cast<mlir::DictionaryAttr>(attribute);
+        py::dict row;
+        for (auto key : {"control_id", "region_index", "block_index"})
+          row[py::str(key)] = region.getAs<mlir::IntegerAttr>(key).getInt();
+        for (auto key : {"operation", "coverage_status"})
+          row[py::str(key)] = region.getAs<mlir::StringAttr>(key).str();
+        row["location"] = locationOrigin(
+            mlir::cast<mlir::LocationAttr>(region.get("location")));
+        row["repeated"] = region.getAs<mlir::BoolAttr>("repeated").getValue();
+        for (auto key : {"eligible_candidates", "direct_candidates",
+                         "selected_candidates"}) {
+          py::list ordinals;
+          for (auto value : region.getAs<mlir::ArrayAttr>(key))
+            ordinals.append(mlir::cast<mlir::IntegerAttr>(value).getInt());
+          row[py::str(key)] = ordinals;
+        }
+        rows.append(row);
+      }
+      result["control_regions"] = rows;
+    }
     if (inventory) {
       llvm::StringMap<size_t> allocatedScopes;
       for (const auto &entry :
