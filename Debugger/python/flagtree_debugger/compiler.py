@@ -34,7 +34,9 @@ def _gcu_publication_config(config):
     if isinstance(request, dict) and request.get("semantics") == [
             "source_control_interval"
     ]:
-        mode = os.environ.get("FLAGPRISM_GCU_DYNAMIC_PUBLISHER", "scalar16")
+        mode = os.environ.get(
+            "FLAGPRISM_GCU_DYNAMIC_PUBLISHER", "vector16_per_work_item"
+            if request.get("automatic") else "scalar16")
         if mode not in {"scalar16", "vector16_per_work_item"}:
             raise ValueError("Unknown GCU dynamic publisher mode")
         result["debug_dynamic_publication_mode"] = mode
@@ -154,6 +156,12 @@ def _kernel_internal_timeline_supported() -> bool:
 
 def _finish_metadata_only_tensor_pointer_debug(fd, mod,
                                                metadata: dict) -> bool:
+    # GCU's source-control interval observer only reads the device clock and
+    # publishes its own buffer.  It never materializes a block-pointer value or
+    # computes an address summary, so block pointers can use the normal path.
+    if (_target_backend(metadata) in {"gcu", "enflame"}
+            and metadata.get("debug_dynamic_index_bits") == 32):
+        return False
     has_tensor_pointer = getattr(fd, "has_triton_tensor_pointer_types", None)
     if has_tensor_pointer is None or not has_tensor_pointer(mod):
         return False
@@ -197,6 +205,14 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     }
 
     if auto_collect:
+        if not has_markers and _target_backend(metadata) in {"gcu", "enflame"}:
+            # Discover operations in ordinary JIT helpers before assigning
+            # entry-function scope/site IDs. Inlining after metadata loses
+            # helper operations because the metadata pass excludes callees.
+            inline_pm = ir.pass_manager(mod.context)
+            passes.common.add_inliner(inline_pm)
+            passes.common.add_symbol_dce(inline_pm)
+            _run_pass_manager(inline_pm, mod, "flagtree_debug_auto_inline")
         try:
             from . import api as debugger
 
@@ -234,10 +250,11 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "Ascend late trace currently requires all sites and sample_every=1"
             )
         if not set(request.get("semantics", [])) <= {
-                "issue", "wait_bracket", "control_checkpoint"
+                "issue", "wait_bracket", "control_checkpoint",
+                "operation_checkpoint"
         }:
             raise ValueError(
-                "Ascend late trace provides issue, wait_bracket and control_checkpoint"
+                "Ascend late trace provides issue, wait_bracket, control_checkpoint and operation_checkpoint"
             )
         # Resolve source metadata before erasing markers; late recording itself
         # observes actual post-lowering native sites, whose source relation may
@@ -286,6 +303,8 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             "flagprism_ascend_observation_request":
             request,
         })
+        if request.get("automatic"):
+            metadata["flagprism_ascend_trace_max_sites"] = request["max_sites"]
         return
     if _target_backend(metadata) in {"gcu", "enflame"}:
         # Selects the read-only SDK helper during the actual backend lowering.
@@ -383,6 +402,13 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     metadata["debug_kernel_id"] = fd.get_debug_kernel_id(mod)
     metadata["debug_metadata_json"] = kernel_metadata_json
     metadata["debug_tracked_table"] = json.loads(tracked_table_json)
+    if request is not None and request.get("automatic"):
+        from .automatic_plan import plan_operations
+        plan = plan_operations(metadata["debug_tracked_table"],
+                               request["max_sites"])
+        fd.set_debug_dynamic_timeline_sites(mod, plan["selected_sites"])
+        metadata["debug_dynamic_selected_sites"] = plan["selected_sites"]
+        metadata["debug_automatic_plan"] = plan
 
     instrumentation_pm = ir.pass_manager(mod.context)
     instrumentation_pm.enable_debug()
