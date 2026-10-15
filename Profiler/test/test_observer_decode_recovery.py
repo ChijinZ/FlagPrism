@@ -3,10 +3,27 @@ import base64
 import hashlib
 import importlib
 import json
+from pathlib import Path
 import struct
 from types import SimpleNamespace
 
 import pytest
+
+
+# Recorded by the real LLVM15 late pass in the public development test
+# test_ascend_semantic_selection::test_real_pass_manifest_binds_cpu_record_fixture
+# [AIC, 0]. The original manifest/texts are retained unchanged. The raw buffers
+# below are synthetic protocol fixtures, not accelerator execution evidence.
+def _bound_handoff():
+    path = Path(
+        __file__).parent / 'fixtures/ascend_actor_recovery_handoff.json'
+    handoff = json.loads(path.read_text())
+    from flagtree.profiler.ascend_actor_binding import bind_compiler_sites
+    sites = bind_compiler_sites(handoff, require_binding=True)
+    assert len(sites) == 1
+    assert sites[0]['compiler_actor']['binding_proof'][
+        'selection_membership'] == 'selected_dynamic_site_in_exact_module_plan'
+    return handoff
 
 
 @pytest.mark.parametrize("handler_fails", [False, True])
@@ -19,16 +36,25 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
     from flagtree.profiler import observations, reconstruction
     profile = importlib.import_module("flagtree.profiler.profile")
 
+    handoff = _bound_handoff()
+    manifest = handoff['artifacts'][0]['metadata']
+    site, = manifest['dynamic_sites']
+    assert site['public_semantic'] == 'issue'
+    segment_words = manifest['runtime_actor_binding']['segment_words']
+    capacity = (segment_words - 4) // 8
     raw = b"\x00" * 8
     expected_error = 'truncated dynamic64 allocation'
     if failure != 'truncated':
-        descriptor = (1 if failure == 'semantic' else 2) << 32 | 7
+        # Raw wait against the actual pass-selected issue site must fail.
+        descriptor = (2
+                      if failure == 'semantic' else 1) << 32 | site['site_id']
         program = 1 if failure == 'program' else 0
-        words = [
+        words = [0] * (3 * segment_words)
+        words[:12] = [
             1, 1, 1, 0, descriptor, 0, 100, 120, program, 0, (1 << 64) - 1,
             (1 << 64) - 1
-        ] + [0] * 24
-        raw = struct.pack('<36Q', *words)
+        ]
+        raw = struct.pack('<' + 'Q' * len(words), *words)
         expected_error = 'dynamic64 event semantic contradicts authoritative compiler site' if failure == 'semantic' else 'dynamic64 program contradicts compiled program selection'
     calls = []
 
@@ -48,27 +74,9 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
         "debug_record_level": 1,
         "debug_addr_level": 0,
         "debug_record_layout": "ascend_actor_dynamic_v1",
-        "flagprism_ascend_trace_capacity": 1,
+        "flagprism_ascend_trace_capacity": capacity,
         "flagprism_ascend_trace_program": 0,
-        "flagprism_ascend_handoff": {
-            "phase":
-            "finished",
-            "artifacts": [{
-                "metadata": {
-                    "actors": [{
-                        "actor_kind": "AIC"
-                    }],
-                    "dynamic_sites": [{
-                        "site_id":
-                        7,
-                        "callee":
-                        "llvm.hivm.WAIT.FLAG.IMM",
-                        "semantics":
-                        "existing_readiness_wait_source_control"
-                    }]
-                }
-            }]
-        }
+        "flagprism_ascend_handoff": handoff
     }
     monkeypatch.setattr(api, "_build_launch_metadata_dict",
                         lambda value: dict(metadata))
@@ -120,3 +128,71 @@ def test_finalize_preserves_truncated_actor_trace_and_original_error(
     rendered = reconstruction.render(view)
     assert "Failed observation captures" in rendered
     assert "provide no decoded execution evidence" in rendered
+
+
+def test_legacy_finalize_keeps_raw_without_inventing_compiler_authority(
+        monkeypatch):
+    from flagtree.debugger import api
+    from flagtree.profiler.ascend_actor_binding import bind_compiler_sites
+
+    handoff = _bound_handoff()
+    artifact = handoff['artifacts'][0]
+    manifest = artifact['metadata']
+    binding = manifest.pop('runtime_actor_binding')
+    artifact['manifest_text'] = json.dumps(manifest)
+    artifact['manifest_sha256'] = hashlib.sha256(
+        artifact['manifest_text'].encode()).hexdigest()
+    assert bind_compiler_sites(handoff) == []
+    with pytest.raises(ValueError, match='lacks runtime actor binding'):
+        bind_compiler_sites(handoff, require_binding=True)
+    segment_words = binding['segment_words']
+    capacity = (segment_words - 4) // 8
+    site, = manifest['dynamic_sites']
+    # The raw wait disagrees with the legacy issue declaration. Without an
+    # emitted binding, that declaration cannot authoritatively classify it.
+    words = [0] * (3 * segment_words)
+    words[:12] = [
+        1, 1, 1, 0, (2 << 32) | site['site_id'], 0, 100, 120, 0, 0,
+        (1 << 64) - 1, (1 << 64) - 1
+    ]
+    raw = struct.pack('<' + 'Q' * len(words), *words)
+    calls = []
+    monkeypatch.setattr(api, '_exported_runs', [])
+    monkeypatch.setattr(
+        api, '_active_config',
+        api.DebuggerConfig(enabled=True, export_handler=calls.append))
+    metadata = {
+        'name': 'legacy_unbound_fixture',
+        'debug_record_layout': 'ascend_actor_dynamic_v1',
+        'flagprism_ascend_trace_capacity': capacity,
+        'flagprism_ascend_trace_program': 0,
+        'flagprism_ascend_handoff': handoff,
+        'flagprism_ascend_observation_request': {
+            'semantics': ['wait_bracket']
+        }
+    }
+    monkeypatch.setattr(api, '_build_launch_metadata_dict',
+                        lambda value: metadata)
+    monkeypatch.setattr(api, '_infer_runtime_metadata', lambda *args: {})
+    handle = SimpleNamespace(hidden_arg_value=8,
+                             finish=lambda: {
+                                 'raw_buffer': raw,
+                                 'runtime_metadata': {}
+                             })
+    monkeypatch.setattr(
+        api, '_load_binding',
+        lambda: SimpleNamespace(prepare_launch=lambda *args: handle))
+    api._default_launch_prepare_hook(SimpleNamespace(), 0, None,
+                                     ()).finalize(None)
+    run, = calls
+    assert run['raw_buffer'] == raw
+    assert 'decode_error' not in run
+    event, = run['semantic_observations']
+    assert event['semantic'] == 'wait_bracket'
+    assert event['compiler_actor_status'] == 'unverified_legacy'
+    assert not event.get('compiler_site')
+    assert all(
+        actor.get('binding_status') != 'verified_by_committed_records'
+        for actor in run['decoded']['actors'])
+    assert all(not actor.get('compiler_actors')
+               for actor in run['decoded']['actors'])
