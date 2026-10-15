@@ -161,3 +161,114 @@ sealing, so the baseline distribution is preserved. Supply the sealed
 helper; the sibling core tool is included automatically. This is an incremental
 component rebuild against the pinned parent, not a rebuild of every vendor SDK
 component or a claim that unrelated repository targets were compiled.
+
+## Build from pinned sources in a fresh directory
+
+`build_from_source.py` is the source-build entrypoint. It takes no old core,
+component native or observer binary. `build_automatic_wheel.py` remains an
+advanced **assembly-only** helper and is invoked after the source builds finish.
+Run the source entrypoint inside the matching Linux aarch64/Python 3.11 Ascend
+SDK environment. No NPU is initialized by the installation check.
+
+Required dependencies are a C/C++ toolchain, Git, CMake >=3.20, Ninja, Python
+build headers, setuptools/wheel, pybind11 (validated 3.0.4), nanobind (validated
+2.12.0), matching Torch/torch_npu packages, nlohmann JSON headers, and CANN 9.0.0
+with `include/acl/acl.h`, `lib64/libascendcl.so`, and `bin/bisheng`. Supply the
+supported Ascend LLVM22/MLIR dependency prefix corresponding to FlagTree's
+`cmake/llvm-hash.txt` revision
+`7d5de3033187c8a3bb4d2e322f5462cdaf49808f`; a bare system LLVM22 installation is
+not assumed equivalent to the vendor-compatible distribution. Separately
+supply upstream LLVM15.0.7 with development headers, CMake package and `opt`.
+For Debian/Ubuntu the latter is supplied by `llvm-15-dev llvm-15-tools`; the
+prefix is normally `/usr/lib/llvm-15`. The two LLVM prefixes must remain
+separate: the LLVM15 plugin is loaded by upstream opt15, never by bisheng.
+
+The pinned FlagTree source publishes its matching LLVM22 distribution in
+`python/setup_tools/setup_helper.py`:
+[LLVM22 aarch64/Python3.11 compatibility archive](https://baai-cp-web.ks3-cn-beijing.ksyuncs.com/trans/llvm-7d5de303-ubuntu-aarch64-python311-compat_v0.6.0.tar.gz).
+Its JSON dependency in `setup.py` is
+[nlohmann JSON 3.11.3 include.zip](https://github.com/nlohmann/json/releases/download/v3.11.3/include.zip).
+These are dependency distributions, not a FlagPrism compiler/native build.
+Download/extract them into a chosen dependency directory and set the two prefix
+arguments to the extracted LLVM directory and directory containing
+`nlohmann/json.hpp`. Record the downloaded archive SHA256 alongside the recipe.
+Build tooling can be installed with `python -m pip install cmake ninja setuptools
+wheel pybind11==3.0.4 nanobind==2.12.0`; retain the matching SDK Torch packages.
+
+The caller owns these dependency installations. The helper checks major
+versions, records tools/configuration/header and all top-level LLVM library
+hashes, and binds the actual CMake source/LLVM inputs and output native hashes
+to `recipe.json`. A version string alone does not certify an LLVM source commit;
+retain the dependency distributor's archive/source provenance alongside that
+receipt. The recipe does not require a previous FlagPrism build, its artifacts,
+or any fixed `/tmp` directory.
+
+```sh
+# Run in the SDK environment; these paths are explicit installation inputs.
+export COMPONENT=/path/to/FlagPrism
+export WORK=/path/to/fresh-ascend-build
+export LLVM22_PREFIX=/path/to/ascend-compatible-llvm22
+export LLVM15_PREFIX=/usr/lib/llvm-15
+export CANN_ROOT=/path/to/cann-9.0.0
+export JSON_INCLUDE=/path/to/json/include  # contains nlohmann/json.hpp
+
+python "$COMPONENT/integration/patches/ascend/build_from_source.py" \
+  --component "$COMPONENT" --work-dir "$WORK" \
+  --llvm22-prefix "$LLVM22_PREFIX" --llvm15-prefix "$LLVM15_PREFIX" \
+  --cann-root "$CANN_ROOT" --json-include "$JSON_INCLUDE" --jobs 4
+
+# Successful installation is a normal wheel install in this fresh venv.
+"$WORK/venv/bin/python" -I -m flagtree.profiler.cli --help
+```
+
+The default source repositories are the public FlagTree, AscendNPU-IR and FLIR
+repositories listed above. Offline users may pass `--flagtree-repository`,
+`--ascend-ir-repository`, and `--flir-repository` as local **source Git mirrors**;
+these are cloned into the independent work directory and exact commits checked.
+No native/build directory is read from those mirrors. The helper applies the
+three complete patch layers in this order: `flagtree-source.patch`,
+`automatic-source-origins.patch`, `automatic-import-order.patch`. It snapshots
+current component sources under `$WORK/component`, configures a fresh Ninja
+graph, builds `triton`, `triton-mlir-opt`, `flagtree_profiler_native`,
+`flagtree_debugger_native`, and the separate LLVM15 observer, and only then
+assembles the wheel. AMD/NVIDIA backend generated-header targets are common
+compiler dependencies; enabling them does not run another backend or device.
+
+Outputs are `$WORK/core-build`, `native-python`, `observer-build`, `wheel/dist`,
+and `venv`. The venv deliberately reuses the matching SDK's Torch dependencies
+through `--system-site-packages`; compiler and FlagPrism imports must resolve to
+the new venv. `check-install` records native/helper/plugin/header paths and
+hashes, validates package prefixes, and asserts that NPU initialization remains
+false. Wheel assembly additionally checks all component Python and native/header
+bytes against the ZIP. This is CPU installation evidence, not a kernel or
+independent qualification pass.
+
+To inspect configuration before a long build, add `--stop-after configure`.
+To compile and seal the native outputs before packaging, use `--stop-after native`.
+Resume with the same inputs and `--resume`; when intentionally updating the
+component source, also pass `--refresh-component`. The latter replaces the
+snapshot, regenerates the graph and rebuilds affected targets, including common
+compiler C++ even when Ascend observes kernels through the late plugin. Changed
+LLVM/SDK dependency identities or parent patches require a new work directory.
+Each invocation/command records argv, PID, start/end, exit and a distinct log;
+failures raise the original error or identify the exact retained log. A command
+watchdog defaults to 7200 seconds (explicit `--command-timeout`); interrupted
+commands stop their own process group. Installation limits are independent of
+public profiling compile/export deadlines. No successful installation is
+reported until all required builds, wheel installation and cold import checks
+finish.
+
+The Ascend manifest exports separate `operation_plan` and `control_plan`
+inventories. The operation budget limits selected source-operation regions;
+it is not a total timestamp/site budget. The control inventory is formed at
+the actual LLVM site-ID allocation points for recognized existing primitives
+and original `LoopInfo` headers. It records `public_semantic`, `operation`,
+`selected`, selection reason, real source/inline evidence and loop structure.
+All requested control sites are selected (`max_sites: null`), and unrequested
+semantic classes remain visible as unselected candidates. Controls therefore
+add real collection cost beyond the default eight operation regions; the
+per-actor dynamic record capacity/loss protocol still applies. No numeric
+site-ID namespace is used to classify or exempt records. Both plans bind to
+the actual compiler/module/actor handoff and are exported by the public plan
+view. This inventory addition requires rebuilding the LLVM15 observer; it is
+not a report-only reconstruction of earlier buffers.

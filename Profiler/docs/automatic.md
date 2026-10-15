@@ -106,9 +106,29 @@ each row identifies its source location, compiler operation, binary, call,
 program, actor, site, semantic class and retained occurrence. The execution and
 clock-group view links the related native activity when uniquely associated.
 
+Select a source position to open **Captured source** at that line. This uses
+digest-checked snapshots inside the bundle, so the capture-machine filesystem is
+not needed. Green marks link each observed line back to retained records for
+that exact binary and line. The source selector separates binaries and captured
+file versions. Compiler primary locations and inline callsites have distinct
+labels. An out-of-range primary remains visible with its reason; a valid inline
+callsite can still provide navigation. File bounds alone do not establish that
+the snapshot text is identical to the compiled input. Captured JIT text without
+a full-file snapshot remains readable with relative lines; file offsets are not
+guessed.
+
+**Execution mapping** opens a report page containing observed identities and
+retained visits, followed by expandable compiler structure tables. The observed
+rows preserve invocation, program, actor, semantic and clock frame. Compiler
+organization, layouts, actors and dependencies remain static evidence; the page
+does not match static actor names to measured identities or invent an aligned
+timeline. The original mapping JSON remains available from that page.
+
 Machine-readable counterparts are:
 
 - `ai/fine_grained.json`: normalized dynamic records and source locations.
+- `ai/source_index.json`: captured source identities, digests, line counts,
+  retained source-linked record counts and snapshot diagnostics.
 - `ai/observation_plan.json`: automatic plans and exact capture evidence.
 - `ai/observations.json`: original typed observations and backend capture/loss
   data. Raw artifacts remain under `raw/`.

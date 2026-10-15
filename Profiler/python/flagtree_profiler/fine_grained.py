@@ -6,29 +6,55 @@ backend capture/loss evidence remains accessible beside the normalized records.
 from html import escape
 import json
 from pathlib import Path
+import posixpath
 
 
-def _locations(value):
+def _location_candidates(value):
     found = {}
 
-    def visit(node):
+    def visit(node, role='compiler_primary'):
         if isinstance(node, dict):
-            file = node.get('file', node.get('source_file'))
+            file = node.get('source_file', node.get('file'))
+            directory = node.get('directory', node.get('debug_directory'))
+            if isinstance(file, str) and isinstance(
+                    directory, str) and not posixpath.isabs(file):
+                # The compiler supplied the directory explicitly. No basename
+                # or neighboring-file inference is used for an inline frame.
+                file = posixpath.join(directory, file)
             line = node.get('line')
             column = node.get('column', 0)
             if isinstance(file,
                           str) and file and type(line) is int and line > 0:
-                location = {'file': file, 'line': line, 'column': column}
-                found[(file, line, column)] = location
-            for child in node.values():
+                location = dict(file=file, line=line, column=column, role=role)
+                found[(file, line, column, role)] = location
+            for key, child in node.items():
+                child_role = {
+                    'inline_chain': 'inline_callsite',
+                    'inlined_at': 'inline_callsite',
+                    'caller': 'inline_callsite',
+                    'callee': 'compiler_callee',
+                    'entry': 'interval_entry',
+                    'exit': 'interval_exit',
+                    'source_capture': 'captured_location_reference',
+                }.get(key, role)
                 if isinstance(child, (dict, list)):
-                    visit(child)
+                    visit(child, child_role)
         elif isinstance(node, list):
             for child in node:
-                visit(child)
+                visit(child, role)
 
     visit(value)
     return list(found.values())
+
+
+def _locations(value):
+    return list({
+        (row['file'], row['line'], row['column']): {
+            key: row[key]
+            for key in ('file', 'line', 'column')
+        }
+        for row in _location_candidates(value)
+    }.values())
 
 
 def normalize(document):
@@ -45,10 +71,15 @@ def normalize(document):
                     'kind') != 'automatic_compiler_operation':
                 origin = compiler
             locations = _locations(origin) if verified else []
+            candidates = _location_candidates(origin) if verified else []
             if verified and source.get('sourceLoc'):
                 from .execution_enflame import _location_evidence
                 evidence, _ = _location_evidence(source['sourceLoc'], {})
                 locations += evidence.get('locations', [])
+                candidates += [
+                    dict(location, role='frontend_source')
+                    for location in evidence.get('locations', [])
+                ]
             locations = list({
                 (row['file'], row['line'], row.get('column', 0)):
                 row
@@ -65,6 +96,7 @@ def normalize(document):
             }
             row['actor'] = event.get('actor', event.get('actor_slot'))
             row.update(source_locations=locations,
+                       source_location_candidates=candidates,
                        operation=origin.get(
                            'operation',
                            compiler.get(
@@ -101,15 +133,33 @@ def _plans(report, captures):
         handoff = metadata.get('flagprism_ascend_handoff') or {}
         for artifact in handoff.get('artifacts', []):
             manifest = artifact.get('metadata') or {}
-            operation_plan = manifest.get('operation_plan')
-            if operation_plan:
-                plans.append({
-                    'binary_id': binary['id'],
-                    'compile_id': handoff.get('compile_id'),
-                    'actor': artifact.get('actor'),
-                    'module_sha256': manifest.get('module_sha256'),
-                    'plan': operation_plan
-                })
+            for kind in ('operation', 'control'):
+                actor_plan = manifest.get(kind + '_plan')
+                if actor_plan:
+                    plans.append({
+                        'binary_id':
+                        binary['id'],
+                        'compile_id':
+                        handoff.get('compile_id'),
+                        'actor':
+                        artifact.get('actor'),
+                        'compiler_actors': [{
+                            'function':
+                            actor.get('function'),
+                            'actor_kind':
+                            actor.get('actor_kind'),
+                            'identity':
+                            f'late_llvm:{manifest.get("module_sha256")}:{actor["function"]}'
+                            if manifest.get('module_sha256')
+                            and actor.get('function') else None
+                        } for actor in manifest.get('actors', [])],
+                        'module_sha256':
+                        manifest.get('module_sha256'),
+                        'plan_kind':
+                        kind,
+                        'plan':
+                        actor_plan
+                    })
     for capture in captures:
         if capture.get('automatic_plan'):
             plans.append({
@@ -139,30 +189,34 @@ def _plans(report, captures):
 
 
 def render(data):
+    from .source_view import source_cell
     rows = []
     for row in data['records']:
-        source = ', '.join(
-            f"{loc['file']}:{loc['line']}:{loc.get('column', 0)}"
-            for loc in row['source_locations']) or 'Unresolved source'
         clock = row['clock'] or {}
         values = [
-            source, row['operation'], row['invocation_id'], row['binary_id'],
+            row['operation'], row['invocation_id'], row['binary_id'],
             row['program'], row['actor'], row['site'], row['semantic'],
             row['occurrence'], row['start_tick'], row['end_tick'],
             row['duration_ticks'],
             clock.get('domain'),
             clock.get('scope'), row['association_status']
         ]
-        rows.append('<tr>' + ''.join('<td>' + escape(str(value)) + '</td>'
-                                     for value in values) + '</tr>')
+        rows.append('<tr data-binary="' +
+                    escape(str(row['binary_id']), quote=True) + '"><td>' +
+                    source_cell(row) + '</td>' +
+                    ''.join('<td>' + escape(str(value)) + '</td>'
+                            for value in values) + '</tr>')
     captures = escape(
         json.dumps(data['captures'], indent=2, ensure_ascii=False))
     return (
         '<!doctype html><meta charset="utf-8"><title>Source-linked dynamic records</title>'
         '<style>body{font:14px system-ui;margin:2rem}table{border-collapse:collapse}'
         'td,th{border:1px solid #ddd;padding:.4rem}td{overflow-wrap:anywhere}'
-        'input{padding:.5rem;width:32rem}pre{white-space:pre-wrap}</style>'
+        'input{padding:.5rem;max-width:95%;width:32rem}pre{white-space:pre-wrap}'
+        'small{color:#586575}.source-warning{color:#8b4b08;font-size:12px}</style>'
         '<h1>Source-linked dynamic records</h1><p><a href="index.html">Overview</a> | '
+        '<a href="sources.html">Captured source</a> | '
+        '<a href="execution.html">Execution mapping</a> | '
         '<a href="observations.html">Execution and clock groups</a> | '
         '<a href="../ai/fine_grained.json">Records JSON</a> | '
         '<a href="../ai/observation_plan.json">Collection plan</a></p>'
@@ -170,7 +224,12 @@ def render(data):
         'visits, not necessarily loop iterations. Raw ticks are only comparable within the '
         'recorded clock scope; checkpoints record occurrence, not operation busy time. '
         'Intervals measure instrumented source control. None means unavailable.</p>'
+        '<p>Source links open captured snapshots at the measured location. Compiler primary and '
+        'inline callsite roles are distinct; out-of-range or unavailable positions remain '
+        'visible as candidates and do not count as located source. File bounds do not '
+        'independently verify that snapshot text matches compiled text.</p>'
         '<input id="filter" aria-label="Filter records" placeholder="Filter source / operation / actor">'
+        '<p id="binary-filter"></p>'
         '<p>Status: ' + escape(data['status']) + '</p><table><thead><tr>' +
         ''.join('<th>' + title + '</th>' for title in (
             'Source', 'Operation', 'Invocation', 'Binary', 'Program', 'Actor',
@@ -180,14 +239,27 @@ def render(data):
         '</tbody></table>'
         '<details><summary>Original capture, selection and loss evidence</summary><pre>'
         + captures +
-        '</pre></details><script>document.getElementById("filter").addEventListener("input",e=>{'
-        'let q=e.target.value.toLowerCase();document.querySelectorAll("#records tr").forEach(r=>'
-        'r.hidden=!r.textContent.toLowerCase().includes(q));});</script>')
+        '</pre></details><script>const filter=document.getElementById("filter"),'
+        'params=new URLSearchParams(location.search),binary=params.get("binary");'
+        'if(binary){let note=document.getElementById("binary-filter");'
+        'note.textContent="Binary filter: "+binary+" ";let clear=document.createElement("a");'
+        'clear.href="fine_grained.html";clear.textContent="Show all binaries";note.append(clear);}'
+        'function apply(){let q=filter.value.toLowerCase();document.querySelectorAll("#records tr").forEach(r=>'
+        'r.hidden=(binary&&r.dataset.binary!==binary)||!r.textContent.toLowerCase().includes(q));}'
+        'filter.addEventListener("input",apply);filter.value=params.get("filter")||"";'
+        'apply();</script>')
 
 
 def write_view(output, document, report):
     output = Path(output)
     data = normalize(document)
+    from .source_view import SourceCatalog
+    catalog = SourceCatalog(output)
+    catalog.load(data['captures'])
+    catalog.annotate(data['records'])
+    catalog.write()
+    from .execution_view import write_view as write_execution
+    write_execution(output, data['records'])
     (output / 'ai/fine_grained.json'
      ).write_text(json.dumps(data, allow_nan=False) + '\n')
     (output / 'ai/observation_plan.json').write_text(
@@ -197,8 +269,9 @@ def write_view(output, document, report):
     if overview.exists():
         overview.write_text(overview.read_text().replace(
             '<main>',
-            '<main><p><a href="fine_grained.html">Source-linked internal dynamic records</a></p>',
-            1))
+            '<main><p><a href="fine_grained.html">Source-linked internal dynamic records</a> | '
+            '<a href="sources.html">Captured source</a> | '
+            '<a href="execution.html">Execution mapping</a></p>', 1))
 
 
 def require_automatic_records(output, request):
@@ -214,23 +287,31 @@ def require_automatic_records(output, request):
     ]
     if valid:
         return
-    status = {
-        'schema_version':
-        1,
-        'status':
-        'incomplete',
-        'reason':
-        'selected_programs_produced_no_source_linked_internal_records',
-        'request':
-        request,
-        'action':
+    internal = [
+        row for row in document.get('records', [])
+        if row.get('operation') and row.get('association_status') == 'verified'
+        and row.get('semantic') != 'native_lifecycle'
+    ]
+    reason = ('internal_records_lack_valid_source_snapshot_positions'
+              if internal else
+              'selected_programs_produced_no_source_linked_internal_records')
+    action = (
+        'Inspect ai/source_index.json diagnostics and source_location_candidates '
+        'in ai/fine_grained.json. Captured source snapshots must match their '
+        'digest and compiler positions must fall within an unambiguous file snapshot.'
+        if internal else
         'Inspect the retained plan, capture/loss status and selected programs. '
         'For conditional work, choose a program that executes the region with '
-        'a public ObservationRequest; no application replay was performed.'
+        'a public ObservationRequest; no application replay was performed.')
+    status = {
+        'schema_version': 1,
+        'status': 'incomplete',
+        'reason': reason,
+        'request': request,
+        'action': action
     }
     (output / 'ai/selection_status.json'
      ).write_text(json.dumps(status, indent=2) + '\n')
     raise RuntimeError(
-        'Automatic profiling is incomplete: selected programs produced no '
-        'source-linked internal records. Original capture and plan retained at '
+        f'Automatic profiling is incomplete: {reason}. Original capture and plan retained at '
         f'{output}; see ai/selection_status.json.')

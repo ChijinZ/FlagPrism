@@ -462,27 +462,43 @@ def test_bundle_preserves_evidence_and_unknown_context(tmp_path):
 
 def test_bundle_retains_actual_compiler_ir_without_inline_duplicates(tmp_path):
     import hashlib
+    import base64
+    helper_bytes = b'def helper():\r\n    return 2\r\n'
+    helper_sha = hashlib.sha256(helper_bytes).hexdigest()
     artifacts = {
         'ttir': 'module { // source origin\n}\n',
         'gcuir': 'module { // vector work-items\n}\n'
     }
-    document = dict(backend='enflame',
-                    associations=[],
-                    binaries=[{
-                        'id': 'binary1',
-                        'source': {},
-                        'compiler_artifacts': artifacts,
-                        'execution_manifest': {
-                            'schema_version': 1,
-                            'binary_id': 'binary1',
-                            'status': 'partial'
-                        },
-                    }])
+    document = dict(
+        backend='enflame',
+        associations=[],
+        binaries=[{
+            'id':
+            'binary1',
+            'source': {},
+            'compiler_artifacts':
+            artifacts,
+            'source_snapshots': [
+                dict(status='captured',
+                     file='/original/helper.py',
+                     sha256=helper_sha,
+                     content=base64.b64encode(helper_bytes).decode())
+            ],
+            'execution_manifest': {
+                'schema_version': 1,
+                'binary_id': 'binary1',
+                'status': 'partial'
+            },
+        }])
     output = tmp_path / 'bundle'
     report.write_bundle(report.analyze(document), document, output)
     binary, = json.loads((output / 'ai/binaries.json').read_text())
     assert 'compiler_artifacts' not in binary
     manifest = json.loads((output / 'manifest.json').read_text())
+    snapshot, = binary['source_snapshots']
+    assert 'content' not in snapshot
+    assert (output / snapshot['snapshot_file']).read_bytes() == helper_bytes
+    assert manifest['files'][snapshot['snapshot_file']]['sha256'] == helper_sha
     for stage, content in artifacts.items():
         ref = binary['compiler_artifact_files'][stage]
         assert (output / ref['file']).read_bytes() == content.encode()

@@ -62,6 +62,14 @@ Object toJson(const StatementValueInfo &info) {
 }
 
 Object toJson(const TrackedOpEntry &entry) {
+  Array ancestors;
+  for (const auto &owner : entry.controlFlowAncestors)
+    ancestors.push_back(Object{{"controlId", owner.controlId},
+                               {"parentOpId", owner.parentOpId},
+                               {"operation", owner.operation},
+                               {"regionIndex", owner.regionIndex},
+                               {"blockIndex", owner.blockIndex},
+                               {"repeated", owner.repeated}});
   Array operands;
   for (const auto &operand : entry.operands)
     operands.push_back(toJson(operand));
@@ -84,6 +92,8 @@ Object toJson(const TrackedOpEntry &entry) {
       {"tritonStatement", entry.tritonStatement},
       {"statementResultName", entry.statementResultName},
       {"inlineCallPath", entry.inlineCallPath},
+      {"controlFlowSchemaVersion", entry.controlFlowSchemaVersion},
+      {"controlFlowAncestors", std::move(ancestors)},
       {"result", toJson(entry.result)},
       {"operands", std::move(operands)},
       {"statementValues", std::move(statementValues)},
@@ -274,6 +284,34 @@ bool parseTrackedOpEntry(const Object &object, TrackedOpEntry &entry,
     return false;
   }
 
+  entry.controlFlowSchemaVersion = 0;
+  entry.controlFlowAncestors.clear();
+  if (!getOptionalUInt32(object, "controlFlowSchemaVersion",
+                         entry.controlFlowSchemaVersion))
+    return false;
+  auto *ancestors = object.getArray("controlFlowAncestors");
+  if (entry.controlFlowSchemaVersion > 1 ||
+      (entry.controlFlowSchemaVersion == 1 && !ancestors)) {
+    if (errorMessage)
+      *errorMessage = "unsupported or incomplete control-flow metadata";
+    return false;
+  }
+  if (ancestors) {
+    for (const auto &value : *ancestors) {
+      auto *owner = value.getAsObject();
+      ControlFlowAncestor ancestor;
+      if (!owner ||
+          !getUInt32(*owner, "controlId", ancestor.controlId, errorMessage) ||
+          !getUInt32(*owner, "parentOpId", ancestor.parentOpId, errorMessage) ||
+          !getString(*owner, "operation", ancestor.operation, errorMessage) ||
+          !getUInt32(*owner, "regionIndex", ancestor.regionIndex,
+                     errorMessage) ||
+          !getUInt32(*owner, "blockIndex", ancestor.blockIndex, errorMessage) ||
+          !getBool(*owner, "repeated", ancestor.repeated, errorMessage))
+        return false;
+      entry.controlFlowAncestors.push_back(std::move(ancestor));
+    }
+  }
   entry.operands.clear();
   for (const auto &operandValue : *operandsArray) {
     const auto *operandObject = operandValue.getAsObject();
