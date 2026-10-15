@@ -68,10 +68,19 @@ the invocation's worker/descendants, including SDK children in separate sessions
 Other server processes are not terminated. Successful CLI captures include
 `ai/deadlines.json`, whose bytes are covered by the bundle manifest.
 
-The automatic quickstart covers eager kernel launches. NVIDIA stream graph
-capture is rejected before an instrumented launch; use the separately documented
-native CUPTI graph mode when native graph activities are needed. An existing
-graph replay without ordinary JIT launches does not supply per-kernel automatic
+The automatic quickstart covers eager kernel launches. Automatic internal
+collection rejects NVIDIA, Ascend/NPU and Enflame/GCU stream graph capture.
+Run the kernels outside graph capture to collect internal observations. On CANN
+and Enflame this also applies to legacy IR/instrumentation modes: capture is
+checked before starting an internal session and before instrumentation prepares
+a launch. A missing, failed or indeterminate capture-state query raises an
+error; it is never treated as evidence of an eager launch. Eager launches on
+explicit streams remain eligible for collection.
+
+Native-only collection has its own backend support rules; the internal-mode
+checks do not establish native graph support. For NVIDIA native graph
+activities, use the separately documented CUPTI graph mode. An existing graph
+replay without ordinary JIT launches does not supply per-kernel automatic
 source records. Simultaneous host-thread JIT calls in one supervised automatic
 CLI worker are rejected; use separate capture processes. Interleaving eager
 launches on streams does not by itself prove simultaneous recording support.

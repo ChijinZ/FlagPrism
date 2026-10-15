@@ -1429,6 +1429,13 @@ def _retain_failed_decode(exported_run, metadata_dict, error):
 def _default_launch_prepare_hook(
         metadata: Any, stream: int, launch_metadata: Any,
         kernel_args: Sequence[Any]) -> PreparedKernelLaunch:
+    metadata_dict = _build_launch_metadata_dict(metadata)
+    backend = metadata_dict.get("debug_backend_name",
+                                metadata_dict.get("backend_name"))
+    if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
+        backend = "ascend"
+    from .graph_guard import require_eager
+    require_eager(backend, stream=stream)
     launch_identity_object = (
         launch_metadata.get("_flagprism_launch_identity_object") if isinstance(
             launch_metadata, dict) else launch_metadata)
@@ -1439,7 +1446,6 @@ def _default_launch_prepare_hook(
             if key != "_flagprism_launch_identity_object"
         }
     launch_metadata = _materialize_launch_metadata(launch_metadata)
-    metadata_dict = _build_launch_metadata_dict(metadata)
     if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
         handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
         if handoff.get("phase") != "finished" or not handoff.get("artifacts"):
@@ -1788,6 +1794,11 @@ def launch_context(
 ):
     backend = str(backend or "unknown").lower()
     metadata_dict = _metadata_to_dict(metadata)
+    if (metadata_dict.get("debug_enabled")
+            or metadata_dict.get("debug_launch_hidden_arg")
+            or _active_config.enabled):
+        from .graph_guard import require_eager
+        require_eager(backend, stream=stream)
     runtime_launch_metadata = _materialize_launch_metadata(launch_metadata)
     runtime_launch_metadata = dict(runtime_launch_metadata or {})
     runtime_launch_metadata[
@@ -1836,7 +1847,14 @@ def launch_context(
         launch_error = error
         raise
     finally:
-        finalize_prepared_launch(prepared, launch_error)
+        try:
+            finalize_prepared_launch(prepared, launch_error)
+        except BaseException as cleanup_error:
+            if launch_error is None:
+                raise
+            if callable(getattr(launch_error, "add_note", None)):
+                launch_error.add_note("Debugger launch cleanup also failed: " +
+                                      str(cleanup_error))
 
 
 def ascend_launch_context(

@@ -1523,19 +1523,6 @@ def start(
                 "Explicit requests support Enflame, CANN, or CUDA backend='instrumentation' modes"
             )
 
-    # Native collection exports automatically; external counter tools are opt-in.
-    from ._capture import INTERNAL_ENV
-    internal = bool(os.environ.get(INTERNAL_ENV))
-    if metadata is not None:
-        metadata = metadata_snapshot(metadata)
-    _check_env(backend)
-    if backend == "cupti_pcsampling" or (backend == "cupti" and str(
-            mode or "").split(":", 1)[0] == "pcsampling"):
-        # Probe before allocating a session: an enabled SDK may still expose
-        # zero stall reasons on a particular GPU/toolkit combination.
-        profiler_native.validate_pc_sampling_support(
-            _get_backend_default_path(backend))
-
     use_triton_hook = (
         hook in ("triton", "instrumentation") or backend == "instrumentation"
         or (_is_mthreads_backend(backend) and hook is None)
@@ -1551,6 +1538,24 @@ def start(
         hook == "instrumentation"
         and not (_is_cann_backend(backend) or _is_tianshu_backend(backend)
                  or _is_enflame_backend(backend)))
+    if use_instrumentation_hook and (_is_cann_backend(backend)
+                                     or _is_enflame_backend(backend)):
+        from flagtree.debugger.graph_guard import require_eager
+        require_eager(backend)
+
+    # Native collection exports automatically; external counter tools are opt-in.
+    from ._capture import INTERNAL_ENV
+    internal = bool(os.environ.get(INTERNAL_ENV))
+    if metadata is not None:
+        metadata = metadata_snapshot(metadata)
+    _check_env(backend)
+    if backend == "cupti_pcsampling" or (backend == "cupti" and str(
+            mode or "").split(":", 1)[0] == "pcsampling"):
+        # Probe before allocating a session: an enabled SDK may still expose
+        # zero stall reasons on a particular GPU/toolkit combination.
+        profiler_native.validate_pc_sampling_support(
+            _get_backend_default_path(backend))
+
     effective_mode = (_mode_with_ir_triton_overrides(mode, backend) if
                       ir_default_for_triton else _get_mode_str(backend, mode))
     request_spec = None if observation_request is None else observation_request.as_dict(
@@ -1628,6 +1633,11 @@ def start(
             _get_backend_default_path(backend),
             hook or "",
         )
+        if use_instrumentation_hook and (_is_cann_backend(backend)
+                                         or _is_enflame_backend(backend)):
+            from .hooks.graph_guard import graph_guards
+            guard_backend = 'cann' if _is_cann_backend(backend) else 'enflame'
+            HookManager.register(graph_guards[guard_backend], session)
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:

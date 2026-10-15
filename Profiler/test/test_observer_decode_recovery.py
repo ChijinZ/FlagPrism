@@ -26,6 +26,14 @@ def _bound_handoff():
     return handoff
 
 
+@pytest.fixture(autouse=True)
+def mocked_eager_capture_state(monkeypatch):
+    from flagtree.debugger import graph_guard
+    # Every native prepare in this decoder-only suite is a CPU fixture.
+    # Capture state itself is tested in dedicated guard/route regressions.
+    monkeypatch.setattr(graph_guard, "require_eager", lambda *a, **k: None)
+
+
 @pytest.mark.parametrize("handler_fails", [False, True])
 @pytest.mark.parametrize("failure", ["truncated", "semantic", "program"])
 def test_finalize_preserves_truncated_actor_trace_and_original_error(

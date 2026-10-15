@@ -1,6 +1,8 @@
 #include "Debugger/Frontend/Bridge.h"
 
 #include <cctype>
+#include <cstdio>
+#include <exception>
 #include <string>
 #include <string_view>
 
@@ -126,8 +128,23 @@ public:
     }
     request.launchContext = transferEngine.prepare(
         normalizedMeta, artifacts.bufferPlan, runtimeMetadata);
-    transferEngine.initHeader(request.launchContext);
-    request.hiddenArgValue = transferEngine.hiddenArg(request.launchContext);
+    try {
+      transferEngine.initHeader(request.launchContext);
+      request.hiddenArgValue = transferEngine.hiddenArg(request.launchContext);
+    } catch (...) {
+      // Header initialization can fail after allocation. Preserve that error
+      // while attempting to release both owned buffers before unwinding.
+      try {
+        transferEngine.release(request.launchContext);
+      } catch (const std::exception &error) {
+        std::fprintf(stderr, "FlagPrism debugger prepare rollback: %s\n",
+                     error.what());
+      } catch (...) {
+        std::fprintf(stderr,
+                     "FlagPrism debugger prepare rollback: unknown failure\n");
+      }
+      throw;
+    }
     return request;
   }
 
