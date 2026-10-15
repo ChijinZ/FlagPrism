@@ -1,10 +1,16 @@
 """Decode the Ascend per actor dynamic64 log without inventing clock joins."""
 from __future__ import annotations
+import copy
 import struct
 from .observations import observation, validate_clock
 
 _UNKNOWN = (1 << 64) - 1
-_SEMANTICS = {1: 'issue', 2: 'wait_bracket', 3: 'control_checkpoint', 4: 'operation_checkpoint'}
+_SEMANTICS = {
+    1: 'issue',
+    2: 'wait_bracket',
+    3: 'control_checkpoint',
+    4: 'operation_checkpoint'
+}
 _MANIFEST_SEMANTICS = {
     'signal_issue_source_control': 1,
     'existing_readiness_wait_source_control': 2,
@@ -43,7 +49,8 @@ def decode_dynamic64(data,
                      association_evidence=None,
                      clock=None,
                      site_manifest=None,
-                     expected_program=None):
+                     expected_program=None,
+                     require_actor_binding=False):
     """Decode actor_header4_record8_v1 with independent cursor/overflow counts.
 
     Zero headers denote no recorded selected event; actor execution is unknown.
@@ -51,7 +58,8 @@ def decode_dynamic64(data,
     not a source loop index. Clock conversion requires separately supplied
     evidence; independent replay clocks are never joined here.
     """
-    if type(capacity) is not int or capacity < 1 or type(actor_slots) is not int or actor_slots < 1:
+    if type(capacity) is not int or capacity < 1 or type(
+            actor_slots) is not int or actor_slots < 1:
         raise ValueError('capacity and actor_slots must be positive integers')
     if expected_program is not None and (
             type(expected_program) is not int
@@ -62,19 +70,32 @@ def decode_dynamic64(data,
         raise ValueError('capture_id must be nonempty')
     if isinstance(data, (bytes, bytearray, memoryview)):
         if len(data) % 8:
-            raise ValueError('dynamic64 byte length must be divisible by eight')
-        words = list(struct.unpack('<' + 'Q' * (len(data)//8), data))
+            raise ValueError(
+                'dynamic64 byte length must be divisible by eight')
+        words = list(struct.unpack('<' + 'Q' * (len(data) // 8), data))
     else:
         words = list(data)
-        if any(type(word) is not int or word < -(1 << 63) or word > _UNKNOWN for word in words):
-            raise ValueError('dynamic64 words must fit a signed/unsigned64 carrier')
+        if any(
+                type(word) is not int or word < -(1 << 63) or word > _UNKNOWN
+                for word in words):
+            raise ValueError(
+                'dynamic64 words must fit a signed/unsigned64 carrier')
         words = [word & _UNKNOWN for word in words]
     expected = actor_slots * (4 + capacity * 8)
     if len(words) < expected:
         raise ValueError('truncated dynamic64 allocation')
-    if any(type(word) is not int or word < 0 or word > _UNKNOWN for word in words[:expected]):
+    if any(
+            type(word) is not int or word < 0 or word > _UNKNOWN
+            for word in words[:expected]):
         raise ValueError('dynamic64 words must be unsigned64')
-    native_clock = validate_clock(clock or {'domain': 'ascend.SYS_CNT', 'scope': 'actor_local', 'alignment': 'instance_local', 'tick_ns': None, 'wrap_bits': 64})
+    native_clock = validate_clock(
+        clock or {
+            'domain': 'ascend.SYS_CNT',
+            'scope': 'actor_local',
+            'alignment': 'instance_local',
+            'tick_ns': None,
+            'wrap_bits': 64
+        })
     sites = {}
     ambiguous_sites = set()
     for entry in (site_manifest or []):
@@ -89,34 +110,91 @@ def decode_dynamic64(data,
     events, actors = [], []
     for actor in range(actor_slots):
         base = actor * (4 + capacity * 8)
-        version, cursor, attempted, dropped = words[base:base+4]
+        version, cursor, attempted, dropped = words[base:base + 4]
         if version == 0:
             if cursor or attempted or dropped:
-                raise ValueError('uninitialized actor header has nonzero statistics')
-            actors.append({'actor_slot': actor, 'state': 'no_records', 'execution_status': 'unknown', 'committed': 0, 'attempted': 0, 'dropped': 0})
+                raise ValueError(
+                    'uninitialized actor header has nonzero statistics')
+            actors.append({
+                'actor_slot': actor,
+                'state': 'no_records',
+                'execution_status': 'unknown',
+                'binding_status': 'unknown_no_records',
+                'committed': 0,
+                'attempted': 0,
+                'dropped': 0
+            })
             continue
         if version != 1:
             raise ValueError('unsupported dynamic64 version')
         if cursor > capacity or attempted != cursor + dropped:
-            raise ValueError('inconsistent dynamic64 cursor/overflow statistics')
-        actors.append({'actor_slot': actor, 'state': 'truncated' if dropped else 'complete', 'committed': cursor, 'attempted': attempted, 'dropped': dropped})
+            raise ValueError(
+                'inconsistent dynamic64 cursor/overflow statistics')
+        actors.append({
+            'actor_slot': actor,
+            'state': 'truncated' if dropped else 'complete',
+            'committed': cursor,
+            'attempted': attempted,
+            'dropped': dropped
+        })
         prior = -1
         for index in range(cursor):
-            record = words[base+4+index*8:base+4+(index+1)*8]
+            record = words[base + 4 + index * 8:base + 4 + (index + 1) * 8]
             descriptor, occurrence, start, end, program, recorded_actor, buffer_slot, iteration = record
             site, code = descriptor & 0xffffffff, descriptor >> 32
             if code not in _SEMANTICS:
                 raise ValueError('unknown dynamic64 event semantic')
             if recorded_actor != actor or occurrence <= prior or occurrence >= attempted:
-                raise ValueError('dynamic64 actor/occurrence identity mismatch')
+                raise ValueError(
+                    'dynamic64 actor/occurrence identity mismatch')
             if code in (3, 4) and start != end:
-                raise ValueError('checkpoint point record has nonzero interval')
+                raise ValueError(
+                    'checkpoint point record has nonzero interval')
             if expected_program is not None and program != expected_program:
                 raise ValueError(
                     'dynamic64 program contradicts compiled program selection')
             prior = occurrence
-            manifest = None if (actor, site) in ambiguous_sites else sites.get((actor, site))
+            manifest = None if (actor, site) in ambiguous_sites else sites.get(
+                (actor, site))
             site_semantic_verified = _validate_site_semantic(manifest, code)
+            compiler_actor = (manifest or {}).get('compiler_actor')
+            verified_actor = False
+            if compiler_actor:
+                binding = compiler_actor.get('runtime_actor_binding') or {}
+                proof = compiler_actor.get('binding_proof') or {}
+                verified_actor = (
+                    actor in binding.get('admissible_slots', [])
+                    and binding.get('segment_count') == actor_slots
+                    and binding.get('segment_words') == 4 + capacity * 8
+                    and proof.get('status')
+                    == 'verified_compiler_emission_manifest'
+                    and compiler_actor.get('module_sha256')
+                    == binding.get('module_sha256')
+                    and compiler_actor.get('compile_id')
+                    == binding.get('compile_id') and
+                    compiler_actor.get('function') == binding.get('function')
+                    and compiler_actor.get('id') ==
+                    f"late_llvm:{binding.get('module_sha256')}:{binding.get('function')}"
+                )
+                if not verified_actor:
+                    raise ValueError(
+                        'raw actor slot contradicts compiler runtime binding')
+            if require_actor_binding and (not verified_actor
+                                          or not site_semantic_verified):
+                raise ValueError(
+                    'automatic raw record lacks unambiguous compiler actor binding'
+                )
+            if verified_actor:
+                manifest = copy.deepcopy(manifest)
+                proof = manifest['compiler_actor']['binding_proof']
+                proof['observed_actor_slot'] = actor
+                proof[
+                    'runtime_slot_status'] = 'verified_against_raw_record_and_segment'
+                actors[-1]['binding_status'] = 'verified_by_committed_records'
+                identities = actors[-1].setdefault('compiler_actors', [])
+                identity = manifest['compiler_actor']['id']
+                if identity not in identities:
+                    identities.append(identity)
             event = {
                 'program_selection_status':
                 'consistent_with_expected_program'
@@ -135,7 +213,8 @@ def decode_dynamic64(data,
                 _SEMANTICS[code],
                 'event_kind':
                 'loop_header_occurrence'
-                if code == 3 else 'source_operation_occurrence' if code == 4 else 'native_primitive_bracket',
+                if code == 3 else 'source_operation_occurrence'
+                if code == 4 else 'native_primitive_bracket',
                 'program':
                 program,
                 'actor_slot':
@@ -161,6 +240,9 @@ def decode_dynamic64(data,
                 association_evidence,
                 'original_record':
                 record,
+                'compiler_actor_status':
+                'verified_against_raw_record_and_segment'
+                if verified_actor else 'unverified_legacy',
                 'compiler_site':
                 manifest,
                 'source_mapping_status':
