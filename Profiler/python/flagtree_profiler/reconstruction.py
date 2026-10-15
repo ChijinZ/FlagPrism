@@ -217,6 +217,8 @@ def render(document):
         '<a href="../ai/reconstruction.json">Complete reconstruction</a> | '
         '<a href="../ai/execution.json">Compiler execution mapping</a></p>'
         '<p>Raw ticks stay in their measured clock frame. None denotes an unavailable quantity. '
+        'Zero-tick intervals are unresolved at the counter granularity, '
+        'rather than evidence of zero execution cost. '
         'Source-control intervals measure instrumented control, not engine occupancy. '
         'Retained occurrences may omit sampled or truncated executions.</p>' +
         ''.join(panels) +

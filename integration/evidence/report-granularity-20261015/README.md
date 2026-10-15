@@ -1,0 +1,1 @@
+HTML clarifies that zero-tick intervals do not establish zero execution cost. NVIDIA Docker CPU regression: 16 existing reconstruction/acceptance-plan tests pass, actual native imports/hashes retained in log; pinned formatter unchanged and Ruff clean. No GPU or performance experiment.
