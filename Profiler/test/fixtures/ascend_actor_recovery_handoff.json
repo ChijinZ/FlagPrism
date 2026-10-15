@@ -1,0 +1,148 @@
+{
+  "phase": "finished",
+  "compile_id": "actual_opt_unit",
+  "artifacts": [
+    {
+      "metadata": {
+        "actors": [
+          {
+            "actor_kind": "AIC",
+            "argument_roles": [],
+            "arguments": [
+              {
+                "address_space": 1,
+                "position": 0,
+                "role": null,
+                "ssa": "%log"
+              }
+            ],
+            "dynamic_observation_prepared": true,
+            "function": "fresh_actor",
+            "loops": [],
+            "sites": [
+              {
+                "block": "%entry",
+                "callee": "llvm.hivm.SET.FLAG.IMM",
+                "id": 0,
+                "operands": [
+                  "3",
+                  "4",
+                  "7"
+                ],
+                "source_op_id": null
+              },
+              {
+                "block": "%entry",
+                "callee": "llvm.hivm.WAIT.FLAG.IMM",
+                "id": 1,
+                "operands": [
+                  "3",
+                  "4",
+                  "7"
+                ],
+                "source_op_id": null
+              }
+            ],
+            "target_cpu": ""
+          }
+        ],
+        "backend": "ascend",
+        "compile_id": "actual_opt_unit",
+        "control_plan": {
+          "budget_scope": "existing_primitives_and_original_loop_headers",
+          "candidate_count": 2,
+          "inventory": [
+            {
+              "callee": "llvm.hivm.SET.FLAG.IMM",
+              "operation": "llvm.hivm.SET.FLAG.IMM",
+              "operation_class": "existing_control_primitive",
+              "public_semantic": "issue",
+              "selected": true,
+              "selection_reason": "requested_existing_control_primitive",
+              "semantics": "signal_issue_source_control",
+              "site_id": 0,
+              "source_op_id": null
+            },
+            {
+              "callee": "llvm.hivm.WAIT.FLAG.IMM",
+              "operation": "llvm.hivm.WAIT.FLAG.IMM",
+              "operation_class": "existing_control_primitive",
+              "public_semantic": "wait_bracket",
+              "selected": false,
+              "selection_reason": "semantic_not_requested",
+              "semantics": "existing_readiness_wait_source_control",
+              "site_id": 1,
+              "source_op_id": null
+            }
+          ],
+          "max_sites": null,
+          "operation_max_sites_applies": false,
+          "plan_kind": "control",
+          "policy": "all_requested_original_control_sites",
+          "record_capacity_per_actor": 16,
+          "selected_count": 1
+        },
+        "dynamic_clock": {
+          "alignment": "unverified",
+          "domain": "ascend.SYS_CNT",
+          "scope": "actor_local",
+          "tick_ns": null,
+          "unit": "ticks"
+        },
+        "dynamic_record_layout": "actor_header4_record8_v1",
+        "dynamic_sites": [
+          {
+            "callee": "llvm.hivm.SET.FLAG.IMM",
+            "operation": "llvm.hivm.SET.FLAG.IMM",
+            "operation_class": "existing_control_primitive",
+            "public_semantic": "issue",
+            "semantics": "signal_issue_source_control",
+            "site_id": 0,
+            "source_op_id": null
+          }
+        ],
+        "effective_semantics": [
+          "issue"
+        ],
+        "instrumented": true,
+        "module_identifier": "/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll",
+        "module_sha256": "9b67019008b0174f0f67fb36f09fe89686f5fa59fc0f62051f38070fef16e6cb",
+        "observation_plan_version": 2,
+        "operation_plan": {},
+        "phase": "post_actor_lowering_pre_scalar_optimization",
+        "runtime_actor_binding": {
+          "actor_kind": "AIC",
+          "admissible_slots": [
+            0
+          ],
+          "basis": "actual_emitted_logger_actor_value",
+          "compile_id": "actual_opt_unit",
+          "expression": {
+            "kind": "constant_i64",
+            "value": 0
+          },
+          "function": "fresh_actor",
+          "layout": "actor_header4_record8_v1",
+          "module_sha256": "9b67019008b0174f0f67fb36f09fe89686f5fa59fc0f62051f38070fef16e6cb",
+          "record_actor_word": 5,
+          "schema_version": 1,
+          "segment_count": 3,
+          "segment_words": 132,
+          "value_use": "same_emitted_i64_for_segment_offset_and_record_word5"
+        },
+        "schema_version": 1,
+        "semantic_selection_stage": "compile_time_before_timestamp_and_record",
+        "source_association": "surviving_source_metadata_and_full_debug_locations",
+        "target_triple": ""
+      },
+      "manifest_text": "{\n  \"actors\": [\n    {\n      \"actor_kind\": \"AIC\",\n      \"argument_roles\": [],\n      \"arguments\": [\n        {\n          \"address_space\": 1,\n          \"position\": 0,\n          \"role\": null,\n          \"ssa\": \"%log\"\n        }\n      ],\n      \"dynamic_observation_prepared\": true,\n      \"function\": \"fresh_actor\",\n      \"loops\": [],\n      \"sites\": [\n        {\n          \"block\": \"%entry\",\n          \"callee\": \"llvm.hivm.SET.FLAG.IMM\",\n          \"id\": 0,\n          \"operands\": [\n            \"3\",\n            \"4\",\n            \"7\"\n          ],\n          \"source_op_id\": null\n        },\n        {\n          \"block\": \"%entry\",\n          \"callee\": \"llvm.hivm.WAIT.FLAG.IMM\",\n          \"id\": 1,\n          \"operands\": [\n            \"3\",\n            \"4\",\n            \"7\"\n          ],\n          \"source_op_id\": null\n        }\n      ],\n      \"target_cpu\": \"\"\n    }\n  ],\n  \"backend\": \"ascend\",\n  \"compile_id\": \"actual_opt_unit\",\n  \"control_plan\": {\n    \"budget_scope\": \"existing_primitives_and_original_loop_headers\",\n    \"candidate_count\": 2,\n    \"inventory\": [\n      {\n        \"callee\": \"llvm.hivm.SET.FLAG.IMM\",\n        \"operation\": \"llvm.hivm.SET.FLAG.IMM\",\n        \"operation_class\": \"existing_control_primitive\",\n        \"public_semantic\": \"issue\",\n        \"selected\": true,\n        \"selection_reason\": \"requested_existing_control_primitive\",\n        \"semantics\": \"signal_issue_source_control\",\n        \"site_id\": 0,\n        \"source_op_id\": null\n      },\n      {\n        \"callee\": \"llvm.hivm.WAIT.FLAG.IMM\",\n        \"operation\": \"llvm.hivm.WAIT.FLAG.IMM\",\n        \"operation_class\": \"existing_control_primitive\",\n        \"public_semantic\": \"wait_bracket\",\n        \"selected\": false,\n        \"selection_reason\": \"semantic_not_requested\",\n        \"semantics\": \"existing_readiness_wait_source_control\",\n        \"site_id\": 1,\n        \"source_op_id\": null\n      }\n    ],\n    \"max_sites\": null,\n    \"operation_max_sites_applies\": false,\n    \"plan_kind\": \"control\",\n    \"policy\": \"all_requested_original_control_sites\",\n    \"record_capacity_per_actor\": 16,\n    \"selected_count\": 1\n  },\n  \"dynamic_clock\": {\n    \"alignment\": \"unverified\",\n    \"domain\": \"ascend.SYS_CNT\",\n    \"scope\": \"actor_local\",\n    \"tick_ns\": null,\n    \"unit\": \"ticks\"\n  },\n  \"dynamic_record_layout\": \"actor_header4_record8_v1\",\n  \"dynamic_sites\": [\n    {\n      \"callee\": \"llvm.hivm.SET.FLAG.IMM\",\n      \"operation\": \"llvm.hivm.SET.FLAG.IMM\",\n      \"operation_class\": \"existing_control_primitive\",\n      \"public_semantic\": \"issue\",\n      \"semantics\": \"signal_issue_source_control\",\n      \"site_id\": 0,\n      \"source_op_id\": null\n    }\n  ],\n  \"effective_semantics\": [\n    \"issue\"\n  ],\n  \"instrumented\": true,\n  \"module_identifier\": \"/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll\",\n  \"module_sha256\": \"9b67019008b0174f0f67fb36f09fe89686f5fa59fc0f62051f38070fef16e6cb\",\n  \"observation_plan_version\": 2,\n  \"operation_plan\": {},\n  \"phase\": \"post_actor_lowering_pre_scalar_optimization\",\n  \"runtime_actor_binding\": {\n    \"actor_kind\": \"AIC\",\n    \"admissible_slots\": [\n      0\n    ],\n    \"basis\": \"actual_emitted_logger_actor_value\",\n    \"compile_id\": \"actual_opt_unit\",\n    \"expression\": {\n      \"kind\": \"constant_i64\",\n      \"value\": 0\n    },\n    \"function\": \"fresh_actor\",\n    \"layout\": \"actor_header4_record8_v1\",\n    \"module_sha256\": \"9b67019008b0174f0f67fb36f09fe89686f5fa59fc0f62051f38070fef16e6cb\",\n    \"record_actor_word\": 5,\n    \"schema_version\": 1,\n    \"segment_count\": 3,\n    \"segment_words\": 132,\n    \"value_use\": \"same_emitted_i64_for_segment_offset_and_record_word5\"\n  },\n  \"schema_version\": 1,\n  \"semantic_selection_stage\": \"compile_time_before_timestamp_and_record\",\n  \"source_association\": \"surviving_source_metadata_and_full_debug_locations\",\n  \"target_triple\": \"\"\n}",
+      "manifest_sha256": "c78d5227f57020100b482a98fbc266070c69b8c2ad9ee5e306aba9f6875fbba9",
+      "llir": "; ModuleID = '/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll'\nsource_filename = \"/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll\"\n\ndefine dso_local void @fresh_actor(ptr addrspace(1) %log) {\nentry:\n  call void @llvm.hivm.SET.FLAG.IMM(i64 3, i64 4, i64 7)\n  call void @llvm.hivm.WAIT.FLAG.IMM(i64 3, i64 4, i64 7)\n  ret void\n}\n\ndeclare void @llvm.hivm.SET.FLAG.IMM(i64, i64, i64)\n\ndeclare void @llvm.hivm.WAIT.FLAG.IMM(i64, i64, i64)\n\n!hivm.annotations = !{!0}\n\n!0 = !{ptr @fresh_actor, !\"kernel\", i32 1}\n",
+      "sha256": "9b67019008b0174f0f67fb36f09fe89686f5fa59fc0f62051f38070fef16e6cb",
+      "adapted": {
+        "llir": "; ModuleID = '/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll'\nsource_filename = \"/tmp/flagprism-usability-ascend-c1/binding-test-artifacts/test_real_pass_manifest_binds_0/input.ll\"\n\ndefine dso_local void @fresh_actor(ptr addrspace(1) %log) {\nentry:\n  %0 = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %1 = call i64 asm sideeffect \"MOV $0, SYS_CNT\", \"=l\"()\n  call void @llvm.hivm.SET.FLAG.IMM(i64 3, i64 4, i64 7)\n  %2 = call i64 asm sideeffect \"MOV $0, SYS_CNT\", \"=l\"()\n  %3 = icmp eq i64 %0, 0\n  br i1 %3, label %4, label %38\n\n4:                                                ; preds = %entry\n  %5 = getelementptr i64, ptr addrspace(1) %log, i64 1\n  %6 = getelementptr i64, ptr addrspace(1) %log, i64 2\n  %7 = getelementptr i64, ptr addrspace(1) %log, i64 3\n  %8 = load volatile i64, ptr addrspace(1) %6, align 4\n  %9 = add i64 %8, 1\n  store volatile i64 %9, ptr addrspace(1) %6, align 4\n  %10 = load volatile i64, ptr addrspace(1) %5, align 4\n  %11 = icmp ult i64 %10, 16\n  br i1 %11, label %12, label %34\n\n12:                                               ; preds = %4\n  %13 = mul i64 %10, 8\n  %14 = add i64 4, %13\n  %15 = add i64 0, %14\n  %16 = add i64 %15, 0\n  %17 = getelementptr i64, ptr addrspace(1) %log, i64 %16\n  store volatile i64 4294967296, ptr addrspace(1) %17, align 4\n  %18 = add i64 %15, 1\n  %19 = getelementptr i64, ptr addrspace(1) %log, i64 %18\n  store volatile i64 %8, ptr addrspace(1) %19, align 4\n  %20 = add i64 %15, 2\n  %21 = getelementptr i64, ptr addrspace(1) %log, i64 %20\n  store volatile i64 %1, ptr addrspace(1) %21, align 4\n  %22 = add i64 %15, 3\n  %23 = getelementptr i64, ptr addrspace(1) %log, i64 %22\n  store volatile i64 %2, ptr addrspace(1) %23, align 4\n  %24 = add i64 %15, 4\n  %25 = getelementptr i64, ptr addrspace(1) %log, i64 %24\n  store volatile i64 %0, ptr addrspace(1) %25, align 4\n  %26 = add i64 %15, 5\n  %27 = getelementptr i64, ptr addrspace(1) %log, i64 %26\n  store volatile i64 0, ptr addrspace(1) %27, align 4\n  %28 = add i64 %15, 6\n  %29 = getelementptr i64, ptr addrspace(1) %log, i64 %28\n  store volatile i64 -1, ptr addrspace(1) %29, align 4\n  %30 = add i64 %15, 7\n  %31 = getelementptr i64, ptr addrspace(1) %log, i64 %30\n  store volatile i64 -1, ptr addrspace(1) %31, align 4\n  %32 = getelementptr i64, ptr addrspace(1) %log, i64 0\n  store volatile i64 1, ptr addrspace(1) %32, align 4\n  %33 = add i64 %10, 1\n  store volatile i64 %33, ptr addrspace(1) %5, align 4\n  br label %37\n\n34:                                               ; preds = %4\n  %35 = load volatile i64, ptr addrspace(1) %7, align 4\n  %36 = add i64 %35, 1\n  store volatile i64 %36, ptr addrspace(1) %7, align 4\n  br label %37\n\n37:                                               ; preds = %34, %12\n  br label %38\n\n38:                                               ; preds = %entry, %37\n  call void @llvm.hivm.WAIT.FLAG.IMM(i64 3, i64 4, i64 7)\n  ret void\n}\n\ndeclare void @llvm.hivm.SET.FLAG.IMM(i64, i64, i64)\n\ndeclare void @llvm.hivm.WAIT.FLAG.IMM(i64, i64, i64)\n\ndeclare i64 @llvm.hivm.GET.BLOCK.IDX()\n\n!hivm.annotations = !{!0}\n\n!0 = !{ptr @fresh_actor, !\"kernel\", i32 1}\n",
+        "sha256": "8ca0cdc658d29fb94664850b842d36cabc28b57a17a1f0f7ab8f1145249a12db"
+      }
+    }
+  ]
+}
