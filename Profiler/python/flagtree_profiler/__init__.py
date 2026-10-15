@@ -1,6 +1,9 @@
 # ruff: noqa
 from __future__ import annotations
 
+from ._bootstrap import prepare_runtime_imports
+prepare_runtime_imports()
+
 from triton import __version__
 from flagtree._flagprism import register_component
 

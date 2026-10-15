@@ -24,7 +24,7 @@ def test_bad_protocol_header_is_rejected(header):
 
 
 def test_actor_mismatch_and_unknown_semantics_rejected():
-    for descriptor,actor in [(4<<32,0),(1<<32,1)]:
+    for descriptor,actor in [(5<<32,0),(1<<32,1)]:
         with pytest.raises(ValueError):m.decode_dynamic64([1,1,1,0]+[descriptor,0,100,100,0,actor,UNKNOWN,UNKNOWN],capacity=1,actor_slots=1,capture_id='capture')
 
 
@@ -133,3 +133,22 @@ def test_unknown_and_duplicate_legacy_sites_do_not_gain_semantic_certification(
                                 capture_id='capture',
                                 site_manifest=[known, known])
     assert result['observations'][0]['source_mapping_status'] == 'ambiguous'
+
+
+def test_operation_checkpoint_is_point_observation_with_authoritative_origin():
+    raw = [1, 1, 1, 0] + [(4 << 32) | 7, 0, 123, 123, 0, 0, UNKNOWN, UNKNOWN]
+    site = {'actor_slot': 0, 'site_id': 7,
+            'semantics': 'source_operation_checkpoint',
+            'callee': 'ordinary_generated_operation', 'operation_class': 'compiler_call',
+            'source_file': '/user/kernel.py', 'line': 19, 'column': 4}
+    result = m.decode_dynamic64(raw, capacity=1, actor_slots=1,
+                                capture_id='capture', site_manifest=[site])
+    event, = result['observations']
+    assert event['semantic'] == 'operation_checkpoint'
+    assert event['event_kind'] == 'source_operation_occurrence'
+    assert event['duration_ticks'] == 0
+    assert event['compiler_site'] == site
+    assert event['source_mapping_status'] == 'compiler_site_identified'
+    raw[7] = 124
+    with pytest.raises(ValueError, match='point record'):
+        m.decode_dynamic64(raw, capacity=1, actor_slots=1, capture_id='capture')

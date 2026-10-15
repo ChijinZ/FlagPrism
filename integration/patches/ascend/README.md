@@ -88,3 +88,38 @@ bytes for every component Python file and native library and performs public
 imports/compiler ABI/preallocation checks under Python -I with the extracted
 wheel as the only triton/flagtree package source. Import installed torch and
 torch_npu before triton, as the supported Ascend runner does.
+
+The automatic mode additionally applies `automatic-source-origins.patch` after
+`flagtree-source.patch`. Also apply `automatic-import-order.patch` to load the
+Ascend Torch runtime before the vendor compiler is discovered during a cold
+CLI import. The source-origin patch enables the SDK's real debug locations when the
+frozen `NPUOptions.instrumentation_mode` contains an automatic observation
+request, on both SDK routes. It does not require `TRITON_DISABLE_LINE_INFO` or
+change process-wide compiler flags. The automatic request participates in the
+normal compiler option hash.
+
+Build the LLVM15 observer from `Profiler/llvm` using CMake. For an existing
+matching, verified native build, `build_automatic_wheel.py` assembles the real
+FlagTree setup Distribution with standard `build_py`/`bdist_wheel`. Supply the
+patched FlagTree checkout, the complete component source, the matching native
+Python tree/core library, the newly built plugin and a fresh output directory.
+This helper explicitly reuses those native binaries; it does not claim a new
+core build. It creates the official backend marker, packages the late plugin
+under `flagtree/profiler/lib`, verifies package bytes and records their hashes.
+Install the resulting wheel into a venv (matching system Torch/SDK packages may
+be reused). The installed adapter discovers the packaged plugin and creates
+immutable compiler capture directories automatically; explicit environment
+paths remain available as advanced overrides. Failed compiler captures are
+retained and the error names their compiler-stage evidence.
+
+Automatic Ascend observations include zero-interval source-operation
+checkpoints from generic original LLVM loads/stores/computations/compiler
+calls with surviving debug locations. The default selects at most eight source
+location/class regions per actor, spread over the original control flow;
+original loop-header checkpoints preserve actual runtime visits. A checkpoint
+proves that source control reached the region, and is not a completion barrier
+or engine-busy measurement. Adjacent operations at the same source location and
+class within one original basic block share a checkpoint. Compiler manifests
+retain candidate/selected counts, operation classes, original site identities
+and full debug origins. Raw event publication, losses, typed readiness,
+per-invocation hidden ABI and actor-local clock boundaries are unchanged.

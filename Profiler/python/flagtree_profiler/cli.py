@@ -1,13 +1,46 @@
 import argparse
 import json
+import importlib
 import sys
 import os
 from pathlib import Path
-from .profile import start, finalize, _select_backend
+from .profile import start, finalize, _select_backend, _automatic_backend
 from .flags import set_command_line
 from .mthreads import (DEFAULT_MCU_SECTIONS, MCU_INTEGRATION_ENABLED,
                        merge_mcu_vendor_artifact, run_mcu_profile)
 from .tianshu import merge_ixkn_vendor_artifact, run_ixkn_profile
+
+
+def _nonnegative_device(value):
+    number = int(value)
+    if number < 0:
+        raise argparse.ArgumentTypeError("device must be a nonnegative integer")
+    return number
+
+
+def _set_runtime_device(backend, device):
+    """Select the application runtime device before a collector is started."""
+    if device is None:
+        return
+    if type(device) is not int or device < 0:
+        raise ValueError("device must be a nonnegative integer")
+    runtimes = {
+        'cann': ('torch_npu', 'npu'),
+        'enflame': ('torch_gcu', 'gcu'),
+        'gcu': ('torch_gcu', 'gcu'),
+        'tops': ('torch_gcu', 'gcu'),
+        'instrumentation': (None, 'cuda'),
+        'cupti': (None, 'cuda'),
+        'cupti_pcsampling': (None, 'cuda'),
+        'roctracer': (None, 'cuda'),
+    }
+    if backend not in runtimes:
+        raise ValueError(f"--device runtime selection is unavailable for {backend!r}; select the device before using the session API")
+    extension, runtime = runtimes[backend]
+    torch = importlib.import_module('torch')
+    if extension:
+        importlib.import_module(extension)
+    getattr(torch, runtime).set_device(device)
 
 
 def parse_arguments():
@@ -35,6 +68,8 @@ def parse_arguments():
                             "tianshu", "corex", "iluvatar", "enflame", "gcu",
                             "tops"
                         ])
+    parser.add_argument("--device", type=_nonnegative_device, default=None,
+                        help="Application runtime device selected before collection; use the same device in the application")
     parser.add_argument("-c",
                         "--context",
                         type=str,
@@ -65,6 +100,8 @@ def parse_arguments():
         "Enable external hardware counters (TCU on Enflame or msprof on Ascend; off by default)"
     )
     parser.add_argument("--counter-metrics", default=None)
+    parser.add_argument("--detail", choices=("auto",), default=None,
+                        help="Automatically select source-linked internal observations")
     parser.add_argument(
         "--observation-request",
         help="JSON file describing a typed detailed observation request")
@@ -164,6 +201,8 @@ def do_setup_and_execute(target_args):
 
 def run_profiling(args, target_args):
     backend = args.backend if args.backend else _select_backend()
+    if getattr(args, "detail", None) == "auto":
+        backend = _automatic_backend(backend)
     # The outer launcher owns collection and exports a single capture directory.
     from ._capture import INTERNAL_ENV, run_capture
     if not os.environ.get(INTERNAL_ENV):
@@ -299,6 +338,7 @@ def run_profiling(args, target_args):
             raise SystemExit(result.returncode)
         return
 
+    _set_runtime_device(backend, getattr(args, "device", None))
     start(
         args.name,
         context=args.context,
@@ -306,6 +346,7 @@ def run_profiling(args, target_args):
         backend=backend,
         mode=args.mode,
         hook=args.hook,
+        detail=getattr(args, "detail", None),
         observation_request=(json.loads(
             Path(args.observation_request).read_text()) if getattr(
                 args, "observation_request", None) else None),

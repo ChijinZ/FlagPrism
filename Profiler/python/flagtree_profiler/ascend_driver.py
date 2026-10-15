@@ -69,7 +69,10 @@ def main():
             receipt['inputs'].append({'path': str(path), 'sha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'pass_command': command, 'pass_returncode': result.returncode})
             (output / ('pass-' + str(len(receipt['inputs'])) + '.log')).write_bytes(result.stdout + result.stderr)
             if result.returncode:
-                raise RuntimeError('LLVM pass failed; original SDK invocation was not run')
+                raise RuntimeError(
+                    f'Ascend LLVM observation pass failed (exit {result.returncode}); '
+                    f'evidence: {output / ("pass-" + str(len(receipt["inputs"])) + ".log")}; '
+                    'original SDK invocation was not run')
             if adapted.is_file():
                 receipt['inputs'][-1]['adapted_path'] = str(adapted)
                 receipt['inputs'][-1]['adapted_sha256'] = hashlib.sha256(adapted.read_bytes()).hexdigest()

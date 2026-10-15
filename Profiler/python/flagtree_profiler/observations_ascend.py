@@ -4,11 +4,12 @@ import struct
 from .observations import observation, validate_clock
 
 _UNKNOWN = (1 << 64) - 1
-_SEMANTICS = {1: 'issue', 2: 'wait_bracket', 3: 'control_checkpoint'}
+_SEMANTICS = {1: 'issue', 2: 'wait_bracket', 3: 'control_checkpoint', 4: 'operation_checkpoint'}
 _MANIFEST_SEMANTICS = {
     'signal_issue_source_control': 1,
     'existing_readiness_wait_source_control': 2,
-    'loop_header_occurrence': 3
+    'loop_header_occurrence': 3,
+    'source_operation_checkpoint': 4
 }
 _CALLEE_SEMANTICS = {
     'llvm.hivm.SET.FLAG.IMM': 1,
@@ -30,7 +31,7 @@ def _validate_site_semantic(manifest, code):
     if declared == 3 and callee is not None:
         raise ValueError(
             'dynamic64 checkpoint compiler site has a native callee')
-    return declared is not None and (native is not None or declared == 3)
+    return declared is not None and (native is not None or declared in (3, 4))
 
 
 def decode_dynamic64(data,
@@ -108,8 +109,8 @@ def decode_dynamic64(data,
                 raise ValueError('unknown dynamic64 event semantic')
             if recorded_actor != actor or occurrence <= prior or occurrence >= attempted:
                 raise ValueError('dynamic64 actor/occurrence identity mismatch')
-            if code == 3 and start != end:
-                raise ValueError('loop-header point record has nonzero interval')
+            if code in (3, 4) and start != end:
+                raise ValueError('checkpoint point record has nonzero interval')
             if expected_program is not None and program != expected_program:
                 raise ValueError(
                     'dynamic64 program contradicts compiled program selection')
@@ -134,7 +135,7 @@ def decode_dynamic64(data,
                 _SEMANTICS[code],
                 'event_kind':
                 'loop_header_occurrence'
-                if code == 3 else 'native_primitive_bracket',
+                if code == 3 else 'source_operation_occurrence' if code == 4 else 'native_primitive_bracket',
                 'program':
                 program,
                 'actor_slot':

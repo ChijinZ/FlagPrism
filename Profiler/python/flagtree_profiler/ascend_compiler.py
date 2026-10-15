@@ -12,6 +12,7 @@ from pathlib import Path
 import shlex
 import shutil
 import sys
+import tempfile
 import uuid
 
 
@@ -23,6 +24,14 @@ def prepare(event):
     plugin = event.metadata.get('flagprism_ascend_late_plugin') or os.environ.get('FLAGPRISM_ASCEND_LATE_PLUGIN')
     destination = event.metadata.get('flagprism_ascend_compiler_capture') or os.environ.get('FLAGPRISM_ASCEND_COMPILER_CAPTURE')
     requested = event.metadata.get('flagprism_ascend_observation_request')
+    if requested and not plugin:
+        packaged_plugin = Path(__file__).with_name('lib') / 'FlagPrismAscendLateObserver.so'
+        if packaged_plugin.is_file():
+            plugin = str(packaged_plugin)
+    if requested and plugin and not destination:
+        # Compiler artifacts are immutable and retained on failure. Their exact
+        # bytes/hashes are embedded in the ordinary portable bundle on success.
+        destination = tempfile.mkdtemp(prefix='flagprism-ascend-compiler-')
     if requested:
         fields = (('flagprism_ascend_trace_capacity', 1, 1_000_000),
                   ('flagprism_ascend_trace_program', 0, None),
@@ -42,7 +51,7 @@ def prepare(event):
         raise FileNotFoundError(plugin)
     if requested:
         semantics = requested.get('semantics')
-        allowed = {'issue', 'wait_bracket', 'control_checkpoint'}
+        allowed = {'issue', 'wait_bracket', 'control_checkpoint', 'operation_checkpoint'}
         if (not isinstance(semantics, (list, tuple)) or not semantics
                 or any(value not in allowed for value in semantics)
                 or len(set(semantics)) != len(semantics)):
@@ -52,6 +61,10 @@ def prepare(event):
             semantics)
         event.metadata[
             'flagprism_ascend_semantic_selection_stage'] = 'compile_time_before_timestamp_and_record'
+        max_sites = event.metadata.get('flagprism_ascend_trace_max_sites', 32)
+        if type(max_sites) is not int or not 1 <= max_sites <= 256:
+            raise ValueError('Ascend operation site budget must be 1..256')
+        event.environment['FLAGPRISM_ASCEND_TRACE_MAX_SITES'] = str(max_sites)
         event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] = str(event.metadata['flagprism_ascend_trace_capacity'])
         event.environment['FLAGPRISM_ASCEND_TRACE_PROGRAM'] = str(event.metadata['flagprism_ascend_trace_program'])
         event.environment['FLAGPRISM_ASCEND_TRACE_SOURCE_ARGUMENT'] = str(event.metadata['flagprism_ascend_trace_source_argument_index'])
@@ -122,7 +135,7 @@ def prepare(event):
         'output':
         str(output),
         'source_association':
-        'surviving_explicit_metadata_only'
+        'surviving_source_metadata_and_full_debug_locations'
     }
     if source_inputs:
         tracked = event.metadata.get('debug_tracked_table')
@@ -226,7 +239,11 @@ def finish(event, *, returncode):
 def cache_key():
     plugin = os.environ.get('FLAGPRISM_ASCEND_LATE_PLUGIN')
     if not plugin:
-        return ''
+        packaged_plugin = Path(__file__).with_name('lib') / 'FlagPrismAscendLateObserver.so'
+        if packaged_plugin.is_file():
+            plugin = str(packaged_plugin)
+        else:
+            return ''
     return hashlib.sha256(
         json.dumps(
             {
@@ -240,6 +257,7 @@ def cache_key():
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_CAPACITY'),
                 'program':
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_PROGRAM'),
+                'trace_max_sites': os.environ.get('FLAGPRISM_ASCEND_TRACE_MAX_SITES'),
                 'trace_semantics':
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_SEMANTICS'),
                 'line_info':
@@ -254,7 +272,7 @@ def cache_key():
                         Path(__file__).with_name(
                             name).read_bytes()).hexdigest()
                     for name in [
-                        'ascend_compiler.py', 'ascend_sdk_driver.py',
+                        'ascend_compiler.py', 'ascend_driver.py', 'ascend_sdk_driver.py',
                         'ascend_hivm.py'
                     ]
                 },

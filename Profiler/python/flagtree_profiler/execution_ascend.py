@@ -225,7 +225,7 @@ def build_execution_mapping(asm: Mapping, compiler_metadata: Mapping, *, binary_
                 if len(manifest.get('actors', [])) == 1:
                     for raw_site in manifest.get('dynamic_sites', []):
                         callee = raw_site.get('callee')
-                        semantic = 'control_checkpoint' if raw_site.get('semantics') == 'loop_header_occurrence' else 'wait_bracket' if callee and '.WAIT.' in callee else 'issue'
+                        semantic = 'operation_checkpoint' if raw_site.get('semantics') == 'source_operation_checkpoint' else 'control_checkpoint' if raw_site.get('semantics') == 'loop_header_occurrence' else 'wait_bracket' if callee and '.WAIT.' in callee else 'issue'
                         sites.append({
                             'id':
                             actor_id + f':dynamic{raw_site["site_id"]}',

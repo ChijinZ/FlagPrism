@@ -1,0 +1,47 @@
+--- a/third_party/ascend/backend/compiler.py
++++ b/third_party/ascend/backend/compiler.py
+@@ -21,6 +21,7 @@
+ import ctypes
+ import functools
+ import hashlib
++import json
+ import glob
+ import os
+ import re
+@@ -68,6 +69,18 @@
+ from triton.tools.get_ascend_devices import is_compile_on_910_95
+ 
+ 
++def _flagprism_automatic_source_info(opt):
++    # The public automatic request is frozen in instrumentation_mode and its
++    # normal NPUOptions hash. Preserve source locations only for that compile;
++    # do not change process-global debug settings or device completion semantics.
++    mode = getattr(opt, "instrumentation_mode", "")
++    if "|config=" not in mode:
++        return False
++    config = json.loads(mode.split("|config=", 1)[1])
++    request = config.get("debug_observation_request")
++    return isinstance(request, dict) and request.get("automatic") is True
++
++
+ # TODO: materialize the concrete min shape
+ def min_dot_size(target: GPUTarget):
+     return lambda lhsType, rhsType: (1, 1, 1)
+@@ -411,7 +424,7 @@
+             _compile_option_list += ["--disable-ffts"]
+         if _is_ascend_sanitizer_enabled():
+             _compile_option_list += ["--enable-sanitizer=true"]
+-        if not _is_debug_line_info_disabled():
++        if not _is_debug_line_info_disabled() or _flagprism_automatic_source_info(opt):
+             _compile_option_list += ["--enable-debug-info=true"]
+ 
+         if _enable_print_ub_bits():
+@@ -637,7 +650,7 @@
+ 
+         if _is_ascend_sanitizer_enabled():
+             _compile_option_list += ["--enable-sanitizer=true"]
+-        if not _is_debug_line_info_disabled():
++        if not _is_debug_line_info_disabled() or _flagprism_automatic_source_info(opt):
+             _compile_option_list += ["--enable-debug-info=true"]
+ 
+         if _enable_print_ub_bits():

@@ -1,0 +1,33 @@
+--- a/python/flagtree/__init__.py
++++ b/python/flagtree/__init__.py
+@@ -1,5 +1,30 @@
+ """FlagPrism debugger and profiler components bundled with FlagTree."""
+ 
++import importlib
++import importlib.util
++import os
++from pathlib import Path
++import sys
++
++
++def _prepare_runtime_imports():
++    # Ascend's vendor backend imports TorchDynamo during compiler discovery.
++    # Load its runtime first, before Triton starts package initialization.
++    if 'triton' in sys.modules:
++        return
++    backend = os.environ.get('FLAGTREE_BACKEND')
++    if backend is None:
++        spec = importlib.util.find_spec('triton')
++        if spec is not None and spec.origin:
++            marker = Path(spec.origin).with_name('FLAGTREE_BACKEND')
++            if marker.is_file():
++                backend = marker.read_text().strip()
++    if backend == 'ascend':
++        importlib.import_module('torch')
++        importlib.import_module('torch_npu')
++
++
++_prepare_runtime_imports()
+ from triton import __version__
+ 
+ __all__ = ["__version__"]

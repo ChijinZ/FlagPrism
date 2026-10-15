@@ -21,9 +21,12 @@
 #include "llvm/Support/Format.h"
 #include "llvm/Support/FormatVariadic.h"
 #include "llvm/Support/raw_ostream.h"
+#include <algorithm>
 #include <cstdlib>
 #include <functional>
 #include <optional>
+#include <set>
+#include <tuple>
 
 using namespace llvm;
 namespace {
@@ -94,6 +97,14 @@ static void attachSourceOrigin(json::Object &site, const Instruction &instructio
     if (source->getNumOperands() && isa<MDString>(source->getOperand(0)))
       site["source_op_id"] = cast<MDString>(source->getOperand(0))->getString();
   if (const DebugLoc &location = instruction.getDebugLoc()) {
+    SmallString<256> sourcePath(location->getDirectory());
+    if (sys::path::is_absolute(location->getFilename()))
+      sourcePath = location->getFilename();
+    else
+      sys::path::append(sourcePath, location->getFilename());
+    site["source_file"] = sourcePath.str().str();
+    site["line"] = static_cast<int64_t>(location.getLine());
+    site["column"] = static_cast<int64_t>(location.getCol());
     site["debug_line"] = static_cast<int64_t>(location.getLine());
     site["debug_column"] = static_cast<int64_t>(location.getCol());
     site["debug_file"] = location->getFilename();
@@ -103,6 +114,22 @@ static void attachSourceOrigin(json::Object &site, const Instruction &instructio
       chain.push_back(json::Object{{"file", parent->getFilename()}, {"directory", parent->getDirectory()}, {"line", static_cast<int64_t>(parent->getLine())}, {"column", static_cast<int64_t>(parent->getColumn())}});
     site["inline_chain"] = std::move(chain);
   }
+}
+static json::Object describeOperation(Instruction &instruction, uint64_t siteId) {
+  const bool call = isa<CallInst>(instruction);
+  const char *kind = call ? "compiler_call" : isa<LoadInst>(instruction) ? "load" : isa<StoreInst>(instruction) ? "store" : "compute";
+  json::Object site{{"site_id", static_cast<int64_t>(siteId)},
+                    {"semantics", "source_operation_checkpoint"},
+                    {"operation_class", kind},
+                    {"compiler_opcode", instruction.getOpcodeName()},
+                    {"operation", instruction.getOpcodeName()},
+                    {"source_op_id", nullptr}};
+  if (call) {
+    site["callee"] = cast<CallInst>(instruction).getCalledFunction()->getName();
+    site["operation"] = cast<CallInst>(instruction).getCalledFunction()->getName();
+  }
+  attachSourceOrigin(site, instruction);
+  return site;
 }
 static uint64_t selectedSemantics() {
   const std::string option = environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS");
@@ -115,6 +142,7 @@ static uint64_t selectedSemantics() {
     uint64_t bit = name == "issue"                ? 1
                    : name == "wait_bracket"       ? 2
                    : name == "control_checkpoint" ? 4
+                   : name == "operation_checkpoint" ? 8
                                                   : 0;
     if (!bit || (mask & bit))
       report_fatal_error(
@@ -129,12 +157,84 @@ static uint64_t selectedSemantics() {
 static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             uint64_t capacity, uint64_t selectedProgram,
                             StringRef actorKind, uint64_t semanticMask,
-                            json::Array &sites) {
+                            json::Array &sites, json::Object &operationPlan) {
   if (argumentIndex >= function.arg_size() || !function.getArg(argumentIndex)->getType()->isPointerTy())
     report_fatal_error("FlagPrism trace argument must identify a compiler-mapped pointer formal");
   auto *pointerType = cast<PointerType>(function.getArg(argumentIndex)->getType());
   if (pointerType->getAddressSpace() != 1)
     report_fatal_error("FlagPrism trace argument must use global address space 1");
+  SmallVector<CallInst *, 32> selected;
+  for (BasicBlock &block : function)
+    for (Instruction &instruction : block)
+      if (auto *call = dyn_cast<CallInst>(&instruction))
+        if (Function *callee = call->getCalledFunction()) {
+          StringRef name = callee->getName();
+          if (name == "llvm.hivm.WAIT.FLAG.IMM" || name == "llvm.hivm.WAIT.FLAG.DEV.REG" || name == "llvm.hivm.SET.CROSS.CORE" || name == "llvm.hivm.SET.FLAG.IMM")
+            selected.push_back(call);
+        }
+  // Snapshot original operations before adding the logger. Calls are compiler
+  // operations regardless of their generated symbol; source origin is required
+  // so allocation/ABI scaffolding without a user location is not presented as a
+  // user operation. No operator or source-file allowlist is involved.
+  SmallVector<Instruction *, 64> operationCandidates;
+  for (BasicBlock &block : function) {
+    std::set<std::tuple<const MDNode *, std::string>> regions;
+    for (Instruction &instruction : block) {
+      const DebugLoc &location = instruction.getDebugLoc();
+      if (!location || !location.getLine())
+        continue;
+      std::string kind;
+      if (auto *call = dyn_cast<CallInst>(&instruction)) {
+        Function *callee = call->getCalledFunction();
+        if (!callee || callee->isIntrinsic())
+          continue;
+        StringRef name = callee->getName();
+        if (name.startswith("llvm.hivm.GET.") ||
+            name.startswith("llvm.hivm.SET.") ||
+            name.startswith("llvm.hivm.WAIT.") ||
+            name.startswith("llvm.hivm.PIPE.") ||
+            name.startswith("llvm.dbg."))
+          continue;
+        kind = "compiler_call";
+      } else if (isa<LoadInst>(instruction)) {
+        kind = "load";
+      } else if (isa<StoreInst>(instruction)) {
+        kind = "store";
+      } else if (isa<BinaryOperator>(instruction) || isa<UnaryOperator>(instruction)) {
+        kind = "compute";
+      } else {
+        continue;
+      }
+      if (regions.emplace(location.get(), kind).second)
+        operationCandidates.push_back(&instruction);
+    }
+  }
+  uint64_t maxSites = 32;
+  const std::string budget = environment("FLAGPRISM_ASCEND_TRACE_MAX_SITES");
+  if (!budget.empty() && (StringRef(budget).getAsInteger(10, maxSites) ||
+                         !maxSites || maxSites > 256))
+    report_fatal_error("FlagPrism operation site budget must be 1..256");
+  SmallVector<Instruction *, 64> operationSites;
+  const uint64_t selectedCount = std::min<uint64_t>(maxSites, operationCandidates.size());
+  for (uint64_t index = 0; index < selectedCount; ++index)
+    operationSites.push_back(operationCandidates[selectedCount == 1 ? 0 : index * (operationCandidates.size() - 1) / (selectedCount - 1)]);
+  DominatorTree dominance(function);
+  LoopInfo loopInfo(dominance);
+  SmallVector<std::pair<BasicBlock *, Instruction *>, 16> loopHeaders;
+  for (Loop *loop : loopInfo.getLoopsInPreorder()) {
+    Instruction *origin = &*loop->getHeader()->getFirstInsertionPt();
+    if (!origin->getDebugLoc())
+      for (BasicBlock *block : loop->blocks()) {
+        for (Instruction &instruction : *block)
+          if (instruction.getDebugLoc()) {
+            origin = &instruction;
+            break;
+          }
+        if (origin->getDebugLoc())
+          break;
+      }
+    loopHeaders.emplace_back(loop->getHeader(), origin);
+  }
   IRBuilder<> entry(&*function.getEntryBlock().getFirstInsertionPt());
   Type *i64 = entry.getInt64Ty();
   FunctionType *coordinateType = FunctionType::get(i64, false);
@@ -147,20 +247,6 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   } else if (actorKind != "AIC") {
     report_fatal_error("FlagPrism trace needs an actual SDK cube/vector target");
   }
-  SmallVector<CallInst *, 32> selected;
-  for (BasicBlock &block : function)
-    for (Instruction &instruction : block)
-      if (auto *call = dyn_cast<CallInst>(&instruction))
-        if (Function *callee = call->getCalledFunction()) {
-          StringRef name = callee->getName();
-          if (name == "llvm.hivm.WAIT.FLAG.IMM" || name == "llvm.hivm.WAIT.FLAG.DEV.REG" || name == "llvm.hivm.SET.CROSS.CORE" || name == "llvm.hivm.SET.FLAG.IMM")
-            selected.push_back(call);
-        }
-  DominatorTree dominance(function);
-  LoopInfo loopInfo(dominance);
-  SmallVector<std::pair<BasicBlock *, Instruction *>, 16> loopHeaders;
-  for (Loop *loop : loopInfo.getLoopsInPreorder())
-    loopHeaders.emplace_back(loop->getHeader(), &*loop->getHeader()->getFirstInsertionPt());
   uint64_t siteNumber = 0;
   for (CallInst *call : selected) {
     const bool wait = call->getCalledFunction()->getName().contains("WAIT");
@@ -206,6 +292,35 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                  tick, tick, capacity, siteId, 3);
     sites.push_back(std::move(site));
   }
+  if (semanticMask & 8) {
+    json::Array inventory;
+    for (uint64_t index = 0; index < operationCandidates.size(); ++index) {
+      Instruction *candidate = operationCandidates[index];
+      json::Object item = describeOperation(*candidate, siteNumber + index);
+      const bool selected = std::find(operationSites.begin(), operationSites.end(), candidate) != operationSites.end();
+      item["selected"] = selected;
+      item["selection_reason"] = selected ? "source_location_class_evenly_spaced" : "static_site_budget";
+      inventory.push_back(std::move(item));
+    }
+    operationPlan["policy"] = "source_location_class_per_original_block_evenly_spaced";
+    operationPlan["max_sites"] = static_cast<int64_t>(maxSites);
+    operationPlan["candidate_count"] = static_cast<int64_t>(operationCandidates.size());
+    operationPlan["selected_count"] = static_cast<int64_t>(selectedCount);
+    operationPlan["inventory"] = std::move(inventory);
+    for (Instruction *position : operationSites) {
+      const uint64_t siteId = siteNumber + std::distance(operationCandidates.begin(), std::find(operationCandidates.begin(), operationCandidates.end(), position));
+      json::Object site = describeOperation(*position, siteId);
+      site["candidate_count"] = static_cast<int64_t>(operationCandidates.size());
+      site["selected_count"] = static_cast<int64_t>(selectedCount);
+      site["selection_policy"] = "source_location_class_per_original_block_evenly_spaced";
+      IRBuilder<> builder(position);
+      Value *tick = timestamp(builder);
+      auto *terminator = SplitBlockAndInsertIfThen(builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)), position, false);
+      appendRecord(terminator, function.getArg(argumentIndex), program, actor,
+                   tick, tick, capacity, siteId, 4);
+      sites.push_back(std::move(site));
+    }
+  }
   return true; // Program/actor coordinate calls were added even for zero
                // selected sites.
 }
@@ -239,6 +354,7 @@ public:
     const auto moduleHash = digest(ir);
     json::Array actors;
     json::Array dynamicSites;
+    json::Object operationPlan;
     bool changed = false;
     SmallPtrSet<Function *, 4> processedEntries;
     auto &functions = analysis.getResult<FunctionAnalysisManagerModuleProxy>(module).getManager();
@@ -394,7 +510,7 @@ public:
         changed |=
             instrumentActor(*function, argumentIndex, capacity, selectedProgram,
                             environment("FLAGPRISM_ASCEND_ACTOR_KIND"),
-                            selectedSemantics(), dynamicSites);
+                            selectedSemantics(), dynamicSites, operationPlan);
       }
       const auto targetCpu = function->getFnAttribute("target-cpu").getValueAsString();
       actors.push_back(json::Object{{"dynamic_observation_prepared", !traceArgument.empty()}, {"argument_roles", std::move(argumentRoles)}, {"function", function->getName()}, {"target_cpu", targetCpu}, {"actor_kind", environment("FLAGPRISM_ASCEND_ACTOR_KIND")}, {"arguments", std::move(arguments)}, {"sites", std::move(sites)}, {"loops", std::move(loops)}});
@@ -420,6 +536,8 @@ public:
       effectiveSemantics.push_back("wait_bracket");
     if (semanticMask & 4)
       effectiveSemantics.push_back("control_checkpoint");
+    if (semanticMask & 8)
+      effectiveSemantics.push_back("operation_checkpoint");
     json::Object manifest{
         {"effective_semantics", std::move(effectiveSemantics)},
         {"semantic_selection_stage",
@@ -431,6 +549,7 @@ public:
                                        {"alignment", "unverified"}}},
         {"dynamic_record_layout", "actor_header4_record8_v1"},
         {"dynamic_sites", std::move(dynamicSites)},
+        {"operation_plan", std::move(operationPlan)},
         {"instrumented", changed},
         {"schema_version", 1},
         {"backend", "ascend"},
@@ -439,7 +558,7 @@ public:
         {"module_identifier", module.getModuleIdentifier()},
         {"target_triple", module.getTargetTriple()},
         {"compile_id", environment("FLAGPRISM_ASCEND_COMPILE_ID")},
-        {"source_association", "surviving_explicit_metadata_only"},
+        {"source_association", "surviving_source_metadata_and_full_debug_locations"},
         {"actors", std::move(actors)}};
     raw_fd_ostream jsonFile((base + ".json").str(), fileError, sys::fs::OF_None);
     if (fileError)
