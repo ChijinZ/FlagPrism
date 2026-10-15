@@ -1,0 +1,5 @@
+# Final conservative channel release8fffdf6
+
+Runtime8fffdf681989388de02b591d52806e1f57500184,469filehashes. ActualDockerpre/post repro: unresolvedcompetitor retained3sites, incorrect1channel becomes0/partial. Eightnegativecases covercompeting set/wait withmissing/rejected/duplicate/ambiguousactor evidence. Focused99pass, newRuff0/changedrangeYAPF0.43idempotent/ASTequivalent. OriginalgenuineMIXreparseunchanged1channel34unique27ambiguous13unassociated/232records4raw; noGPUrerun.
+
+FinalDockerCPU regressions: NVIDIA491pass4skip, GCU414pass5skip, Asc477pass20skip, explicit reasons inactual logs. Each verifies469sources/actualimports/nativehashes; GCU52realPythonoverlaycopybackedup. Nativebinariesunchanged. IsolatedAsc r8wheel exact52Python/3nativelibs/receiptheader/MLIRABI/preallocguard/no sourcefallback passed. Repack reusesacceptedbuiltbinaries, notcleancompilerbuild. WheelSHA e7e06e5534b613d35bb9f9c30ca80bdfe87b77491a6d52bc9ed411bc41173a59. NoNVIDIAperformance; userdeferred. Historicalmatrices/costcaptures retain originalsourceversions, notrelabeledfinal.

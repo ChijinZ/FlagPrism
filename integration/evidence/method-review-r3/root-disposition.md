@@ -1,0 +1,5 @@
+# Root disposition
+
+Novelty/systems supported bounded contribution with minorrepairs; correctness found oneconcrete major partial-readiness bug. ROOT accepted it regardless otherpositiveassessments. Parser now counts unresolved rawtypedcompetitors beforeuniquechannel certification; officialDockerpre/post/8newnegatives/99focused/final3backendCPU+genuineoriginalreparse/r8wheel retained in final-r33-20261015. Reviewer localinmemory exploration is not counted as officialtest; actualDockerrepro independentlyestablishedit. No newGPU/timing.
+
+Otheracceptedrepairs: earlyNVIDIAstudyreference vs priorAMDcomparison clarified, concrete trustfailures placed incontributionframing; retainedinventoryfirststep andfreshmktempoutputretention explicit; duplicateprose removed preservingcounterexamples/decisiontable/modesensitivity/costs/researchsetting/clocklimits. Body/referenceboundary verifiedwithin12pages, all13pagesincludingrefsrendered. Macrospacing correctedwithoutmeaningchanges. Alltiming/loss/sampleclaims preserveoriginaldata andversions. Fresh finalscopedreview receives source/code/technicalevidence without theseverdicts/livejournal/peerreports.

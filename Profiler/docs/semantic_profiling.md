@@ -310,7 +310,10 @@ the earlier full-matrix audits do not certify this later implementation.
 Verified Ascend readiness and source origins require the retained original source
 and per-artifact manifest bytes, their hashes and typed JSON consistency, the
 successful enclosing/SDK compilation identities, and the corresponding LLVM
-and finished driver job. Older hash-only bundles retain raw inventory without
+and finished driver job. Unresolved typed set/wait sites still compete when establishing channel
+uniqueness, even if their actor artifact is missing or rejected. They are
+retained and withhold an affected channel rather than disappearing from the
+candidate count. Older hash-only bundles retain raw inventory without
 asserting verified associations; separately revalidated sidecars are derived
 evidence and do not rewrite those originals. Missing line locations remain
 partial even when compilation provenance is complete.
@@ -328,8 +331,9 @@ fusion-error bound. Evidence and original version identities are retained in
 ## Worked bounded Softmax diagnosis (retrospective)
 
 Use the pinned GCU container/compiler integration in the evidence manifests.
-This is a reproducible fixture walkthrough, not an automatic site selector or
-an onboarding study. Start with a small bounded discovery capture (`sites=None`)
+This recorded example starts from the already retained exact-specialization
+inventory. It is a fixture walkthrough, not an automatic site selector or an
+onboarding study. For a new kernel, start with a separate small bounded discovery capture (`sites=None`)
 on the intended specialization; inspect its compiled tracked-operation table.
 An all-site discovery request still instruments all sites and may be costly or
 fail compilation on larger kernels. The tested narrow request can instead
@@ -354,10 +358,12 @@ path, checks original CPU tolerances, unchanged inputs and output canaries,
 and exports both the inventory and the result:
 
 ```bash
+experiment_dir=$(mktemp -d /workspace/chijin-softmax.XXXXXX)
 FLAGPRISM_TEST_ENFLAME=1 \
 FLAGPRISM_ENFLAME_CANONICAL_INPUT_DIR=/workspace/chijin-study-canonical-inputs-r007 \
 python -m pytest -q \
-  Profiler/test/test_enflame_softmax_diagnostic_hardware.py
+  Profiler/test/test_enflame_softmax_diagnostic_hardware.py \
+  --basetemp="$experiment_dir"
 ```
 
 Use a new output/temp directory when retaining another run. Read

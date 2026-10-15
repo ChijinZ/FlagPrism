@@ -1,0 +1,93 @@
+{
+  "state": "reproduced_incorrect_certification_on_a9a28_baseline",
+  "actual_module_sha256": "b6ba22b46c24c9eb8a144f552070b72a5f2ba131ca302a3a89c152eaf157900b",
+  "result": {
+    "schema_version": 1,
+    "state": "compiler_static",
+    "channels": [
+      {
+        "id": "hivm-channel:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:7:PIPE_FIX:PIPE_S",
+        "state": "compiler_static",
+        "producer_site_id": "hivm:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:3",
+        "consumer_site_id": "hivm:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:7",
+        "producer_function": "producer",
+        "consumer_function": "consumer",
+        "producer_actor_kind": "AIC",
+        "consumer_actor_kind": "AIV",
+        "flag_id": 7,
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "dynamic_generation": null,
+        "dynamic_pairing": "not_established"
+      }
+    ],
+    "sites": [
+      {
+        "id": "hivm:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:3",
+        "operation": "sync_block_set",
+        "function": "producer",
+        "actor_kind": "AIC",
+        "native_core": "CUBE",
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "flag_id": 7,
+        "dump_line": 3,
+        "source_locations": [],
+        "source_cost_ownership": "not_established",
+        "raw_ir": "hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 7",
+        "actor_artifacts": [
+          {
+            "module_sha256": "b333457ef17ed1aac53899c8e77df15c049ed0422a476db0ff7d0930ca7d4fe8",
+            "artifact_sha256": "b333457ef17ed1aac53899c8e77df15c049ed0422a476db0ff7d0930ca7d4fe8",
+            "adapted_sha256": null
+          }
+        ],
+        "state": "verified_same_compile_actor"
+      },
+      {
+        "id": "hivm:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:7",
+        "operation": "sync_block_wait",
+        "function": "consumer",
+        "actor_kind": "AIV",
+        "native_core": "VECTOR",
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "flag_id": 7,
+        "dump_line": 7,
+        "source_locations": [],
+        "source_cost_ownership": "not_established",
+        "raw_ir": "hivm.hir.sync_block_wait[<VECTOR>, <PIPE_FIX>, <PIPE_S>] flag = 7",
+        "actor_artifacts": [
+          {
+            "module_sha256": "54984b628aa63ba2d3ef53386245dd320bcb48195b83598d4dd008953876c3f9",
+            "artifact_sha256": "54984b628aa63ba2d3ef53386245dd320bcb48195b83598d4dd008953876c3f9",
+            "adapted_sha256": null
+          }
+        ],
+        "state": "verified_same_compile_actor"
+      },
+      {
+        "id": "hivm:b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f:10",
+        "operation": "sync_block_set",
+        "function": "unretained_producer",
+        "actor_kind": "AIC",
+        "native_core": "CUBE",
+        "producer_pipeline": "PIPE_FIX",
+        "consumer_pipeline": "PIPE_S",
+        "flag_id": 7,
+        "dump_line": 10,
+        "source_locations": [],
+        "source_cost_ownership": "not_established",
+        "raw_ir": "hivm.hir.sync_block_set[<CUBE>, <PIPE_FIX>, <PIPE_S>] flag = 7",
+        "actor_artifacts": [],
+        "state": "unassociated_actor"
+      }
+    ],
+    "semantics": "compiler_static_readiness_not_dynamic_generation",
+    "clock_alignment": "not_established",
+    "sdk_ir_sha256": "b74999b692395e043103aff104c0a3dd9080522da7c422cd0fbcb9abaf250e6f",
+    "compile_id": "actual-test-compile",
+    "source_ir_sha256": "ff39300e6482c62de8abf04d03a25a8e78321f9c18fc3f90e29c69fa291ff290",
+    "source_binding": "verified_durable_bytes_and_enclosing_compile"
+  }
+}

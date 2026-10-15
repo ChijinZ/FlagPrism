@@ -1,0 +1,34 @@
+can not use command: npu-smi info
+{
+  "canonical_runtime_code_commit": "8fffdf681989388de02b591d52806e1f57500184",
+  "exact_code_files": 469,
+  "paths": {
+    "profiler": "/tmp/flagprism-method-ascend/source/Profiler/python/flagtree_profiler/__init__.py",
+    "debugger": "/tmp/flagprism-method-ascend/source/Debugger/python/flagtree_debugger/__init__.py",
+    "compiler": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+    "profiler_native": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+    "debugger_native": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so"
+  },
+  "native_sha256": {
+    "compiler": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d",
+    "profiler_native": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a",
+    "debugger_native": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+  }
+}
+...........................................................s............ [ 14%]
+.............................ss..................................sssssss [ 28%]
+ssss.................................................................... [ 43%]
+..........................................................s............. [ 57%]
+....................s..........s........................................ [ 72%]
+........................................s............................... [ 86%]
+...............................................................ss        [100%]
+=========================== short test summary info ============================
+SKIPPED [1] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_portable_capture.py:354: Opt-in browser regression
+SKIPPED [2] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_portable_capture.py:1026: Opt-in browser regression
+SKIPPED [11] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_enflame_dynamic_bounds_hardware.py:14: requires formal Enflame native extension
+SKIPPED [1] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_cann_native.py:262: Set FLAGPRISM_CANN_NATIVE_FIXTURE to the retained actual r3 archive
+SKIPPED [1] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_cann_native.py:470: Set FLAGPRISM_CANN_NATIVE_HIDDEN_VENDOR to the actual retained hidden-r4 vendor file
+SKIPPED [1] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_cann_native.py:614: Set FLAGPRISM_CANN_NATIVE_MIX_FIXTURE to retained actual MIX archive
+SKIPPED [1] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_report.py:252: Opt-in Playwright browser regression
+SKIPPED [2] ../../tmp/flagprism-method-ascend/source/Profiler/test/test_enflame_softmax_diagnostic_hardware.py:16: requires selected real Enflame hardware and canonical Study inputs
+477 passed, 20 skipped in 4.49s

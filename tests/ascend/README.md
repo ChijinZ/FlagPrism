@@ -198,3 +198,16 @@ static channel and232 zero-loss local records. Final invalid-input guards were
 rechecked against these genuine retained bytes without repeating GPU timing.
 Manifest text adds20236+17583 bytes to this fresh handoff; it is not free metadata.
 The six fidelity requests remain explicitly tied to the earlier18ed577 source.
+
+
+### Final conservative readiness follow-up (8fffdf6)
+
+The earlier91-case proof above belongs to its original snapshot. The final
+readiness parser counts every raw typed set/wait candidate before certifying
+uniqueness, including candidates with missing/rejected/ambiguous actor
+artifacts. Eight additional negative cases bring the focused suite to99passes.
+Actual Docker before/after repro changes3rawsites/1incorrectchannel to
+3rawsites/0channels/partial without dropping the unresolved site. Reparse of
+the original realMIX still yields1channel,34unique/27ambiguous/13unassociated
+origins and232records; this is not another hardware experiment. Final exact
+source/regression/package proofs are separately versioned in the release evidence.
