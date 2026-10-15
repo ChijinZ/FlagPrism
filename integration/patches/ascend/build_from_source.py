@@ -342,22 +342,37 @@ class Recipe:
 
     def build_install(self):
         self.build_native()
+        # Treat wheel assembly and installation as one immutable attempt. A
+        # failed assembler may leave a partial wheel directory; never reuse it.
+        attempt = 0
+        while True:
+            suffix = '' if attempt == 0 else '-resume' + str(attempt)
+            wheel = self.root / ('wheel' + suffix)
+            venv = self.root / ('venv' + suffix)
+            probe = self.root / ('check-install' + suffix + '.py')
+            check = self.root / ('install-check' + suffix + '.json')
+            if not any(path.exists() or path.is_symlink()
+                       for path in (wheel, venv, probe, check)):
+                break
+            attempt += 1
+        self.save(install_attempt=dict(wheel=str(wheel),
+                                       venv=str(venv),
+                                       probe=str(probe),
+                                       check=str(check)))
         self.run('assemble-wheel', [
             sys.executable, self.root /
             'component/integration/patches/ascend/build_automatic_wheel.py',
             '--flagtree', self.root / 'FlagTree', '--component',
             self.root / 'component', '--native-python',
             self.root / 'native-python', '--core-library',
-            self.root / 'core-build/libtriton.so', '--plugin',
-            self.root / 'observer-build/FlagPrismAscendLateObserver.so',
-            '--output', self.root / 'wheel'
+            self.root / 'core-build/libtriton.so', '--plugin', self.root /
+            'observer-build/FlagPrismAscendLateObserver.so', '--output', wheel
         ])
-        self.run('create-venv', [
-            sys.executable, '-m', 'venv', '--system-site-packages',
-            self.root / 'venv'
-        ])
-        python = self.root / 'venv/bin/python'
-        wheels = list((self.root / 'wheel/dist').glob('*.whl'))
+        self.run(
+            'create-venv',
+            [sys.executable, '-m', 'venv', '--system-site-packages', venv])
+        python = venv / 'bin/python'
+        wheels = list((wheel / 'dist').glob('*.whl'))
         if len(wheels) != 1:
             raise ValueError('Expected exactly one wheel')
         self.run('install-wheel',
@@ -385,7 +400,6 @@ class Recipe:
                 'component/Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h'
             )
         }
-        probe = self.root / 'check-install.py'
         probe.write_text(
             'import pathlib,sys,json,hashlib,torch,torch_npu\n'
             'import triton,flagtree.profiler,flagtree.debugger\n'
@@ -409,10 +423,8 @@ class Recipe:
             'pathlib.Path(sys.argv[2]).write_text(json.dumps({"python":sys.executable,"files":files,"python_files":python_files,"npu_initialized":False},indent=2)+"\\n")\n'
             'print(json.dumps({"python":sys.executable,"files":files,"npu_initialized":False},indent=2))\n'
         )
-        self.run('check-install', [
-            python, '-I', probe, self.root / 'component',
-            self.root / 'install-check.json'
-        ])
+        self.run('check-install',
+                 [python, '-I', probe, self.root / 'component', check])
         artifacts = [
             self.root / 'core-build/libtriton.so',
             self.root / 'core-build/third_party/ascend/bin/triton-mlir-opt',
@@ -422,6 +434,9 @@ class Recipe:
             'native-python/flagtree/profiler/_cann_launch_receipt.h'
         ]
         self.save(state='installed',
+                  installed_prefix=str(venv),
+                  installed_wheel=str(wheels[0]),
+                  install_check=str(check),
                   wheel_sha256=digest(wheels[0]),
                   native_artifacts={str(p): digest(p)
                                     for p in artifacts})

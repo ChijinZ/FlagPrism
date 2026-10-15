@@ -35,6 +35,10 @@ def main():
     for key, value in vars(args).items():
         if isinstance(value, Path):
             setattr(args, key, value.resolve())
+    for name in ('component', 'flagtree'):
+        source = getattr(args, name)
+        if args.workdir == source or args.workdir.is_relative_to(source):
+            parser.error(f'--workdir must be outside the {name} source')
     if not 1 <= args.jobs <= 64:
         parser.error('--jobs must be in [1,64]')
     for path in (args.llvm_prefix / 'lib/cmake/llvm/LLVMConfig.cmake',

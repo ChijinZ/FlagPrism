@@ -90,3 +90,150 @@ def test_source_manifest_detects_deleted_native_source(recipe_module,
     before = recipe_module.source_manifest(tmp_path)
     source.unlink()
     assert before != recipe_module.source_manifest(tmp_path)
+
+
+@pytest.mark.parametrize('failure', ['assemble-wheel', 'install-wheel'])
+def test_build_install_resume_preserves_failed_attempt(recipe_module, tmp_path,
+                                                       monkeypatch, failure):
+    """Exercise real orchestration/receipts with CPU external-command fixtures.
+
+    Compiler/SDK building, pip and the vendor import probe are fake boundaries;
+    this checks recovery and evidence identity, not a real Ascend installation.
+    """
+    import ast
+    import hashlib
+
+    root = tmp_path / 'build'
+    root.mkdir()
+    args = arguments(root)
+    args.resume = False
+    native_files = {
+        'compiler': 'core-build/libtriton.so',
+        'helper': 'core-build/third_party/ascend/bin/triton-mlir-opt',
+        'plugin': 'observer-build/FlagPrismAscendLateObserver.so',
+        'profiler': 'native-python/flagtree/profiler/profiler.so',
+        'debugger': 'native-python/flagtree/debugger/debugger.so',
+        'header': 'native-python/flagtree/profiler/_cann_launch_receipt.h',
+    }
+    for name, relative in native_files.items():
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(('fixture-' + name).encode())
+    header = root / 'component/Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h'
+    header.parent.mkdir(parents=True)
+    header.write_bytes((root / native_files['header']).read_bytes())
+    monkeypatch.setattr(recipe_module.Recipe, 'build_native',
+                        lambda self: None)
+    original_run = recipe_module.Recipe.run
+    requested = []
+    injected = False
+
+    def boundary(self, label, argv, **kwargs):
+        nonlocal injected
+        argv = [str(x) for x in argv]
+        requested.append((label, argv))
+        fail = label == failure and not injected
+        if fail:
+            injected = True
+        if label == 'assemble-wheel':
+            output = Path(argv[argv.index('--output') + 1])
+            # Mirrors the real assembler's exclusive output mkdir. Baseline
+            # --resume fails here before the second attempt can complete.
+            code = ('from pathlib import Path;import sys;'
+                    'p=Path(sys.argv[1]);p.mkdir();'
+                    '(p/"original-marker").write_text("retained");')
+            if fail:
+                code += 'print("injected assembler failure");raise SystemExit(19)'
+            else:
+                code += (
+                    '(p/"dist").mkdir();'
+                    '(p/"dist/fixture.whl").write_bytes(b"wheel-fixture")')
+            return original_run(self, label,
+                                [sys.executable, '-c', code, output])
+        if label == 'create-venv':
+            prefix = Path(argv[-1])
+            code = ('from pathlib import Path;import sys;'
+                    'p=Path(sys.argv[1]);(p/"bin").mkdir(parents=True);'
+                    '(p/"bin/python").write_text("CPU fixture interpreter")')
+            return original_run(self, label,
+                                [sys.executable, '-c', code, prefix])
+        if label == 'install-wheel':
+            prefix = Path(argv[0]).parent.parent
+            assert Path(argv[-1]).parent.parent.name.replace(
+                'wheel', 'venv') == prefix.name
+            code = ('from pathlib import Path;import sys;'
+                    '(Path(sys.argv[1])/"pip-marker").write_text("retained");')
+            code += ('print("injected pip failure");raise SystemExit(23)'
+                     if fail else 'print("CPU fixture install")')
+            return original_run(self, label,
+                                [sys.executable, '-c', code, prefix])
+        assert label == 'check-install'
+        prefix = Path(argv[0]).parent.parent
+        probe = Path(argv[2])
+        check = Path(argv[-1])
+        expected_node = next(
+            n for n in ast.parse(probe.read_text()).body
+            if isinstance(n, ast.Assign) and isinstance(
+                n.targets[0], ast.Name) and n.targets[0].id == 'expected')
+        expected = ast.literal_eval(expected_node.value)
+        # Independent oracle for generated native/header hash requirements.
+        assert expected == {
+            n: recipe_module.digest(root / p)
+            for n, p in native_files.items()
+        }
+        files = {}
+        for name, relative in native_files.items():
+            target = prefix / 'lib' / name
+            target.parent.mkdir(exist_ok=True)
+            target.write_bytes((root / relative).read_bytes())
+            files[name] = {
+                'path': str(target),
+                'sha256': recipe_module.digest(target)
+            }
+        data = dict(python=argv[0], files=files, npu_initialized=False)
+        code = 'from pathlib import Path;import sys;Path(sys.argv[1]).write_text(sys.argv[2])'
+        return original_run(
+            self, label, [sys.executable, '-c', code, check,
+                          json.dumps(data)])
+
+    monkeypatch.setattr(recipe_module.Recipe, 'run', boundary)
+    first = recipe_module.Recipe(args)
+    with pytest.raises(RuntimeError, match='exited (19|23)') as error:
+        first.build_install()
+    first.save(state='failed', error=repr(error.value))
+    preserved = {
+        p: p.read_bytes()
+        for p in root.rglob('*')
+        if p.is_file() and (p.name.endswith('.log') or 'wheel' in p.parts or
+                            'venv' in p.parts or p.name == 'check-install.py')
+    }
+    assert (root / 'wheel/original-marker').read_text() == 'retained'
+    args.resume = True
+    resumed = recipe_module.Recipe(args)
+    resumed.build_install()
+    receipt = json.loads((root / 'recipe.json').read_text())
+    assert receipt['state'] == 'installed'
+    assert receipt['installed_prefix'] == str(root / 'venv-resume1')
+    assert receipt['installed_wheel'] == str(root /
+                                             'wheel-resume1/dist/fixture.whl')
+    assert receipt['wheel_sha256'] == hashlib.sha256(
+        b'wheel-fixture').hexdigest()
+    assert receipt['install_check'] == str(root / 'install-check-resume1.json')
+    assert receipt['invocations'][-1]['arguments']['resume'] is True
+    assert receipt['invocations'][-1]['previous_state'] == 'failed'
+    assert all(p.read_bytes() == content for p, content in preserved.items())
+    check = json.loads(Path(receipt['install_check']).read_text())
+    assert check['python'] == str(root / 'venv-resume1/bin/python')
+    for name, item in check['files'].items():
+        assert Path(item['path']).is_relative_to(root / 'venv-resume1')
+        assert item['sha256'] == recipe_module.digest(root /
+                                                      native_files[name])
+    failures = [r for r in receipt['commands'] if r['returncode']]
+    assert len(failures) == 1
+    assert failures[0]['returncode'] == (19 if failure == 'assemble-wheel' else
+                                         23)
+    assert 'injected' in Path(failures[0]['log']).read_text()
+    outputs = [
+        argv[-1] for label, argv in requested if label == 'assemble-wheel'
+    ]
+    assert outputs == [str(root / 'wheel'), str(root / 'wheel-resume1')]
