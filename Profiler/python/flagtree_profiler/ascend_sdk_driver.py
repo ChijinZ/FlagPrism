@@ -5,6 +5,8 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import signal
+import time
 import sys
 import threading
 
@@ -15,6 +17,10 @@ def main():
     command = sys.argv[1:]
     if not command:
         raise ValueError('SDK compiler argv is empty')
+    timeout_s = int(os.environ.get('FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S', '120'))
+    if not 1 <= timeout_s <= 300:
+        raise ValueError('Ascend SDK compiler timeout must be 1..300 seconds')
+    started = time.monotonic()
     output = Path(os.environ['FLAGPRISM_ASCEND_COMPILER_OUTPUT'])
     receipt = {
         'schema_version':
@@ -24,6 +30,8 @@ def main():
         'state':
         'started',
         'streams': {},
+        'timeout_s': timeout_s,
+        'timeout_policy': 'SDK_job_process_group_hard_deadline',
         'compile_id':
         os.environ.get('FLAGPRISM_ASCEND_COMPILE_ID'),
         'sdk_tool_sha256':
@@ -90,7 +98,10 @@ def main():
     try:
         process = subprocess.Popen(command,
                                    stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+                                   stderr=subprocess.PIPE,
+                                   start_new_session=True)
+        receipt.update(process_id=process.pid, process_group_id=process.pid)
+        receipt_path.write_text(json.dumps(receipt, indent=2))
         threads = [
             threading.Thread(target=drain,
                              args=(process.stdout, 'stdout',
@@ -101,11 +112,29 @@ def main():
         ]
         for thread in threads:
             thread.start()
-        code = process.wait()
+        timed_out = False
+        try:
+            code = process.wait(timeout=timeout_s)
+        except subprocess.TimeoutExpired:
+            timed_out = True
+            # This session contains only the SDK compiler and its children. A
+            # hard deadline also stops descendants that ignore SIGTERM, closes
+            # their inherited output pipes and leaves partial logs intact.
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait(timeout=10)
+            code = 124
+            print(f'Ascend SDK compiler exceeded {timeout_s}s; '
+                  f'failed compilation evidence retained at {output}',
+                  file=sys.stderr, flush=True)
         for thread in threads:
             thread.join()
         receipt.update(returncode=code,
-                       state='finished' if code == 0 else 'failed')
+                       sdk_process_returncode=process.returncode,
+                       elapsed_s=time.monotonic() - started,
+                       state='timed_out' if timed_out else 'finished' if code == 0 else 'failed')
         if errors:
             receipt['capture_errors'] = errors
             if code == 0:

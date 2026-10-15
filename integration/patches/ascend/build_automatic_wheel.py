@@ -97,6 +97,11 @@ def main():
         for native in (args.native_python / 'flagtree' / component).iterdir():
             if native.suffix in ('.so', '.h'):
                 shutil.copy2(native, target / native.name)
+    # Header bytes are part of the generated launcher's cache identity. Always
+    # package this source snapshot's canonical ABI header, even with reused
+    # matching runtime libraries.
+    shutil.copy2(args.component / 'Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h',
+                 stage / 'flagtree/profiler/_cann_launch_receipt.h')
     core_target = stage / 'triton/_C'
     core_target.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.core_library, core_target / 'libtriton.so')
@@ -119,11 +124,12 @@ def main():
     assert len(paths) == 1, paths
     files = {}
     with zipfile.ZipFile(paths[0]) as archive:
-        for path in list(stage.rglob('*.so')) + [stage / 'triton/backends/ascend/compiler.py']:
+        for path in list(stage.rglob('*.so')) + list(stage.rglob('*.h')) + [stage / 'triton/backends/ascend/compiler.py', stage / 'flagtree/__init__.py', stage / 'triton/FLAGTREE_BACKEND']:
             relative = path.relative_to(stage).as_posix()
             assert archive.read(relative) == path.read_bytes(), relative
             files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
         python_count = 0
+        component_python_sha256 = {}
         for component in ('Profiler', 'Debugger'):
             source = args.component / component / 'python' / ('flagtree_' + component.lower())
             for path in source.rglob('*.py'):
@@ -131,11 +137,16 @@ def main():
                     continue
                 entry = 'flagtree/' + component.lower() + '/' + path.relative_to(source).as_posix()
                 assert archive.read(entry) == path.read_bytes(), entry
+                component_python_sha256[entry] = hashlib.sha256(path.read_bytes()).hexdigest()
                 python_count += 1
         plugin_entry = 'flagtree/profiler/lib/' + args.plugin.name
         assert archive.read(plugin_entry) == args.plugin.read_bytes()
     result = {'wheel': str(paths[0]), 'wheel_sha256': hashlib.sha256(paths[0].read_bytes()).hexdigest(),
               'files': files, 'component_python_files_verified': python_count,
+              'component_python_sha256': component_python_sha256,
+              'component_source_snapshot_sha256': hashlib.sha256(json.dumps(component_python_sha256, sort_keys=True).encode()).hexdigest(),
+              'flagtree_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=args.flagtree, text=True).strip(),
+              'flagtree_tracked_diff_sha256': hashlib.sha256(subprocess.check_output(['git', 'diff', '--binary'], cwd=args.flagtree)).hexdigest(),
               'plugin_sources': {name: hashlib.sha256((args.component / 'Profiler/llvm' / name).read_bytes()).hexdigest()
                                  for name in ('AscendLateObserver.cpp', 'CMakeLists.txt')},
               'native_provenance': 'supplied matching already-built native; no rebuild',

@@ -12,7 +12,35 @@ The pinned full integration patch/dependencies and exact binaries are in
 The full core, both native modules and isolated LLVM15 observer are required;
 a runtime-only build does not supply the hidden compiler ABI.
 
-## Public entry
+## Automatic entry
+
+An installed wheel with the automatic integration patches and packaged LLVM15
+observer supports ordinary unannotated kernels:
+
+```sh
+python -m flagtree.profiler.cli --backend cann --device 4 --detail auto \
+  --name result user_application.py
+```
+
+The application uses the same runtime device. The CLI selects it before
+starting collection. The installed adapter finds its packaged observer and
+creates immutable compiler evidence automatically. No plugin/capture path,
+source argument index, site list or internal scope is required. Open
+`result/report/fine_grained.html` for source positions, actual compiler
+operations, actor-local records and repeated visits; the observation-plan file
+retains selected and unselected source regions. Advanced environment overrides
+and explicit requests remain available below.
+
+For the public session API, select the runtime device before
+`profiler.start("result", backend="cann", detail="auto")` and finalize the
+session after the requested launches. `automatic_hardware.py` is a development
+oracle for fused/tail, reduction, matrix and same-binary runtime loops;
+`automatic_cli_app.py` is an ordinary launcher with math/input/canary and
+application-execution checks. These are development tests; the fixed workload
+tables below preserve historical results and are separate from independent
+qualification.
+
+## Advanced explicit observation entry
 
 Set the independent compiler/component paths and these dependencies before first
 kernel compilation:

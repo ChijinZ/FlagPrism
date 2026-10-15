@@ -123,3 +123,11 @@ class within one original basic block share a checkpoint. Compiler manifests
 retain candidate/selected counts, operation classes, original site identities
 and full debug origins. Raw event publication, losses, typed readiness,
 per-invocation hidden ABI and actor-local clock boundaries are unchanged.
+
+The SDK compiler wrapper enforces a 120-second deadline for each actual SDK
+compiler job, including its child tools. `FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S`
+may explicitly select 1 through 300 seconds. A deadline failure stops that
+job's process group, returns exit 124 and retains partial output plus its
+`timed_out` receipt, child PID/group, requested deadline and elapsed time. This
+is compiler-stage enforcement; the public export receipt separately measures
+full finalization/export and must not be described as a compiler deadline.
