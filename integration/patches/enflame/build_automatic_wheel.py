@@ -116,6 +116,13 @@ def main():
         for native in (args.native_python / 'flagtree' / component).iterdir():
             if native.suffix in ('.so', '.h'):
                 shutil.copy2(native, target / native.name)
+    # Package the canonical public header from this source snapshot, rather
+    # than a stale copy in an older runtime. Native ABI compatibility remains
+    # a prerequisite for reusing the supplied native build.
+    shutil.copy2(
+        args.component /
+        'Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h',
+        stage / 'flagtree/profiler/_cann_launch_receipt.h')
     core_target = stage / 'triton/_C'
     core_target.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.core_library, core_target / 'libtriton.so')
@@ -129,7 +136,7 @@ def main():
     assert len(paths) == 1, paths
     files = {}
     with zipfile.ZipFile(paths[0]) as archive:
-        for path in list(stage.rglob('*.so')) + [
+        for path in list(stage.rglob('*.so')) + list(stage.rglob('*.h')) + [
                 stage / 'triton/backends/enflame/compiler.py'
         ]:
             relative = path.relative_to(stage).as_posix()
