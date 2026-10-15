@@ -1,0 +1,42 @@
+{
+  "yapf": "0.43.0",
+  "clang_format": "19.1.6",
+  "files": [
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          326,
+          327
+        ]
+      ],
+      "before_sha256": "0d8dd9a68d0828e9ecf17e3811205d018531b15d5d48816ef56b86eb4cccceae",
+      "after_sha256": "0d8dd9a68d0828e9ecf17e3811205d018531b15d5d48816ef56b86eb4cccceae",
+      "file": "Profiler/python/flagtree_profiler/execution_ascend.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          131,
+          141
+        ],
+        [
+          149,
+          152
+        ],
+        [
+          155,
+          158
+        ]
+      ],
+      "before_sha256": "620ddb3c319a088393fc36c035ef9aefdc2f581bf9028c52cccf7c741f03115a",
+      "after_sha256": "97e7480812785ad937741558555da94808d773d1997222bd9c1b17b2c305036a",
+      "file": "Profiler/test/test_execution_ascend.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    }
+  ]
+}

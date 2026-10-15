@@ -1,0 +1,7 @@
+# Final release public-summary consistency
+
+Runtime2d7eb9565bb339fdfd6e6413ed8aedd6c7eda76a,469exactfiles/52runtimePython. ActualDocker491pass4skipNVIDIA,414pass5skipGCU,477pass20skipAsc; explicitlimits/skipreasons inactual logs. Focused99pass unchangedcasecount, enhancedexistingpublicexportcontracts verifyunique2/ambiguous0/unverified0.
+
+Oneadditive returnfield fixesgeneric public origin summary; combinedassociations/siteevidence unchanged. ActualDockerpre/post genuineoriginalMIXpublicexport0→34origin/34combined/site34unique27ambiguous13unassociated/1typedchannel. Originalresult/rawSHA unchanged. Derivedpublicmanifest workspaceartifacts/method-run/ascend/round5/derived-public-manifest.json SHAe6b560439c23c31b39a17485ba398d884151d92c2d43a552ce96fac428d203c1; separate output, notmodifiedoriginalbundle. ROOTdata-onlyaudit verifiescount/site/channel/hash.
+
+Isolatedr9 exact52Python,accepted3native/header/IpublicMLIRABI/preallocguard/no sourcefallback pass. WheelSHA66fb52002e8463a1439712cd2e8a410849eaa2526c651f3c1d6a136a197a40d7, remotedirectory/path inresultJSON. Repackreusesacceptedbinaries,notcleancompilerbuild. NoGPU/performance inthisfollowup. Historicalmatrices/recovery/costs retaintheir originalversions. NVIDIAperformance remainsuserdeferred.

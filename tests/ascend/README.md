@@ -211,3 +211,8 @@ Actual Docker before/after repro changes3rawsites/1incorrectchannel to
 the original realMIX still yields1channel,34unique/27ambiguous/13unassociated
 origins and232records; this is not another hardware experiment. Final exact
 source/regression/package proofs are separately versioned in the release evidence.
+
+The subsequent2d7eb95 follow-up exports the separate origin-association list
+used by the generic public summary. Its derived realMIX export reports34
+origins and34combined associations; ambiguity/unverified cases report0origins.
+Existing detailed site states and original bundle/rawbytes remain unchanged.
