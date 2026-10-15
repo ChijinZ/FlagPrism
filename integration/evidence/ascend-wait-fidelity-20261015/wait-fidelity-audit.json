@@ -1,0 +1,909 @@
+{
+  "schema_version": 1,
+  "scope": "Local AIV source-control wait ranking/count and selection sensitivity; no shared epoch or absolute timer accuracy certificate.",
+  "rows": [
+    {
+      "phase_index": 0,
+      "label": "R_KMN64_K256:allsite",
+      "config": {
+        "BM": 64,
+        "BN": 64,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 64,
+          "BN": 64,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "R_KMN64_K256:allsite"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "c9e198349138a2bd0806566449ee78f0d1b45ed1cf549a5022e35a7d513f392f",
+      "source_sha256": "f4eac88862f0d674ac9128574ec7abac31ce353ef168f5f36968b3ecd9e1c4ff",
+      "compile_id": "8d9045ad-4f2d-4c54-81d2-594f63492af3",
+      "actual_aic_original_llvm_sha256": "44fd6b31e1cced2aef59a2330773b120991975fc2647ef4f19e89ea7e08ef99e",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 16",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 16,
+        "aic_sites6_9_each": 16,
+        "aic_site17": 17,
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 70
+      },
+      "measured_observations": 700,
+      "all_captures": 13,
+      "all_observations": 910,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            16.64,
+            15.5,
+            16.48,
+            14.46,
+            13.86,
+            13.88,
+            13.58,
+            13.64,
+            14.42,
+            15.54
+          ],
+          "median_us": 14.440000000000001,
+          "q25_us": 13.865,
+          "q75_us": 15.53,
+          "min_us": 13.58,
+          "max_us": 16.64
+        },
+        "2": {
+          "points_us": [
+            14.16,
+            12.9,
+            14.8,
+            12.8,
+            12.26,
+            11.72,
+            12.52,
+            11.26,
+            12.24,
+            12.96
+          ],
+          "median_us": 12.66,
+          "q25_us": 12.245000000000001,
+          "q75_us": 12.945,
+          "min_us": 11.26,
+          "max_us": 14.8
+        }
+      },
+      "task_points_us": [
+        60.14,
+        59.02,
+        60.92,
+        60.32,
+        61.32,
+        60.8,
+        60.1,
+        60.62,
+        58.68,
+        56.24
+      ],
+      "host_points_ns": [
+        9882607,
+        8862973,
+        8361357,
+        8818503,
+        8401577,
+        8846463,
+        8404137,
+        9750675,
+        8352947,
+        8464508
+      ],
+      "export_ns": 6910989388,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "b0e630ef572702bd85c4426e8f79061c12d6a7115ee9b3428d0c084d5958c37f"
+    },
+    {
+      "phase_index": 1,
+      "label": "P32_K32:wait-only",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "P32_K32:wait-only"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "d39079e59bb86ae360d14df0fd36a6f47350bc5c722a697164e3264d40bc7acd",
+      "source_sha256": "f6fec17b487d151d79197d3446af5516a3af09d163544d48de33f86b87688944",
+      "compile_id": "caf2dfc3-4f76-4969-af48-3d4a4baae785",
+      "actual_aic_original_llvm_sha256": "949dd1f7ec8e11f3d309004d9e7d0d9158fb75668101e881b18bb92a3abd2f5c",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 128",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 128,
+        "aic_sites6_9_each": "not selected",
+        "aic_site17": "not selected",
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 11
+      },
+      "measured_observations": 110,
+      "all_captures": 13,
+      "all_observations": 143,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            36.78,
+            38.72,
+            29.84,
+            30.62,
+            30.26,
+            29.32,
+            35.14,
+            28.6,
+            33.74,
+            32.0
+          ],
+          "median_us": 31.310000000000002,
+          "q25_us": 29.945,
+          "q75_us": 34.79,
+          "min_us": 28.6,
+          "max_us": 38.72
+        },
+        "2": {
+          "points_us": [
+            34.82,
+            35.86,
+            29.62,
+            29.22,
+            28.94,
+            27.86,
+            37.72,
+            27.82,
+            32.26,
+            30.04
+          ],
+          "median_us": 29.83,
+          "q25_us": 29.01,
+          "q75_us": 34.18,
+          "min_us": 27.82,
+          "max_us": 37.72
+        }
+      },
+      "task_points_us": [
+        309.56,
+        310.64,
+        308.86,
+        308.32,
+        316.3,
+        310.54,
+        309.28,
+        308.24,
+        307.68,
+        309.7
+      ],
+      "host_points_ns": [
+        9263068,
+        7963312,
+        7864520,
+        7889861,
+        8044523,
+        9587482,
+        7824370,
+        7957222,
+        7852640,
+        7864581
+      ],
+      "export_ns": 5708956617,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "0d105f590b33231e2f3190872720d4b60e270168193efc291bd8f787f4a1a165"
+    },
+    {
+      "phase_index": 2,
+      "label": "R_K32_K256:allsite",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "R_K32_K256:allsite"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "ced2afc05327005e659300cdb307b3d2ea36417e95dcd0c6166630ee80c58120",
+      "source_sha256": "cb9546e4aa904fc837a4739e680a14d3e8497b7b20dee7697af72f343f0e14f9",
+      "compile_id": "7106212f-1a57-4089-9394-bccc72dfff8e",
+      "actual_aic_original_llvm_sha256": "8f9826e269230ae8475726add9243baef0374212e6616b00f700a5fc26631c5c",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 16",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 16,
+        "aic_sites6_9_each": 16,
+        "aic_site17": 17,
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 70
+      },
+      "measured_observations": 700,
+      "all_captures": 13,
+      "all_observations": 910,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            13.34,
+            10.56,
+            12.16,
+            13.86,
+            14.0,
+            14.32,
+            14.26,
+            13.62,
+            14.06,
+            13.12
+          ],
+          "median_us": 13.739999999999998,
+          "q25_us": 13.174999999999999,
+          "q75_us": 14.045,
+          "min_us": 10.56,
+          "max_us": 14.32
+        },
+        "2": {
+          "points_us": [
+            13.74,
+            13.32,
+            10.62,
+            12.76,
+            12.92,
+            12.72,
+            11.52,
+            13.1,
+            11.94,
+            11.38
+          ],
+          "median_us": 12.74,
+          "q25_us": 11.625,
+          "q75_us": 13.055,
+          "min_us": 10.62,
+          "max_us": 13.74
+        }
+      },
+      "task_points_us": [
+        165.26,
+        166.74,
+        158.4,
+        165.02,
+        171.12,
+        167.64,
+        171.3,
+        170.64,
+        162.42,
+        162.04
+      ],
+      "host_points_ns": [
+        9811575,
+        9035185,
+        8515528,
+        8957554,
+        8460828,
+        10101529,
+        8413127,
+        8471048,
+        8345886,
+        8474219
+      ],
+      "export_ns": 5077306281,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "1836b2081008ba2c08b47e98a887321ea21f3d8d065be84b584cb4915c9c15a6"
+    },
+    {
+      "phase_index": 3,
+      "label": "R_K32_K256:wait-only",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "R_K32_K256:wait-only"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "1c68e034170b5cbd644c6309c7f5a3b08f1f6ef577a309fbef7d64c3e4a1ab87",
+      "source_sha256": "cb9546e4aa904fc837a4739e680a14d3e8497b7b20dee7697af72f343f0e14f9",
+      "compile_id": "4ba46e0f-bf60-419b-a61c-60ea327ae4c1",
+      "actual_aic_original_llvm_sha256": "1eb0b368150416d5817b1c2c73dc3c7fbb0c8c96f53129ea370f79b4bcdf078e",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 16",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 16,
+        "aic_sites6_9_each": "not selected",
+        "aic_site17": "not selected",
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 11
+      },
+      "measured_observations": 110,
+      "all_captures": 13,
+      "all_observations": 143,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            9.78,
+            14.5,
+            14.24,
+            11.64,
+            14.24,
+            15.04,
+            14.2,
+            12.36,
+            15.24,
+            14.06
+          ],
+          "median_us": 14.219999999999999,
+          "q25_us": 12.785,
+          "q75_us": 14.435,
+          "min_us": 9.78,
+          "max_us": 15.24
+        },
+        "2": {
+          "points_us": [
+            13.24,
+            13.02,
+            12.18,
+            10.38,
+            11.96,
+            13.6,
+            11.58,
+            11.12,
+            13.68,
+            11.54
+          ],
+          "median_us": 12.07,
+          "q25_us": 11.549999999999999,
+          "q75_us": 13.185,
+          "min_us": 10.38,
+          "max_us": 13.68
+        }
+      },
+      "task_points_us": [
+        161.7,
+        161.94,
+        161.7,
+        159.46,
+        167.04,
+        162.5,
+        164.96,
+        164.02,
+        170.78,
+        170.42
+      ],
+      "host_points_ns": [
+        8329446,
+        7855981,
+        7818760,
+        7820030,
+        7847100,
+        7910821,
+        8272536,
+        7769769,
+        8178244,
+        8183845
+      ],
+      "export_ns": 4611585204,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "eb4178a5db2dbeb433a87f167c1025eae0ee578a8c16f690725a0068badc8dcf"
+    },
+    {
+      "phase_index": 4,
+      "label": "P32_K32:allsite",
+      "config": {
+        "BM": 32,
+        "BN": 32,
+        "BK": 32,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "P32_K32:allsite"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "53d23c472f8e024706a896109269b79af3f23de25534945f7019c32603b5cb8d",
+      "source_sha256": "f6fec17b487d151d79197d3446af5516a3af09d163544d48de33f86b87688944",
+      "compile_id": "7b8accc7-171b-4e50-8955-3d2c5c7d3f10",
+      "actual_aic_original_llvm_sha256": "debdbf7ff148c7d2b2ef8a6f4516ccd84a8e9907b11e4dd078aec7f8cb14be4c",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 128",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 128,
+        "aic_sites6_9_each": 128,
+        "aic_site17": 129,
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 406
+      },
+      "measured_observations": 4060,
+      "all_captures": 13,
+      "all_observations": 5278,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            57.1,
+            55.22,
+            58.34,
+            57.46,
+            55.52,
+            56.34,
+            55.02,
+            54.66,
+            54.66,
+            53.36
+          ],
+          "median_us": 55.370000000000005,
+          "q25_us": 54.75,
+          "q75_us": 56.910000000000004,
+          "min_us": 53.36,
+          "max_us": 58.34
+        },
+        "2": {
+          "points_us": [
+            54.96,
+            53.78,
+            56.72,
+            55.26,
+            54.48,
+            55.28,
+            53.48,
+            57.92,
+            53.54,
+            52.18
+          ],
+          "median_us": 54.72,
+          "q25_us": 53.6,
+          "q75_us": 55.275,
+          "min_us": 52.18,
+          "max_us": 57.92
+        }
+      },
+      "task_points_us": [
+        313.04,
+        317.82,
+        313.44,
+        311.34,
+        313.54,
+        315.9,
+        312.1,
+        313.48,
+        307.48,
+        316.6
+      ],
+      "host_points_ns": [
+        13946958,
+        14406264,
+        199812112,
+        14318253,
+        12772483,
+        12462689,
+        14434595,
+        12433679,
+        13842626,
+        12637532
+      ],
+      "export_ns": 7751161758,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "646eb128ba515a4aadae8cb03630a418ac225b18b51e685cef7c2957f19205ed"
+    },
+    {
+      "phase_index": 5,
+      "label": "R_KMN64_K256:wait-only",
+      "config": {
+        "BM": 64,
+        "BN": 64,
+        "BK": 256,
+        "num_stages": 4,
+        "num_warps": 4
+      },
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 64,
+          "BN": 64,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "R_KMN64_K256:wait-only"
+      },
+      "status": "passed_math_and_native",
+      "input_hashes": [
+        {
+          "file": "matmul-512x512x4096-0.bin",
+          "sha256": "a18f3b090246f13b79ddf065c569cfabb4d7fc25cfb1c0f9955e06aa614caa15"
+        },
+        {
+          "file": "matmul-512x512x4096-1.bin",
+          "sha256": "c6b5837b9e83a23120f7216fe6ffa82acbde54132f53b2f4f9e01db94d5ca7e2"
+        },
+        {
+          "file": "matmul-512x512x4096-2.bin",
+          "sha256": "1a521f19ad2deed599c1571fa99e31b42d69db3a87f95a6310a606390064fb4d"
+        }
+      ],
+      "compiled_binary_id": "69f238458f62ca501cfbda9059781ec4b48cae0d3a5ead63e3969350c6e86a36",
+      "source_sha256": "f4eac88862f0d674ac9128574ec7abac31ce353ef168f5f36968b3ecd9e1c4ff",
+      "compile_id": "890f336f-9378-4906-b47d-961aa519c504",
+      "actual_aic_original_llvm_sha256": "9fcf6c06d7b8a5436781c6e2c0659a6b06194b65b21107a23e808499492ddac9",
+      "independent_cfg_lines": [
+        "%46 = phi i32 [ %119, %117 ], [ 0, %11 ]",
+        "%47 = icmp slt i32 %46, 16",
+        "br i1 %47, label %48, label %120",
+        "br i1 %89, label %104, label %105",
+        "br i1 %108, label %116, label %117",
+        "%119 = add i32 %46, 1"
+      ],
+      "known_count_oracle": {
+        "basis": "Actual original uninstrumented LLVM phi0/condition n/backedge+1; canonical fulltile program0, K divisible BK. Site mapping retained compiler manifest. checkpoint includes condition+exit, not source iterationID.",
+        "n": 16,
+        "aic_sites6_9_each": "not selected",
+        "aic_site17": "not selected",
+        "aiv_site0_each": 1,
+        "events_per_measured_call": 11
+      },
+      "measured_observations": 110,
+      "all_captures": 13,
+      "all_observations": 143,
+      "loss": 0,
+      "waits": {
+        "1": {
+          "points_us": [
+            14.22,
+            12.14,
+            11.98,
+            15.52,
+            11.08,
+            13.04,
+            16.06,
+            12.24,
+            12.96,
+            16.16
+          ],
+          "median_us": 13.0,
+          "q25_us": 12.165000000000001,
+          "q75_us": 15.195,
+          "min_us": 11.08,
+          "max_us": 16.16
+        },
+        "2": {
+          "points_us": [
+            12.64,
+            10.46,
+            10.98,
+            12.88,
+            10.3,
+            10.9,
+            13.92,
+            14.9,
+            11.34,
+            14.54
+          ],
+          "median_us": 11.99,
+          "q25_us": 10.92,
+          "q75_us": 13.66,
+          "min_us": 10.3,
+          "max_us": 14.9
+        }
+      },
+      "task_points_us": [
+        61.72,
+        59.76,
+        64.94,
+        60.88,
+        61.24,
+        61.18,
+        61.48,
+        59.28,
+        62.92,
+        59.82
+      ],
+      "host_points_ns": [
+        9250708,
+        7674818,
+        8152114,
+        7698978,
+        7756629,
+        7748459,
+        7625148,
+        7598187,
+        7623437,
+        8952484
+      ],
+      "export_ns": 4590922810,
+      "max_abs_error": 2.86102294921875e-06,
+      "result_sha256": "6318ab212d4d48aca1377d0e48ed6586aaac718c15d46f450459a3dd06455630"
+    }
+  ],
+  "comparisons": [
+    {
+      "config": "P32_K32",
+      "actor": "1",
+      "allsite_vs_wait_only_relative_median_delta": 0.7684445863941234,
+      "sensitivity_flag_gt25pct": true
+    },
+    {
+      "config": "P32_K32",
+      "actor": "2",
+      "allsite_vs_wait_only_relative_median_delta": 0.8343949044585988,
+      "sensitivity_flag_gt25pct": true
+    },
+    {
+      "config": "R_K32_K256",
+      "actor": "1",
+      "allsite_vs_wait_only_relative_median_delta": -0.03375527426160341,
+      "sensitivity_flag_gt25pct": false
+    },
+    {
+      "config": "R_K32_K256",
+      "actor": "2",
+      "allsite_vs_wait_only_relative_median_delta": 0.05550952775476392,
+      "sensitivity_flag_gt25pct": false
+    },
+    {
+      "config": "R_KMN64_K256",
+      "actor": "1",
+      "allsite_vs_wait_only_relative_median_delta": 0.11076923076923095,
+      "sensitivity_flag_gt25pct": false
+    },
+    {
+      "config": "R_KMN64_K256",
+      "actor": "2",
+      "allsite_vs_wait_only_relative_median_delta": 0.05587989991659725,
+      "sensitivity_flag_gt25pct": false
+    }
+  ],
+  "no_wait_or_empty_floor_claim": true
+}

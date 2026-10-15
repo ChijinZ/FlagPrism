@@ -1,0 +1,53 @@
+{
+  "scope": "Six existing longK configs/selection requests only; source round2 formatted9 frozen",
+  "configs": [
+    {
+      "label": "P32_K32",
+      "BM": 32,
+      "BN": 32,
+      "BK": 32
+    },
+    {
+      "label": "R_K32_K256",
+      "BM": 32,
+      "BN": 32,
+      "BK": 256
+    },
+    {
+      "label": "R_KMN64_K256",
+      "BM": 64,
+      "BN": 64,
+      "BK": 256
+    }
+  ],
+  "shape": [
+    512,
+    512,
+    4096
+  ],
+  "selections": [
+    "allsite",
+    "wait-only"
+  ],
+  "warmup": 3,
+  "measured": 10,
+  "shuffle_seed": 1729,
+  "program": 0,
+  "capacity_per_actor": 2048,
+  "predicted_oracles": {
+    "AIV_wait_site0": "one per actor per invocation, rank P32 above BK256 in both selection modes",
+    "AIC_signal_sites6_9": [
+      128,
+      16,
+      16
+    ],
+    "AIC_checkpoint_site17": [
+      129,
+      17,
+      17
+    ],
+    "wait_only_events_per_call": 11
+  },
+  "analysis": "All points, medians/IQR and within-mode variability; >25% allsite/wait-only median delta is sensitivity flag, not an accuracy certificate. Preserve BK256\u2192tile64 wait increase even if task faster. No shared counter epoch. Historical native controls clearly versioned.",
+  "controls": "Independent two-MOV floor GPU not run: pureAIV writer ownership unproven. Checkpoint zero and issue zero not timer floor."
+}

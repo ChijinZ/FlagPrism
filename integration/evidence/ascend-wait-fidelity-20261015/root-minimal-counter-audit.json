@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "scope": "offline original raw storage/pair/canary/image and replay-object integrity, not a fresh hardware run",
+  "calls": 64,
+  "raw_storage_bytes": 17408,
+  "zero_tick_pairs": 64,
+  "distinct_monotonically_advancing_start_ticks": true,
+  "all_exact_declared_canaries": true,
+  "actual_gpu_image_sha256": "a5c41e82949bb1d6cb36d3f9dae3943a39418cb7e49b9f6ee81d4576e867af39",
+  "cpu_replayed_object_matches_original_receipt": true,
+  "archive_sha256": "1cb9d8ef231783716b90930ff1ea3faf2701fee78aa7d2b2971f0fbf8f0cf7af",
+  "limits": [
+    "Original LLVM has two side-effect counter reads; device-side -S was rejected, so adjacent final-machine instructions are not certified.",
+    "This minimal source control does not bound fusion-wait perturbation or establish shared actor/native epochs."
+  ]
+}

@@ -1,0 +1,256 @@
+{
+  "preinstrumentation_actor_LLVM_identical_after_ModuleID_path_removal": true,
+  "original_AIC_CFG_trip_count_independently_checked": true,
+  "status": "passed",
+  "scope": "independent offline original bytes, source binding, raw records and descriptive count/rate arithmetic; no fresh numerical execution or native wait accuracy certificate",
+  "counts": {
+    "bundle_manifest_entries": 1030,
+    "raw_buffers": 82,
+    "records": 7759,
+    "portable_binary_source_bindings": 7,
+    "results": 7
+  },
+  "cases": [
+    {
+      "case": "round2-source-mix-r1",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          128,
+          128,
+          128
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 1,
+        "samples": 3
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 6.6,
+        "2": 5.56
+      },
+      "retained_records": 232,
+      "result_sha256": "372b68fe43fba9bddfd4e6f0b464f389748c0b6df4bd81bba73cfa2bffafa9bf"
+    },
+    {
+      "case": "round2-wait-fidelity-0",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 64,
+          "BN": 64,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "R_KMN64_K256:allsite"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 14.440000000000001,
+        "2": 12.66
+      },
+      "retained_records": 910,
+      "result_sha256": "b0e630ef572702bd85c4426e8f79061c12d6a7115ee9b3428d0c084d5958c37f"
+    },
+    {
+      "case": "round2-wait-fidelity-1",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "P32_K32:wait-only"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 31.310000000000002,
+        "2": 29.83
+      },
+      "retained_records": 143,
+      "result_sha256": "0d105f590b33231e2f3190872720d4b60e270168193efc291bd8f787f4a1a165"
+    },
+    {
+      "case": "round2-wait-fidelity-2",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "R_K32_K256:allsite"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 13.739999999999998,
+        "2": 12.74
+      },
+      "retained_records": 910,
+      "result_sha256": "1836b2081008ba2c08b47e98a887321ea21f3d8d065be84b584cb4915c9c15a6"
+    },
+    {
+      "case": "round2-wait-fidelity-3",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "R_K32_K256:wait-only"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 14.219999999999999,
+        "2": 12.07
+      },
+      "retained_records": 143,
+      "result_sha256": "eb4178a5db2dbeb433a87f167c1025eae0ee578a8c16f690725a0068badc8dcf"
+    },
+    {
+      "case": "round2-wait-fidelity-4",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 32,
+          "BN": 32,
+          "BK": 32,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "issue",
+          "wait_bracket",
+          "control_checkpoint"
+        ],
+        "fidelity_label": "P32_K32:allsite"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 55.370000000000005,
+        "2": 54.72
+      },
+      "retained_records": 5278,
+      "result_sha256": "646eb128ba515a4aadae8cb03630a418ac225b18b51e685cef7c2957f19205ed"
+    },
+    {
+      "case": "round2-wait-fidelity-5",
+      "plan": {
+        "operator": "gemm_bias_gelu",
+        "shape": [
+          512,
+          512,
+          4096
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 2048,
+        "warmup": 3,
+        "samples": 10,
+        "config": {
+          "BM": 64,
+          "BN": 64,
+          "BK": 256,
+          "num_stages": 4,
+          "num_warps": 4
+        },
+        "semantics": [
+          "wait_bracket"
+        ],
+        "fidelity_label": "R_KMN64_K256:wait-only"
+      },
+      "measured_AIV_site0_median_us": {
+        "1": 13.0,
+        "2": 11.99
+      },
+      "retained_records": 143,
+      "result_sha256": "6318ab212d4d48aca1377d0e48ed6586aaac718c15d46f450459a3dd06455630"
+    }
+  ],
+  "archive_sha256": "ba5fb4b31823e353f43267494d7e80435ede97f2ded9256bcdf8b28ee0f79974"
+}
