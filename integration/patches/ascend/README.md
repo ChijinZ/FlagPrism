@@ -258,6 +258,14 @@ public profiling compile/export deadlines. No successful installation is
 reported until all required builds, wheel installation and cold import checks
 finish.
 
+If a previous attempt created `wheel` or `venv`, resuming uses a new matching
+pair `wheel-resumeN` / `venv-resumeN` and separate `check-install-resumeN.py` /
+`install-check-resumeN.json` files. Failed attempts and their logs remain intact.
+Read `installed_prefix`, `installed_wheel` and `install_check` in `recipe.json`
+for the successful paths; `install_attempt` identifies the current attempt,
+including one that failed. Do not assume that `$WORK/venv` is the most recent
+successful installation after a resume.
+
 The Ascend manifest exports separate `operation_plan` and `control_plan`
 inventories. The operation budget limits selected source-operation regions;
 it is not a total timestamp/site budget. The control inventory is formed at

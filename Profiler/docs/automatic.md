@@ -107,7 +107,10 @@ finally:
 `detail="auto"` supplies the backend-specific observation request and hook.
 Do not combine it with an explicit observation request or mode. Explicit scopes
 and typed requests remain advanced interfaces. Automatic selection defaults to
-eight internal sites and bounded per-instance record capacity. The actual
+eight source-operation sites. Default retained capacity is 4096 records per
+actor on Ascend and 256 records per selected instance on NVIDIA and Enflame.
+Ascend also observes original control primitives and loop headers outside the
+eight-operation-site budget; the record capacity bounds their retained visits. The actual
 backend plan, selected locations, unselected inventory when available, and
 protocol-specific loss evidence are retained in the bundle. A bounded selection
 is not a claim that every operation was observed.
@@ -144,6 +147,9 @@ Machine-readable counterparts are:
 - `ai/source_index.json`: captured source identities, digests, line counts,
   retained source-linked record counts and snapshot diagnostics.
 - `ai/observation_plan.json`: automatic plans and exact capture evidence.
+- `ai/selection_status.json`: automatic validity for each capture and expected
+  invocation, including missing captures. Another kernel's records cannot make
+  an empty invocation complete. The records page displays the same coverage.
 - `ai/observations.json`: original typed observations and backend capture/loss
   data. Raw artifacts remain under `raw/`.
 - `ai/execution.json`: actual compiler execution mapping and its evidence limits.
@@ -153,6 +159,24 @@ Machine-readable counterparts are:
   receipt write is excluded. A standalone export of legacy raw files may have
   only materialization time and explicitly reports incomplete total timing.
   These values measure host engineering cost, not GPU/kernel latency.
+
+Large repeated fields in derived JSON can use digest-checked references to the
+complete `ai/observations.json`. Normalized record clock, actor and source fields
+remain directly available. The schema guide gives the public `restore` reader.
+Large CANN SDK trees are retained losslessly in `raw/native/cann_sdk.zip`, with
+member paths, byte counts and SHA-256 in `raw/native/cann-sdk-retention.json`.
+Small trees retain the directory layout. Extract an archived tree into a new,
+empty directory with standard ZIP tools:
+
+```bash
+unzip profile-run/raw/native/cann_sdk.zip -d extracted-cann-sdk
+```
+
+The exporter verifies every member before releasing its temporary SDK capture.
+Record capacity is bounded, but raw evidence and reports still grow with the
+actual capture. Loss, saturation and export-budget failures remain explicit;
+the default capacity does not guarantee a complete trace or a 64 MiB bundle
+for arbitrary input sizes or loop counts.
 
 See the [version 1 JSON field contract](automatic_schema.md) for field types,
 identity namespaces, backend loss accounting and a read-only inspection example.
@@ -170,12 +194,23 @@ clock frames are not overlaid on native timelines.
 it is not automatically a loop iteration number. Loop conditions may execute
 once more than their bodies. Sampling, unselected sites and dropped records
 have different meanings. Use the original capture statistics; an unselected
-site is not proof of nonexecution. An automatic capture with no verified source-linked internal records fails
-explicitly as incomplete, retaining `ai/selection_status.json`, the plan and raw
-capture. This includes a selected program that does not execute the region;
-inspect the selection and loss state and, when appropriate, use a public
-`ObservationRequest` to select an executing program. The tool does not replay
-the application to discover another selection.
+site is not proof of nonexecution. NVIDIA's current automatic policy reserves
+representatives of actual repeating/branch regions and observes their scalar
+control computations and SCF control intervals. A selected program that takes
+an empty branch can therefore expose its own control activity. An interval
+around `scf.if` describes the control operation; it does not mean that the
+conditional body ran. This remains a bounded program/warp/site sample and does
+not observe tensor work performed only by other programs. Plans distinguish
+regions with no eligible operation, direct or descendant coverage, and regions
+excluded by the finite site budget.
+
+Every captured invocation must have its own verified, source-linked internal
+records. An empty, unassociated or unlocated invocation makes automatic export
+incomplete even when another kernel has useful records. Failed captures retain
+`ai/selection_status.json`, the plan and raw data. Inspect their selection and
+loss state and, when more detail is needed, use a public `ObservationRequest` to
+select another program. The tool does not replay the application to discover
+another selection.
 
 ## Diagnose installation provenance
 

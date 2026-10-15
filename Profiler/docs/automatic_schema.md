@@ -6,25 +6,32 @@ ignore additional fields they do not consume, and reject other major versions.
 IDs are local to a bundle unless a field explicitly identifies a binary digest.
 Lists preserve records, not a global ordering across devices or actors.
 
-The CLI with `--detail auto` succeeds only after at least one source-linked,
-verified internal dynamic record has been exported. Omitting `--detail` keeps
+The CLI with `--detail auto` succeeds only after every captured invocation has
+its own source-linked, verified internal dynamic record and every expected
+launch has an internal capture. A successful kernel cannot mask an empty second
+kernel or invocation of the same binary. Omitting `--detail` keeps
 native collection mode; that mode can succeed without internal records. This is a minimum validity check, not proof of
 complete coverage. A multi-operation workload should normally have multiple
 distinct internal sites. Inspect the plan and loss evidence before interpreting
 absence. Failed automatic selection retains `ai/selection_status.json` with
 `status: "incomplete"`, a reason, request and suggested action, and exits with an
-error. Retained partial artifacts are not a successful capture.
+error. Retained partial artifacts are not a successful capture. The status file
+is also written on success. Its `captures` array reports `capture_id`,
+`invocation_id`, `binary_id`, `status`, nullable `reason`, `internal_records` and
+`source_linked_records` for each capture. An expected invocation with no capture
+has `capture_id: null` and reason `invocation_has_no_internal_capture`.
 
 ## `ai/fine_grained.json`
 
 | Field | Type | Meaning |
 | --- | --- | --- |
 | `schema_version` | integer | `1` |
-| `status` | string | `dynamic_records_available` or `no_internal_dynamic_records` |
+| `status` | string | `dynamic_records_available`, `no_internal_dynamic_records`, or `incomplete_automatic_capture` |
 | `records` | array of objects | Normalized dynamic observations, including unresolved ones |
 | `captures` | array of objects | Original backend capture and loss evidence |
 | `rejected` | array | Records rejected during reconstruction, with reasons |
 | `limits` | array of strings | Interpretation limits of the reconstructed view |
+| `automatic_selection_status` | optional object | Same per-capture validity result as `ai/selection_status.json` |
 
 Every normalized record has the following keys. Nullable fields are present as
 `null` when the producer has no value.
@@ -125,7 +132,20 @@ has `schema_version: 1`, `candidate_count`, `max_sites`, `policy`, `selected_sit
 `exclusion_reason`, `selected`, and a `selection_reason` on selected entries.
 Native IR bookkeeping is not interchangeable with source operations.
 
-Current Enflame plans additionally have `policy_version: 2` and `control_regions`.
+NVIDIA inventory schema 2 additionally exposes
+`selection_policy: "bounded_control_regions_then_source_statements"`,
+`selection_policy_version: 1` and `control_regions`. Region entries contain
+actual `control_id`, `operation`, `location`, `region_index`, `block_index`,
+`repeated`, `eligible_candidates`, `direct_candidates`, `selected_candidates`
+and `coverage_status` (`no_eligible_operation`, `direct_representative`,
+`descendant_only` or `budget_excluded`). Candidate ordinals are not scope IDs.
+`control_computation` denotes a real operation in a control condition's
+def-use slice; `control_region` denotes a real SCF control operation. Their
+intervals neither prove that a conditional body ran nor observe other programs.
+The matching compiler exports `AUTOMATIC_SELECTION_POLICY_VERSION = 1`; the
+hook checks it and includes it in compilation cache identity.
+
+Current Enflame plans additionally have `policy_version: 3` and `control_regions`.
 Inventory entries carry `controlFlowSchemaVersion: 1` and actual outer-to-inner
 `controlFlowAncestors`, each with `controlId`, `parentOpId`, `operation`,
 `regionIndex`, `blockIndex` and `repeated`. These come from IR owners, not source
@@ -135,6 +155,12 @@ absence of eligible operations differs from exclusion by the finite site budget.
 Repeated regions receive priority before class filling. Default eight-site
 coverage is bounded: a plan may still leave regions uncovered, which must remain
 visible. Older round-robin plans remain readable and have no such coverage proof.
+
+Enflame excludes generated statement-operand capture helpers and debugger
+bookkeeping from eligible user operations. `GCU_DYNAMIC_LOWERING_REVISION = 2`
+is also included in source-control dynamic compilation identities, including
+explicit requests and both publisher modes. Older cached device code is not
+reused merely because its selected site IDs are unchanged.
 
 Current Ascend handoffs also export a distinct `control_plan`; the public
 envelope labels actor plans with `plan_kind: "operation"` or `"control"`.
@@ -528,3 +554,56 @@ application's independent side-effect/launch checks for no-hidden-replay evidenc
 The compile/export values reflect the explicitly selected limits; application
 runtime remains unbounded. Timeout/cancellation returns a failed invocation and
 retains a diagnostic directory instead of a successful deadline receipt.
+
+## Derived observation references and native evidence retention
+
+A derived view may replace large repeated fields with
+`{"$observation_ref": {"pointer": "/captures/0/raw_base64", "sha256": "..."}}`.
+Its top-level `export_references` has integer `schema_version: 1`,
+`file: "observations.json"` (relative to `ai/`), `sha256` of the complete parsed
+observation object, `digest_encoding: "sorted-key compact ASCII JSON UTF-8"`,
+and `pointer_encoding: "RFC6901"`. Digests use sorted keys, compact separators,
+ASCII escapes, UTF-8 and no nonfinite JSON numbers. Both the whole artifact
+and referenced value must match. Unsupported contracts and invalid pointers
+raise `ValueError`. Unreferenced older documents remain readable.
+
+```python
+import json
+from pathlib import Path
+from flagtree.profiler.export_refs import restore
+
+bundle = Path("profile-run")
+observations = json.loads((bundle / "ai/observations.json").read_text())
+view = json.loads((bundle / "ai/fine_grained.json").read_text())
+complete_view = restore(view, observations)
+```
+
+This reconstructs the exact pre-export dictionary. Complete original observation
+JSON and raw capture files remain unchanged; normalized record identity, clock,
+actor, association and source fields are not reference substitutions.
+
+CANN native retention manifest `raw/native/cann-sdk-retention.json` schema 1
+retains its directory representation. Schema 2 uses `storage: "zip_deflate"`
+and `bundle_capture_root: "raw/native/cann_sdk.zip"`; `archive` records the
+bundle-relative archive path, stored bytes, SHA-256 and compression settings.
+`directories` preserves the original directories. Each `files` entry has
+`source_relative`, `archive_member`, `bytes` and `sha256` for the original
+uncompressed member. Trees at least 8 MiB are archived with ZIP_DEFLATED level 1.
+The writer checks archive bytes, every member's bytes/hash/CRC, directory
+inventory and unchanged capture source before releasing temporary SDK output.
+Paths, duplicate members, links, unsupported member types and extra/missing
+members are rejected. Standard ZIP extraction restores original member bytes;
+outer compression does not discard raw evidence. Actual stored archive bytes
+and archive verification time count toward export engineering costs.
+
+### NVIDIA candidate observation status
+
+`candidate_observation_status` in `ai/fine_grained.json` and its report table
+joins the actual capture, binary and scope identity to compiler candidates.
+Rows retain `capture_id`, `binary_id`, `invocation_id`, `candidate_ordinal`,
+`scope_id`, `selected`, `operation`, `candidate_class`, `selection_reason`,
+`retained_records` and `status`. Status is `observed_retained_records`,
+`selected_no_retained_records`, `site_budget_excluded` or
+`unbound_scope_identity`. A selected candidate without retained records is not
+proof of nonexecution. Neither an enclosing control interval nor another
+program's tensor activity proves that the selected conditional body executed.
