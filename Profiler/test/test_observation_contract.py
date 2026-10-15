@@ -130,3 +130,20 @@ def test_dynamic_records_keep_site_history_and_verified_invocation():
                for event in events)
     assert all(event.get('iteration') is None for event in events)
     assert all(event['duration_ns'] is None for event in events)
+
+
+def test_automatic_request_roundtrip_and_manual_compatibility():
+    manual = contract.ObservationRequest()
+    assert 'automatic' not in manual.as_dict()
+    automatic = contract.ObservationRequest(automatic=True, max_sites=5)
+    assert contract.ObservationRequest.from_dict(automatic.as_dict()) == automatic
+    assert automatic.as_dict()['max_sites'] == 5
+
+
+@pytest.mark.parametrize('values', [
+    {'automatic': 1}, {'automatic': True, 'sites': (3,)},
+    {'max_sites': 0}, {'max_sites': 129}, {'max_sites': True},
+])
+def test_automatic_request_rejects_ambiguous_or_unbounded_selection(values):
+    with pytest.raises(ValueError):
+        contract.ObservationRequest(**values)

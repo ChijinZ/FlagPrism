@@ -1335,7 +1335,7 @@ def _ascend_selection_metadata(handoff, requested):
         "program_selection_limit":
         "counter_reads_may_execute_for_unselected_programs",
     }
-    allowed = {"issue", "wait_bracket", "control_checkpoint"}
+    allowed = {"issue", "wait_bracket", "control_checkpoint", "operation_checkpoint"}
     if not requested or not requested <= allowed or not isinstance(
             handoff, dict):
         return result
@@ -1347,7 +1347,8 @@ def _ascend_selection_metadata(handoff, requested):
     classes = {
         "existing_readiness_wait_source_control": "wait_bracket",
         "signal_issue_source_control": "issue",
-        "loop_header_occurrence": "control_checkpoint"
+        "loop_header_occurrence": "control_checkpoint",
+        "source_operation_checkpoint": "operation_checkpoint"
     }
     for artifact in artifacts:
         if not isinstance(artifact, dict):

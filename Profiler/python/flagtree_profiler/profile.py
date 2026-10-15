@@ -1388,6 +1388,16 @@ def _get_mode_str(backend: str, mode: Optional[Union[str, BaseMode]]) -> str:
     return str(mode) if mode else ""
 
 
+def _automatic_backend(backend=None):
+    """Route the public automatic path to a supported instrumented backend."""
+    backend = backend or _select_backend()
+    if backend in {"cupti", "instrumentation"}:
+        return "instrumentation"
+    if _is_cann_backend(backend) or _is_enflame_backend(backend):
+        return backend
+    raise ValueError(f"Automatic fine-grained profiling is unavailable for {backend!r}")
+
+
 def start(
     name: Optional[str] = None,
     *,
@@ -1398,9 +1408,12 @@ def start(
     hook: Optional[str] = None,
     metadata: Optional[dict] = None,
     observation_request=None,
+    detail=None,
 ):
     """
     Start profiling with the given name and backend.
+
+    Set detail="auto" for bounded, automatically selected internal observations.
 
     Usage:
 
@@ -1451,6 +1464,22 @@ def start(
     if name is None:
         name = DEFAULT_PROFILE_NAME
 
+    if detail not in (None, "auto"):
+        raise ValueError("detail must be None or 'auto'")
+    if detail == "auto":
+        if observation_request is not None or mode is not None:
+            raise ValueError("detail='auto' cannot be combined with a request or explicit mode")
+        if hook not in (None, "instrumentation"):
+            raise ValueError("detail='auto' requires the instrumentation hook")
+        backend = _automatic_backend(backend)
+        if _is_cann_backend(backend):
+            mode = ("runtime_base:mstx_enabled=true:aclprof_msproftx_enabled=true:"
+                    "runtime_host_timing_fallback=false")
+        hook = "instrumentation"
+        from .observations import ObservationRequest
+        semantics = (("operation_checkpoint", "control_checkpoint")
+                     if _is_cann_backend(backend) else ("source_control_interval",))
+        observation_request = ObservationRequest(semantics=semantics, automatic=True)
     if backend is None:
         backend = _select_backend()
 

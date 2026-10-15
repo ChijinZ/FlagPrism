@@ -52,8 +52,16 @@ See [activity reports and the collector contract](docs/activity_report.md).
 This development branch also adds compiler execution mapping, semantic
 observations and invocation-associated reconstruction. See
 [semantic profiling and support boundaries](docs/semantic_profiling.md) and
-[method acceptance tests](docs/method_testing.md). Ascend hidden-only
-instrumentation is pending full hardware acceptance.
+[method acceptance tests](docs/method_testing.md). Automatic-mode product qualification and independent installation results are
+tracked separately from earlier explicitly selected instrumentation tests.
+
+## Automatic internal profiling
+
+Use `python -m flagtree.profiler.cli --detail auto -n profile-run my_script.py`
+with the matching instrumented FlagTree build, or wrap ordinary launches with
+`profiler.start("profile-run", detail="auto")`. This path selects internal
+locations without editing the kernel. See [installation, backend selection,
+source-linked reports and measurement semantics](docs/automatic.md).
 
 ## Usage
 

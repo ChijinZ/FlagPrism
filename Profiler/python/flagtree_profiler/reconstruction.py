@@ -49,7 +49,7 @@ def reconstruct(payload, launches, binaries, native_events):
             compiler_site = {}
         region_origin = None
         if (linked and record['source_available']
-                and compiler_site.get('kind') == 'explicit_proton_scope'
+                and compiler_site.get('kind') in {'explicit_proton_scope', 'automatic_compiler_operation'}
                 and compiler_site.get('binary_id') == record['binary_id']
                 and compiler_site.get('scope_id') == record.get('site')
                 and isinstance(compiler_site.get('origin'), dict)):
@@ -234,6 +234,8 @@ def write_view(output, payload, report):
     (output / 'ai/reconstruction.json'
      ).write_text(json.dumps(document, indent=2, allow_nan=False) + '\n')
     (output / 'report/observations.html').write_text(render(document))
+    from .fine_grained import write_view as write_fine_grained
+    write_fine_grained(output, document, report)
     overview = output / 'report/index.html'
     if overview.exists():
         text = overview.read_text()

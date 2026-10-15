@@ -17,6 +17,7 @@ SEMANTICS = frozenset({
     'engine_activity',
     'counter',
     'control_checkpoint',
+    'operation_checkpoint',
 })
 ALIGNMENTS = frozenset({'unverified', 'instance_local', 'verified_shared'})
 
@@ -35,6 +36,8 @@ class ObservationRequest:
     sites: Optional[tuple[int, ...]] = None
     max_events_per_instance: int = 256
     sample_every: int = 1
+    automatic: bool = False
+    max_sites: int = 8
 
     def __post_init__(self):
         if not isinstance(self.semantics, tuple) or not self.semantics:
@@ -57,15 +60,25 @@ class ObservationRequest:
                  'max_events_per_instance',
                  minimum=1)
         _integer(self.sample_every, 'sample_every', minimum=1)
+        if type(self.automatic) is not bool:
+            raise ValueError('automatic must be a boolean')
+        _integer(self.max_sites, 'max_sites', minimum=1)
+        if self.max_sites > 128:
+            raise ValueError('max_sites must be <= 128')
+        if self.automatic and self.sites is not None:
+            raise ValueError('automatic selection cannot specify manual sites')
 
     def as_dict(self):
-        return {
+        result = {
             'semantics': list(self.semantics),
             'programs': None if self.programs is None else list(self.programs),
             'sites': None if self.sites is None else list(self.sites),
             'max_events_per_instance': self.max_events_per_instance,
             'sample_every': self.sample_every,
         }
+        if self.automatic:
+            result.update(automatic=True, max_sites=self.max_sites)
+        return result
 
     @classmethod
     def from_dict(cls, value):

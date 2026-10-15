@@ -217,6 +217,8 @@ def run_capture(args, target_args, execute):
                 child += ["--mode", args.mode]
             if args.hook:
                 child += ["--hook", args.hook]
+            if getattr(args, "detail", None):
+                child += ["--detail", args.detail]
             if getattr(args, "observation_request", None):
                 child += ["--observation-request", args.observation_request]
             child += target_args
