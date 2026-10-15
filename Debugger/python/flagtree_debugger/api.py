@@ -1335,7 +1335,9 @@ def _ascend_selection_metadata(handoff, requested):
         "program_selection_limit":
         "counter_reads_may_execute_for_unselected_programs",
     }
-    allowed = {"issue", "wait_bracket", "control_checkpoint", "operation_checkpoint"}
+    allowed = {
+        "issue", "wait_bracket", "control_checkpoint", "operation_checkpoint"
+    }
     if not requested or not requested <= allowed or not isinstance(
             handoff, dict):
         return result
@@ -1510,19 +1512,11 @@ def _default_launch_prepare_hook(
                 from flagtree.profiler.observations_ascend import decode_dynamic64
                 capture_id = str(uuid.uuid4())
                 handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
-                sites = []
-                for artifact in handoff.get("artifacts", []):
-                    manifest = artifact.get("metadata") or {}
-                    kinds = {
-                        actor.get("actor_kind")
-                        for actor in manifest.get("actors", [])
-                    }
-                    slots = [0] if kinds == {
-                        "AIC"
-                    } else [1, 2] if kinds == {"AIV"} else []
-                    for site in manifest.get("dynamic_sites", []):
-                        sites.extend(
-                            dict(site, actor_slot=slot) for slot in slots)
+                from flagtree.profiler.ascend_actor_binding import bind_compiler_sites
+                automatic = bool(
+                    (metadata_dict.get("flagprism_ascend_observation_request")
+                     or {}).get("automatic"))
+                sites = bind_compiler_sites(handoff, require_binding=automatic)
                 decoded = decode_dynamic64(
                     exported_run["raw_buffer"],
                     capacity=metadata_dict["flagprism_ascend_trace_capacity"],
@@ -1533,6 +1527,7 @@ def _default_launch_prepare_hook(
                     association_evidence=exported_runtime_metadata.get(
                         "profiler_association_evidence"),
                     site_manifest=sites,
+                    require_actor_binding=automatic,
                     expected_program=metadata_dict.get(
                         'flagprism_ascend_trace_program'))
                 requested = set(

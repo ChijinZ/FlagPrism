@@ -46,6 +46,18 @@ def _observed(records):
             for key in ('invocation_id', 'program', 'actor', 'semantic',
                         'clock', 'association_status')
         }
+        compiler_actor = record.get('compiler_actor') or {}
+        if compiler_actor:
+            identity['compiler_actor'] = {
+                key: compiler_actor.get(key)
+                for key in ('id', 'function', 'kind', 'module_sha256',
+                            'compile_id')
+            }
+            proof = compiler_actor.get('binding_proof') or {}
+            identity['compiler_actor'].update(
+                binding_status=proof.get('status'),
+                observed_actor_slot=proof.get('observed_actor_slot'),
+                runtime_slot_status=proof.get('runtime_slot_status'))
         groups[json.dumps(identity, sort_keys=True)].append(record)
     rows = []
     for key, visits in groups.items():

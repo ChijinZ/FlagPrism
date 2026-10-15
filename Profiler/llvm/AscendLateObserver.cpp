@@ -190,7 +190,8 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             uint64_t capacity, uint64_t selectedProgram,
                             StringRef actorKind, uint64_t semanticMask,
                             json::Array &sites, json::Object &operationPlan,
-                            json::Object &controlPlan) {
+                            json::Object &controlPlan,
+                            json::Object &runtimeActorBinding) {
   if (argumentIndex >= function.arg_size() ||
       !function.getArg(argumentIndex)->getType()->isPointerTy())
     report_fatal_error("FlagPrism trace argument must identify a "
@@ -265,7 +266,14 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                                       (selectedCount - 1)]);
   DominatorTree dominance(function);
   LoopInfo loopInfo(dominance);
-  SmallVector<std::pair<BasicBlock *, Instruction *>, 16> loopHeaders;
+  struct OriginalLoopHeader {
+    BasicBlock *header;
+    Instruction *origin;
+    std::string name;
+    unsigned depth;
+    SmallVector<std::string, 8> blocks;
+  };
+  SmallVector<OriginalLoopHeader, 16> loopHeaders;
   for (Loop *loop : loopInfo.getLoopsInPreorder()) {
     Instruction *origin = &*loop->getHeader()->getFirstInsertionPt();
     if (!origin->getDebugLoc())
@@ -278,7 +286,14 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         if (origin->getDebugLoc())
           break;
       }
-    loopHeaders.emplace_back(loop->getHeader(), origin);
+    OriginalLoopHeader candidate{loop->getHeader(),
+                                 origin,
+                                 printValue(*loop->getHeader()),
+                                 loop->getLoopDepth(),
+                                 {}};
+    for (const BasicBlock *block : loop->blocks())
+      candidate.blocks.push_back(printValue(*block));
+    loopHeaders.push_back(std::move(candidate));
   }
   IRBuilder<> entry(&*function.getEntryBlock().getFirstInsertionPt());
   Type *i64 = entry.getInt64Ty();
@@ -296,6 +311,30 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     report_fatal_error(
         "FlagPrism trace needs an actual SDK cube/vector target");
   }
+  json::Array slots;
+  json::Object expression;
+  if (actorKind == "AIC") {
+    slots.push_back(0);
+    expression = json::Object{{"kind", "constant_i64"}, {"value", 0}};
+  } else {
+    slots.push_back(1);
+    slots.push_back(2);
+    expression = json::Object{{"kind", "add_i64"},
+                              {"call", "llvm.hivm.GET.SUBBLOCKID"},
+                              {"constant", 1}};
+  }
+  runtimeActorBinding = json::Object{
+      {"schema_version", 1},
+      {"function", function.getName()},
+      {"actor_kind", actorKind.str()},
+      {"layout", "actor_header4_record8_v1"},
+      {"segment_count", 3},
+      {"segment_words", static_cast<int64_t>(4 + capacity * 8)},
+      {"record_actor_word", 5},
+      {"admissible_slots", std::move(slots)},
+      {"expression", std::move(expression)},
+      {"value_use", "same_emitted_i64_for_segment_offset_and_record_word5"},
+      {"basis", "actual_emitted_logger_actor_value"}};
   uint64_t siteNumber = 0, selectedControls = 0;
   json::Array controlInventory;
   for (CallInst *call : selected) {
@@ -341,25 +380,25 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   for (const auto &loopHeader : loopHeaders) {
     const uint64_t siteId = siteNumber++;
     const bool enabled = semanticMask & 4;
-    BasicBlock *header = loopHeader.first;
+    BasicBlock *header = loopHeader.header;
     auto describe = [&]() {
       json::Array blocks;
-      const Loop *loop = loopInfo.getLoopFor(header);
-      for (const BasicBlock *block : loop->blocks())
-        blocks.push_back(printValue(*block));
-      json::Object site{
-          {"site_id", static_cast<int64_t>(siteId)},
-          {"block", printValue(*header)},
-          {"loop_depth", static_cast<int64_t>(loop->getLoopDepth())},
-          {"loop_blocks", std::move(blocks)},
-          {"semantics", "loop_header_occurrence"},
-          {"public_semantic", "control_checkpoint"},
-          {"operation", "loop_header_occurrence"},
-          {"operation_class", "original_loop_header"},
-          {"iteration_identity", nullptr},
-          {"source_op_id", nullptr},
-          {"origin_semantics", "loop_header_control_checkpoint"}};
-      attachSourceOrigin(site, *loopHeader.second);
+      for (const std::string &block : loopHeader.blocks)
+        blocks.push_back(block);
+      json::Object site{{"site_id", static_cast<int64_t>(siteId)},
+                        {"block", loopHeader.name},
+                        {"block_representation",
+                         "original_pre_instrumentation_canonical_llvm"},
+                        {"loop_depth", static_cast<int64_t>(loopHeader.depth)},
+                        {"loop_blocks", std::move(blocks)},
+                        {"semantics", "loop_header_occurrence"},
+                        {"public_semantic", "control_checkpoint"},
+                        {"operation", "loop_header_occurrence"},
+                        {"operation_class", "original_loop_header"},
+                        {"iteration_identity", nullptr},
+                        {"source_op_id", nullptr},
+                        {"origin_semantics", "loop_header_control_checkpoint"}};
+      attachSourceOrigin(site, *loopHeader.origin);
       return site;
     };
     json::Object site = describe();
@@ -471,7 +510,7 @@ public:
     const auto moduleHash = digest(ir);
     json::Array actors;
     json::Array dynamicSites;
-    json::Object operationPlan, controlPlan;
+    json::Object operationPlan, controlPlan, runtimeActorBinding;
     bool changed = false;
     SmallPtrSet<Function *, 4> processedEntries;
     auto &functions =
@@ -678,7 +717,7 @@ public:
         changed |= instrumentActor(
             *function, argumentIndex, capacity, selectedProgram,
             environment("FLAGPRISM_ASCEND_ACTOR_KIND"), selectedSemantics(),
-            dynamicSites, operationPlan, controlPlan);
+            dynamicSites, operationPlan, controlPlan, runtimeActorBinding);
       }
       const auto targetCpu =
           function->getFnAttribute("target-cpu").getValueAsString();
@@ -717,6 +756,11 @@ public:
       effectiveSemantics.push_back("control_checkpoint");
     if (semanticMask & 8)
       effectiveSemantics.push_back("operation_checkpoint");
+    if (!runtimeActorBinding.empty()) {
+      runtimeActorBinding["module_sha256"] = moduleHash;
+      runtimeActorBinding["compile_id"] =
+          environment("FLAGPRISM_ASCEND_COMPILE_ID");
+    }
     json::Object manifest{
         {"effective_semantics", std::move(effectiveSemantics)},
         {"semantic_selection_stage",
@@ -728,6 +772,7 @@ public:
                                        {"alignment", "unverified"}}},
         {"dynamic_record_layout", "actor_header4_record8_v1"},
         {"dynamic_sites", std::move(dynamicSites)},
+        {"runtime_actor_binding", std::move(runtimeActorBinding)},
         {"operation_plan", std::move(operationPlan)},
         {"control_plan", std::move(controlPlan)},
         {"observation_plan_version", 2},

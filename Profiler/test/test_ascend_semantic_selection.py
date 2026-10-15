@@ -33,8 +33,10 @@ def execute(tmp_path, semantics, ir=IR, actor_kind="AIC"):
                FLAGPRISM_ASCEND_ALLOW_TEST_FORMAL_INDEX='1')
     env.pop('FLAGPRISM_ASCEND_TRACE_SOURCE_ARGUMENT', None)
     env.pop('FLAGPRISM_ASCEND_SOURCE_ABI', None)
-    if semantics is None: env.pop('FLAGPRISM_ASCEND_TRACE_SEMANTICS', None)
-    else: env['FLAGPRISM_ASCEND_TRACE_SEMANTICS'] = semantics
+    if semantics is None:
+        env.pop('FLAGPRISM_ASCEND_TRACE_SEMANTICS', None)
+    else:
+        env['FLAGPRISM_ASCEND_TRACE_SEMANTICS'] = semantics
     result = subprocess.run([
         os.environ.get('FLAGPRISM_ASCEND_OPT',
                        '/usr/bin/opt-15'), '-load-pass-plugin=' + plugin,
@@ -65,7 +67,8 @@ def test_actual_pass_preserves_site_ids_and_omits_unselected_timestamp(
             for site in manifest['dynamic_sites']] == expected_sites
     assert manifest[
         'semantic_selection_stage'] == 'compile_time_before_timestamp_and_record'
-    if not timestamps: assert 'store volatile' not in text
+    if not timestamps:
+        assert 'store volatile' not in text
 
 
 @pytest.mark.parametrize('semantics',
@@ -231,3 +234,138 @@ def test_control_inventory_matches_actual_encoded_record_sites(
         for site in selected
     }
     assert manifest['observation_plan_version'] == 2
+
+
+def test_control_inventory_preserves_original_unnamed_blocks(tmp_path):
+    ir = NESTED_CONTROL_IR
+    for name, number in [('entry', 0), ('outer', 1), ('inner', 2),
+                         ('latch', 3), ('exit', 4)]:
+        ir = ir.replace(name + ':',
+                        str(number) + ':').replace('%' + name,
+                                                   '%' + str(number))
+    result, path = execute(tmp_path, 'issue,wait_bracket,control_checkpoint',
+                           ir)
+    assert result.returncode == 0, result.stderr.decode()
+    manifest, = [json.loads(p.read_text()) for p in path.glob('*.json')]
+    original = manifest['actors'][0]['loops']
+    inventory = [
+        item for item in manifest['control_plan']['inventory']
+        if item['operation_class'] == 'original_loop_header'
+    ]
+    assert [item['block']
+            for item in inventory] == [item['header'] for item in original]
+    assert [item['loop_blocks']
+            for item in inventory] == [item['blocks'] for item in original]
+    assert all(item['block_representation'] ==
+               'original_pre_instrumentation_canonical_llvm'
+               for item in inventory)
+
+
+@pytest.mark.parametrize('kind,slots', [('AIC', [0]), ('AIV', [1, 2])])
+def test_binding_describes_actual_emitted_actor_value(tmp_path, kind, slots):
+    result, path = execute(tmp_path, 'issue', actor_kind=kind)
+    assert result.returncode == 0, result.stderr.decode()
+    manifest, = [json.loads(p.read_text()) for p in path.glob('*.json')]
+    binding = manifest['runtime_actor_binding']
+    assert binding['admissible_slots'] == slots
+    assert binding['function'] == 'fresh_actor'
+    assert binding['module_sha256'] == manifest['module_sha256']
+    assert binding['segment_words'] == 132
+    text = (path / 'adapted.ll').read_text()
+    if kind == 'AIV':
+        import re
+        call, = re.findall(
+            r'(%[\w.]+) = call i64 @llvm.hivm.GET.SUBBLOCKID\(\)', text)
+        actor, = re.findall(r'(%[\w.]+) = add i64 ' + re.escape(call) + r', 1',
+                            text)
+        assert re.search(r'mul i64 ' + re.escape(actor) + r', 132', text)
+        assert re.search(r'store volatile i64 ' + re.escape(actor) + r',',
+                         text)
+        assert binding['expression'] == {
+            'kind': 'add_i64',
+            'call': 'llvm.hivm.GET.SUBBLOCKID',
+            'constant': 1
+        }
+    else:
+        assert '@llvm.hivm.GET.SUBBLOCKID' not in text
+        assert 'store volatile i64 0,' in text
+        assert binding['expression'] == {'kind': 'constant_i64', 'value': 0}
+
+
+@pytest.mark.parametrize('kind,slot', [('AIC', 0), ('AIV', 1), ('AIV', 2)])
+def test_real_pass_manifest_binds_cpu_record_fixture(tmp_path, monkeypatch,
+                                                     kind, slot):
+    """Real opt emission plus synthetic protocol record; no device claim."""
+    import hashlib
+    import importlib.util
+    from pathlib import Path
+    import sys
+    import types
+    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILE_ID', 'actual_opt_unit')
+    result, path = execute(tmp_path, 'issue', actor_kind=kind)
+    assert result.returncode == 0, result.stderr.decode()
+    manifest_path, = list(path.glob('*.json'))
+    manifest_text = manifest_path.read_text()
+    manifest = json.loads(manifest_text)
+    original = manifest_path.with_suffix('.ll').read_text()
+    adapted = (path / 'adapted.ll').read_text()
+
+    def digest(text):
+        return hashlib.sha256(text.encode()).hexdigest()
+
+    handoff = {
+        'compile_id':
+        'actual_opt_unit',
+        'artifacts': [{
+            'metadata': manifest,
+            'manifest_text': manifest_text,
+            'manifest_sha256': digest(manifest_text),
+            'llir': original,
+            'sha256': digest(original),
+            'adapted': {
+                'llir': adapted,
+                'sha256': digest(adapted)
+            }
+        }]
+    }
+    package = types.ModuleType('_real_ascend_binding_test')
+    package.__path__ = [
+        str(Path(__file__).parents[1] / 'python/flagtree_profiler')
+    ]
+    sys.modules[package.__name__] = package
+    modules = []
+    for name in ('ascend_actor_binding', 'observations_ascend'):
+        spec = importlib.util.spec_from_file_location(
+            package.__name__ + '.' + name,
+            Path(package.__path__[0]) / (name + '.py'))
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = module
+        spec.loader.exec_module(module)
+        modules.append(module)
+    helper, decoder = modules
+    sites = helper.bind_compiler_sites(handoff, require_binding=True)
+    words = [0] * (3 * 132)
+    words[slot * 132:slot * 132 + 12] = [
+        1, 1, 1, 0, (1 << 32), 0, 100, 110, 0, slot, (1 << 64) - 1,
+        (1 << 64) - 1
+    ]
+    event, = decoder.decode_dynamic64(
+        words,
+        capacity=16,
+        capture_id='cpu_fixture',
+        site_manifest=sites,
+        require_actor_binding=True)['observations']
+    assert event['compiler_site']['compiler_actor']['module_sha256'] == digest(
+        original)
+    assert event['compiler_site']['compiler_actor']['binding_proof'][
+        'observed_actor_slot'] == slot
+    (path / 'cpu-record-projection.json').write_text(
+        json.dumps(
+            {
+                'evidence_kind': 'real_opt_manifest_plus_synthetic_cpu_record',
+                'hardware_execution_claim': False,
+                'compiler_actor': event['compiler_site']['compiler_actor'],
+                'actor_slot': event['actor_slot'],
+                'compiler_actor_status': event['compiler_actor_status']
+            },
+            indent=2))

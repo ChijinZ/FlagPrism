@@ -34,6 +34,7 @@ Every normalized record has the following keys. Nullable fields are present as
 | `invocation_id`, `binary_id` | string or null | Verified actual call and compiled binary identity |
 | `program` | integer or null | Backend linear program ID; not a source line or actor |
 | `actor` | integer, string, object or null | Backend execution identity; keep its type and namespace |
+| `compiler_actor` | object or null | Explicit compiler-actor provenance supplied by the decoder; separate from the measured `actor` slot. See Ascend binding below. |
 | `site` | integer or null | Compiler-assigned observation site in this binary's protocol |
 | `semantic` | string | What was measured, for example `source_control_interval` or `operation_checkpoint` |
 | `occurrence` | integer or null | Retained visit ordinal for this capture/call/program/actor/site; not a source iteration variable |
@@ -158,6 +159,70 @@ slots. The older nullable `actor` label is retained for compatibility; it is
 often null because actual artifacts supply actor declarations instead of one
 actor label. Never equate an AIV label with a fixed runtime slot. Read the raw
 capture's actor/manifest association before using a module-local site ID.
+
+### Ascend compiler-to-record actor binding
+
+Current actor manifests additionally contain a top-level
+`runtime_actor_binding`. Matching `plans[].compiler_actors[]` declarations expose
+that object under the same key; the declaration's compiler ID key is `identity`.
+Binding is attached only to the declaration with the exact `function`. It is
+an emission contract for the supported dynamic64 ABI, not evidence that every
+admissible actor ran:
+
+| Binding field | Type and exact meaning |
+| --- | --- |
+| `schema_version` | Integer `1` |
+| `function`, `actor_kind` | Actual kernel entry function and SDK kind (`AIC` or `AIV`) |
+| `module_sha256`, `compile_id` | Original canonical actor LLVM digest and exact compilation identity |
+| `layout` | `actor_header4_record8_v1` (the wire layout of capture `record_layout: "ascend_actor_dynamic_v1"`) |
+| `segment_count`, `segment_words` | `3`; each segment has `4 + capacity * 8` uint64 words |
+| `record_actor_word` | `5`, the zero-based actor word within each eight-word record |
+| `admissible_slots` | `[0]` for emitted AIC constant zero; `[1, 2]` for the emitted AIV subblock expression |
+| `expression` | AIC: `{"kind":"constant_i64","value":0}`; AIV: `{"kind":"add_i64","call":"llvm.hivm.GET.SUBBLOCKID","constant":1}` |
+| `value_use` | `same_emitted_i64_for_segment_offset_and_record_word5` |
+| `basis` | `actual_emitted_logger_actor_value` |
+
+The raw record's actor word must equal its segment index and satisfy this emitted
+binding. AIV is not one fixed slot. No timestamp or actor-name proximity is used.
+Compiler handoff artifacts retain `metadata`, `manifest_text`, `manifest_sha256`,
+`llir`, `sha256` and `adapted.{llir,sha256}`. The manifest text must parse to the
+exact metadata, and all three text digests must match. The original LLVM digest
+and compile ID must agree with the binding and the exact binary's handoff.
+
+After these checks, original observations retain
+`compiler_site.compiler_actor`; normalized records expose the same object as
+`compiler_actor`. Its fields are `id` (equal to the plan declaration's
+`identity`), `function`, `kind`, `module_sha256`, `compile_id`,
+`runtime_actor_binding` and `binding_proof`. The proof contains:
+
+- `status: "verified_compiler_emission_manifest"`;
+- `manifest_sha256`, `original_module_sha256`, `adapted_module_sha256`;
+- `selection_membership: "selected_dynamic_site_in_exact_module_plan"`;
+- after raw decoding, `observed_actor_slot` and
+  `runtime_slot_status: "verified_against_raw_record_and_segment"`.
+
+The last two keys are **inside `binding_proof`**, not top-level compiler-actor
+fields. Original observations also carry `compiler_actor_status`. To check a
+record, match its binary, module, compile ID and compiler actor ID to an applicable
+selected plan entry, then match site and public semantic. Check the original
+uint64 descriptor (low 32 bits site, high 32 bits kind: issue `1`, wait `2`,
+control `3`, operation `4`) and raw actor word against that record and binding.
+Do not use a union of unrelated actors' numeric site IDs as proof of membership.
+
+Capture actors with validated committed records expose
+`binding_status: "verified_by_committed_records"` and `compiler_actors` (compiler
+ID strings). Empty segments keep `binding_status: "unknown_no_records"` and
+`execution_status: "unknown"`; admissible slots alone do not prove execution.
+Automatic capture rejects missing, inconsistent or ambiguous binding, retains
+the original raw allocation with `capture_status: "decode_failed"` and a
+`decode_error`, and fails. Legacy standalone decoding can still read old bytes
+but reports `unverified_legacy`; it does not acquire new actor proof retroactively.
+
+`report/fine_grained.html` retains the measured actor slot and adds the compiler
+kind/function label only when its proof also verifies that exact raw slot.
+`report/execution.html` keeps call, slot, semantic and clock scope while showing
+the explicit compiler binding separately from static declarations. These fields
+do not establish cross-actor clock alignment or engine utilization.
 
 The NVIDIA nested plan uses its own `schema_version: 2` (the outer envelope
 remains version 1), actual `proton.automatic_candidates` and
