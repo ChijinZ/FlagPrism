@@ -63,6 +63,14 @@ the invocation's worker/descendants, including SDK children in separate sessions
 Other server processes are not terminated. Successful CLI captures include
 `ai/deadlines.json`, whose bytes are covered by the bundle manifest.
 
+The automatic quickstart covers eager kernel launches. NVIDIA stream graph
+capture is rejected before an instrumented launch; use the separately documented
+native CUPTI graph mode when native graph activities are needed. An existing
+graph replay without ordinary JIT launches does not supply per-kernel automatic
+source records. Simultaneous host-thread JIT calls in one supervised automatic
+CLI worker are rejected; use separate capture processes. Interleaving eager
+launches on streams does not by itself prove simultaneous recording support.
+
 Direct session API calls remain in the caller's process. They report measured
 finalization cost, and external SDK compiler jobs have their own watchdog, but
 Python cannot safely preempt a native collector holding the GIL. Use the CLI

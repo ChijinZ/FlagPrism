@@ -403,7 +403,8 @@ def main():
             code = supervise(worker_command(__package__ + '.cli',
                                             sys.argv[1:]),
                              compile_seconds=args.compile_timeout,
-                             export_seconds=args.export_timeout)
+                             export_seconds=args.export_timeout,
+                             require_capture=True)
             raise SystemExit(code)
         bind_worker()
     try:

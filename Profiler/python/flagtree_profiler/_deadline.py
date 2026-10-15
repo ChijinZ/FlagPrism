@@ -180,7 +180,11 @@ def _cancel(signum, frame):
     raise _Cancelled(signum)
 
 
-def supervise(command, *, compile_seconds=120, export_seconds=60):
+def supervise(command,
+              *,
+              compile_seconds=120,
+              export_seconds=60,
+              require_capture=False):
     if type(compile_seconds) is not int or not 1 <= compile_seconds <= 300:
         raise ValueError(
             'compile deadline must be an integer in [1,300] seconds')
@@ -246,6 +250,19 @@ def supervise(command, *, compile_seconds=120, export_seconds=60):
             # Read the last context even when the final phase was very short.
             if control.is_file():
                 document = json.loads(control.read_text())
+            output = document.get('context', {}).get('output')
+            if require_capture and (
+                    not output
+                    or not (Path(output) / 'manifest.json').is_file()):
+                document.update(
+                    state='incomplete',
+                    reason='worker_exited_without_completed_capture',
+                    worker_returncode=0)
+                (directory / 'incomplete.json').write_text(
+                    json.dumps(document, indent=2))
+                raise RuntimeError(
+                    'Automatic profiling worker exited without a completed '
+                    f'capture; evidence retained at {directory}')
             _retain_success(document, limits)
             import shutil
             shutil.rmtree(directory)

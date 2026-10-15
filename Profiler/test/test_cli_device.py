@@ -121,7 +121,7 @@ def test_successful_application_exit_finishes_collection(
 
 
 def test_application_error_preserves_traceback_and_finalization_error(
-        cli, monkeypatch, tmp_path):
+        cli, monkeypatch, tmp_path, capsys):
     script = tmp_path / 'ordinary.py'
     script.write_text(
         'try:\n    raise KeyError("cause")\nexcept KeyError as error:\n    raise ValueError("original application failure") from error\n'
@@ -139,7 +139,11 @@ def test_application_error_preserves_traceback_and_finalization_error(
         cli.run_profiling(args, [str(script)])
     assert isinstance(caught.value.__cause__, KeyError)
     assert any(frame.path == script for frame in caught.traceback)
-    assert 'Profiling finalization also failed: collector flush failed' in caught.value.__notes__
+    message = 'Profiling finalization also failed: collector flush failed'
+    if hasattr(caught.value, 'add_note'):
+        assert message in caught.value.__notes__
+    else:
+        assert message in capsys.readouterr().err
     assert sys.argv is original_argv
 
 

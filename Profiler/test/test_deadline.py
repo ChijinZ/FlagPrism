@@ -151,15 +151,33 @@ def test_success_receipt_and_manifest_are_consistent(deadline, tmp_path):
     output = tmp_path / 'bundle'
     (output / 'ai').mkdir(parents=True)
     (output / 'manifest.json').write_text('{"files":{}}')
-    assert deadline.supervise(
-        command(tmp_path,
-                f"d.phase('application', output={str(output)!r})")) == 0
+    assert deadline.supervise(command(
+        tmp_path, f"d.phase('application', output={str(output)!r})"),
+                              require_capture=True) == 0
     receipt = json.loads((output / 'ai/deadlines.json').read_text())
     assert receipt['enforced'] and receipt['supervisor_worker_launches'] == 1
     import hashlib
     manifest = json.loads((output / 'manifest.json').read_text())
     assert manifest['files']['ai/deadlines.json']['sha256'] == hashlib.sha256(
         (output / 'ai/deadlines.json').read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize('with_output', [False, True])
+def test_abrupt_zero_exit_without_capture_is_not_success(
+        deadline, tmp_path, monkeypatch, with_output):
+    control = tmp_path / 'control'
+    control.mkdir()
+    monkeypatch.setattr(deadline.tempfile, 'mkdtemp',
+                        lambda **kwargs: str(control))
+    context = f', output={str(tmp_path / "bundle")!r}' if with_output else ''
+    with pytest.raises(RuntimeError, match='without a completed capture'):
+        deadline.supervise(command(
+            tmp_path, f"d.phase('application'{context}); os._exit(0)"),
+                           require_capture=True)
+    receipt = json.loads((control / 'incomplete.json').read_text())
+    assert receipt['state'] == 'incomplete'
+    assert receipt['worker_returncode'] == 0
+    assert receipt['reason'] == 'worker_exited_without_completed_capture'
 
 
 def test_status_write_failure_preserves_original_exception(
