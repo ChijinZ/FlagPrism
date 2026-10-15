@@ -1,0 +1,144 @@
+{
+  "status": "passed_finite_GCU_two_actual_stream_functional_acceptance",
+  "date": "2026-10-15",
+  "new_test": {
+    "path": "Profiler/test/test_enflame_two_stream_hardware.py",
+    "sha256": "9f96dd5262d77cf2fddf19ab24df05ff7466c8cdd8dede5bb7355c28f7b50c28"
+  },
+  "environment": {
+    "host": "zhiyuan_suiyuan",
+    "docker": "flagprism-enflame-dev",
+    "device": 0,
+    "source": "/workspace/method-enflame-20261014/i3-source",
+    "runtime": "/workspace/method-enflame-20261014/i3-runtime",
+    "no_other_process_terminated": true,
+    "own_old_jobs_terminal_before_run": true,
+    "own_GPU_job_after_completion": false,
+    "hot_Ascend_Python_not_synchronized": true
+  },
+  "native_and_GCU_source_freeze": {
+    "reference_manifest": "artifacts/method-run/enflame/postformat-final-source-native-manifest.json",
+    "sha256": "73918f075f1f5c89d3c1832cc3d04db4802d0514d797cd289455a24e2a9d3aad",
+    "selected_GCU_source_core_native_files": 12,
+    "all_match_original": true,
+    "actual_profile_python_sha256": "92395f2e00a83de1378a3d4b1580278dd11f08555b02c47b3980c23578a140f5",
+    "actual_instrumentation_python_sha256": "7b885318e0804ff6f774bd99f004f7aa3f5724b71d218cda9ee10dfced2926a5"
+  },
+  "validation": {
+    "pytest_passed": 1,
+    "seconds": 4.92,
+    "warning": "existing torch_gcu migration ImportWarning",
+    "launches": 6,
+    "native_kernel_records": 6,
+    "dynamic_captures": 6,
+    "dynamic_observations": 80,
+    "same_specialization_calls": 4,
+    "different_specialization_calls": 2,
+    "distinct_binaries": 2,
+    "actual_nondefault_stream_handles": [
+      848736000,
+      837745600
+    ],
+    "native_stream_sequence": [
+      0,
+      1,
+      0,
+      1,
+      0,
+      1
+    ],
+    "native_correlation_ids": [
+      34,
+      62,
+      90,
+      118,
+      155,
+      183
+    ],
+    "math": "Exact FP32 CPU oracle, different input per call; unchanged input and output guard regions.",
+    "identity": "Per controlled API call unique newly added LaunchHook ID; native source/provider+process/context/report correlation domain/correlation ID+scope/source binary+stream one-to-one; same-LazyDict dynamic capture partition matches each exact invocation. No timestamp/name matching.",
+    "yapf": "0.43.0 full-new-file/idempotent",
+    "ruff": "0.9.1 passed"
+  },
+  "limitations": [
+    "Native SDK grid/task field is raw0 and normalizednull/legacy_unknown, not verified grid/task identity.",
+    "SDK stream0 is valid as a reported ID; each actual Torch stream is nondefault/nonzero and maps consistently to one distinct native stream.",
+    "Interleaved calls do not establish simultaneous overlap; debugger capture can synchronize.",
+    "No new performance measurement, clock-alignment claim, full matrix rerun or three-backend complete acceptance claim."
+  ],
+  "historical_negatives": [
+    {
+      "log": "two-stream-first-hardware.log",
+      "cause": "Test used nonexistent event[stream] field; fixed to actual stream_id. Original raw directory retained."
+    },
+    {
+      "log": "two-stream-second-hardware.log",
+      "cause": "Oracle incorrectly required independent task/grid ID even though raw gridId0 is unknown. Root explicitly authorized actual available native identity tuple; unknown task left null, no production change."
+    },
+    {
+      "log": "two-stream-first-ruff-unused-import.log",
+      "cause": "Unused Path import in new test; removed before GPU execution."
+    }
+  ],
+  "raw": {
+    "remote_current": "/workspace/method-enflame-20261014/i3-evidence/two-stream-hardware",
+    "remote_initial_negative": "/workspace/method-enflame-20261014/i3-evidence/two-stream-first-failed-test-field",
+    "remote_native_ID_oracle_negative": "/workspace/method-enflame-20261014/i3-evidence/two-stream-second-native-task-id-unknown",
+    "local_archive": "artifacts/method-run/enflame/two-stream-functional-raw.tar.gz",
+    "archive_sha256": "4d4b30bac6d9bac0db77657a75d90b8052485ef5986b2c379bc92a6e67934d46",
+    "archive_bytes": 5129023,
+    "per_file_SHA": "two-stream-final-hardware-summary.json files_sha256, includes exact compiled test source snapshot"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/method-run/enflame/two-stream-final-hardware-summary.json",
+      "sha256": "8022675c627699e10a855c6b16e1715b49088a2d1563ae984c44962e70d978c9",
+      "bytes": 10107
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-final-hardware.log",
+      "sha256": "dfa173d4d31f73adad66f7c2c7fc9490c3c563e6ea061e210c5364e34c3e75fc",
+      "bytes": 2532
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-quality-terminal.log",
+      "sha256": "f1f833f40d49f6b0d3e3b2d885500026f558bca05dd6aefe12f2bc4aa2be76d7",
+      "bytes": 139
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-corrected-oracle-stdout.log",
+      "sha256": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+      "bytes": 19
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-initial-inspect.log",
+      "sha256": "82c3d75d2beaa87dd092ea0da6c7b4f0c9aaf413fe252b7ca0c89138a5f3be8d",
+      "bytes": 1736
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-source-native-hashes.json",
+      "sha256": "e6c7273d0a50742e111cdd2fbe442f4e9a596ec7841c747675cdc016e67570df",
+      "bytes": 3199
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-first-hardware.log",
+      "sha256": "86ffcf01c9fedbd51143adf6657aa78e51be1ca8f122aee49ccac9f2d92b9958",
+      "bytes": 9182
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-second-hardware.log",
+      "sha256": "2da97d5174ef091f078c3468278840aa9edbe219c33ed5daec62699e3525f7d2",
+      "bytes": 9177
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-native-failure-inspect2.log",
+      "sha256": "a4531e4b43a5d4c8309ccdc8efd6deed201911646983e8039853d3abfe4173ef",
+      "bytes": 12863
+    },
+    {
+      "path": "artifacts/method-run/enflame/two-stream-functional-raw.tar.gz",
+      "sha256": "4d4b30bac6d9bac0db77657a75d90b8052485ef5986b2c379bc92a6e67934d46",
+      "bytes": 5129023
+    }
+  ]
+}

@@ -87,6 +87,21 @@ must remain unchanged.
   held-out workloads in `tests/ascend/`. Follow its README. A native smoke or
   explicit pointer experiment is not hidden-only ABI acceptance.
 
+The Ascend typed-IR tests (`test_ascend_hivm.py`) additionally cover capture
+integrity, ambiguous or missing actor peers, typed pipeline keys, pass/function
+boundaries, bounded streams and child-pipe draining after capture-write failure.
+The semantic-selection contracts (`test_ascend_semantic_selection.py`) execute
+the real LLVM15 late plugin: selected semantics must preserve site numbering
+and omit counter reads and publications at unselected sites. Unsupported
+requests remain explicit; these are compiler tests, not hardware timing proofs.
+
+`test_enflame_two_stream_hardware.py` requires `FLAGPRISM_TEST_ENFLAME=1` and
+real GCU hardware. It interleaves two actual non-default streams and repeated
+and different specializations, using a per-call launch-ID oracle and exact CPU
+math/guards. Provider correlation identity and source scopes must isolate
+captures even when a native task/grid identifier is unavailable. The test does
+not establish concurrent overlap or shared timestamps.
+
 Six families use three shapes and two configurations with frozen Study inputs
 and unchanged CPU tolerances. Retain input hashes, output canaries and actual
 invocations. RMSNorm was preselected as held-out and must not be replaced after
