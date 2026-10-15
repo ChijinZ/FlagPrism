@@ -1321,6 +1321,78 @@ def _propagate_observation_clock(runtime_metadata, metadata_dict):
             })
 
 
+def _ascend_selection_metadata(handoff, requested):
+    """Describe compiler selection only when every actual actor receipt agrees."""
+    result = {
+        "collection_scope":
+        "all_existing_wait_signal_and_loop_sites_of_selected_program",
+        "selection_stage":
+        "semantic_output_filter_after_capture",
+        "program_selection_stage":
+        "device_record_publication_predicate",
+        "semantic_selection_stage":
+        "semantic_output_filter_after_capture",
+        "program_selection_limit":
+        "counter_reads_may_execute_for_unselected_programs",
+    }
+    allowed = {"issue", "wait_bracket", "control_checkpoint"}
+    if not requested or not requested <= allowed or not isinstance(
+            handoff, dict):
+        return result
+    if handoff.get("phase") != "finished" or handoff.get("returncode") != 0:
+        return result
+    artifacts = handoff.get("artifacts")
+    if not isinstance(artifacts, list) or not artifacts:
+        return result
+    classes = {
+        "existing_readiness_wait_source_control": "wait_bracket",
+        "signal_issue_source_control": "issue",
+        "loop_header_occurrence": "control_checkpoint"
+    }
+    for artifact in artifacts:
+        if not isinstance(artifact, dict):
+            return result
+        manifest = artifact.get("metadata") or {}
+        job = artifact.get("driver_job") or {}
+        adapted = artifact.get("adapted") or {}
+        if not all(
+                isinstance(value, dict) for value in (manifest, job, adapted)):
+            return result
+        effective = manifest.get("effective_semantics")
+        if (manifest.get("semantic_selection_stage")
+                != "compile_time_before_timestamp_and_record"
+                or not isinstance(effective, list)
+                or len(effective) != len(requested)
+                or any(not isinstance(value, str) or value not in requested
+                       for value in effective)
+                or len(set(effective)) != len(effective)
+                or job.get("state") != "finished" or job.get("exit_code") != 0
+                or job.get("mode") != "selected_dynamic_trace"
+                or not handoff.get("compile_id")
+                or job.get("compile_id") != handoff["compile_id"]
+                or manifest.get("compile_id") != handoff["compile_id"]
+                or not isinstance(artifact.get("llir"), str)
+                or hashlib.sha256(artifact["llir"].encode()).hexdigest()
+                != artifact.get("sha256")
+                or manifest.get("module_sha256") != artifact.get("sha256")
+                or not isinstance(adapted.get("llir"), str)
+                or hashlib.sha256(adapted["llir"].encode()).hexdigest()
+                != adapted.get("sha256") or not any(
+                    item.get("pass_returncode") == 0
+                    and item.get("adapted_sha256") == adapted.get("sha256")
+                    for item in job.get("inputs", [])) or any(
+                        classes.get(site.get("semantics")) not in requested
+                        for site in manifest.get("dynamic_sites", []))):
+            return result
+    result.update(
+        collection_scope="requested_semantic_sites_of_selected_program",
+        semantic_selection_stage=
+        "compiler_semantic_site_selection_then_output_filter",
+        effective_semantics=sorted(requested),
+        semantic_selection_evidence_status="verified_actual_actor_manifests")
+    return result
+
+
 def _retain_failed_decode(exported_run, metadata_dict, error):
     """Preserve the original bytes after finish released the device handle."""
     import uuid
@@ -1473,16 +1545,8 @@ def _default_launch_prepare_hook(
                     "dropped": decoded["dropped"]
                 }
                 exported_runtime_metadata["capture_id"] = capture_id
-                exported_runtime_metadata[
-                    "collection_scope"] = "all_existing_wait_signal_and_loop_sites_of_selected_program"
-                exported_runtime_metadata[
-                    "selection_stage"] = "semantic_output_filter_after_capture"
-                exported_runtime_metadata[
-                    "program_selection_stage"] = "device_record_publication_predicate"
-                exported_runtime_metadata[
-                    "semantic_selection_stage"] = "semantic_output_filter_after_capture"
-                exported_runtime_metadata[
-                    "program_selection_limit"] = "counter_reads_may_execute_for_unselected_programs"
+                exported_runtime_metadata.update(
+                    _ascend_selection_metadata(handoff, requested))
             else:
                 exported_run = _finalize_exported_run(exported_run,
                                                       metadata_dict)

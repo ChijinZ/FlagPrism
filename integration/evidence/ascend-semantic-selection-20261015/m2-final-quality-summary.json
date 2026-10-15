@@ -1,0 +1,137 @@
+{
+  "yapf": "0.43.0",
+  "clang_format": "19.1.6",
+  "files": [
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          44,
+          54
+        ],
+        [
+          199,
+          200
+        ]
+      ],
+      "before_sha256": "2b4655bcb8cfe1b8b5458f26111ca41ef63519b6aa385e578c76412c1fcf939a",
+      "after_sha256": "2b4655bcb8cfe1b8b5458f26111ca41ef63519b6aa385e578c76412c1fcf939a",
+      "file": "Profiler/python/flagtree_profiler/ascend_compiler.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          45,
+          47
+        ]
+      ],
+      "before_sha256": "26e3f091f24eee0b1a1e901b83b2caa8c56784a2d92ea7645aa3196b20b29313",
+      "after_sha256": "26e3f091f24eee0b1a1e901b83b2caa8c56784a2d92ea7645aa3196b20b29313",
+      "file": "Profiler/test/test_ascend_compiler.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          173,
+          179
+        ]
+      ],
+      "before_sha256": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+      "after_sha256": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+      "file": "tests/ascend/acceptance.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": null,
+      "before_sha256": "2e6f020d7cc7a7fe896e83cf118e8c6de1255efe3d31f9d2596aadc115c66f7a",
+      "after_sha256": "2e6f020d7cc7a7fe896e83cf118e8c6de1255efe3d31f9d2596aadc115c66f7a",
+      "file": "Profiler/test/test_ascend_semantic_selection.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          107,
+          128
+        ],
+        [
+          131,
+          132
+        ],
+        [
+          167,
+          169
+        ],
+        [
+          178,
+          185
+        ],
+        [
+          190,
+          192
+        ],
+        [
+          195,
+          200
+        ],
+        [
+          205,
+          206
+        ],
+        [
+          209,
+          210
+        ],
+        [
+          394,
+          397
+        ],
+        [
+          415,
+          443
+        ]
+      ],
+      "before_sha256": "376a8222440e86c673983561935571223d863e8b862c151be0c7f989585a08aa",
+      "after_sha256": "376a8222440e86c673983561935571223d863e8b862c151be0c7f989585a08aa",
+      "file": "Profiler/llvm/AscendLateObserver.cpp",
+      "semantic_validation": "Fixed clang-format only; actual LLVM15 build and real opt selection contracts required after apply."
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": [
+        [
+          1324,
+          1395
+        ],
+        [
+          1548,
+          1549
+        ]
+      ],
+      "before_sha256": "25e7836a2b340d8efc20c41d231be685529a45d0e0d910706f844e3a95b31b71",
+      "after_sha256": "33b0804a0612171b3b9134f66629b32cdcc1a84645da0ca4687e1ed743d8c76a",
+      "file": "Debugger/python/flagtree_debugger/api.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    },
+    {
+      "idempotent": true,
+      "changed_ranges": null,
+      "before_sha256": "7670988be1953cc33890227fd9c02c9c366614e78bfbf26ef2b3d5748ad7ac8d",
+      "after_sha256": "42737048c48c6cc924cdf2affc4efa761d66d748d90ab11e2c0f50189db7928a",
+      "file": "Profiler/test/test_ascend_selection_metadata.py",
+      "ast_equal": true,
+      "ruff_new_diagnostics": []
+    }
+  ]
+}

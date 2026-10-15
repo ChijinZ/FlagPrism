@@ -104,9 +104,32 @@ static void attachSourceOrigin(json::Object &site, const Instruction &instructio
     site["inline_chain"] = std::move(chain);
   }
 }
+static uint64_t selectedSemantics() {
+  const std::string option = environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS");
+  if (option.empty())
+    return 7;
+  SmallVector<StringRef, 4> names;
+  StringRef(option).split(names, ',', -1, false);
+  uint64_t mask = 0;
+  for (StringRef name : names) {
+    uint64_t bit = name == "issue"                ? 1
+                   : name == "wait_bracket"       ? 2
+                   : name == "control_checkpoint" ? 4
+                                                  : 0;
+    if (!bit || (mask & bit))
+      report_fatal_error(
+          "FlagPrism trace semantics must be unique supported names");
+    mask |= bit;
+  }
+  if (!mask)
+    report_fatal_error(
+        "FlagPrism trace semantics must be unique supported names");
+  return mask;
+}
 static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             uint64_t capacity, uint64_t selectedProgram,
-                            StringRef actorKind, json::Array &sites) {
+                            StringRef actorKind, uint64_t semanticMask,
+                            json::Array &sites) {
   if (argumentIndex >= function.arg_size() || !function.getArg(argumentIndex)->getType()->isPointerTy())
     report_fatal_error("FlagPrism trace argument must identify a compiler-mapped pointer formal");
   auto *pointerType = cast<PointerType>(function.getArg(argumentIndex)->getType());
@@ -141,6 +164,9 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   uint64_t siteNumber = 0;
   for (CallInst *call : selected) {
     const bool wait = call->getCalledFunction()->getName().contains("WAIT");
+    const uint64_t siteId = siteNumber++;
+    if (!(semanticMask & (wait ? 2 : 1)))
+      continue;
     Instruction *after = call->getNextNode();
     IRBuilder<> beforeBuilder(call);
     Value *start = timestamp(beforeBuilder);
@@ -149,24 +175,39 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     // Only the chosen program touches global log memory. The timestamps are
     // source-control observations around the existing primitive, no new wait.
     auto *selectedTerminator = SplitBlockAndInsertIfThen(afterBuilder.CreateICmpEQ(program, afterBuilder.getInt64(selectedProgram)), after, false);
-    appendRecord(selectedTerminator, function.getArg(argumentIndex), program, actor, start, end, capacity, siteNumber, wait ? 2 : 1);
-    json::Object site{{"site_id", static_cast<int64_t>(siteNumber++)}, {"callee", call->getCalledFunction()->getName()}, {"semantics", wait ? "existing_readiness_wait_source_control" : "signal_issue_source_control"}, {"source_op_id", nullptr}};
+    appendRecord(selectedTerminator, function.getArg(argumentIndex), program,
+                 actor, start, end, capacity, siteId, wait ? 2 : 1);
+    json::Object site{
+        {"site_id", static_cast<int64_t>(siteId)},
+        {"callee", call->getCalledFunction()->getName()},
+        {"semantics", wait ? "existing_readiness_wait_source_control"
+                           : "signal_issue_source_control"},
+        {"source_op_id", nullptr}};
     attachSourceOrigin(site, *call);
     sites.push_back(std::move(site));
   }
   for (const auto &loopHeader : loopHeaders) {
+    const uint64_t siteId = siteNumber++;
+    if (!(semanticMask & 4))
+      continue;
     BasicBlock *header = loopHeader.first;
     Instruction *position = &*header->getFirstInsertionPt();
-    json::Object site{{"site_id", static_cast<int64_t>(siteNumber)}, {"block", printValue(*header)}, {"semantics", "loop_header_occurrence"}, {"iteration_identity", nullptr}, {"source_op_id", nullptr}, {"origin_semantics", "loop_header_control_checkpoint"}};
+    json::Object site{{"site_id", static_cast<int64_t>(siteId)},
+                      {"block", printValue(*header)},
+                      {"semantics", "loop_header_occurrence"},
+                      {"iteration_identity", nullptr},
+                      {"source_op_id", nullptr},
+                      {"origin_semantics", "loop_header_control_checkpoint"}};
     attachSourceOrigin(site, *loopHeader.second);
     IRBuilder<> builder(position);
     Value *tick = timestamp(builder);
     auto *terminator = SplitBlockAndInsertIfThen(builder.CreateICmpEQ(program, builder.getInt64(selectedProgram)), position, false);
-    appendRecord(terminator, function.getArg(argumentIndex), program, actor, tick, tick, capacity, siteNumber, 3);
-    ++siteNumber;
+    appendRecord(terminator, function.getArg(argumentIndex), program, actor,
+                 tick, tick, capacity, siteId, 3);
     sites.push_back(std::move(site));
   }
-  return !selected.empty() || !loopHeaders.empty();
+  return true; // Program/actor coordinate calls were added even for zero
+               // selected sites.
 }
 class AscendLateObserver : public PassInfoMixin<AscendLateObserver> {
 public:
@@ -350,7 +391,10 @@ public:
         const auto programOption = environment("FLAGPRISM_ASCEND_TRACE_PROGRAM");
         if (!programOption.empty() && StringRef(programOption).getAsInteger(10, selectedProgram))
           report_fatal_error("FlagPrism selected program must be an integer");
-        changed |= instrumentActor(*function, argumentIndex, capacity, selectedProgram, environment("FLAGPRISM_ASCEND_ACTOR_KIND"), dynamicSites);
+        changed |=
+            instrumentActor(*function, argumentIndex, capacity, selectedProgram,
+                            environment("FLAGPRISM_ASCEND_ACTOR_KIND"),
+                            selectedSemantics(), dynamicSites);
       }
       const auto targetCpu = function->getFnAttribute("target-cpu").getValueAsString();
       actors.push_back(json::Object{{"dynamic_observation_prepared", !traceArgument.empty()}, {"argument_roles", std::move(argumentRoles)}, {"function", function->getName()}, {"target_cpu", targetCpu}, {"actor_kind", environment("FLAGPRISM_ASCEND_ACTOR_KIND")}, {"arguments", std::move(arguments)}, {"sites", std::move(sites)}, {"loops", std::move(loops)}});
@@ -368,7 +412,35 @@ public:
       report_fatal_error("FlagPrism cannot retain final actor LLVM");
     llvmFile << ir;
     llvmFile.close();
-    json::Object manifest{{"dynamic_clock", json::Object{{"domain", "ascend.SYS_CNT"}, {"scope", "actor_local"}, {"unit", "ticks"}, {"tick_ns", nullptr}, {"alignment", "unverified"}}}, {"dynamic_record_layout", "actor_header4_record8_v1"}, {"dynamic_sites", std::move(dynamicSites)}, {"instrumented", changed}, {"schema_version", 1}, {"backend", "ascend"}, {"phase", "post_actor_lowering_pre_scalar_optimization"}, {"module_sha256", moduleHash}, {"module_identifier", module.getModuleIdentifier()}, {"target_triple", module.getTargetTriple()}, {"compile_id", environment("FLAGPRISM_ASCEND_COMPILE_ID")}, {"source_association", "surviving_explicit_metadata_only"}, {"actors", std::move(actors)}};
+    json::Array effectiveSemantics;
+    const uint64_t semanticMask = selectedSemantics();
+    if (semanticMask & 1)
+      effectiveSemantics.push_back("issue");
+    if (semanticMask & 2)
+      effectiveSemantics.push_back("wait_bracket");
+    if (semanticMask & 4)
+      effectiveSemantics.push_back("control_checkpoint");
+    json::Object manifest{
+        {"effective_semantics", std::move(effectiveSemantics)},
+        {"semantic_selection_stage",
+         "compile_time_before_timestamp_and_record"},
+        {"dynamic_clock", json::Object{{"domain", "ascend.SYS_CNT"},
+                                       {"scope", "actor_local"},
+                                       {"unit", "ticks"},
+                                       {"tick_ns", nullptr},
+                                       {"alignment", "unverified"}}},
+        {"dynamic_record_layout", "actor_header4_record8_v1"},
+        {"dynamic_sites", std::move(dynamicSites)},
+        {"instrumented", changed},
+        {"schema_version", 1},
+        {"backend", "ascend"},
+        {"phase", "post_actor_lowering_pre_scalar_optimization"},
+        {"module_sha256", moduleHash},
+        {"module_identifier", module.getModuleIdentifier()},
+        {"target_triple", module.getTargetTriple()},
+        {"compile_id", environment("FLAGPRISM_ASCEND_COMPILE_ID")},
+        {"source_association", "surviving_explicit_metadata_only"},
+        {"actors", std::move(actors)}};
     raw_fd_ostream jsonFile((base + ".json").str(), fileError, sys::fs::OF_None);
     if (fileError)
       report_fatal_error("FlagPrism cannot retain compiler manifest");

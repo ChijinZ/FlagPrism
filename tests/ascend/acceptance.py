@@ -170,7 +170,13 @@ def worker(plan, output):
             os.environ['FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY']='1'
         else:os.environ.pop('FLAGTREE_PROFILER_CANN_TRITON_HOOK_LEGACY',None)
         if mode!='off':
-            request=ObservationRequest(semantics=('issue','wait_bracket','control_checkpoint'),programs=(0,),max_events_per_instance=plan['capacity']) if mode=='detailed' else None
+            request = ObservationRequest(
+                semantics=tuple(
+                    plan.get('semantics',
+                             ('issue', 'wait_bracket', 'control_checkpoint'))),
+                programs=(0, ),
+                max_events_per_instance=plan['capacity']
+            ) if mode == 'detailed' else None
             session=profiler.start(str(output/'capture'),backend='cann',hook='instrumentation' if request else 'triton',
                 observation_request=request,mode=f"runtime_base:device_id={plan['device']}:mstx_enabled=true:aclprof_msproftx_enabled=true:runtime_host_timing_fallback=false",
                 metadata={'operator':operator,'parameters':{'shape':shape,'config':config},'validation':record['oracle'],'test_plan':plan})

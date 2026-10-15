@@ -1,0 +1,31 @@
+{
+  "purpose": "Test a bounded on-device semantic-selection mode after the original all-site RMS T5 overhead failure; retain the original failure and thresholds.",
+  "functional_contract": "Unselected primitive/loop classes receive no MOV SYS_CNT or event writes. Selected original site IDs remain stable. Native primitives/math remain unchanged. No arbitrary site selection or sampling is added.",
+  "rms": {
+    "operator": "rmsnorm",
+    "shape": [127, 769],
+    "variant": 0,
+    "batches": [0, 1, 2],
+    "modes": ["native", "detailed"],
+    "detailed_semantics": ["wait_bracket"],
+    "samples": 30,
+    "warmup": 3,
+    "capacity": 256,
+    "device": 4,
+    "order_seed": 1729,
+    "inputs": "Original canonical input bytes; same CPU oracle/tolerances/canaries as original fixed T5."
+  },
+  "fused_smoke": {
+    "operator": "gemm_bias_gelu",
+    "shape": [128, 128, 128],
+    "variant": 0,
+    "mode": "detailed",
+    "semantics": ["wait_bracket"],
+    "samples": 3,
+    "warmup": 1,
+    "capacity": 256,
+    "device": 4,
+    "purpose": "Demonstrate real selected waits, stable sparse site IDs, retained exact identity/local clock and typed static actor peers through the public entry."
+  },
+  "interpretation": "If RMS has no selected waits, record zero events explicitly and do not substitute another case to claim RMS acceptance. Preserve all task samples and any overhead reversal. Native reference is SDK task time; off isolated task time remains unavailable."
+}

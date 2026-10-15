@@ -42,6 +42,9 @@ def test_cache_identity_changes_with_trace_capacity_and_plugin(tmp_path, monkeyp
     monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN',str(plugin));first=m.cache_key()
     monkeypatch.setenv('FLAGPRISM_ASCEND_TRACE_CAPACITY','64');second=m.cache_key();assert first!=second
     plugin.write_bytes(b'second');assert second!=m.cache_key()
+    third = m.cache_key()
+    monkeypatch.setenv('FLAGPRISM_ASCEND_TRACE_SEMANTICS', 'wait_bracket')
+    assert third != m.cache_key()
 
 
 def test_unrequested_backend_does_not_change_driver():

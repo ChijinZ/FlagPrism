@@ -41,6 +41,17 @@ def prepare(event):
     if not plugin.is_file():
         raise FileNotFoundError(plugin)
     if requested:
+        semantics = requested.get('semantics')
+        allowed = {'issue', 'wait_bracket', 'control_checkpoint'}
+        if (not isinstance(semantics, (list, tuple)) or not semantics
+                or any(value not in allowed for value in semantics)
+                or len(set(semantics)) != len(semantics)):
+            raise ValueError(
+                'Ascend observation semantics must be unique supported names')
+        event.environment['FLAGPRISM_ASCEND_TRACE_SEMANTICS'] = ','.join(
+            semantics)
+        event.metadata[
+            'flagprism_ascend_semantic_selection_stage'] = 'compile_time_before_timestamp_and_record'
         event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] = str(event.metadata['flagprism_ascend_trace_capacity'])
         event.environment['FLAGPRISM_ASCEND_TRACE_PROGRAM'] = str(event.metadata['flagprism_ascend_trace_program'])
         event.environment['FLAGPRISM_ASCEND_TRACE_SOURCE_ARGUMENT'] = str(event.metadata['flagprism_ascend_trace_source_argument_index'])
@@ -185,6 +196,8 @@ def cache_key():
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_CAPACITY'),
                 'program':
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_PROGRAM'),
+                'trace_semantics':
+                os.environ.get('FLAGPRISM_ASCEND_TRACE_SEMANTICS'),
                 'line_info':
                 os.environ.get('TRITON_DISABLE_LINE_INFO'),
                 'sdk_ir_print_flag':

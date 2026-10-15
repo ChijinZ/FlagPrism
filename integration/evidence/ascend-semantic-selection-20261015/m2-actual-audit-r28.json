@@ -1,0 +1,937 @@
+{
+  "status": "PASS_functional_semantic_selection",
+  "rms_requests": [
+    {
+      "case": "m2-rms-r28-0",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 2,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        5.88,
+        5.9,
+        5.86,
+        5.92,
+        5.76,
+        6.02,
+        5.92,
+        6.06,
+        5.72,
+        5.94,
+        6.02,
+        6.3,
+        6.34,
+        6.48,
+        6.74,
+        6.16,
+        5.84,
+        6.36,
+        6.3,
+        5.98,
+        6.12,
+        5.9,
+        6.6,
+        5.94,
+        5.98,
+        6.58,
+        6.58,
+        5.88,
+        5.74,
+        6.64
+      ],
+      "host_median_us": 215.668,
+      "finalization_export_s": 5.875977754,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 6.0
+    },
+    {
+      "case": "m2-rms-r28-1",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30,
+        "semantics": [
+          "wait_bracket"
+        ]
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        12.02,
+        10.62,
+        12.64,
+        10.58,
+        10.8,
+        9.72,
+        10.6,
+        9.04,
+        10.74,
+        10.82,
+        10.76,
+        9.64,
+        11.4,
+        10.36,
+        11.4,
+        11.42,
+        12.04,
+        10.6,
+        11.98,
+        10.56,
+        10.46,
+        9.44,
+        10.42,
+        9.18,
+        10.74,
+        9.32,
+        9.32,
+        9.82,
+        10.6,
+        10.64
+      ],
+      "host_median_us": 1708.192,
+      "finalization_export_s": 6.112301664,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 10.6,
+      "records": 198,
+      "raw_captures": 33,
+      "actor_counts": {
+        "1": 198
+      },
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ],
+      "effective_semantics": [
+        [
+          "wait_bracket"
+        ]
+      ],
+      "unselected_class_has_no_timestamps": true,
+      "zero_drop_saturation": true,
+      "selection_metadata_version": "Actual compiler manifest; debugger public selection labels pending descriptive correction after this run."
+    },
+    {
+      "case": "m2-rms-r28-2",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 1,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30,
+        "semantics": [
+          "wait_bracket"
+        ]
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        9.38,
+        10.78,
+        9.36,
+        11.4,
+        10.82,
+        11.38,
+        10.52,
+        11.4,
+        10.64,
+        10.64,
+        10.58,
+        11.98,
+        9.74,
+        10.54,
+        9.7,
+        9.74,
+        9.4,
+        10.8,
+        9.64,
+        10.84,
+        10.78,
+        11.78,
+        10.84,
+        11.84,
+        10.6,
+        12.16,
+        12.04,
+        12.12,
+        10.8,
+        10.78
+      ],
+      "host_median_us": 1760.758,
+      "finalization_export_s": 4.870011569,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 10.78,
+      "records": 198,
+      "raw_captures": 33,
+      "actor_counts": {
+        "1": 198
+      },
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ],
+      "effective_semantics": [
+        [
+          "wait_bracket"
+        ]
+      ],
+      "unselected_class_has_no_timestamps": true,
+      "zero_drop_saturation": true,
+      "selection_metadata_version": "Actual compiler manifest; debugger public selection labels pending descriptive correction after this run."
+    },
+    {
+      "case": "m2-rms-r28-3",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 1,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        6.64,
+        6.42,
+        6.24,
+        6.54,
+        6.66,
+        7.3,
+        6.6,
+        6.62,
+        6.6,
+        6.38,
+        6.26,
+        6.28,
+        6.36,
+        6.44,
+        6.22,
+        6.32,
+        6.24,
+        6.54,
+        6.28,
+        6.32,
+        6.5,
+        6.32,
+        6.22,
+        6.86,
+        6.26,
+        6.3,
+        6.34,
+        6.4,
+        7.08,
+        6.6
+      ],
+      "host_median_us": 220.3025,
+      "finalization_export_s": 3.737204959,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 6.390000000000001
+    },
+    {
+      "case": "m2-rms-r28-4",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 0,
+        "mode": "native",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        6.68,
+        6.62,
+        6.5,
+        6.56,
+        6.56,
+        6.48,
+        6.74,
+        6.54,
+        6.62,
+        6.6,
+        6.58,
+        6.68,
+        6.48,
+        6.56,
+        7.08,
+        6.76,
+        6.66,
+        6.52,
+        7.04,
+        7.14,
+        7.08,
+        6.58,
+        6.6,
+        6.88,
+        7.04,
+        6.62,
+        6.6,
+        6.62,
+        6.72,
+        6.48
+      ],
+      "host_median_us": 216.678,
+      "finalization_export_s": 3.741815838,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 6.62
+    },
+    {
+      "case": "m2-rms-r28-5",
+      "plan": {
+        "operator": "rmsnorm",
+        "shape": [
+          127,
+          769
+        ],
+        "variant": 0,
+        "batch": 2,
+        "mode": "detailed",
+        "device": 4,
+        "capacity": 256,
+        "warmup": 3,
+        "samples": 30,
+        "semantics": [
+          "wait_bracket"
+        ]
+      },
+      "inputs": [
+        {
+          "file": "rows-127x769-0.bin",
+          "sha256": "cfaffaf5a0806a2f44aa8bf82dbb29d367ec27d4bbbb2c7979523d1753325f2d"
+        },
+        {
+          "file": "rows-127x769-1.bin",
+          "sha256": "54ea02d10c9642507f147125ee2efbe7fcd3d832fb0bb4d0ffe40a960da80a8e"
+        },
+        {
+          "file": "rows-127x769-2.bin",
+          "sha256": "9de112a3efa65bf5a1798a3bae097c5ff840b3a5b9a5d4d90fec8a8a8330e915"
+        }
+      ],
+      "max_abs_error": 1.7881393432617188e-07,
+      "device_samples_us": [
+        12.04,
+        10.68,
+        12.0,
+        10.62,
+        10.5,
+        9.84,
+        11.2,
+        9.06,
+        10.74,
+        10.76,
+        10.72,
+        9.36,
+        11.38,
+        10.84,
+        11.36,
+        11.72,
+        12.04,
+        10.68,
+        12.0,
+        11.44,
+        10.5,
+        9.84,
+        10.46,
+        9.08,
+        10.78,
+        9.72,
+        9.46,
+        9.34,
+        10.6,
+        10.58
+      ],
+      "host_median_us": 1722.682,
+      "finalization_export_s": 4.856257782,
+      "source_hashes": {
+        "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+        "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+        "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+      },
+      "compiler": {
+        "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+        "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+      },
+      "native_bindings": {
+        "debugger": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+          "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+        },
+        "profiler": {
+          "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+          "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+        }
+      },
+      "device_median_us": 10.68,
+      "records": 198,
+      "raw_captures": 33,
+      "actor_counts": {
+        "1": 198
+      },
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ],
+      "effective_semantics": [
+        [
+          "wait_bracket"
+        ]
+      ],
+      "unselected_class_has_no_timestamps": true,
+      "zero_drop_saturation": true,
+      "selection_metadata_version": "Actual compiler manifest; debugger public selection labels pending descriptive correction after this run."
+    }
+  ],
+  "comparisons": [
+    {
+      "batch": 0,
+      "native_device_median_us": 6.62,
+      "wait_only_device_median_us": 10.6,
+      "percent_increase": 60.12084592145015,
+      "detailed_le_10percent": false,
+      "native_host_median_us": 216.678,
+      "wait_only_host_median_us": 1708.192,
+      "records": 198,
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ]
+    },
+    {
+      "batch": 1,
+      "native_device_median_us": 6.390000000000001,
+      "wait_only_device_median_us": 10.78,
+      "percent_increase": 68.70109546165881,
+      "detailed_le_10percent": false,
+      "native_host_median_us": 220.3025,
+      "wait_only_host_median_us": 1760.758,
+      "records": 198,
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ]
+    },
+    {
+      "batch": 2,
+      "native_device_median_us": 6.0,
+      "wait_only_device_median_us": 10.68,
+      "percent_increase": 78.0,
+      "detailed_le_10percent": false,
+      "native_host_median_us": 215.668,
+      "wait_only_host_median_us": 1722.682,
+      "records": 198,
+      "selected_sites": [
+        {
+          "actor_kind": "AIV",
+          "site_id": 1,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 4,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 6,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 8,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 9,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        },
+        {
+          "actor_kind": "AIV",
+          "site_id": 11,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM"
+        }
+      ]
+    }
+  ],
+  "fused_smoke": {
+    "case": "m2-fused-r28",
+    "plan": {
+      "operator": "gemm_bias_gelu",
+      "shape": [
+        128,
+        128,
+        128
+      ],
+      "variant": 0,
+      "batch": 0,
+      "mode": "detailed",
+      "device": 4,
+      "capacity": 256,
+      "warmup": 1,
+      "samples": 3,
+      "semantics": [
+        "wait_bracket"
+      ]
+    },
+    "inputs": [
+      {
+        "file": "matmul-128x128x128-0.bin",
+        "sha256": "7a2f7ed5a6012a289a961cd9494ff3c663b4e5c6f07ef4be91081e0dae24d4ea"
+      },
+      {
+        "file": "matmul-128x128x128-1.bin",
+        "sha256": "e829bbaf2f07160e4472f53304ca5d2257ee420f72e1922aae2bbc23c774b943"
+      },
+      {
+        "file": "matmul-128x128x128-2.bin",
+        "sha256": "17218dc59332814ab7b9303afff1a11b2ba92e8a2fc4effd56e710375794ac23"
+      }
+    ],
+    "max_abs_error": 1.341104507446289e-07,
+    "device_samples_us": [
+      24.84,
+      24.54,
+      24.9
+    ],
+    "host_median_us": 2089.787,
+    "finalization_export_s": 3.979899976,
+    "source_hashes": {
+      "runner": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+      "math": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+      "heldout": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef"
+    },
+    "compiler": {
+      "path": "/tmp/flagprism-method-ascend/FlagTree/python/triton/_C/libtriton.so",
+      "sha256": "4eb0684188f8e7bd55221d54d073dab4ac667430d5867ffbed64ba68d30a281d"
+    },
+    "native_bindings": {
+      "debugger": {
+        "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+        "sha256": "244bc4a62728c31ae86edc8a491fb11cbfaa98e41dea68d513a3b5a76f59215c"
+      },
+      "profiler": {
+        "path": "/tmp/flagprism-method-ascend/compiler-python/flagtree/profiler/_native.so",
+        "sha256": "893fc61b09cca4f8b5ace7f7e98d5fff0b7a2ed781188c7bcca5a9fd4985265a"
+      }
+    },
+    "device_median_us": 24.84,
+    "records": 100,
+    "raw_captures": 4,
+    "actor_counts": {
+      "0": 76,
+      "1": 12,
+      "2": 12
+    },
+    "selected_sites": [
+      {
+        "actor_kind": "AIC",
+        "site_id": 3,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 4,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 7,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 8,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 10,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 11,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIC",
+        "site_id": 13,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIV",
+        "site_id": 0,
+        "callee": "llvm.hivm.WAIT.FLAG.DEV.REG"
+      },
+      {
+        "actor_kind": "AIV",
+        "site_id": 2,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIV",
+        "site_id": 4,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      },
+      {
+        "actor_kind": "AIV",
+        "site_id": 6,
+        "callee": "llvm.hivm.WAIT.FLAG.IMM"
+      }
+    ],
+    "effective_semantics": [
+      [
+        "wait_bracket"
+      ],
+      [
+        "wait_bracket"
+      ]
+    ],
+    "unselected_class_has_no_timestamps": true,
+    "zero_drop_saturation": true,
+    "selection_metadata_version": "Actual compiler manifest; debugger public selection labels pending descriptive correction after this run."
+  },
+  "limits": [
+    "Original all-site 61-68percent overhead failure retained.",
+    "New wait-only mode is not arbitrary site selection or event sampling.",
+    "Unselected classes have no MOV or event stores; program publication selection still does not gate selected counter reads.",
+    "No off isolated task reference; native<=5percent target remains unverified."
+  ]
+}
