@@ -104,3 +104,49 @@ kernels, ordinary CLI execution with one host-side effect, and explicit manual
 scope compatibility. These development and installation results do not replace
 frozen unseen-kernel acceptance or a final release freeze. NVIDIA performance
 benchmarks remain deferred.
+
+## Automatic candidate inventory
+
+`ai/observation_plan.json` retains the complete eligible candidate list under
+`plans[].plan.inventory`, including candidates excluded by the site budget.
+The automatic plan has `schema_version: 2`, the actual `binary_id` and
+`compiler_ir_sha256`, and identifies the completed TTGIR stage. Each row contains:
+
+| Field | Meaning |
+| --- | --- |
+| `candidate_ordinal` | Stable traversal position among eligible candidates in this compilation. |
+| `operation`, `location` | Actual compiler operation and structured MLIR source location, including callsite/fused locations when present. |
+| `candidate_class` | Source statement or other eligible internal operation. |
+| `selected`, `selection_reason` | Whether records were inserted, and source priority, even spacing, or site-budget exclusion. |
+| `selected_scope_name` | Unique inserted scope name, or null for an unselected candidate. |
+| `scope_id` | Actual allocated scope ID in this binary's saved TTGIR, or null when no scope was inserted. |
+| `source_statement` | Preserved frontend statement text when the compiler supplies it. |
+
+A candidate ordinal is not a scope ID. Selection can skip ordinal 1 while
+allocating scope IDs 0 and 1 to candidate ordinals 0 and 2. The binding resolves
+selected names through the actual scope allocator; it does not substitute the
+candidate ordinal. Unselected candidates do not generate dynamic records, so
+absence at these locations is not evidence that their source code did not run.
+Excluded compiler bookkeeping operations are outside the eligible candidate
+list; the eligibility policy remains in the generic pass.
+
+Version 2 is also part of the compiler capability check and the instrumentation
+cache identity. Existing version-1 automatic binaries cannot silently supply a
+count-only plan. The device ring ABI remains version 1, and explicit manual
+scope mode remains available.
+
+Automatic activation registers the bundled frontend statement-metadata component
+before compilation; users do not need to import the debugger. This registration
+does not enable debugger collection or execute the application. Source statement
+priority is applied when these compiler annotations exist; other eligible IR
+operations fill the remaining site budget. `source_metadata=1` is part of the
+cache identity alongside inventory version 2. Explicit `max_sites=1` is accepted
+for a requested single-site view; the normal default remains eight sites.
+
+Detailed automatic and explicit-scope NVIDIA recording support eager launches.
+A JIT launch during CUDA graph capture is rejected before compilation or buffer
+allocation with an actionable error. Use `backend="cupti", hook="triton"` for
+the separate native-only CUDA graph mode. Detailed graph replay semantics are
+not provided; a graph recorded outside the detailed session has no automatic
+internal records. Graph rejection leaves the profiling session usable for a
+subsequent ordinary eager launch.

@@ -121,6 +121,12 @@ def main(output):
             torch.testing.assert_close(c.cpu(), expected)
             assert torch.equal(a, original_a) and torch.equal(b, original_b)
             records, capture = validate_bundle(base)
+            inventory = capture['automatic_plan']['inventory']
+            assert any(not row['selected'] and row['scope_id'] is None
+                       for row in inventory)
+            assert any(
+                row['selected'] and row['candidate_ordinal'] != row['scope_id']
+                for row in inventory)
             assert any(r['compiler_site']['origin']['operation'] == 'tt.dot'
                        for r in records), records
             rows.append({

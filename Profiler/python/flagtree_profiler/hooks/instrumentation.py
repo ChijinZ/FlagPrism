@@ -1,4 +1,5 @@
 import functools
+import importlib
 import base64
 import hashlib
 import json
@@ -34,6 +35,8 @@ profiler_native = runtime_binding()
 
 # TODO(fywkevin): add support for major.minor
 VERSION = 1
+# Part of the compilation cache identity: old auto binaries have no inventory.
+AUTOMATIC_INVENTORY_VERSION = 2
 
 
 class CudaAllocator:
@@ -255,11 +258,20 @@ class InstrumentationHook(Hook):
             raise RuntimeError(
                 "Only one instance of the instrumentation hook can be active at a time."
             )
-        if self.automatic and (_get_backend_name() != 'nvidia' or not hasattr(
-                triton_proton, 'add_automatic_proton_scopes')):
+        if self.automatic and (
+                _get_backend_name() != 'nvidia'
+                or not hasattr(triton_proton, 'add_automatic_proton_scopes')
+                or getattr(triton_proton, 'AUTOMATIC_INVENTORY_VERSION',
+                           0) != AUTOMATIC_INVENTORY_VERSION):
             raise RuntimeError(
                 'Automatic NVIDIA profiling requires the matching FlagPrism compiler plugin'
             )
+
+        if self.automatic:
+            # Register the packaged frontend statement metadata component before
+            # compiling ordinary scripts. Importing it does not enable debugger
+            # collection, execute a kernel or replay the application.
+            importlib.import_module('flagtree.debugger')
 
         InstrumentationHook.active_count += 1
 
@@ -329,6 +341,13 @@ class InstrumentationHook(Hook):
             # Own the shared scratch allocator before compilation/allocation,
             # not just after the launcher has already chosen a device buffer.
             locked = instrumentation_hook.capture_observations
+            if locked:
+                import torch
+                if torch.cuda.is_current_stream_capturing():
+                    raise RuntimeError(
+                        "NVIDIA detailed instrumentation supports eager launches only; "
+                        "CUDA graph capture is unsupported. Use backend='cupti', "
+                        "hook='triton' for native-only CUDA graph profiling.")
             if locked and not instrumentation_hook._observation_run_lock.acquire(
                     blocking=False):
                 raise RuntimeError(
@@ -338,7 +357,7 @@ class InstrumentationHook(Hook):
                 kwargs["instrumentation_mode"] = str(original_mode)
                 if instrumentation_hook.automatic:
                     kwargs[
-                        "instrumentation_mode"] += f':automatic=1:max_sites={instrumentation_hook.max_sites}'
+                        "instrumentation_mode"] += f':automatic={AUTOMATIC_INVENTORY_VERSION}:source_metadata=1:max_sites={instrumentation_hook.max_sites}'
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(
@@ -414,20 +433,41 @@ class InstrumentationHook(Hook):
                 triton_proton.get_scope_id_origins(module),
                 binary_id=hash,
                 compiler_ir_path=ir_path)
+            automatic_plan = None
+            if self.automatic:
+                automatic_plan = triton_proton.get_automatic_proton_plan(
+                    module)
+                if any(
+                        origin.get('automatic')
+                        for origin in scope_origins.values()):
+                    if automatic_plan.get(
+                            'schema_version') != AUTOMATIC_INVENTORY_VERSION:
+                        raise RuntimeError(
+                            'Automatic NVIDIA compiler inventory is missing or stale; rebuild matching compiler and clear the old cache'
+                        )
+                    if len(automatic_plan.get(
+                            'inventory', [])) != automatic_plan.get(
+                                'proton.automatic_candidates'):
+                        raise RuntimeError(
+                            'Automatic NVIDIA compiler inventory candidate count is inconsistent'
+                        )
+                automatic_plan.update(
+                    binary_id=hash,
+                    compiler_ir_sha256=hashlib.sha256(
+                        Path(ir_path).read_bytes()).hexdigest(),
+                    max_sites=self.max_sites,
+                    policy=
+                    'source_statements_then_evenly_spaced_internal_operations',
+                    semantics=
+                    'compiler_operation_control_intervals_without_completion_barriers'
+                )
             self.observation_metadata[function] = {
                 'binary_id':
                 hash,
                 'scope_id_names':
                 list(scope_id_names),
-                'automatic_plan': {
-                    **triton_proton.get_automatic_proton_plan(module),
-                    'max_sites':
-                    self.max_sites,
-                    'policy':
-                    'source_statements_then_evenly_spaced_internal_operations',
-                    'semantics':
-                    'compiler_operation_control_intervals_without_completion_barriers',
-                } if self.automatic else None,
+                'automatic_plan':
+                automatic_plan,
                 'scope_id_origins':
                 scope_origins,
                 'scope_origin_sources':

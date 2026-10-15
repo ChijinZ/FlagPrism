@@ -39,6 +39,28 @@ def validate_bundle(base):
     exported = json.loads((base / 'ai/observations.json').read_text())
     assert len(exported['captures']) == 1, exported.keys()
     capture = exported['captures'][0]
+    plan = capture['automatic_plan']
+    assert plan['schema_version'] == 2
+    assert plan['binary_id'] == capture['binary_id']
+    assert plan['compiler_ir_sha256'] == capture['compiler_ir_sha256']
+    assert ':automatic=2:source_metadata=1:' in capture['compiler_metadata'][
+        'instrumentation_mode']
+    inventory = plan['inventory']
+    assert len(inventory) == plan['proton.automatic_candidates']
+    assert sum(row['selected']
+               for row in inventory) == plan['proton.automatic_selected']
+    assert any(row['candidate_class'] == 'source_statement'
+               for row in inventory)
+    names = dict(capture['scope_id_names'])
+    for row in inventory:
+        assert row['operation'] and row['location'] and row['selection_reason']
+        if row['selected']:
+            assert names[row['scope_id']] == row['selected_scope_name']
+            assert row['location'] == capture['scope_id_origins'][str(
+                row['scope_id'])]['entry'][0]
+        else:
+            assert row['scope_id'] is None and row[
+                'selected_scope_name'] is None
     decoded = capture['decoded']
     assert decoded['dropped_records'] == 0, decoded['losses']
     assert not decoded['unpaired_records'], decoded['unpaired_records']
