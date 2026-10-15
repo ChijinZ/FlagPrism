@@ -1401,6 +1401,23 @@ def _automatic_backend(backend=None):
         f"Automatic fine-grained profiling is unavailable for {backend!r}")
 
 
+def _automatic_observation_request(backend):
+    from .observations import ObservationRequest
+
+    if _is_cann_backend(backend):
+        # Ascend observes late LLVM checkpoints, including scalarized lowering
+        # loops. A few source iterations can therefore exceed 256 records.
+        # Keep every selected occurrence up to a fixed per-actor bound; do not
+        # infer source iteration counts, replay, or silently sample away loss.
+        # Three actor regions use 3 * (32 + 4096 * 64) = 786,528 raw bytes.
+        return ObservationRequest(
+            semantics=("operation_checkpoint", "control_checkpoint"),
+            max_events_per_instance=4096,
+            automatic=True)
+    return ObservationRequest(semantics=("source_control_interval", ),
+                              automatic=True)
+
+
 def start(
     name: Optional[str] = None,
     *,
@@ -1482,12 +1499,7 @@ def start(
                 "runtime_base:mstx_enabled=true:aclprof_msproftx_enabled=true:"
                 "runtime_host_timing_fallback=false")
         hook = "instrumentation"
-        from .observations import ObservationRequest
-        semantics = (("operation_checkpoint",
-                      "control_checkpoint") if _is_cann_backend(backend) else
-                     ("source_control_interval", ))
-        observation_request = ObservationRequest(semantics=semantics,
-                                                 automatic=True)
+        observation_request = _automatic_observation_request(backend)
     if backend is None:
         backend = _select_backend()
 
