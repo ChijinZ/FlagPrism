@@ -31,10 +31,10 @@ NESTED = '''module {
   %one = arith.constant 1 : index
   %out = scf.for %i = %zero to %steps step %one iter_args(%v = %x) -> (tensor<32xf32>) {
    %next = scf.if %pred -> (tensor<32xf32>) {
-    %a = arith.addf %v, %x : tensor<32xf32>
+    %a = arith.addf %v, %x : tensor<32xf32> loc(unknown)
     scf.yield %a : tensor<32xf32>
    } else {
-    %b = arith.subf %v, %x : tensor<32xf32>
+    %b = arith.subf %v, %x : tensor<32xf32> loc(unknown)
     scf.yield %b : tensor<32xf32>
    }
    scf.yield %next : tensor<32xf32>
