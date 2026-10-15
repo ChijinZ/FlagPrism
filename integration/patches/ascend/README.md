@@ -183,6 +183,18 @@ For Debian/Ubuntu the latter is supplied by `llvm-15-dev llvm-15-tools`; the
 prefix is normally `/usr/lib/llvm-15`. The two LLVM prefixes must remain
 separate: the LLVM15 plugin is loaded by upstream opt15, never by bisheng.
 
+The pinned FlagTree source publishes its matching LLVM22 distribution in
+`python/setup_tools/setup_helper.py`:
+[LLVM22 aarch64/Python3.11 compatibility archive](https://baai-cp-web.ks3-cn-beijing.ksyuncs.com/trans/llvm-7d5de303-ubuntu-aarch64-python311-compat_v0.6.0.tar.gz).
+Its JSON dependency in `setup.py` is
+[nlohmann JSON 3.11.3 include.zip](https://github.com/nlohmann/json/releases/download/v3.11.3/include.zip).
+These are dependency distributions, not a FlagPrism compiler/native build.
+Download/extract them into a chosen dependency directory and set the two prefix
+arguments to the extracted LLVM directory and directory containing
+`nlohmann/json.hpp`. Record the downloaded archive SHA256 alongside the recipe.
+Build tooling can be installed with `python -m pip install cmake ninja setuptools
+wheel pybind11==3.0.4 nanobind==2.12.0`; retain the matching SDK Torch packages.
+
 The caller owns these dependency installations. The helper checks major
 versions, records tools/configuration/header and all top-level LLVM library
 hashes, and binds the actual CMake source/LLVM inputs and output native hashes
