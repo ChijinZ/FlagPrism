@@ -12,9 +12,12 @@ import re
 import shutil
 import stat
 import tempfile
+import zipfile
 
 _TREE = "raw/native/cann_sdk"
 _MANIFEST = "raw/native/cann-sdk-retention.json"
+_ARCHIVE = "raw/native/cann_sdk.zip"
+_ARCHIVE_THRESHOLD_BYTES = 8 * 1024 * 1024
 
 
 def _true(value):
@@ -122,6 +125,105 @@ def _same_tree(root, expected):
             f"CANN SDK retention inventory/hash mismatch: {root}")
 
 
+def _safe_relative(relative):
+    if (not isinstance(relative, str) or not relative or "\\" in relative
+            or ":" in relative or Path(relative).is_absolute()
+            or ".." in Path(relative).parts
+            or Path(relative).as_posix() != relative or relative == "."):
+        raise ValueError("Invalid relative CANN SDK archive path")
+    return relative
+
+
+def _verify_archive(path, expected, archive_digest=None):
+    """Verify every member without extracting attacker-controlled paths."""
+    path = _path(path)
+    if archive_digest is not None and _file_digest(path) != archive_digest:
+        raise RuntimeError("CANN SDK archive hash/size mismatch")
+    names, directories, files = set(), [], {}
+    with zipfile.ZipFile(path) as archive:
+        for member in archive.infolist():
+            name = member.filename
+            relative = _safe_relative(name[:-1] if member.is_dir() else name)
+            if relative in names:
+                raise ValueError("Duplicate CANN SDK archive member")
+            names.add(relative)
+            mode = member.external_attr >> 16
+            if stat.S_ISLNK(mode) or (stat.S_IFMT(mode)
+                                      not in (0, stat.S_IFREG, stat.S_IFDIR)):
+                raise ValueError("Nonregular CANN SDK archive member")
+            if stat.S_IFMT(mode) and stat.S_ISDIR(mode) != member.is_dir():
+                raise ValueError("CANN SDK archive member type mismatch")
+            if member.is_dir():
+                if relative not in expected['directories'] or member.file_size:
+                    raise ValueError("Unexpected CANN SDK archive directory")
+                directories.append(relative)
+                continue
+            if relative not in expected['files']:
+                raise ValueError("Unexpected CANN SDK archive member")
+            target = expected['files'][relative]
+            if member.file_size != target['bytes']:
+                raise RuntimeError("CANN SDK archive member size mismatch")
+            size, digest = 0, hashlib.sha256()
+            with archive.open(member) as stream:
+                for block in iter(lambda: stream.read(1024 * 1024), b''):
+                    size += len(block)
+                    if size > target['bytes']:
+                        raise RuntimeError(
+                            "CANN SDK archive member exceeds declared size")
+                    digest.update(block)
+            files[relative] = {'bytes': size, 'sha256': digest.hexdigest()}
+    if {
+            'directories': sorted(directories),
+            'files': dict(sorted(files.items()))
+    } != expected:
+        raise RuntimeError("CANN SDK archive member inventory/hash mismatch")
+
+
+def _retain_archive(source, output, inventory, manifest):
+    target, manifest_path = output / _ARCHIVE, output / _MANIFEST
+    staging = Path(
+        tempfile.mkdtemp(prefix='.cann-sdk-archive-', dir=target.parent))
+    archive = staging / 'cann_sdk.zip'
+    with zipfile.ZipFile(archive,
+                         'x',
+                         compression=zipfile.ZIP_DEFLATED,
+                         compresslevel=1,
+                         allowZip64=True) as retained:
+        for relative in inventory['directories']:
+            retained.write(source / relative, relative + '/')
+        for relative in inventory['files']:
+            retained.write(source / relative, relative)
+    archive_digest = _file_digest(archive)
+    _verify_archive(archive, inventory, archive_digest)
+    _same_tree(source, inventory)
+    manifest.update(schema_version=2,
+                    storage='zip_deflate',
+                    bundle_capture_root=_ARCHIVE,
+                    mapping={
+                        'source': manifest['source_capture_root'],
+                        'bundle_relative': _ARCHIVE
+                    },
+                    archive=dict(bundle_relative=_ARCHIVE,
+                                 compression='ZIP_DEFLATED',
+                                 compresslevel=1,
+                                 **archive_digest),
+                    files=[
+                        dict(source_relative=relative,
+                             archive_member=relative,
+                             **digest)
+                        for relative, digest in inventory['files'].items()
+                    ])
+    # Exclusive hard links never replace an existing archive or manifest. Keep
+    # staging and source on every failure so partial retention is inspectable.
+    staged_manifest = staging / 'manifest.json'
+    staged_manifest.write_text(
+        json.dumps(manifest, separators=(',', ':')) + '\n')
+    os.link(archive, target)
+    os.link(staged_manifest, manifest_path)
+    shutil.rmtree(staging)
+    return manifest
+
+
 def retain_native_capture(base, output):
     """Copy one native CANN session tree and return its complete manifest.
 
@@ -138,7 +240,8 @@ def retain_native_capture(base, output):
     target, manifest_path = output / _TREE, output / _MANIFEST
     _path(target)
     _path(manifest_path)
-    if target.exists() or manifest_path.exists():
+    archive_path = _path(output / _ARCHIVE)
+    if target.exists() or archive_path.exists() or manifest_path.exists():
         raise FileExistsError(
             f"CANN SDK retention destination already exists: {target}")
     inventory = _inventory(source)
@@ -187,6 +290,9 @@ def retain_native_capture(base, output):
             **digest
         } for relative, digest in inventory["files"].items()],
     }
+    if sum(row["bytes"]
+           for row in inventory["files"].values()) >= _ARCHIVE_THRESHOLD_BYTES:
+        return _retain_archive(source, output, inventory, manifest)
     with tempfile.TemporaryDirectory(prefix=".cann-sdk-copy-",
                                      dir=target.parent) as staging:
         staging = Path(staging)
@@ -214,16 +320,25 @@ def _expected_inventory(manifest):
     files = {}
     for row in manifest.get("files", []):
         relative = row["source_relative"]
+        _safe_relative(relative)
         path = Path(relative)
+        mapping_valid = (row.get("archive_member") == relative
+                         if manifest.get("schema_version") == 2 else
+                         row.get("bundle_relative") == f"{_TREE}/{relative}")
         if (not relative or path.is_absolute() or ".." in path.parts
                 or path.as_posix() != relative or relative in files
-                or row["bundle_relative"] != f"{_TREE}/{relative}"):
+                or not mapping_valid):
             raise ValueError(
                 "Invalid relative CANN SDK retention file mapping")
         files[relative] = {"sha256": row["sha256"], "bytes": row["bytes"]}
     if not files:
         raise ValueError("CANN SDK retention manifest contains no files")
-    return {"directories": manifest.get("directories", []), "files": files}
+    directories = manifest.get("directories", [])
+    if len(set(directories)) != len(directories):
+        raise ValueError("Duplicate CANN SDK retention directory")
+    for relative in directories:
+        _safe_relative(relative)
+    return {"directories": sorted(directories), "files": files}
 
 
 def cleanup_retained_native_capture(base, output):
@@ -242,17 +357,29 @@ def cleanup_retained_native_capture(base, output):
     output = _path(output)
     manifest_path = _path(output / _MANIFEST)
     manifest = json.loads(manifest_path.read_text())
-    if (manifest.get("schema_version") != 1
-            or manifest.get("status") != "complete"
+    version = manifest.get("schema_version")
+    storage_path = _ARCHIVE if version == 2 else _TREE
+    if (version not in (1, 2) or manifest.get("status") != "complete"
             or manifest.get("backend") != "cann"
             or manifest.get("temporary") is not True
-            or manifest.get("bundle_capture_root") != _TREE
+            or manifest.get("bundle_capture_root") != storage_path
             or manifest.get("metadata_path") != metadata["metadata_path"]
             or manifest.get("metadata_sha256") != metadata["metadata_sha256"]):
         raise ValueError(
             "CANN SDK retention manifest does not match this capture")
     expected = _expected_inventory(manifest)
-    _same_tree(output / _TREE, expected)
+    if version == 2:
+        archive = manifest.get('archive') or {}
+        if (manifest.get('storage') != 'zip_deflate'
+                or archive.get('bundle_relative') != _ARCHIVE
+                or archive.get('compression') != 'ZIP_DEFLATED'):
+            raise ValueError('Invalid CANN SDK archive representation')
+        _verify_archive(output / _ARCHIVE, expected, {
+            'bytes': archive['bytes'],
+            'sha256': archive['sha256']
+        })
+    else:
+        _same_tree(output / _TREE, expected)
     source = metadata["source"]
     if not config.get("aclprof_output_root"):
         raise ValueError(
@@ -264,7 +391,7 @@ def cleanup_retained_native_capture(base, output):
             or manifest.get("source_owned_root") != str(owned_root)
             or manifest.get("mapping") != {
                 "source": str(source),
-                "bundle_relative": _TREE
+                "bundle_relative": storage_path
             } or source == output or source in output.parents
             or output in source.parents):
         raise ValueError(

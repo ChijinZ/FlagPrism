@@ -232,8 +232,16 @@ def write_view(output, payload, report):
     output = Path(output)
     document = reconstruct(payload, report['launches'], report['binaries'],
                            report['events'] + report['untimed_events'])
-    (output / 'ai/reconstruction.json'
-     ).write_text(json.dumps(document, indent=2, allow_nan=False) + '\n')
+    from .export_refs import compact
+    exported = compact(document,
+                       payload,
+                       fields={
+                           'raw_base64', 'runtime_metadata', 'compiler_site',
+                           'clock', 'association_evidence',
+                           'source_region_origin', 'source_site'
+                       })
+    (output / 'ai/reconstruction.json').write_text(
+        json.dumps(exported, separators=(',', ':'), allow_nan=False) + '\n')
     (output / 'report/observations.html').write_text(render(document))
     from .fine_grained import write_view as write_fine_grained
     write_fine_grained(output, document, report)

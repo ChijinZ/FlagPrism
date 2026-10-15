@@ -596,16 +596,21 @@ def render(report):
             return str(value)
         return value
 
-    data = json.dumps(safe_numbers(report), ensure_ascii=True).replace(
-        "<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+    data = json.dumps(safe_numbers(report),
+                      ensure_ascii=True,
+                      separators=(',', ':')).replace("<", "\\u003c").replace(
+                          ">", "\\u003e").replace("&", "\\u0026")
     # Keep exact integer literals in downloadable JSON; the UI uses safe strings.
     # Embedded exports also work when opening a standalone HTML via file://.
     exports = json.dumps(
         {
-            "report.json": json.dumps(report),
-            "timeline.json": json.dumps(chrome_trace(report))
+            "report.json":
+            json.dumps(report, separators=(',', ':')),
+            "timeline.json":
+            json.dumps(chrome_trace(report), separators=(',', ':'))
         },
-        ensure_ascii=True)
+        ensure_ascii=True,
+        separators=(',', ':'))
     exports = exports.replace("<", "\\u003c").replace(">", "\\u003e").replace(
         "&", "\\u0026")
     before, after = HTML.split("__DATA__", 1)
@@ -846,8 +851,8 @@ def write_bundle(report, source, output, context=None, *, complete=True):
         source="caller", value=policy if isinstance(policy, dict) else None)
 
     def write(name, value):
-        (output /
-         name).write_text(json.dumps(value, indent=2, allow_nan=False) + "\n")
+        (output / name).write_text(
+            json.dumps(value, separators=(',', ':'), allow_nan=False) + "\n")
 
     availability = {}
     for name, present in (("events",

@@ -57,6 +57,43 @@ def _locations(value):
     }.values())
 
 
+def candidate_observation_status(captures, records):
+    """Join compiler candidates to retained records by exact capture/binary/site."""
+    rows = []
+    for capture in captures:
+        plan = capture.get('automatic_plan') or {}
+        binary = capture.get('binary_id')
+        capture_id = capture.get('capture_id')
+        for candidate in plan.get('inventory', []):
+            site = candidate.get('scope_id')
+            selected = candidate.get('selected')
+            bound = (isinstance(capture_id, str) and bool(capture_id)
+                     and isinstance(binary, str) and bool(binary)
+                     and type(site) is int and site >= 0)
+            count = sum(
+                1 for row in records
+                if bound and row.get('capture_id') == capture_id
+                and row.get('binary_id') == binary and row.get('site') == site
+                and row.get('association_status') == 'verified')
+            status = ('site_budget_excluded' if selected is False else
+                      'unbound_scope_identity' if not bound
+                      or selected is not True else 'observed_retained_records'
+                      if count else 'selected_no_retained_records')
+            rows.append(
+                dict(capture_id=capture_id,
+                     binary_id=binary,
+                     invocation_id=capture.get('invocation_id'),
+                     candidate_ordinal=candidate.get('candidate_ordinal'),
+                     scope_id=site,
+                     selected=selected,
+                     operation=candidate.get('operation'),
+                     candidate_class=candidate.get('candidate_class'),
+                     selection_reason=candidate.get('selection_reason'),
+                     retained_records=count,
+                     status=status))
+    return rows
+
+
 def normalize(document):
     records = []
     for group in document['groups']:
@@ -115,13 +152,21 @@ def normalize(document):
                        native_event_ids=group['native_event_ids'])
             records.append(row)
     return {
-        'schema_version': 1,
-        'records': records,
-        'captures': document.get('captures', []),
-        'rejected': document.get('rejected', []),
-        'status': 'dynamic_records_available'
+        'schema_version':
+        1,
+        'records':
+        records,
+        'candidate_observation_status':
+        candidate_observation_status(document.get('captures', []), records),
+        'captures':
+        document.get('captures', []),
+        'rejected':
+        document.get('rejected', []),
+        'status':
+        'dynamic_records_available'
         if records else 'no_internal_dynamic_records',
-        'limits': document['limits']
+        'limits':
+        document['limits']
     }
 
 
@@ -222,8 +267,52 @@ def render(data):
                     source_cell(row) + '</td>' +
                     ''.join('<td>' + escape(str(value)) + '</td>'
                             for value in values) + '</tr>')
+    coverage = data.get('automatic_selection_status')
+    coverage_html = ''
+    if coverage is not None:
+        coverage_rows = ''.join(
+            '<tr>' +
+            ''.join('<td>' + escape(str(row.get(key))) + '</td>'
+                    for key in ('capture_id', 'invocation_id', 'binary_id',
+                                'source_linked_records', 'status', 'reason')) +
+            '</tr>' for row in coverage['captures'])
+        coverage_html = (
+            '<h2>Automatic capture coverage</h2><p>Status: ' +
+            escape(coverage['status']) +
+            '. Each captured invocation must have its own source-linked internal records. '
+            'This check describes the selected programs and sites; it does not assert '
+            'that every program or source region was sampled. '
+            '<a href="../ai/selection_status.json">Coverage JSON</a></p>'
+            '<table><thead><tr><th>Capture</th><th>Invocation</th><th>Binary</th>'
+            '<th>Located records</th><th>Status</th><th>Reason</th></tr></thead><tbody>'
+            + coverage_rows + '</tbody></table>')
+    candidates = data.get('candidate_observation_status', [])
+    candidate_html = ''
+    if candidates:
+        fields = ('capture_id', 'binary_id', 'candidate_ordinal', 'scope_id',
+                  'operation', 'candidate_class', 'selected',
+                  'selection_reason', 'retained_records', 'status')
+        candidate_html = (
+            '<h2>Compiler candidate observations</h2>'
+            '<p>Counts join retained records by capture, binary and compiler scope. '
+            'A selected scope with no retained record does not establish nonexecution; '
+            'inspect original loss and sampling evidence below. A control-region '
+            'interval does not establish execution of its conditional body.</p>'
+            '<table><thead><tr>' +
+            ''.join('<th>' + field.replace('_', ' ').title() + '</th>'
+                    for field in fields) + '</tr></thead><tbody>' +
+            ''.join(
+                '<tr>' + ''.join('<td>' + escape(str(row.get(field))) + '</td>'
+                                 for field in fields) + '</tr>'
+                for row in candidates) + '</tbody></table>')
     captures = escape(
-        json.dumps(data['captures'], indent=2, ensure_ascii=False))
+        json.dumps([{
+            key: value
+            for key, value in capture.items()
+            if key not in {'raw_base64', 'runtime_metadata'}
+        } for capture in data['captures']],
+                   separators=(',', ':'),
+                   ensure_ascii=False))
     return (
         '<!doctype html><meta charset="utf-8"><title>Source-linked dynamic records</title>'
         '<style>body{font:14px system-ui;margin:2rem}table{border-collapse:collapse}'
@@ -252,8 +341,10 @@ def render(data):
             'Site', 'Semantic', 'Retained occurrence', 'Start tick',
             'End tick', 'Ticks', 'Clock', 'Clock scope', 'Association')) +
         '</tr></thead><tbody id="records">' + ''.join(rows) +
-        '</tbody></table>'
+        '</tbody></table>' + coverage_html + candidate_html +
         '<details><summary>Original capture, selection and loss evidence</summary><pre>'
+        +
+        '<a href="../ai/observations.json">Complete raw capture and runtime metadata</a>'
         + captures +
         '</pre></details><script>const filter=document.getElementById("filter"),'
         'params=new URLSearchParams(location.search),binary=params.get("binary");'
@@ -276,10 +367,15 @@ def write_view(output, document, report):
     catalog.write()
     from .execution_view import write_view as write_execution
     write_execution(output, data['records'])
-    (output / 'ai/fine_grained.json'
-     ).write_text(json.dumps(data, allow_nan=False) + '\n')
-    (output / 'ai/observation_plan.json').write_text(
-        json.dumps(_plans(report, data['captures']), allow_nan=False) + '\n')
+    from .export_refs import compact
+    original = json.loads((output / 'ai/observations.json').read_text())
+    for name, view in (('fine_grained', data), ('observation_plan',
+                                                _plans(report,
+                                                       data['captures']))):
+        exported = compact(view, original, fields={'raw_base64'})
+        (output / f'ai/{name}.json').write_text(
+            json.dumps(exported, separators=(',', ':'), allow_nan=False) +
+            '\n')
     (output / 'report/fine_grained.html').write_text(render(data))
     overview = output / 'report/index.html'
     if overview.exists():
@@ -291,43 +387,118 @@ def write_view(output, document, report):
 
 
 def require_automatic_records(output, request):
-    """An automatic capture without internal evidence is an incomplete result."""
+    """Check each captured invocation; another kernel cannot mask a gap."""
     output = Path(output)
     path = output / 'ai/fine_grained.json'
     document = json.loads(path.read_text()) if path.is_file() else {}
-    valid = [
-        row for row in document.get('records', [])
-        if row.get('source_locations') and row.get('operation')
-        and row.get('association_status') == 'verified'
-        and row.get('semantic') != 'native_lifecycle'
-    ]
-    if valid:
-        return
+    from .export_refs import restore
+    original_path = output / 'ai/observations.json'
+    original = json.loads(
+        original_path.read_text()) if original_path.is_file() else {}
+    document = restore(document, original)
     internal = [
         row for row in document.get('records', [])
         if row.get('operation') and row.get('association_status') == 'verified'
         and row.get('semantic') != 'native_lifecycle'
     ]
-    reason = ('internal_records_lack_valid_source_snapshot_positions'
-              if internal else
+    launches_path = output / 'ai/launches.json'
+    launches = json.loads(
+        launches_path.read_text()) if launches_path.is_file() else []
+    coverage, captured_invocations = [], set()
+    for capture in document.get('captures', []):
+        metadata = capture.get('runtime_metadata') or {}
+        proof = metadata.get('profiler_association_evidence') or {}
+        invocation = capture.get('invocation_id') or metadata.get(
+            'profiler_invocation_id')
+        binary = capture.get('binary_id') or proof.get('binary_id')
+        capture_id = capture.get('capture_id')
+        identity = (invocation, binary)
+        identity_valid = all(
+            isinstance(value, str) and value
+            for value in (capture_id, invocation, binary))
+        # Do not derive a missing capture identity from some other valid row.
+        # Runtime-owned captures use the exact same-launch metadata evidence.
+        if metadata:
+            identity_valid = (
+                identity_valid
+                and proof.get('evidence') == 'same_launch_metadata_object'
+                and proof.get('invocation_id') == invocation
+                and metadata.get('profiler_invocation_id') == invocation
+                and proof.get('binary_id') == binary)
+        matched = [
+            row for row in internal
+            if identity_valid and row.get('capture_id') == capture_id
+            and row.get('invocation_id') == invocation
+            and row.get('binary_id') == binary
+        ]
+        valid = [row for row in matched if row.get('source_locations')]
+        reason = (
+            None if valid else
+            'capture_has_no_verified_invocation_identity' if not identity_valid
+            else 'internal_records_lack_valid_source_snapshot_positions'
+            if matched else
+            'selected_programs_produced_no_source_linked_internal_records')
+        coverage.append(
+            dict(capture_id=capture_id,
+                 invocation_id=invocation,
+                 binary_id=binary,
+                 status='complete' if valid else 'incomplete',
+                 reason=reason,
+                 internal_records=len(matched),
+                 source_linked_records=len(valid)))
+        if identity_valid:
+            captured_invocations.add(identity)
+    for launch in launches:
+        identity = (launch.get('id'), launch.get('binary_id'))
+        if identity not in captured_invocations:
+            coverage.append(
+                dict(capture_id=None,
+                     invocation_id=identity[0],
+                     binary_id=identity[1],
+                     status='incomplete',
+                     reason='invocation_has_no_internal_capture',
+                     internal_records=0,
+                     source_linked_records=0))
+    incomplete = [row for row in coverage if row['status'] != 'complete']
+    reason = (incomplete[0]['reason'] if incomplete else None if coverage else
               'selected_programs_produced_no_source_linked_internal_records')
     action = (
         'Inspect ai/source_index.json diagnostics and source_location_candidates '
         'in ai/fine_grained.json. Captured source snapshots must match their '
         'digest and compiler positions must fall within an unambiguous file snapshot.'
-        if internal else
+        if reason == 'internal_records_lack_valid_source_snapshot_positions'
+        else
+        'Inspect capture runtime_metadata and ai/launches.json for the named invocation '
+        'and binary. Preserve raw data and report the missing or conflicting invocation '
+        'association; records from another capture cannot establish this association.'
+        if reason in ('capture_has_no_verified_invocation_identity',
+                      'invocation_has_no_internal_capture') else
         'Inspect the retained plan, capture/loss status and selected programs. '
         'For conditional work, choose a program that executes the region with '
         'a public ObservationRequest; no application replay was performed.')
     status = {
         'schema_version': 1,
-        'status': 'incomplete',
+        'status': 'incomplete' if reason else 'complete',
         'reason': reason,
         'request': request,
-        'action': action
+        'action': action if reason else None,
+        'captures': coverage,
     }
     (output / 'ai/selection_status.json'
      ).write_text(json.dumps(status, indent=2) + '\n')
+    document['automatic_selection_status'] = status
+    if reason:
+        document['status'] = 'incomplete_automatic_capture'
+    from .export_refs import compact
+    path.write_text(
+        json.dumps(compact(document, original, fields={'raw_base64'}),
+                   separators=(',', ':'),
+                   allow_nan=False) + '\n')
+    html = output / 'report/fine_grained.html'
+    if html.is_file():
+        html.write_text(render(document))
+    if not reason:
+        return
     raise RuntimeError(
         f'Automatic profiling is incomplete: {reason}. Original capture and plan retained at '
         f'{output}; see ai/selection_status.json.')

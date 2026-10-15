@@ -370,3 +370,229 @@ def test_real_export_failure_keeps_sdk_and_partial_bundle(
             ).read_bytes() == expected
     assert (output / "raw/native/cann-sdk-retention.json").exists()
     assert not (output / "manifest.json").exists()
+
+
+def test_zip_retains_every_member_and_empty_directory_then_cleans(
+        helper, capture, monkeypatch):
+    import zipfile
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, root, _ = capture
+    inventory = helper._inventory(source)
+    manifest = helper.retain_native_capture(base, output)
+    assert manifest['schema_version'] == 2
+    assert manifest['storage'] == 'zip_deflate'
+    assert not (output / 'raw/native/cann_sdk').exists()
+    path = output / manifest['archive']['bundle_relative']
+    with zipfile.ZipFile(path) as archive:
+        for relative, digest in inventory['files'].items():
+            data = archive.read(relative)
+            assert data == (source / relative).read_bytes()
+            assert hashlib.sha256(data).hexdigest() == digest['sha256']
+        assert 'PROF_7/device_0/empty/' in archive.namelist()
+    assert helper.cleanup_retained_native_capture(base, output) is True
+    assert not source.exists() and not root.exists()
+    assert helper.cleanup_retained_native_capture(base, output) is False
+
+
+@pytest.mark.parametrize(
+    'name', ['../escape', '/absolute', 'a/../escape', 'a\\escape', './escape'])
+def test_unsafe_zip_members_rejected(helper, tmp_path, name):
+    import zipfile
+    path = tmp_path / 'bad.zip'
+    with zipfile.ZipFile(path, 'x') as archive:
+        archive.writestr(name, b'bytes')
+    with pytest.raises(ValueError, match='relative'):
+        helper._verify_archive(path, {'directories': [], 'files': {}})
+
+
+@pytest.mark.parametrize('problem', [
+    'duplicate', 'extra', 'missing', 'hash', 'directory', 'symlink', 'notzip'
+])
+def test_invalid_zip_never_authorizes_cleanup(helper, capture, monkeypatch,
+                                              problem):
+    import zipfile
+    import stat
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, _, _ = capture
+    manifest = helper.retain_native_capture(base, output)
+    path = output / manifest['archive']['bundle_relative']
+    expected = helper._expected_inventory(manifest)
+    if problem == 'notzip':
+        path.write_bytes(b'not a zip')
+    elif problem == 'hash':
+        manifest['files'][0]['sha256'] = '0' * 64
+    else:
+        with zipfile.ZipFile(path, 'w') as archive:
+            for relative in expected['directories']:
+                if problem == 'directory' and relative == expected[
+                        'directories'][0]:
+                    continue
+                archive.writestr(relative + '/', b'')
+            for i, relative in enumerate(expected['files']):
+                if problem == 'missing' and i == 0:
+                    continue
+                archive.writestr(relative, (source / relative).read_bytes())
+            if problem == 'duplicate':
+                relative = next(iter(expected['files']))
+                with pytest.warns(UserWarning, match='Duplicate'):
+                    archive.writestr(relative,
+                                     (source / relative).read_bytes())
+            if problem == 'extra':
+                archive.writestr('unknown-file', b'new')
+            if problem == 'symlink':
+                info = zipfile.ZipInfo('link')
+                info.external_attr = (stat.S_IFLNK | 0o777) << 16
+                archive.writestr(info, b'/outside')
+    # Update only outer hash: inner member verification must still reject it.
+    manifest['archive'].update(helper._file_digest(path))
+    (output / 'raw/native/cann-sdk-retention.json').write_text(
+        json.dumps(manifest))
+    with pytest.raises((ValueError, RuntimeError, zipfile.BadZipFile)):
+        helper.cleanup_retained_native_capture(base, output)
+    assert source.exists()
+
+
+def test_archive_outer_corruption_and_source_mutation_refuse_cleanup(
+        helper, capture, monkeypatch):
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, _, _ = capture
+    manifest = helper.retain_native_capture(base, output)
+    path = output / manifest['archive']['bundle_relative']
+    original = path.read_bytes()
+    path.write_bytes(original[:-1])
+    with pytest.raises(RuntimeError, match='hash/size'):
+        helper.cleanup_retained_native_capture(base, output)
+    assert source.exists()
+    path.write_bytes(original)
+    (source / 'new SDK data').write_bytes(b'changed')
+    with pytest.raises(RuntimeError, match='mismatch'):
+        helper.cleanup_retained_native_capture(base, output)
+    assert source.exists()
+
+
+def test_archive_existing_destination_is_never_overwritten(
+        helper, capture, monkeypatch):
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, _, _ = capture
+    target = output / 'raw/native/cann_sdk.zip'
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b'keep')
+    with pytest.raises(FileExistsError):
+        helper.retain_native_capture(base, output)
+    assert target.read_bytes() == b'keep' and source.exists()
+
+
+def test_archive_verification_failure_preserves_staging_and_source(
+        helper, capture, monkeypatch):
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, _, _ = capture
+
+    def fail(*args):
+        raise RuntimeError('injected archive validation failure')
+
+    monkeypatch.setattr(helper, '_verify_archive', fail)
+    with pytest.raises(RuntimeError, match='archive validation'):
+        helper.retain_native_capture(base, output)
+    assert source.exists()
+    assert list(
+        (output / 'raw/native').glob('.cann-sdk-archive-*/cann_sdk.zip'))
+    assert not (output / 'raw/native/cann-sdk-retention.json').exists()
+    assert not (output / 'raw/native/cann_sdk.zip').exists()
+
+
+def test_archive_changed_source_during_retention_is_not_committed(
+        helper, capture, monkeypatch):
+    monkeypatch.setattr(helper, '_ARCHIVE_THRESHOLD_BYTES', 1)
+    base, output, source, _, _ = capture
+    verify = helper._verify_archive
+
+    def mutate(*args):
+        verify(*args)
+        (source /
+         'PROF_7/info.json').write_bytes(b'changed after archive validation')
+
+    monkeypatch.setattr(helper, '_verify_archive', mutate)
+    with pytest.raises(RuntimeError, match='mismatch'):
+        helper.retain_native_capture(base, output)
+    assert source.exists()
+    assert list(
+        (output / 'raw/native').glob('.cann-sdk-archive-*/cann_sdk.zip'))
+    assert not (output / 'raw/native/cann-sdk-retention.json').exists()
+
+
+def test_zip_bad_member_crc_is_rejected_without_extraction(helper, tmp_path):
+    import zipfile
+    import struct
+    path = tmp_path / 'bad-crc.zip'
+    content = b'opaque contents'
+    with zipfile.ZipFile(path, 'x', compression=zipfile.ZIP_STORED) as archive:
+        archive.writestr('data', content)
+    data = bytearray(path.read_bytes())
+    name_length, extra_length = struct.unpack_from('<HH', data, 26)
+    data[30 + name_length + extra_length] ^= 1
+    path.write_bytes(data)
+    expected = {
+        'directories': [],
+        'files': {
+            'data': {
+                'bytes': len(content),
+                'sha256': hashlib.sha256(content).hexdigest()
+            }
+        }
+    }
+    with pytest.raises(zipfile.BadZipFile, match='CRC'):
+        helper._verify_archive(path, expected, helper._file_digest(path))
+    assert not (tmp_path / 'data').exists()
+
+
+@pytest.mark.parametrize('temporary', [True, False])
+def test_real_export_uses_archive_threshold_and_verifies_before_cleanup(
+        capture, temporary):
+    import zipfile
+    from flagtree.profiler._capture import export_capture
+    base, output, source, _, metadata = capture
+    metadata['config']['aclprof_output_path_temporary'] = temporary
+    write_metadata(base, metadata)
+    large = b'opaque SDK retained bytes\x00\xff' * 350000
+    (source / 'PROF_7/large.db').write_bytes(large)
+    base.with_suffix('.vendor.json').write_text(
+        json.dumps({
+            'backend': 'cann',
+            'associations': []
+        }))
+    export_capture(base, output)
+    retention = json.loads(
+        (output / 'raw/native/cann-sdk-retention.json').read_text())
+    assert retention['schema_version'] == 2
+    archive_path = output / retention['archive']['bundle_relative']
+    with zipfile.ZipFile(archive_path) as archive:
+        assert archive.read('PROF_7/large.db') == large
+    bundle = json.loads((output / 'manifest.json').read_text())
+    assert bundle['files']['raw/native/cann_sdk.zip'][
+        'sha256'] == hashlib.sha256(archive_path.read_bytes()).hexdigest()
+    assert not (output / 'raw/native/cann_sdk').exists()
+    assert source.exists() is (not temporary)
+
+
+def test_real_archive_export_completion_failure_preserves_original(
+        capture, monkeypatch):
+    from flagtree.profiler import _capture
+    base, output, source, _, _ = capture
+    (source / 'PROF_7/large.db').write_bytes(b'opaque SDK bytes' * 600000)
+    base.with_suffix('.vendor.json').write_text(
+        json.dumps({
+            'backend': 'cann',
+            'associations': []
+        }))
+
+    def fail(*args):
+        raise RuntimeError(
+            'injected completion failure after archive retention')
+
+    monkeypatch.setattr(_capture._report, 'write_manifest', fail)
+    with pytest.raises(RuntimeError, match='completion failure'):
+        _capture.export_capture(base, output)
+    assert source.exists()
+    assert (output / 'raw/native/cann_sdk.zip').exists()
+    assert (output / 'raw/native/cann-sdk-retention.json').exists()
+    assert not (output / 'manifest.json').exists()

@@ -248,3 +248,251 @@ def test_automatic_empty_selection_is_incomplete_not_native_only_success(
     status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
     assert status['status'] == 'incomplete'
     assert status['request']['programs'] == [0]
+
+
+def automatic_capture(capture, invocation, binary, *, runtime_owned=False):
+    if not runtime_owned:
+        return dict(capture_id=capture,
+                    invocation_id=invocation,
+                    binary_id=binary)
+    return dict(capture_id=capture,
+                runtime_metadata=dict(
+                    profiler_invocation_id=invocation,
+                    profiler_association_evidence=dict(
+                        invocation_id=invocation,
+                        binary_id=binary,
+                        evidence='same_launch_metadata_object')))
+
+
+def automatic_record(capture, invocation, binary, *, located=True):
+    return dict(capture_id=capture,
+                invocation_id=invocation,
+                binary_id=binary,
+                operation='arith.addf',
+                association_status='verified',
+                semantic='source_control_interval',
+                source_locations=[dict(file='ordinary.py', line=4, column=2)]
+                if located else [])
+
+
+def write_automatic_input(tmp_path, captures, records, launches=None):
+    import json
+    (tmp_path / 'ai').mkdir()
+    (tmp_path / 'ai/fine_grained.json').write_text(
+        json.dumps(
+            dict(captures=captures,
+                 records=records,
+                 status='dynamic_records_available')))
+    if launches is not None:
+        (tmp_path / 'ai/launches.json').write_text(json.dumps(launches))
+
+
+@pytest.mark.parametrize('runtime_owned', [False, True])
+@pytest.mark.parametrize('second_binary', ['binary-A', 'binary-B'])
+def test_valid_kernel_cannot_mask_empty_capture(view, tmp_path, runtime_owned,
+                                                second_binary):
+    import json
+    captures = [
+        automatic_capture('c-A',
+                          'launch-A',
+                          'binary-A',
+                          runtime_owned=runtime_owned),
+        automatic_capture('c-B',
+                          'launch-B',
+                          second_binary,
+                          runtime_owned=runtime_owned)
+    ]
+    write_automatic_input(tmp_path, captures,
+                          [automatic_record('c-A', 'launch-A', 'binary-A')])
+    with pytest.raises(RuntimeError, match='incomplete'):
+        view.require_automatic_records(tmp_path, {'automatic': True})
+    status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
+    assert status['status'] == 'incomplete'
+    a, b = status['captures']
+    assert a['status'] == 'complete' and a['source_linked_records'] == 1
+    assert b['capture_id'] == 'c-B' and b['invocation_id'] == 'launch-B'
+    assert b['status'] == 'incomplete' and b['source_linked_records'] == 0
+
+
+@pytest.mark.parametrize('runtime_owned', [False, True])
+def test_every_invocation_of_same_binary_needs_its_own_capture(
+        view, tmp_path, runtime_owned):
+    import json
+    captures = [
+        automatic_capture('c-A',
+                          'launch-A',
+                          'binary',
+                          runtime_owned=runtime_owned),
+        automatic_capture('c-B',
+                          'launch-B',
+                          'binary',
+                          runtime_owned=runtime_owned)
+    ]
+    records = [
+        automatic_record('c-A', 'launch-A', 'binary'),
+        automatic_record('c-B', 'launch-B', 'binary')
+    ]
+    launches = [
+        dict(id='launch-A', binary_id='binary'),
+        dict(id='launch-B', binary_id='binary')
+    ]
+    write_automatic_input(tmp_path, captures, records, launches)
+    view.require_automatic_records(tmp_path, {'automatic': True})
+    status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
+    assert status['status'] == 'complete'
+    assert len(status['captures']) == 2
+    assert all(row['source_linked_records'] == 1 for row in status['captures'])
+
+
+def test_expected_launch_without_capture_is_incomplete(view, tmp_path):
+    import json
+    write_automatic_input(tmp_path,
+                          [automatic_capture('c-A', 'launch-A', 'binary')],
+                          [automatic_record('c-A', 'launch-A', 'binary')], [
+                              dict(id='launch-A', binary_id='binary'),
+                              dict(id='launch-B', binary_id='binary')
+                          ])
+    with pytest.raises(RuntimeError,
+                       match='invocation_has_no_internal_capture'):
+        view.require_automatic_records(tmp_path, {'automatic': True})
+    status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
+    assert status['captures'][-1]['invocation_id'] == 'launch-B'
+
+
+@pytest.mark.parametrize('mismatch',
+                         ['capture', 'invocation', 'binary', 'source'])
+def test_record_cannot_borrow_identity_or_source_from_another_capture(
+        view, tmp_path, mismatch):
+    import json
+    record = automatic_record('c-A', 'launch-A', 'binary')
+    if mismatch == 'source':
+        record['source_locations'] = []
+    else:
+        record[{
+            'capture': 'capture_id',
+            'invocation': 'invocation_id',
+            'binary': 'binary_id'
+        }[mismatch]] = 'another'
+    write_automatic_input(tmp_path,
+                          [automatic_capture('c-A', 'launch-A', 'binary')],
+                          [record])
+    with pytest.raises(RuntimeError, match='incomplete'):
+        view.require_automatic_records(tmp_path, {'automatic': True})
+    status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
+    assert status['captures'][0]['source_linked_records'] == 0
+
+
+def test_partial_automatic_html_names_the_missing_capture(view, tmp_path):
+    import json
+    data = view.normalize(document())
+    data['records'][0]['capture_id'] = 'c-A'
+    data['captures'] = [
+        automatic_capture('c-A', 'launch-4', 'binary-sha'),
+        automatic_capture('c-B', 'launch-5', 'binary-sha')
+    ]
+    (tmp_path / 'ai').mkdir()
+    (tmp_path / 'report').mkdir()
+    (tmp_path / 'ai/fine_grained.json').write_text(json.dumps(data))
+    html = tmp_path / 'report/fine_grained.html'
+    html.write_text(view.render(data))
+    with pytest.raises(RuntimeError, match='incomplete'):
+        view.require_automatic_records(tmp_path, {'automatic': True})
+    rendered = html.read_text()
+    assert 'Automatic capture coverage' in rendered
+    assert 'c-B' in rendered and 'launch-5' in rendered
+    assert 'incomplete_automatic_capture' in rendered
+    assert '../ai/selection_status.json' in rendered
+
+
+def test_raw_capture_references_preserve_automatic_gate_and_loss(
+        view, tmp_path):
+    import json
+    refs = importlib.import_module(view.__package__ + '.export_refs')
+    capture = automatic_capture('c-A',
+                                'launch-A',
+                                'binary-A',
+                                runtime_owned=True)
+    capture.update(raw_base64='retained-raw-' * 1024,
+                   raw_sha256='raw-digest',
+                   dropped=7,
+                   counter_saturated=True)
+    records = [automatic_record('c-A', 'launch-A', 'binary-A')]
+    write_automatic_input(tmp_path, [capture], records)
+    path = tmp_path / 'ai/fine_grained.json'
+    original = {'captures': [capture], 'observations': []}
+    (tmp_path / 'ai/observations.json').write_text(json.dumps(original))
+    before = json.loads(path.read_text())
+    path.write_text(
+        json.dumps(refs.compact(before, original, fields={'raw_base64'})))
+    view.require_automatic_records(tmp_path, {'automatic': True})
+    exported = json.loads(path.read_text())
+    restored = refs.restore(exported, original)
+    assert restored['records'] == records
+    assert restored['captures'] == [capture]
+    assert restored['automatic_selection_status']['status'] == 'complete'
+    assert '$observation_ref' in exported['captures'][0]['raw_base64']
+    assert exported['captures'][0]['dropped'] == 7
+    assert exported['captures'][0]['counter_saturated'] is True
+
+
+def test_capture_html_links_complete_raw_without_inlining_it(view):
+    data = view.normalize(document())
+    data['captures'] = [{
+        'capture_id': 'capture-raw',
+        'dropped': 7,
+        'raw_base64': 'unique-base64-' * 4096,
+        'runtime_metadata': {
+            'large': 'unique-runtime-' * 4096
+        }
+    }]
+    html = view.render(data)
+    assert 'unique-base64-' not in html
+    assert 'unique-runtime-' not in html
+    assert '../ai/observations.json' in html
+    assert 'capture-raw' in html and 'dropped' in html
+
+
+def test_candidate_status_distinguishes_retention_selection_and_scope_identity(
+        view):
+    capture = dict(capture_id='capture',
+                   binary_id='binary',
+                   invocation_id='launch',
+                   automatic_plan={
+                       'inventory': [
+                           dict(scope_id=2,
+                                selected=True,
+                                candidate_ordinal=0,
+                                candidate_class='control_region',
+                                operation='scf.if'),
+                           dict(scope_id=3,
+                                selected=True,
+                                candidate_ordinal=1,
+                                candidate_class='control_computation',
+                                operation='arith.addi'),
+                           dict(scope_id=None,
+                                selected=False,
+                                candidate_ordinal=2,
+                                selection_reason='site_budget_excluded'),
+                           dict(scope_id=None,
+                                selected=True,
+                                candidate_ordinal=3)
+                       ]
+                   })
+    record = automatic_record('capture', 'launch', 'binary')
+    record['site'] = 2
+    other = dict(record, capture_id='other', site=3)
+    other_binary = dict(record, binary_id='other', site=3)
+    rows = view.candidate_observation_status([capture],
+                                             [record, other, other_binary])
+    assert [row['status'] for row in rows] == [
+        'observed_retained_records', 'selected_no_retained_records',
+        'site_budget_excluded', 'unbound_scope_identity'
+    ]
+    assert [row['retained_records'] for row in rows] == [1, 0, 0, 0]
+    data = view.normalize(document())
+    data['candidate_observation_status'] = rows
+    html = view.render(data)
+    assert all(row['status'] in html for row in rows)
+    assert 'control_region' in html and 'control_computation' in html
+    assert 'conditional body' in html
+    assert 'notexecuted' not in html
