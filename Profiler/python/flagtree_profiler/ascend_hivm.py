@@ -224,14 +224,16 @@ def build_static_readiness(capture,
     for (flag, producer, consumer), sites in groups.items():
         sets = [
             site for site in sites if site['operation'] == 'sync_block_set'
-            and site['state'] == 'verified_same_compile_actor'
         ]
         waits = [
             site for site in sites if site['operation'] == 'sync_block_wait'
-            and site['state'] == 'verified_same_compile_actor'
         ]
-        if len(sets) == 1 and len(waits) == 1 and sets[0][
-                'actor_kind'] != waits[0]['actor_kind']:
+        # Unresolved sites still compete: artifact validation cannot erase a
+        # possible producer or consumer when establishing channel uniqueness.
+        if (len(sets) == 1 and len(waits) == 1
+                and sets[0]['state'] == 'verified_same_compile_actor'
+                and waits[0]['state'] == 'verified_same_compile_actor'
+                and sets[0]['actor_kind'] != waits[0]['actor_kind']):
             result['channels'].append({
                 'id':
                 'hivm-channel:' + stream['sha256'] + ':' + str(flag) + ':' +

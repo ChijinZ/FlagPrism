@@ -259,3 +259,46 @@ def test_source_bytes_and_enclosing_compile_are_independent_requirements(
 def test_old_hash_only_capture_is_unavailable_without_durable_source():
     result = m.build_static_readiness(*fixtures())
     assert result['state'] == 'unavailable' and result['channels'] == []
+
+
+@pytest.mark.parametrize('operation', ['set', 'wait'])
+@pytest.mark.parametrize(
+    'artifact_state', ['missing', 'rejected', 'duplicate', 'ambiguous_actor'])
+def test_unresolved_competitors_prevent_channel_uniqueness(
+        operation, artifact_state):
+    kind, core, function, original = ('AIC', 'CUBE', 'unretained_producer',
+                                      'producer') if operation == 'set' else (
+                                          'AIV', 'VECTOR',
+                                          'unretained_consumer', 'consumer')
+    extra = ('func.func @' + function +
+             '() attributes {hivm.func_core_type = #hivm.func_core_type<' +
+             kind + '>} {\n'
+             ' hivm.hir.sync_block_' + operation + '[<' + core +
+             '>, <PIPE_FIX>, <PIPE_S>] flag = 7\n}\n')
+    capture, artifacts = fixtures(DUMP + extra)
+    if artifact_state != 'missing':
+        competitor = copy.deepcopy(artifacts[0 if operation == 'set' else 1])
+        competitor['llir'] = competitor['llir'].replace(original, function)
+        competitor['sha256'] = hashlib.sha256(
+            competitor['llir'].encode()).hexdigest()
+        competitor['metadata']['module_sha256'] = competitor['sha256']
+        competitor['metadata']['actors'][0]['function'] = function
+        if artifact_state == 'rejected':
+            competitor['driver_job']['exit_code'] = 1
+        if artifact_state == 'ambiguous_actor':
+            competitor['metadata']['actors'].append(
+                copy.deepcopy(competitor['metadata']['actors'][0]))
+        competitor['manifest_text'] = json.dumps(
+            competitor['metadata'], sort_keys=True, indent=2) + '\n'
+        competitor['manifest_sha256'] = hashlib.sha256(
+            competitor['manifest_text'].encode()).hexdigest()
+        artifacts.append(competitor)
+        if artifact_state == 'duplicate':
+            artifacts.append(copy.deepcopy(competitor))
+    result = readiness(capture, artifacts)
+    assert len(result['sites']) == 3
+    assert result['sites'][-1]['function'] == function
+    assert result['sites'][-1]['state'] == 'unassociated_actor'
+    assert not result['channels']
+    assert result['state'] == 'partial'
+    assert result['reason'] == 'no_unique_cross_actor_typed_channel'
