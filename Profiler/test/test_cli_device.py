@@ -153,3 +153,50 @@ def test_nonzero_application_exit_is_preserved(cli, tmp_path):
     with pytest.raises(SystemExit) as caught:
         cli.execute_as_main(str(script), [])
     assert caught.value.code == 7
+
+
+@pytest.mark.parametrize('failure', [False, True])
+@pytest.mark.parametrize('isolated,safe_path', [(False, False), (True, True),
+                                                (False, True)])
+def test_script_sibling_import_precedence_and_search_path_restored(
+        cli, monkeypatch, tmp_path, failure, isolated, safe_path):
+    app = tmp_path / 'application'
+    competing = tmp_path / 'competing'
+    app.mkdir()
+    competing.mkdir()
+    name = '_flagprism_cli_sibling_helper'
+    (app / (name + '.py')).write_text('value = "sibling"\n')
+    (competing / (name + '.py')).write_text('value = "wrong helper"\n')
+    marker = tmp_path / 'actual.txt'
+    script = app / 'main.py'
+    script.write_text(
+        'from pathlib import Path\nimport sys\nimport ' + name + '\n'
+        'Path(' + repr(str(marker)) + ').write_text(' + name + '.value)\n'
+        'sys.path.append("application-only-entry")\n' +
+        ('raise ValueError("application error")\n' if failure else ''))
+    monkeypatch.syspath_prepend(str(competing))
+    monkeypatch.delitem(sys.modules, name, raising=False)
+    flags = {
+        key: getattr(sys.flags, key)
+        for key in dir(sys.flags)
+        if not key.startswith('_') and isinstance(getattr(sys.flags, key), int)
+    }
+    flags.update(isolated=isolated, safe_path=safe_path)
+    monkeypatch.setattr(sys, 'flags', SimpleNamespace(**flags))
+    original_path = sys.path
+    original_entries = sys.path[:]
+    try:
+        if failure:
+            with pytest.raises(ValueError, match='application error'):
+                cli.execute_as_main(str(script), [])
+        else:
+            cli.execute_as_main(str(script), [])
+        expected_directory = competing if isolated or safe_path else app
+        assert marker.read_text() == ('wrong helper'
+                                      if isolated or safe_path else 'sibling')
+        assert sys.modules[name].__file__ == str(expected_directory /
+                                                 (name + '.py'))
+        assert sys.path is original_path
+        assert sys.path == original_entries
+    finally:
+        sys.modules.pop(name, None)

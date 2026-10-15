@@ -37,6 +37,7 @@ profiler_native = runtime_binding()
 VERSION = 1
 # Part of the compilation cache identity: old auto binaries have no inventory.
 AUTOMATIC_INVENTORY_VERSION = 2
+AUTOMATIC_SELECTION_POLICY_VERSION = 1
 
 
 class CudaAllocator:
@@ -252,6 +253,10 @@ class InstrumentationHook(Hook):
         self._observation_stack = ContextVar('proton_observation_stack',
                                              default=())
         self.capture_observations = False
+        self._activated = False
+        self._run_enabled = False
+        self._previous_run = None
+        self._installed_run = None
 
     def activate(self):
         if InstrumentationHook.active_count > 0:
@@ -262,7 +267,9 @@ class InstrumentationHook(Hook):
                 _get_backend_name() != 'nvidia'
                 or not hasattr(triton_proton, 'add_automatic_proton_scopes')
                 or getattr(triton_proton, 'AUTOMATIC_INVENTORY_VERSION',
-                           0) != AUTOMATIC_INVENTORY_VERSION):
+                           0) != AUTOMATIC_INVENTORY_VERSION
+                or getattr(triton_proton, 'AUTOMATIC_SELECTION_POLICY_VERSION',
+                           0) != AUTOMATIC_SELECTION_POLICY_VERSION):
             raise RuntimeError(
                 'Automatic NVIDIA profiling requires the matching FlagPrism compiler plugin'
             )
@@ -274,6 +281,7 @@ class InstrumentationHook(Hook):
             importlib.import_module('flagtree.debugger')
 
         InstrumentationHook.active_count += 1
+        self._activated = True
 
         set_instrumentation_on()
 
@@ -338,6 +346,11 @@ class InstrumentationHook(Hook):
 
         @functools.wraps(original_run)
         def instrumented_run(jit_function, *args, **kwargs):
+            # A third-party wrapper may still retain this closure after our
+            # session ends. Disabled wrappers are transparent and never inject
+            # options for compiler passes/allocators that have been removed.
+            if not instrumentation_hook._run_enabled:
+                return original_run(jit_function, *args, **kwargs)
             # Own the shared scratch allocator before compilation/allocation,
             # not just after the launcher has already chosen a device buffer.
             locked = instrumentation_hook.capture_observations
@@ -357,7 +370,7 @@ class InstrumentationHook(Hook):
                 kwargs["instrumentation_mode"] = str(original_mode)
                 if instrumentation_hook.automatic:
                     kwargs[
-                        "instrumentation_mode"] += f':automatic={AUTOMATIC_INVENTORY_VERSION}:source_metadata=1:max_sites={instrumentation_hook.max_sites}'
+                        "instrumentation_mode"] += f':automatic={AUTOMATIC_INVENTORY_VERSION}:control_policy={AUTOMATIC_SELECTION_POLICY_VERSION}:source_metadata=1:max_sites={instrumentation_hook.max_sites}'
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(
@@ -367,12 +380,17 @@ class InstrumentationHook(Hook):
                 if locked:
                     instrumentation_hook._observation_run_lock.release()
 
+        self._previous_run = original_run
+        self._installed_run = instrumented_run
+        self._run_enabled = True
         JITFunction.run = instrumented_run
 
     def deactivate(self):
-        if InstrumentationHook.active_count == 0:
+        self._run_enabled = False
+        if not self._activated:
             return
 
+        self._activated = False
         InstrumentationHook.active_count -= 1
 
         backend_name = _get_backend_name()
@@ -384,8 +402,8 @@ class InstrumentationHook(Hook):
         set_instrumentation_off()
 
         # Restore original JIT function run method
-        if hasattr(JITFunction.run, "__wrapped__"):
-            JITFunction.run = JITFunction.run.__wrapped__
+        if JITFunction.run is self._installed_run:
+            JITFunction.run = self._previous_run
 
         # Reset profile allocator
         set_profile_allocator(NullAllocator())

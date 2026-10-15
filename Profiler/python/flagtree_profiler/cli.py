@@ -189,9 +189,15 @@ def execute_as_main(script, args):
     }
 
     original_argv = sys.argv
+    original_path = sys.path
+    original_path_entries = original_path[:]
     sys.argv = [script] + args
-    # Append the script's directory in case the script uses relative imports
-    sys.path.append(os.path.dirname(script_path))
+    # Match ordinary script import precedence: sibling modules precede cwd and
+    # installed packages. Use a temporary list so application mutations cannot
+    # leak into the caller's search path after collection or an exception.
+    safe_path = sys.flags.isolated or getattr(sys.flags, 'safe_path', False)
+    sys.path = (original_path_entries if safe_path else
+                [os.path.dirname(script_path), *original_path_entries])
 
     # Execute in the isolated environment
     try:
@@ -205,6 +211,7 @@ def execute_as_main(script, args):
             raise
     finally:
         sys.argv = original_argv
+        sys.path = original_path
 
 
 def do_setup_and_execute(target_args):

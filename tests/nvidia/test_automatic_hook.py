@@ -18,6 +18,23 @@ def test_old_inventory_plugin_is_rejected_before_activation(monkeypatch):
     assert not get_instrumentation_on()
 
 
+def test_old_control_policy_plugin_is_rejected_before_activation(monkeypatch):
+    import pytest
+    from flagtree.profiler.hooks import instrumentation
+    from flagtree.profiler.observations_nvidia import lower_request
+    from flagtree.profiler.flags import get_instrumentation_on
+    plan = lower_request({'automatic': True})
+    hook = instrumentation.InstrumentationHook(None, observation_plan=plan)
+    monkeypatch.setattr(instrumentation, '_get_backend_name', lambda: 'nvidia')
+    monkeypatch.setattr(instrumentation.triton_proton,
+                        'AUTOMATIC_SELECTION_POLICY_VERSION', 0)
+    with pytest.raises(RuntimeError,
+                       match='matching FlagPrism compiler plugin'):
+        hook.activate()
+    assert instrumentation.InstrumentationHook.active_count == 0
+    assert not get_instrumentation_on()
+
+
 def test_raw_capture_rejects_graph_before_original_run_and_recovers(
         monkeypatch):
     from types import SimpleNamespace
