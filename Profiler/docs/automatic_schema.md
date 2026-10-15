@@ -344,3 +344,34 @@ print("Complete export cost:", timing["complete_finalize_and_export"],
 `manifest.json` covers exported files with byte lengths and SHA-256 digests,
 including timing and successful CLI deadline receipts. A checker should verify
 these against the actual bytes rather than trusting receipt presence alone.
+Its `files` is an object mapping bundle-relative paths to objects with integer
+`bytes` and string `sha256`, not an array. Other manifest metadata may be present:
+
+```json
+{
+  "files": {
+    "ai/export_timing.json": {"bytes": 512, "sha256": "digest-of-exact-file-bytes"},
+    "ai/deadlines.json": {"bytes": 320, "sha256": "digest-of-exact-file-bytes"}
+  }
+}
+```
+
+The supervised automatic CLI's deadline receipt has these exact fields:
+
+```json
+{
+  "schema_version": 1,
+  "enforced": true,
+  "limits_seconds": {"startup": 120, "compile": 120, "export": 60},
+  "supervisor_worker_launches": 1,
+  "application_runtime_limit": null,
+  "mechanism": "separate_worker_phase_watchdog"
+}
+```
+
+`supervisor_worker_launches` counts worker processes started by this supervisor;
+it alone does not prove the number of device kernel executions. Use the ordinary
+application's independent side-effect/launch checks for no-hidden-replay evidence.
+The compile/export values reflect the explicitly selected limits; application
+runtime remains unbounded. Timeout/cancellation returns a failed invocation and
+retains a diagnostic directory instead of a successful deadline receipt.
