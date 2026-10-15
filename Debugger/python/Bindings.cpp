@@ -572,6 +572,33 @@ public:
 
     DebugRuntimeMetadata runtimeMetadata =
         parseRuntimeMetadata(runtimeMetadataValue);
+    if (runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
+        getStringOr(metadata, "debug_record_layout", "") ==
+            "ascend_actor_dynamic_v1") {
+      const uint64_t actorCapacity =
+          getUInt64Or(metadata, "flagprism_ascend_trace_capacity", 0);
+      if (!actorCapacity ||
+          actorCapacity > (std::numeric_limits<uint32_t>::max() - 1) / 3)
+        throw std::invalid_argument(
+            "Ascend dynamic trace requires a valid per-actor capacity");
+      if (getStringOr(metadata, "debug_record_layout", "") !=
+              "ascend_actor_dynamic_v1" ||
+          runtimeMetadata.recordLayout != "ascend_actor_dynamic_v1")
+        throw std::invalid_argument(
+            "Ascend dynamic trace layout metadata is inconsistent");
+      if (getUInt32Or(metadata, "debug_record_size", 0) != 64)
+        throw std::invalid_argument(
+            "Ascend dynamic trace requires 64-byte records");
+      // TransferEngine allocates a 32-byte ring header plus 64-byte slots.
+      // Three actor headers and payload regions need 96 + 192*C bytes:
+      // total slot capacity must therefore be exactly 3*C + 1. Validate
+      // before any device allocation, even for stale/corrupted cached metadata.
+      if (getUInt64Or(metadata, "debug_record_capacity", 0) !=
+          3 * actorCapacity + 1)
+        throw std::invalid_argument(
+            "Ascend dynamic trace allocation capacity must equal "
+            "3 * per-actor capacity + 1; rebuild stale kernel metadata");
+    }
     if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
         runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
       // Legacy snapshots retain their minimum allocation. Dynamic capacity is

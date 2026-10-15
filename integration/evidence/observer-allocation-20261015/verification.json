@@ -1,0 +1,29 @@
+{
+  "scope": "capacity metadata precedence and preallocation rejection only; not complete CANN product acceptance",
+  "source_files": {
+    "Debugger/python/Bindings.cpp": "85d6bcd9272e43f6a94c8d8dd44c8920e5f5372a66624bf1ce407f5f8770bf39",
+    "Debugger/python/flagtree_debugger/compiler.py": "3ff595c5205e9fc5b3ece4b2d24c794fb2ab545b388b02796325ee44fb8d3c8b",
+    "Profiler/test/test_observer_allocation_contract.py": "1dcc382557f43cf75ed25ca1ffda9ea7cc2bff7d4f025bda7030af6c235dcfd4"
+  },
+  "source_matches_actual_r21_build": true,
+  "native": {
+    "compiler": {
+      "path": "/workspace/FlagTree-method-nvidia/python/triton/_C/libtriton.so",
+      "sha256": "48ced086ce666911562ce1f66855d70305d5816f82cf0f8370ee550dab96a6e6"
+    },
+    "profiler_native": {
+      "path": "/workspace/FlagPrism-method-nvidia/Profiler/python/flagtree_profiler/_native.so",
+      "sha256": "386a3736943841df2ebbbb38607409dfc65f92f7b6314d6bcd213c41d6da83ce"
+    },
+    "debugger_native": {
+      "path": "/workspace/FlagPrism-method-nvidia/Debugger/python/flagtree_debugger/_native.cpython-310-x86_64-linux-gnu.so",
+      "sha256": "6118c72090d5732abc9ce30b20988387f4144c7d61f08b93ff6a32babf996e4a"
+    }
+  },
+  "contracts": {
+    "passed": 11,
+    "exit": 0,
+    "log_sha256": "0b16620479a35ce240d5e048e022cdd675ccde45c0f1b16d6f5395e0869edfb2"
+  },
+  "environment": "NVIDIA server Docker chijin-study-pro6000, CPU native preallocation contracts; no GPU launch or performance measurement"
+}

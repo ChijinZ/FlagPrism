@@ -455,5 +455,9 @@ def update_compile_metadata(metadata: dict) -> None:
         return
     from .api import current_compile_config
 
-    metadata.update(current_compile_config())
+    # This runs after TTIR lowering. Request defaults must not overwrite the
+    # resolved ABI (for example, three Ascend actor regions require a larger
+    # allocation than the requested per-actor event capacity).
+    for key, value in current_compile_config().items():
+        metadata.setdefault(key, value)
     metadata.setdefault("debug_enabled", True)
