@@ -58,3 +58,29 @@ def test_pointer_escaping_and_nested_reconstruction_fields():
     assert '~1' in exported['groups'][0]['clock']['$observation_ref'][
         'pointer']
     assert refs.restore(exported, original) == view
+
+
+@pytest.mark.parametrize('key,value', [('schema_version', 2),
+                                       ('schema_version', True),
+                                       ('digest_encoding', 'unknown'),
+                                       ('pointer_encoding', 'unknown')])
+def test_unknown_reference_contract_is_rejected(key, value):
+    original = {'raw_base64': 'x' * 1024}
+    exported = refs.compact(original, original, fields={'raw_base64'})
+    exported['export_references'][key] = value
+    with pytest.raises(ValueError, match='reference contract'):
+        refs.restore(exported, original)
+
+
+@pytest.mark.parametrize('pointer', [
+    'captures/0', '/captures/-1', '/captures/00', '/captures/1',
+    '/captures/~2', '/missing'
+])
+def test_non_rfc6901_or_missing_pointer_is_rejected(pointer):
+    original = {'captures': [{'raw_base64': 'x' * 1024}]}
+    exported = refs.compact(original, original, fields={'raw_base64'})
+    ref = exported['captures'][0]['raw_base64']['$observation_ref']
+    ref.update(pointer=pointer, sha256=refs.digest(original))
+    with pytest.raises(ValueError,
+                       match='reference pointer|reference array index'):
+        refs.restore(exported, original)
