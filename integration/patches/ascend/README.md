@@ -18,15 +18,29 @@ receipts, packaging/import fixes, source-program marker transport through
 AutoBlockify, and effective AutoBlockify options in the compiler cache key.
 The FLIR patch records roles and source-axis information at actual ABI argument
 creation. The component supplies the source marker pass, late LLVM observer,
-runtime transport and decoder. Version 2 reserves three actor banks with the
-actual selected source-site count S per program, rather than 128 cells per
-bank. Legacy version 1 remains readable with its original fixed layout.
+runtime transport and decoder. The current transport is physical version 3:
+a 64-byte header followed by three actor banks per program, each occupying
+`alignUp(S * 8, 64)` bytes for the actual selected source-site count S.
+Separating actor banks on cache-line boundaries prevents the cross-actor lost
+writes reproduced with the compact version 2 layout. Physical byte and cell
+budgets include the header and padding. Version 1/2 captures remain readable,
+but their counters have unknown visibility loss and are not exact; a zero cell
+cannot establish non-execution. See the
+[source-site census protocol](../../../Profiler/docs/source_site_census.md).
+The complete patch filenames retain `v2` for compatibility with the build
+recipe; the FlagTree patch carries the current version 3 marker transport.
 
-Validation status: the v2 transport has Docker CPU coverage and the LLVM15
-observer has compiled. Full fresh compiler/runtime builds and device/cache
-validation are in progress; these patches are not yet a qualified release.
+Validation checkpoint: source `ec75a9f` has clean installation and installed CPU
+evidence on all three backends. Its native inputs match the actually compiled
+`bd61acd` build; the final reader-only refresh reuses those unchanged native
+bytes. Ascend public mixed and
+vector-loop device checks passed, including an upgrade with the original source,
+path and old cache retained. The complete independent Ascend qualification matrix
+is still running; public cases do not replace that acceptance. Exact source,
+wheel hashes, build scope and review evidence are retained in the
+[v3 engineering checkpoint](../../evidence/usability-v3-ec75a9f/README.md).
 The historical paths and build results below describe their earlier snapshots,
-not an installation receipt for current sources.
+not installation receipts for current sources.
 
 FlagTree0364 leaves FLIR unpinned; the later 516ad31 revision uses a TLE API
 absent from this baseline and fails compilation. The compatible pin above
