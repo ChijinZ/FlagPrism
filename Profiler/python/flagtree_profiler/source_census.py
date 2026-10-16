@@ -38,6 +38,51 @@ def legacy_ascend_visibility_hazard(descriptor):
     return any(layout in LEGACY_ASCEND_LAYOUTS for layout in layouts)
 
 
+def derive_transport_visibility(document):
+    """Copy and consistently retag derived views of known unsafe transports."""
+    # Derived reports must retract historical exactness even when the retained
+    # bundle already contains decoded events. Preserve the original evidence.
+    document = copy.deepcopy(document)
+    hazardous_captures = set()
+    for capture in document.get('captures', []):
+        metadata = capture.get('runtime_metadata') or {}
+        census = metadata.get('ascend_source_census') or {}
+        physical = census.get('physical_plan') or {}
+        if (legacy_ascend_visibility_hazard(capture)
+                or legacy_ascend_visibility_hazard(metadata)
+                or physical.get('layout')
+                in {'ascend_source_census_v1', 'ascend_source_census_v2'}):
+            if capture.get('capture_id'):
+                hazardous_captures.add(capture['capture_id'])
+            state = dict(
+                transport_visibility='legacy_ascend_cache_line_hazard',
+                unknown_loss=True)
+            capture.update(state)
+            metadata = capture.setdefault('runtime_metadata', {})
+            census = metadata.setdefault('ascend_source_census', {})
+            census.setdefault('loss', {}).update(exact=False, **state)
+            census.setdefault('summary', {}).update(state)
+            for key in ('source_census', 'census', 'decoded'):
+                if isinstance(capture.get(key), dict):
+                    capture[key].setdefault('loss', {}).update(exact=False,
+                                                               **state)
+                    capture[key].setdefault('summary', {}).update(state)
+    for group in document.get('groups', []):
+        for event in group.get('observations', []):
+            compiler = event.get('compiler_site') or {}
+            if (event.get('semantic') == 'counter' and
+                (event.get('capture_id') in hazardous_captures
+                 or legacy_ascend_visibility_hazard(
+                     dict(actors=[
+                         dict(compiler_actor=compiler.get('compiler_actor'))
+                     ])))):
+                event.update(
+                    count_exact=False,
+                    unknown_loss=True,
+                    transport_visibility='legacy_ascend_cache_line_hazard')
+    return document
+
+
 def _uint(value, name, minimum=0):
     if type(value) is not int or value < minimum:
         raise ValueError(f'{name} must be an integer >= {minimum}')
@@ -112,6 +157,12 @@ class CensusReader:
                 raise ValueError('duplicate logical observer')
             actor_ids.add((kind, identity))
         cells = programs * len(actors) * len(sites)
+        layouts = [desc.get('record_layout')] + [(
+            (actor.get('compiler_actor') or {}).get('runtime_actor_binding')
+            or {}).get('layout') for actor in actors]
+        if 'ascend_source_census_v3' in layouts and (len(raw) +
+                                                     7) // 8 > max_cells:
+            raise ValueError('Ascend census physical cell budget exceeded')
         if cells > max_cells:
             raise ValueError('source census cell budget exceeded')
         offset = _uint(desc.get('cells_offset'), 'cells_offset')

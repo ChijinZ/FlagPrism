@@ -370,3 +370,46 @@ def test_exact_census_request_rejects_fixed_instance_sampling_and_invalid_budget
     values.update(changes)
     with pytest.raises(ValueError):
         contract.ObservationRequest(**values)
+
+
+@pytest.mark.parametrize('placement', ['record_layout', 'compiler_actor'])
+def test_direct_v3_reader_charges_complete_shared_physical_storage(placement):
+    _, desc = capture([[0, 0]])
+    raw = bytes(256)
+    desc.update(raw_sha256=hashlib.sha256(raw).hexdigest(),
+                cells_offset=64,
+                actor_stride=64,
+                program_stride=192,
+                sites=desc['sites'][:1])
+    if placement == 'record_layout':
+        desc['record_layout'] = 'ascend_source_census_v3'
+    else:
+        desc['actors'][0]['compiler_actor'] = dict(runtime_actor_binding=dict(
+            layout='ascend_source_census_v3'))
+    with pytest.raises(ValueError, match='physical cell budget'):
+        census.CensusReader(raw, desc, max_cells=1)
+    assert census.CensusReader(raw, desc,
+                               max_cells=32).cell(0, 0, 0)['exact'] is True
+    with pytest.raises(ValueError, match='byte budget'):
+        census.CensusReader(raw, desc, max_cells=32, max_bytes=255)
+
+
+def test_legacy_derived_retag_is_idempotent_and_scoped_to_actual_capture():
+    original = dict(
+        captures=[
+            dict(
+                capture_id='legacy',
+                runtime_metadata=dict(record_layout='ascend_source_census_v2'))
+        ],
+        groups=[
+            dict(observations=[
+                dict(capture_id='legacy', semantic='counter',
+                     count_exact=True),
+                dict(capture_id='other', semantic='counter', count_exact=True)
+            ])
+        ])
+    derived = census.derive_transport_visibility(original)
+    assert original['groups'][0]['observations'][0]['count_exact'] is True
+    assert derived['groups'][0]['observations'][0]['count_exact'] is False
+    assert derived['groups'][0]['observations'][1]['count_exact'] is True
+    assert census.derive_transport_visibility(derived) == derived

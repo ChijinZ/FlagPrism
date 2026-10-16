@@ -4,7 +4,6 @@ No inference joins and no clock conversion are introduced in this view. Original
 backend capture/loss evidence remains accessible beside the normalized records.
 """
 from html import escape
-import copy
 import json
 from pathlib import Path
 import posixpath
@@ -118,49 +117,13 @@ def candidate_observation_status(captures, records):
 
 
 def normalize(document):
-    # Derived reports must retract historical exactness even when the retained
-    # bundle already contains decoded events. Preserve the original evidence.
-    from .source_census import legacy_ascend_visibility_hazard
-    document = copy.deepcopy(document)
-    hazardous_captures = set()
-    for capture in document.get('captures', []):
-        metadata = capture.get('runtime_metadata') or {}
-        census = metadata.get('ascend_source_census') or {}
-        physical = census.get('physical_plan') or {}
-        if (legacy_ascend_visibility_hazard(capture)
-                or legacy_ascend_visibility_hazard(metadata)
-                or physical.get('layout')
-                in {'ascend_source_census_v1', 'ascend_source_census_v2'}):
-            if capture.get('capture_id'):
-                hazardous_captures.add(capture['capture_id'])
-            state = dict(
-                transport_visibility='legacy_ascend_cache_line_hazard',
-                unknown_loss=True)
-            capture.update(state)
-            metadata = capture.setdefault('runtime_metadata', {})
-            census = metadata.setdefault('ascend_source_census', {})
-            census.setdefault('loss', {}).update(exact=False, **state)
-            census.setdefault('summary', {}).update(state)
-            for key in ('source_census', 'census', 'decoded'):
-                if isinstance(capture.get(key), dict):
-                    capture[key].setdefault('loss', {}).update(exact=False,
-                                                               **state)
-                    capture[key].setdefault('summary', {}).update(state)
+    from .source_census import derive_transport_visibility
+    document = derive_transport_visibility(document)
     records = []
     for group in document['groups']:
         for event in group['observations']:
             source = event.get('source_site') or {}
             compiler = event.get('compiler_site') or {}
-            if (event.get('semantic') == 'counter' and
-                (event.get('capture_id') in hazardous_captures
-                 or legacy_ascend_visibility_hazard(
-                     dict(actors=[
-                         dict(compiler_actor=compiler.get('compiler_actor'))
-                     ])))):
-                event.update(
-                    count_exact=False,
-                    unknown_loss=True,
-                    transport_visibility='legacy_ascend_cache_line_hazard')
             verified = event.get('reconstruction_association') == 'verified'
             origin = event.get('source_region_origin') or {}
             # Late compiler sites have already been checked against the actual
