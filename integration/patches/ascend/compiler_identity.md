@@ -17,6 +17,15 @@ compiler. Without this variable, the existing order remains: packaged
 required by the selected compiler available in its ordinary environment.
 This selection does not replace system CANN, its libraries or the driver.
 
+Compiler filename spelling does not select the command family. The compiler's
+actual `--help` capabilities determine modern compilation flags, register-based
+mode, saved-IR support and the expected object filename. Successful help output
+is cached by executable identity plus `PATH` and `LD_LIBRARY_PATH`, with at most
+64 entries. A changed executable invalidates this capability cache as well.
+Each probe has a 30-second limit; failure or timeout raises a diagnostic instead
+of silently selecting a legacy object filename. A legacy compiler whose help
+does not advertise the modern options retains its legacy command/output path.
+
 Both ordinary and profiled compilation bind the resolved executable path and
 SHA256 to `NPUOptions.compiler_identity`. Both FlagTree JIT implementations
 normalize this option before the in-memory specialization lookup, and the same
@@ -50,6 +59,7 @@ CPU regression command in an installed Ascend environment:
 ```sh
 python -m pytest -q integration/patches/ascend/test_compiler_identity.py \
   integration/patches/ascend/test_auto_blockify_cache.py \
+  integration/patches/ascend/test_compiler_capabilities.py \
   Profiler/test/test_ascend_compiler.py
 ```
 
