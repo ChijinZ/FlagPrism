@@ -372,7 +372,8 @@ def test_exact_census_request_rejects_fixed_instance_sampling_and_invalid_budget
         contract.ObservationRequest(**values)
 
 
-@pytest.mark.parametrize('placement', ['record_layout', 'compiler_actor'])
+@pytest.mark.parametrize(
+    'placement', ['record_layout', 'compiler_actor', 'compiler_actor_layout'])
 def test_direct_v3_reader_charges_complete_shared_physical_storage(placement):
     _, desc = capture([[0, 0]])
     raw = bytes(256)
@@ -383,6 +384,9 @@ def test_direct_v3_reader_charges_complete_shared_physical_storage(placement):
                 sites=desc['sites'][:1])
     if placement == 'record_layout':
         desc['record_layout'] = 'ascend_source_census_v3'
+    elif placement == 'compiler_actor_layout':
+        desc['actors'][0]['compiler_actor'] = dict(
+            layout='ascend_source_census_v3')
     else:
         desc['actors'][0]['compiler_actor'] = dict(runtime_actor_binding=dict(
             layout='ascend_source_census_v3'))

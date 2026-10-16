@@ -26,8 +26,8 @@ DEFAULT_MAX_BYTES = 8388608
 LEGACY_ASCEND_LAYOUTS = {'ascend_source_census_v1', 'ascend_source_census_v2'}
 
 
-def legacy_ascend_visibility_hazard(descriptor):
-    """Recognize historical transport from retained backend/compiler metadata."""
+def _transport_layouts(descriptor):
+    """Collect explicitly retained transport names from supported placements."""
     layouts = [descriptor.get('record_layout')]
     for actor in descriptor.get('actors', []):
         compiler = actor.get('compiler_actor') or {}
@@ -35,7 +35,13 @@ def legacy_ascend_visibility_hazard(descriptor):
             compiler.get('layout'),
             (compiler.get('runtime_actor_binding') or {}).get('layout')
         ])
-    return any(layout in LEGACY_ASCEND_LAYOUTS for layout in layouts)
+    return layouts
+
+
+def legacy_ascend_visibility_hazard(descriptor):
+    """Recognize historical transport from retained backend/compiler metadata."""
+    return any(layout in LEGACY_ASCEND_LAYOUTS
+               for layout in _transport_layouts(descriptor))
 
 
 def derive_transport_visibility(document):
@@ -157,9 +163,7 @@ class CensusReader:
                 raise ValueError('duplicate logical observer')
             actor_ids.add((kind, identity))
         cells = programs * len(actors) * len(sites)
-        layouts = [desc.get('record_layout')] + [(
-            (actor.get('compiler_actor') or {}).get('runtime_actor_binding')
-            or {}).get('layout') for actor in actors]
+        layouts = _transport_layouts(desc)
         if 'ascend_source_census_v3' in layouts and (len(raw) +
                                                      7) // 8 > max_cells:
             raise ValueError('Ascend census physical cell budget exceeded')
