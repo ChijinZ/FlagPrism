@@ -23,6 +23,29 @@ def modules(monkeypatch):
     ]
 
 
+def test_compact_labels_preserve_source_identity_roles_and_navigation(modules):
+    source = modules[0]
+    record = dict(source_links=[
+        dict(file='/capture/very/long/path/kernel.py',
+             line=9,
+             column=2,
+             role=role,
+             href='sources.html?source=sha-full#L9')
+        for role in ('interval_entry', 'captured_location_reference')
+    ])
+    before = json.dumps(record, sort_keys=True)
+    rendered = source.source_cell(record, compact=True)
+    assert rendered.count('<a ') == 1
+    assert '>kernel.py:9:2</a>' in rendered
+    assert 'href="sources.html?source=sha-full#L9"' in rendered
+    assert '/capture/very/long/path/kernel.py:9:2' in rendered
+    assert 'interval entry' in rendered and 'captured location reference' in rendered
+    assert 'aria-label=' in rendered
+    assert json.dumps(record, sort_keys=True) == before
+    # The existing full-label interface retains separate compiler source roles.
+    assert source.source_cell(record).count('<a ') == 2
+
+
 def snapshot(tmp_path,
              content=b'first\nsecond\nthird\n',
              reference='ai/original.py'):

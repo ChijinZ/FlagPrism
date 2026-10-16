@@ -8,6 +8,7 @@ import hashlib
 from html import escape
 import json
 from pathlib import Path
+import posixpath
 import tokenize
 from io import BytesIO
 from urllib.parse import urlencode
@@ -195,18 +196,33 @@ class SourceCatalog:
             _PAGE.replace('__SOURCES__', payload))
 
 
-def source_cell(record):
+def source_cell(record, *, compact=False):
     rows, seen = [], set()
     for item in record.get('source_links', []):
-        key = (item['file'], item['line'], item.get('column',
-                                                    0), item.get('role'))
+        key = (item['file'], item['line'], item.get('column', 0),
+               item.get('href') if compact else item.get('role'))
         if key in seen:
             continue
         seen.add(key)
         label = f"{item['file']}:{item['line']}:{item.get('column', 0)}"
         role = item.get('role', 'compiler_location').replace('_', ' ')
-        rows.append(f'<a href="{escape(item["href"], quote=True)}">'
-                    f'{escape(label)}</a> <small>{escape(role)}</small>')
+        if compact:
+            roles = list(
+                dict.fromkeys(
+                    link.get('role', 'compiler_location').replace('_', ' ')
+                    for link in record.get('source_links', [])
+                    if (link['file'], link['line'], link.get('column', 0),
+                        link.get('href')) == key))
+            title = label + ' · ' + ', '.join(roles)
+            label = f"{posixpath.basename(item['file'])}:{item['line']}:{item.get('column', 0)}"
+            role = roles[0] if len(
+                roles) == 1 else f'{len(roles)} compiler source roles'
+            attributes = f' title="{escape(title, quote=True)}" aria-label="{escape(title, quote=True)}"'
+        else:
+            attributes = ''
+        rows.append(
+            f'<a href="{escape(item["href"], quote=True)}"{attributes}>'
+            f'{escape(label)}</a> <small>{escape(role)}</small>')
     for item in record.get('source_location_candidates', []):
         status = item.get('validation_status')
         if status and status != 'in_range_snapshot_position':

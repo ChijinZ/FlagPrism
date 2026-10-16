@@ -60,6 +60,42 @@ def test_pointer_escaping_and_nested_reconstruction_fields():
     assert refs.restore(exported, original) == view
 
 
+def test_repeated_actor_and_clock_are_lossless_references_not_evidence_deletion(
+):
+    clock = {
+        'domain': 'device',
+        'alignment_evidence': {
+            'proof': 'clock-proof-' * 300
+        }
+    }
+    actor = {
+        'kind': 'compiler_actor',
+        'binding_proof': {
+            'proof': 'actor-proof-' * 300
+        }
+    }
+    original = {
+        'observations': [{
+            'clock': clock,
+            'compiler_site': {
+                'compiler_actor': actor
+            }
+        }]
+    }
+    view = {
+        'records': [
+            dict(clock=copy.deepcopy(clock),
+                 compiler_actor=copy.deepcopy(actor),
+                 count=count,
+                 actor=0) for count in (2, 5)
+        ]
+    }
+    exported = refs.compact(view, original, fields={'clock', 'compiler_actor'})
+    assert refs.restore(exported, original) == view
+    assert [row['count'] for row in exported['records']] == [2, 5]
+    assert len(refs.canonical(exported)) < len(refs.canonical(view)) // 4
+
+
 @pytest.mark.parametrize('key,value', [('schema_version', 2),
                                        ('schema_version', True),
                                        ('digest_encoding', 'unknown'),

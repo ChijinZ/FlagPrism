@@ -152,10 +152,15 @@ def _take_instrumentation_runs() -> list[dict]:
             list(run.get("debug_tracked_table") or []),
             "semantic_observations":
             run.get("semantic_observations") or [],
+            "source_census":
+            run.get("source_census"),
             "raw_encoding":
-            ("base64_ascend_actor_dynamic_v1"
+            ("base64_source_census_v1" if runtime_metadata.get("record_layout")
+             == "gcu_site_census_v1" else "base64_ascend_source_census_v1"
              if runtime_metadata.get("record_layout")
-             == "ascend_actor_dynamic_v1" else "base64_debugger_protocol_v2"),
+             == "ascend_source_census_v1" else "base64_ascend_actor_dynamic_v1"
+             if runtime_metadata.get("record_layout") ==
+             "ascend_actor_dynamic_v1" else "base64_debugger_protocol_v2"),
             "raw_base64":
             base64.b64encode(raw_buffer).decode("ascii"),
             "raw_sha256":
@@ -882,7 +887,7 @@ def _augment_instrumentation_artifacts(
     if not runs:
         return
     base = Path(name)
-    from .observations import from_ir_runs
+    from .observations import from_ir_runs, ir_source_census_metadata
     base.with_suffix('.observations.json').write_text(
         json.dumps(
             {
@@ -915,6 +920,11 @@ def _augment_instrumentation_artifacts(
                     run.get('raw_base64'),
                     'raw_sha256':
                     run.get('raw_sha256'),
+                    'source_census':
+                    ir_source_census_metadata(
+                        run,
+                        capture_id=(run.get('runtime_metadata') or {}).get(
+                            'capture_id') or f'ir-capture-{index}'),
                 } for index, run in enumerate(runs)]
             },
             indent=2) + '\n')
@@ -1413,6 +1423,13 @@ def _automatic_observation_request(backend):
         return ObservationRequest(semantics=("operation_checkpoint",
                                              "control_checkpoint"),
                                   max_events_per_instance=4096,
+                                  automatic=True)
+    if _is_enflame_backend(backend) or str(backend or '').lower() in {
+            'cupti', 'cuda', 'nvidia', 'instrumentation'
+    }:
+        return ObservationRequest(semantics=('counter', ),
+                                  programs=None,
+                                  program_policy='all_grid_census',
                                   automatic=True)
     return ObservationRequest(semantics=("source_control_interval", ),
                               automatic=True)

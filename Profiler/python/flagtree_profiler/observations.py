@@ -38,6 +38,9 @@ class ObservationRequest:
     sample_every: int = 1
     automatic: bool = False
     max_sites: int = 8
+    program_policy: str = 'fixed'
+    max_census_cells: int = 1048576
+    max_census_bytes: int = 8388608
 
     def __post_init__(self):
         if not isinstance(self.semantics, tuple) or not self.semantics:
@@ -67,6 +70,18 @@ class ObservationRequest:
             raise ValueError('max_sites must be <= 128')
         if self.automatic and self.sites is not None:
             raise ValueError('automatic selection cannot specify manual sites')
+        if self.program_policy not in ('fixed', 'all_grid_census'):
+            raise ValueError('unsupported program policy')
+        _integer(self.max_census_cells, 'max_census_cells', minimum=1)
+        _integer(self.max_census_bytes, 'max_census_bytes', minimum=8)
+        if self.program_policy == 'all_grid_census':
+            if self.programs is not None:
+                raise ValueError('all_grid_census requires programs=None')
+            if self.semantics != ('counter', ):
+                raise ValueError('all_grid_census requires counter semantics')
+            if self.sample_every != 1:
+                raise ValueError(
+                    'all_grid_census cannot sample execution counts')
 
     def as_dict(self):
         result = {
@@ -78,6 +93,11 @@ class ObservationRequest:
         }
         if self.automatic:
             result.update(automatic=True, max_sites=self.max_sites)
+        if (self.program_policy != 'fixed' or self.max_census_cells != 1048576
+                or self.max_census_bytes != 8388608):
+            result.update(program_policy=self.program_policy,
+                          max_census_cells=self.max_census_cells,
+                          max_census_bytes=self.max_census_bytes)
         return result
 
     @classmethod
@@ -190,18 +210,86 @@ def observation(value):
     return result
 
 
+def decode_ir_source_census(run, *, capture_id=None):
+    """Decode Debugger's distinct census transport using actual launch evidence."""
+    import base64
+    from .source_census import decode_source_census
+    census = run.get('source_census')
+    if not isinstance(census, dict):
+        raise ValueError('source_census must be an object')
+    encoded = census.get('raw_base64', run.get('raw_base64'))
+    if not isinstance(encoded, str):
+        raise ValueError('source census requires retained raw_base64')
+    runtime = run.get('runtime_metadata') or {}
+    proof = runtime.get('profiler_association_evidence') or {}
+    if not isinstance(proof, dict):
+        raise ValueError('source census requires object launch evidence')
+    descriptor = census.get('descriptor')
+    if not isinstance(descriptor, dict):
+        raise ValueError('source census requires an object descriptor')
+    limits = {'max_census_cells': 1048576, 'max_census_bytes': 8388608}
+    compiler_request = runtime.get('source_census_request')
+    if compiler_request is not None:
+        request = ObservationRequest.from_dict(compiler_request)
+        if request.program_policy != 'all_grid_census':
+            raise ValueError(
+                'source census requires the actual census compiler request')
+        for key in limits:
+            limit = getattr(request, key)
+            declared = descriptor.get(key)
+            _integer(declared, key, minimum=8 if key.endswith('bytes') else 1)
+            if declared != limit:
+                raise ValueError(
+                    'source census descriptor and compiler request limits disagree'
+                )
+            limits[key] = limit
+    else:
+        # Older captures did not retain the compiler request. They may tighten
+        # the safe reader defaults, but cannot authorize a larger allocation.
+        for key, default in limits.items():
+            declared = descriptor.get(key, default)
+            _integer(declared, key, minimum=8 if key.endswith('bytes') else 1)
+            limits[key] = min(default, declared)
+    return decode_source_census(
+        base64.b64decode(encoded, validate=True),
+        descriptor,
+        capture_id=capture_id or runtime.get('capture_id'),
+        invocation_id=runtime.get('profiler_invocation_id'),
+        binary_id=proof.get('binary_id'),
+        association_evidence=proof,
+        source='flagtree_ir_source_census',
+        max_cells=limits['max_census_cells'],
+        max_bytes=limits['max_census_bytes'])
+
+
+def ir_source_census_metadata(run, *, capture_id):
+    """Keep descriptor and all-program loss summary beside the single raw copy."""
+    if run.get('source_census') is None:
+        return None
+    decoded = decode_ir_source_census(run, capture_id=capture_id)
+    return dict(descriptor=run['source_census']['descriptor'],
+                summary=decoded['summary'],
+                loss=decoded['loss'])
+
+
 def from_ir_runs(runs):
     """Keep append traces and legacy snapshots distinct; never invent calibration."""
     events = []
     for run_index, run in enumerate(runs):
         if run.get('capture_status') == 'decode_failed':
             continue
-        events.extend(
-            observation(event)
-            for event in run.get('semantic_observations', []))
+        if run.get('source_census') is None:
+            events.extend(
+                observation(event)
+                for event in run.get('semantic_observations', []))
         runtime = run.get('runtime_metadata') or {}
         capture_id = str(
             runtime.get('capture_id') or f'ir-capture-{run_index}')
+        if run.get('source_census') is not None:
+            decoded = decode_ir_source_census(run, capture_id=capture_id)
+            events.extend(decoded['observations'])
+            # A census is a distinct protocol, never a legacy timer snapshot.
+            continue
         supplied_clock = runtime.get('observation_clock')
         clock = supplied_clock or {
             'domain': 'unidentified.device_counter',

@@ -8,6 +8,16 @@ import json
 from pathlib import Path
 import posixpath
 
+EXPORT_REFERENCE_FIELDS = frozenset({
+    'raw_base64',
+    'clock',
+    'compiler_actor',
+    'association_evidence',
+    'runtime_metadata',
+    'source_region_origin',
+    'source_location_candidates',
+})
+
 
 def _location_candidates(value):
     found = {}
@@ -129,7 +139,10 @@ def normalize(document):
                             'occurrence', 'iteration', 'clock', 'start_tick',
                             'end_tick', 'duration_ticks', 'duration_ns',
                             'relative_start_ns', 'unit', 'truncated',
-                            'sampling', 'association_evidence')
+                            'sampling', 'association_evidence', 'count',
+                            'count_exact', 'counter_kind', 'site_role',
+                            'overflow', 'mask_activity', 'storage',
+                            'raw_offset', 'raw_sha256')
             }
             row['actor'] = event.get('actor', event.get('actor_slot'))
             row['compiler_actor'] = compiler.get(
@@ -243,9 +256,32 @@ def _plans(report, captures):
 def render(data):
     from .source_view import source_cell
     rows = []
+    counts_only = bool(data['records']) and all(
+        row.get('semantic') == 'counter' for row in data['records'])
+    titles = [
+        'Source', 'Operation', 'Invocation', 'Binary', 'Program', 'Actor',
+        'Site', 'Semantic', 'Visits', 'Count exact'
+    ]
+    if counts_only:
+        titles.append('Site role')
+    else:
+        titles.extend([
+            'Retained occurrence', 'Start tick', 'End tick', 'Ticks', 'Clock',
+            'Clock scope'
+        ])
+    titles.append('Association')
     for row in data['records']:
         clock = row['clock'] or {}
         actor_label = str(row['actor'])
+        if isinstance(row['actor'], dict):
+            actor = row['actor']
+            kind = {
+                'logical_warp': 'warp',
+                'logical_work_item': 'work-item',
+                'logical_program_observer': 'program observer'
+            }.get(actor.get('kind'))
+            if kind is not None:
+                actor_label = f"{kind} {actor.get('id')}"
         compiler_actor = row.get('compiler_actor') or {}
         binding_proof = compiler_actor.get('binding_proof') or {}
         if (binding_proof.get('runtime_slot_status')
@@ -254,19 +290,35 @@ def render(data):
                 and binding_proof.get('status')
                 == 'verified_compiler_emission_manifest'):
             actor_label += f' · {compiler_actor.get("kind")} / {compiler_actor.get("function")} (verified compiler binding)'
+        binary = str(row['binary_id'])
+        binary_label = binary if len(binary) <= 16 else binary[:12] + '…'
         values = [
             row['operation'], row['invocation_id'], row['binary_id'],
             row['program'], actor_label, row['site'], row['semantic'],
-            row['occurrence'], row['start_tick'], row['end_tick'],
-            row['duration_ticks'],
+            row.get('count'),
+            row.get('count_exact'), row['occurrence'], row['start_tick'],
+            row['end_tick'], row['duration_ticks'],
             clock.get('domain'),
             clock.get('scope'), row['association_status']
         ]
-        rows.append('<tr data-binary="' +
-                    escape(str(row['binary_id']), quote=True) + '"><td>' +
-                    source_cell(row) + '</td>' +
-                    ''.join('<td>' + escape(str(value)) + '</td>'
-                            for value in values) + '</tr>')
+        values[2] = binary_label
+        if counts_only:
+            values = values[:9] + [
+                row.get('site_role'), row['association_status']
+            ]
+        source_paths = [
+            f"{item.get('file', '')}:{item.get('line', '')}:{item.get('column', 0)}"
+            for item in row.get('source_links', [])
+        ]
+        search = ' '.join([binary, str(row['actor']), *source_paths])
+        rows.append('<tr data-binary="' + escape(binary, quote=True) +
+                    '" data-search="' + escape(search, quote=True) + '"><td>' +
+                    source_cell(row, compact=True) + '</td>' +
+                    ''.join('<td title="' + escape(binary, quote=True) + '">' +
+                            escape(str(value)) +
+                            '</td>' if index == 2 else '<td>' +
+                            escape(str(value)) + '</td>'
+                            for index, value in enumerate(values)) + '</tr>')
     coverage = data.get('automatic_selection_status')
     coverage_html = ''
     if coverage is not None:
@@ -316,6 +368,7 @@ def render(data):
     return (
         '<!doctype html><meta charset="utf-8"><title>Source-linked dynamic records</title>'
         '<style>body{font:14px system-ui;margin:2rem}table{border-collapse:collapse}'
+        '.records-scroll{overflow-x:auto}.records-scroll td:first-child{min-width:13em}'
         'td,th{border:1px solid #ddd;padding:.4rem}td{overflow-wrap:anywhere}'
         'input{padding:.5rem;max-width:95%;width:32rem}pre{white-space:pre-wrap}'
         'small{color:#586575}.source-warning{color:#8b4b08;font-size:12px}</style>'
@@ -329,19 +382,23 @@ def render(data):
         'visits, not necessarily loop iterations. Raw ticks are only comparable within the '
         'recorded clock scope; checkpoints record occurrence, not operation busy time. '
         'Intervals measure instrumented source control. None means unavailable.</p>'
+        '<p>Visit counters are one value per selected site and logical observer. '
+        'They count reaching a source control position, including masked operations '
+        'with no active data lanes. They provide no timestamps or busy duration. '
+        'A saturated count is a lower bound, marked Count exact = False. '
+        'The census retains all admitted programs in raw data; the default table '
+        'presents the lowest program with primary-site visits.</p>'
         '<p>Source links open captured snapshots at the measured location. Compiler primary and '
         'inline callsite roles are distinct; out-of-range or unavailable positions remain '
         'visible as candidates and do not count as located source. File bounds do not '
         'independently verify that snapshot text matches compiled text.</p>'
         '<input id="filter" aria-label="Filter records" placeholder="Filter source / operation / actor">'
         '<p id="binary-filter"></p>'
-        '<p>Status: ' + escape(data['status']) + '</p><table><thead><tr>' +
-        ''.join('<th>' + title + '</th>' for title in (
-            'Source', 'Operation', 'Invocation', 'Binary', 'Program', 'Actor',
-            'Site', 'Semantic', 'Retained occurrence', 'Start tick',
-            'End tick', 'Ticks', 'Clock', 'Clock scope', 'Association')) +
+        '<p>Status: ' + escape(data['status']) +
+        '</p><div class="records-scroll"><table><thead><tr>' +
+        ''.join('<th>' + title + '</th>' for title in titles) +
         '</tr></thead><tbody id="records">' + ''.join(rows) +
-        '</tbody></table>' + coverage_html + candidate_html +
+        '</tbody></table></div>' + coverage_html + candidate_html +
         '<details><summary>Original capture, selection and loss evidence</summary><pre>'
         +
         '<a href="../ai/observations.json">Complete raw capture and runtime metadata</a>'
@@ -352,7 +409,8 @@ def render(data):
         'note.textContent="Binary filter: "+binary+" ";let clear=document.createElement("a");'
         'clear.href="fine_grained.html";clear.textContent="Show all binaries";note.append(clear);}'
         'function apply(){let q=filter.value.toLowerCase();document.querySelectorAll("#records tr").forEach(r=>'
-        'r.hidden=(binary&&r.dataset.binary!==binary)||!r.textContent.toLowerCase().includes(q));}'
+        'r.hidden=(binary&&r.dataset.binary!==binary)||!'
+        '(r.textContent+" "+r.dataset.search).toLowerCase().includes(q));}'
         'filter.addEventListener("input",apply);filter.value=params.get("filter")||"";'
         'apply();</script>')
 
@@ -372,7 +430,7 @@ def write_view(output, document, report):
     for name, view in (('fine_grained', data), ('observation_plan',
                                                 _plans(report,
                                                        data['captures']))):
-        exported = compact(view, original, fields={'raw_base64'})
+        exported = compact(view, original, fields=EXPORT_REFERENCE_FIELDS)
         (output / f'ai/{name}.json').write_text(
             json.dumps(exported, separators=(',', ':'), allow_nan=False) +
             '\n')
@@ -431,21 +489,39 @@ def require_automatic_records(output, request):
             and row.get('invocation_id') == invocation
             and row.get('binary_id') == binary
         ]
-        valid = [row for row in matched if row.get('source_locations')]
+        count_rows = [
+            row for row in matched
+            if row.get('storage') == 'source_site_census_v1'
+        ]
+        census = (capture.get('source_census') or capture.get('census')
+                  or metadata.get('ascend_source_census') or {})
+        census_loss = census.get('loss') or (capture.get('decoded')
+                                             or {}).get('loss') or {}
+        count_overflow = (any(
+            row.get('overflow') is True for row in count_rows)
+                          or bool(census_loss.get('overflow_cells')))
+        source_linked = [row for row in matched if row.get('source_locations')]
+        valid = [
+            row for row in source_linked
+            if (row.get('storage') != 'source_site_census_v1' or (
+                row.get('site_role') == 'primary' and type(row.get('count')) is
+                int and row['count'] > 0 and row.get('count_exact') is True))
+        ]
         reason = (
-            None if valid else
-            'capture_has_no_verified_invocation_identity' if not identity_valid
-            else 'internal_records_lack_valid_source_snapshot_positions'
-            if matched else
-            'selected_programs_produced_no_source_linked_internal_records')
+            'source_census_count_overflow' if count_overflow else
+            None if valid else 'capture_has_no_verified_invocation_identity'
+            if not identity_valid else
+            'internal_records_lack_valid_source_snapshot_positions' if matched
+            else 'selected_programs_produced_no_source_linked_internal_records'
+        )
         coverage.append(
             dict(capture_id=capture_id,
                  invocation_id=invocation,
                  binary_id=binary,
-                 status='complete' if valid else 'incomplete',
+                 status='complete' if reason is None else 'incomplete',
                  reason=reason,
                  internal_records=len(matched),
-                 source_linked_records=len(valid)))
+                 source_linked_records=len(source_linked)))
         if identity_valid:
             captured_invocations.add(identity)
     for launch in launches:
@@ -463,6 +539,10 @@ def require_automatic_records(output, request):
     reason = (incomplete[0]['reason'] if incomplete else None if coverage else
               'selected_programs_produced_no_source_linked_internal_records')
     action = (
+        'A source visit counter saturated. The retained value is a lower bound. '
+        'Inspect the raw census flags and use a shorter application workload; '
+        'this capture cannot establish exact visit counts.'
+        if reason == 'source_census_count_overflow' else
         'Inspect ai/source_index.json diagnostics and source_location_candidates '
         'in ai/fine_grained.json. Captured source snapshots must match their '
         'digest and compiler positions must fall within an unambiguous file snapshot.'
@@ -473,6 +553,12 @@ def require_automatic_records(output, request):
         'association; records from another capture cannot establish this association.'
         if reason in ('capture_has_no_verified_invocation_identity',
                       'invocation_has_no_internal_capture') else
+        'Inspect the census grid, selected primary sites and retained raw matrix. '
+        'All admitted programs were collected; changing the displayed program '
+        'cannot create missing primary observations. Preserve this capture when '
+        'reporting a compiler-plan coverage defect for executed source regions.'
+        if isinstance(request, dict)
+        and request.get('program_policy') == 'all_grid_census' else
         'Inspect the retained plan, capture/loss status and selected programs. '
         'For conditional work, choose a program that executes the region with '
         'a public ObservationRequest; no application replay was performed.')
@@ -491,7 +577,7 @@ def require_automatic_records(output, request):
         document['status'] = 'incomplete_automatic_capture'
     from .export_refs import compact
     path.write_text(
-        json.dumps(compact(document, original, fields={'raw_base64'}),
+        json.dumps(compact(document, original, fields=EXPORT_REFERENCE_FIELDS),
                    separators=(',', ':'),
                    allow_nan=False) + '\n')
     html = output / 'report/fine_grained.html'

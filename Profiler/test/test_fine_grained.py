@@ -87,6 +87,43 @@ def test_actual_origin_and_clock_are_preserved(view):
     assert 'observation_plan.json' in html
 
 
+def test_counter_report_presents_visits_and_role_without_empty_time_columns(
+        view):
+    import copy
+    data = view.normalize(document())
+    row = data['records'][0]
+    row.update(semantic='counter',
+               storage='source_site_census_v1',
+               count=5,
+               count_exact=True,
+               site_role='primary',
+               actor={
+                   'kind': 'logical_warp',
+                   'id': 0,
+                   'writer': 'physical_thread_zero'
+               },
+               binary_id='0123456789abcdef' * 4,
+               clock=None,
+               start_tick=None,
+               end_tick=None,
+               duration_ticks=None)
+    before = copy.deepcopy(data)
+    rendered = view.render(data)
+    assert '<th>Visits</th>' in rendered and '<th>Site role</th>' in rendered
+    assert '<th>Start tick</th>' not in rendered
+    assert '<th>Retained occurrence</th>' not in rendered
+    assert '<td>warp 0</td>' in rendered and '<td>5</td>' in rendered
+    assert 'title="' + row['binary_id'] + '"' in rendered
+    assert 'data-binary="' + row['binary_id'] + '"' in rendered
+    assert data == before
+
+
+def test_timed_report_retains_actual_clock_and_time_columns(view):
+    rendered = view.render(view.normalize(document()))
+    assert '<th>Start tick</th>' in rendered and '<th>Clock scope</th>' in rendered
+    assert '<td>SM:3/warp:0</td>' in rendered
+
+
 def test_unassociated_cannot_borrow_source(view):
     record = view.normalize(document(False))['records'][0]
     assert record['source_locations'] == []
@@ -433,6 +470,77 @@ def test_raw_capture_references_preserve_automatic_gate_and_loss(
     assert '$observation_ref' in exported['captures'][0]['raw_base64']
     assert exported['captures'][0]['dropped'] == 7
     assert exported['captures'][0]['counter_saturated'] is True
+
+
+@pytest.mark.parametrize('role,exact,expected', [
+    ('primary', True, True),
+    ('context', True, False),
+    ('primary', False, False),
+])
+def test_census_gate_requires_source_linked_exact_primary_count(
+        view, tmp_path, role, exact, expected):
+    capture = automatic_capture('c-A', 'launch-A', 'binary-A')
+    record = automatic_record('c-A', 'launch-A', 'binary-A')
+    record.update(storage='source_site_census_v1',
+                  semantic='counter',
+                  site_role=role,
+                  count=5,
+                  count_exact=exact,
+                  overflow=not exact)
+    write_automatic_input(tmp_path, [capture], [record])
+    request = dict(automatic=True, program_policy='all_grid_census')
+    if expected:
+        view.require_automatic_records(tmp_path, request)
+    else:
+        with pytest.raises(RuntimeError, match='incomplete'):
+            view.require_automatic_records(tmp_path, request)
+
+
+@pytest.mark.parametrize('backend', ['gcu', 'ascend'])
+def test_census_gate_checks_overflow_in_programs_not_expanded_for_display(
+        view, tmp_path, backend):
+    capture = automatic_capture('c-A', 'launch-A', 'binary-A')
+    census = {'loss': {'overflow_cells': 1, 'exact': False}}
+    if backend == 'ascend':
+        capture = automatic_capture('c-A',
+                                    'launch-A',
+                                    'binary-A',
+                                    runtime_owned=True)
+        capture['runtime_metadata']['ascend_source_census'] = census
+    else:
+        capture['source_census'] = census
+    record = automatic_record('c-A', 'launch-A', 'binary-A')
+    record.update(storage='source_site_census_v1',
+                  semantic='counter',
+                  site_role='primary',
+                  count=5,
+                  count_exact=True,
+                  overflow=False)
+    write_automatic_input(tmp_path, [capture], [record])
+    with pytest.raises(RuntimeError, match='source_census_count_overflow'):
+        view.require_automatic_records(
+            tmp_path, dict(automatic=True, program_policy='all_grid_census'))
+
+
+def test_census_coverage_counts_located_context_without_accepting_it_as_body(
+        view, tmp_path):
+    import json
+    capture = automatic_capture('c-A', 'launch-A', 'binary-A')
+    rows = []
+    for role in ('context', 'primary'):
+        row = automatic_record('c-A', 'launch-A', 'binary-A')
+        row.update(storage='source_site_census_v1',
+                   semantic='counter',
+                   site_role=role,
+                   count=2,
+                   count_exact=True,
+                   overflow=False)
+        rows.append(row)
+    write_automatic_input(tmp_path, [capture], rows)
+    view.require_automatic_records(tmp_path, {'automatic': True})
+    status = json.loads((tmp_path / 'ai/selection_status.json').read_text())
+    assert status['captures'][0]['source_linked_records'] == 2
+    assert status['captures'][0]['status'] == 'complete'
 
 
 def test_capture_html_links_complete_raw_without_inlining_it(view):
