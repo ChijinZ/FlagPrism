@@ -1,0 +1,234 @@
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+[DEBUG] /tmp/tmp6tejmwgu/kernel_reloc.o is not found
+[DEBUG] Stderr:
+
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+ERROR: Invalid bishengir path format: /tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428
+[DEBUG] /tmp/tmptg4m22n0/kernel_reloc.o is not found
+[DEBUG] Stderr:
+
+{
+  "scope": "CPU-only staged imports, not fresh wheel installation or SDK/hardware validation",
+  "source": {
+    "compiler.py": {
+      "path": "/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/compiler.py",
+      "sha256": "3cd803dc08d612c0e2c1056c8a0850beefe0b72b98af537948c0cfe640fa5a99"
+    },
+    "compiler_identity.py": {
+      "path": "/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/compiler_identity.py",
+      "sha256": "9ecc943ea025c45c3c073a4a99ac47bb897c1ffb1b65272ccb813e5812c9d46b"
+    },
+    "utils.py": {
+      "path": "/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/utils.py",
+      "sha256": "228365237261580bbdebade8ff2a4b288f9b61153fb1993c380faa843f6f99d2"
+    },
+    "utils-0364.py": {
+      "commit": "0364ed4bc39d1dfae483741ec272298297fa5bda",
+      "sha256": "81ba03a2bf8e9fe55ce0c861479a22ae86b9d01525e0f763717980b698032a8a"
+    }
+  },
+  "fake_boundaries": [
+    "linalg metadata parser",
+    "NPUUtils.get_arch",
+    "shell stub compiler bytes"
+  ],
+  "stub_sha256": "531930fc55db5056ceabed1c71f79195f6bfa6f0de70d71c0080e8f6450c0481",
+  "npu_initialized": false,
+  "cases": [
+    {
+      "case": "current-direct-override",
+      "selected": "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+      "valid_bishengir": true,
+      "api_change": true,
+      "regbased": true,
+      "save_ir": true
+    },
+    {
+      "case": "current-symlink-override",
+      "selected": "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+      "valid_bishengir": false,
+      "api_change": false,
+      "regbased": false,
+      "save_ir": false
+    },
+    {
+      "case": "baseline-PATH-symlink",
+      "selected": "/tmp/chijin-r15-c1-cache-review/alias/bishengir-compile",
+      "valid_bishengir": true,
+      "api_change": true,
+      "regbased": true,
+      "save_ir": true
+    },
+    {
+      "case": "current-PATH-symlink",
+      "selected": "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+      "valid_bishengir": false,
+      "api_change": false,
+      "regbased": false,
+      "save_ir": false
+    },
+    {
+      "case": "linalg_to_bin_enable_npu_compile_910_95",
+      "selection": "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+      "identity": {
+        "path": "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+        "sha256": "531930fc55db5056ceabed1c71f79195f6bfa6f0de70d71c0080e8f6450c0481"
+      },
+      "status": "success",
+      "binary_sha256": "cae0f34b95d5f8d3f6233e53a9258614e175f357275c59b2102cce3435d93ef1",
+      "commands": [
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+            "--help"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "6deb2ed97a02d434e06bdbc3e2ed5a7981dbb56efae4d33b6dad1662bb0ebd0a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+            "/tmp/tmp9e1cf9_p/kernel.mlir",
+            "--target=Ascend910B",
+            "--enable-auto-multi-buffer=True",
+            "--enable-auto-bind-sub-block=True",
+            "--enable-hfusion-compile=true",
+            "--enable-triton-kernel-compile=true",
+            "--append-bisheng-options=-cce-link-aicore-ll-module /tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc",
+            "-o",
+            "/tmp/tmp9e1cf9_p/kernel"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "hfusion_flag": true,
+      "triton_kernel_flag": true
+    },
+    {
+      "case": "linalg_to_bin_enable_npu_compile_A2_A3",
+      "selection": "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+      "identity": {
+        "path": "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+        "sha256": "531930fc55db5056ceabed1c71f79195f6bfa6f0de70d71c0080e8f6450c0481"
+      },
+      "status": "success",
+      "binary_sha256": "cae0f34b95d5f8d3f6233e53a9258614e175f357275c59b2102cce3435d93ef1",
+      "commands": [
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+            "--help"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "6deb2ed97a02d434e06bdbc3e2ed5a7981dbb56efae4d33b6dad1662bb0ebd0a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+            "--help"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "6deb2ed97a02d434e06bdbc3e2ed5a7981dbb56efae4d33b6dad1662bb0ebd0a",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/direct/bishengir-compile",
+            "/tmp/tmpo2itx3fa/kernel.mlir",
+            "--target=Ascend910B",
+            "--enable-auto-multi-buffer=True",
+            "--enable-auto-bind-sub-block=True",
+            "--link-aicore-bitcode=/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc",
+            "--enable-hfusion-compile=true",
+            "--reg-based=true",
+            "--enable-triton-kernel-compile=true",
+            "-o",
+            "/tmp/tmpo2itx3fa/kernel"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "hfusion_flag": true,
+      "triton_kernel_flag": true
+    },
+    {
+      "case": "linalg_to_bin_enable_npu_compile_910_95",
+      "selection": "/tmp/chijin-r15-c1-cache-review/alias/bishengir-compile",
+      "identity": {
+        "path": "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+        "sha256": "531930fc55db5056ceabed1c71f79195f6bfa6f0de70d71c0080e8f6450c0481"
+      },
+      "status": "CalledProcessError",
+      "returncode": 0,
+      "error": "Command '['/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428', '/tmp/tmp6tejmwgu/kernel.mlir', '--target=Ascend910B', '--enable-auto-multi-buffer=True', '--enable-auto-bind-sub-block=True', '--append-bisheng-options=-cce-link-aicore-ll-module /tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc', '-o', '/tmp/tmp6tejmwgu/kernel']' returned non-zero exit status 0.",
+      "commands": [
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+            "/tmp/tmp6tejmwgu/kernel.mlir",
+            "--target=Ascend910B",
+            "--enable-auto-multi-buffer=True",
+            "--enable-auto-bind-sub-block=True",
+            "--append-bisheng-options=-cce-link-aicore-ll-module /tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc",
+            "-o",
+            "/tmp/tmp6tejmwgu/kernel"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "hfusion_flag": false,
+      "triton_kernel_flag": false
+    },
+    {
+      "case": "linalg_to_bin_enable_npu_compile_A2_A3",
+      "selection": "/tmp/chijin-r15-c1-cache-review/alias/bishengir-compile",
+      "identity": {
+        "path": "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+        "sha256": "531930fc55db5056ceabed1c71f79195f6bfa6f0de70d71c0080e8f6450c0481"
+      },
+      "status": "CalledProcessError",
+      "returncode": 0,
+      "error": "Command '['/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428', '/tmp/tmptg4m22n0/kernel.mlir', '--target=Ascend910B', '--enable-auto-multi-buffer=True', '--enable-auto-bind-sub-block=True', '--link-aicore-bitcode=/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc', '-o', '/tmp/tmptg4m22n0/kernel']' returned non-zero exit status 0.",
+      "commands": [
+        {
+          "argv": [
+            "/tmp/chijin-r15-c1-cache-review/versioned/bishengir-compile-428",
+            "/tmp/tmptg4m22n0/kernel.mlir",
+            "--target=Ascend910B",
+            "--enable-auto-multi-buffer=True",
+            "--enable-auto-bind-sub-block=True",
+            "--link-aicore-bitcode=/tmp/chijin-r15-compiler-identity/site/triton/backends/ascend/lib/libdevice.10.bc",
+            "-o",
+            "/tmp/tmptg4m22n0/kernel"
+          ],
+          "cwd": "/workspace/FlagTree",
+          "returncode": 0,
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "hfusion_flag": false,
+      "triton_kernel_flag": false
+    }
+  ]
+}

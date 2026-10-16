@@ -1,0 +1,41 @@
+{
+  "scope": "read-only existing public bytes/manifests/IR; no new tests or compilation",
+  "archive_sha256": "4a9da10348c74fb3ec069b515030a0989eae17705ed2d3fadf2920c66184e055",
+  "archive_members": 46,
+  "forbidden_sdk_binary_regular_files": [],
+  "object_sets_equal": true,
+  "object_count": 2619,
+  "changed_objects": {
+    "tools/bishengir/bishengir/lib/Dialect/HIVM/Transforms/CMakeFiles/obj.BiShengIRHIVMTransforms.dir/TileAndBindSubBlock.cpp.o": {
+      "before": "d8f70c6b82a2049c43bbcbeb0c8b4fca27623f5f5009b091dc5c61b5e27ae4c7",
+      "after": "88a53f9a435276f85f4ccd8a219a679a46ccff901c1ee1c84c1375f692523729"
+    }
+  },
+  "dependency_sets_equal": true,
+  "dependency_count": 756,
+  "changed_dependencies": {
+    "/tmp/chijin-r15-sdk-scalar-legality/source/AscendNPU-IR/bishengir/lib/Dialect/HIVM/Transforms/TileAndBindSubBlock.cpp": {
+      "before": "c33d6effd6a128a16126a4ee1f1c511754d1b045157133a664baa63607ad4d11",
+      "after": "5370a0df12b9f1216dc935888e843376c61391aa96c8a2864132cec30a6d434c"
+    }
+  },
+  "compile_commands_byteequal": true,
+  "source_sha_matches_receipt": true,
+  "recipe_sha_matches_receipt": true,
+  "patch_sha_matches_receipt": true,
+  "delivery_validator_sha256": "dbae8224f08ef8f906e642613f00a2892bd1576879a1fa8b746c093efb5b43cf",
+  "execution_seal_sha_matches": true,
+  "execution_seal_content_matches": true,
+  "derived_receipt_sha_matches": true,
+  "original_build_receipt_hash_matches": true,
+  "original_templates_receipt_hash_matches": true,
+  "baseline_replay_hash_matches": true,
+  "before_bind_equal_to_unmodified": true,
+  "before_bind_sha256": "0b1f6b3241e15b95dfbcfa74b7d4dcc0166eca74c02a94928b89ea1b6dc66c2f",
+  "after_bind_sha256": "ea9f95969639a81a3e321a5b5065f4ecf28f6f06cf4a1ba9bc08c9ee2916e7ea",
+  "aic_body_byteequal_before_after": true,
+  "public_binary_sha_matches": true,
+  "public_binary_bytes": 4528,
+  "compiler_hash_build_replay_matches": true,
+  "fixed_resource_hashes_match_baseline": true
+}
