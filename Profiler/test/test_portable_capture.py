@@ -149,6 +149,64 @@ def test_backend_extensions_are_lazy_and_replaceable(capture, monkeypatch):
     assert backends.capture_backend("other").collect_counters is None
 
 
+@pytest.mark.parametrize('backend', ['cann', 'ascend', 'npu'])
+@pytest.mark.parametrize('replay', ['none', 'application', '', None])
+def test_ascend_counters_reject_replay_without_explicit_consent(
+        capture, monkeypatch, tmp_path, backend, replay):
+    output = tmp_path / 'never-created'
+    args = SimpleNamespace(backend=backend,
+                           counters=True,
+                           replay_mode=replay,
+                           name=str(output),
+                           metadata=None)
+    monkeypatch.setattr(capture.tempfile, 'mkdtemp',
+                        lambda **kw: pytest.fail('created capture staging'))
+    with pytest.raises(ValueError, match='independent'):
+        capture.run_capture(args, ['ordinary.py'],
+                            lambda *a: pytest.fail('executed application'))
+    assert not output.exists()
+
+
+@pytest.mark.parametrize('replay', ['none', 'application', '', None])
+def test_direct_ascend_counter_wrapper_rejects_implicit_replay(
+        capture, monkeypatch, tmp_path, replay):
+    backends = importlib.import_module(capture.__package__ + '._backends')
+    cann = ModuleType(capture.__package__ + '.cann')
+    cann.collect_msprof = lambda *a, **kw: pytest.fail('invoked SDK collector')
+    monkeypatch.setitem(sys.modules, cann.__name__, cann)
+    with pytest.raises(ValueError, match='independent'):
+        backends._ascend_counters(['ordinary.py'],
+                                  tmp_path / 'raw',
+                                  metrics=None,
+                                  replay_mode=replay,
+                                  env={})
+    assert not (tmp_path / 'raw').exists()
+
+
+def test_explicit_independent_ascend_replay_is_forwarded(
+        capture, monkeypatch, tmp_path):
+    backends = importlib.import_module(capture.__package__ + '._backends')
+    calls = []
+    cann = ModuleType(capture.__package__ + '.cann')
+    cann.collect_msprof = lambda *a, **kw: calls.append((a, kw)) or {
+        'ok': True
+    }
+    monkeypatch.setitem(sys.modules, cann.__name__, cann)
+    result = backends._ascend_counters(['ordinary.py'],
+                                       tmp_path / 'raw',
+                                       metrics='A, B',
+                                       replay_mode='independent',
+                                       env={'X': '1'})
+    assert result == {'ok': True}
+    assert calls == [((['ordinary.py'], tmp_path / 'raw'), {
+        'metrics': ('A', 'B'),
+        'replay_mode': 'independent',
+        'env': {
+            'X': '1'
+        }
+    })]
+
+
 def test_cli_failure_retains_intermediates_and_restores_environment(
         capture, tmp_path, monkeypatch, capsys):
     stage = tmp_path / "stage"

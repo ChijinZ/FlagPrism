@@ -227,6 +227,11 @@ def run_capture(args, target_args, execute):
     if args.counters and backend.collect_counters is None:
         raise ValueError(
             f"External counters are not supported by {args.backend}")
+    allowed_replay = getattr(backend, 'counter_replay_modes', ())
+    if args.counters and allowed_replay and args.replay_mode not in allowed_replay:
+        raise ValueError(
+            f"External counters for {args.backend} require --replay-mode "
+            f"{' or '.join(allowed_replay)} (requested {args.replay_mode})")
     output = Path(args.name or "profile-run").expanduser().resolve()
     context = None
     if args.metadata:

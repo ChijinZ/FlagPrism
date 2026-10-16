@@ -123,17 +123,17 @@ immutable compiler capture directories automatically; explicit environment
 paths remain available as advanced overrides. Failed compiler captures are
 retained and the error names their compiler-stage evidence.
 
-Automatic Ascend observations include zero-interval source-operation
-checkpoints from generic original LLVM loads/stores/computations/compiler
-calls with surviving debug locations. The default selects at most eight source
-location/class regions per actor, spread over the original control flow;
-original loop-header checkpoints preserve actual runtime visits. A checkpoint
-proves that source control reached the region, and is not a completion barrier
-or engine-busy measurement. Adjacent operations at the same source location and
-class within one original basic block share a checkpoint. Compiler manifests
-retain candidate/selected counts, operation classes, original site identities
-and full debug origins. Raw event publication, losses, typed readiness,
-per-invocation hidden ABI and actor-local clock boundaries are unchanged.
+Default automatic Ascend profiling uses source-site census v2: actual dynamic
+visit counts for selected source operations over the admitted launch grid,
+with separate physical actor banks. Counts are not checkpoint event streams
+or operation durations; clock, occurrence and iteration fields remain null.
+See the [source census contract](../../../Profiler/docs/source_site_census.md)
+for selection, physical storage, source association and overflow semantics.
+
+The older explicit advanced checkpoint mode retains zero-interval
+source-operation events and loop-header visits. Its locations and local ticks
+do not establish completion barriers or engine-busy measurements. Historical
+checkpoint selection limits do not describe the default census mode.
 
 The SDK compiler wrapper enforces a 120-second deadline for each actual SDK
 compiler job, including its child tools. `FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S`

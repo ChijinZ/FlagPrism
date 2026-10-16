@@ -1482,6 +1482,18 @@ def _default_launch_prepare_hook(
         runtime_metadata["grid"] = grid
     elif grid is not None:
         runtime_metadata.setdefault("grid", grid)
+    if metadata_dict.get("debug_record_layout") == "gcu_site_census_v1":
+        compiled_stride = metadata_dict.get("debug_records_per_instance")
+        runtime_stride = runtime_metadata.get("records_per_instance",
+                                              compiled_stride)
+        if (runtime_metadata.get("record_layout", "gcu_site_census_v1")
+                != "gcu_site_census_v1" or type(compiled_stride) is not int
+                or not 1 <= compiled_stride <= 128
+                or type(runtime_stride) is not int
+                or runtime_stride != compiled_stride):
+            raise ValueError(
+                "GCU census runtime builder contradicts actual compiler layout/stride"
+            )
     if metadata_dict.get("debug_record_layout") in {
             "ascend_source_census_v1", "ascend_source_census_v2"
     }:

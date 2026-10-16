@@ -629,9 +629,10 @@ public:
                                     "physical cell/byte/index budgets");
       compileRequest.options.recordCapacity = static_cast<uint32_t>(cells);
     }
-    if (runtimeMetadata.recordLayout == "gcu_site_census_v1") {
-      if (getStringOr(metadata, "debug_record_layout", "") !=
-              "gcu_site_census_v1" ||
+    if (runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
+        compiledCensusLayout == "gcu_site_census_v1") {
+      if (compiledCensusLayout != "gcu_site_census_v1" ||
+          runtimeMetadata.recordLayout != compiledCensusLayout ||
           getUInt32Or(metadata, "debug_census_version", 0) != 1 ||
           getUInt32Or(metadata, "debug_record_size", 0) != 64 ||
           !runtimeMetadata.hasLaunchGrid ||

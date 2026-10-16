@@ -36,10 +36,12 @@ here. The hardware is ZIXIAOC200; `gcu300` is the compiler/SDK target name.
 
 ## Ascend
 
-See [Ascend pinned integration and packaging](ascend/README.md). Apply its
-complete patch first, then `automatic-source-origins.patch` and
-`automatic-import-order.patch`. These layered changes preserve automatic source
-locations and initialize the vendor Torch runtime before importing Triton.
+See [Ascend pinned integration and packaging](ascend/README.md). Apply the
+complete `flagtree-source-census-v2.patch` and `flir-source-census-v2.patch`
+once to their respective pinned repositories, or use the documented source
+build entry point. Do not layer the historical `automatic-source-origins.patch`
+or `automatic-import-order.patch` on these complete patches; their changes are
+already included.
 The earlier gateway interruption has been resolved; independent API/CLI and
 native task/source checks have run in the existing server Docker.
 The upstream LLVM15 observer must run out of process before the SDK toolchain;

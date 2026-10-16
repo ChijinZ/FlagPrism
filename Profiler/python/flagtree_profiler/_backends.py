@@ -7,6 +7,7 @@ from typing import Callable, Optional
 class CaptureBackend:
     software_modules: tuple[str, ...] = ()
     collect_counters: Optional[Callable] = None
+    counter_replay_modes: tuple[str, ...] = ()
 
 
 def _enflame_counters(command, output, *, metrics, replay_mode, env):
@@ -21,10 +22,11 @@ def _enflame_counters(command, output, *, metrics, replay_mode, env):
 
 
 def _ascend_counters(command, output, *, metrics, replay_mode, env):
-    from .cann import collect_msprof
-    if replay_mode not in ("none", "independent"):
+    if replay_mode != "independent":
         raise ValueError(
-            "CANN counter collection supports independent replay only")
+            "CANN counters require explicit --replay-mode independent; collection replays the application"
+        )
+    from .cann import collect_msprof
     if isinstance(metrics, str):
         metrics = tuple(part.strip() for part in metrics.split(",")
                         if part.strip())
@@ -32,14 +34,15 @@ def _ascend_counters(command, output, *, metrics, replay_mode, env):
                           output,
                           metrics=metrics
                           or ("ArithmeticUtilization", "PipeUtilization"),
-                          replay_mode="independent",
+                          replay_mode=replay_mode,
                           env=env)
 
 
 _DEFAULT = CaptureBackend()
-_ENFLAME = CaptureBackend(("torch_gcu", ), _enflame_counters)
+_ENFLAME = CaptureBackend(("torch_gcu", ), _enflame_counters,
+                          ("none", "application"))
 _BACKENDS = dict.fromkeys(("enflame", "gcu", "tops"), _ENFLAME)
-_ASCEND = CaptureBackend(("torch_npu", ), _ascend_counters)
+_ASCEND = CaptureBackend(("torch_npu", ), _ascend_counters, ("independent", ))
 _BACKENDS.update(dict.fromkeys(("ascend", "npu", "cann"), _ASCEND))
 
 

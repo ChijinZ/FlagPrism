@@ -121,3 +121,71 @@ def test_census_grid_is_bound_to_actual_launch_only(monkeypatch, layout,
     metadata = {'debug_record_layout': layout, 'debug_records_per_instance': 8}
     with pytest.raises(Prepared if accepted else ValueError):
         api._default_launch_prepare_hook(metadata, 0, {'grid': [13, 1, 1]}, ())
+
+
+@pytest.mark.parametrize('supplied,accepted', [
+    ({}, True),
+    ({
+        'record_layout': 'gcu_site_census_v1',
+        'records_per_instance': 8
+    }, True),
+    ({
+        'record_layout': ''
+    }, False),
+    ({
+        'record_layout': None
+    }, False),
+    ({
+        'record_layout': 'selected_dynamic_timeline_v1'
+    }, False),
+    ({
+        'record_layout': 'unknown'
+    }, False),
+    ({
+        'records_per_instance': 1
+    }, False),
+    ({
+        'records_per_instance': 0
+    }, False),
+    ({
+        'records_per_instance': True
+    }, False),
+    ({
+        'records_per_instance': 8.0
+    }, False),
+    ({
+        'records_per_instance': '8'
+    }, False),
+])
+def test_census_builder_cannot_change_compiled_layout_or_stride(
+        monkeypatch, supplied, accepted):
+    from types import SimpleNamespace
+    from flagtree.debugger import api, graph_guard
+    calls = []
+
+    class Prepared(Exception):
+        pass
+
+    def prepare(metadata, stream, runtime):
+        calls.append(runtime)
+        assert runtime['grid'] == (13, 1, 1)
+        assert runtime['record_layout'] == 'gcu_site_census_v1'
+        assert runtime['records_per_instance'] == 8
+        raise Prepared()
+
+    monkeypatch.setattr(graph_guard, 'require_eager', lambda *a, **k: None)
+    monkeypatch.setattr(api, '_build_launch_metadata_dict', lambda m: m)
+    monkeypatch.setattr(api, '_infer_runtime_metadata', lambda *a: {})
+    monkeypatch.setattr(api, '_propagate_observation_clock', lambda *a: None)
+    monkeypatch.setattr(api, '_load_binding',
+                        lambda: SimpleNamespace(prepare_launch=prepare))
+    monkeypatch.setattr(
+        api, '_active_config',
+        api.DebuggerConfig(runtime_metadata_builder=lambda *a: supplied))
+    metadata = {
+        'debug_record_layout': 'gcu_site_census_v1',
+        'debug_records_per_instance': 8
+    }
+    with pytest.raises(Prepared if accepted else ValueError):
+        api._default_launch_prepare_hook(metadata, 0, {'grid': (13, 1, 1)}, ())
+    assert len(calls) == int(accepted)
