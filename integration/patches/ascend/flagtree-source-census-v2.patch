@@ -299,7 +299,19 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
  
          npu_compiler_path, env = _get_npucompiler_path()
          cmd_list = ([npu_compiler_path, src_path] + _compile_option_list + ["-o", bin_file])
-@@ -983,6 +998,8 @@
+@@ -978,11 +993,20 @@
+             # Include all binary file extensions (mlirbc is used in bytecode mode)
+             self.binary_extensions = {"npubin", "mlirbc"}
+ 
++    def normalize_launch_options(self, options):
++        # Called before the in-memory JIT cache lookup, not only on a miss.
++        options = dict(options)
++        if options.get("enable_auto_blockify") is None:
++            options["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
++        return options
++
+     def parse_options(self, opts) -> Any:
+         # TODO: get available targets when building options?
          if self.target.backend == "npu":
              args = {k: opts[k] for k in NPUOptions.__dataclass_fields__.keys() if k in opts}
              args.setdefault("arch", self.target.arch)
@@ -435,3 +447,18 @@ index 076ad5083..10c2ebd1d 100644
      } else if (isa<triton::AtomicCASOp>(user)) {
        auto *newOp =
            createBlockifyLoop(user, op, logicalBlockId, logicalBlockNum,
+diff --git a/python/triton/runtime/jit.py b/python/triton/runtime/jit.py
+--- a/python/triton/runtime/jit.py
++++ b/python/triton/runtime/jit.py
+@@ -733,6 +733,11 @@
+         # specialization is list[tuple[str, Any]], where first element of tuple is
+         # the type and the second parameter is the 'specialization' value.
+         bound_args, specialization, options = binder(*args, **kwargs)
++        normalize_options = getattr(backend, "normalize_launch_options", None)
++        if normalize_options is not None:
++            options = normalize_options(options)
++            # Freeze the same effective values for the cache key and compile.
++            kwargs.update(options)
+ 
+         key = compute_cache_key(kernel_key_cache, specialization, options)
+         kernel = kernel_cache.get(key, None)
