@@ -43,6 +43,23 @@ def dependencies(log, build):
     return result
 
 
+def validate_replay_identity(baseline, old_compiler, *, require_matched=False):
+    """Check actual public bytes for either baseline route before source changes."""
+    # Re-read actual files, not just the previous receipt's booleans.
+    if (baseline["input_sha256"] != PUBLIC_INPUT_SHA256 or
+            sha(baseline["input"]) != PUBLIC_INPUT_SHA256 or
+            sha(baseline["reference"]) != PUBLIC_BINARY_SHA256 or
+            baseline["reference_sha256"] != PUBLIC_BINARY_SHA256 or
+            sha(baseline["binary"]) != baseline["binary_sha256"] or
+            baseline["compiler_sha256"] != sha(old_compiler) or
+            Path(baseline["compiler"]).resolve() != old_compiler.resolve()):
+        raise RuntimeError("Frozen public input/reference/output/tool identity changed")
+    if require_matched and (baseline.get("state") != "matched" or
+                            baseline.get("byteequal") is not True or
+                            baseline["binary_sha256"] != PUBLIC_BINARY_SHA256):
+        raise RuntimeError("A byteequal public replay is required for this route")
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("prefix", type=Path)
@@ -67,15 +84,8 @@ def main():
     if template_receipt.get("state") != "templates-ready":
         raise RuntimeError("The complete public template resource installation is required")
     old_compiler = prefix / "install-unmodified/bin/bishengir-compile"
-    # Re-read actual files, not just the previous receipt's booleans.
-    if (baseline["input_sha256"] != PUBLIC_INPUT_SHA256 or
-            sha(baseline["input"]) != PUBLIC_INPUT_SHA256 or
-            sha(baseline["reference"]) != PUBLIC_BINARY_SHA256 or
-            baseline["reference_sha256"] != PUBLIC_BINARY_SHA256 or
-            sha(baseline["binary"]) != baseline["binary_sha256"] or
-            baseline["compiler_sha256"] != sha(old_compiler) or
-            Path(baseline["compiler"]).resolve() != old_compiler.resolve()):
-        raise RuntimeError("Frozen public input/reference/output/tool identity changed")
+    validate_replay_identity(baseline, old_compiler,
+                             require_matched=args.baseline_equivalence is None)
     equivalent = None
     if args.baseline_equivalence:
         derived = json.loads(args.baseline_equivalence.read_text())
@@ -83,9 +93,6 @@ def main():
         canonical = lambda value: json.dumps(value, sort_keys=True, separators=(",", ":"))
         if any(canonical(derived.get(key)) != canonical(value) for key, value in equivalent.items()):
             raise RuntimeError("Producer-only receipt differs from a fresh strict ELF/IR audit")
-    elif (baseline.get("state") != "matched" or not baseline.get("byteequal") or
-          baseline["binary_sha256"] != PUBLIC_BINARY_SHA256):
-        raise RuntimeError("A byteequal replay or separately audited producer-only equivalence is required")
     if build_receipt["state"] not in ("unmodified-tool-ready", "legality-unmodified-tool-ready"):
         raise RuntimeError("Actual source build is not a legality-unmodified baseline")
     delivery = validate_delivery(prefix, baseline)

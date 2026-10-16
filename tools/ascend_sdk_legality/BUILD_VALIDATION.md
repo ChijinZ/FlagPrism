@@ -100,3 +100,18 @@ represented only by resolved paths and hashes. Root has separately archived its
 independent ELF and fixed-CPU audits. This source commit changes no profiler
 runtime or cache selector: the separately installed compiler-identity parent
 patch selects this same standalone tool for ordinary and profile compilation.
+
+The subsequent C3 test-route correction exercises both supported baselines.
+The test selects the actual rebuild identity/bitidentical preflight for
+`state=matched`, and the existing derived-IR/ELF validator for
+`state=binary_mismatch`. The preflight was extracted from the rebuild entry
+without changing source/resource validation or the producer exception. Both
+routes reject changed input/output/reference/tool hashes, state and byteequal
+flags, under normal Python and `-O`. Six Docker suite invocations passed: a
+clearly marked synthetic matched receipt whose binary is a copy of the public
+reference, a synthetic producer receipt copying the earlier public artifact,
+and the unchanged actual producer replay, each under normal and optimized
+Python. Every suite also exercises normal/optimized child validators. These
+are test-only copied receipts, not new compiler replays or claims that the
+isolated baseline became bitidentical. No SDK source, tool, template, final
+NPUBIN or device execution changed.

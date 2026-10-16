@@ -57,12 +57,21 @@ class BaselineGate(unittest.TestCase):
         if REPLAY is None:
             self.skipTest("pass --replay for actual compiler identity integration")
         replay = json.loads(REPLAY.read_text())
+        self.assertIn(replay["state"], ("matched", "binary_mismatch"))
+        # Matched replays use the real rebuild preflight, which requires byte
+        # identity. Producer-only replays use their stricter derived-IR/ELF
+        # validator; that validator deliberately rejects matched receipts.
         # Preserve the actual IR directory: the validator resolves it relative
         # to the receipt. Write fresh temporary receipts there, never overwrite.
         for optimized in (False, True):
-            for key in (None, "compiler_sha256", "input_sha256", "binary_sha256", "reference_sha256"):
+            for key in (None, "compiler_sha256", "input_sha256", "binary_sha256", "reference_sha256",
+                        "state", "byteequal"):
                 changed = dict(replay)
-                if key:
+                if key == "state":
+                    changed[key] = "matched" if replay["state"] != "matched" else "binary_mismatch"
+                elif key == "byteequal":
+                    changed[key] = not replay["byteequal"]
+                elif key:
                     changed[key] = "0" * 64
                 with tempfile.NamedTemporaryFile(mode="w", suffix=".json", prefix="gate-negative-",
                                                  dir=REPLAY.parent, delete=False) as stream:
@@ -70,10 +79,18 @@ class BaselineGate(unittest.TestCase):
                     receipt = Path(stream.name)
                 with tempfile.TemporaryDirectory(prefix="sdk-gate-derived-") as tmp:
                     try:
-                        result = subprocess.run([sys.executable, *(["-O"] if optimized else []),
-                                                 str(RECIPE / "accept_public_baseline.py"),
-                                                 "--replay", str(receipt), "--output", str(Path(tmp) / "derived.json")],
-                                                capture_output=True, text=True, timeout=30)
+                        command = [sys.executable, *(["-O"] if optimized else [])]
+                        if replay["state"] == "matched":
+                            command += ["-c", "import json,sys; from pathlib import Path; "
+                                        "sys.path.insert(0, sys.argv[1]); "
+                                        "from rebuild_fixed import validate_replay_identity; "
+                                        "validate_replay_identity(json.loads(Path(sys.argv[2]).read_text()), "
+                                        "Path(sys.argv[3]), require_matched=True)",
+                                        str(RECIPE), str(receipt), replay["compiler"]]
+                        else:
+                            command += [str(RECIPE / "accept_public_baseline.py"),
+                                        "--replay", str(receipt), "--output", str(Path(tmp) / "derived.json")]
+                        result = subprocess.run(command, capture_output=True, text=True, timeout=30)
                         with self.subTest(key=key, optimized=optimized):
                             self.assertEqual(result.returncode == 0, key is None)
                     finally:
