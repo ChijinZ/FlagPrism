@@ -166,6 +166,7 @@ index 11be83331..316688386 100644
      cmdclass={
          "bdist_wheel": plugin_bdist_wheel,
 diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend/compiler.py
+index ea9c0b5..23ebdd0 100644
 --- a/third_party/ascend/backend/compiler.py
 +++ b/third_party/ascend/backend/compiler.py
 @@ -21,6 +21,7 @@
@@ -176,10 +177,13 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
  import glob
  import os
  import re
-@@ -68,6 +69,18 @@
+@@ -67,6 +68,20 @@ from triton.runtime import driver
+ from triton.runtime.cache import get_dump_manager
  from triton.tools.get_ascend_devices import is_compile_on_910_95
  
- 
++from .compiler_identity import compiler_identity, bind_compiler_identity
++
++
 +def _flagprism_automatic_source_info(opt):
 +    # The public automatic request is frozen in instrumentation_mode and its
 +    # normal NPUOptions hash. Preserve source locations only for that compile;
@@ -191,11 +195,10 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
 +    request = config.get("debug_observation_request")
 +    return isinstance(request, dict) and request.get("automatic") is True
 +
-+
+ 
  # TODO: materialize the concrete min shape
  def min_dot_size(target: GPUTarget):
-     return lambda lhsType, rhsType: (1, 1, 1)
-@@ -411,7 +424,7 @@
+@@ -411,7 +426,7 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
              _compile_option_list += ["--disable-ffts"]
          if _is_ascend_sanitizer_enabled():
              _compile_option_list += ["--enable-sanitizer=true"]
@@ -204,7 +207,7 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
              _compile_option_list += ["--enable-debug-info=true"]
  
          if _enable_print_ub_bits():
-@@ -513,13 +526,9 @@
+@@ -513,15 +528,12 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
                  _compile_option_list += \
                      [f"--link-aicore-bitcode={bitcode}"]
  
@@ -220,8 +223,11 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
 +            _compile_option_list += ["--enable-auto-blockify-loop"]
  
          npu_compiler_path, env = _get_npucompiler_path()
++        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
          if npu_compiler_path.endswith("bishengir-compile"):
-@@ -550,7 +559,13 @@
+             _compile_option_list += [
+                 "--enable-hfusion-compile=true",
+@@ -550,7 +562,13 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
              print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
  
          try:
@@ -236,7 +242,7 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
          except subprocess.CalledProcessError as e:
              if opt.debug:
                  _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
-@@ -631,7 +646,7 @@
+@@ -631,7 +649,7 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
  
          if _is_ascend_sanitizer_enabled():
              _compile_option_list += ["--enable-sanitizer=true"]
@@ -245,7 +251,7 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
              _compile_option_list += ["--enable-debug-info=true"]
  
          if _enable_print_ub_bits():
-@@ -728,7 +743,8 @@
+@@ -728,9 +746,11 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
              _compile_option_list += \
                  [f"--disable-size-align-for-cast={disable_size_align_for_cast}"]
  
@@ -254,8 +260,11 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
 +        if opt.enable_auto_blockify:
              _compile_option_list += ["--enable-auto-blockify-loop"]
          npu_compiler_path, env = _get_npucompiler_path()
++        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
          if npu_compiler_path.endswith("bishengir-compile"):
-@@ -746,7 +762,13 @@
+             _compile_option_list += [
+                 "--enable-hfusion-compile=true",
+@@ -746,7 +766,13 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
              print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
  
          try:
@@ -270,7 +279,20 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
          except subprocess.CalledProcessError as e:
              if opt.debug:
                  _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
-@@ -902,7 +924,7 @@
+@@ -883,7 +909,12 @@ class NPUOptions:
+     # disable simt fma optimization to get high precision
+     disable_fma: bool = False
+ 
++    compiler_identity: str = ""
++
+     def __post_init__(self):
++        if not self.compiler_identity:
++            path, _ = _get_npucompiler_path()
++            object.__setattr__(self, "compiler_identity", compiler_identity(path))
+         # Parse compile_mode and set related fields
+         if self.compile_mode == "simd":
+             object.__setattr__(self, "parallel_mode", "simd")
+@@ -902,7 +933,7 @@ class NPUOptions:
  
      def hash(self):
          key = "_".join([f"{name}-{val}" for name, val in self.__dict__.items()])
@@ -279,7 +301,7 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
          return hashlib.sha256(key.encode("utf-8")).hexdigest()
  
  
-@@ -943,16 +965,9 @@
+@@ -943,18 +974,12 @@ def ttir_to_npubin(mod, metadata, opt):
                  if bisheng_options is not None:
                      _compile_option_list += [f"--append-bisheng-options={bisheng_options}"]
  
@@ -298,8 +320,11 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
 +                _compile_option_list += ["--enable-auto-blockify-loop"]
  
          npu_compiler_path, env = _get_npucompiler_path()
++        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
          cmd_list = ([npu_compiler_path, src_path] + _compile_option_list + ["-o", bin_file])
-@@ -978,11 +993,20 @@
+         ret = subprocess.run(cmd_list, env=env, capture_output=True, check=True)
+         if not Path(bin_path).exists():
+@@ -978,11 +1003,27 @@ class AscendBackend(BaseBackend):
              # Include all binary file extensions (mlirbc is used in bytecode mode)
              self.binary_extensions = {"npubin", "mlirbc"}
  
@@ -308,6 +333,8 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
 +        options = dict(options)
 +        if options.get("enable_auto_blockify") is None:
 +            options["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
++        path, _ = _get_npucompiler_path()
++        options["compiler_identity"] = compiler_identity(path)
 +        return options
 +
      def parse_options(self, opts) -> Any:
@@ -315,11 +342,247 @@ diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend
          if self.target.backend == "npu":
              args = {k: opts[k] for k in NPUOptions.__dataclass_fields__.keys() if k in opts}
              args.setdefault("arch", self.target.arch)
++            path, _ = _get_npucompiler_path()
++            identity = compiler_identity(path)
++            if args.get("compiler_identity", identity) != identity:
++                raise RuntimeError("Ascend compiler changed after JIT option binding; retry the launch")
++            args["compiler_identity"] = identity
 +            if args.get("enable_auto_blockify") is None:
 +                args["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
              options = NPUOptions(**args)
          else:
              raise NotImplementedError(f"Backend '{self.target.backend}' is not supported. "
+diff --git a/third_party/ascend/backend/compiler_identity.py b/third_party/ascend/backend/compiler_identity.py
+new file mode 100644
+index 0000000..fd2a298
+--- /dev/null
++++ b/third_party/ascend/backend/compiler_identity.py
+@@ -0,0 +1,200 @@
++"""Identity of the actual external Ascend compiler, shared by all launch modes."""
++import atexit
++import ctypes
++import hashlib
++import json
++import os
++import stat
++import struct
++import threading
++
++_CACHE = {}
++_LOCK = threading.Lock()
++
++
++class _Invalidations:
++    """One nonblocking Linux watch FD; consume notifications on the calling thread."""
++    _MASK = 0x00000002 | 0x00000004 | 0x00000008 | 0x00000400 | 0x00000800
++    _OVERFLOW = 0x00004000
++    _GONE = 0x00000400 | 0x00000800 | 0x00008000
++
++    def __init__(self):
++        self.fd = None
++        self.failed = False
++        self.supported = True
++        self.pid = os.getpid()
++        self.paths = {}
++        self.descriptors = {}
++        self.epoch = 0
++        try:
++            self.libc = ctypes.CDLL(None, use_errno=True)
++            self.libc.inotify_init1.argtypes = [ctypes.c_int]
++            self.libc.inotify_init1.restype = ctypes.c_int
++            self.libc.inotify_add_watch.argtypes = [ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32]
++            self.libc.inotify_add_watch.restype = ctypes.c_int
++            self.libc.inotify_rm_watch.argtypes = [ctypes.c_int, ctypes.c_int]
++            self.libc.inotify_rm_watch.restype = ctypes.c_int
++        except (AttributeError, OSError):
++            self.supported = False
++            self.failed = True
++
++    def close(self):
++        if self.fd is not None:
++            os.close(self.fd)
++        self.fd = None
++        self.paths.clear()
++        self.descriptors.clear()
++
++    def disable(self):
++        self.close()
++        self.failed = True
++        self.epoch += 1
++        _CACHE.clear()
++
++    def forget(self, path):
++        entry = self.paths.pop(path, None)
++        _CACHE.pop(path, None)
++        if entry is not None:
++            wd = entry[0]
++            self.descriptors.pop(wd, None)
++            self.libc.inotify_rm_watch(self.fd, wd)
++
++    def drain(self):
++        if self.fd is None:
++            return
++        while True:
++            try:
++                data = os.read(self.fd, 65536)
++            except BlockingIOError:
++                return
++            except OSError:
++                self.disable()
++                return
++            if not data:
++                self.disable()
++                return
++            offset = 0
++            while offset < len(data):
++                wd, mask, _, length = struct.unpack_from('iIII', data, offset)
++                offset += 16 + length
++                self.epoch += 1
++                if mask & self._OVERFLOW:
++                    # Events were lost: correctness falls back to fresh hashing.
++                    self.disable()
++                    return
++                path = self.descriptors.get(wd)
++                if path is not None:
++                    _CACHE.pop(path, None)
++                    if mask & self._GONE:
++                        self.forget(path)
++
++    def ensure(self, path, info):
++        if self.pid != os.getpid():
++            self.close()
++            self.pid = os.getpid()
++            self.failed = not self.supported
++            _CACHE.clear()
++        if self.failed:
++            return False
++        if self.fd is None:
++            self.fd = self.libc.inotify_init1(os.O_NONBLOCK | os.O_CLOEXEC)
++            if self.fd < 0:
++                self.fd = None
++                self.disable()
++                return False
++        self.drain()
++        if self.failed:
++            return False
++        entry = self.paths.get(path)
++        inode = (info.st_dev, info.st_ino)
++        if entry is not None and entry[1:] != inode:
++            self.forget(path)
++            entry = None
++        if entry is None:
++            # Bound both watch resources and retained digests in long-lived apps.
++            if len(self.paths) >= 64:
++                self.forget(next(iter(self.paths)))
++            wd = self.libc.inotify_add_watch(self.fd, os.fsencode(path), self._MASK)
++            if wd < 0:
++                self.disable()
++                return False
++            # Hard links can share a watch descriptor. Invalidate the prior name;
++            # a later lookup can establish it again without stale digest reuse.
++            previous = self.descriptors.get(wd)
++            if previous is not None:
++                self.paths.pop(previous, None)
++                _CACHE.pop(previous, None)
++            self.paths[path] = (wd, *inode)
++            self.descriptors[wd] = path
++            _CACHE.pop(path, None)
++        return True
++
++
++_WATCH = _Invalidations()
++atexit.register(_WATCH.close)
++
++
++def _after_fork():
++    global _LOCK
++    _LOCK = threading.Lock()
++    _WATCH.close()
++    _WATCH.pid = os.getpid()
++    _WATCH.failed = not _WATCH.supported
++    _CACHE.clear()
++
++
++if hasattr(os, 'register_at_fork'):
++    os.register_at_fork(after_in_child=_after_fork)
++
++
++def executable_path(path):
++    if not os.path.isabs(path):
++        raise ValueError("TRITON_ASCEND_COMPILER must be an absolute executable path")
++    path = os.path.realpath(path)
++    info = os.stat(path)
++    if not stat.S_ISREG(info.st_mode) or not os.access(path, os.X_OK):
++        raise ValueError("Ascend compiler is not an executable regular file: " + path)
++    return path
++
++
++def _stamp(info):
++    return (info.st_dev, info.st_ino, info.st_size, info.st_ctime_ns, info.st_mtime_ns)
++
++
++def compiler_identity(path):
++    path = executable_path(path)
++    # The stat key detects replacement; notifications also detect same-tick
++    # in-place writes whose size, ctime and restored mtime are all unchanged.
++    with _LOCK:
++        for _ in range(3):
++            before = _stamp(os.stat(path))
++            cacheable = _WATCH.ensure(path, os.stat(path))
++            _WATCH.drain()
++            cacheable = cacheable and not _WATCH.failed
++            epoch = _WATCH.epoch
++            cached = _CACHE.get(path)
++            if cacheable and cached is not None and cached[0] == before:
++                return cached[1]
++            with open(path, "rb") as stream:
++                if _stamp(os.fstat(stream.fileno())) != before:
++                    continue
++                digest = hashlib.sha256()
++                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
++                    digest.update(chunk)
++                after = _stamp(os.fstat(stream.fileno()))
++            _WATCH.drain()
++            if before != after or before != _stamp(os.stat(path)) or epoch != _WATCH.epoch:
++                continue
++            token = json.dumps({"path": path, "sha256": digest.hexdigest()}, sort_keys=True, separators=(",", ":"))
++            if cacheable and not _WATCH.failed:
++                _CACHE[path] = (before, token)
++            return token
++    raise RuntimeError("Ascend compiler changed while fingerprinting: " + path)
++
++
++def bind_compiler_identity(path, expected, metadata):
++    actual = compiler_identity(path)
++    if actual != expected:
++        raise RuntimeError("Ascend compiler changed after JIT option binding; retry the launch")
++    metadata["ascend_compiler_identity"] = json.loads(actual)
++    return json.loads(actual)["path"]
+diff --git a/third_party/ascend/backend/utils.py b/third_party/ascend/backend/utils.py
+index be53f53..4c8b168 100644
+--- a/third_party/ascend/backend/utils.py
++++ b/third_party/ascend/backend/utils.py
+@@ -217,6 +217,10 @@ def _get_bishengir_opt_path() -> str:
+ def _get_npucompiler_path() -> str:
+     ascend_dir = os.path.dirname(os.path.abspath(__file__))
+     env = os.environ.copy()
++    override = os.environ.get("TRITON_ASCEND_COMPILER")
++    if override is not None:
++        from .compiler_identity import executable_path
++        return executable_path(override), env
+     npu_compiler_path = os.path.join(ascend_dir, "bishengir", "bin", "bishengir-compile")
+     if os.path.exists(npu_compiler_path):
+         npuir_env_path = os.path.dirname(npu_compiler_path)
+@@ -228,7 +232,8 @@ def _get_npucompiler_path() -> str:
+             if npu_compiler_root is None:
+                 raise EnvironmentError("Couldn't find executable bishengir-compile or TRITON_NPU_COMPILER_PATH.")
+             npu_compiler_path = os.path.join(npu_compiler_root, "npuc")
+-    return npu_compiler_path, env
++    from .compiler_identity import executable_path
++    return executable_path(os.path.abspath(npu_compiler_path)), env
+ 
+ 
+ def _get_bisheng_path() -> str:
 diff --git a/third_party/ascend/backend/driver.py b/third_party/ascend/backend/driver.py
 index ce3a73ee2..fbb483df6 100644
 --- a/third_party/ascend/backend/driver.py

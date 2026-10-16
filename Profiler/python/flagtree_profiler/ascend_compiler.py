@@ -193,6 +193,8 @@ def prepare(event):
     sdk_command = list(event.command)
     event.command[:] = [sys.executable, str(sdk_driver), *sdk_command]
     provenance = {
+        'ascend_compiler_identity':
+        event.metadata.get('ascend_compiler_identity'),
         'compile_id':
         compile_id,
         'phase':

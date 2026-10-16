@@ -307,3 +307,26 @@ def test_missing_producer_relation_fails_closed(sdk_producer_fixture,
     with pytest.raises(RuntimeError,
                        match='enclosing SDK producer association'):
         m.finish(event, returncode=0)
+
+
+def test_driver_receipt_preserves_bound_compiler_identity(
+        tmp_path, monkeypatch):
+    plugin = tmp_path / 'plugin.so'
+    plugin.write_bytes(b'fixture-plugin')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE',
+                       str(tmp_path / 'captures'))
+    monkeypatch.setattr(
+        m.shutil, 'which', lambda name, **kw: '/sdk/bisheng'
+        if name == 'bisheng' else '/llvm/opt-15')
+    identity = {'path': '/isolated/bin/bishengir-compile', 'sha256': 'b' * 64}
+    event = SimpleNamespace(backend='ascend',
+                            metadata={'ascend_compiler_identity': identity},
+                            command=[identity['path'], 'input.mlir'],
+                            environment={'PATH': '/sdk'})
+    m.prepare(event)
+    handoff = event.metadata['flagprism_ascend_handoff']
+    receipt = json.loads((Path(handoff['output']) / 'driver.json').read_text())
+    assert receipt['ascend_compiler_identity'] == identity
+    assert receipt['command'][0] == identity['path']
+    assert handoff['ascend_compiler_identity'] == identity

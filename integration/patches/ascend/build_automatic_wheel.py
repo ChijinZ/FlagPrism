@@ -153,6 +153,8 @@ def main():
             'python/triton/spec/ascend/runtime/jit.py',
             'triton/backends/ascend/compiler.py':
             'third_party/ascend/backend/compiler.py',
+            'triton/backends/ascend/compiler_identity.py':
+            'third_party/ascend/backend/compiler_identity.py',
             'triton/backends/ascend/driver.py':
             'third_party/ascend/backend/driver.py',
             'triton/backends/ascend/utils.py':
