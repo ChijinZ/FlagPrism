@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "purpose": "Public ordinary scalar-store compiler delivery replay; CPU compilation and byte comparison only",
+  "source": {
+    "file": "public_state_probe.py",
+    "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+    "case": "bm16-scalar-ordinary"
+  },
+  "input": {
+    "file": "public_bm16_scalar.mlir",
+    "sha256": "6b910a15aa5e87da20bbfc7ae29515093d362a609eae1a8c39126514f6a76b3f",
+    "representation": "Actual public ordinary SDK input after bytecode-to-text round trip"
+  },
+  "reference": {
+    "file": "ordinary_reference.npubin",
+    "sha256": "05b54efee3ed790bc6c76b40110e92b2f7684d2761605bea6f1dfa31c1fe6b6e",
+    "bytes": 4576,
+    "representation": "Generated public user-kernel NPUBIN, not an SDK library or SDK bitcode",
+    "producer": "CANN9.0.0 bishengir-compile1.1.0 source428ab8fdab46 LLVM19.1.7e4ce5939f6e1",
+    "target": "Ascend910B4-1"
+  },
+  "runtime_dependency": "A matching Ascend FlagTree installation supplies libdevice.10.bc; pass its path explicitly. SDK executables/libraries/BC are not bundled here.",
+  "historical_locations": "Location strings in the frozen MLIR describe public source provenance; replay does not require those historical directories."
+}

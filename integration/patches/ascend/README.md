@@ -36,7 +36,12 @@ evidence on all three backends. Its native inputs match the actually compiled
 bytes. Ascend public mixed and
 vector-loop device checks passed, including an upgrade with the original source,
 path and old cache retained. The complete independent Ascend qualification matrix
-is still running; public cases do not replace that acceptance. Exact source,
+for `ec75a9f` with the original SDK ended at 42/44, with two real State
+assertion failures still open. The isolated SDK tiling-legality compiler has
+passed CPU build, pass regressions and public driver compilation; device
+validation is still required and those failures have not been closed. See the
+[final qualification report](../../evidence/usability-v3-ec75a9f/qualification-final/REPORT.md).
+Public cases do not replace that acceptance. Exact source,
 wheel hashes, build scope and review evidence are retained in the
 [v3 engineering checkpoint](../../evidence/usability-v3-ec75a9f/README.md).
 The historical paths and build results below describe their earlier snapshots,
@@ -48,6 +53,17 @@ retains FLIR; disabling the feature is not the validated build. The compiler
 uses the existing LLVM22 cache. The late observer is a separate upstream
 LLVM15.0.7 `opt-15` plugin. **Do not load this plugin into vendor bisheng**;
 that LLVM fork is ABI-incompatible.
+
+The SDK tiling-legality work uses a separate LLVM19 standalone compiler pinned
+to the actual CANN SDK source revision `428ab8fdab46`, in an isolated prefix.
+It does not replace the LLVM22 parent dialect build or overwrite system CANN.
+The [SDK build recipe](../../../tools/ascend_sdk_legality/README.md) records
+source pins, material hashes, real build PIDs and the unmodified-tool replay
+required before applying the repair. After installing the compiler-identity
+parent patch, select a validated replacement through
+`TRITON_ASCEND_COMPILER=/absolute/path/to/bishengir-compile`; the
+[compiler identity contract](compiler_identity.md) applies equally to ordinary
+and profiled compilation. Retain old caches when verifying an upgrade.
 
 All compilation, CPU tests/oracles and workloads run inside the user's existing
 `chijin_v3.5.x` Docker via the `chijin` host user, with device4 explicitly
