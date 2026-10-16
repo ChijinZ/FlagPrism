@@ -573,6 +573,36 @@ public:
 
     DebugRuntimeMetadata runtimeMetadata =
         parseRuntimeMetadata(runtimeMetadataValue);
+    if (runtimeMetadata.recordLayout == "gcu_site_census_v1") {
+      if (getStringOr(metadata, "debug_record_layout", "") !=
+              "gcu_site_census_v1" ||
+          getUInt32Or(metadata, "debug_census_version", 0) != 1 ||
+          getUInt32Or(metadata, "debug_record_size", 0) != 64 ||
+          !runtimeMetadata.hasLaunchGrid ||
+          runtimeMetadata.recordsPerInstance == 0)
+        throw std::invalid_argument(
+            "GCU census requires actual grid and matching compiler layout");
+      uint32_t compiledSites =
+          getUInt32Or(metadata, "debug_records_per_instance", 0);
+      py::handle censusSites = lookup(metadata, "debug_census_sites");
+      if (compiledSites == 0 || compiledSites > 128 ||
+          runtimeMetadata.recordsPerInstance != compiledSites || !censusSites ||
+          !py::isinstance<py::list>(censusSites) ||
+          py::len(censusSites) != compiledSites)
+        throw std::invalid_argument(
+            "GCU census runtime stride contradicts actual compiler sites");
+      uint64_t programs = launchGridProduct(runtimeMetadata);
+      uint64_t cells = checkedMulU64(
+          programs, runtimeMetadata.recordsPerInstance, "GCU census cells");
+      uint64_t bytes = 32 + checkedMulU64(cells, 64, "GCU census bytes");
+      if (programs == 0 || programs > std::numeric_limits<uint32_t>::max() ||
+          cells > getUInt64Or(metadata, "debug_max_census_cells", 0) ||
+          bytes > getUInt64Or(metadata, "debug_max_census_bytes", 0) ||
+          bytes > static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
+        throw std::invalid_argument(
+            "GCU census actual grid exceeds cell/byte/index budget");
+      compileRequest.options.recordCapacity = static_cast<uint32_t>(cells);
+    }
     if (runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
         getStringOr(metadata, "debug_record_layout", "") ==
             "ascend_actor_dynamic_v1") {

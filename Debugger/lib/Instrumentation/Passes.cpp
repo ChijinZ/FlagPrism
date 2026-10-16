@@ -163,6 +163,7 @@ constexpr StringLiteral kAttrDynamicTimeline =
     "flagtree.debug.dynamic_timeline_enabled";
 constexpr StringLiteral kAttrSelectedProgram =
     "flagtree.debug.selected_program";
+constexpr StringLiteral kAttrCensus = "flagtree.debug.source_census";
 constexpr StringLiteral kAttrSelectedActor = "flagtree.debug.selected_actor";
 constexpr StringLiteral kAttrSampleEvery = "flagtree.debug.sample_every";
 constexpr StringLiteral kAttrSelectedSites = "flagtree.debug.selected_sites";
@@ -3046,6 +3047,53 @@ void storePerWorkItemRecordVector(OpBuilder &builder, Location loc,
   storeValue(builder, loc, ptrs, values);
 }
 
+// A census cell belongs exclusively to (logical program, work-item 0, site).
+// No shared append cursor or atomic operation participates in this layout.
+void emitCensusStore(OpBuilder &builder, Operation *targetOp, Value ctrlPtr,
+                     uint32_t column, uint32_t sites, uint32_t workItems) {
+  Location loc = targetOp->getLoc();
+  builder.setInsertionPointAfter(targetOp);
+  builder.getContext()->getOrLoadDialect<gpu::GPUDialect>();
+  Value actor = builder.create<gpu::ThreadIdOp>(loc, gpu::Dimension::x);
+  Value zeroIndex = builder.create<arith::ConstantIndexOp>(loc, 0);
+  Value selected = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::eq,
+                                                 actor, zeroIndex);
+  auto writer = builder.create<scf::IfOp>(loc, selected, false);
+  OpBuilder::InsertionGuard guard(builder);
+  builder.setInsertionPointToStart(writer.thenBlock());
+  Value cell = builder.create<arith::AddIOp>(
+      loc,
+      builder.create<arith::MulIOp>(loc, computeDynamicInstanceId(builder, loc),
+                                    createI32Constant(builder, loc, sites)),
+      createI32Constant(builder, loc, column));
+  Value offset = builder.create<arith::AddIOp>(
+      loc, createI32Constant(builder, loc, kRingHeaderBytes / 4),
+      builder.create<arith::MulIOp>(
+          loc, cell, createI32Constant(builder, loc, kRecordWords)));
+  Value oldCount = loadI32(
+      builder, loc,
+      fieldPointer(builder, loc, ctrlPtr, offset, 0, builder.getI32Type()));
+  Value oldFlags = loadI32(
+      builder, loc,
+      fieldPointer(builder, loc, ctrlPtr, offset, 4, builder.getI32Type()));
+  Value saturated = builder.create<arith::CmpIOp>(
+      loc, arith::CmpIPredicate::eq, oldCount,
+      createI32Constant(builder, loc, std::numeric_limits<uint32_t>::max()));
+  Value next = builder.create<arith::AddIOp>(
+      loc, oldCount, createI32Constant(builder, loc, 1));
+  Value count = builder.create<arith::SelectOp>(loc, saturated, oldCount, next);
+  Value flags = builder.create<arith::OrIOp>(
+      loc, oldFlags,
+      builder.create<arith::SelectOp>(loc, saturated,
+                                      createI32Constant(builder, loc, 3),
+                                      createI32Constant(builder, loc, 1)));
+  SmallVector<Value, kRecordWords> words(kRecordWords,
+                                         createI32Constant(builder, loc, 0));
+  words[0] = count;
+  words[1] = flags;
+  storePerWorkItemRecordVector(builder, loc, ctrlPtr, offset, words, workItems);
+}
+
 // Every state change and staging store is inside the sole-writer branch.
 // Cursor state is private to the selected invocation; no global atomic is used.
 void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
@@ -4452,6 +4500,47 @@ struct InsertInstrumentationPass
     if (!anyInstrumented)
       return;
 
+#ifdef FLAGPRISM_BACKEND_ENFLAME
+    if (module->hasAttr(kAttrCensus)) {
+      auto sites = module->getAttrOfType<ArrayAttr>(kAttrSelectedSites);
+      uint32_t workItems = dynamicOption(
+          module, "flagtree.debug.dynamic_publication_work_items", 0);
+      if (!enableHiddenArgAbi || !timelineOnly || !sites || sites.empty() ||
+          workItems == 0 || workItems > 32) {
+        module.emitError("GCU census requires hidden ABI, selected sites and "
+                         "actual work-item configuration");
+        signalPassFailure();
+        return;
+      }
+      module->setAttr(kAttrInstrumentationInserted, builder.getBoolAttr(true));
+      module->setAttr(kAttrRecordsPerInstance,
+                      builder.getI32IntegerAttr(sites.size()));
+      module->setAttr(kAttrRecordSize, builder.getI32IntegerAttr(kRecordBytes));
+      module->setAttr(kAttrRecordLayout,
+                      builder.getStringAttr("gcu_site_census_v1"));
+      OpBuilder censusBuilder(module.getContext());
+      llvm::DenseSet<Operation *> prepared;
+      for (const auto &target : targets) {
+        if (!target.hasTimeline)
+          continue;
+        auto func = parentFunction(target.op);
+        if (prepared.insert(func.getOperation()).second &&
+            failed(ensureHiddenDebugArgument(func, builder, true))) {
+          signalPassFailure();
+          return;
+        }
+        uint32_t column = 0;
+        for (auto site : sites) {
+          if (cast<IntegerAttr>(site).getInt() == target.opId)
+            break;
+          ++column;
+        }
+        emitCensusStore(censusBuilder, target.op, hiddenDebugArgument(func),
+                        column, sites.size(), workItems);
+      }
+      return;
+    }
+#endif
     int32_t recordsPerInstance = 0;
     OpBuilder opBuilder(module.getContext());
     llvm::SmallVector<RecordPlanEntry> recordPlan;
@@ -4551,6 +4640,18 @@ void setDebugHiddenArgAbiEnabled(ModuleOp module, bool enabled) {
   module->setAttr(kAttrHiddenArgAbiEnabled, builder.getBoolAttr(enabled));
 }
 
+void setDebugCensusEnabled(ModuleOp module, bool enabled) {
+#ifdef FLAGPRISM_BACKEND_ENFLAME
+  if (enabled)
+    module->setAttr(kAttrCensus, UnitAttr::get(module.getContext()));
+  else
+    module->removeAttr(kAttrCensus);
+#else
+  (void)module;
+  (void)enabled;
+#endif
+}
+
 void setDebugAddrLevel(ModuleOp module, int32_t addrLevel) {
   Builder builder(module.getContext());
   int32_t normalized = std::clamp<int32_t>(addrLevel, 0, 2);
@@ -4597,8 +4698,8 @@ llvm::Error setDebugDynamicPublicationWorkItems(ModuleOp module,
   return llvm::createStringError(llvm::inconvertibleErrorCode(),
                                  "GCU vector publication requires Enflame");
 #else
-  if (!isDynamicTimeline(module) || !workItems || workItems > 32 ||
-      (workItems & (workItems - 1)))
+  if ((!isDynamicTimeline(module) && !module->hasAttr(kAttrCensus)) ||
+      !workItems || workItems > 32 || (workItems & (workItems - 1)))
     return llvm::createStringError(
         llvm::inconvertibleErrorCode(),
         "GCU vector publication requires dynamic timeline and actual "

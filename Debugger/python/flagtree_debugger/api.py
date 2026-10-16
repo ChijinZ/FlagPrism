@@ -1460,7 +1460,18 @@ def _default_launch_prepare_hook(
         if built_runtime_metadata is not None:
             runtime_metadata.update(dict(built_runtime_metadata))
     grid = _normalize_launch_grid(launch_metadata)
-    if grid is not None:
+    if metadata_dict.get("debug_record_layout") == "gcu_site_census_v1":
+        if grid is None:
+            raise ValueError("GCU census requires the actual launch grid")
+        if "grid" in runtime_metadata:
+            supplied = runtime_metadata["grid"]
+            if (not isinstance(supplied,
+                               (tuple, list)) or not 1 <= len(supplied) <= 3
+                    or _normalize_launch_grid({"grid": supplied}) != grid):
+                raise ValueError(
+                    "GCU census runtime grid contradicts actual launch")
+        runtime_metadata["grid"] = grid
+    elif grid is not None:
         runtime_metadata.setdefault("grid", grid)
     records_per_instance = metadata_dict.get("debug_records_per_instance")
     if records_per_instance is not None:
@@ -1513,6 +1524,10 @@ def _default_launch_prepare_hook(
         exported_run["runtime_metadata"] = exported_runtime_metadata
         try:
             if metadata_dict.get(
+                    "debug_record_layout") == "gcu_site_census_v1":
+                from .gcu_census import attach_export
+                exported_run = attach_export(exported_run, metadata_dict)
+            elif metadata_dict.get(
                     "debug_record_layout") == "ascend_actor_dynamic_v1":
                 import uuid
                 from flagtree.profiler.observations_ascend import decode_dynamic64

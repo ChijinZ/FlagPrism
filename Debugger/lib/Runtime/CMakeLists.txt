@@ -83,6 +83,20 @@ if(FLAGTREE_DEBUGGER_RUNTIME_BUILD_SMOKE_TEST)
   )
 endif()
 
+if(FLAGTREE_DEBUGGER_RUNTIME_BUILD_SMOKE_TEST)
+  add_executable(FlagTreeDebuggerCensusRuntimeTest
+    ../../test/census_runtime_smoke.cpp
+    ../Decode/Decoder.cpp
+  )
+  target_link_libraries(FlagTreeDebuggerCensusRuntimeTest
+    PRIVATE FlagTreeDebuggerRuntimeStandalone
+  )
+  flagprism_enable_debugger_runtime(FlagTreeDebuggerCensusRuntimeTest)
+  add_test(NAME FlagTreeDebuggerCensusRuntimeTest
+    COMMAND FlagTreeDebuggerCensusRuntimeTest
+  )
+endif()
+
 if(FLAGTREE_DEBUGGER_RUNTIME_BUILD_TRACE_DEMO)
   add_executable(FlagTreeDebuggerRuntimeTraceDemo
     RuntimeTraceDemo.cpp

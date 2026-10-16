@@ -1019,6 +1019,7 @@ struct BackendTransferAllocation {
 void synthesizeExportHeader(const DebugLaunchContext &ctx,
                             BackendTransferAllocation &allocation) {
   if (ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+      ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1")
     return; // The actual writer publishes its own counts, including overflow.
   if (!ctx.runtimeMetadata.hasLaunchGrid ||
@@ -1158,7 +1159,12 @@ public:
     // Header initialization is part of launch setup, not payload capture. Keep
     // it synchronous so the instrumented kernel never observes stale allocation
     // contents when different backend launch APIs are mixed in one process.
-    adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes, 0);
+    const uint64_t initializationStream =
+        ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1"
+            ? ctx.streamHandle
+            : 0;
+    adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes,
+                           initializationStream);
 
     if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
       allocation->asyncExportPending = false;
@@ -1178,8 +1184,8 @@ public:
     header.reserved1 = 0;
 
     std::memcpy(allocation->hostBuffer, &header, sizeof(header));
-    adapter_->copyHostToDevice(allocation->deviceBuffer, &header,
-                               sizeof(header), 0);
+    adapter_->copyHostToDevice(allocation->deviceBuffer, allocation->hostBuffer,
+                               sizeof(header), initializationStream);
     allocation->asyncExportPending = false;
     allocation->asyncCopySubmitted = false;
   }

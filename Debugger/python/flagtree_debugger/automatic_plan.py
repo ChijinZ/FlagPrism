@@ -20,6 +20,21 @@ def _category(item):
                          for part in ('reduce', 'scan', 'dot')) else 'compute')
 
 
+CENSUS_SELECTION_POLICY_VERSION = 1
+
+
+def _is_data_candidate(item):
+    operation = item.get('mlirOpName', '')
+    if item.get('isControlConditionComputation'):
+        return False
+    dtype = item.get('result', {}).get('elementDtype', '')
+    return (any(part in operation
+                for part in ('load', 'store', 'atomic', 'copy', 'reduce',
+                             'scan', 'dot'))
+            or (dtype.startswith(('f', 'bf')) and not operation.startswith(
+                ('tt.splat', 'tt.broadcast', 'tt.expand_dims'))))
+
+
 def _region_key(owner):
     return owner['controlId'], owner['regionIndex'], owner['blockIndex']
 
@@ -46,7 +61,7 @@ def _source_line(item):
     return (match.group(1), int(match.group(2))) if match else None
 
 
-def plan_operations(table, max_sites):
+def plan_operations(table, max_sites, *, census=False):
     if type(max_sites) is not int or not 1 <= max_sites <= 128:
         raise ValueError('automatic max_sites must be an integer in [1,128]')
     rows = list(table.values()) if isinstance(table, Mapping) else list(table)
@@ -100,6 +115,30 @@ def plan_operations(table, max_sites):
         item['selection_reason'] = reason
         selected_ids.add(identity)
         chosen.append(item)
+
+    # Census must retain actual repeating body positions before scalar context.
+    # This changes only the explicit all-grid counter policy, never legacy trace.
+    if census and max_sites >= 3:
+        for group in sorted(regions.values(), key=lambda g: _region_key(g)):
+            if not group['repeated']:
+                continue
+            candidates = [
+                by_id[identity] for identity in (
+                    group['direct_sites'] or group['eligible_sites'])
+                if _is_data_candidate(by_id[identity])
+            ]
+            candidates.sort(key=_representative_rank)
+            if not candidates:
+                continue
+            first = candidates[0]
+            select(first, 'census_repeated_body_data')
+            line = _source_line(first)
+            second = next(
+                (item
+                 for item in candidates[1:] if _source_line(item) is not None
+                 and _source_line(item) != line), None)
+            if second is not None:
+                select(second, 'census_repeated_body_data')
 
     # A public kernel's real entry block is compiler evidence, unlike an empty
     # SCF ancestry list (which also occurs in combiners and other functions).
@@ -175,5 +214,7 @@ def plan_operations(table, max_sites):
         'selected_sites':
         [item.get('opId', item.get('op_id')) for item in chosen],
         'control_regions': ordered_regions,
+        'census_policy_version':
+        CENSUS_SELECTION_POLICY_VERSION if census else None,
         'inventory': inventory
     }

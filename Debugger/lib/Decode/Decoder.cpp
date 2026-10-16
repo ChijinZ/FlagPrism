@@ -355,6 +355,12 @@ bool decodeCompactRecordAt(const std::vector<uint8_t> &buffer,
 bool decodeExportedRun(const DebugExportedRun &run, DecodedDebugRun &decoded,
                        std::string *errorMessage) {
   decoded = {};
+  if (run.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
+      run.runtimeMetadata.recordLayout == "ascend_source_census_v1") {
+    return fail(errorMessage,
+                "Source census layout requires its versioned census decoder; "
+                "use the public source-census export path");
+  }
   decoded.meta = run.meta;
   decoded.runtimeMetadata = run.runtimeMetadata;
 

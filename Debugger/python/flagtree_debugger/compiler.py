@@ -10,7 +10,8 @@ from .native import compiler_binding
 
 _instrumentation_mode = ""
 # Compiler lowering changes must invalidate both automatic and advanced caches.
-GCU_DYNAMIC_LOWERING_REVISION = 2
+GCU_DYNAMIC_LOWERING_REVISION = 3
+GCU_CENSUS_VERSION = 1
 _DISABLED_BUILD_MESSAGE = (
     "FlagPrism debugger compiler support is unavailable. Reinstall FlagTree "
     "with `TRITON_BUILD_FLAGPRISM=ON`.")
@@ -33,15 +34,23 @@ def _instrumentation_kind(mode: str | None = None) -> str:
 def _gcu_publication_config(config):
     result = dict(config)
     request = result.get("debug_observation_request")
-    if isinstance(request, dict) and request.get("semantics") == [
-            "source_control_interval"
-    ]:
-        mode = os.environ.get(
-            "FLAGPRISM_GCU_DYNAMIC_PUBLISHER", "vector16_per_work_item"
-            if request.get("automatic") else "scalar16")
+    if isinstance(
+            request,
+            dict) and (request.get("semantics") == ["source_control_interval"]
+                       or request.get("program_policy") == "all_grid_census"):
+        if request.get("program_policy") == "all_grid_census":
+            # Census has an explicit physical stride; the legacy trace override
+            # must not mislabel its proven vector publisher in cache metadata.
+            mode = "vector16_per_work_item"
+        else:
+            mode = os.environ.get(
+                "FLAGPRISM_GCU_DYNAMIC_PUBLISHER", "vector16_per_work_item"
+                if request.get("automatic") else "scalar16")
         if mode not in {"scalar16", "vector16_per_work_item"}:
             raise ValueError("Unknown GCU dynamic publisher mode")
         result["debug_dynamic_publication_mode"] = mode
+        if request.get("program_policy") == "all_grid_census":
+            result["debug_census_version"] = GCU_CENSUS_VERSION
         result[
             "debug_dynamic_lowering_revision"] = GCU_DYNAMIC_LOWERING_REVISION
         if request.get("automatic"):
@@ -72,8 +81,9 @@ def apply_compile_options(options: dict) -> None:
         from .api import current_compile_config
         request = current_compile_config().get("debug_observation_request")
         if not (_instrumentation_kind(str(provided)).startswith("debugger")
-                and isinstance(request, dict)
-                and request.get("semantics") == ["source_control_interval"]):
+                and isinstance(request, dict) and
+                (request.get("semantics") == ["source_control_interval"]
+                 or request.get("program_policy") == "all_grid_census")):
             return
     mode = str(provided) if provided else get_instrumentation_mode()
     if not mode:
@@ -355,49 +365,74 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             raise ValueError(
                 "Dynamic Debugger observation requests currently require the GCU backend"
             )
-        programs = request.get("programs")
-        if not isinstance(programs, list) or len(programs) != 1:
-            raise ValueError(
-                "GCU selected trace requires exactly one logical program")
-        if request.get("semantics") != ["source_control_interval"]:
-            raise ValueError(
-                "GCU IR trace provides source_control_interval only")
-        if type(programs[0]) is not int or not 0 <= programs[0] <= 0x7fffffff:
-            raise ValueError(
-                "GCU selected program must fit validated signed 32-bit indexing"
-            )
-        metadata["debug_dynamic_index_bits"] = 32
-        metadata["debug_clock_carrier"] = "llvm_i64_words"
-        fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
-                                              request["sample_every"])
-        if request.get("sites") is not None:
-            fd.set_debug_dynamic_timeline_sites(mod, request["sites"])
-        publisher = _frozen_gcu_publication_mode(metadata)
-        source_work_items = metadata.get("num_warps")
-        if publisher == "vector16_per_work_item":
-            if type(source_work_items) is not int or source_work_items <= 0:
+        census = request.get("program_policy") == "all_grid_census"
+        if census:
+            if (request.get("programs") is not None
+                    or request.get("semantics") != ["counter"]
+                    or request.get("sample_every", 1) != 1):
                 raise ValueError(
-                    "GCU vector publication requires actual compiler work-item configuration"
-                )
-            fd.set_debug_dynamic_publication_work_items(mod, source_work_items)
-            metadata["debug_dynamic_publication"] = "per_work_item_vector16_v1"
-            metadata[
-                "debug_dynamic_publication_work_items"] = source_work_items
-        elif publisher == "scalar16":
-            metadata["debug_dynamic_publication"] = "scalar16_v1"
-            metadata[
-                "debug_dynamic_publication_work_items"] = source_work_items
+                    "GCU census requires all-grid unsampled counter request")
+            for key in ("max_census_cells", "max_census_bytes"):
+                value = request.get(key)
+                if type(value) is not int or value <= 0:
+                    raise ValueError("GCU census requires positive " + key)
+                metadata["debug_" + key] = value
+            fd.set_debug_census_enabled(mod, True)
+            metadata["debug_census_version"] = GCU_CENSUS_VERSION
+            metadata["debug_census_request"] = request
+            work_items = metadata.get("num_warps")
+            if type(work_items) is not int or not 1 <= work_items <= 32:
+                raise ValueError(
+                    "GCU census requires actual work-item configuration")
+            fd.set_debug_dynamic_publication_work_items(mod, work_items)
+            metadata["debug_census_publication_work_items"] = work_items
         else:
-            raise ValueError("Unknown GCU dynamic publisher mode")
-        metadata[
-            "debug_dynamic_publication_config_basis"] = "GCU compiler configuration num_warps denotes work-items"
-        metadata["debug_dynamic_selected_sites"] = request.get("sites")
-        metadata["debug_dynamic_clock_sampling"] = "region_free_sites_only"
-        metadata["debug_dynamic_selected_program"] = programs[0]
-        metadata["debug_dynamic_selected_actor"] = 0
-        metadata["debug_dynamic_sample_every"] = request["sample_every"]
-        metadata["debug_dynamic_attempted_total_offset"] = 24
-
+            programs = request.get("programs")
+            if not isinstance(programs, list) or len(programs) != 1:
+                raise ValueError(
+                    "GCU selected trace requires exactly one logical program")
+            if request.get("semantics") != ["source_control_interval"]:
+                raise ValueError(
+                    "GCU IR trace provides source_control_interval only")
+            if type(programs[0]
+                    ) is not int or not 0 <= programs[0] <= 0x7fffffff:
+                raise ValueError(
+                    "GCU selected program must fit validated signed 32-bit indexing"
+                )
+            metadata["debug_dynamic_index_bits"] = 32
+            metadata["debug_clock_carrier"] = "llvm_i64_words"
+            fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
+                                                  request["sample_every"])
+            if request.get("sites") is not None:
+                fd.set_debug_dynamic_timeline_sites(mod, request["sites"])
+            publisher = _frozen_gcu_publication_mode(metadata)
+            source_work_items = metadata.get("num_warps")
+            if publisher == "vector16_per_work_item":
+                if type(source_work_items
+                        ) is not int or source_work_items <= 0:
+                    raise ValueError(
+                        "GCU vector publication requires actual compiler work-item configuration"
+                    )
+                fd.set_debug_dynamic_publication_work_items(
+                    mod, source_work_items)
+                metadata[
+                    "debug_dynamic_publication"] = "per_work_item_vector16_v1"
+                metadata[
+                    "debug_dynamic_publication_work_items"] = source_work_items
+            elif publisher == "scalar16":
+                metadata["debug_dynamic_publication"] = "scalar16_v1"
+                metadata[
+                    "debug_dynamic_publication_work_items"] = source_work_items
+            else:
+                raise ValueError("Unknown GCU dynamic publisher mode")
+            metadata[
+                "debug_dynamic_publication_config_basis"] = "GCU compiler configuration num_warps denotes work-items"
+            metadata["debug_dynamic_selected_sites"] = request.get("sites")
+            metadata["debug_dynamic_clock_sampling"] = "region_free_sites_only"
+            metadata["debug_dynamic_selected_program"] = programs[0]
+            metadata["debug_dynamic_selected_actor"] = 0
+            metadata["debug_dynamic_sample_every"] = request["sample_every"]
+            metadata["debug_dynamic_attempted_total_offset"] = 24
     if _finish_metadata_only_tensor_pointer_debug(fd, mod, metadata):
         return
 
@@ -421,11 +456,19 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     metadata["debug_tracked_table"] = json.loads(tracked_table_json)
     if request is not None and request.get("automatic"):
         from .automatic_plan import plan_operations
-        plan = plan_operations(metadata["debug_tracked_table"],
-                               request["max_sites"])
+        plan = plan_operations(
+            metadata["debug_tracked_table"],
+            request["max_sites"],
+            census=request.get("program_policy") == "all_grid_census")
         fd.set_debug_dynamic_timeline_sites(mod, plan["selected_sites"])
         metadata["debug_dynamic_selected_sites"] = plan["selected_sites"]
         metadata["debug_automatic_plan"] = plan
+        if request.get("program_policy") == "all_grid_census":
+            from .gcu_census import compiler_sites
+            metadata["debug_census_sites"] = compiler_sites(plan)
+            for key in ("debug_clock_domain", "debug_clock_bits",
+                        "debug_clock_unit"):
+                metadata.pop(key, None)
 
     instrumentation_pm = ir.pass_manager(mod.context)
     instrumentation_pm.enable_debug()
