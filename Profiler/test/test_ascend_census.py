@@ -26,10 +26,14 @@ def test_v3_complete_physical_budget_and_cache_line_ownership(columns, grid):
             occupied.update(lines)
             assert base + columns * 8 <= plan['byte_count']
     with pytest.raises(ValueError, match='cell budget'):
-        plan_layout(grid, version=3, site_count=columns,
+        plan_layout(grid,
+                    version=3,
+                    site_count=columns,
                     max_cells=plan['reserved_cell_count'] - 1)
     with pytest.raises(ValueError, match='byte budget'):
-        plan_layout(grid, version=3, site_count=columns,
+        plan_layout(grid,
+                    version=3,
+                    site_count=columns,
                     max_bytes=plan['byte_count'] - 1)
 
 
@@ -46,14 +50,25 @@ def test_v3_rejects_header_actor_padding_and_unassigned_actor(offset):
 @pytest.mark.parametrize('version', [1, 2, 3])
 def test_shared_ascend_legacy_transport_cannot_claim_exact(version):
     from flagtree.profiler.ascend_census import decode_shared_census
-    plan = plan_layout([1], version=version, site_count=128 if version == 1 else 1)
+    plan = plan_layout([1],
+                       version=version,
+                       site_count=128 if version == 1 else 1)
     raw = bytearray(plan['byte_count'])
     struct.pack_into('<II', raw, plan['header_bytes'], 5, 1)
-    result = decode_shared_census(bytes(raw), grid=[1], version=version,
-        site_count=128 if version == 1 else 1,
-        actors=[dict(slot=0, sites=[dict(site=1, role='primary')],
-                     compiler_actor=dict(kind='AIC', runtime_slot=0))],
-        capture_id='legacy-visibility', invocation_id=None, binary_id='actual')
+    result = decode_shared_census(bytes(raw),
+                                  grid=[1],
+                                  version=version,
+                                  site_count=128 if version == 1 else 1,
+                                  actors=[
+                                      dict(
+                                          slot=0,
+                                          sites=[dict(site=1, role='primary')],
+                                          compiler_actor=dict(kind='AIC',
+                                                              runtime_slot=0))
+                                  ],
+                                  capture_id='legacy-visibility',
+                                  invocation_id=None,
+                                  binary_id='actual')
     assert result['loss']['exact'] == (version == 3)
     assert result['loss']['unknown_loss'] == (version < 3)
     assert result['observations'][0]['count_exact'] == (version == 3)

@@ -65,25 +65,26 @@ def decode(raw, descriptor, **kwargs):
                                        **kwargs)
 
 
-@pytest.mark.parametrize('layout,hazard', [
-    ('ascend_source_census_v1', True),
-    ('ascend_source_census_v2', True),
-    ('ascend_source_census_v3', False),
-    ('gcu_site_census_v1', False),
-    ('nvidia_source_census_v1', False)])
+@pytest.mark.parametrize('layout,hazard', [('ascend_source_census_v1', True),
+                                           ('ascend_source_census_v2', True),
+                                           ('ascend_source_census_v3', False),
+                                           ('gcu_site_census_v1', False),
+                                           ('nvidia_source_census_v1', False)])
 @pytest.mark.parametrize('placement', ['record_layout', 'compiler_actor'])
-def test_known_legacy_ascend_transport_retracts_exact_without_changing_raw(layout, hazard, placement):
+def test_known_legacy_ascend_transport_retracts_exact_without_changing_raw(
+        layout, hazard, placement):
     raw, desc = capture([[0, 5]])
     if placement == 'record_layout':
         desc['record_layout'] = layout
     else:
-        desc['actors'][0]['compiler_actor'] = dict(
-            runtime_actor_binding=dict(layout=layout))
+        desc['actors'][0]['compiler_actor'] = dict(runtime_actor_binding=dict(
+            layout=layout))
     reader = census.CensusReader(raw, desc)
     assert reader.raw == raw and reader.descriptor == desc
     assert reader.cell(0, 0, 0)['exact'] == (not hazard)
-    assert reader.cell(0, 0, 0)['zero_execution_status'] == (
-        'unknown' if hazard else 'not_applicable')
+    assert reader.cell(0, 0,
+                       0)['zero_execution_status'] == ('unknown' if hazard else
+                                                       'not_applicable')
     result = decode(raw, desc)
     assert result['loss']['exact'] == (not hazard)
     assert result['loss']['unknown_loss'] == hazard

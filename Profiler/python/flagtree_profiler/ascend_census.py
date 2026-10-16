@@ -71,7 +71,8 @@ def plan_layout(grid,
             'Ascend census physical reserved cell budget exceeded')
     if size > max_bytes:
         raise ValueError('Ascend census physical byte budget exceeded')
-    return dict(layout=LAYOUT if version == 1 else COMPACT_LAYOUT if version == 2 else ALIGNED_LAYOUT,
+    return dict(layout=LAYOUT if version == 1 else
+                COMPACT_LAYOUT if version == 2 else ALIGNED_LAYOUT,
                 version=version,
                 grid=grid,
                 program_count=programs,
@@ -162,7 +163,8 @@ def validate_transport(raw, plan, actor_sites):
                         'Ascend census cell count/flags are inconsistent')
             tail = base + plan['reserved_sites'] * CELL_BYTES
             if any(raw[tail:base + plan['actor_stride']]):
-                raise ValueError('Ascend census actor alignment padding contains data')
+                raise ValueError(
+                    'Ascend census actor alignment padding contains data')
     return dict(raw_sha256=hashlib.sha256(raw).hexdigest(), **plan)
 
 

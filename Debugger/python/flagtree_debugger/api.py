@@ -1495,7 +1495,8 @@ def _default_launch_prepare_hook(
                 "GCU census runtime builder contradicts actual compiler layout/stride"
             )
     if metadata_dict.get("debug_record_layout") in {
-            "ascend_source_census_v1", "ascend_source_census_v2", "ascend_source_census_v3"
+            "ascend_source_census_v1", "ascend_source_census_v2",
+            "ascend_source_census_v3"
     }:
         from flagtree.profiler.ascend_census import plan_layout
         version = metadata_dict["debug_census_version"]
@@ -1569,7 +1570,8 @@ def _default_launch_prepare_hook(
                 from .gcu_census import attach_export
                 exported_run = attach_export(exported_run, metadata_dict)
             elif metadata_dict.get("debug_record_layout") in {
-                    "ascend_source_census_v1", "ascend_source_census_v2", "ascend_source_census_v3"
+                    "ascend_source_census_v1", "ascend_source_census_v2",
+                    "ascend_source_census_v3"
             }:
                 import uuid
                 from flagtree.profiler.ascend_census import compiler_actor_views, decode_shared_census
