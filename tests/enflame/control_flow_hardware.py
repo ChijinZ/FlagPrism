@@ -67,7 +67,7 @@ def inspect_bundle(bundle):
         (bundle / 'ai/observation_plan.json').read_text())['plans']
     assert len(plans) == 1 and len(raw['captures']) == 2
     plan = plans[0]['plan']
-    assert plan['max_sites'] == 8 and plan['policy_version'] == 3
+    assert plan['max_sites'] == 8 and plan['policy_version'] == 4
     assert len(plan['selected_sites']) <= 8 and len(plan['inventory']) > 8
     loop_regions = [
         row for row in plan['control_regions']
@@ -128,8 +128,8 @@ def inspect_bundle(bundle):
     for binary in report['binaries']:
         mode = binary['compiler_metadata']['instrumentation_mode']
         config = json.loads(mode.split('|config=', 1)[1])
-        assert config['debug_automatic_plan_version'] == 3
-        assert config['debug_control_flow_metadata_version'] == 1
+        assert config['debug_automatic_plan_version'] == 4
+        assert config['debug_control_flow_metadata_version'] == 2
     timing = json.loads((bundle / 'ai/export_timing.json').read_text())
     assert timing['complete_finalize_and_export'] and timing[
         'export_wall_s'] < 60

@@ -93,6 +93,8 @@ Object toJson(const TrackedOpEntry &entry) {
       {"statementResultName", entry.statementResultName},
       {"inlineCallPath", entry.inlineCallPath},
       {"controlFlowSchemaVersion", entry.controlFlowSchemaVersion},
+      {"isKernelEntryContext", entry.isKernelEntryContext},
+      {"isControlConditionComputation", entry.isControlConditionComputation},
       {"controlFlowAncestors", std::move(ancestors)},
       {"result", toJson(entry.result)},
       {"operands", std::move(operands)},
@@ -290,12 +292,20 @@ bool parseTrackedOpEntry(const Object &object, TrackedOpEntry &entry,
                          entry.controlFlowSchemaVersion))
     return false;
   auto *ancestors = object.getArray("controlFlowAncestors");
-  if (entry.controlFlowSchemaVersion > 1 ||
-      (entry.controlFlowSchemaVersion == 1 && !ancestors)) {
+  if (entry.controlFlowSchemaVersion > 2 ||
+      (entry.controlFlowSchemaVersion >= 1 && !ancestors)) {
     if (errorMessage)
       *errorMessage = "unsupported or incomplete control-flow metadata";
     return false;
   }
+  entry.isKernelEntryContext = false;
+  entry.isControlConditionComputation = false;
+  if (entry.controlFlowSchemaVersion == 2 &&
+      !(getBool(object, "isKernelEntryContext", entry.isKernelEntryContext,
+                errorMessage) &&
+        getBool(object, "isControlConditionComputation",
+                entry.isControlConditionComputation, errorMessage)))
+    return false;
   if (ancestors) {
     for (const auto &value : *ancestors) {
       auto *owner = value.getAsObject();

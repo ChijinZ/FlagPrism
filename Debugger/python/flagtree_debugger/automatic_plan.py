@@ -4,9 +4,10 @@ Control ancestry is compiler metadata, never inferred from names, locations,
 operation ID intervals or earlier executions. Selection precedes instrumentation.
 """
 from collections.abc import Mapping
+import re
 
-AUTOMATIC_PLAN_VERSION = 3
-CONTROL_FLOW_METADATA_VERSION = 1
+AUTOMATIC_PLAN_VERSION = 4
+CONTROL_FLOW_METADATA_VERSION = 2
 
 
 def _category(item):
@@ -31,6 +32,18 @@ def _representative_rank(item):
     return (0 if category == 'memory' else
             1 if category == 'aggregate' else 2 if element.startswith(
                 ('f', 'bf')) else 3)
+
+
+def _source_line(item):
+    # Prefer structured compiler positions where present. Current tracked tables
+    # retain actual MLIR locations; parse a FileLineCol leaf without treating
+    # different columns on the same source line as separate source regions.
+    file, line = item.get('sourceFile'), item.get('sourceLine')
+    if isinstance(file, str) and file and type(line) is int and line > 0:
+        return file, line
+    match = re.search(r'"((?:[^"\\]|\\.)+)":([0-9]+):[0-9]+',
+                      item.get('sourceLoc', ''))
+    return (match.group(1), int(match.group(2))) if match else None
 
 
 def plan_operations(table, max_sites):
@@ -87,6 +100,31 @@ def plan_operations(table, max_sites):
         item['selection_reason'] = reason
         selected_ids.add(identity)
         chosen.append(item)
+
+    # A public kernel's real entry block is compiler evidence, unlike an empty
+    # SCF ancestry list (which also occurs in combiners and other functions).
+    # These anchors describe their own scalar activity, never a branch outcome.
+    if max_sites >= 3:
+        entry_candidates = [
+            item for item in eligible
+            if item.get('isKernelEntryContext') is True
+            and not item.get('controlFlowAncestors')
+            and item.get('result', {}).get('valueKind') == 'scalar'
+            and item.get('sourceLoc') not in (None, '', 'loc(unknown)')
+        ]
+        entry_candidates.sort(key=lambda item: not item.get(
+            'isControlConditionComputation', False))
+        if entry_candidates:
+            first = entry_candidates[0]
+            select(first, 'verified_kernel_entry_scalar_context')
+            remaining = entry_candidates[1:]
+            if remaining:
+                first_line = _source_line(first)
+                second = next(
+                    (item
+                     for item in remaining if _source_line(item) is not None
+                     and _source_line(item) != first_line), remaining[0])
+                select(second, 'verified_kernel_entry_scalar_context')
 
     # Reserve a representative for each actual repeating region before using
     # the remaining budget for class diversity. While condition and body are

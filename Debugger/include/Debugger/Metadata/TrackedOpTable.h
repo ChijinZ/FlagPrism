@@ -76,7 +76,9 @@ struct TrackedOpEntry {
   std::string tritonStatement;
   std::string statementResultName;
   std::string inlineCallPath;
-  uint32_t controlFlowSchemaVersion = 1;
+  uint32_t controlFlowSchemaVersion = 2;
+  bool isKernelEntryContext = false;
+  bool isControlConditionComputation = false;
   std::vector<ControlFlowAncestor> controlFlowAncestors;
   StaticValueInfo result;
   std::vector<OperandStaticInfo> operands;

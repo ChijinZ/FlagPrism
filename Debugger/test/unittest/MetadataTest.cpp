@@ -127,6 +127,8 @@ TEST(FlagTreeDebuggerMetadataTest, StatementValueMetadataJsonRoundTrips) {
 
 TEST(FlagTreeDebuggerMetadataTest, ControlRegionOwnershipJsonRoundTrips) {
   auto entry = makeEntry(9, false);
+  entry.isKernelEntryContext = false;
+  entry.isControlConditionComputation = true;
   entry.controlFlowAncestors = {{1, 22, "scf.while", 1, 0, true},
                                 {2, 0, "scf.if", 0, 0, false}};
   TrackedOpTable parsed;
@@ -135,7 +137,9 @@ TEST(FlagTreeDebuggerMetadataTest, ControlRegionOwnershipJsonRoundTrips) {
       serializeTrackedOpTableToJson({entry}), parsed, &error))
       << error;
   ASSERT_EQ(parsed.size(), 1u);
-  EXPECT_EQ(parsed[0].controlFlowSchemaVersion, 1u);
+  EXPECT_EQ(parsed[0].controlFlowSchemaVersion, 2u);
+  EXPECT_FALSE(parsed[0].isKernelEntryContext);
+  EXPECT_TRUE(parsed[0].isControlConditionComputation);
   ASSERT_EQ(parsed[0].controlFlowAncestors.size(), 2u);
   EXPECT_EQ(parsed[0].controlFlowAncestors[0].controlId, 1u);
   EXPECT_EQ(parsed[0].controlFlowAncestors[0].parentOpId, 22u);

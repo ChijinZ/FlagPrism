@@ -32,7 +32,7 @@ void validateRecordLevel(int32_t level) {
 } // namespace
 
 void init_flagtree_debugger_compiler(py::module_ &m) {
-  m.attr("CONTROL_FLOW_METADATA_VERSION") = 1;
+  m.attr("CONTROL_FLOW_METADATA_VERSION") = 2;
   using namespace mlir;
   using namespace mlir::flagtree::debugger;
 

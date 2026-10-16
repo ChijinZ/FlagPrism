@@ -20,6 +20,7 @@
 #include "triton/Dialect/Triton/IR/Types.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/STLExtras.h"
+#include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringSet.h"
 #include "llvm/Support/raw_ostream.h"
@@ -1296,12 +1297,44 @@ LogicalResult assignDebugOpIdsAndMetadataWithoutPassManager(ModuleOp module) {
     if (op->getName().getDialectNamespace() == "scf" && op->getNumRegions())
       controlIds[op] = nextControlId++;
   });
+  // Trace only actual condition operands through SSA definitions in the
+  // condition user's block. Block arguments are boundaries: do not invent
+  // loop-carried, cross-region or interprocedural causality.
+  llvm::SmallPtrSet<Operation *, 32> conditionComputations;
+  module.walk([&](Operation *control) {
+    StringRef name = control->getName().getStringRef();
+    unsigned count = name == "scf.for"                               ? 3
+                     : (name == "scf.if" || name == "scf.condition") ? 1
+                                                                     : 0;
+    llvm::SmallVector<Value> pending;
+    for (unsigned i = 0; i < std::min(count, control->getNumOperands()); ++i)
+      pending.push_back(control->getOperand(i));
+    llvm::SmallPtrSet<Operation *, 32> visited;
+    while (!pending.empty()) {
+      Operation *producer = pending.pop_back_val().getDefiningOp();
+      if (!producer || producer->getBlock() != control->getBlock() ||
+          !visited.insert(producer).second)
+        continue;
+      conditionComputations.insert(producer);
+      for (Value operand : producer->getOperands())
+        pending.push_back(operand);
+    }
+  });
   for (Operation *op : trackedOps) {
     uint32_t opId = getIntegerAttr(op, kAttrOpId);
     llvm::SmallVector<TrackedOpEntry, 1> syntheticEntries;
     table.push_back(makeEntry(op, opId, producerOpIds, nextSyntheticOpId,
                               builder, syntheticEntries));
     auto &entry = table.back();
+    Operation *parentFunction = op->getParentOp();
+    entry.isKernelEntryContext =
+        parentFunction &&
+        parentFunction->getName().getStringRef() == "tt.func" &&
+        getStringAttr(parentFunction, "sym_visibility") == "public" &&
+        parentFunction->getNumRegions() == 1 &&
+        !parentFunction->getRegion(0).empty() &&
+        op->getBlock() == &parentFunction->getRegion(0).front();
+    entry.isControlConditionComputation = conditionComputations.contains(op);
     Operation *child = op;
     for (Operation *parent = op->getParentOp(); parent;
          child = parent, parent = parent->getParentOp()) {
@@ -1328,8 +1361,12 @@ LogicalResult assignDebugOpIdsAndMetadataWithoutPassManager(ModuleOp module) {
     }
     std::reverse(entry.controlFlowAncestors.begin(),
                  entry.controlFlowAncestors.end());
-    for (TrackedOpEntry &synthetic : syntheticEntries)
+    for (TrackedOpEntry &synthetic : syntheticEntries) {
       synthetic.controlFlowAncestors = entry.controlFlowAncestors;
+      synthetic.isKernelEntryContext = entry.isKernelEntryContext;
+      synthetic.isControlConditionComputation =
+          entry.isControlConditionComputation;
+    }
     for (TrackedOpEntry &synthetic : syntheticEntries)
       table.push_back(std::move(synthetic));
   }

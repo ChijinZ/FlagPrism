@@ -220,7 +220,7 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             if getattr(fd, "CONTROL_FLOW_METADATA_VERSION",
                        0) != CONTROL_FLOW_METADATA_VERSION:
                 raise RuntimeError(
-                    "Automatic GCU profiling requires matching compiler control-flow metadata; rebuild and install FlagTree/FlagPrism together"
+                    "Automatic GCU profiling requires matching compiler control-flow and entry-context metadata; rebuild and install FlagTree/FlagPrism together"
                 )
         if not has_markers and _target_backend(metadata) in {"gcu", "enflame"}:
             # Discover operations in ordinary JIT helpers before assigning

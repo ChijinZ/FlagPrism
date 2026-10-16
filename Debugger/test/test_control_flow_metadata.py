@@ -46,7 +46,7 @@ NESTED = '''module {
 
 def tracked(text):
     fd = compiler_binding()
-    assert fd.CONTROL_FLOW_METADATA_VERSION == 1
+    assert fd.CONTROL_FLOW_METADATA_VERSION == 2
     context = ir.context()
     ir.load_dialects(context)
     fd.load_dialects(context)
@@ -71,7 +71,7 @@ def test_real_while_header_and_body_have_distinct_actual_region_indices():
     assert (h['regionIndex'], b['regionIndex']) == (0, 1)
     assert h['repeated'] and b['repeated']
     assert h['operation'] == b['operation'] == 'scf.while'
-    assert all(row['controlFlowSchemaVersion'] == 1 for row in rows)
+    assert all(row['controlFlowSchemaVersion'] == 2 for row in rows)
 
 
 def test_real_nested_for_and_branch_arm_ancestry_uses_ir_not_source_text():
@@ -105,8 +105,8 @@ def test_automatic_policy_version_is_in_frozen_compiler_cache_options(
         compiler.set_instrumentation_mode(original)
     frozen = json.loads(options['instrumentation_mode'].split('|config=',
                                                               1)[1])
-    assert frozen['debug_automatic_plan_version'] == 3
-    assert frozen['debug_control_flow_metadata_version'] == 1
+    assert frozen['debug_automatic_plan_version'] == 4
+    assert frozen['debug_control_flow_metadata_version'] == 2
     legacy = dict(frozen)
     del legacy['debug_automatic_plan_version']
     del legacy['debug_control_flow_metadata_version']
@@ -122,8 +122,9 @@ def test_old_compiler_without_structural_metadata_cannot_silently_profile(
         lambda: SimpleNamespace(has_debug_collect_markers=lambda mod: False))
     monkeypatch.setattr(compiler, '_instrumentation_kind',
                         lambda: 'debugger_auto')
-    with pytest.raises(RuntimeError,
-                       match='matching compiler control-flow metadata'):
+    with pytest.raises(
+            RuntimeError,
+            match='matching compiler control-flow and entry-context metadata'):
         compiler.run_ttir_debug_passes_if_needed(
             None, {'target': {
                 'backend': 'gcu'
@@ -165,3 +166,62 @@ def test_dynamic_lowering_revision_invalidates_every_dynamic_cache(
             "sample_every": 3
         }
     }
+
+
+ENTRY_CONTEXT = '''module {
+ tt.func private @helper(%a: i32) -> i32 {
+  %h = arith.addi %a, %a : i32 loc("helper.py":500:1)
+  tt.return %h : i32
+ }
+ tt.func private @unused(%a: i32) -> i32 {
+  %h = arith.addi %a, %a : i32 loc("private.py":400:1)
+  tt.return %h : i32
+ }
+ tt.func public @entry_test(%x: tensor<4xf32>) -> i32 {
+  %one = arith.constant 1 : i32
+  %two = arith.constant 2 : i32
+  %pid = tt.get_program_id x : i32 loc("entry.py":10:1)
+  %scaled = arith.muli %pid, %two : i32 loc("entry.py":11:1)
+  %pred = arith.cmpi eq, %scaled, %one : i32 loc("entry.py":12:1)
+  %out = scf.if %pred -> (i32) {
+   %nested = arith.addi %scaled, %one : i32 loc("nested.py":300:1)
+   scf.yield %nested : i32
+  } else {
+   scf.yield %one : i32
+  }
+  %reduced = "tt.reduce"(%x) ({
+  ^bb0(%lhs: f32, %rhs: f32):
+   %cmp = arith.cmpf ogt, %lhs, %rhs : f32 loc("combiner.py":700:1)
+   %sel = arith.select %cmp, %lhs, %rhs : f32 loc("combiner.py":701:1)
+   tt.reduce.return %sel : f32
+  }) {axis = 0 : i32} : (tensor<4xf32>) -> f32
+  %called = tt.call @helper(%out) : (i32) -> i32
+  tt.return %called : i32
+ }
+}'''
+
+
+def test_entry_and_condition_evidence_comes_from_actual_function_block_and_ssa(
+):
+    rows = tracked(ENTRY_CONTEXT)
+    entry = [r for r in rows if 'entry.py' in r['sourceLoc']]
+    assert len(entry) == 3
+    assert all(r['isKernelEntryContext'] and r['isControlConditionComputation']
+               for r in entry)
+    nested = next(r for r in rows if 'nested.py' in r['sourceLoc'])
+    assert not nested['isKernelEntryContext']
+    assert not nested['isControlConditionComputation']
+    private = next(r for r in rows if 'private.py' in r['sourceLoc'])
+    assert not private['isKernelEntryContext']
+    assert not any(
+        'helper.py' in r['sourceLoc'] or 'combiner.py' in r['sourceLoc']
+        for r in rows)
+
+
+def test_while_condition_block_argument_does_not_invent_entry_causality():
+    rows = tracked(WHILE)
+    predicate = next(r for r in rows if r['mlirOpName'] == 'arith.cmpi')
+    increment = next(r for r in rows if r['mlirOpName'] == 'arith.addi')
+    assert predicate['isControlConditionComputation']
+    assert not predicate['isKernelEntryContext']
+    assert not increment['isControlConditionComputation']
