@@ -1561,15 +1561,19 @@ def start(
     if metadata is not None:
         metadata = metadata_snapshot(metadata)
     _check_env(backend)
-    if backend == "cupti_pcsampling" or (backend == "cupti" and str(
-            mode or "").split(":", 1)[0] == "pcsampling"):
-        # Probe before allocating a session: an enabled SDK may still expose
-        # zero stall reasons on a particular GPU/toolkit combination.
-        profiler_native.validate_pc_sampling_support(
-            _get_backend_default_path(backend))
-
     effective_mode = (_mode_with_ir_triton_overrides(mode, backend) if
                       ir_default_for_triton else _get_mode_str(backend, mode))
+    if backend == "cupti_pcsampling" and not effective_mode:
+        effective_mode = "pcsampling"
+    if backend == "cupti_pcsampling" or (
+            backend == "cupti"
+            and effective_mode.split(":", 1)[0].lower() == "pcsampling"):
+        # Probe before allocating a session: an enabled SDK may still expose
+        # zero stall reasons. Native compatibility checks precede any probe SDK
+        # calls, including when the existing collector was started natively.
+        profiler_native.validate_pc_sampling_support(
+            _get_backend_default_path(backend), effective_mode)
+
     request_spec = None if observation_request is None else observation_request.as_dict(
     )
     if not internal:
