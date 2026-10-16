@@ -1,0 +1,130 @@
+{
+  "NPU4_released": true,
+  "candidate_source": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "history": {
+    "eligible": 23,
+    "ineligible": 1,
+    "old_records_and_denominators_unchanged": true,
+    "original_complete_gate_pass": 45,
+    "original_failure_closed": false,
+    "original_unexplained_State_failure": 1,
+    "profiles": 46,
+    "registered_ordinary": 24
+  },
+  "independent_post_fix_unseen": {
+    "actual_captures": 16,
+    "actual_runtime_calls": 16,
+    "all_AIC_AIV_modules": true,
+    "budgets": {
+      "CLI_compile_limit_s_max": 120,
+      "CLI_export_limit_s_max": 60,
+      "bundle_bytes_max": 22633343,
+      "complete_finalize_export_s_max": 1.4059775741770864,
+      "ordinary_cold_timeout_s_max": 120,
+      "ordinary_cold_timeout_s_min": 120,
+      "ordinary_compile_launch_sync_wall_s_max": 23.58115561492741,
+      "physical_cells_max": 104,
+      "profile_host_process_wall_s_max": 46.13809160888195,
+      "raw_bytes_max": 832
+    },
+    "complete_gate_pass": 8,
+    "mathematical_kernels": 1,
+    "mathematical_manifest_sha256": "d2b5698fe83c8385adcecb1cd4c7fa8a4d1b2b6d71f912245048188b215f4f47",
+    "mathematical_source_sha256": "be19e2ea9f91afa3a5f9cad17f3827f091d84e9c45aaf9583fe22d4387081db3",
+    "ordinary_pass": 4,
+    "profiles": 8,
+    "registered_ordinary": 4,
+    "same_binary_runtime_count_witness_required": true,
+    "source_not_shared_with_engineering": true,
+    "supplement_pass": 8
+  },
+  "known_shadow": {
+    "actual_State_elements": 1024,
+    "actual_all_State_values_one": true,
+    "additional_required_AIV_State_counts": [
+      [
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "budgets": {
+      "actual_runtime_calls": 2,
+      "bundle_bytes_max": 20827510,
+      "cold_compile_launch_sync_wall_s_max": 22.93925387598574,
+      "compile_budget_s": 120,
+      "complete_finalize_export_s_max": 1.0486879432573915,
+      "export_budget_s": 60,
+      "ordinary": 2,
+      "original_historical_failure_closed": false,
+      "physical_cells_max": 56,
+      "profile_host_wall_s_max": 44.47990393638611,
+      "profiles": 2,
+      "raw_bytes_max": 448,
+      "schema": "known-shadow-r13-actual-host-budget-safe-v1"
+    },
+    "derived_complete_gate_pass": 2,
+    "new_unseen": false,
+    "ordinary": 2,
+    "original_CPU_gate_KeyError_records": 2,
+    "profiles": 2,
+    "supplement_pass": 2
+  },
+  "main": {
+    "actual_scalar_State_CLI_failures": 2,
+    "all_original_bytes_unchanged": true,
+    "budgets": {
+      "CLI_compile_limit_s_max": 120,
+      "CLI_export_limit_s_max": 60,
+      "bundle_bytes_max": 22082692,
+      "complete_finalize_export_s_max": 1.2252534460276365,
+      "ordinary_cold_timeout_s_max": 120,
+      "ordinary_cold_timeout_s_min": 120,
+      "ordinary_compile_launch_sync_wall_s_max": 25.565264890901744,
+      "physical_cells_max": 272,
+      "profile_host_process_wall_s_max": 46.709470191039145,
+      "raw_bytes_max": 2176
+    },
+    "eligible": 22,
+    "full_original_gate_pass": 42,
+    "ineligible": 2,
+    "profiles": 44,
+    "registered_ordinary": 24,
+    "supplement_pass": 42
+  },
+  "model_configuration": "Precise model/configuration not exposed by tools; no claim to be an additional designated reviewer",
+  "native_source": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+  "old_scalar_oracle_invalidity_proven": false,
+  "ordinary_compile_only": {
+    "attempts": 1,
+    "caller_state_election_present": false,
+    "helper_internal_election_unresolved": true,
+    "npubin_bytes": 4800,
+    "npubin_sha256": "a0a09d04080b04a129eb4da13122232172692f7734eba38666093ebab0fb295e",
+    "ordinary_and_profiled_caller_structure_same_in_checked_fields": true,
+    "ordinary_npubin_byte_equal": true,
+    "profiler_API_imported": false,
+    "user_kernel_launches": 0
+  },
+  "original_frozen_math_and_manifest_0823c12_byte_equal": true,
+  "overall_pass": false,
+  "private_archive": {
+    "bytes": 56329122,
+    "path": ".qualification-r13-transfer/PRIVATE-r13-frozen-cohorts-and-actual-compiler-evidence.tgz",
+    "private_do_not_read_or_publish": true,
+    "sha256": "8b7b2cf6ef24df9e08ae2fdacfbef817ab7a3be799fb89d9f2c2a3673cb43b8e"
+  },
+  "product_cause_proven": false,
+  "remaining_device_jobs": 0,
+  "runtime_source_does_not_include_later_docs_evidence_only_commits": true,
+  "schema": "independent-ascend-v3-ec75-final-safe-verdict-v1",
+  "snapshot_sha256": "1368cbc831a1c0fc30137d8077c217dce3b65b0957f03a89be5adf1ddf5991f1",
+  "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206"
+}

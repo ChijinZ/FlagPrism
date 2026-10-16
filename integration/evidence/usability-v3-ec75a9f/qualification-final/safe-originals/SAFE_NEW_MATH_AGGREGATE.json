@@ -1,0 +1,66 @@
+{
+  "actual_captures": 16,
+  "actual_host_budgets": {
+    "CLI_compile_limit_s_max": 120,
+    "CLI_export_limit_s_max": 60,
+    "bundle_bytes_max": 22633343,
+    "complete_finalize_export_s_max": 1.4059775741770864,
+    "ordinary_cold_timeout_s_max": 120,
+    "ordinary_cold_timeout_s_min": 120,
+    "ordinary_compile_launch_sync_wall_s_max": 23.58115561492741,
+    "physical_cells_max": 104,
+    "profile_host_process_wall_s_max": 46.13809160888195,
+    "raw_bytes_max": 832
+  },
+  "actual_runtime_calls": 16,
+  "all_binaries_have_actual_AIC_and_AIV_modules": true,
+  "authorization_sha256": "cec1184a9211a0bf50995ccabdf6f8c3ba8afbcadc19f3097fc1539d02734b69",
+  "eligibility_sha256": "182a3e624ac9054460b3801d743eb59d3e4740624137d036bc6ba7c84ee4be15",
+  "history": {
+    "complete_gate_pass": 45,
+    "eligible": 23,
+    "original_failure_closed": false,
+    "profiles": 46,
+    "registered": 24,
+    "unexplained_state_failure": 1
+  },
+  "matrix_terminal": true,
+  "observed_at": 1792156252.8390546,
+  "ordinary": {
+    "categories": {
+      "matrix": {
+        "pass": 4
+      },
+      "pointwise": {},
+      "reduction": {}
+    },
+    "resolved": 4,
+    "statuses": {
+      "pass": 4
+    }
+  },
+  "original_manifest_sha256": "d2b5698fe83c8385adcecb1cd4c7fa8a4d1b2b6d71f912245048188b215f4f47",
+  "original_math_sha256": "be19e2ea9f91afa3a5f9cad17f3827f091d84e9c45aaf9583fe22d4387081db3",
+  "profile_progress_sha256": "f3334af891ed3a0c6cb660220c06af45bb304079c8c592081d959de79364ca19",
+  "profiles": {
+    "attempted": 8,
+    "cold": {
+      "pass": 4
+    },
+    "failed_actual_CLI": 0,
+    "failed_after_CLI": 0,
+    "original_bundle_unchanged": 8,
+    "statuses": {
+      "pass": 8
+    },
+    "warm": {
+      "pass": 4
+    }
+  },
+  "registered_ordinary": 4,
+  "same_binary_per_two_runtime_calls": true,
+  "schema": "independent-r13-post-fix-new-math-safe-aggregate-v1",
+  "snapshot_sha256": "1368cbc831a1c0fc30137d8077c217dce3b65b0957f03a89be5adf1ddf5991f1",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206"
+}

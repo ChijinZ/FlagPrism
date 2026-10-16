@@ -1,0 +1,92 @@
+{
+  "aggregate": {
+    "CPU_only": true,
+    "GPU_execution": false,
+    "SDK_libraries_read": false,
+    "all_original_bundles_and_results_unchanged": true,
+    "driver_sha256": "d969ce23e51bc3e5eaf26e6d592f15a2187346442c54fac696a1f413e6f7da0f",
+    "expected_existing_bundles": 2,
+    "generated_artifacts_verified": 4,
+    "generated_bytes_verified": 192700,
+    "module_sha256": "7f0af8d60fbd8835952b8191bbfbe28cd8767ef93f433ded21f5cf77de88af1c",
+    "observed_at": 1792155628.0807726,
+    "original_attempted_profiles": 2,
+    "original_failed_without_exported_compiler_bundle": 0,
+    "original_full_gate_statuses": {
+      "fail": 2
+    },
+    "original_terminal_sha256": "c45c8a29fc9d8a0ab7d13569dbc17a89ef3977511c625b3854db21444c910f26",
+    "phase": "shadow",
+    "record_sha256": [
+      "96aca79258291205bde9eb5eb64d11eb4b6789156cfd919ccd20bff65806fb84",
+      "480faaa997eee737d608f99ac723adbd43499a3ef183ac45a8b8da13b48ec051"
+    ],
+    "resolved": 2,
+    "schema": "independent-r13-generated-main-input-supplement-v2",
+    "statuses": {
+      "pass": 2
+    },
+    "supplement_failure_count": 0
+  },
+  "bundles": [
+    {
+      "anonymous_bundle_ordinal": 1,
+      "generated_inputs": [
+        {
+          "actor_kind": "AIV",
+          "closure_complete": true,
+          "compile_id": "11bdb801-c003-42c5-9831-13d2043aaa81",
+          "executed_argument_index": 0,
+          "generated_input_bytes": 62192,
+          "generated_input_sha256": "41c9fd9557418530ca12722d97432b33bd94406a72c6273fdded4df42df12cb9"
+        },
+        {
+          "actor_kind": "AIC",
+          "closure_complete": true,
+          "compile_id": "11bdb801-c003-42c5-9831-13d2043aaa81",
+          "executed_argument_index": 0,
+          "generated_input_bytes": 34158,
+          "generated_input_sha256": "730f3a55349bf6f5025938ac4f7deb2265869ae64ce61168268623ea554d15a5"
+        }
+      ],
+      "original_bundle_complete_file_count": 40,
+      "original_bundle_file_index_sha256": "b8c4919a98bd66fd1cdea1ece2dadb66ea3b7318e16cf4c4fe8c519b90c04fa5",
+      "original_bundle_unchanged": true,
+      "original_qualification_sha256": "f16d19a47d711537214df2b182877c89460a07dc0c07363a2445cd61f3b3bee0",
+      "original_qualification_unchanged": true,
+      "record_sha256": "96aca79258291205bde9eb5eb64d11eb4b6789156cfd919ccd20bff65806fb84",
+      "supplement_status": "pass"
+    },
+    {
+      "anonymous_bundle_ordinal": 2,
+      "generated_inputs": [
+        {
+          "actor_kind": "AIV",
+          "closure_complete": true,
+          "compile_id": "11bdb801-c003-42c5-9831-13d2043aaa81",
+          "executed_argument_index": 0,
+          "generated_input_bytes": 62192,
+          "generated_input_sha256": "41c9fd9557418530ca12722d97432b33bd94406a72c6273fdded4df42df12cb9"
+        },
+        {
+          "actor_kind": "AIC",
+          "closure_complete": true,
+          "compile_id": "11bdb801-c003-42c5-9831-13d2043aaa81",
+          "executed_argument_index": 0,
+          "generated_input_bytes": 34158,
+          "generated_input_sha256": "730f3a55349bf6f5025938ac4f7deb2265869ae64ce61168268623ea554d15a5"
+        }
+      ],
+      "original_bundle_complete_file_count": 40,
+      "original_bundle_file_index_sha256": "f106b08a5ca5b6409c7877c9c91ea89e142c8b33263657d2e430a18778631624",
+      "original_bundle_unchanged": true,
+      "original_qualification_sha256": "7de7be5056d47578c8aed0027dc3a12963a1f9fa9ffd3dcd5e01e0480e99cd50",
+      "original_qualification_unchanged": true,
+      "record_sha256": "480faaa997eee737d608f99ac723adbd43499a3ef183ac45a8b8da13b48ec051",
+      "supplement_status": "pass"
+    }
+  ],
+  "phase": "shadow",
+  "private_source_paths_and_contents_omitted": true,
+  "schema": "generated-input-closure-safe-index-v1"
+}

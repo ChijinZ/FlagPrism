@@ -1,0 +1,54 @@
+{
+  "exact_actual_inputs_seed_match_proven": false,
+  "historical_baseline_eligible": true,
+  "new_ordinary_failures": [
+    {
+      "actual_State": [
+        2,
+        2
+      ],
+      "actual_compiled_cache_hash": "c780415b599fc4ccf0f109256f71f770236d8559aa5c4daa5629b4baec0ebd82",
+      "anonymous_ordinary_ordinal": 21,
+      "assertion_call_index": 0,
+      "exception_telemetry_sha256": "bc872bf45dad9d0edeea4b7a6c7c75bd933d61d4ebdd8627b32583170c080979",
+      "expected_State": 1,
+      "failed_actual_input_seed_hashes_saved": false,
+      "math_input_canary_assertions_preceded_State_assertion": true,
+      "original_historical_failure_closed": false,
+      "original_host_ledger_lines": 1,
+      "same_deterministic_input_seed_construction": false,
+      "same_kernel": false,
+      "same_kernel_shape_config": false,
+      "same_shape_config_indices": true,
+      "source_bytes_equal": true,
+      "stderr_sha256": "dbedcfd61be1e339ba3a760fdf5593ee9bae31df575caa2e74d6305574190325"
+    },
+    {
+      "actual_State": [
+        2
+      ],
+      "actual_compiled_cache_hash": "6d44486d525e8d2583196c2f3c280b6d6f6c85d02111853410b626d632f135a0",
+      "anonymous_ordinary_ordinal": 22,
+      "assertion_call_index": 0,
+      "exception_telemetry_sha256": "0fa191e4749a5692365434b8bb4ace9264be85aaac33a4c3e00f9032e178954d",
+      "expected_State": 1,
+      "failed_actual_input_seed_hashes_saved": false,
+      "math_input_canary_assertions_preceded_State_assertion": true,
+      "original_historical_failure_closed": false,
+      "original_host_ledger_lines": 1,
+      "same_deterministic_input_seed_construction": false,
+      "same_kernel": false,
+      "same_kernel_shape_config": false,
+      "same_shape_config_indices": false,
+      "source_bytes_equal": true,
+      "stderr_sha256": "dbedcfd61be1e339ba3a760fdf5593ee9bae31df575caa2e74d6305574190325"
+    }
+  ],
+  "new_source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "original_failed_profile_argv_sha256": "cfe04251b1cfece1948c9c5e9c5761202255e32693713e1cce1683430227babf",
+  "original_failure_closed": false,
+  "original_ordinary_receipt_sha256": "c55f193324a6b9fd3ebe68dd532da0f3d84671c514a23ed331c1847968f4d4ff",
+  "original_source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "schema": "r13-ordinary-historical-exactness-safe-v1",
+  "scope": "Exact source/kernel/shape/config identity can be checked; failed runs emitted no completed receipt or input/seed digest. Source determinism and preceding original mathematical/input assertions are retained, not mislabeled as saved actual digest equality."
+}

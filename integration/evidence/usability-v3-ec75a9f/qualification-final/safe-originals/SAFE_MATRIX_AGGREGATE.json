@@ -1,0 +1,71 @@
+{
+  "actual_host_budgets": {
+    "CLI_compile_limit_s_max": 120,
+    "CLI_export_limit_s_max": 60,
+    "bundle_bytes_max": 22082692,
+    "complete_finalize_export_s_max": 1.2252534460276365,
+    "ordinary_cold_timeout_s_max": 120,
+    "ordinary_cold_timeout_s_min": 120,
+    "ordinary_compile_launch_sync_wall_s_max": 25.565264890901744,
+    "physical_cells_max": 272,
+    "profile_host_process_wall_s_max": 46.709470191039145,
+    "raw_bytes_max": 2176
+  },
+  "authorization_sha256": "cec1184a9211a0bf50995ccabdf6f8c3ba8afbcadc19f3097fc1539d02734b69",
+  "eligibility_sha256": "d73e1950d5a493a68a23a799daeaa7e48ff9984ef77677f3f062baca40f6d3dc",
+  "history": {
+    "complete_gate_pass": 45,
+    "eligible": 23,
+    "original_failure_closed": false,
+    "profiles": 46,
+    "registered": 24,
+    "unexplained_state_failure": 1
+  },
+  "matrix_terminal": true,
+  "observed_at": 1792156798.3089767,
+  "ordinary": {
+    "categories": {
+      "matrix": {
+        "fail": 2,
+        "pass": 6
+      },
+      "pointwise": {
+        "pass": 8
+      },
+      "reduction": {
+        "pass": 8
+      }
+    },
+    "resolved": 24,
+    "statuses": {
+      "fail": 2,
+      "pass": 22
+    }
+  },
+  "original_manifest_sha256": "10492a70eba6e2e5c8e8f885d731a390cdd6790d0415a398b133a9a3e4c9614f",
+  "original_math_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "profile_progress_sha256": "834dbc7901fc6e21248b718b118014aa5671f3ab949b9197f530d43c277b27d8",
+  "profiles": {
+    "attempted": 44,
+    "cold": {
+      "fail": 1,
+      "pass": 21
+    },
+    "failed_actual_CLI": 2,
+    "failed_after_CLI": 0,
+    "original_bundle_unchanged": 42,
+    "statuses": {
+      "fail": 2,
+      "pass": 42
+    },
+    "warm": {
+      "fail": 1,
+      "pass": 21
+    }
+  },
+  "registered_ordinary": 24,
+  "schema": "independent-r13-ascend-safe-aggregate-v1",
+  "snapshot_sha256": "1368cbc831a1c0fc30137d8077c217dce3b65b0957f03a89be5adf1ddf5991f1",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206"
+}

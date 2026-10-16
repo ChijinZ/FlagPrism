@@ -41,8 +41,11 @@ current ordinary run and warm profile passed, while the cold profile failed.
 The historical failure is preserved; no root cause has been established, and
 this checkpoint does **not** meet the overall stable-usability acceptance.
 
-A separately frozen new mathematical kernel and stronger known-case regressions
-are being assessed; their results do not remove the main failures. The independent
+The separately frozen new mathematical kernel passed four ordinary cases and
+eight cold/warm profiles, including 16 same-binary runtime calls. Two stronger
+known-case profiles also passed their derived full gates and required State
+markers. These results do not remove the main failures. The independent final
+[safe report](qualification-final/REPORT.md) retains every denominator and failure. The independent
 gate passed two actual public positives, 35 structural forgery negatives, eight
 layout positives and 63 boundary negatives. A further same-byte CPU supplement
 checked the actual generated LLVM inputs against executed driver arguments for
@@ -57,3 +60,14 @@ file.
 Large archives, SDK libraries/headers, private qualification
 code, credentials and caches are excluded from Git. `index.json` records original
 workspace evidence paths and SHA-256 values. No paper or Study was edited.
+
+
+A finite [public diagnostic](scalar-state-diagnostic/public_state_probe.py)
+reproduced the scalar-State discrepancy independently of the private mathematical
+cohort. Its [results](scalar-state-diagnostic/FINITE_RESULTS.md) distinguish
+mathematical/canary success from State correctness; diagnostic exit zero is not
+qualification success. All twelve fixed cells completed, and no owned device
+process remains. The referenced 1.17 MB raw archive stays in the workspace rather
+than Git. Only safe receipts, source and an independently rehashed index are
+included here. A compiler-legality candidate is under development in an isolated
+SDK source/tool prefix; no compiler repair is claimed by this checkpoint.

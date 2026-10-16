@@ -1,0 +1,44 @@
+{
+  "actual_receipt_schema_witness_field": "calls[i].non_idempotence_witness_max_abs",
+  "added_to_cohort_projection_only": [
+    "cold_timeout_s"
+  ],
+  "equivalent_seed_input_witness_checks_performed_before_common": true,
+  "legacy_branch_assumes_top_level_witness": "non_idempotence_witness_max_abs",
+  "original_mathematics_or_tolerance_not_removed": true,
+  "original_receipts_unmodified": true,
+  "removed_from_cohort_projection_only": [
+    "output_initial_sha256"
+  ],
+  "rows": [
+    {
+      "actual_top_input_sha256_equal": true,
+      "actual_top_output_initial_sha256_equal": true,
+      "baseline_receipt_sha256": "73398ac65c816ba4d8e90e587fecedb0aa38dfa709b8d576857c77b71c1af682",
+      "exact_callset_index_and_runtime_steps_equal": true,
+      "legacy_top_level_witness_missing_in_both": true,
+      "original_elementwise_assertions_and_guards_completed": true,
+      "original_source_assertion_authority_not_replaced_by_output_hash_or_error_bound": true,
+      "per_call_nonzero_finite_witness_equal": true,
+      "per_call_runtime_input_digest_equal": true,
+      "per_call_tolerances_equal_original_fixed": true,
+      "receipt_sha256": "b52264908b0da9e8e81207623c5b4b27f10c31a563f4a9a5b3434e4abd033a68",
+      "repetition": "cold"
+    },
+    {
+      "actual_top_input_sha256_equal": true,
+      "actual_top_output_initial_sha256_equal": true,
+      "baseline_receipt_sha256": "73398ac65c816ba4d8e90e587fecedb0aa38dfa709b8d576857c77b71c1af682",
+      "exact_callset_index_and_runtime_steps_equal": true,
+      "legacy_top_level_witness_missing_in_both": true,
+      "original_elementwise_assertions_and_guards_completed": true,
+      "original_source_assertion_authority_not_replaced_by_output_hash_or_error_bound": true,
+      "per_call_nonzero_finite_witness_equal": true,
+      "per_call_runtime_input_digest_equal": true,
+      "per_call_tolerances_equal_original_fixed": true,
+      "receipt_sha256": "94e9d4223bb9678b196d9c3921548f82410bad37dac8a9196b73fe038a6459f1",
+      "repetition": "warm"
+    }
+  ],
+  "schema": "known-shadow-receipt-projection-independent-equivalence-v1"
+}
