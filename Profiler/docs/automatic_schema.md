@@ -134,7 +134,7 @@ Native IR bookkeeping is not interchangeable with source operations.
 
 NVIDIA inventory schema 2 additionally exposes
 `selection_policy: "bounded_control_regions_then_source_statements"`,
-`selection_policy_version: 1` and `control_regions`. Region entries contain
+`selection_policy_version: 2` and `control_regions`. Region entries contain
 actual `control_id`, `operation`, `location`, `region_index`, `block_index`,
 `repeated`, `eligible_candidates`, `direct_candidates`, `selected_candidates`
 and `coverage_status` (`no_eligible_operation`, `direct_representative`,
@@ -142,17 +142,37 @@ and `coverage_status` (`no_eligible_operation`, `direct_representative`,
 `control_computation` denotes a real operation in a control condition's
 def-use slice; `control_region` denotes a real SCF control operation. Their
 intervals neither prove that a conditional body ran nor observe other programs.
-The matching compiler exports `AUTOMATIC_SELECTION_POLICY_VERSION = 1`; the
+With a budget of at least three sites, policy 2 first retains up to two actual
+entry-level control candidates (no SCF ancestor), then allocates the remaining
+capacity to repeating/branch regions and other source statements. Entry anchors
+have `selection_reason: "entry_control_context"`. This prevents many untaken
+region bodies from exhausting all default control evidence. Explicit one- and
+two-site requests retain region-first selection and can leave entry context
+unobserved. Finite coverage is still shown per region; entry evidence does not
+prove that any branch body ran.
+
+The matching compiler exports `AUTOMATIC_SELECTION_POLICY_VERSION = 2`; the
 hook checks it and includes it in compilation cache identity.
 
-Current Enflame plans additionally have `policy_version: 3` and `control_regions`.
-Inventory entries carry `controlFlowSchemaVersion: 1` and actual outer-to-inner
+Current Enflame plans additionally have `policy_version: 4` and `control_regions`.
+Inventory entries carry `controlFlowSchemaVersion: 2` and actual outer-to-inner
 `controlFlowAncestors`, each with `controlId`, `parentOpId`, `operation`,
 `regionIndex`, `blockIndex` and `repeated`. These come from IR owners, not source
 line proximity. `parentOpId: 0` means the owner is not a tracked operation.
 Regions expose eligible/direct/selected site lists and coverage status/reason;
 absence of eligible operations differs from exclusion by the finite site budget.
-Repeated regions receive priority before class filling. Default eight-site
+`isKernelEntryContext` identifies an operation directly in a public kernel's
+actual entry block; an empty ancestor list alone does not establish this.
+`isControlConditionComputation` identifies an actual producer in a control
+condition's same-block SSA slice. It does not infer a branch result. With at
+least three sites, the planner reserves up to two eligible source-linked scalar
+entry operations, preferring condition producers and distinct source lines
+where available. Their `selection_reason` is
+`verified_kernel_entry_scalar_context`. Repeating regions then receive priority
+before class filling.
+Explicit one- and two-site requests retain region-first selection. Synthetic
+operand captures remain ineligible even when they inherit context metadata.
+Default eight-site
 coverage is bounded: a plan may still leave regions uncovered, which must remain
 visible. Older round-robin plans remain readable and have no such coverage proof.
 
@@ -178,6 +198,19 @@ For membership checks, use the selected inventories for the actual binary,
 module, actor and semantic class. Older operation-only plans cannot establish a
 complete control-site selection proof; raw compiler-site provenance remains
 available but is not a substitute for a missing plan.
+
+Ascend operation policy 2 is
+`original_entry_source_context_then_evenly_spaced`. With at least three operation
+sites, it first reserves up to two source-linked candidates from the actual
+original LLVM entry block, then distributes the remaining slots across other
+candidates. Inventory entries preserve `original_block`, its
+`block_representation`, and `is_original_entry_block` from before logger
+insertion changes the CFG. Reserved entries have
+`selection_reason: "original_entry_source_context"`. Source-line diversity is
+preferred when those entry candidates permit it. One- and two-site requests
+retain the earlier evenly spaced rule. Neither policy gives entry checkpoints
+the meaning of a branch-body observation. The actual rebuilt observer library
+digest participates in compiler cache identity.
 
 Ascend entries also preserve `compiler_actors` with actual `function`,
 `actor_kind` and the same `late_llvm:<module_sha256>:<function>` compiler identity
@@ -344,8 +377,9 @@ each element of `captures[].actors`:
     "candidate_count": 1,
     "selected_count": 1,
     "max_sites": 8,
-    "policy": "source_location_class_per_original_block_evenly_spaced",
-    "inventory": [{"site_id": 6, "operation": "mul", "compiler_opcode": "mul", "source_file": "/app/kernel.py", "line": 12, "column": 4, "selected": true, "selection_reason": "source_location_class_evenly_spaced"}]
+    "policy": "original_entry_source_context_then_evenly_spaced",
+    "policy_version": 2,
+    "inventory": [{"site_id": 6, "operation": "mul", "compiler_opcode": "mul", "source_file": "/app/kernel.py", "line": 12, "column": 4, "original_block": "%entry", "block_representation": "original_pre_instrumentation_canonical_llvm", "is_original_entry_block": true, "selected": true, "selection_reason": "original_entry_source_context"}]
   }
 }
 ```
@@ -373,7 +407,9 @@ found in `plans[].plan`, bound to `binary_id`:
     "schema_version": 1,
     "candidate_count": 1,
     "max_sites": 8,
-    "policy": "bounded_class_round_robin",
+    "policy": "bounded_control_flow_then_class",
+    "policy_version": 4,
+    "control_flow_metadata_version": 2,
     "selected_sites": [3],
     "inventory": [{"opId": 3, "mlirOpName": "arith.addf", "sourceLoc": "loc(\"/app/kernel.py\":12:4)", "automatic_eligible": true, "exclusion_reason": null, "selected": true, "selection_reason": "bounded_class_round_robin"}]
   }

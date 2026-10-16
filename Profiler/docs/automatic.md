@@ -195,9 +195,18 @@ it is not automatically a loop iteration number. Loop conditions may execute
 once more than their bodies. Sampling, unselected sites and dropped records
 have different meanings. Use the original capture statistics; an unselected
 site is not proof of nonexecution. NVIDIA's current automatic policy reserves
-representatives of actual repeating/branch regions and observes their scalar
-control computations and SCF control intervals. A selected program that takes
-an empty branch can therefore expose its own control activity. An interval
+up to two entry-level control positions before distributing the remaining
+default budget across actual repeating/branch regions. It observes real scalar
+control computations and SCF control intervals; bounded entry evidence does not
+mean every branch body was observed. Explicit one- or two-site requests retain
+region-first selection and may leave entry context unobserved. Enflame similarly
+uses compiler-verified public kernel entry operations, with condition producers
+preferred. Ascend reserves source checkpoints from the actual original LLVM
+entry block. These positions may describe coordinate or condition computation;
+they do not establish that a tensor branch body executed. The Enflame and Ascend
+entry policies prefer distinct source lines where the candidates permit it.
+A selected program that takes an empty branch can therefore expose its own
+entry or control activity. An interval
 around `scf.if` describes the control operation; it does not mean that the
 conditional body ran. This remains a bounded program/warp/site sample and does
 not observe tensor work performed only by other programs. Plans distinguish
@@ -248,3 +257,14 @@ hashes against the installation/build receipt. Include the command, SDK/compiler
 versions, installation receipt, original application exception and retained
 failure artifacts in a bug report; numerical correctness alone does not prove
 that the internal trace is correct.
+
+For advanced CUPTI library-path selection, configure the path before CUPTI is
+first loaded in the process. Changing an already loaded library path is rejected;
+use a new process to select another SDK library. A rejected session must leave an
+existing collector's mode and path unchanged. The PC sampling capability probe
+also checks the live native collector before touching the SDK. Matching active
+PC sessions reuse their configuration without probing again; a conflicting mode
+or path is rejected before the probe. If SDK shutdown fails, the original
+error is reported and remaining owned cleanup is attempted. Unreleased resources
+remain pending; a later start must complete their cleanup before acquiring a new
+collector, and repeated cleanup failure remains an error.
