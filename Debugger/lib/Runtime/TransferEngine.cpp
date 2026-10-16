@@ -1022,7 +1022,7 @@ void synthesizeExportHeader(const DebugLaunchContext &ctx,
       ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-      ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2")
+      (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
     return; // The actual writer publishes its own counts, including overflow.
   if (!ctx.runtimeMetadata.hasLaunchGrid ||
       ctx.runtimeMetadata.recordsPerInstance == 0 || !allocation.hostBuffer ||
@@ -1119,6 +1119,9 @@ public:
     }
 
     try {
+      if (runtimeMetadata.recordLayout == "ascend_source_census_v3" &&
+          reinterpret_cast<uintptr_t>(allocation->deviceBuffer) % 64)
+        throw std::runtime_error("Ascend census v3 requires 64-byte aligned device storage");
       allocation->hostBuffer = adapter_->allocateHost(ctx.bufferSize);
       if (!allocation->hostBuffer) {
         if (options_.driverKind == TransferDriverKind::CANN ||
@@ -1164,7 +1167,7 @@ public:
     const uint64_t initializationStream =
         (ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
          ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2")
+         (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
             ? ctx.streamHandle
             : 0;
     adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes,
@@ -1172,7 +1175,7 @@ public:
 
     if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-        ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2") {
+        (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3")) {
       allocation->asyncExportPending = false;
       allocation->asyncCopySubmitted = false;
       return; // Actor-local headers are initialized by the actual selected

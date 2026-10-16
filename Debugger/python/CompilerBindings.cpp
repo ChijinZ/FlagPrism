@@ -89,19 +89,19 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
     if (auto error = prepareAscendProgramAnchors(mod))
       throw py::value_error(llvm::toString(std::move(error)));
   });
-  m.attr("ASCEND_SOURCE_CENSUS_VERSION") = 2;
+  m.attr("ASCEND_SOURCE_CENSUS_VERSION") = 3;
   m.def("prepare_ascend_source_census_abi",
         [](ModuleOp mod, const std::vector<uint32_t> &selectedSiteIds) {
           auto result = prepareAscendSourceCensusAbi(mod, selectedSiteIds);
           if (!result)
             throw py::value_error(llvm::toString(result.takeError()));
           py::dict abi;
-          abi["version"] = 2;
+          abi["version"] = 3;
           abi["hidden_argument_index"] = *result;
           abi["site_count"] = selectedSiteIds.size();
           abi["records_per_instance"] = 3 * selectedSiteIds.size();
           abi["record_size"] = 8;
-          abi["record_layout"] = "ascend_source_census_v2";
+          abi["record_layout"] = "ascend_source_census_v3";
           return abi;
         });
   m.def("prepare_late_observation_abi", [](ModuleOp mod) {

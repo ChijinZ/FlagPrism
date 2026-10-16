@@ -306,15 +306,15 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 )
             from .gcu_census import compiler_sites
             source_sites = compiler_sites(plan)
-            if getattr(fd, "ASCEND_SOURCE_CENSUS_VERSION", 0) != 2:
+            if getattr(fd, "ASCEND_SOURCE_CENSUS_VERSION", 0) != 3:
                 raise RuntimeError(
-                    "Ascend census requires the matching version-2 compiler ABI"
+                    "Ascend census requires the matching version-3 compiler ABI"
                 )
             abi = dict(
                 fd.prepare_ascend_source_census_abi(mod,
                                                     plan["selected_sites"]))
-            if (abi.get("version") != 2
-                    or abi.get("record_layout") != "ascend_source_census_v2"
+            if (abi.get("version") != 3
+                    or abi.get("record_layout") != "ascend_source_census_v3"
                     or type(abi.get("site_count")) is not int
                     or abi["site_count"] != len(source_sites)
                     or abi.get("records_per_instance") != 3 * abi["site_count"]
@@ -350,7 +350,7 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "debug_ascend_census_sites":
                 source_sites,
                 "debug_census_version":
-                2,
+                3,
                 "debug_max_census_cells":
                 request["max_census_cells"],
                 "debug_max_census_bytes":
@@ -360,7 +360,7 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "flagprism_ascend_observation_request":
                 request,
                 "flagprism_ascend_source_census_version":
-                2,
+                3,
             })
             return
         programs = request.get("programs")

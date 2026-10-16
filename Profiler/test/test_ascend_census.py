@@ -7,6 +7,42 @@ from flagtree.profiler.ascend_census import (ACTOR_STRIDE, HEADER_BYTES,
                                              plan_layout, validate_transport)
 
 
+@pytest.mark.parametrize('columns', [1, 2, 4, 8, 9, 16, 128])
+@pytest.mark.parametrize('grid', [[0], [1], [2], [2, 3, 5], [257, 2, 3]])
+def test_v3_complete_physical_budget_and_cache_line_ownership(columns, grid):
+    plan = plan_layout(grid, version=3, site_count=columns)
+    stride = ((columns * 8 + 63) // 64) * 64
+    assert plan['header_bytes'] == 64
+    assert plan['actor_stride'] == stride
+    assert plan['program_stride'] == 3 * stride
+    assert plan['byte_count'] == 64 + plan['program_count'] * 3 * stride
+    assert plan['reserved_cell_count'] * 8 == plan['byte_count']
+    occupied = set()
+    for p in range(plan['program_count']):
+        for slot in range(3):
+            base = 64 + p * 3 * stride + slot * stride
+            lines = set(range(base // 64, (base + columns * 8 - 1) // 64 + 1))
+            assert not lines & occupied
+            occupied.update(lines)
+            assert base + columns * 8 <= plan['byte_count']
+    with pytest.raises(ValueError, match='cell budget'):
+        plan_layout(grid, version=3, site_count=columns,
+                    max_cells=plan['reserved_cell_count'] - 1)
+    with pytest.raises(ValueError, match='byte budget'):
+        plan_layout(grid, version=3, site_count=columns,
+                    max_bytes=plan['byte_count'] - 1)
+
+
+@pytest.mark.parametrize('offset', [0, 32, 63, 72, 127, 128])
+def test_v3_rejects_header_actor_padding_and_unassigned_actor(offset):
+    plan = plan_layout([1], version=3, site_count=1)
+    raw = bytearray(plan['byte_count'])
+    raw[offset] = 1
+    with pytest.raises(ValueError, match='header|padding'):
+        validate_transport(bytes(raw), plan,
+                           {0: [dict(site=1, role='primary')]})
+
+
 def test_physical_reserved_budget_and_actual_grid():
     plan = plan_layout([2, 3, 5])
     assert plan['program_count'] == 30

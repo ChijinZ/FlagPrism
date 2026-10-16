@@ -123,12 +123,19 @@ immutable compiler capture directories automatically; explicit environment
 paths remain available as advanced overrides. Failed compiler captures are
 retained and the error names their compiler-stage evidence.
 
-Default automatic Ascend profiling uses source-site census v2: actual dynamic
+Default automatic Ascend profiling uses source-site census v3: actual dynamic
 visit counts for selected source operations over the admitted launch grid,
 with separate physical actor banks. Counts are not checkpoint event streams
 or operation durations; clock, occurrence and iteration fields remain null.
 See the [source census contract](../../../Profiler/docs/source_site_census.md)
 for selection, physical storage, source association and overflow semantics.
+
+Version 3 reserves a 64-byte zero header and rounds every actor bank up to a
+64-byte boundary. This gives each independently writing actor exclusive scalar
+GM cache lines. All header and actor padding counts toward the byte and cell
+budgets and must remain zero. Versions 1 and 2 remain readable as historical
+formats. The `flagtree-source-census-v2.patch` filename remains for recipe
+compatibility; its contents also transport the explicit version-3 source marker.
 
 The older explicit advanced checkpoint mode retains zero-interval
 source-operation events and loop-header visits. Its locations and local ticks

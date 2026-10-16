@@ -110,21 +110,27 @@ or synthetic timestamp intervals are introduced.
 
 ## Ascend source-program census
 
-Ascend uses physical layout `ascend_source_census_v2`. The native frontend
+Ascend uses physical layout `ascend_source_census_v3`. The native frontend
 selects S source sites (1–128), emits their IDs/columns and transports each
 site's three program coordinates and three grid extents through actor lowering
 and AutoBlockify. The late LLVM pass requires those compiler markers and their
 actual operands; a physical block ID cannot substitute for source coordinates.
 
-Storage is a 32-byte zero header followed by P source programs, three actor
-banks and S eight-byte cells. Each bank has stride `S * 8`; each program has
-stride `3 * S * 8`. AIC occupies slot 0. On the supported 910B target, the
+Storage is a 64-byte zero header followed by P source programs, three actor
+banks and S eight-byte cells. Each bank has stride `alignUp(S * 8, 64)`; each
+program has three bank strides. This isolates independently writing actors in
+separate scalar GM cache lines. All bytes, including the header and actor
+padding, count toward the byte budget; the version-3 reserved-cell budget is
+the complete byte count divided by eight. Padding bytes must remain zero. AIC occupies slot 0. On the supported 910B target, the
 actual AIV subblock value selects slot 1 or 2. Unused columns and actor banks
 must stay zero. Split actors may retain different, sparse subsets of selected
 columns; a missing emitted column does not become a synthetic unvisited site.
 The common logical descriptor remains version 1 with these explicit strides.
-Legacy physical `ascend_source_census_v1` always retains its fixed 128-column
-banks and is never reinterpreted using the new compact layout.
+Historical `ascend_source_census_v1` and `ascend_source_census_v2` retain their
+original 32-byte header and original strides when read. Version 1 always has
+128-column banks. These layouts do not provide version-3 cache-line isolation.
+Frontend markers, native allocation, compiler manifests and readers explicitly
+carry version 3 for new captures.
 
 All programs are collected within both admitted budgets. Presentation selects
 the lowest program with actual primary visits, while loss/overflow validation

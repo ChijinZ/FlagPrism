@@ -14,6 +14,8 @@ import struct
 
 LAYOUT = 'ascend_source_census_v1'
 COMPACT_LAYOUT = 'ascend_source_census_v2'
+ALIGNED_LAYOUT = 'ascend_source_census_v3'
+CACHE_LINE_BYTES = 64
 HEADER_BYTES = 32
 ACTOR_SLOTS = 3
 RESERVED_SITES = 128
@@ -39,7 +41,7 @@ def plan_layout(grid,
     for value, name in ((max_cells, 'max_cells'), (max_bytes, 'max_bytes')):
         if type(value) is not int or value <= 0:
             raise ValueError(f'{name} must be a positive integer')
-    if type(version) is not int or version not in (1, 2):
+    if type(version) is not int or version not in (1, 2, 3):
         raise ValueError('unsupported Ascend census physical version')
     if version == 1:
         if site_count is not None and (type(site_count) is not int
@@ -55,22 +57,27 @@ def plan_layout(grid,
             )
         columns = site_count
     actor_stride = columns * CELL_BYTES
+    header_bytes = HEADER_BYTES
+    if version == 3:
+        header_bytes = CACHE_LINE_BYTES
+        actor_stride = ((actor_stride + 63) // 64) * 64
     program_stride = ACTOR_SLOTS * actor_stride
     programs = math.prod(grid)
-    cells = programs * ACTOR_SLOTS * columns
-    size = HEADER_BYTES + cells * CELL_BYTES
+    size = header_bytes + programs * program_stride
+    # V3 budgets include every header and actor padding cell.
+    cells = size // CELL_BYTES if version == 3 else programs * ACTOR_SLOTS * columns
     if cells > max_cells:
         raise ValueError(
             'Ascend census physical reserved cell budget exceeded')
     if size > max_bytes:
         raise ValueError('Ascend census physical byte budget exceeded')
-    return dict(layout=LAYOUT if version == 1 else COMPACT_LAYOUT,
+    return dict(layout=LAYOUT if version == 1 else COMPACT_LAYOUT if version == 2 else ALIGNED_LAYOUT,
                 version=version,
                 grid=grid,
                 program_count=programs,
                 reserved_cell_count=cells,
                 byte_count=size,
-                header_bytes=HEADER_BYTES,
+                header_bytes=header_bytes,
                 actor_slots=ACTOR_SLOTS,
                 reserved_sites=columns,
                 program_stride=program_stride,
@@ -95,7 +102,7 @@ def validate_transport(raw, plan, actor_sites):
     if not isinstance(raw, bytes) or len(raw) != plan['byte_count']:
         raise ValueError(
             'Ascend census raw length disagrees with the actual grid')
-    if any(raw[:HEADER_BYTES]):
+    if any(raw[:plan['header_bytes']]):
         raise ValueError(
             'Ascend census reserved header must be zero; legacy ring headers are invalid'
         )
@@ -139,7 +146,7 @@ def validate_transport(raw, plan, actor_sites):
                 site.get("column", index)
                 for index, site in enumerate(actor_sites.get(slot, []))
             }
-            base = HEADER_BYTES + program * plan[
+            base = plan['header_bytes'] + program * plan[
                 'program_stride'] + slot * plan['actor_stride']
             for column in range(plan['reserved_sites']):
                 count, flags = struct.unpack_from('<II', raw,
@@ -153,6 +160,9 @@ def validate_transport(raw, plan, actor_sites):
                       or flags & 2 and count != 0xffffffff):
                     raise ValueError(
                         'Ascend census cell count/flags are inconsistent')
+            tail = base + plan['reserved_sites'] * CELL_BYTES
+            if any(raw[tail:base + plan['actor_stride']]):
+                raise ValueError('Ascend census actor alignment padding contains data')
     return dict(raw_sha256=hashlib.sha256(raw).hexdigest(), **plan)
 
 
@@ -196,9 +206,9 @@ def actor_descriptor(raw,
                  id=slot,
                  compiler_actor=copy.deepcopy(compiler_actor))
         ],
-        cells_offset=(HEADER_BYTES + slot * plan['actor_stride'] +
+        cells_offset=(plan['header_bytes'] + slot * plan['actor_stride'] +
                       columns[0] * CELL_BYTES
-                      if plan['program_count'] else HEADER_BYTES),
+                      if plan['program_count'] else plan['header_bytes']),
         program_stride=plan['program_stride'],
         actor_stride=plan['actor_stride'],
         site_stride=CELL_BYTES,
@@ -341,7 +351,7 @@ def compiler_actor_views(handoff, source_sites, *, version=1, site_count=None):
     coordinates come from each marker's own operands, never physical block IDs.
     """
     physical = plan_layout([1], version=version, site_count=site_count)
-    if version == 2 and len(source_sites) != site_count:
+    if version >= 2 and len(source_sites) != site_count:
         raise ValueError(
             'Ascend census actual frontend selection differs from compiled columns'
         )
@@ -385,6 +395,7 @@ def compiler_actor_views(handoff, source_sites, *, version=1, site_count=None):
                 kind='add_i64', call='llvm.hivm.GET.SUBBLOCKID', constant=1))
         source_binding = binding.get('source_program_binding') or {}
         if (not slots or binding.get('layout') != physical['layout']
+                or binding.get('header_bytes') != physical['header_bytes']
                 or binding.get('admissible_slots') != slots
                 or binding.get('expression') != expression
                 or binding.get('program_stride_bytes')
@@ -413,7 +424,7 @@ def compiler_actor_views(handoff, source_sites, *, version=1, site_count=None):
             identity, column = marker.get('source_op_id'), marker.get(
                 'census_column')
             if (identity not in selected or selected[identity][0] != column
-                    or (version == 2
+                    or (version >= 2
                         and marker.get('source_site_count') != site_count)
                     or marker.get('point_phase') != 'before_source_operation'
                     or marker.get('operation_class')

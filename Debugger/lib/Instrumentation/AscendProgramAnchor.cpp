@@ -128,7 +128,7 @@ prepareAscendSourceCensusAbi(mlir::ModuleOp module,
     state.addOperands(coordinates);
     state.addAttribute("asm_string",
                        builder.getStringAttr(
-                           "/* flagprism.source_census_site.v2:" +
+                           "/* flagprism.source_census_site.v3:" +
                            std::to_string(id) + ":" + std::to_string(column) +
                            ":" + std::to_string(selectedSites.size()) + " */"));
     state.addAttribute("constraints", builder.getStringAttr("l,l,l,l,l,l"));
@@ -142,9 +142,9 @@ prepareAscendSourceCensusAbi(mlir::ModuleOp module,
   module->setAttr("flagtree.profile.ascend_program_anchor_version",
                   builder.getI32IntegerAttr(1));
   module->setAttr("flagtree.profile.ascend_source_census_version",
-                  builder.getI32IntegerAttr(2));
+                  builder.getI32IntegerAttr(3));
   module->setAttr("flagtree.debug.record_layout",
-                  builder.getStringAttr("ascend_source_census_v2"));
+                  builder.getStringAttr("ascend_source_census_v3"));
   module->setAttr("flagtree.debug.record_size", builder.getI32IntegerAttr(8));
   module->setAttr("flagtree.debug.records_per_instance",
                   builder.getI32IntegerAttr(3 * selectedSites.size()));
