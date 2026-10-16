@@ -1,0 +1,259 @@
+{
+  "schema": "flagprism-compiler-identity-install-v1",
+  "source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+  "pid": 1962868,
+  "started": 1792160747.9947245,
+  "deadline": 1792161947.9947245,
+  "device_work": false,
+  "native_build": false,
+  "state": "passed",
+  "commands": [
+    {
+      "label": "clone-parent",
+      "argv": [
+        "git",
+        "clone",
+        "--no-checkout",
+        "/tmp/chijin-r13-ascend-census-v3/FlagTree",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree"
+      ],
+      "started": 1792160747.9992957,
+      "pid": 1962902,
+      "exit": 0,
+      "ended": 1792160748.063637
+    },
+    {
+      "label": "checkout-parent",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree",
+        "checkout",
+        "--detach",
+        "0364ed4bc39d1dfae483741ec272298297fa5bda"
+      ],
+      "started": 1792160748.0639422,
+      "pid": 1962905,
+      "exit": 0,
+      "ended": 1792160748.378454
+    },
+    {
+      "label": "check-parent-patch",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree",
+        "apply",
+        "--check",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component/integration/patches/ascend/flagtree-source-census-v2.patch"
+      ],
+      "started": 1792160748.3788261,
+      "pid": 1962906,
+      "exit": 0,
+      "ended": 1792160748.3828702
+    },
+    {
+      "label": "apply-parent-patch",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree",
+        "apply",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component/integration/patches/ascend/flagtree-source-census-v2.patch"
+      ],
+      "started": 1792160748.3831613,
+      "pid": 1962907,
+      "exit": 0,
+      "ended": 1792160748.3869975
+    },
+    {
+      "label": "clone-flir",
+      "argv": [
+        "git",
+        "clone",
+        "--no-checkout",
+        "/tmp/chijin-r13-ascend-census-v3/FlagTree/third_party/flir",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/flir"
+      ],
+      "started": 1792160748.387309,
+      "pid": 1962908,
+      "exit": 0,
+      "ended": 1792160748.4194744
+    },
+    {
+      "label": "checkout-flir",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/flir",
+        "checkout",
+        "--detach",
+        "ff91e64b6042a27e0db053f28ea3741be65d24d0"
+      ],
+      "started": 1792160748.4197986,
+      "pid": 1962911,
+      "exit": 0,
+      "ended": 1792160748.4519022
+    },
+    {
+      "label": "check-flir-patch",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/flir",
+        "apply",
+        "--check",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component/integration/patches/ascend/flir-source-census-v2.patch"
+      ],
+      "started": 1792160748.4522464,
+      "pid": 1962912,
+      "exit": 0,
+      "ended": 1792160748.4562747
+    },
+    {
+      "label": "apply-flir-patch",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/flir",
+        "apply",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component/integration/patches/ascend/flir-source-census-v2.patch"
+      ],
+      "started": 1792160748.4566295,
+      "pid": 1962913,
+      "exit": 0,
+      "ended": 1792160748.4606335
+    },
+    {
+      "label": "clone-ascend-ir",
+      "argv": [
+        "git",
+        "clone",
+        "--no-checkout",
+        "/tmp/chijin-r13-ascend-census-v3/FlagTree/third_party/ascend/AscendNPU-IR",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/ascend/AscendNPU-IR"
+      ],
+      "started": 1792160748.461031,
+      "pid": 1962914,
+      "exit": 0,
+      "ended": 1792160748.493143
+    },
+    {
+      "label": "checkout-ascend-ir",
+      "argv": [
+        "git",
+        "-C",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree/third_party/ascend/AscendNPU-IR",
+        "checkout",
+        "--detach",
+        "4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9"
+      ],
+      "started": 1792160748.4935336,
+      "pid": 1962917,
+      "exit": 0,
+      "ended": 1792160748.6579065
+    },
+    {
+      "label": "assemble-wheel",
+      "argv": [
+        "/usr/local/python3.11.15/bin/python",
+        "-B",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component/integration/patches/ascend/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-r15-compiler-identity-install-v2/FlagTree",
+        "--component",
+        "/tmp/chijin-r15-compiler-identity-install-v2/component",
+        "--native-python",
+        "/tmp/chijin-r13-ascend-census-v3/native-python",
+        "--core-library",
+        "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+        "--plugin",
+        "/tmp/chijin-r13-ascend-census-v3/observer-build/FlagPrismAscendLateObserver.so",
+        "--output",
+        "/tmp/chijin-r15-compiler-identity-install-v2/wheel"
+      ],
+      "started": 1792160756.3286283,
+      "pid": 1963132,
+      "exit": 0,
+      "ended": 1792160782.575871
+    },
+    {
+      "label": "create-venv",
+      "argv": [
+        "/usr/local/python3.11.15/bin/python",
+        "-B",
+        "-m",
+        "venv",
+        "--system-site-packages",
+        "--without-pip",
+        "/tmp/chijin-r15-compiler-identity-install-v2/venv"
+      ],
+      "started": 1792160782.5766,
+      "pid": 1963550,
+      "exit": 0,
+      "ended": 1792160782.6409214
+    },
+    {
+      "label": "install-wheel",
+      "argv": [
+        "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+        "-B",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "/tmp/chijin-r15-compiler-identity-install-v2/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+      ],
+      "started": 1792160782.6416879,
+      "pid": 1963551,
+      "exit": 0,
+      "ended": 1792160787.8121037
+    },
+    {
+      "label": "audit-installed-and-test",
+      "argv": [
+        "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+        "-B",
+        "-I",
+        "/tmp/chijin-r15-compiler-identity-install-v2/install-v2-audit.py"
+      ],
+      "started": 1792160787.812758,
+      "pid": 1963669,
+      "exit": 0,
+      "ended": 1792160805.599949
+    }
+  ],
+  "input_sha256": {
+    "install-v2-controller.py": "542314cee53487696610d9f1f96e91b40729b41369255a0dc73d174fb74f5012",
+    "install-v2-audit.py": "d5d137a303395693e4ca6ba28c596b5b67bd8dcd5f5bdc2c7f455e4655dbd953",
+    "install-source-a829a33.tgz": "8f6d72aa8022d6f0746a8a1cdfbf0c40d0540b048d8d48b2cd2415eef15a3bf6",
+    "install-git-tree.txt": "1e909b1d337e405f0a238f46fde35cf601b46ca22b74825073ba47791f352bb3"
+  },
+  "updated": 1792160805.7201953,
+  "native_reuse": {
+    "native_source_files": 3549,
+    "compile_dependencies": 2748,
+    "link_inputs": 1272,
+    "artifacts": {
+      "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so": "6722f0ed1ca5271fe712221ac2ebeebe645989b6969aac561046179a78bc992f",
+      "/tmp/chijin-r13-ascend-census-v3/core-build/third_party/ascend/bin/triton-mlir-opt": "0d75ea636e56378012805ce3d540ef9747619a6bdd8855652547a6a7f60cbde5",
+      "/tmp/chijin-r13-ascend-census-v3/observer-build/FlagPrismAscendLateObserver.so": "164769a1a5fd2666190ee93b24ed421a572e5cb2c0f5396db39cd9bb3593c496",
+      "/tmp/chijin-r13-ascend-census-v3/native-python/flagtree/profiler/_native.cpython-311-aarch64-linux-gnu.so": "61126cdb9f8305013f7995e844e6b5655afe44f097a3ecea1188b53d64ced960",
+      "/tmp/chijin-r13-ascend-census-v3/native-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so": "88315d31f88f9171bbe2bf41662d4137eaa7c6d2da0f9f97d9b2d04fd1b1b56b",
+      "/tmp/chijin-r13-ascend-census-v3/native-python/flagtree/profiler/_cann_launch_receipt.h": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540"
+    },
+    "original_receipt_sha256": {
+      "native-result.json": "539fea3b8679c80b87ed797341196d6f16d422f5d5ba2e5574a9004286b0042e",
+      "native-commands.json": "44f9b15643c73be73aa6b56fbb5900534f0665d63faa0a4e723f2a285d53a8b0",
+      "native-link-audit.json": "1456e7015eed12bbb39fa881dba0f458c45b679f7a32aebec171e886a29b96bc",
+      "core-build-object-audit.json": "c30666ff7982be378944e40f88dac46ddc4da7e1406f7b290cc0f0b6886633cd",
+      "observer-build-object-audit.json": "9adcfa7414d3fd85a41f7e98a62a5e138504550c702d96bb6fdc59e7e7f1a2c3",
+      "recipe.json": "85acf8ce399f9768dcdfdf5e557eebfad269bde8e8b9393b238e7be446d40623"
+    }
+  },
+  "wheel": "/tmp/chijin-r15-compiler-identity-install-v2/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+  "wheel_sha256": "bbd3ff08a15f2cb174be3d63d527540935f2811d8a0356772d7749a85b1a7a14",
+  "installed_audit_sha256": "b05235e72a71410c074d424c4f6a7637cef1b443f69c9c05e793871a65ffc600",
+  "ended": 1792160805.7208514
+}
