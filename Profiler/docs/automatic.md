@@ -15,9 +15,9 @@ and Ascend late plugin must be built; copying Python over an older installation
 does not add these capabilities.
 
 For NVIDIA, layer `nvidia/automatic-scopes.patch` on the pinned integration.
-For Ascend, layer `ascend/automatic-source-origins.patch` on the complete pinned
-integration, and build/package the LLVM15 observer. The observer runs out of
-process with upstream opt; it must not be loaded into the vendor LLVM fork.
+For Ascend, use the complete pinned source-census patches through the source
+recipe linked below, and build/package the LLVM15 observer. The observer runs
+out of process with upstream opt; it must not be loaded into the vendor LLVM fork.
 For Enflame, use its pinned combined compiler integration and this component's
 automatic planner. Backend wheel recipes and independent installation evidence
 are being qualified in this branch; development smoke tests alone are not a
@@ -41,10 +41,15 @@ requires `--device 4`. Backend selection and device selection are separate.
 Do not set line-info, plugin-path, capture-directory or publisher environment
 variables for normal automatic profiling; those are advanced overrides.
 
-The new Ascend census also requires the source-coordinate lowering bridge and
-matching native census ABI. Its complete clean-build recipe is still being
-finalized in this development branch. An older checkpoint-only wheel does not
-implement the new default; Python file replacement alone is insufficient.
+The Ascend census requires the source-coordinate lowering bridge and matching
+native census ABI. The pinned clean-source recipe is provided by
+[`ascend/build_from_source.py`](../../integration/patches/ascend/build_from_source.py);
+see its [environment prerequisites and invocation](../../integration/patches/ascend/README.md#build-from-pinned-sources-in-a-fresh-directory).
+Run it in the matching Linux aarch64/Python 3.11 environment with CANN 9.0.0,
+matching Torch/torch_npu, the supported LLVM22/MLIR dependency prefix, and a
+separate upstream LLVM15 observer toolchain. Recipe availability does not
+establish independent device qualification. An older checkpoint-only wheel does
+not implement the default; Python file replacement alone is insufficient.
 
 ## Run your own script
 

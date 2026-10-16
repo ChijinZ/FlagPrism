@@ -107,11 +107,20 @@ then follow the source-linked internal records link.
 All three imports, native modules and backend libraries must resolve within the
 venv. Driver/SDK libraries and Torch may resolve to the documented installed
 vendor dependencies. Use a fresh `TRITON_CACHE_DIR` for cold compilation.
-The default auto route selects at most eight real internal sites, one logical
-program and one actor. GCU raw timers are 46-bit ticks without a calibrated
-nanosecond frequency. Source-control intervals do not establish engine busy
-intervals or operation completion. Block-pointer kernels use real dynamic
-interval capture; numeric/address summaries retain their existing boundaries.
+The default auto route selects at most eight real internal sites and records
+source-control visit counts across every program in the admitted launch grid,
+using logical work-item 0 as the observer in each program. The source-linked
+view presents the lowest program with primary visits; this display filter does
+not sample collection, and the complete grid remains in the raw census. Counts
+include visits with all-false data masks. Census records have null clocks and
+timing fields and do not establish active lanes, engine busy time or operation
+completion. Block-pointer kernels use the same default census; numeric/address
+summaries retain their existing boundaries.
+
+Explicit advanced legacy timeline capture retains GCU 46-bit raw timer ticks
+without a calibrated nanosecond frequency. Those source-control intervals do
+not establish engine busy intervals, operation completion or comparable clocks
+across devices or actors.
 
 Development regressions use ordinary unannotated kernels:
 
@@ -128,9 +137,9 @@ python tests/enflame/control_flow_hardware.py /tmp/control-auto
 
 The hardware/structure runners accept `--size 137` or `--size 256`, and
 `--num-warps 1` or `--num-warps 4`. They assert original math, input,
-canaries, source/binary/call identity, multi-site dynamic records, device raw
-publication tags, exact ordinals and no loss, plans, clocks and bundle size.
+canaries, source/binary/call identity, multi-site source counters, complete raw
+census cells and padding, exact counts and loss status, plans and bundle size.
 The loop runner requires different runtime trip counts to reuse one binary and
-produce repeated visits at the same site. They are development regressions,
-not independent unseen qualification. Run all compilation, tests and CPU
+produce the corresponding visit counts at the same site. They are development
+regressions, not independent unseen qualification. Run all compilation, tests and CPU
 references inside the booked server Docker.
