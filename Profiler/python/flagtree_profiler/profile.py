@@ -156,10 +156,12 @@ def _take_instrumentation_runs() -> list[dict]:
             run.get("source_census"),
             "raw_encoding":
             ("base64_source_census_v1" if runtime_metadata.get("record_layout")
-             == "gcu_site_census_v1" else "base64_ascend_source_census_v1"
-             if runtime_metadata.get("record_layout")
-             == "ascend_source_census_v1" else "base64_ascend_actor_dynamic_v1"
-             if runtime_metadata.get("record_layout") ==
+             == "gcu_site_census_v1" else "base64_ascend_source_census_v2" if
+             runtime_metadata.get("record_layout") == "ascend_source_census_v2"
+             else "base64_ascend_source_census_v1" if runtime_metadata.get(
+                 "record_layout") == "ascend_source_census_v1" else
+             "base64_ascend_actor_dynamic_v1" if runtime_metadata.
+             get("record_layout") ==
              "ascend_actor_dynamic_v1" else "base64_debugger_protocol_v2"),
             "raw_base64":
             base64.b64encode(raw_buffer).decode("ascii"),
@@ -1414,25 +1416,30 @@ def _automatic_backend(backend=None):
 def _automatic_observation_request(backend):
     from .observations import ObservationRequest
 
-    if _is_cann_backend(backend):
-        # Ascend observes late LLVM checkpoints, including scalarized lowering
-        # loops. A few source iterations can therefore exceed 256 records.
-        # Keep every selected occurrence up to a fixed per-actor bound; do not
-        # infer source iteration counts, replay, or silently sample away loss.
-        # Three actor regions use 3 * (32 + 4096 * 64) = 786,528 raw bytes.
-        return ObservationRequest(semantics=("operation_checkpoint",
-                                             "control_checkpoint"),
-                                  max_events_per_instance=4096,
-                                  automatic=True)
-    if _is_enflame_backend(backend) or str(backend or '').lower() in {
-            'cupti', 'cuda', 'nvidia', 'instrumentation'
-    }:
+    if _is_cann_backend(backend) or _is_enflame_backend(backend) or str(
+            backend
+            or '').lower() in {'cupti', 'cuda', 'nvidia', 'instrumentation'}:
         return ObservationRequest(semantics=('counter', ),
                                   programs=None,
                                   program_policy='all_grid_census',
                                   automatic=True)
     return ObservationRequest(semantics=("source_control_interval", ),
                               automatic=True)
+
+
+def _automatic_mode(backend, *, device=None):
+    # Census identity comes from the actual JIT launch metadata. Default source
+    # counts do not require an additional vendor activity collection session.
+    if _is_cann_backend(backend):
+        mode = _mode_with_ir_triton_overrides("runtime_base", backend)
+        if device is not None:
+            if type(device) is not int or device < 0:
+                raise ValueError(
+                    "Automatic profiling requires a nonnegative runtime device"
+                )
+            mode += f":device_id={device}"
+        return mode
+    return None
 
 
 def start(
@@ -1511,10 +1518,10 @@ def start(
         if hook not in (None, "instrumentation"):
             raise ValueError("detail='auto' requires the instrumentation hook")
         backend = _automatic_backend(backend)
-        if _is_cann_backend(backend):
-            mode = (
-                "runtime_base:mstx_enabled=true:aclprof_msproftx_enabled=true:"
-                "runtime_host_timing_fallback=false")
+        mode = _automatic_mode(
+            backend,
+            device=triton.runtime.driver.active.get_current_device()
+            if _is_cann_backend(backend) else None)
         hook = "instrumentation"
         observation_request = _automatic_observation_request(backend)
     if backend is None:
