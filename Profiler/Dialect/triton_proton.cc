@@ -70,6 +70,8 @@ void init_triton_proton(py::module &&m) {
   m.doc() = "Python bindings to the Proton backend";
   m.attr("AUTOMATIC_INVENTORY_VERSION") = 2;
   m.attr("AUTOMATIC_SELECTION_POLICY_VERSION") = 2;
+  m.attr("SOURCE_CENSUS_VERSION") = 1;
+  m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -139,6 +141,14 @@ void init_triton_proton(py::module &&m) {
         result[key] = origin;
       }
       auto origin = result[key].cast<py::dict>();
+      if (auto role =
+              record->getAttrOfType<mlir::StringAttr>("proton.census_role"))
+        origin["census_role"] = role.str();
+      for (auto field : {"census_actor", "census_observer_threads",
+                         "census_partition_region"})
+        if (auto value = record->getAttrOfType<mlir::IntegerAttr>(
+                std::string("proton.") + field))
+          origin[field] = value.getInt();
       if (auto operation = record->getAttrOfType<mlir::StringAttr>(
               "proton.automatic_operation")) {
         origin["automatic"] = true;
@@ -169,13 +179,13 @@ void init_triton_proton(py::module &&m) {
 
   m.def(
       "add_automatic_proton_scopes",
-      [](mlir::PassManager &pm, unsigned maxSites) {
+      [](mlir::PassManager &pm, unsigned maxSites, bool census) {
         if (maxSites < 1 || maxSites > 128)
           throw std::invalid_argument(
               "Automatic site budget must be between 1 and 128");
-        pm.addPass(proton::createAutomaticScopesPass(maxSites));
+        pm.addPass(proton::createAutomaticScopesPass(maxSites, census));
       },
-      py::arg("pm"), py::arg("max_sites") = 8);
+      py::arg("pm"), py::arg("max_sites") = 8, py::arg("census") = false);
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;

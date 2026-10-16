@@ -14,6 +14,55 @@ namespace proton::gpu {
 
 namespace {
 
+struct CensusStoreOpConversion
+    : public ConvertOpToLLVMPattern<proton::gpu::CensusStoreOp> {
+  using ConvertOpToLLVMPattern<
+      proton::gpu::CensusStoreOp>::ConvertOpToLLVMPattern;
+  LogicalResult
+  matchAndRewrite(proton::gpu::CensusStoreOp op, OpAdaptor adaptor,
+                  ConversionPatternRewriter &rewriter) const override {
+    auto loc = op.getLoc();
+    auto b = TritonLLVMOpBuilder(loc, rewriter);
+    // One physical lane owns each site cell for its declared logical observer.
+    // No other program can address this program's per-CTA scratch segment.
+    auto threads = op->getAttrOfType<IntegerAttr>("census_observer_threads");
+    auto actorOffset =
+        op->getAttrOfType<IntegerAttr>("census_actor_word_offset");
+    int64_t observerThreads = threads ? threads.getInt() : 0;
+    int64_t base = actorOffset ? actorOffset.getInt() : 0;
+    Value thread = getRawThreadId(rewriter, loc);
+    // A contiguous partition interval of P threads contains exactly one
+    // multiple of P, independent of its assigned physical warp start. This is a
+    // logical partition observer, not a claim that its physical warp ID equals
+    // actor ID.
+    Value writer = b.icmp_eq(
+        observerThreads ? b.urem(thread, b.i32_val(observerThreads)) : thread,
+        b.i32_val(0));
+    Block *before = op->getBlock();
+    Block *body = rewriter.splitBlock(before, op->getIterator());
+    Block *after = rewriter.splitBlock(body, op->getIterator());
+    rewriter.setInsertionPointToEnd(before);
+    rewriter.create<cf::CondBranchOp>(loc, writer, body, after);
+    rewriter.setInsertionPointToStart(body);
+    auto ptrTy = adaptor.getScratchPtr().getType();
+    Value countPtr = b.gep(ptrTy, i32_ty, adaptor.getScratchPtr(),
+                           b.i32_val(base + op.getScopeId() * 2));
+    Value flagsPtr = b.gep(ptrTy, i32_ty, adaptor.getScratchPtr(),
+                           b.i32_val(base + op.getScopeId() * 2 + 1));
+    Value count = b.load(i32_ty, countPtr);
+    Value flags = b.load(i32_ty, flagsPtr);
+    Value full = b.icmp_eq(count, b.i32_val(-1));
+    Value next = b.select(full, count, b.add(count, b.i32_val(1)));
+    Value newFlags = b.or_(
+        flags, b.or_(b.i32_val(1), b.select(full, b.i32_val(2), b.i32_val(0))));
+    b.store(next, countPtr);
+    b.store(newFlags, flagsPtr);
+    rewriter.create<cf::BranchOp>(loc, after);
+    rewriter.eraseOp(op);
+    return success();
+  }
+};
+
 struct ReadCounterOpConversion
     : public ConvertOpToLLVMPattern<mlir::triton::proton::gpu::ReadCounterOp> {
   explicit ReadCounterOpConversion(
@@ -568,6 +617,7 @@ void populateProtonGPUOpPatterns(LLVMTypeConverter &typeConverter,
                                  RewritePatternSet &patterns,
                                  const TargetInfoBase &targetInfo,
                                  PatternBenefit benefit) {
+  patterns.add<CensusStoreOpConversion>(typeConverter, benefit);
   patterns.add<ReadCounterOpConversion>(typeConverter, targetInfo, benefit);
   patterns.add<FinalizeOpConversion>(typeConverter, targetInfo, benefit);
   patterns.add<SegmentAllocOpConversion>(typeConverter, targetInfo, benefit);

@@ -33,6 +33,14 @@ class PTG_Op<string mnemonic, list<Trait> traits = []> :
 // ProtonGPU Operations
 //===----------------------------------------------------------------------===//
 
+def PTG_CensusStoreOp : PTG_Op<"census_store", [
+    MemoryEffects<[MemRead<GlobalMemory>, MemWrite<GlobalMemory>]>
+]> {
+  let summary = "Single-writer saturated source-site visit count in this program";
+  let arguments = (ins TT_Ptr:$scratchPtr, I32Attr:$scopeId);
+  let assemblyFormat = "$scratchPtr attr-dict `:` qualified(type($scratchPtr))";
+}
+
 def PTG_CircularStoreOp : PTG_Op<"circular_store", [
     MemoryEffects<[MemRead<DefaultResource>, MemWrite<DefaultResource>]>
 ]> {

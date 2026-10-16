@@ -3,6 +3,7 @@
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/Pass/Pass.h"
 namespace mlir::triton::proton {
-std::unique_ptr<OperationPass<ModuleOp>> createAutomaticScopesPass(unsigned maxSites);
+std::unique_ptr<OperationPass<ModuleOp>>
+createAutomaticScopesPass(unsigned maxSites, bool census = false);
 }
 #endif

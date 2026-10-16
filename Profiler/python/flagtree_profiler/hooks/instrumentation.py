@@ -58,11 +58,20 @@ class CudaAllocator:
         aligned_size = max(aligned_size,
                            self.instrumentation_hook.profile_buffer_size)
 
+        if self.instrumentation_hook.census and aligned_size > self.instrumentation_hook.observation_plan[
+                'output_selection']['max_census_bytes']:
+            raise RuntimeError(
+                'NVIDIA source census byte budget exceeded before allocation')
         # Create the buffer
         import torch
         buffer = torch.empty((aligned_size, ),
                              dtype=torch.uint8,
                              device="cuda")
+        if self.instrumentation_hook.census:
+            target_stream = torch.cuda.current_stream(
+            ) if stream is None else torch.cuda.ExternalStream(stream)
+            with torch.cuda.stream(target_stream):
+                buffer.zero_()
         self.instrumentation_hook.buffer = buffer
         return buffer
 
@@ -235,6 +244,7 @@ class InstrumentationHook(Hook):
         # Mapping of function objects to their scope ID pairs
         self.mode: mode.InstrumentationMode = _interpret_mode(mode_obj)
         self.observation_plan = observation_plan
+        self.census = bool(observation_plan and observation_plan.get("census"))
         self.automatic = bool(observation_plan
                               and observation_plan.get('automatic'))
         self.max_sites = observation_plan.get('max_sites',
@@ -274,6 +284,12 @@ class InstrumentationHook(Hook):
                 'Automatic NVIDIA profiling requires the matching FlagPrism compiler plugin'
             )
 
+        if self.census and (getattr(
+                triton_proton, 'SOURCE_CENSUS_VERSION', 0) != 1 or getattr(
+                    triton_proton, 'SOURCE_CENSUS_PARTITION_VERSION', 0) != 2):
+            raise RuntimeError(
+                'NVIDIA source census requires the matching version-1 compiler plugin'
+            )
         if self.automatic:
             # Register the packaged frontend statement metadata component before
             # compiling ordinary scripts. Importing it does not enable debugger
@@ -326,10 +342,18 @@ class InstrumentationHook(Hook):
                     device)["arch"].split(":")[0]
                 triton_proton.add_convert_proton_amd_gpu_to_llvm(pm, arch)
 
+        def automatic_scopes(pm):
+            if not self.automatic:
+                return
+            if self.census:
+                triton_proton.add_automatic_proton_scopes(
+                    pm, self.max_sites, True)
+            else:
+                triton_proton.add_automatic_proton_scopes(pm, self.max_sites)
+
         backends[backend_name].compiler.instrumentation = Instrumentation({
             "ttgpuir_complete":
-            lambda pm: triton_proton.add_automatic_proton_scopes(
-                pm, self.max_sites) if self.automatic else None,
+            automatic_scopes,
             "ttgpuir_to_llvmir":
             lambda pm: to_llvmir_passes(pm),
             "llvmir_to_llvm":
@@ -374,6 +398,9 @@ class InstrumentationHook(Hook):
                 if instrumentation_hook.automatic:
                     kwargs[
                         "instrumentation_mode"] += f':automatic={AUTOMATIC_INVENTORY_VERSION}:control_policy={AUTOMATIC_SELECTION_POLICY_VERSION}:source_metadata=1:max_sites={instrumentation_hook.max_sites}'
+                if instrumentation_hook.census:
+                    kwargs[
+                        'instrumentation_mode'] += ':source_census=1:partition_observers=2'
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(
@@ -482,8 +509,10 @@ class InstrumentationHook(Hook):
                     policy=
                     'source_statements_then_evenly_spaced_internal_operations',
                     semantics=
-                    'compiler_operation_control_intervals_without_completion_barriers'
-                )
+                    ('compiler_source_region_visit_counts_without_timestamps'
+                     if self.census else
+                     'compiler_operation_control_intervals_without_completion_barriers'
+                     ))
             self.observation_metadata[function] = {
                 'binary_id':
                 hash,
@@ -576,6 +605,7 @@ class InstrumentationHook(Hook):
                         'session_ids': session_ids,
                         'function': func,
                         'stream_handle': int(stream),
+                        'grid': list(rows[0]['grid']) if associated else None,
                     }, ))
             has_scopes = bool(
                 self.observation_metadata.get(func, {}).get('scope_id_names'))
@@ -586,6 +616,13 @@ class InstrumentationHook(Hook):
                 raise RuntimeError(
                     'NVIDIA program selection requires num_ctas=1; CTA clusters are unsupported'
                 )
+            if self.census:
+                from ..nvidia_census import census_descriptor
+                census_descriptor(self.observation_metadata[func],
+                                  self._observation_stack.get()[-1],
+                                  alloc_size,
+                                  self.observation_plan['output_selection'])
+                return
             profiler_native.enter_instrumented_op(
                 stream, func,
                 self._data_ptr() if has_scopes else 0,
@@ -607,6 +644,9 @@ class InstrumentationHook(Hook):
         alloc_size = 0 if self.buffer is None else self.buffer.element_size(
         ) * self.buffer.numel()
         try:
+            if self.census:
+                self._export_census_capture(func, stream)
+                return
             has_scopes = bool(
                 self.observation_metadata.get(func, {}).get('scope_id_names'))
             profiler_native.exit_instrumented_op(
@@ -629,6 +669,61 @@ class InstrumentationHook(Hook):
                 self._observation_stack.set(())
                 self._observation_entered.set(False)
                 self._observation_lock.release()
+
+    def _export_census_capture(self, function, stream):
+        import torch
+        from ..nvidia_census import census_descriptor
+        from ..source_census import decode_source_census
+        stack = self._observation_stack.get()
+        launch = stack[-1]
+        self._observation_stack.set(stack[:-1])
+        torch.cuda.ExternalStream(stream).synchronize()
+        raw = self.buffer.cpu().numpy().tobytes()
+        cls = type(self)
+        sequence = cls.observation_capture_sequence
+        cls.observation_capture_sequence += 1
+        capture_id = f'census-{os.getpid()}-{sequence}'
+        metadata = self.observation_metadata[function]
+        selection = self.observation_plan['output_selection']
+        descriptor = census_descriptor(metadata, launch, len(raw), selection)
+        descriptor['raw_sha256'] = hashlib.sha256(raw).hexdigest()
+        capture = dict(
+            metadata,
+            capture_id=capture_id,
+            scope_id=launch['scope_id'],
+            process_id=os.getpid(),
+            stream_handle=launch['stream_handle'],
+            invocation_id=launch['invocation_id'],
+            session_ids=launch['session_ids'],
+            census=descriptor,
+            raw_encoding='base64_source_census_v1',
+            raw_sha256=descriptor['raw_sha256'],
+            raw_base64=base64.b64encode(raw).decode('ascii'),
+            collection_boundary=
+            'after_original_application_stream_synchronization',
+            capture_notes=[
+                'Single original launch; all logical programs; source-region visits by compiler-declared default/partition single-writer observers; logical partition IDs are not physical warp IDs; mask activity unobserved; no synthetic intervals.'
+            ])
+        try:
+            capture['decoded'] = decode_source_census(
+                raw,
+                descriptor,
+                capture_id=capture_id,
+                invocation_id=launch['invocation_id'],
+                binary_id=metadata['binary_id'],
+                association_evidence=launch['association_evidence'],
+                max_cells=selection['max_census_cells'],
+                max_bytes=selection['max_census_bytes'])
+        except BaseException as error:
+            capture.update(decoded={'observations': []},
+                           capture_status='decode_failed',
+                           decode_error={
+                               'type': type(error).__name__,
+                               'message': str(error)
+                           })
+            cls.observation_captures.append(capture)
+            raise
+        cls.observation_captures.append(capture)
 
     def _export_observation_capture(self, function):
         from ..observations_nvidia import decode_proton_ring, select_observations

@@ -245,6 +245,61 @@ def lower_request(request):
     value = request.as_dict() if hasattr(request, 'as_dict') else dict(request)
     automatic = value.get('automatic', False)
     max_sites = value.get('max_sites', 8)
+    if value.get('program_policy', 'fixed') == 'all_grid_census':
+        if value.get('semantics') != ['counter'
+                                      ] or value.get('programs') is not None:
+            raise ValueError(
+                'NVIDIA all-grid census requires counter semantics and programs=None'
+            )
+        if automatic is not True or type(
+                max_sites) is not int or not 1 <= max_sites <= 128:
+            raise ValueError(
+                'NVIDIA census requires automatic sites with max_sites between 1 and 128'
+            )
+        if value.get('sample_every', 1) != 1 or value.get('sites') is not None:
+            raise ValueError(
+                'NVIDIA census records all visits to compiler-selected sites; occurrence/site output filtering is unavailable'
+            )
+        for name, default in (('max_census_cells', 1048576),
+                              ('max_census_bytes', 8388608)):
+            if type(value.get(name, default)) is not int or value.get(
+                    name, default) < 1:
+                raise ValueError(name + ' must be a positive integer')
+            value[name] = value.get(name, default)
+        return {
+            'backend':
+            'cuda',
+            'status':
+            'supported_with_all_grid_census',
+            'automatic':
+            True,
+            'max_sites':
+            max_sites,
+            'census':
+            True,
+            'mode_options': {
+                'sampling_strategy': 'selective',
+                'sampling_options': '0',
+                'granularity': 'warp',
+                'buffer_size': 0
+            },
+            'collection_scope': {
+                'programs': 'all_launched_CTAs',
+                'logical_observers':
+                'compiler_declared_default_and_partition_observers',
+                'sites': 'bounded_automatic_compiler_operations',
+                'semantics': 'source_region_execution_count'
+            },
+            'output_selection':
+            value,
+            'requirements': [
+                'Matching source-census compiler capability version 1 is required.'
+            ],
+            'limitations': [
+                'Counts describe source-region visits by compiler-declared default/partition observers, not memory transactions or engine busy time; partition IDs are not physical warp IDs.',
+                'No timestamps or repeated interval records are synthesized from counts.'
+            ]
+        }
     if type(automatic) is not bool:
         raise ValueError('automatic must be a boolean')
     if automatic and (type(max_sites) is not int or not 1 <= max_sites <= 128):

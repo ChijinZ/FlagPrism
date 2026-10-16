@@ -343,6 +343,75 @@ public:
     return success();
   }
 
+  LogicalResult censusRecordStrategyLowering(FuncOp func) {
+    auto &scopeInfo = getAnalysis<ModuleScopeIdAllocation>();
+    auto names = scopeInfo.getScopeIdNames();
+    if (names.empty())
+      return func.emitError("source census has no compiler observation sites");
+    unsigned slots = 0;
+    for (auto &entry : names)
+      slots = std::max(slots, unsigned(entry.first + 1));
+    if (slots > 128)
+      return func.emitError("source census site count exceeds compiler bound");
+    OpBuilder builder(func.getContext());
+    builder.setInsertionPointToStart(&func.getBody().front());
+    unsigned actors = 1;
+    func.walk([&](proton::RecordOp record) {
+      if (auto actor =
+              record->getAttrOfType<IntegerAttr>("proton.census_actor"))
+        actors = std::max(actors, unsigned(actor.getInt() + 1));
+    });
+    const unsigned stride =
+        llvm::alignTo(slots * actors * 8u, unsigned(profileScratchAlignment));
+    auto scratch = builder.create<gpu::GlobalScratchAllocOp>(
+        func.getLoc(), triton::getPointerType(builder.getI32Type()),
+        int32_t(stride), int32_t(profileScratchAlignment.getValue()));
+    llvm::DenseMap<Region *, Value> partitionScratch;
+    func.walk<WalkOrder::PreOrder>([&](triton::gpu::WarpSpecializeOp ws) {
+      Value capturedScratch = scratch;
+      if (auto enclosing =
+              ws->getParentOfType<triton::gpu::WarpSpecializePartitionsOp>()) {
+        Operation *child = ws;
+        while (child->getParentOp() != enclosing.getOperation())
+          child = child->getParentOp();
+        capturedScratch = partitionScratch.lookup(child->getParentRegion());
+      }
+      ws->insertOperands(ws->getNumOperands(), {capturedScratch});
+      for (Region *region : ws.getPartitionRegions())
+        partitionScratch[region] =
+            region->addArgument(scratch.getType(), ws.getLoc());
+    });
+    SmallVector<proton::RecordOp> records;
+    func.walk([&](proton::RecordOp record) { records.push_back(record); });
+    for (auto record : records) {
+      if (record.getIsStart()) {
+        builder.setInsertionPoint(record);
+        Value localScratch = scratch;
+        if (auto partitions = record->getParentOfType<
+                              triton::gpu::WarpSpecializePartitionsOp>()) {
+          Operation *child = record;
+          while (child->getParentOp() != partitions.getOperation())
+            child = child->getParentOp();
+          localScratch = partitionScratch.lookup(child->getParentRegion());
+        }
+        auto store = builder.create<gpu::CensusStoreOp>(
+            record.getLoc(), localScratch,
+            builder.getI32IntegerAttr(scopeInfo.getOpScopeId(record)));
+        auto actor = record->getAttrOfType<IntegerAttr>("proton.census_actor");
+        auto threads = record->getAttrOfType<IntegerAttr>(
+            "proton.census_observer_threads");
+        store->setAttr(
+            "census_actor_word_offset",
+            builder.getI32IntegerAttr(actor ? actor.getInt() * slots * 2 : 0));
+        store->setAttr(
+            "census_observer_threads",
+            builder.getI32IntegerAttr(threads ? threads.getInt() : 0));
+      }
+      record.erase();
+    }
+    return success();
+  }
+
   void runOnOperation() override {
     ModuleOp m = getOperation();
     Location loc = m->getLoc();
@@ -366,6 +435,12 @@ public:
     }
 
     FuncOp func = *m.getOps<triton::FuncOp>().begin();
+
+    if (m->hasAttr("proton.source_census")) {
+      if (failed(censusRecordStrategyLowering(func)))
+        signalPassFailure();
+      return;
+    }
 
     // Check if there are any proton records to process
     if (!hasOperator<Operation, proton::RecordOp>(func.getOperation())) {

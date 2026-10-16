@@ -4,6 +4,8 @@
 #include "mlir/IR/BuiltinTypes.h"
 #include "mlir/Interfaces/SideEffectInterfaces.h"
 #include "mlir/Pass/Pass.h"
+#include "triton/Dialect/TritonGPU/IR/Dialect.h"
+#include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include <functional>
 
@@ -15,10 +17,12 @@ class AutomaticScopesPass
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(AutomaticScopesPass)
   AutomaticScopesPass() = default;
-  explicit AutomaticScopesPass(unsigned limit) : siteLimit(limit) {}
+  explicit AutomaticScopesPass(unsigned limit, bool census = false)
+      : siteLimit(limit), census(census) {}
   AutomaticScopesPass(const AutomaticScopesPass &other)
-      : PassWrapper(other), siteLimit(other.siteLimit) {}
+      : PassWrapper(other), siteLimit(other.siteLimit), census(other.census) {}
   unsigned siteLimit = 8;
+  bool census = false;
   StringRef getArgument() const final { return "proton-automatic-scopes"; }
   StringRef getDescription() const final {
     return "Insert bounded source-linked internal operation intervals";
@@ -28,6 +32,8 @@ public:
   }
   void runOnOperation() override {
     auto module = getOperation();
+    if (census)
+      module->setAttr("proton.source_census", UnitAttr::get(&getContext()));
     // Idempotence also keeps advanced manually annotated kernels unchanged.
     bool hasRecords = false;
     module.walk([&](RecordOp) { hasRecords = true; });
@@ -71,8 +77,11 @@ public:
       for (auto *parent = op->getParentOp(); parent;
            parent = parent->getParentOp()) {
         auto ns = parent->getName().getDialectNamespace();
+        const bool censusPartition =
+            census && isa<triton::gpu::WarpSpecializeOp,
+                          triton::gpu::WarpSpecializePartitionsOp>(parent);
         if (ns != "scf" && !isa<ModuleOp>(parent) &&
-            parent->getName().getStringRef() != "tt.func")
+            parent->getName().getStringRef() != "tt.func" && !censusPartition)
           return;
       }
       if (op->hasTrait<OpTrait::ConstantLike>() ||
@@ -290,21 +299,51 @@ public:
       auto scopeName = builder.getStringAttr(name);
       builder.setInsertionPoint(op);
       auto start = builder.create<RecordOp>(op->getLoc(), true, scopeName);
+      const bool primary =
+          op->getNumRegions() == 0 && !controlSlice.contains(op);
+      if (census)
+        start->setAttr("proton.census_role",
+                       builder.getStringAttr(primary ? "primary" : "context"));
       start->setAttr("proton.automatic_operation",
                      builder.getStringAttr(op->getName().getStringRef()));
       if (auto statement = op->getAttr("flagtree.debug.triton_statement"))
         start->setAttr("proton.automatic_statement", statement);
       builder.setInsertionPointAfter(op);
       auto end = builder.create<RecordOp>(op->getLoc(), false, scopeName);
+      if (census)
+        end->setAttr("proton.census_role",
+                     builder.getStringAttr(primary ? "primary" : "context"));
       end->setAttr("proton.automatic_operation",
                    builder.getStringAttr(op->getName().getStringRef()));
       if (auto statement = op->getAttr("flagtree.debug.triton_statement"))
         end->setAttr("proton.automatic_statement", statement);
     }
+    if (census) {
+      llvm::DenseMap<Region *, unsigned> observers;
+      module.walk([&](RecordOp record) {
+        unsigned observer = 0, threads = 0;
+        if (auto partitions = record->getParentOfType<
+                              triton::gpu::WarpSpecializePartitionsOp>()) {
+          Operation *child = record;
+          while (child->getParentOp() != partitions.getOperation())
+            child = child->getParentOp();
+          Region *region = child->getParentRegion();
+          auto inserted = observers.try_emplace(region, observers.size() + 1);
+          observer = inserted.first->second;
+          threads = triton::gpu::lookupNumWarps(record.getOperation()) * 32;
+          record->setAttr("proton.census_partition_region",
+                          builder.getI32IntegerAttr(region->getRegionNumber()));
+        }
+        record->setAttr("proton.census_actor",
+                        builder.getI32IntegerAttr(observer));
+        record->setAttr("proton.census_observer_threads",
+                        builder.getI32IntegerAttr(threads));
+      });
+    }
   }
 };
 std::unique_ptr<OperationPass<ModuleOp>>
-createAutomaticScopesPass(unsigned maxSites) {
-  return std::make_unique<AutomaticScopesPass>(maxSites);
+createAutomaticScopesPass(unsigned maxSites, bool census) {
+  return std::make_unique<AutomaticScopesPass>(maxSites, census);
 }
 } // namespace mlir::triton::proton
