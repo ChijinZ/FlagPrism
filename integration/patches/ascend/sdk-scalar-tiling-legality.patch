@@ -1,0 +1,32 @@
+--- a/bishengir/lib/Dialect/HIVM/Transforms/TileAndBindSubBlock.cpp
++++ b/bishengir/lib/Dialect/HIVM/Transforms/TileAndBindSubBlock.cpp
+@@ -730,10 +730,10 @@
+   func->walk([&isFailed](hivm::StoreOp op) {
+     if (op->hasAttr(tileAndSliceFailure)) {
+       op->removeAttr(tileAndSliceFailure);
+-      if (op.isAtomic()) {
+-        isFailed = true;
+-        return WalkResult::interrupt();
+-      }
++      // Every externally visible store must be partitioned. A successfully
++      // tiled sibling cannot make an unpartitioned ordinary store safe.
++      isFailed = true;
++      return WalkResult::interrupt();
+     } else {
+       isFailed = false;
+     }
+@@ -910,10 +910,13 @@
+         LLVM_DEBUG(DBGS() << "Failed to limit unique subblock: " << symNameStr
+                           << "\n");
+         signalPassFailure();
++        return;
+       }
+       LLVM_DEBUG(DBGS() << "Failed to transform function: " << symNameStr
+                         << ", keeping original\n");
+-      return;
++      // Fallback succeeded for this function; remaining AIV functions still
++      // require their own partition-or-unique-writer decision.
++      continue;
+     }
+     auto processedFunc = res.value();
+     processedFunc.setName(originalFunc.getName().str() + "_processing");

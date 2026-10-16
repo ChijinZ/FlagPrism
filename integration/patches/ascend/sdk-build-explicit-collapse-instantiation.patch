@@ -1,0 +1,15 @@
+--- a/bishengir/lib/Dialect/Tensor/Transforms/PropagateReshape/Utils.cpp
++++ b/bishengir/lib/Dialect/Tensor/Transforms/PropagateReshape/Utils.cpp
+@@ -238,6 +238,12 @@
+ 
+ template void collapseAndReplace<mlir::tensor::ExpandShapeOp>(
+     PatternRewriter &rewriter, mlir::tensor::ExpandShapeOp reshapeOp, Type ty,
++    Value newVal, Operation *definingOp);
++
++// The definition is in this translation unit, while CollapseShapeOp also has
++// five-argument callers in PropagateCollapseDown.cpp. Emit both specializations.
++template void collapseAndReplace<mlir::tensor::CollapseShapeOp>(
++    PatternRewriter &rewriter, mlir::tensor::CollapseShapeOp reshapeOp, Type ty,
+     Value newVal, Operation *definingOp);
+ 
+ LogicalResult computeExpandPad(OpBuilder &rewriter, tensor::PadOp &padOp,
