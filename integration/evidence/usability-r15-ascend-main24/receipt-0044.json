@@ -1,0 +1,42 @@
+{
+  "anonymous_profile_ordinal": 44,
+  "repetition": "warm",
+  "status": "pass",
+  "State_values": [
+    1
+  ],
+  "host_ledger_lines": 1,
+  "source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "compiled_cache_hash": "bf1e06d59bcb3541a1434826aa0cd068f00ab38f724835b945af6a0ba33b446a",
+  "final_binary_sha256": "9030670c703cae38850f5e4dcf51c89fbd0ebbcd976d6e00f47a3953dbc6217a",
+  "raw_sha256": [
+    "dac625139ee93aa4e894ebf89a37c80b4417d8c861edbdd82ff5e3905275fed8"
+  ],
+  "qualification_sha256": "e7024391c80a727e8373b1b3a7aca1c70f9f43c61316dfbc8c743d6d9d234802",
+  "numerical_receipt_sha256": "e7c51d5eb39a0d282cfc2919f52325fcc1bf4e55846ff6f3e287abd0bd31c9b7",
+  "bundle_manifest_sha256": "60b59145c1857e12838f39cfb2862591bc3f5a34a364797660769e3a99b15253",
+  "actual_raw_cells_sha256": "8148de792346857ed969e326be7032a44ce34d1362818b023b27fa8bf8604f69",
+  "ownership_audit_sha256": "1fa9d9bce7b0a4d19d6d79790eda85e10446682b0bd4c893309633ef7c359016",
+  "complete_bundle_bytes": 18941571,
+  "complete_finalize_export_s": 1.002530918456614,
+  "cold_budget_s": 120,
+  "compile_launch_sync_s": 0.5651905229315162,
+  "writer_proof_kind": "mixed_explicit_SUB0_guard",
+  "actual_compiled_single_writer_guard": true,
+  "State_single_writer": true,
+  "source_actor_generated_input_object_binary_closure": true,
+  "terminal_marker_CFG_exactly_once": true,
+  "required_terminal_obligations": 6,
+  "required_terminal_all_pass": true,
+  "State_two_negative": {
+    "rejected": true,
+    "exception_class": "ContractError",
+    "reason": "original per-program side effect/replay state changed"
+  },
+  "required_raw_zero_negative": {
+    "rejected": true,
+    "exception_class": "CensusError",
+    "reason": "actual raw source visit contradicts proved writer/control context"
+  },
+  "original_bundle_unchanged": true
+}

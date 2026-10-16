@@ -1,0 +1,89 @@
+--- .qualification-r15-private/derive_actual_ownership.py	2026-10-16 23:44:31.040659392 +0800
++++ .qualification-r15-private/postcapture-v3/derive_ownership_v3.py	2026-10-17 00:21:35.075480477 +0800
+@@ -6 +6 @@
+-R=Path('/tmp/chijin-r15-independent-qualification');sys.path[:0]=[str(R/'final'),str(R/'original_qualification')]
++R=Path('/tmp/chijin-r15-independent-qualification');sys.path[:0]=[str(Path(__file__).resolve().parent),str(R/'final'),str(R/'original_qualification')]
+@@ -13,0 +14 @@
++from standalone_execution_r15 import prove_standalone,verify_standalone_sum
+@@ -46 +47 @@
+-def bind_and_prove(a,case,state_index,terminal_sites):
++def bind_and_prove(a,case,state_index,terminal_sites,site_operations,standalone=None):
+@@ -70,0 +72,9 @@
++    for mark in actual_marks:
++        operation=site_operations[mark[0]]
++        if operation=='arith.addi':
++            following=body[mark[4]:].splitlines()[1].strip().split(', !dbg')[0]
++            require(following==adds[0]+' = add i32 '+truncs[0]+', 1','selected terminal addi marker is not actual State RMW SSA')
++        else:
++            require(operation=='tt.store','terminal source operation lacks State SSA semantics')
++            ubpos=body.index('store i32 '+adds[0]+', '+stores[0])
++            require(mark[3]<ubpos and atblock(mark[3])==atblock(ubpos),'selected terminal store marker does not bind actual State UB store')
+@@ -74,0 +85,4 @@
++    def depends_on_sub(value,seen=()):
++        if value in seen or value not in defs:return False
++        definition=defs[value]
++        return '@llvm.hivm.GET.SUBBLOCKID()' in definition or any(depends_on_sub(v,seen+(value,)) for v in re.findall(r'%[\w.]+',definition))
+@@ -78,3 +92,2 @@
+-            if match:
+-                try:condition=expr(match[1])
+-                except ContractError:continue
++            if match and depends_on_sub(match[1]):
++                condition=expr(match[1])
+@@ -83 +96,6 @@
+-    require(len(candidates)==1,'actual State write is not dominated by unique SUB==0 election')
++    if standalone is None:
++        require(len(candidates)==1,'actual State write is not dominated by unique SUB==0 election')
++    else:
++        require(standalone['kind']=='standalone_aiv_one_instance' and standalone['actual_sdk_AIV_not_part_of_mix'] is True,'standalone actual compiled/launch proof absent')
++        require(not candidates and '@llvm.hivm.GET.SUBBLOCKID()' not in body,'standalone proof cannot hide a SUB-dependent writer')
++        require(sb in post[entry],'standalone State writer does not execute exactly once per actual vector instance')
+@@ -85 +103 @@
+-    return dict(actor=kind,original_llir_sha256=hashlib.sha256(ll.encode()).hexdigest(),function=funcs[0],state_formal=state['final_formal_index'],terminal_sites=obligations,State_external_writes=1,guard=candidates[0],length=1,stride=1,offset_expr=expr(offset),rmw_plus_one_proved=True),obligations
++    return dict(actor=kind,original_llir_sha256=hashlib.sha256(ll.encode()).hexdigest(),function=funcs[0],state_formal=state['final_formal_index'],terminal_sites=obligations,State_external_writes=1,guard=candidates[0] if candidates else None,length=1,stride=1,offset_expr=expr(offset),rmw_plus_one_proved=True,writer_proof_kind='mixed_explicit_SUB0_guard' if standalone is None else 'standalone_aiv_one_instance'),obligations
+@@ -89 +107 @@
+-    m=verify_authorization(R/'final/FINAL_EXECUTION_MANIFEST.json');root=R/f'run-{args.scope}';summary=load(root/'summary.json');proofroot=root/'independent-ownership-v2';proofroot.mkdir(exist_ok=False);proofs=[];safe_rows=[]
++    m=verify_authorization(R/'final/FINAL_EXECUTION_MANIFEST.json');root=R/f'run-{args.scope}';summary=load(root/'summary.json');proofroot=root/'independent-ownership-v3';proofroot.mkdir(exist_ok=False);proofs=[];safe_rows=[]
+@@ -99 +117,5 @@
+-        compiler=compiler_proof(bundle,b,frontend_proof=frontend);sites={s['site'] for s in compiler['sites'] if s['operation']=='tt.store' and any(loc['file']==b['source']['path'] and store.lineno<=loc['line']<=store.end_lineno for loc in s['origin']['source_locations'])};require(sites,'selected terminal State source site missing')
++        compiler=compiler_proof(bundle,b,frontend_proof=frontend);sites={s['site'] for s in compiler['sites'] if (s['operation']=='tt.store' or s['operation']=='arith.addi' and s['element_dtype']=='i32' and s['value_kind']=='scalar') and any(loc['file']==b['source']['path'] and store.lineno<=loc['line']<=store.end_lineno for loc in s['origin']['source_locations'])};require(sites,'selected terminal State source site missing')
++        site_operations={s['site']:s['operation'] for s in compiler['sites'] if s['site'] in sites}
++        actual=load(folder/'receipt.json');standalone=None
++        if b['compiler_metadata'].get('mix_mode')=='aiv':
++            standalone=prove_standalone(bundle,b,actual,root/'profile-cache'/folder.parent.name,Path(m['venv'])/'lib/python3.11/site-packages')
+@@ -102,2 +124,2 @@
+-            trace,marks=bind_and_prove(a,q['case'],state_index,sites);traces.append(trace);kind=a['driver_job']['actor_kind'];actor_sites[kind]=set(marks)
+-            if kind=='AIV':
++            trace,marks=bind_and_prove(a,q['case'],state_index,sites,site_operations,standalone);traces.append(trace);kind=a['driver_job']['actor_kind'];actor_sites[kind]=set(marks)
++            if kind=='AIV' and standalone is None:
+@@ -105 +127 @@
+-                try:bind_and_prove(changed,q['case'],state_index,sites)
++                try:bind_and_prove(changed,q['case'],state_index,sites,site_operations)
+@@ -114,2 +136,7 @@
+-            expected=[dict(program=c['program'],actor_slot=c['actor']['id'],site=c['site'],count=1) for c in selected]
+-            proved.extend(verify_required_visits([c for c in cells if c['capture_id']==cid],expected));requirements[cid]=expected
++            if standalone is None:
++                expected=[dict(program=c['program'],actor_slot=c['actor']['id'],site=c['site'],count=1) for c in selected]
++                proved.extend(verify_required_visits([c for c in cells if c['capture_id']==cid],expected))
++            else:
++                expected=[dict(program=program,site=site,actor_slots=[1,2],count_sum=1) for program in range(actual['grid'][0]) for site in sorted(sites)]
++                proved.extend(verify_standalone_sum([c for c in cells if c['capture_id']==cid],expected))
++            requirements[cid]=expected
+@@ -117,2 +144,8 @@
+-            try:verify_required_visits(corrupt,expected)
+-            except CensusError:negative+=1
++            if standalone is not None:
++                first=expected[0]
++                for c in corrupt:
++                    if c['program']==first['program'] and c['site']==first['site']:c['count']=0
++            try:
++                if standalone is None:verify_required_visits(corrupt,expected)
++                else:verify_standalone_sum(corrupt,expected)
++            except (CensusError,ValueError):negative+=1
+@@ -120 +153 @@
+-        audit=dict(schema='independent-r15-actual-terminal-audit-v1',status='pass',synthetic=False,qualification_sha256=qsha,original_state_formal_bound=True,actual_compiled_single_writer_guard=True,actual_generated_object_final_closure=bool(q['verification']['generated_inputs']) and q['verification']['common_gate']['status']=='pass',required_terminal_raw_visits_exact=True,actual_aic_aiv_modules_verified=True,actual_verified_raw_cells_sha256=sha(cells_path),required_visits_by_capture=requirements,proved_obligations=len(proved),private_compiler_proofs=traces,negative_actual_mutations_rejected=negative,derivation_script_sha256=sha(Path(__file__)),source_sha256=b['source']['file_sha256'])
++        audit=dict(schema='independent-r15-actual-terminal-audit-v3',status='pass',synthetic=False,qualification_sha256=qsha,original_state_formal_bound=True,actual_compiled_single_writer_guard=standalone is None,writer_proof_kind='mixed_explicit_SUB0_guard' if standalone is None else 'standalone_aiv_one_instance',standalone_execution_proof=standalone,actual_generated_object_final_closure=bool(q['verification']['generated_inputs']) and q['verification']['common_gate']['status']=='pass',required_terminal_raw_visits_exact=True,actual_aic_aiv_modules_verified=True,actual_verified_raw_cells_sha256=sha(cells_path),required_visits_by_capture=requirements,terminal_sites=sorted(sites),program_count=actual['grid'][0],proved_obligations=len(proved),private_compiler_proofs=traces,negative_actual_mutations_rejected=negative,derivation_script_sha256=sha(Path(__file__)),source_sha256=b['source']['file_sha256'])
+@@ -122,2 +155,2 @@
+-        safe_rows.append(dict(anonymous_profile_ordinal=ordinal,repetition=q['repetition'],status='pass',State_scalar_single_writer=True,source_formal_bound=True,actual_actor_modules=len(traces),required_terminal_raw_obligations=len(proved),negative_actual_mutations_rejected=negative,original_bundle_unchanged=True))
+-    proof=dict(schema='independent-r15-actual-terminal-ownership-v1',scope=args.scope,manifest_sha256=sha(R/'final/FINAL_EXECUTION_MANIFEST.json'),profiles=proofs);proofpath=proofroot/'PROOF_PRIVATE.json';proofpath.write_text(json.dumps(proof,indent=2)+'\n')
++        safe_rows.append(dict(anonymous_profile_ordinal=ordinal,repetition=q['repetition'],status='pass',State_scalar_single_writer=True,writer_proof_kind=audit['writer_proof_kind'],explicit_SUB0_guard=audit['actual_compiled_single_writer_guard'],source_formal_bound=True,actual_actor_modules=len(traces),required_terminal_raw_obligations=len(proved),negative_actual_mutations_rejected=negative,original_bundle_unchanged=True))
++    proof=dict(schema='independent-r15-actual-terminal-ownership-v3',scope=args.scope,manifest_sha256=sha(R/'final/FINAL_EXECUTION_MANIFEST.json'),profiles=proofs);proofpath=proofroot/'PROOF_PRIVATE.json';proofpath.write_text(json.dumps(proof,indent=2)+'\n')
