@@ -1,0 +1,66 @@
+{
+  "status": "pass",
+  "scope": "offline retained archives/Git/receipts only, no product execution",
+  "backends": [
+    {
+      "backend": "nvidia",
+      "archive_sha256": "d90b3d45c129c2ab621570fe0732609592ad820533fa042b8d24bd1e289a0dd3",
+      "indexed_files_verified": 38,
+      "archive_files_verified": 39,
+      "canonical_a829_Git_blobs_verified": 1049,
+      "installed_audit": {
+        "status": "pass",
+        "source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+        "wheel": "/workspace/chijin-r15-python-alignment-r2/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+        "wheel_sha256": "7d95df6950a2419a85186d2e654bca952b0b955c8c4825549e4b422822988f18",
+        "python": "/workspace/chijin-r15-python-alignment-r2/venv/bin/python",
+        "imports": {
+          "triton": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/triton/__init__.py",
+          "flagtree.profiler": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/flagtree/profiler/__init__.py",
+          "flagtree.debugger": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/flagtree/debugger/__init__.py",
+          "triton._C.libtriton.debugger": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/triton/_C/libtriton.so",
+          "flagtree.debugger._native": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/flagtree/debugger/_native.cpython-310-x86_64-linux-gnu.so",
+          "flagtree.profiler._native": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/flagtree/profiler/_native.cpython-310-x86_64-linux-gnu.so"
+        },
+        "counts": {
+          "git_files": 1049,
+          "package_files": 597,
+          "python_sources": 348,
+          "native_origins": 216
+        },
+        "cpu_exit": 0,
+        "device_work": false
+      }
+    },
+    {
+      "backend": "gcu",
+      "archive_sha256": "a93276ad55d4e6bcb377ae19f91954fe5146a936cdde3a1f63e077ea97a6c089",
+      "indexed_files_verified": 55,
+      "archive_files_verified": 56,
+      "canonical_a829_Git_blobs_verified": 1049,
+      "installed_audit": {
+        "status": "pass",
+        "source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+        "wheel": "/workspace/chijin-r15-python-alignment/wheel/dist/flagtree-0.7.0+enflame-cp312-cp312-linux_x86_64.whl",
+        "wheel_sha256": "f24cd4cb39dc411c7c1e04ab3f7d6797a0628ae9284d3cb267b4e8e9b1645c30",
+        "python": "/workspace/chijin-r15-python-alignment/venv/bin/python",
+        "imports": {
+          "triton": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/triton/__init__.py",
+          "flagtree.profiler": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/flagtree/profiler/__init__.py",
+          "flagtree.debugger": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/flagtree/debugger/__init__.py",
+          "triton._C.libtriton.debugger": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/triton/_C/libtriton.so",
+          "flagtree.debugger._native": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so",
+          "flagtree.profiler._native": "/workspace/chijin-r15-python-alignment/venv/lib/python3.12/site-packages/flagtree/profiler/_native.so"
+        },
+        "counts": {
+          "git_files": 1049,
+          "package_files": 438,
+          "python_sources": 359,
+          "native_origins": 63
+        },
+        "cpu_exit": 0,
+        "device_work": false
+      }
+    }
+  ]
+}

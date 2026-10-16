@@ -1,0 +1,86 @@
+{
+  "backend": "nvidia",
+  "prefix": "/workspace/chijin-r15-python-alignment-r2",
+  "source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+  "source_archive_sha256": "8f6d72aa8022d6f0746a8a1cdfbf0c40d0540b048d8d48b2cd2415eef15a3bf6",
+  "source_git_tree_sha256": "1e909b1d337e405f0a238f46fde35cf601b46ca22b74825073ba47791f352bb3",
+  "controller": {
+    "pid": 19925,
+    "pgid": 19925,
+    "start_ticks": "3221525",
+    "argv_sha256": "184622d29e8a88fb05ddccd8b7db70e6771452417782d8b7375e896619d0f674",
+    "started": 1792165959.9349992,
+    "budget_s": 2400,
+    "device_work": false,
+    "native_build": false,
+    "backend": "nvidia",
+    "commands": [
+      {
+        "label": "assemble",
+        "argv": [
+          "/workspace/venv/bin/python",
+          "-B",
+          "/workspace/chijin-r15-python-alignment-r2/assemble-nvidia.py",
+          "/workspace/chijin-r15-python-alignment-r2"
+        ],
+        "pid": 19926,
+        "exit": 0
+      },
+      {
+        "label": "venv",
+        "argv": [
+          "/workspace/venv/bin/python",
+          "-B",
+          "-m",
+          "venv",
+          "/workspace/chijin-r15-python-alignment-r2/venv"
+        ],
+        "pid": 19962,
+        "exit": 0
+      },
+      {
+        "label": "install",
+        "argv": [
+          "/workspace/chijin-r15-python-alignment-r2/venv/bin/python",
+          "-B",
+          "-I",
+          "-m",
+          "pip",
+          "install",
+          "--no-deps",
+          "/workspace/chijin-r15-python-alignment-r2/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+        ],
+        "pid": 19967,
+        "exit": 0
+      },
+      {
+        "label": "audit",
+        "argv": [
+          "/workspace/chijin-r15-python-alignment-r2/venv/bin/python",
+          "-B",
+          "-I",
+          "/workspace/chijin-r15-python-alignment-r2/audit.py",
+          "/workspace/chijin-r15-python-alignment-r2",
+          "nvidia"
+        ],
+        "pid": 19970,
+        "exit": 0
+      }
+    ],
+    "state": "passed",
+    "wheel": "/workspace/chijin-r15-python-alignment-r2/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+    "wheel_sha256": "7d95df6950a2419a85186d2e654bca952b0b955c8c4825549e4b422822988f18",
+    "ended": 1792166039.9659472
+  },
+  "owned_processes_remaining": [
+    {
+      "pid": 19925,
+      "state": "Z",
+      "ppid": "1",
+      "argv_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "device_work": false,
+  "native_build": false,
+  "collection_time": 1792166105.3756692
+}

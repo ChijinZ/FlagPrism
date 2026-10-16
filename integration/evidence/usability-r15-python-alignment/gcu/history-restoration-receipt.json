@@ -1,0 +1,182 @@
+{
+  "reason": "Initial copied audit invoked old output-writing CPU native test; corrected audit copies the unchanged test into new prefix.",
+  "trusted_original_sha256": "7dcd2429a646d853188e1ca26039c01dbc67d4b8151902f0827d772786a62d33",
+  "trusted_original_bytes": 3394,
+  "before_sha256": "4519eba743bca4eef8b0531e1220653b3f1b0beb783e08d4934d434dbf361546",
+  "before_bytes": 6757,
+  "original_rows": 14,
+  "before_rows": 28,
+  "appended_rows": [
+    {
+      "columns": 1,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 256,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "aligned_actual_allocation_verified"
+    },
+    {
+      "columns": 2,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 256,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 4,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 256,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 8,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 256,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 9,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 448,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 16,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 448,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 128,
+      "grid": [
+        1
+      ],
+      "physical_bytes": 3136,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 1,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 5824,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 2,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 5824,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 4,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 5824,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 8,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 5824,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 9,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 11584,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 16,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 11584,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "explicitly_rejected",
+      "subsequent_host_transaction": "pass"
+    },
+    {
+      "columns": 128,
+      "grid": [
+        2,
+        3,
+        5
+      ],
+      "physical_bytes": 92224,
+      "budget_negative_cases": 2,
+      "layout_negative_cases": 5,
+      "host_alignment": "aligned_actual_allocation_verified"
+    }
+  ],
+  "common_prefix_bytes": 3391,
+  "changed": true,
+  "after_sha256": "7dcd2429a646d853188e1ca26039c01dbc67d4b8151902f0827d772786a62d33",
+  "after_bytes": 3394,
+  "restored": true
+}

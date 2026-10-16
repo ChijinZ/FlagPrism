@@ -1,0 +1,57 @@
+{
+  "backend": "gcu",
+  "controller": {
+    "pid": 356147,
+    "pgid": 356147,
+    "start_ticks": "998419441",
+    "argv_sha256": "2b0308bcd735096b443858f82e16ea6be5421f980f89787191a522c62b42398a",
+    "state": "R"
+  },
+  "started": 1792166599.5549736,
+  "case_deadline_s": 360,
+  "compile_deadline_s": 120,
+  "export_deadline_s": 60,
+  "device_work": true,
+  "device": 0,
+  "performance_measurement": false,
+  "attempts": 1,
+  "hidden_replay": false,
+  "source_hashes": {
+    "application.py": "ff73fb02e7a1c6f86c0a8e05fe8b7ce04c60310b8323745d845bf35d02937349",
+    "controller.py": "13b21656584dec488272aa5149224e40bbba982f44aae3ff35f0c05843de41ce",
+    "warp_specialization_affine_smoke.py": "742a8bfa59bcd89b989a4df608dc9778a73faf49c18cc932f770289ec2d68a25",
+    "source_census_application.py": "2a4b0fa6044aef918c86f5279aad00a8288424156d3bc52905454789d6103c68",
+    "verify.py": "0df2745d60b94c2ebd52c837d81a4ac195502864c79106ff9c3906007cc2143d",
+    "warp_specialization_affine.py": "19478c2cb489f79ddb597861ba28b514f13bdab3aa689fd6243ab3a864c6b492",
+    "source_census_assertions.py": "9638131716a4605ddf3e4e6c4e470ec0bdcae787aba1c75b7080dbcb34ddebc9"
+  },
+  "state": "failed",
+  "argv": [
+    "/workspace/chijin-r15-python-alignment/venv/bin/python",
+    "-B",
+    "-I",
+    "-m",
+    "flagtree.profiler.cli",
+    "--detail",
+    "auto",
+    "--device",
+    "0",
+    "-n",
+    "/workspace/chijin-r15-python-alignment/public-smoke-r15/bundle",
+    "/workspace/chijin-r15-python-alignment/public-smoke-r15/application.py",
+    "source_census_application.py",
+    "/workspace/chijin-r15-python-alignment/public-smoke-r15/math-result"
+  ],
+  "cli": {
+    "pid": 356148,
+    "pgid": 356148,
+    "start_ticks": "998419445",
+    "argv_sha256": "d9380c390592ac24547a7b342a4ac933d860f82d0848b543b55e89834319dcdd",
+    "state": "R"
+  },
+  "exit": 1,
+  "host_cli_wall_s": 7.77643895149231,
+  "error": "AssertionError()",
+  "remaining_owned_children": {},
+  "ended": 1792166607.3325207
+}

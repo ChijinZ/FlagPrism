@@ -1,0 +1,39 @@
+{
+  "scope": "offline actual retained bytes/complete physical cell flags/padding/normalized rows/dynamic repetitions/math receipts; no product imports or device execution",
+  "status": "pass",
+  "ledger_schema": "one startup and one completed record with same PID; not one total JSON line",
+  "backends": [
+    {
+      "backend": "nvidia",
+      "status": "pass",
+      "archive_sha256": "d0194cf6d8e86bddb9ae92d7a0a2e60369c23e7ca3e0b11a51ee874adf6a2035",
+      "indexed_files": 54,
+      "archive_members": 55,
+      "captures": 2,
+      "records": 16,
+      "all_physical_cells_flags_checked": 32,
+      "raw_bytes": 256,
+      "startup_executions": 1,
+      "actual_kernel_calls": 2,
+      "bundle_bytes": 3572714,
+      "export_s": 0.2592272550027701,
+      "legacy_NV_terminal_controller_zombie_preserved": true
+    },
+    {
+      "backend": "gcu-r2",
+      "status": "pass",
+      "archive_sha256": "21275ffdb6bf43f0ffe1c6a641ee6d5fac4cff8e2e2e976dbb1a19c806af9a8c",
+      "indexed_files": 62,
+      "archive_members": 63,
+      "captures": 4,
+      "records": 32,
+      "all_physical_cells_flags_checked": 416,
+      "raw_bytes": 26752,
+      "startup_executions": 1,
+      "actual_kernel_calls": 4,
+      "bundle_bytes": 19530814,
+      "export_s": 0.5050593819469213,
+      "legacy_NV_terminal_controller_zombie_preserved": false
+    }
+  ]
+}

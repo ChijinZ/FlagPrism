@@ -1,0 +1,92 @@
+{
+  "backend": "gcu",
+  "prefix": "/workspace/chijin-r15-python-alignment",
+  "source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+  "source_archive_sha256": "8f6d72aa8022d6f0746a8a1cdfbf0c40d0540b048d8d48b2cd2415eef15a3bf6",
+  "source_git_tree_sha256": "1e909b1d337e405f0a238f46fde35cf601b46ca22b74825073ba47791f352bb3",
+  "controller": {
+    "pid": 355840,
+    "pgid": 355840,
+    "start_ticks": "998352105",
+    "argv_sha256": "d3e6adaaf9cb70d6f8be29a2af9f85405bfeb24c4f0036fcd651184caaf65406",
+    "started": 1792165926.1931617,
+    "budget_s": 2400,
+    "device_work": false,
+    "native_build": false,
+    "backend": "gcu",
+    "commands": [
+      {
+        "label": "assemble",
+        "argv": [
+          "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python",
+          "-B",
+          "/workspace/chijin-r15-python-alignment/component/integration/patches/enflame/build_automatic_wheel.py",
+          "--flagtree",
+          "/workspace/chijin-r15-python-alignment/FlagTree",
+          "--component",
+          "/workspace/chijin-r15-python-alignment/component",
+          "--native-python",
+          "/workspace/chijin-r13-census-v3/native-python",
+          "--core-library",
+          "/workspace/chijin-r13-census-v3/core-build/libtriton.so",
+          "--backend-build",
+          "/workspace/chijin-r11-gcu-final-source-build/work/build",
+          "--output",
+          "/workspace/chijin-r15-python-alignment/wheel"
+        ],
+        "pid": 355841,
+        "exit": 0
+      },
+      {
+        "label": "venv",
+        "argv": [
+          "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python",
+          "-B",
+          "-m",
+          "venv",
+          "--system-site-packages",
+          "--without-pip",
+          "/workspace/chijin-r15-python-alignment/venv"
+        ],
+        "pid": 355875,
+        "exit": 0
+      },
+      {
+        "label": "install",
+        "argv": [
+          "/workspace/chijin-r15-python-alignment/venv/bin/python",
+          "-B",
+          "-I",
+          "-m",
+          "pip",
+          "install",
+          "--no-deps",
+          "/workspace/chijin-r15-python-alignment/wheel/dist/flagtree-0.7.0+enflame-cp312-cp312-linux_x86_64.whl"
+        ],
+        "pid": 355876,
+        "exit": 0
+      },
+      {
+        "label": "audit",
+        "argv": [
+          "/workspace/chijin-r15-python-alignment/venv/bin/python",
+          "-B",
+          "-I",
+          "/workspace/chijin-r15-python-alignment/audit.py",
+          "/workspace/chijin-r15-python-alignment",
+          "gcu"
+        ],
+        "pid": 355879,
+        "exit": 0
+      }
+    ],
+    "state": "passed",
+    "wheel": "/workspace/chijin-r15-python-alignment/wheel/dist/flagtree-0.7.0+enflame-cp312-cp312-linux_x86_64.whl",
+    "wheel_sha256": "f24cd4cb39dc411c7c1e04ab3f7d6797a0628ae9284d3cb267b4e8e9b1645c30",
+    "ended": 1792165990.6114438
+  },
+  "owned_processes_remaining": [],
+  "device_work": false,
+  "native_build": false,
+  "collection_time": 1792166107.7967806
+}
