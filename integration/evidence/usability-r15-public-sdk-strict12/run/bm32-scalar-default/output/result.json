@@ -1,0 +1,104 @@
+{
+  "capture_retention": {
+    "entries": 14,
+    "status": "retained_available_bytes"
+  },
+  "checks": {
+    "input_a": "pass",
+    "input_b": "pass",
+    "input_bias": "pass",
+    "math": "pass",
+    "output_canary_left": "pass",
+    "output_canary_right": "pass",
+    "state_canary_left": "pass",
+    "state_canary_right": "pass"
+  },
+  "compiled_hash": "9ebfeef86ada21fb1d78807c7c7a6a64f1aaedaeb3debc7be0351a7de834c4b3",
+  "compiled_products": [
+    {
+      "bytes": 17423,
+      "file": "source.txt",
+      "format": "source",
+      "sha256": "f0e89fcc56d023c518347af706a308c4de75b56f48bef3a1eac4b7e8abec0613"
+    },
+    {
+      "bytes": 270385,
+      "file": "ttir.txt",
+      "format": "ttir",
+      "sha256": "671eab2f19cabfd16d9071737a5941254b604a56665f2bc718c6caa83a96a2d3"
+    },
+    {
+      "bytes": 257538,
+      "file": "ttadapter.txt",
+      "format": "ttadapter",
+      "sha256": "311111cc0e2c882d974620bdcea55a907db695dab7267e3f6ffa6c94b71726ad"
+    },
+    {
+      "bytes": 191340,
+      "file": "mlirbc.bin",
+      "format": "mlirbc",
+      "sha256": "d9612fc3f5889173cfc055e895623911dcff052effa48995f1cd36a161ae841a"
+    },
+    {
+      "bytes": 257451,
+      "file": "bcmlir.txt",
+      "format": "bcmlir",
+      "sha256": "4036c80add2b5472f0211b6c4bfd90b12ca8d286f667674c684e84ddaca2bcc6"
+    },
+    {
+      "bytes": 17456,
+      "file": "npubin.bin",
+      "format": "npubin",
+      "sha256": "ff4143231cef778ef550e2c3ccc9da5b8028474d5e79c3fa496aa6f1b7728f25"
+    }
+  ],
+  "errors": [],
+  "host_ledger": {
+    "attempted": 1,
+    "returned": 1,
+    "synchronized": true
+  },
+  "pid": 2006205,
+  "plan": {
+    "actor_bank_probe": "not_available_no_verified_public_intrinsic",
+    "config": "bm32",
+    "device": 4,
+    "grid": [
+      2,
+      1,
+      1
+    ],
+    "invocation_budget": 1,
+    "mode": "default",
+    "options": {
+      "enable_auto_blockify": false
+    },
+    "shape": {
+      "K": 32,
+      "M": 64,
+      "N": 32
+    },
+    "source_sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+    "state": "scalar",
+    "state_is_diagnostic_only": true,
+    "tile": {
+      "BK": 32,
+      "BM": 32,
+      "BN": 32
+    }
+  },
+  "pointer_chain_limits": "launch-arguments.json proves Python input/storage addresses only; final roles and State/trace GEPs need generated LLVM audit. Actual hidden trace runtime address is not exposed by this probe; no claim of complete launcher-to-formal pointer proof.",
+  "state_observation": {
+    "elements": 2,
+    "equals_one_observation": true,
+    "oracle": "none; requires actual physical ownership analysis",
+    "unique": [
+      1
+    ],
+    "values": [
+      1,
+      1
+    ]
+  },
+  "status": "diagnostic_completed"
+}

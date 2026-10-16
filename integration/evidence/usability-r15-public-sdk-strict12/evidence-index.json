@@ -1,0 +1,1359 @@
+{
+  "schema": "public-state-finite-evidence-v1",
+  "files": {
+    "public_state_probe.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/public_state_probe.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "finite_controller.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/finite_controller.py",
+      "sha256": "6a529e5e61d8e12a00cc81ca5caade674061b3ca9fd985b66ec5def90a33b88a",
+      "bytes": 10856
+    },
+    "prepare_r15.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/prepare_r15.py",
+      "sha256": "b7ab6d00ab056684dc9c828bb2caca5233e999a4b590325eb05cd2413897e19d",
+      "bytes": 4667
+    },
+    "run_strict_suite.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run_strict_suite.py",
+      "sha256": "926865b7f6559b13acacf7b9b44c6c3a33a50a200ceebdaac832551e47056d3c",
+      "bytes": 6710
+    },
+    "compiler_identity_gate.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/compiler_identity_gate.py",
+      "sha256": "5646fbb58678b4e41a079abe31c7b5b9ec5f3f5d0f8680ae141a2c8106ba160c",
+      "bytes": 5720
+    },
+    "strict_state_gate.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/strict_state_gate.py",
+      "sha256": "5c73e8ae82967df6abdd3d9d715b672d66374fef2cfed1fc53180f89a72495d8",
+      "bytes": 6506
+    },
+    "pins.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/pins.json",
+      "sha256": "40836b921a46016752152029090c8ca9159c60e9d062da65a981620f7131a3eb",
+      "bytes": 129299
+    },
+    "preparation-receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/preparation-receipt.json",
+      "sha256": "dafa231ee04b753df515ee57a66a175c3b10a90ff2a3b2f4856363faae4365a9",
+      "bytes": 3009
+    },
+    "sdk-seal.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/sdk-seal.json",
+      "sha256": "a10392fe518b3be04f505d6c31c19878803d3521c03cb169d710de2999e90f7b",
+      "bytes": 20834
+    },
+    "sdk-seal.pending-preserved.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/sdk-seal.pending-preserved.json",
+      "sha256": "bb534a371ea569c3550c7d49b46023c22c9f69df844c23af9dfc640d005c5e7a",
+      "bytes": 20672
+    },
+    "one-shot-start.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/one-shot-start.json",
+      "sha256": "b0b902bcf5b1cd3ee2584bfa720ee8a34c903e43367beac91634bf00d62229af",
+      "bytes": 836
+    },
+    "LAUNCH_REQUEST.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/LAUNCH_REQUEST.json",
+      "sha256": "b45c2cd5f38845c08aabf567711922f1d667bebf39aa843f996aa2b838cb7d9d",
+      "bytes": 1769
+    },
+    "suite-exit.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/suite-exit.json",
+      "sha256": "3c1d747298b7e6ea4c932d1b52e3dfc010ec2a962d7fa626bbff822bc20212d4",
+      "bytes": 167
+    },
+    "strict-state-gate.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/strict-state-gate.json",
+      "sha256": "c08cdd623ff15cc6f6a6616fa09b47add92b52e2e04ee8d0e6abd0ffeba9dca7",
+      "bytes": 1446
+    },
+    "actual-compiler-identity-gate.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/actual-compiler-identity-gate.json",
+      "sha256": "8be3d3a99975fde5becccf8c9b9aa7d9693f61a3c541f2f4d674c0cda823e30f",
+      "bytes": 7402
+    },
+    "suite-stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/suite-stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "suite-stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/suite-stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "strict-gate.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/strict-gate.log",
+      "sha256": "53bb967575bd728c6e8ea5c4aea2bf81b367441641983c80279256270e62a7db",
+      "bytes": 37
+    },
+    "identity-gate.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/identity-gate.log",
+      "sha256": "1b69a5d543f371dce5778f1fc12640220f9aa1e5b29781d48f6dbd6868727602",
+      "bytes": 19
+    },
+    "device-release-receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/device-release-receipt.json",
+      "sha256": "5742b88570b1b7bd3b4eed1034f01b9948f399edfc438690bc29e03ae724a8d6",
+      "bytes": 218
+    },
+    "controller.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/controller.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "run/summary.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/summary.json",
+      "sha256": "d84d8b3e2a3b2fd2b2e1436b737241f7e1c61ad8656b6ec3af0f18007fa22358",
+      "bytes": 3972
+    },
+    "run/table.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/table.json",
+      "sha256": "c3a4a3c4402d29a6b35cee5303d88a16be0dc9e1808e1faae123a00a6144ac06",
+      "bytes": 921
+    },
+    "run/CONTROLLER_STARTED.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/CONTROLLER_STARTED.json",
+      "sha256": "d5ce912de74ebb2628dab610ae2121874600594961fbd928d51453d8eae61df7",
+      "bytes": 217
+    },
+    "run/bm16-scalar-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/receipt.json",
+      "sha256": "27d4b7f2a862d2b6548529803494ee2a2a9b3d7615bd12d742bb7974a9b0b1bb",
+      "bytes": 1421
+    },
+    "run/bm16-scalar-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/stdout.log",
+      "sha256": "e0f748a937dbaece8d39777ca72df0e61a5f03d92193b3b505a5cbb884cd7305",
+      "bytes": 113
+    },
+    "run/bm16-scalar-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-scalar-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/result.json",
+      "sha256": "8bab3bdf123cac1e3143fb0d1f7b9e5283b9c4202b4f3eadeab0f0075a564d6a",
+      "bytes": 2719
+    },
+    "run/bm16-scalar-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/plan.json",
+      "sha256": "e08ca5b0fd769d8b37c9fdee9cc6c934a55bbc1101ccb792d500f186c8f66639",
+      "bytes": 503
+    },
+    "run/bm16-scalar-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-scalar-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/launch-arguments.json",
+      "sha256": "b3b45bdab246012b9d63bce1adb0944c89ce6c0df8205a9c55417fa7b5a1df96",
+      "bytes": 1093
+    },
+    "run/bm16-scalar-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-scalar-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/index.json",
+      "sha256": "8f19a908bd7fcac50eb070b0e9dae6b2a523854bb809418409566d760cbf2c0f",
+      "bytes": 960
+    },
+    "run/bm16-scalar-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/metadata.txt",
+      "sha256": "7b227f00b6d664f54408f6602c3e491b48b1a4a296225eb444f66a5ea535cb1d",
+      "bytes": 3222
+    },
+    "run/bm16-scalar-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/source.txt",
+      "sha256": "b6bcaeded85e90637357a4978c9c86102e9ee1d3a89dd4be9113d8c405449c29",
+      "bytes": 15268
+    },
+    "run/bm16-scalar-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/ttir.txt",
+      "sha256": "7a2e01cb482a55d1d4fdda8f497201594030cabf4fc932d64afd8f29f8e7ad16",
+      "bytes": 9713
+    },
+    "run/bm16-scalar-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "c2cf47012a3c1b0799f1724ee867ccbddea22ea36b296023cc34c396e97fde7a",
+      "bytes": 9126
+    },
+    "run/bm16-scalar-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "e67e6192a93b0dc728c650919aada980fe348c87493bc597c370cfba42324ffb",
+      "bytes": 9023
+    },
+    "run/bm16-scalar-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output/compiled/npubin.bin",
+      "sha256": "d5e366436832b147c619d65a467442a23e33a7bb0a49e27a4ebcfc27ce9169c3",
+      "bytes": 4528
+    },
+    "run/bm16-scalar-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/receipt.json",
+      "sha256": "70b759731416e716ee75a269f3b5bb32d65af2186854779f17f42a63a423d630",
+      "bytes": 1418
+    },
+    "run/bm16-scalar-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/stdout.log",
+      "sha256": "093812a68113405383d30c9e463071749a23de011eff618fea590f44ce4238a5",
+      "bytes": 112
+    },
+    "run/bm16-scalar-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-scalar-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/result.json",
+      "sha256": "c29838b945e70d4a60e10ae2db7f4348d50d6f20ab7dca35b36c5737f1b717d4",
+      "bytes": 2716
+    },
+    "run/bm16-scalar-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/plan.json",
+      "sha256": "ecf2a9cef852e9cdf69b7dc65b639c0b9ca0f16f373675085796821bba75128b",
+      "bytes": 502
+    },
+    "run/bm16-scalar-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-scalar-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/launch-arguments.json",
+      "sha256": "b3b45bdab246012b9d63bce1adb0944c89ce6c0df8205a9c55417fa7b5a1df96",
+      "bytes": 1093
+    },
+    "run/bm16-scalar-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-scalar-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/index.json",
+      "sha256": "aa1358cd1971f5bf9dea6aaa7bfd4bad6dd10d3715dc941c3c2f3dc1e1f79982",
+      "bytes": 969
+    },
+    "run/bm16-scalar-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/metadata.txt",
+      "sha256": "a781bde9e468bacba7025be9ab43f43d1bc9ee8391d14932a8ad936f04842c01",
+      "bytes": 1021411
+    },
+    "run/bm16-scalar-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/index.json",
+      "sha256": "68197830ff03243868b241a10eb4feac51f38a0f1ab98e52cb91cf53a968eb6f",
+      "bytes": 5831
+    },
+    "run/bm16-scalar-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/binaries-receipts.json",
+      "sha256": "f9eebb6c979230e5f37feab616f9e709a1adcde62d0305fe0f561b27af033bf2",
+      "bytes": 2333280
+    },
+    "run/bm16-scalar-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/capture/manifest.json",
+      "sha256": "e14a8f03b7a3bb850a4bcd9fe2b101015346a32bcac6a884f1e788c2d83705ea",
+      "bytes": 5997
+    },
+    "run/bm16-scalar-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/capture/ai/selection_status.json",
+      "sha256": "767e773a93462dfc8fc202740d0fdc5c73c43b2eff6b75298de38948866007b5",
+      "bytes": 800
+    },
+    "run/bm16-scalar-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/capture/ai/launches.json",
+      "sha256": "4bb8572e661397924d67e094d191d5874bd88a9ea4ea65c3e048af00ab38400c",
+      "bytes": 225
+    },
+    "run/bm16-scalar-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/capture/ai/arguments.json",
+      "sha256": "430d8f63cba39498812c5857c3f1e0a86f1f1be04fefce00d85cab9f614ad481",
+      "bytes": 866
+    },
+    "run/bm16-scalar-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm16-scalar-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/source.txt",
+      "sha256": "90bc7fd3639936e6872799200cb1905f017040c633e993e733e54a9ddbe86b53",
+      "bytes": 17423
+    },
+    "run/bm16-scalar-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/ttir.txt",
+      "sha256": "b3ad347b4fd9b8d38b58843e737e10149a587e84995b7594e6e2810c5381622c",
+      "bytes": 277495
+    },
+    "run/bm16-scalar-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/ttadapter.txt",
+      "sha256": "e1a762d27791306c1653363ca0034e03b01f05c898c2a8c3572eb69c441cfe46",
+      "bytes": 264016
+    },
+    "run/bm16-scalar-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/bcmlir.txt",
+      "sha256": "99333fd1afcc6fdf053961e697d8867c6c0d547c21d23c8a6da8d108c09afa72",
+      "bytes": 263929
+    },
+    "run/bm16-scalar-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/compiled/npubin.bin",
+      "sha256": "be350c2c0209aef6fea5f09d98176f413ed0be15c08a978811891de1f3094544",
+      "bytes": 17488
+    },
+    "run/bm16-scalar-default/output/generated/633b37865b3a377ed3f001dad17f7a3e50ce45fd9beec45f4767bd6088bb6496": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/633b37865b3a377ed3f001dad17f7a3e50ce45fd9beec45f4767bd6088bb6496",
+      "sha256": "633b37865b3a377ed3f001dad17f7a3e50ce45fd9beec45f4767bd6088bb6496",
+      "bytes": 43209
+    },
+    "run/bm16-scalar-default/output/generated/16d34d9bf0f2edbc80d2336ab5d902581de4abc346301371e1a5f80ec0e871e2": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/16d34d9bf0f2edbc80d2336ab5d902581de4abc346301371e1a5f80ec0e871e2",
+      "sha256": "16d34d9bf0f2edbc80d2336ab5d902581de4abc346301371e1a5f80ec0e871e2",
+      "bytes": 51366
+    },
+    "run/bm16-scalar-default/output/generated/b0ec2d4d27ff8ca3e4a9b43ad596df6f273445c87cd707da1b3923fb6dc52f4e": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/b0ec2d4d27ff8ca3e4a9b43ad596df6f273445c87cd707da1b3923fb6dc52f4e",
+      "sha256": "b0ec2d4d27ff8ca3e4a9b43ad596df6f273445c87cd707da1b3923fb6dc52f4e",
+      "bytes": 26115
+    },
+    "run/bm16-scalar-default/output/generated/eca0a15999c037d08abbc4ea8a11ba8873184438f776f7ebed754c406c2be4f9": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-default/output/generated/eca0a15999c037d08abbc4ea8a11ba8873184438f776f7ebed754c406c2be4f9",
+      "sha256": "eca0a15999c037d08abbc4ea8a11ba8873184438f776f7ebed754c406c2be4f9",
+      "bytes": 34117
+    },
+    "run/bm32-scalar-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/receipt.json",
+      "sha256": "52153482912170b79811d241e4c2ab68630378252422156b48be74877e39be9e",
+      "bytes": 1422
+    },
+    "run/bm32-scalar-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/stdout.log",
+      "sha256": "b6e1dac4bfe825b4d0c2ab069c070f52b1acea66c2a027246b410653921e8e35",
+      "bytes": 113
+    },
+    "run/bm32-scalar-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-scalar-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/result.json",
+      "sha256": "84721c39ef95385e59763bd55468aa5a2c5ec94dda37bd724e2d00c80a44e0ce",
+      "bytes": 2719
+    },
+    "run/bm32-scalar-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/plan.json",
+      "sha256": "12d88a1d74f1849ec6ac35591a7c0843e2d35acc8992d4718b43a3b5a8525c3d",
+      "bytes": 503
+    },
+    "run/bm32-scalar-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-scalar-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/launch-arguments.json",
+      "sha256": "860454ab694c2fdaaded42eeec72e500284cd0dee39ed3c4787aa3506c48d124",
+      "bytes": 1093
+    },
+    "run/bm32-scalar-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-scalar-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/index.json",
+      "sha256": "82262e41714c43cf9561e5333b0a629fb48045a3327fe859f848b58cc608a94c",
+      "bytes": 960
+    },
+    "run/bm32-scalar-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/metadata.txt",
+      "sha256": "ff07a71211d2c7b0fb28f6db610401182d9b07912402809567c976acbfe8ae18",
+      "bytes": 3222
+    },
+    "run/bm32-scalar-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/source.txt",
+      "sha256": "12fed503f4e6e947bc10d9f1a76e1feb62425e46f701ce915c5aa1615756052f",
+      "bytes": 15268
+    },
+    "run/bm32-scalar-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/ttir.txt",
+      "sha256": "d506a1927937a2cefc8bfba130aaf24c5575b0a3585f740bb61595b79b5ed0d8",
+      "bytes": 9261
+    },
+    "run/bm32-scalar-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "63fa1d711c7c10bdf010b4696f3070a01d64febe7971842f908df5c323d5b508",
+      "bytes": 9126
+    },
+    "run/bm32-scalar-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "b1546a812664d5a2797af9b59ac5fbd8bc90272f22a060f90bbe4ed9f6a3277b",
+      "bytes": 9023
+    },
+    "run/bm32-scalar-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-ordinary/output/compiled/npubin.bin",
+      "sha256": "a2265ece375ef65473e363b63466e4e3c1626ad0d86bf4b079bb956a8750c0a9",
+      "bytes": 4504
+    },
+    "run/bm32-scalar-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/receipt.json",
+      "sha256": "424786e9b5e2bb4a11fa5f79d71e48f3d2cf1f01907add4cb94a3efe401714a3",
+      "bytes": 1419
+    },
+    "run/bm32-scalar-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/stdout.log",
+      "sha256": "fccb19a89a3b64556b1185ede795a1ef9fc1721238f056cab05cb4c581abe586",
+      "bytes": 112
+    },
+    "run/bm32-scalar-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-scalar-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/result.json",
+      "sha256": "cc1784ae631a3c7b4c4a446a70ee897361200669c68d610bde4166cfec764636",
+      "bytes": 2716
+    },
+    "run/bm32-scalar-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/plan.json",
+      "sha256": "ddae862e338114116c0602af8dfeace24bfe14d70fd1eca3d6928acf0ff92ad6",
+      "bytes": 502
+    },
+    "run/bm32-scalar-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-scalar-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/launch-arguments.json",
+      "sha256": "860454ab694c2fdaaded42eeec72e500284cd0dee39ed3c4787aa3506c48d124",
+      "bytes": 1093
+    },
+    "run/bm32-scalar-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-scalar-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/index.json",
+      "sha256": "891142d0710f9744b2c5c446c9523517759304d1f3208f9489538e8a9319c634",
+      "bytes": 969
+    },
+    "run/bm32-scalar-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/metadata.txt",
+      "sha256": "2e5d5bb66ad6ba89278b8ca31e845fcd9a20846e25a5f876d4aab92066bcc86b",
+      "bytes": 1006126
+    },
+    "run/bm32-scalar-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/index.json",
+      "sha256": "01b9609c0d3f0c1b3306278bab989f271e00fa4223f04359a1d81a37827a91e0",
+      "bytes": 5831
+    },
+    "run/bm32-scalar-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/binaries-receipts.json",
+      "sha256": "4b70287e50e34230e169c398a09e50863ac576b6d631d741271a704b83152a9a",
+      "bytes": 2288473
+    },
+    "run/bm32-scalar-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/capture/manifest.json",
+      "sha256": "b2c3fffb16398d5eb3a992c318e57887d00d7ddcc6eb0857cc1f64dc12ddd49f",
+      "bytes": 5997
+    },
+    "run/bm32-scalar-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/capture/ai/selection_status.json",
+      "sha256": "a8902d57df2650ec4c0df533cec2893faa8c3b83d971a3f97a661a18d1ff1586",
+      "bytes": 800
+    },
+    "run/bm32-scalar-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/capture/ai/launches.json",
+      "sha256": "7f6a74c3962aba8e7a3b4cc780365292ef6d9ddfe5fa5741580d96913465bfd0",
+      "bytes": 225
+    },
+    "run/bm32-scalar-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/capture/ai/arguments.json",
+      "sha256": "4de8c34951f121df8c6e99ce7fa2f525f790ddbc285c40fce1f442dec2236d2d",
+      "bytes": 866
+    },
+    "run/bm32-scalar-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm32-scalar-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/source.txt",
+      "sha256": "f0e89fcc56d023c518347af706a308c4de75b56f48bef3a1eac4b7e8abec0613",
+      "bytes": 17423
+    },
+    "run/bm32-scalar-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/ttir.txt",
+      "sha256": "671eab2f19cabfd16d9071737a5941254b604a56665f2bc718c6caa83a96a2d3",
+      "bytes": 270385
+    },
+    "run/bm32-scalar-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/ttadapter.txt",
+      "sha256": "311111cc0e2c882d974620bdcea55a907db695dab7267e3f6ffa6c94b71726ad",
+      "bytes": 257538
+    },
+    "run/bm32-scalar-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/bcmlir.txt",
+      "sha256": "4036c80add2b5472f0211b6c4bfd90b12ca8d286f667674c684e84ddaca2bcc6",
+      "bytes": 257451
+    },
+    "run/bm32-scalar-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/compiled/npubin.bin",
+      "sha256": "ff4143231cef778ef550e2c3ccc9da5b8028474d5e79c3fa496aa6f1b7728f25",
+      "bytes": 17456
+    },
+    "run/bm32-scalar-default/output/generated/30361be3600dfe423c387f92e982356ab4eab1ef4b321bc24c16d3f1731035a6": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/30361be3600dfe423c387f92e982356ab4eab1ef4b321bc24c16d3f1731035a6",
+      "sha256": "30361be3600dfe423c387f92e982356ab4eab1ef4b321bc24c16d3f1731035a6",
+      "bytes": 26116
+    },
+    "run/bm32-scalar-default/output/generated/9ddceddb295fe21d6fa9fe39c3314c076e47a0f9544fe5aafdc4813a5ffff0c5": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/9ddceddb295fe21d6fa9fe39c3314c076e47a0f9544fe5aafdc4813a5ffff0c5",
+      "sha256": "9ddceddb295fe21d6fa9fe39c3314c076e47a0f9544fe5aafdc4813a5ffff0c5",
+      "bytes": 34118
+    },
+    "run/bm32-scalar-default/output/generated/347674b3e6452ddf986d3b8ec016bdc7e9790478afa3c4bcb1ca880ccb09073c": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/347674b3e6452ddf986d3b8ec016bdc7e9790478afa3c4bcb1ca880ccb09073c",
+      "sha256": "347674b3e6452ddf986d3b8ec016bdc7e9790478afa3c4bcb1ca880ccb09073c",
+      "bytes": 43247
+    },
+    "run/bm32-scalar-default/output/generated/d580011ee402e0c2f241b4a948899aa6cf02353054d704aa781b74c1c674dd2e": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-scalar-default/output/generated/d580011ee402e0c2f241b4a948899aa6cf02353054d704aa781b74c1c674dd2e",
+      "sha256": "d580011ee402e0c2f241b4a948899aa6cf02353054d704aa781b74c1c674dd2e",
+      "bytes": 51404
+    },
+    "run/bm16-vector-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/receipt.json",
+      "sha256": "bf1d5365f97cdb815b562902d210b003937865b8b29e099a3f58ace91eec591d",
+      "bytes": 10623
+    },
+    "run/bm16-vector-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/stdout.log",
+      "sha256": "1a89fb8e23aa9627df1052988415cca94436be8d4703b8f472c88446fce77540",
+      "bytes": 113
+    },
+    "run/bm16-vector-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-vector-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/result.json",
+      "sha256": "6ca66853ef409493055d8875769645135cd6eb98ccef60b1c5bd50bd7d5592e4",
+      "bytes": 11921
+    },
+    "run/bm16-vector-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/plan.json",
+      "sha256": "c620d92aed1c1ea7a0aa1ba040fe79538c7bbcf6011c9f8206fdcba5f94962d3",
+      "bytes": 503
+    },
+    "run/bm16-vector-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-vector-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/launch-arguments.json",
+      "sha256": "72ca12b52da8da154de613d3cc1e03a2da4d2b547691d84a2ccee0540dcc5675",
+      "bytes": 1100
+    },
+    "run/bm16-vector-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-vector-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/index.json",
+      "sha256": "63da20243571b34298e3d84a1ba438b01da71aea819719f64884d0c782202208",
+      "bytes": 961
+    },
+    "run/bm16-vector-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/metadata.txt",
+      "sha256": "d7a1b6f56ce493b59da96c30325b65ddcd8992eba8a5122cdc11828dce0f5b75",
+      "bytes": 3222
+    },
+    "run/bm16-vector-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/source.txt",
+      "sha256": "dbacdfbc5ac3d01a26d2edd4d32020294bd3bb9d48ba89c35d001d4b6d7ee089",
+      "bytes": 15772
+    },
+    "run/bm16-vector-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/ttir.txt",
+      "sha256": "ac6d7f47124ca1ce85749026da9ab4e5a3e0cf9e04a59ad89290ed840c416b41",
+      "bytes": 10003
+    },
+    "run/bm16-vector-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "fb8aeba8fa8895775615bc16cdab94945c19ccf984d734dfabb844c0d470aaac",
+      "bytes": 9836
+    },
+    "run/bm16-vector-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "d18d7e82a7c882f576307c166483d1264608ff145622fb8c7f9cdc643e456c84",
+      "bytes": 9708
+    },
+    "run/bm16-vector-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-ordinary/output/compiled/npubin.bin",
+      "sha256": "52eb896a2d541cc9962f1f92cba8f8ecfdf3d3f487333b3ce024aa5e8c43634a",
+      "bytes": 4712
+    },
+    "run/bm16-vector-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/receipt.json",
+      "sha256": "3d30a86a0bef6eeed5fd259fff118b705ac478b7c31d85337af42141164392a4",
+      "bytes": 10620
+    },
+    "run/bm16-vector-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/stdout.log",
+      "sha256": "d95a9b94eeac471251737972c9e03d81049ca98b206dc9d80f7ad78821f62849",
+      "bytes": 112
+    },
+    "run/bm16-vector-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-vector-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/result.json",
+      "sha256": "d7501a07b48f29fec393ea262c5eb11edcb428c2bfdeda3653898f11bf9b38b2",
+      "bytes": 11917
+    },
+    "run/bm16-vector-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/plan.json",
+      "sha256": "4131b0c30ef192b91f76df14e428110a043b460d43bf5b3409e9bb800bab9495",
+      "bytes": 502
+    },
+    "run/bm16-vector-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-vector-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/launch-arguments.json",
+      "sha256": "72ca12b52da8da154de613d3cc1e03a2da4d2b547691d84a2ccee0540dcc5675",
+      "bytes": 1100
+    },
+    "run/bm16-vector-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-vector-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/index.json",
+      "sha256": "d90e8be909214c8178b7f35f95728b401c6ce757f7db19e95aace6e1fe6c859f",
+      "bytes": 969
+    },
+    "run/bm16-vector-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/metadata.txt",
+      "sha256": "ade4a0dc65f2c0636d1d9206db6af86ef6adb64add73732a2127d99efe5eca53",
+      "bytes": 1086866
+    },
+    "run/bm16-vector-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/index.json",
+      "sha256": "bda2518a0bc29099c8e89e1b390d8092f297ded8a8d07ee7c968a7a343d93d79",
+      "bytes": 5831
+    },
+    "run/bm16-vector-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/binaries-receipts.json",
+      "sha256": "e6cbbc36f22500d93fdb39c9fe4dd09c6305eb076553720fd8f7e711b4e77da4",
+      "bytes": 2433424
+    },
+    "run/bm16-vector-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/capture/manifest.json",
+      "sha256": "792ede68166d981331758c400ea01526230df1a0d00b127730a56b9990d958a2",
+      "bytes": 5997
+    },
+    "run/bm16-vector-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/capture/ai/selection_status.json",
+      "sha256": "76c4c76f9f822e008a218ca66b8eeca3a3043d10cb0683627d725fb4dbe8acba",
+      "bytes": 800
+    },
+    "run/bm16-vector-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/capture/ai/launches.json",
+      "sha256": "aaabfff3875f129e94eb073ffd25ecc8d1533ee7a91254fb735e1be79606c6ce",
+      "bytes": 225
+    },
+    "run/bm16-vector-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/capture/ai/arguments.json",
+      "sha256": "6870a190a1534d78c9e9e17ee58589fa91db6536a3a15887147d437928375079",
+      "bytes": 869
+    },
+    "run/bm16-vector-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm16-vector-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/source.txt",
+      "sha256": "dc11987503a962255e89b699a4b6a53f53d6cd121a82da5b019a793cc3d7719b",
+      "bytes": 17954
+    },
+    "run/bm16-vector-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/ttir.txt",
+      "sha256": "db6b768d49bd1b267c37298df8948b5819718eec3b57e6b3b383754fe13b6626",
+      "bytes": 288230
+    },
+    "run/bm16-vector-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/ttadapter.txt",
+      "sha256": "91819ca4ca84e5c73643d2d29d394c0024ac14564ff2085b2df7b2d39c67dd6b",
+      "bytes": 275072
+    },
+    "run/bm16-vector-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/bcmlir.txt",
+      "sha256": "4c6bf7edba81b37831fb090e49dd1d9f874e6d619d17adc2d39f7ebb90c3a821",
+      "bytes": 274968
+    },
+    "run/bm16-vector-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/compiled/npubin.bin",
+      "sha256": "07de98e062dd1a324c78b459e3c8e3b3044cf9228250d3445762e1ee6edd7ba3",
+      "bytes": 20312
+    },
+    "run/bm16-vector-default/output/generated/5a5bc232347b81d1b00ebec91fed26bcc9a6d61c80c28ade3125c84ed5880e3f": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/5a5bc232347b81d1b00ebec91fed26bcc9a6d61c80c28ade3125c84ed5880e3f",
+      "sha256": "5a5bc232347b81d1b00ebec91fed26bcc9a6d61c80c28ade3125c84ed5880e3f",
+      "bytes": 52161
+    },
+    "run/bm16-vector-default/output/generated/96f3b1dae0e479afa2cb14c928c1f4e15852c0b36a99b77b468eb91497dda3c6": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/96f3b1dae0e479afa2cb14c928c1f4e15852c0b36a99b77b468eb91497dda3c6",
+      "sha256": "96f3b1dae0e479afa2cb14c928c1f4e15852c0b36a99b77b468eb91497dda3c6",
+      "bytes": 60338
+    },
+    "run/bm16-vector-default/output/generated/a44a9bf7259a74a0ff4c38fd7a293d8db82a82ab991632215993777f4f75ad0e": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/a44a9bf7259a74a0ff4c38fd7a293d8db82a82ab991632215993777f4f75ad0e",
+      "sha256": "a44a9bf7259a74a0ff4c38fd7a293d8db82a82ab991632215993777f4f75ad0e",
+      "bytes": 26115
+    },
+    "run/bm16-vector-default/output/generated/5a9647706939aead9079e95729b1f8bb7766a25f51aebb73e29587077f487a65": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-vector-default/output/generated/5a9647706939aead9079e95729b1f8bb7766a25f51aebb73e29587077f487a65",
+      "sha256": "5a9647706939aead9079e95729b1f8bb7766a25f51aebb73e29587077f487a65",
+      "bytes": 34117
+    },
+    "run/bm32-vector-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/receipt.json",
+      "sha256": "2f5283850ce3e82966f19c556e1f0d23f76d83c490d3f9c76d94d64ce02a246d",
+      "bytes": 19839
+    },
+    "run/bm32-vector-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/stdout.log",
+      "sha256": "33fbff3ee66bd63ef1de25d8b0ab058768315ad11b2a4b63356db5484a2d9087",
+      "bytes": 113
+    },
+    "run/bm32-vector-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-vector-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/result.json",
+      "sha256": "2418da6016570b058046bb4c7ace16af0a9ff0b0b518c4d3e9b45e857a5782df",
+      "bytes": 21136
+    },
+    "run/bm32-vector-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/plan.json",
+      "sha256": "1b0dfeca7a0ba3244a1a5d37bd224bf3b5e217f1dda572be926049fe9e3c46c5",
+      "bytes": 503
+    },
+    "run/bm32-vector-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-vector-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/launch-arguments.json",
+      "sha256": "5c2ee7623a8e2a86255a91fed0e3aef9d1b22f74168a9506d56ca171369d26f8",
+      "bytes": 1100
+    },
+    "run/bm32-vector-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-vector-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/index.json",
+      "sha256": "55304e36ace48a6d1a19b86e2d96d23c51f1e41e9b8dc89a6a46aba78b21a9aa",
+      "bytes": 960
+    },
+    "run/bm32-vector-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/metadata.txt",
+      "sha256": "0eb2230bf6f2bfcfe2018921ff4c9a92a0acbd537a55f512402f38835bae4023",
+      "bytes": 3222
+    },
+    "run/bm32-vector-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/source.txt",
+      "sha256": "f03bebbbdebf1a5a3cf92ff0d89cc274fdd07a69fa08b02ba4078f7c6026d859",
+      "bytes": 15772
+    },
+    "run/bm32-vector-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/ttir.txt",
+      "sha256": "8fff2aca813375fd397d9c1331d18051f441aa01dea22faddb4bd7d137d1d46d",
+      "bytes": 9551
+    },
+    "run/bm32-vector-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "979509c940ef8c4eb60cd1196351c86bf7a76e479daf8a1dfdb9fead1b012e4c",
+      "bytes": 9836
+    },
+    "run/bm32-vector-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "6e79facd180be449d59f32620b4b448ffd37d01b7421f99db6efb14f522b0fca",
+      "bytes": 9708
+    },
+    "run/bm32-vector-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-ordinary/output/compiled/npubin.bin",
+      "sha256": "bcb03deca8753ac1e239d64d5efd5a2ede7dd08f1109fd3b17f043a380a89306",
+      "bytes": 4696
+    },
+    "run/bm32-vector-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/receipt.json",
+      "sha256": "6ce2bbfb59d7a87db044e4e36a06b94dd52f1359a4b7f8d2ee19429c7be27f5f",
+      "bytes": 19835
+    },
+    "run/bm32-vector-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/stdout.log",
+      "sha256": "58601c5302fe9b744582e8f8f3f8de3d24c7f214942413025cc483576d1eec4f",
+      "bytes": 112
+    },
+    "run/bm32-vector-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-vector-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/result.json",
+      "sha256": "655114a28305f4d0c66524eaa96d6c75b7f503f85801b39ccd0bad13e3c4c048",
+      "bytes": 21133
+    },
+    "run/bm32-vector-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/plan.json",
+      "sha256": "4197b2ba4f70de39fe30d41cbf9de1a2567eb4cb19f7ef3566a9b74518895024",
+      "bytes": 502
+    },
+    "run/bm32-vector-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-vector-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/launch-arguments.json",
+      "sha256": "5c2ee7623a8e2a86255a91fed0e3aef9d1b22f74168a9506d56ca171369d26f8",
+      "bytes": 1100
+    },
+    "run/bm32-vector-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-vector-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/index.json",
+      "sha256": "c0dec7ffca8a1fe07f6a30d0dbd8566ea743968e2a05a76195ad2e3bab85566c",
+      "bytes": 969
+    },
+    "run/bm32-vector-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/metadata.txt",
+      "sha256": "ed9e0287f2a311c8f14d95dd625f268c9c0be06e5e5406d8bff268c625546b8d",
+      "bytes": 1071631
+    },
+    "run/bm32-vector-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/index.json",
+      "sha256": "9c303fdc3d87accdaebe29c4574cb8a8ff5a6a47e36f1df039507a4e44e3dd81",
+      "bytes": 5831
+    },
+    "run/bm32-vector-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/binaries-receipts.json",
+      "sha256": "e828860e5c7aae54d532533aa643a96a83601a9ae083e61f3f497cb736870428",
+      "bytes": 2388871
+    },
+    "run/bm32-vector-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/capture/manifest.json",
+      "sha256": "bae000a55cf7caa2b9228b34d2a463ec49e72475e2ab4fb1ca180fa65a2289d4",
+      "bytes": 5997
+    },
+    "run/bm32-vector-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/capture/ai/selection_status.json",
+      "sha256": "8c852490f74f5198e55ad69962bc85b51c4e67fa33da82fc8814cf2083f27cb2",
+      "bytes": 800
+    },
+    "run/bm32-vector-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/capture/ai/launches.json",
+      "sha256": "87a395807fc5c3d60f82d2889c289288db6a5148e6ec14eac6079f8645208146",
+      "bytes": 225
+    },
+    "run/bm32-vector-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/capture/ai/arguments.json",
+      "sha256": "2263a83df424dc56319b8d5562bb1df0c9d23a0a1d03369df030aa9448434272",
+      "bytes": 869
+    },
+    "run/bm32-vector-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm32-vector-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/source.txt",
+      "sha256": "63ce71644b3cb092b9eb6426c7812a0c7797098ff32a30c3b50c740bd236300d",
+      "bytes": 17954
+    },
+    "run/bm32-vector-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/ttir.txt",
+      "sha256": "13130542bce186f8acd3d0915c4e20713bd4f6c4a8add75c0974a054e072c944",
+      "bytes": 281158
+    },
+    "run/bm32-vector-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/ttadapter.txt",
+      "sha256": "ccec80960f0c3d6b15f00b1c3ae67d5fddfdcb6b34ec395c6871409a9d422539",
+      "bytes": 268638
+    },
+    "run/bm32-vector-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/bcmlir.txt",
+      "sha256": "88f6c441f92becca32fbebddf0d41be45d21853c8812b80f73468cdb2a2d8e73",
+      "bytes": 268534
+    },
+    "run/bm32-vector-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/compiled/npubin.bin",
+      "sha256": "446963651f6bfc7f061b44c3712e1f49a5eef7c4eb2670bed81c264190cd64e1",
+      "bytes": 20288
+    },
+    "run/bm32-vector-default/output/generated/d8c2f1c1916633e4c2d1d4f1797b67bce36952d2dd7516ba971fedda5640702a": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/d8c2f1c1916633e4c2d1d4f1797b67bce36952d2dd7516ba971fedda5640702a",
+      "sha256": "d8c2f1c1916633e4c2d1d4f1797b67bce36952d2dd7516ba971fedda5640702a",
+      "bytes": 52176
+    },
+    "run/bm32-vector-default/output/generated/fdfe9f2ef8a546eeaea77de8944ac9a8270ddda1be1535342743b1b2398f7252": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/fdfe9f2ef8a546eeaea77de8944ac9a8270ddda1be1535342743b1b2398f7252",
+      "sha256": "fdfe9f2ef8a546eeaea77de8944ac9a8270ddda1be1535342743b1b2398f7252",
+      "bytes": 60353
+    },
+    "run/bm32-vector-default/output/generated/74f6d592c57c28968f96949c1836064ad10805a0659175baec210119d8818079": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/74f6d592c57c28968f96949c1836064ad10805a0659175baec210119d8818079",
+      "sha256": "74f6d592c57c28968f96949c1836064ad10805a0659175baec210119d8818079",
+      "bytes": 26116
+    },
+    "run/bm32-vector-default/output/generated/dc17974ec85579254f16e1fc8c01580fcb5a51e660bae0ad6494a373a5e06f7e": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-vector-default/output/generated/dc17974ec85579254f16e1fc8c01580fcb5a51e660bae0ad6494a373a5e06f7e",
+      "sha256": "dc17974ec85579254f16e1fc8c01580fcb5a51e660bae0ad6494a373a5e06f7e",
+      "bytes": 34118
+    },
+    "run/bm16-atomic-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/receipt.json",
+      "sha256": "0b3224780db04eb26474b8ddfa1cc25a52befaa575438fe85e4221648ceb5db9",
+      "bytes": 1423
+    },
+    "run/bm16-atomic-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/stdout.log",
+      "sha256": "c5eaccbdfaea9fa3d98ff35a3c0ee8e8e339f3d9a05c2eed146a13720c8311cb",
+      "bytes": 113
+    },
+    "run/bm16-atomic-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-atomic-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/result.json",
+      "sha256": "b79db5a71726c265f79c8cad9baa44e81bf44b3848f7aa13ec9de408d5c17fdb",
+      "bytes": 2719
+    },
+    "run/bm16-atomic-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/plan.json",
+      "sha256": "545277b290eabab8f477716fac3a80aab410bfd931794b4fd458ef42c4c07235",
+      "bytes": 503
+    },
+    "run/bm16-atomic-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-atomic-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/launch-arguments.json",
+      "sha256": "b3b45bdab246012b9d63bce1adb0944c89ce6c0df8205a9c55417fa7b5a1df96",
+      "bytes": 1093
+    },
+    "run/bm16-atomic-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-atomic-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/index.json",
+      "sha256": "a8b6c9905a02f2d25742bf39737b3e3a02ce0ab688439df1a7b2cb913fa3d992",
+      "bytes": 960
+    },
+    "run/bm16-atomic-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/metadata.txt",
+      "sha256": "cdf6fc70db3c12689534b01c2b8a09f9bd849db25bb7cf2b4c7f0a00ff1cd4c0",
+      "bytes": 3222
+    },
+    "run/bm16-atomic-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/source.txt",
+      "sha256": "f7bbc0b8d7c7ef9bba10f94c691a0c832b9e05c9ea2ef068000a811d23b995ce",
+      "bytes": 14797
+    },
+    "run/bm16-atomic-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/ttir.txt",
+      "sha256": "308ee555a6cb0380fbe5feab53b9bb6fbca0d428cf82824c6fac00bdbdd7c3da",
+      "bytes": 9456
+    },
+    "run/bm16-atomic-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "40307c07b638eae75a9b493d0f8d5fc51f2c5714418651ab39d40a94e3a964bd",
+      "bytes": 8695
+    },
+    "run/bm16-atomic-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "2182a46edbdb9ae556848def47a8867deb2202675c5f3e30fda3ee36ba3f2ba1",
+      "bytes": 8581
+    },
+    "run/bm16-atomic-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-ordinary/output/compiled/npubin.bin",
+      "sha256": "84b7d1a03d250e1ffddf69214c7c83c0acf405d2f29f707db56626ca5735c6ec",
+      "bytes": 4568
+    },
+    "run/bm16-atomic-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/receipt.json",
+      "sha256": "dba7376469a05eedf8eaa6ef4ec3bbd76e83de5c0615bb7c480d97e17975da20",
+      "bytes": 1419
+    },
+    "run/bm16-atomic-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/stdout.log",
+      "sha256": "44fb5ef527297e045d943579031cb7cd3de5f9093c8e853983122a15b8c4f123",
+      "bytes": 112
+    },
+    "run/bm16-atomic-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm16-atomic-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/result.json",
+      "sha256": "fb5b450a4181d319942763a08424377684ea1c0e1e5b770a95c926a8b6309e6b",
+      "bytes": 2716
+    },
+    "run/bm16-atomic-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/plan.json",
+      "sha256": "0478188cdd511fcaea1c584ee971021f100a4d70d597a010da5b10921612274e",
+      "bytes": 502
+    },
+    "run/bm16-atomic-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm16-atomic-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/launch-arguments.json",
+      "sha256": "b3b45bdab246012b9d63bce1adb0944c89ce6c0df8205a9c55417fa7b5a1df96",
+      "bytes": 1093
+    },
+    "run/bm16-atomic-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm16-atomic-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/index.json",
+      "sha256": "79448d086c9d69c05a58842d0e71f6d8ffa00a3bad8bc2cd761f2311dcad0718",
+      "bytes": 969
+    },
+    "run/bm16-atomic-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/metadata.txt",
+      "sha256": "4525923be76eed07c23cae280e0a2f17ad1a08e2633c6cc7ed8d2c34fd290845",
+      "bytes": 1003123
+    },
+    "run/bm16-atomic-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/index.json",
+      "sha256": "6af74963426c230910aa5ebd213f93f32751c8950b193a5bb2348c3fe976b88e",
+      "bytes": 5831
+    },
+    "run/bm16-atomic-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/binaries-receipts.json",
+      "sha256": "cc4f5cf29953f9921872eea38cf56d48bf42bd1e12e00f95b65c4ae53e64b10d",
+      "bytes": 2280883
+    },
+    "run/bm16-atomic-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/capture/manifest.json",
+      "sha256": "52eed883ec8cc80a5a09d5fd29091bfad76eedef87c41e213c8329f5bbd1c64d",
+      "bytes": 5997
+    },
+    "run/bm16-atomic-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/capture/ai/selection_status.json",
+      "sha256": "26ca9c83557b42acbae864342c0c4ef9d14f0b49e105dd82d298d849e51ce101",
+      "bytes": 800
+    },
+    "run/bm16-atomic-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/capture/ai/launches.json",
+      "sha256": "bdb45967b6bea102659a7107a00013c40142e7ae7f0358f9b3919f0e1e208502",
+      "bytes": 225
+    },
+    "run/bm16-atomic-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/capture/ai/arguments.json",
+      "sha256": "c3b906f83065c0903bf595105e01afa6b712f06838d22d81fb8ae3786730395c",
+      "bytes": 866
+    },
+    "run/bm16-atomic-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm16-atomic-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/source.txt",
+      "sha256": "4919706152a85832c41fb02b96a7f52640b5e193fc0491f488741bf3faf76739",
+      "bytes": 16793
+    },
+    "run/bm16-atomic-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/ttir.txt",
+      "sha256": "3489a2f408239f6e52ed2ed2f089712b20faab5e29d0228e9bc81a3242eb0d58",
+      "bytes": 270097
+    },
+    "run/bm16-atomic-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/ttadapter.txt",
+      "sha256": "94af9fc8a4e15f729fca8d5f69bc1ec829ec8f3b11d933114fca6d88ab6bde6c",
+      "bytes": 256818
+    },
+    "run/bm16-atomic-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/bcmlir.txt",
+      "sha256": "5cb86f425fa233f5d90b1d2fee7b5cf8bd756a7d7690e60298c24e0a650f0cc6",
+      "bytes": 256727
+    },
+    "run/bm16-atomic-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/compiled/npubin.bin",
+      "sha256": "9e02d8db4472bc7bdf2c29dee6900960caab266e0cd53417a1d87a4b65d5f061",
+      "bytes": 17016
+    },
+    "run/bm16-atomic-default/output/generated/cd9437b50e1a479c7bc0b79e636dc81737bd86b199c669aef5dbcbc42e04787d": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/cd9437b50e1a479c7bc0b79e636dc81737bd86b199c669aef5dbcbc42e04787d",
+      "sha256": "cd9437b50e1a479c7bc0b79e636dc81737bd86b199c669aef5dbcbc42e04787d",
+      "bytes": 26115
+    },
+    "run/bm16-atomic-default/output/generated/d249d02cf55713bc07d2456d55849f5bd263a45caf84888903675c4d5b60ffea": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/d249d02cf55713bc07d2456d55849f5bd263a45caf84888903675c4d5b60ffea",
+      "sha256": "d249d02cf55713bc07d2456d55849f5bd263a45caf84888903675c4d5b60ffea",
+      "bytes": 34117
+    },
+    "run/bm16-atomic-default/output/generated/c5a3c11185b81682151099d4f3d48be80f2c0f5d6ccb89f1dc05dc17574af117": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/c5a3c11185b81682151099d4f3d48be80f2c0f5d6ccb89f1dc05dc17574af117",
+      "sha256": "c5a3c11185b81682151099d4f3d48be80f2c0f5d6ccb89f1dc05dc17574af117",
+      "bytes": 43116
+    },
+    "run/bm16-atomic-default/output/generated/56136d419b5fc39d3b8ab0f38b32e4061e5d77dfbc2c5e41510e43a71f289b69": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-atomic-default/output/generated/56136d419b5fc39d3b8ab0f38b32e4061e5d77dfbc2c5e41510e43a71f289b69",
+      "sha256": "56136d419b5fc39d3b8ab0f38b32e4061e5d77dfbc2c5e41510e43a71f289b69",
+      "bytes": 51265
+    },
+    "run/bm32-atomic-ordinary/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/receipt.json",
+      "sha256": "b8e0c8ea21f30d74e558c4438b5d7e002ad63f75bc35a597cee056399668c351",
+      "bytes": 1423
+    },
+    "run/bm32-atomic-ordinary/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/stdout.log",
+      "sha256": "a95459619055e3194718868985591f0c8c788e230586b51a037ec06e026551a5",
+      "bytes": 113
+    },
+    "run/bm32-atomic-ordinary/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-atomic-ordinary/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/result.json",
+      "sha256": "d2afbab67c1f07542ac1a31b5bcd71b0dcf833207bd669703a837eca1e3ff316",
+      "bytes": 2719
+    },
+    "run/bm32-atomic-ordinary/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/plan.json",
+      "sha256": "a943588ebd7ded605815588d0b03556258f4937c84494acf57f7f22e15796799",
+      "bytes": 503
+    },
+    "run/bm32-atomic-ordinary/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-atomic-ordinary/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/launch-arguments.json",
+      "sha256": "860454ab694c2fdaaded42eeec72e500284cd0dee39ed3c4787aa3506c48d124",
+      "bytes": 1093
+    },
+    "run/bm32-atomic-ordinary/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-atomic-ordinary/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/index.json",
+      "sha256": "8eafb3a589d9e3c3a44fd7f5df9fb93b77a78fdc5bcb2c61813f1f9626150007",
+      "bytes": 960
+    },
+    "run/bm32-atomic-ordinary/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/metadata.txt",
+      "sha256": "df907dfe4cb402e4c6c4e7ad20028ceca034e0c38ce88d10b42d1d06a6cdbbab",
+      "bytes": 3222
+    },
+    "run/bm32-atomic-ordinary/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/source.txt",
+      "sha256": "3b012878c2abbaf211d990a4648f20515bbae39354b8a401ea2c636b9edea15e",
+      "bytes": 14797
+    },
+    "run/bm32-atomic-ordinary/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/ttir.txt",
+      "sha256": "0ec3bb1051d4fb716e843b5ce95de89ae90d307200df395fc2f2fabe7f03096b",
+      "bytes": 9004
+    },
+    "run/bm32-atomic-ordinary/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/ttadapter.txt",
+      "sha256": "25f7418e9631ab4befcd43b82c12f87a93eab179d00c0b5c02178a89d6c61507",
+      "bytes": 8695
+    },
+    "run/bm32-atomic-ordinary/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/bcmlir.txt",
+      "sha256": "226d176a66a5c154f8a56937e6fe9318b72f64fffdbf02316e0f93be7e1f88ca",
+      "bytes": 8581
+    },
+    "run/bm32-atomic-ordinary/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-ordinary/output/compiled/npubin.bin",
+      "sha256": "c49118340093be05ef033f85c295c9f5f6266061e1340f3a8c376e460c8114c0",
+      "bytes": 4544
+    },
+    "run/bm32-atomic-default/receipt.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/receipt.json",
+      "sha256": "055c1886b646d2b3245ce30917afe37ff2cd39771baeb1fb1de24561b56aadce",
+      "bytes": 1418
+    },
+    "run/bm32-atomic-default/stdout.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/stdout.log",
+      "sha256": "0d6f4c4fe2deb62e1c561ed9d167c9ab127034f1423ef33e6b9c009cbd2cf962",
+      "bytes": 112
+    },
+    "run/bm32-atomic-default/stderr.log": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/stderr.log",
+      "sha256": "60bfc930abeb875a49ac48624c7bb868428a72483e347adc61a6e87d939ea509",
+      "bytes": 34
+    },
+    "run/bm32-atomic-default/output/result.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/result.json",
+      "sha256": "84efa855420438921e0640ff82af614f0d85f9acae9e3bb0cfe40e1b8e553617",
+      "bytes": 2716
+    },
+    "run/bm32-atomic-default/output/plan.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/plan.json",
+      "sha256": "ff44d6d95356cd09aab31614f43a9b596e562c302922766a67ef3719ff84c889",
+      "bytes": 502
+    },
+    "run/bm32-atomic-default/output/host-ledger.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/host-ledger.json",
+      "sha256": "456c44a023b0f2faf1bd99a2da43d2c91a86f1cb1a185c0dab398acbec540449",
+      "bytes": 62
+    },
+    "run/bm32-atomic-default/output/launch-arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/launch-arguments.json",
+      "sha256": "860454ab694c2fdaaded42eeec72e500284cd0dee39ed3c4787aa3506c48d124",
+      "bytes": 1093
+    },
+    "run/bm32-atomic-default/output/source.py": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/source.py",
+      "sha256": "b09827d6f088e3b1d6484e8a3dbd8b341ce467e6eb6821164028dee2e49b774e",
+      "bytes": 15270
+    },
+    "run/bm32-atomic-default/output/compiled/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/index.json",
+      "sha256": "9d492774b0d3d9538bf538d35b677de033691f0fae1e1cc8b28ead6bb5935741",
+      "bytes": 969
+    },
+    "run/bm32-atomic-default/output/compiled/metadata.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/metadata.txt",
+      "sha256": "696492a8b94634d37079e306919f54e54ba8379ed14c940d721e6fe20eb0ad9e",
+      "bytes": 987618
+    },
+    "run/bm32-atomic-default/output/generated/index.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/index.json",
+      "sha256": "2f66c30cbcf81882acc367fbc636a70a0d3ae09f02d899f3caa3017e7e01af18",
+      "bytes": 5831
+    },
+    "run/bm32-atomic-default/output/generated/binaries-receipts.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/binaries-receipts.json",
+      "sha256": "88b972ef08dbcabefa267b85bf5fe41664a9a3a7cfa4646f6fb3628f64045875",
+      "bytes": 2236076
+    },
+    "run/bm32-atomic-default/output/capture/manifest.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/capture/manifest.json",
+      "sha256": "3b75733337c53b53a7ec3bd3ac8f1f78e3f803974cae5521a55a9d988acce929",
+      "bytes": 5997
+    },
+    "run/bm32-atomic-default/output/capture/ai/selection_status.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/capture/ai/selection_status.json",
+      "sha256": "bfd753f3993566b27058192e196279c5312c1412c32d62747c87fd75fd584e40",
+      "bytes": 800
+    },
+    "run/bm32-atomic-default/output/capture/ai/launches.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/capture/ai/launches.json",
+      "sha256": "addff5a55131e66baa2dafe8a37d5c8759786518e4374899793175d576995d15",
+      "bytes": 225
+    },
+    "run/bm32-atomic-default/output/capture/ai/arguments.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/capture/ai/arguments.json",
+      "sha256": "a4e275027ac44350a6f39d8b8639a805893af4e257359cab1c3953492ce2c361",
+      "bytes": 866
+    },
+    "run/bm32-atomic-default/output/capture/ai/cann_native_tasks.json": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/capture/ai/cann_native_tasks.json",
+      "sha256": "54dbe4069369de80bb4bedf3586881c5a2a0ab4be87e9326aab74c3109c32f9f",
+      "bytes": 344
+    },
+    "run/bm32-atomic-default/output/compiled/source.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/source.txt",
+      "sha256": "bfffce2ad94c14153babee1889b5cc9d4d434ff375875360804982023a826ff7",
+      "bytes": 16793
+    },
+    "run/bm32-atomic-default/output/compiled/ttir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/ttir.txt",
+      "sha256": "9a42f56e6c4462d106f12c0ca05ff5223ace19b384d91214f48312c529b2ba6d",
+      "bytes": 262987
+    },
+    "run/bm32-atomic-default/output/compiled/ttadapter.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/ttadapter.txt",
+      "sha256": "8378dbf7cac1559667f3cac036e44ef8e7fb1fe6f918b2a4330860e769e707f7",
+      "bytes": 250340
+    },
+    "run/bm32-atomic-default/output/compiled/bcmlir.txt": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/bcmlir.txt",
+      "sha256": "6ac7edbb6409b109df7655fac7e55dc93160d231bbd1b7d3a3418769b4efe88f",
+      "bytes": 250249
+    },
+    "run/bm32-atomic-default/output/compiled/npubin.npubin": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/compiled/npubin.bin",
+      "sha256": "1c1c6c2433f6dd83bee9eaada1cb0c990f11c18b03a1ebf9051256c7bb5b81c4",
+      "bytes": 16816
+    },
+    "run/bm32-atomic-default/output/generated/905f84aa54f8ae033bc098c1bd7b5bc4bc778e3f4b5a33aee925bc5d50f89e11": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/905f84aa54f8ae033bc098c1bd7b5bc4bc778e3f4b5a33aee925bc5d50f89e11",
+      "sha256": "905f84aa54f8ae033bc098c1bd7b5bc4bc778e3f4b5a33aee925bc5d50f89e11",
+      "bytes": 43154
+    },
+    "run/bm32-atomic-default/output/generated/f74dbb8ae870565a6b7a19353c9b86b9834cfb12ce13c651bc8e6c8b341cbffb": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/f74dbb8ae870565a6b7a19353c9b86b9834cfb12ce13c651bc8e6c8b341cbffb",
+      "sha256": "f74dbb8ae870565a6b7a19353c9b86b9834cfb12ce13c651bc8e6c8b341cbffb",
+      "bytes": 51303
+    },
+    "run/bm32-atomic-default/output/generated/b2439d4d72609c4169aaaf68c5d9ba1b1cb8f7fcf31778fb8f548656699a4616": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/b2439d4d72609c4169aaaf68c5d9ba1b1cb8f7fcf31778fb8f548656699a4616",
+      "sha256": "b2439d4d72609c4169aaaf68c5d9ba1b1cb8f7fcf31778fb8f548656699a4616",
+      "bytes": 26116
+    },
+    "run/bm32-atomic-default/output/generated/3be331c33776e0f11d55ceac56c2a3e3ba5e458decab5383a6a8889ee08100b8": {
+      "path": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm32-atomic-default/output/generated/3be331c33776e0f11d55ceac56c2a3e3ba5e458decab5383a6a8889ee08100b8",
+      "sha256": "3be331c33776e0f11d55ceac56c2a3e3ba5e458decab5383a6a8889ee08100b8",
+      "bytes": 34118
+    }
+  },
+  "sdk_libraries": "excluded",
+  "shared_cache_scan": false,
+  "raw_capture_binaries_json": "excluded; receipts-only copy retained",
+  "compiled_bytecode": "excluded; own generated user npubin retained explicitly"
+}

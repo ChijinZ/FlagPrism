@@ -1,0 +1,400 @@
+{
+  "approved_by_root": true,
+  "compiler_path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+  "compiler_sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e",
+  "cpu_gate_receipt": {
+    "bytes": 17972,
+    "path": "/tmp/chijin-r15-sdk-scalar-legality/public-replay-fixed/receipt.json",
+    "sha256": "6035465b3727869ee3f64866ddfd3b8c9ab5ad67b46bc3060d46bb7eaf69c8fc"
+  },
+  "cpu_gate_receipt_sha256": "6035465b3727869ee3f64866ddfd3b8c9ab5ad67b46bc3060d46bb7eaf69c8fc",
+  "dependency_scope": "actual observed external tools plus fixed opt, five public templates, new-venv libdevice; hash-only",
+  "execution_candidate_repository_commit": "cb968eb8d1891bd1ec6ad2574e070747a0f80986",
+  "fixed_build_receipt": {
+    "bytes": 19489,
+    "path": "/tmp/chijin-r15-sdk-scalar-legality/fixed-build-receipt.json",
+    "sha256": "a983a7608fdfdbd99d902d979395466ed4b2fb6e4525b13b23494a3497071d74"
+  },
+  "legality_fixed": true,
+  "libdevice_bridge": {
+    "byteequal": true,
+    "new": {
+      "bytes": 84984,
+      "path": "/tmp/chijin-r15-compiler-identity-install-v2/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    },
+    "old": {
+      "bytes": 84984,
+      "path": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    }
+  },
+  "note": "Root-approved only for the frozen public strict 12-cell regression; separate GPU_READY and sole NPU4 lease required. Original qualification failures remain open.",
+  "resource_files": [
+    {
+      "bytes": 1567636,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.aic.bc",
+      "sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f"
+    },
+    {
+      "bytes": 13019032,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.aiv.bc",
+      "sha256": "c816c724c8d0455ff1a85cd08b1f6097131f67809dfc0fbe31209d66139d04a6"
+    },
+    {
+      "bytes": 439372,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.mix.aic.bc",
+      "sha256": "8fae0b834a36dda0a58ce1b4acd76511ecf183db713aad35553ad7c109a91213"
+    },
+    {
+      "bytes": 794916,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.mix.aiv.bc",
+      "sha256": "44d1c6a3386b63ae0ae0c48a6b5081ebbd343f87ea838c3872ba5aa0a7363858"
+    },
+    {
+      "bytes": 1920,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/host.bc",
+      "sha256": "1aa88a6b7d318fe5090666e6430b86560875583bfd331e1edb6cf0a28673b948"
+    },
+    {
+      "bytes": 84984,
+      "path": "/tmp/chijin-r15-compiler-identity-install-v2/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    }
+  ],
+  "source_and_patch_identity": {
+    "actual_build_recipe_sha256": "666cf0c914eff2c936c484609889f9397980edafdb1637000a312e0410176e85",
+    "archives": {
+      "AscendNPU-IR": {
+        "archive_sha256": "ad8e88cadb6330c54b64cf7af3b223128ae453c2671a1fcea51c01575228cdc2",
+        "revision": "428ab8fdab46a879c7349caba4cde705bc8c9bb6"
+      },
+      "llvm-project": {
+        "archive_sha256": "baa49713c849c63ca7fd51c4200e439eca01988e87ea904d7abaaf1ef78a95b8",
+        "revision": "cd708029e0b2869e80abe31ddb175f7c35361f90"
+      }
+    },
+    "build_compat_patch_sha256": "4c6e07d319ed7b75c9a7d6ec718b8151c8abb0a5640c1e6eac360a6b17321d64",
+    "build_compat_receipt": {
+      "bytes": 7274,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/build-compat-receipt.json",
+      "sha256": "634361d59a076513fefe980b5ab2a75144ab6304f242153f1bac9418ff4f8246"
+    },
+    "canonical_product_commit": "e0c218fcad8d592ebb6e55c78af8cca4096f57cb",
+    "installed_source_commit": "a829a3312af69c1b961919025053829d7096a2b1",
+    "installed_wheel_sha256": "bbd3ff08a15f2cb174be3d63d527540935f2811d8a0356772d7749a85b1a7a14",
+    "legality_patch": {
+      "bytes": 1275,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/recipe/integration/patches/ascend/sdk-scalar-tiling-legality.patch",
+      "sha256": "7ce7f7c116b9beade493b6473337e73cedff230a62b1b180d26d6f591e30a4db"
+    },
+    "llvm_revision": "cd708029e0b2869e80abe31ddb175f7c35361f90",
+    "official_llvm_patch_manifest": [
+      {
+        "file": "build-tools/patches/llvm-project/0001-[Huawei][MLIR]-feat--add-bishengir.patch",
+        "sha256": "6d11e97c33cc770b8bbc9f5543132649b1419692d6c70f0bbc11514341e40148"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0002-[Huawei][MLIR]-support-on-demand-bare-ptr-calling-convention-for.patch",
+        "sha256": "2834840b60201a94e03eeb6163bf776b7d5f8574218d9c0b5cd34a1776a51adc"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0004-[Huawei][MLIR]-fix--fix-bug-about-convert-func-to-llvm.patch",
+        "sha256": "d096e232c9b8ba2aece6dd75fdc042a0a0762d4c1656955bd33b135d0978301c"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0005-[Huawei][MLIR]-add-an-option-to-skip-slice-linalg-fold-unit-exte.patch",
+        "sha256": "a3cc271d6f5132c2f9b19a26abbe0acdbab384d041bf3395232bbd4bc430e041"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0006-[Huawei][MLIR]-support-specifying-optional-attrs-MatchOp.patch",
+        "sha256": "c6c7b993b0b5cdad9e1f4eb3487a2ae397ee389ad0200c6b938eb8f079d92046"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0007-[Huawei][MLIR]-Add-dynamic-tiling-to-tileReductionUsingForOp.patch",
+        "sha256": "0317ac32d144d5ef35d657bb4308f4aa0ac43971ab7bd3de61881140838471ea"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0008-[Huawei][MLIR]-feat--tile-using-for-support---transform-any-valu.patch",
+        "sha256": "e3f8c0ed6e347187e9156aa75db164ca9693429ce9c0fc7f4e1eff1b9c1371f9"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0009-[Huawei][MLIR]-feat--enhance-reinterpret-canonicalization.patch",
+        "sha256": "d1154bf632375f09948f7c04f4c5a616075621b914a7056de2bc7722f299d15c"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0010-[Huawei][MLIR]-feat--add-enableExtendedPattern-option-for-Canoni.patch",
+        "sha256": "05d6ee6976523326a5c7898de7ba9623c6ff9c33eb79dd13413e32e1544eefd5"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0011-[Huawei][MLIR]-enhance-tensor-expand-shape-bufferize.patch",
+        "sha256": "c733eadee21a7b04dd366e7a58f1dabfb8ef6ccc465e30cf8ff8fbf10572e062"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0012-[Huawei][MLIR]-fix-destination-style-interface-bug.patch",
+        "sha256": "5d9ca22329cc050d732fd159e9e323293b008382154444eee5dd658e5eef8ef2"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0013-[Huawei][MLIR]-enable-aggressive-bubble-up-extract-slice-for-una.patch",
+        "sha256": "49f86d4b262d20440ed6f8d29d0e0cb7f6bb2d427ce9ff420957305ac54e20b7"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0014-[Huawei][MLIR]-Add-support-for-broadcast-and-reduce-bubble-up-ex.patch",
+        "sha256": "80cc3b4ea4f7d8808136d6a7235aabeb1d7f6429f956c873aad54bf1309b42ec"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0015-[Huawei][MLIR]-enhance-loop-fuse-sibling.patch",
+        "sha256": "7a7b1083ab6d80fffbbdf197b0e8f5ddcc409719aac0d2c738861e5369b8338c"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0016-[Huawei][MLIR]-enhance-collapse-of-expand-optimization-for-non-i.patch",
+        "sha256": "d2bc84928b92a14aa5b3f9787e8aa50d8853e0694572180ab498f21cfe82a2f9"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0018-[Backport]-Improve-performance-of-DropEquivalentBufferResultsPas.patch",
+        "sha256": "0c149e76ab6499238c2609f2e5c58b544a2b68783dab7a8987efd0d029228587"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0019-[Huawei][MLIR]-extend-ApplyPatternsOp-with-disable-pattern-optio.patch",
+        "sha256": "5d5340128768ecb915a9f6c605a01ba8506d0ef63b62918624f2595f9428f0fd"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0020-[Huawei][MLIR]-move-in-tensor-cast-users-into-scf-if.patch",
+        "sha256": "fa2fc9391adea75b06d76a6359af96cb1ce7ee4404f50ebbb499ff0600428345"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0021-[Huawei][MLIR]-hoist-same-yields-from-switch-cases.patch",
+        "sha256": "6ebb4c29f3433d920c6afed817cbc516bf15b50dc8a35fc8de8a40a79c4b2637"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0022-[Backport]-Support-bufferization-of-external-functions--113999.patch",
+        "sha256": "026de75e658b1a47238171232f80f6f48c6e0c5e695671199841d5a92096c6af"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0023-[Huawei][MLIR]-fix--fold-constant-into-output-shape-of-ExpandSha.patch",
+        "sha256": "fc5597c23ded3d69bc387c5cb8c4580848941171275d9dac491ac4dc0d7eb308"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0024-[Huawei][MLIR]-Add-fold-multi-reshape-canonicalization-pattern.patch",
+        "sha256": "27f2e6ee19f67714de8458bf1010ccffba0265a8e54a153a7bc56f0f16b1047b"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0025-[Huawei][MLIR]-support-customizing-benifit-for-MergeConsecutiveI.patch",
+        "sha256": "ac75cc6977b98401ac8c627225e2f9a705ad8ea3a5313a5bf9cd3c7bfd08b611"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0026-[Backport]-Simplify-tenor-pad-tiling-length-calculations---11903.patch",
+        "sha256": "c7048b164ee192c1b7f7f39fc2135ea0fd458541e93cebb1b2ffeeb1b91c1962"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0027-[Huawei][MLIR]-improve-fold-expand-of-collapse-with-different-re.patch",
+        "sha256": "073ea5999d755410d09bdd6724e7e86ed45742c26347aad95cc8535672a414fa"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0028-[Huawei][MLIR]-disable-registering-reduce-op-s-partial-reduction.patch",
+        "sha256": "12fbbe76e1540a6662beacb2c44b69e5c12723aabf6e4b776c233e6a316cafc6"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0029-[Huawei][MLIR]-Refactor-tensor-ops-to-receive-multi-dynamic-expa.patch",
+        "sha256": "6c630fd5b097239523164fbecd117c5169ca37bdc4feba39b0351a0f9ba1e3c7"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0030-[Huawei][MLIR]-simplify-slice-from-single-concat-segment.patch",
+        "sha256": "515cc6c4dfd877ecf46b4cbeff6370c7e6b10cefa3e6452cadb7e70e432c2b9a"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0031-[Backport]-Add-TilingInterface-support-for-fusing-tensor-pad--10.patch",
+        "sha256": "8809ddae840ffd5008c1fa255d35cf700ef5f45f573f9352b967bd526ace1642"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0033-[Huawei][MLIR]-added-more-iterator-types.patch",
+        "sha256": "6a5185e143f2c930edc6dfe8de8b306362befe2b38617f4d8f2b692bf4c38fce"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0034-[Huawei][MLIR]-normalize-broadcast-dense-splat-to-fill-with-cons.patch",
+        "sha256": "3963d435be6d66be5fcf3b9fa1cb1dea24dff8145cd13e292c3df637c522cb8a"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0036-[Huawei][MLIR]-simplify-dense-for-linalg-elemwise-binary-op.patch",
+        "sha256": "034e355139c9bf5cb68db427f9403651115b79c9979caf30a70e2b6293440cbe"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0037-[Huawei][MLIR]-support-inline-dense-splat-to-linalg-generic-regi.patch",
+        "sha256": "41fb3b70e5906fb8c7ba777b3c4a61bae255abd33d9859497b7946a7c6dd4fbe"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0038-[Huawei][MLIR]-refactor-redundant-linalg-reduce-unchanging-shape.patch",
+        "sha256": "4a9f9a694a9d0d30c68a877e0f76c9d4ec76ad014fcd697313e2a44a574173a2"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0039-[Backport]-Avoid-doing-op-replacement-in-linalg--dropUnitDims.patch",
+        "sha256": "b4780a27f5c1e810619457d62454b0cb1c7ef8b02a4178239ab9a9999a34bc26"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0040-[Huawei][MLIR]-Refactor--DropUnitDims--to-be-reused-by-other-Lin.patch",
+        "sha256": "6cefb148d4aefa534d02e772fd775fb681d600f28b5da7bc171093d7d805a956"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0041-[Backport]-Move-concat-operation-decomposition-as-a-method-of-th.patch",
+        "sha256": "7a335de83106565a30f81ca9e10f8343e20148684a2a4ac78d6406c35bdf61f4"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0042-[Huawei][MLIR]-Fix-memref-dse-accidentally-remove-func-call.patch",
+        "sha256": "6c28aab1b677195cc34c77bf5e059a1be3718ea648a2bae46b70eceb9dac0882"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0043-[Huawei][MLIR]-fix-clean-code-warnings.patch",
+        "sha256": "af297b70abc3218f662aee470bc4b628af4058a2ee0efe6f9ed986bf29802fca"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0044-[Huawei][MLIR]-feat--enhance-computeCollapsedLayoutMap.patch",
+        "sha256": "9c07e2cbce233c92637b4291b1bb73ff9d66f214070f347393b15be56359a684"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0045-[Huawei][MLIR]-feat--enhance-computeCollapsedLayoutMap.patch",
+        "sha256": "2c53709a986bee629997924d2095efadd9012633ac7d1a894b7687c688845860"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0046-[Huawei][MLIR]-feat--enhance-computeCollapsedLayoutMap.patch",
+        "sha256": "3098f169a536d50cdea59cfaf10381deda67bd4b15f726fd0affc90ef4931f4e"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0047-[Huawei][MLIR]-feat--enhance-computeCollapsedLayoutMap.patch",
+        "sha256": "eada781b92a635ee02f78930deae94d32cdfca290d15c187a881e9e9b9cd0e46"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0048-[Backport][mlir][memref]--Allow-collapse-dummy-strided-unit-dim.patch",
+        "sha256": "0d19ee9113fad935362bdd3d0746c39ae29f9cc60aa30a3eb920292f9921fe4d"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0049-[Huawei][MLIR]-prevent-removal-alloc-on-ReturnLikeOp-ops.patch",
+        "sha256": "d0b678456645b49353d3f3eecab74d9fbeb50b9533dbbdf87f3862c9d28eed53"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0050-[Huawei]-LLVM-modification-for-BiSheng-Enterprise.patch",
+        "sha256": "c58d0f5e3a30fafce61f9b714227b444e31546c2b925613f8ffebc92704c3490"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0051-[Huawei]-Modify-CMakeLists.patch",
+        "sha256": "fef9df26604235f38311ff819c3545ffdb34e96ffa3228bb24584e01036b65f0"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0053-[Huawei]-added-verifier-for-HIVM-StructuredOp-Interface.patch",
+        "sha256": "5791de70bdff6aebc3cffc811c6692025ce1e44a182017c38967add07efd6e18"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0054-[Huawei]-Clean-code-fix-infinite-recursion.patch",
+        "sha256": "4bf4964b14d1da5a00998a0c30a43866d318db0fb88bc874cacafdf100310736"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0055-[Backport]-Enable-decoupling-two-kinds-of-greedy-behavior.patch",
+        "sha256": "db568e8d5853dab07b981f39840a4ae86379ed3e14f19c0ddbf55f57038ebc26"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0056-[Backport]-Propagate-errors-from--visitOperation---105448.patch",
+        "sha256": "00d8a3c89c7536d334fc38e8514ea98ac291e95777d5ae3ad923bb9002930f66"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0057-[Backport]-Refactoring-the-definition-of-program-points-in-data.patch",
+        "sha256": "f7cb8a99c1d08a2eb9b5a07cda37b4b2c55f86c6ff5a798e75b2289421148d17"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0058-[Backport]-unify-semantics-of-program-point--110344.patch",
+        "sha256": "aed3b996051feccabb3eec418c1bb918054088f0420fa4a06e6b81fe23fb1a2c"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0059-[Huawei]-Fix-testcases-readd-addArgumentMaterialization.patch",
+        "sha256": "0da930128e38b28a0c10d1b8ee8cf9154798d42daa18b0e78460f2004271e76b"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0061-[Huawei]-Fix-bubble-up-extract-slice-dyn-dependency-issue.patch",
+        "sha256": "273d1c18ffac9645d7ad8c9e61e86e16607b259df6483b302283e22a3f2298ec"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0062-[Huawei][MLIR]-feat--support-if-and-memref-cast-canonicalization.patch",
+        "sha256": "572794a383b4459eb338b91b295472985f9dbc53cf14d899c4db8ba1e5faad2c"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0063-[Huawei][MLIR]-feat--support-for-and-memref-cast-canonicalizatio.patch",
+        "sha256": "367d6fd1d472fdce7d02bbeb7675c730adb63588617da7a72bf4473ecb9aa66f"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0064-[Huawei][MLIR]-fix-duplicated-pattern.patch",
+        "sha256": "5baa3da689589b4ee88d50acd44e9710260c2cda4500d8e5d93f6d7f0d5644ad"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0065-[Huawei][LLVM]-add-flag-DBSPUB_DAVINCI_BISHENGIR.patch",
+        "sha256": "55c0bdcbc417bcd24627dbe5aaedd9e47e8f8fe6dc1d71197dbc42e5ba2133a8"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0066-[Huawei][LLVM]-Fix-double-free-dead-alloc-and-store.patch",
+        "sha256": "0632fbe8e9920f8201a20594d986783aff57edd1f48dba6e4b72604f883c8881"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0067-[Backport][MLIR]-Fix-multiple-func-return-problem---114017.patch",
+        "sha256": "1faf8767ce1b6da27257be3c621b7a7e205c8365b8c81dd928458eb0f08fc51a"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0068-[Huawei][MLIR]-mark-llvm-for-memref-load-with-load_dev.patch",
+        "sha256": "e7e1a9094fb9e43d8bcb9c12bdcd2c2b9e1f3e38d62f5f81bc15b78fbf9f67ac"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0069-[Huawei][MLIR]-declare-BytecodeOpInterface-on-some-ops.patch",
+        "sha256": "ee3c0af1e4b72dbd452dccd90cf5a1271b71c25ecfaf2e716057e71a5693025a"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0070-[Huawei][MLIR]-fix-loose-reassociation-bug.patch",
+        "sha256": "eda2e6e5a64b713ba224aff47d0b9b4187aa386fcb3a05149c30f0dbff672505"
+      },
+      {
+        "file": "build-tools/patches/llvm-project/0071-[Huawei][MLIR]-fix-callsiteloc-bug.patch",
+        "sha256": "14bd67ae007eb4cc4ac87ce39d3352dc42b1fa171f718b636ec78a19d9e7fd19"
+      }
+    ],
+    "official_patch_manifest_producer": {
+      "bytes": 97130,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/build-receipt.json",
+      "sha256": "5307fb0b21dfe0a709b7b1100b4c3a34f802c3ce82ef6b2fa4af0505b8e80c15"
+    },
+    "sdk_fixed_source": {
+      "bytes": 37488,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/source/AscendNPU-IR/bishengir/lib/Dialect/HIVM/Transforms/TileAndBindSubBlock.cpp",
+      "sha256": "5370a0df12b9f1216dc935888e843376c61391aa96c8a2864132cec30a6d434c"
+    },
+    "sdk_patch_product_commit": "ee877073330404a323aa6cc048d2c62a59b43fb9",
+    "sdk_revision": "428ab8fdab46a879c7349caba4cde705bc8c9bb6"
+  },
+  "status": "SEALED",
+  "tool_files": [
+    {
+      "bytes": 127100952,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+      "sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e"
+    },
+    {
+      "bytes": 81393984,
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/bishengir/bin/hivmc",
+      "sha256": "e1efb1e1f652f36ae64bda1565722af27b4e3ebf14b3aad236ff079ef6ecf1fc"
+    },
+    {
+      "bytes": 144577664,
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/bisheng_compiler/bin/bisheng",
+      "sha256": "2b5d17a037767ad41123868e14bedb91741b0682cafd1a2aa05a1da5d8b8bade"
+    },
+    {
+      "bytes": 80992344,
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/bisheng_compiler/bin/lld",
+      "sha256": "3172fa291532430a51d7849c24b3ad257e83026931eb07ce78cd86a87d8fea53"
+    },
+    {
+      "bytes": 10042544,
+      "path": "/usr/local/Ascend/cann-9.0.0/tools/bisheng_compiler/bin/cce-ld",
+      "sha256": "6d46095edbfc2a645602aa0cd3944115307670abade3daa319a5177b7da9f71e"
+    },
+    {
+      "bytes": 136943480,
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-opt",
+      "sha256": "fa2ee876fd4b2172b1399fe4b316b92230a5aba4b2c04c7f041cafd8fadb6cce"
+    }
+  ]
+}

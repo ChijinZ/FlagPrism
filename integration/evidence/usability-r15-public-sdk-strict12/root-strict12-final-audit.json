@@ -1,0 +1,94 @@
+{
+  "status": "pass",
+  "scope": "offline retained-byte audit, no product import/test/device execution",
+  "archive_sha256": "67781c88999fdcb4420d538f1195a090b177c03bbaf43e3bc69c10ebaf1539e7",
+  "indexed_files_verified": 270,
+  "archive_files_verified": 271,
+  "cells": [
+    {
+      "cell": "bm16-atomic-default",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm16-atomic-ordinary",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm16-scalar-default",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm16-scalar-ordinary",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm16-vector-default",
+      "state_elements": 1024,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm16-vector-ordinary",
+      "state_elements": 1024,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-atomic-default",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-atomic-ordinary",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-scalar-default",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-scalar-ordinary",
+      "state_elements": 2,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-vector-default",
+      "state_elements": 2048,
+      "checks": 8,
+      "host_calls": 1
+    },
+    {
+      "cell": "bm32-vector-ordinary",
+      "state_elements": 2048,
+      "checks": 8,
+      "host_calls": 1
+    }
+  ],
+  "actual_identity_cells": 12,
+  "release": {
+    "summary_status": "finite_table_finished",
+    "completed": 12,
+    "remaining_descendants": {},
+    "owned_live": 0,
+    "rows": [],
+    "zombies": [],
+    "checked_pids": 14,
+    "checked_groups": 13,
+    "device_work": false
+  },
+  "old_qualification_failures_closed": false
+}

@@ -1,0 +1,61 @@
+{
+  "cell": {
+    "config": "bm16",
+    "mode": "ordinary",
+    "state": "scalar"
+  },
+  "cleanup": [],
+  "command": [
+    "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+    "-I",
+    "/tmp/chijin-r15-public-state-strict-new-sdk/public_state_probe.py",
+    "--output",
+    "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/output",
+    "--device",
+    "4",
+    "--config",
+    "bm16",
+    "--state",
+    "scalar",
+    "--mode",
+    "ordinary"
+  ],
+  "device_fault_detected": false,
+  "environment": {
+    "FLAGTREE_BACKEND": "ascend",
+    "TORCH_DEVICE_BACKEND_AUTOLOAD": "0",
+    "TRITON_CACHE_DIR": "/tmp/chijin-r15-public-state-strict-new-sdk/run/bm16-scalar-ordinary/cache"
+  },
+  "exit_code": 0,
+  "finished": 1792163787.641421,
+  "interrupted": [],
+  "pgid": 2004274,
+  "pid": 2004274,
+  "probe_status": "diagnostic_completed",
+  "proc": {
+    "pgid": 2004274,
+    "pid": 2004274,
+    "ppid": 2004273,
+    "sid": 2004274,
+    "start_ticks": 315412662,
+    "state": "R"
+  },
+  "remaining_descendants": {},
+  "started": 1792163752.218423,
+  "state_observation": {
+    "elements": 2,
+    "equals_one_observation": true,
+    "oracle": "none; requires actual physical ownership analysis",
+    "unique": [
+      1
+    ],
+    "values": [
+      1,
+      1
+    ]
+  },
+  "terminal_confirmed": true,
+  "timed_out": false,
+  "timeout_seconds": 360,
+  "variant_compile_unsupported": false
+}
