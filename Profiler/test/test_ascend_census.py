@@ -2,7 +2,7 @@
 import struct
 
 import pytest
-from flagtree_profiler.ascend_census import (ACTOR_STRIDE, HEADER_BYTES,
+from flagtree.profiler.ascend_census import (ACTOR_STRIDE, HEADER_BYTES,
                                              PROGRAM_STRIDE, actor_descriptor,
                                              plan_layout, validate_transport)
 
@@ -88,7 +88,7 @@ def test_saturation_and_flags(count, flags, valid):
 
 
 def test_shared_actor_descriptors_have_unique_events_and_one_raw_reference():
-    from flagtree_profiler.ascend_census import decode_shared_census
+    from flagtree.profiler.ascend_census import decode_shared_census
     plan = plan_layout([3])
     raw = bytearray(plan['byte_count'])
     sites = [{'site': 7, 'role': 'primary'}]
@@ -137,7 +137,7 @@ def test_shared_actor_descriptors_have_unique_events_and_one_raw_reference():
 
 
 def test_zero_grid_has_no_actor_cells_or_synthetic_events():
-    from flagtree_profiler.ascend_census import decode_shared_census
+    from flagtree.profiler.ascend_census import decode_shared_census
     result = decode_shared_census(bytes(HEADER_BYTES),
                                   grid=[0, 2, 3],
                                   actors=[
@@ -161,7 +161,7 @@ def test_zero_grid_has_no_actor_cells_or_synthetic_events():
 
 
 def test_sparse_actual_actor_columns_do_not_create_missing_sites():
-    from flagtree_profiler.ascend_census import decode_shared_census
+    from flagtree.profiler.ascend_census import decode_shared_census
     plan = plan_layout([2])
     raw = bytearray(plan['byte_count'])
     struct.pack_into('<II', raw, 32 + 3072 + 1024 + 5 * 8, 7, 1)
@@ -220,7 +220,7 @@ def test_compaction_admits_large_grid_without_changing_either_budget():
 
 
 def test_compact_sparse_actor_offsets_and_unpresented_overflow():
-    from flagtree_profiler.ascend_census import decode_shared_census
+    from flagtree.profiler.ascend_census import decode_shared_census
     plan = plan_layout([5], version=2, site_count=8)
     raw = bytearray(plan['byte_count'])
     first = 32 + plan['program_stride'] + plan['actor_stride'] + 6 * 8
