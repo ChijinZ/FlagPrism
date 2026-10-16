@@ -1,0 +1,422 @@
+{
+  "cache": "new prefix, per combination cold and warm share only their own cache",
+  "no_handwritten_LLVM": true,
+  "no_private_product_api": true,
+  "no_scope_parameters": true,
+  "no_site_ids": true,
+  "only_interpreter_flag_added": "-B: disable .pyc creation; public CLI/default collection unchanged",
+  "ordinary_registered": 24,
+  "profile_commands_checked": 48,
+  "public_cli": "-m flagtree.profiler.cli --detail auto --device 0 -n <bundle> <ordinary-script> <unchanged-frozen-script-arguments>",
+  "rows": [
+    {
+      "config_index": 0,
+      "kernel_ordinal": 0,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "00f8ecbfa69214d6b359df86d9468bb5d1bc99461b923d53e7cf8cc18046d500",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "af872d04fc9b9c8a9e8682e60e723a1c2d8e2d52d7373f380b4c7275f4d74fe9",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 0,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "a5fb3fbbfcef68884d286c5cd4ba65c8602f5105c54e30c3861c0f2129797375",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "c407a272c4ac6650854cd978ff08786c2ab5706e93684b5ba0f885e4f26f5b54",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 0,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "e01fe0e11edba9cbf123da1ae762ab72f4476ae07a613ebbd979282f9a01995c",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "9969b9aaf38607f7d0e67d7b7b832cd0dcafb978b08f04bd1dfb4116ea14df8c",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 0,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "18edfb6829335f7702d2691130ae77edda9ffc4ddb7554adca8d1be3c98130d1",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "f51dd39a48909f14cfd5833e90e577ddea6d39e92ea3ca989561e349eb4a4e62",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 1,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "609141c58c1b1ea55776d4ed59fcbdf28dafa06774e71f64882bdbc54855d1d0",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "fb1007c82201d0ab03ab3b0167e2b125be998b73ab3319dc0f496293c3c2418f",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 1,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "ed8a6fb235a9e2c36796f28d882278877f0efab40ba6fab4724ae994a6633612",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "f349b4000760e6317dd0978552a847cfebb1e58c30572ee18812d67431468cf7",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 1,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "cfbff32b2df357ae7b3397139a5c0ce080c160eb91f35aa00f988e6de8cca17f",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "37d8bac45001e41c414b9ad89819e8fb69cd72f3093a03d1b7c5dacab5e02819",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 1,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "c8deac66bac0bf4b485de863d43e8df8a8cb92383522f8445eaaa1cc8ebe0e8c",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "1b63e366c3968eddb5edb45d7978f89666b8b8568415d647783749e6fc005c4d",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 2,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "fd23c9498494c2d2d3d51d7b55d7b40dd3814e1e923dda1465dca1bf6a55c7b2",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "2b0539e7c8732299b5002d34bb74c009f319e49925c0ff4b1432f0701ceae680",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 2,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "a29fb77412a0dddf5ba6c07769c9132a9f4b6bd60b6747f130b81f32c4992ec3",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "45753d70731af35f35b164af30ce20b15929777b3ad4aa3136bcc9d880dea0d9",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 2,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "cec7dfc361a4b629e3087df6a5290b14e1d88c35b35f709184debfc27bbf9dda",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "7c7c850a8fe444efcefba73a65617543f2b58ba74064b53bf2b033bd20a3d88d",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 2,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "5f98cbea8d881455f37f4e8c500545ea7f563a665c58d570fe53db52917ca925",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "ea27ef0b40b8f57dd6158d829c4846fe05c7acc8fe81a75766a050f485759189",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 3,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "7492e32a23106ab5fd85846be321e81f610988d2a955fac4c65735d529abd008",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "fedb9898c8fcf0a89fa2f20eb23c61fe094d65509c5ed7c159e8910286d38c75",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 3,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "eddbe6b5c8adecfc86a884861e2ecfdeda213ca13431f28c64c3d5058b167b54",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "424ee1115083e0f6b2379e184e43a3684dd789e097c43c81a4ecf90be548e98a",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 3,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "a8b92cfcfa7cec97f75531318dea19c3c4877f4a90925a92e6bc19aed03f806a",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "8093928d8e75dd8470befedfc043195fd7d5446bc3e0dbdde3a73080af9fc8c1",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 3,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "15c71f6423d9d40089c3cab6d1ba098ef437dcd3b0117259581203aa09b0eed2",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "94983e9f1dc1688bfbef845244ad8d75a847869756ffce35d53713fee9623be6",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 4,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "9fefd29deef9a461817b9ac13122d521834171349a3e1eb3987c3e0de5e6b55c",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "afa6f2a877a79039d6fe80c7308f69a314935521fefd9f6445a4167006ed441a",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 4,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "9f2cc9e70034671caeb30470f73860073dc056b1569587a59f97b70ea1c722f7",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "f388bfab314116ff161ce2d580716601fdf9e3106798937adbadee587d0435c6",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 4,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "984f33813d88511afbf9e1f78c29dd8bbf8ae0276dadfbc650d6aa73fd675ad0",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "4520a7bdc33be2fb93b2ccab7c5862a1c5439a51d22b8f961140eaa696554a9d",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 4,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "2634fc7b67dd22e28c0b02bc5aed776ea5a1801763bf902eb939038b0c73d90f",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "834387777181fda23ef91691927bc572e9f12fabeb46d66dd1f172dc4fdf15cc",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 5,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "9f45743e74c280df80e4a69dbca7fc0790c0aee4f2fe45e5b530f1f69e99a2a3",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "090acd299d88cfd804e6074912ad07cdd06f8d46d1c6261b5f8e101ed0af4fe2",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 5,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "965395735eb6038c5d47dfd62a6f04009d6493de620ab15e040759f453440609",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "2d809e067257edb859260d23994babd326b2cec9eff06506214a55ab936bd8d4",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 0
+    },
+    {
+      "config_index": 0,
+      "kernel_ordinal": 5,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "66e4858843c8cbf703d1f5dfdac2dd38713981d22935e72390da2d1a574e972f",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "1527ce30d00d4c7132f0ff6a23ddd03bf12d874bb89580459939371d941940ac",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    },
+    {
+      "config_index": 1,
+      "kernel_ordinal": 5,
+      "repetitions": [
+        {
+          "original_process_file_sha256": "d8b20f0b11ad5a87a5bb1ceb5c2a12483ff294c23d86df35d14db529a460a377",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "cold"
+        },
+        {
+          "original_process_file_sha256": "464a4c4f5dc30de73e10dfc9df3db88a3f95462d91b20fb87a1ff75eb5e0f256",
+          "public_cli_and_app_arguments_identical_after_new_prefix_mapping": true,
+          "repetition": "warm"
+        }
+      ],
+      "shape_index": 1
+    }
+  ],
+  "status": "pass"
+}

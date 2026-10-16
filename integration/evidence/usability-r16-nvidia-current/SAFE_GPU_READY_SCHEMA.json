@@ -1,0 +1,17 @@
+{
+  "consumer_requirements": "all required fields match exact value and type; all frozen installed/source/gate bytes verified; execution-start written in exclusive x mode",
+  "destination": "/workspace/chijin-r16-independent-qualification-nvidia/GPU_READY.json",
+  "optional_fields": [
+    "issued_unix",
+    "root_authorization"
+  ],
+  "required_fields": {
+    "authorized": true,
+    "backend": "nvidia",
+    "container": "chijin-study-pro6000",
+    "controller_sha256": "ce8a437996a133846fd2ebe09b4db1fcf62786003f0ea9c5f519b77af119dce0",
+    "cpu_freeze_sha256": "9324d5fc45833870153df3e6e38243b3b11dece427b7ce144b658a21e7157c32",
+    "device": 0,
+    "owner": "qualification_r16_nvidia"
+  }
+}

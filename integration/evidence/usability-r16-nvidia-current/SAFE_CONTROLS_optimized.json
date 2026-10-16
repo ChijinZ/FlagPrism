@@ -1,0 +1,217 @@
+{
+  "all_rejected": true,
+  "authorization_version": "R16-NVIDIA-authorization-v2-explicit-require",
+  "device_initialization": false,
+  "kernel_launch": false,
+  "mode": "optimized",
+  "negative_count": 28,
+  "negatives": [
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_python",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_venv",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_wheel_sha256",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_unseen_manifest_sha256",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_device",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_product_revision",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "caller_backend",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "policy_python",
+      "reason": "interpreter namespace",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "policy_venv",
+      "reason": "interpreter namespace",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "policy_backend",
+      "reason": "NVIDIA device authorization",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "policy_device",
+      "reason": "NVIDIA device authorization",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "actual_frozen_file_bytes",
+      "reason": "frozen installed/source/gate bytes: /tmp/auth-cpu-fixture-6l_wz556/fixture",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_backend",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_device",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_authorized",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_owner",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_container",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_cpu_freeze_sha256",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "gpu_ready_controller_sha256",
+      "reason": "root GPU_READY identity/hash binding required",
+      "rejected": true
+    },
+    {
+      "error_type": "FileExistsError",
+      "mutation": "one_shot_exclusive",
+      "reason": "[Errno 17] File exists: '/tmp/exclusive-cpu-test-w8n0izfj/start'",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "state",
+      "reason": "original per-program side effect/replay state changed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "canary",
+      "reason": "original numerical input/canary check failed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "tolerance",
+      "reason": "original elementwise numerical tolerance changed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "witness",
+      "reason": "missing/zero/nonfinite original replay witness",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "runtime",
+      "reason": "actual output/binary/runtime input identity missing",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "ledger",
+      "reason": "actual independent host ledger/pid/case mismatch",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "terminal",
+      "reason": "independent numerical source did not finish successfully",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "seed",
+      "reason": "original numerical/seed configuration changed: output_initial_sha256",
+      "rejected": true
+    }
+  ],
+  "owned_sleep_subprocess_cleanup": [
+    {
+      "host_process_wall_s": 0.7282295810000505,
+      "interrupted": null,
+      "kind": "timeout",
+      "next_call_reached": true,
+      "owned_descendants_reaped": [
+        20533
+      ],
+      "owned_remaining": [],
+      "returncode": -15,
+      "timed_out": true
+    },
+    {
+      "host_process_wall_s": 0.7093280339977355,
+      "interrupted": "controller signal 15",
+      "kind": "SIGTERM",
+      "next_call_reached": false,
+      "owned_descendants_reaped": [
+        20539
+      ],
+      "owned_remaining": [],
+      "returncode": -15,
+      "timed_out": false
+    },
+    {
+      "host_process_wall_s": 0.7094440780056175,
+      "interrupted": "controller signal 2",
+      "kind": "SIGINT",
+      "next_call_reached": false,
+      "owned_descendants_reaped": [
+        20545
+      ],
+      "owned_remaining": [],
+      "returncode": -15,
+      "timed_out": false
+    }
+  ],
+  "status": "pass"
+}

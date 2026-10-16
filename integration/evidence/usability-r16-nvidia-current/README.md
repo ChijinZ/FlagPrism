@@ -1,0 +1,9 @@
+# NVIDIA current-version original independent cohort
+
+The current a829 installed Python/native package passed the original independent six-kernel cohort: 24 ordinary combinations, 48 cold/warm profile runs and 64 actual captures. Two runtime-control kernels request two calls per script, accounting for the difference between profile-run and capture counts. This is current repaired-version revalidation of original frozen mathematics, not a new unseen cohort or a first-pass-success claim.
+
+The original complete mathematical/source/raw gates are retained unchanged. Only obsolete version authorization and finite process supervision were adapted. All 2,944 full-grid physical count cells, 24 distinct specialization identities, 24 cold/warm binary pairs, runtime count/input checks, original tolerances, side effects and host-once checks passed. No combination was excluded or retried. Maximum complete bundle: 2,026,437 bytes; maximum host export: 0.521 seconds. These are engineering limits, not NVIDIA device performance measurements.
+
+Six actual new reports passed Chromium source/records navigation, actor/program/visits inspection, filters, execution mapping and raw-link checks. The first browser attempt failed because its font configuration did not point to staged fonts; the original failure is documented. Correcting the existing browser font environment passed the same reports without changing product/bundle bytes or running new device work.
+
+Root independently re-read actual remote safe-file hashes, audited the transferred 21-file evidence index and archive members, checked the complete anonymous matrix and capture totals, and confirmed controller termination and lease return. Private mathematical source, compiler IR, case-name mapping and full bundles remain outside Git. Original historical results remain separate. This evidence alone does not establish final three-backend acceptance.

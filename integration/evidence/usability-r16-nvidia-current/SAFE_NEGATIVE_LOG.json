@@ -1,0 +1,93 @@
+{
+  "all_rejected": true,
+  "device_initialization": false,
+  "kernel_launch": false,
+  "negative_count": 14,
+  "positive_original_receipt_accepted": true,
+  "results": [
+    {
+      "error_type": "RuntimeError",
+      "mutation": "python",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "venv",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "wheel_sha256",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "unseen_manifest_sha256",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "device",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "RuntimeError",
+      "mutation": "product_revision",
+      "reason": "current authorization differs from CPU frozen bytes",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "state",
+      "reason": "original per-program side effect/replay state changed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "canary",
+      "reason": "original numerical input/canary check failed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "tolerance",
+      "reason": "original elementwise numerical tolerance changed",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "witness",
+      "reason": "missing/zero/nonfinite original replay witness",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "runtime",
+      "reason": "actual output/binary/runtime input identity missing",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "ledger",
+      "reason": "actual independent host ledger/pid/case mismatch",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "terminal",
+      "reason": "independent numerical source did not finish successfully",
+      "rejected": true
+    },
+    {
+      "error_type": "ContractError",
+      "mutation": "seed",
+      "reason": "original numerical/seed configuration changed: output_initial_sha256",
+      "rejected": true
+    }
+  ]
+}
