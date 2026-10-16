@@ -55,3 +55,8 @@ complete SDK dependency fingerprint. At this checkpoint, the standalone SDK sour
 scalar-state qualification failures remain open. The SDK fix and original
 ordinary/profile device regression are separate root-controlled work; this
 checkpoint makes no hardware qualification claim.
+
+The subsequent C3 portability fix makes the CPU compiler fixtures use the
+active `sys.executable` instead of a machine-specific Python path. Its affected
+14 tests passed against this same installed wheel in the Ascend Docker; see
+`portable-fixture-14-cpu.log`. No installed product or native bytes changed.

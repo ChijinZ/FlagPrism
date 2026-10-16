@@ -3,6 +3,7 @@ from collections import defaultdict
 import json
 import os
 import subprocess
+import sys
 from types import SimpleNamespace
 
 import pytest
@@ -15,7 +16,7 @@ MODERN = [
 
 def tool(path, modern=True, help_exit=0):
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text('''#!/usr/local/python3.11.15/bin/python
+    path.write_text('#!' + sys.executable + '''
 import json,pathlib,sys
 modern = MODERN
 help_exit = HELP_EXIT
