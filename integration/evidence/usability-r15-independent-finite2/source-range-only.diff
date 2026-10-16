@@ -1,0 +1,21 @@
+--- FlagPrism-qualification-r15-independent/tests/usability_qualification/check_common_report_c1_r13.py	2026-10-16 22:33:15.718042136 +0800
++++ .qualification-r15-private/final/check_common_report_c1_r15.py	2026-10-16 23:31:26.888974581 +0800
+@@ -7,0 +8 @@
++import ast
+@@ -30,0 +32,12 @@
++def source_function_region(data, name, expected_sha256):
++    require(isinstance(data, bytes) and hashlib.sha256(data).hexdigest() == expected_sha256,
++            'actual source bytes/hash mismatch before function location')
++    functions = [node for node in ast.walk(ast.parse(data))
++                 if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name == name]
++    require(len(functions) == 1 and isinstance(functions[0], ast.FunctionDef),
++            'actual mathematical function source missing/ambiguous/asynchronous')
++    function = functions[0]
++    start = min([function.lineno] + [node.lineno for node in function.decorator_list])
++    return start, function.end_lineno + 1
++
++
+@@ -289,2 +302 @@
+-        start = next(i for i, line in enumerate(lines, 1) if line.startswith(f'def {case}('))
+-        end = next((i for i in range(start + 1, len(lines) + 1) if lines[i - 1].startswith('def ')), len(lines) + 1)
++        start, end = source_function_region(snapshot.read_bytes(), case, source['file_sha256'])
