@@ -1,0 +1,33 @@
+{
+  "schema": "independent-historical-ordinary-exactness-v1",
+  "ordinary_failure_is_original_24_baseline_ineligible_one": true,
+  "failed_ordinary_source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "failed_profile_source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "same_source_file_bytes": true,
+  "same_case": false,
+  "same_shape_index": true,
+  "same_config_index": true,
+  "failed_profile_shape_index": 0,
+  "failed_profile_config_index": 0,
+  "ordinary_failed_shape_index": 0,
+  "ordinary_failed_config_index": 0,
+  "profile_eligible_ordinary_baseline_succeeded": true,
+  "failed_ordinary_receipt_exists": false,
+  "ordinary_stderr_original_state_assertion": true,
+  "ordinary_terminal": {
+    "host_process_wall_s": 36.6198855843395,
+    "returncode": 1,
+    "timed_out": false
+  },
+  "actual_failed_ordinary_input_seed_values_retained_in_receipt": false,
+  "conclusion_same_exact_source_case_shape_config": false,
+  "original_failure_closed": false,
+  "original_cohort_unchanged": true,
+  "no_GPU_work": true,
+  "evidence_sha256": {
+    "eligibility.json": "24c44318604b756f1be627335d734d4f7091c85451a7bc665a737cd74aa79521",
+    "failed_profile_process.json": "cfe04251b1cfece1948c9c5e9c5761202255e32693713e1cce1683430227babf",
+    "ineligible_ordinary_process.json": "b19db180195cfc78b59a409b39fc607c74ae411cf19fc7379471a8d2751230b4",
+    "ineligible_ordinary_stderr.log": "a47727befd2ef46b6b741bf4361036e91d77197b50f410490a56a06af829cab6"
+  }
+}

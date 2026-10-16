@@ -28,3 +28,21 @@ Large raw archives and SDK/cache inputs are deliberately excluded from Git.
 Their original workspace paths, sizes and SHA-256 values are in the indices.
 The ongoing investigation and complete execution history remain in the root
 workspace `method_impl_record.md`; no paper or Study was edited for this work.
+
+## Subsequent diagnostic: actor counter inconsistency remains open
+
+A separately frozen **known-case diagnostic**, not another unseen cohort,
+passed two ordinary launches and two default profiling CLI runs on 1638 with
+unchanged numerical tolerances. An actual SDK/LLVM ownership proof established
+four disjoint vector-state writer regions, covering 1,024 elements, and excluded
+AIC state writes. All state values were exactly one. However, both captures
+retained zero visits for one AIV actor at the unconditional State premarker,
+while the other AIV actor retained one. The additional proven-writer/marker
+invariant therefore passed **0/2**, despite the preceding common gate accepting
+2/2. See the new safe diagnostic aggregates and ownership proof.
+
+This is a concrete counter/source evidence inconsistency requiring public
+reproduction and a general fix. Its cause is not yet established. It is not
+explained away by successful numerical results or the preceding common gate.
+The original historical scalar-state failure remains preserved and unassigned;
+a different ordinary kernel's failure cannot be used to explain it.

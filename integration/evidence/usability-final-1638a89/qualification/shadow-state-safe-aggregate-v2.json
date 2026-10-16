@@ -1,0 +1,158 @@
+{
+  "schema": "independent-known-case-shadow-state-safe-v1",
+  "candidate": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+  "ordinary_baseline_pass": 2,
+  "actual_CLI_profile_commands_returnzero": 2,
+  "derived_original_common_gate_pass": 2,
+  "combined_new_diagnostic_gate_pass": 0,
+  "ownership_proof_scope": "actual SDK/LLVM address+mask extent ownership for fixed frozen shape/config; not full ISA/scheduler proof",
+  "CPU_ownership_forgery_rejected": 3,
+  "known_case_diagnostic_only": true,
+  "new_unseen": false,
+  "original_failure_closed": false,
+  "original_failure_preserved": true,
+  "original_cohort_and_frozen_checker_unchanged": true,
+  "empty_compile_only_session_incomplete_preserved": true,
+  "original_budget_KeyError_and_first_derived_CPU_type_error_preserved": true,
+  "original_numerical_tolerances_unchanged": true,
+  "profiles": [
+    {
+      "repetition": "cold",
+      "status": "pass",
+      "original_bundle_unchanged": true,
+      "actual_state_elements": 1024,
+      "actual_state_unique": [
+        1
+      ],
+      "host_once": true,
+      "original_math_seed_input_tol_preserved": true,
+      "actual_compiled_bytes_match_ownership_proof": true,
+      "state_writer_premarker_raw_cells": [
+        {
+          "program": 0,
+          "actor_slot": 1,
+          "count_flags": [
+            0,
+            0
+          ]
+        },
+        {
+          "program": 0,
+          "actor_slot": 2,
+          "count_flags": [
+            1,
+            1
+          ]
+        },
+        {
+          "program": 1,
+          "actor_slot": 1,
+          "count_flags": [
+            0,
+            0
+          ]
+        },
+        {
+          "program": 1,
+          "actor_slot": 2,
+          "count_flags": [
+            1,
+            1
+          ]
+        }
+      ],
+      "proven_writer_marker_invariant_status": "fail",
+      "host_process_wall_s": 44.62735104560852,
+      "first_call_compile_launch_sync_wall_s": 22.90911785699427,
+      "complete_bundle_bytes": 20547499,
+      "complete_finalize_export_s": 0.7613777262158692,
+      "enforced_cli_deadlines": {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      }
+    },
+    {
+      "repetition": "warm",
+      "status": "pass",
+      "original_bundle_unchanged": true,
+      "actual_state_elements": 1024,
+      "actual_state_unique": [
+        1
+      ],
+      "host_once": true,
+      "original_math_seed_input_tol_preserved": true,
+      "actual_compiled_bytes_match_ownership_proof": true,
+      "state_writer_premarker_raw_cells": [
+        {
+          "program": 0,
+          "actor_slot": 1,
+          "count_flags": [
+            0,
+            0
+          ]
+        },
+        {
+          "program": 0,
+          "actor_slot": 2,
+          "count_flags": [
+            1,
+            1
+          ]
+        },
+        {
+          "program": 1,
+          "actor_slot": 1,
+          "count_flags": [
+            0,
+            0
+          ]
+        },
+        {
+          "program": 1,
+          "actor_slot": 2,
+          "count_flags": [
+            1,
+            1
+          ]
+        }
+      ],
+      "proven_writer_marker_invariant_status": "fail",
+      "host_process_wall_s": 21.397744178771973,
+      "first_call_compile_launch_sync_wall_s": 0.4589992160908878,
+      "complete_bundle_bytes": 20547497,
+      "complete_finalize_export_s": 0.9448710745200515,
+      "enforced_cli_deadlines": {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      }
+    }
+  ],
+  "owned_pids": {
+    "1759162": {
+      "present": false,
+      "state": null,
+      "children": ""
+    },
+    "1759196": {
+      "present": false,
+      "state": null,
+      "children": ""
+    },
+    "1755119": {
+      "present": false,
+      "state": null,
+      "children": ""
+    },
+    "1755165": {
+      "present": false,
+      "state": null,
+      "children": ""
+    }
+  },
+  "remaining": "original historical scalar-state assertion failure lacks actual failing state values and complete final intrinsic ISA semantics; no confirmed causal attribution",
+  "counter_source_evidence_inconsistency_observed": true,
+  "causal_classification_pending_public_reproduction": true,
+  "interpretation": "actual vector ownership and state witnesses pass, but proven unconditional State premarker is zero in one actor in both captures; common checker acceptance is insufficient for this additional semantic invariant; original scalar failure is not retroactively explained"
+}

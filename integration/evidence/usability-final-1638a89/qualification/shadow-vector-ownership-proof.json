@@ -1,0 +1,91 @@
+{
+  "schema": "independent-shadow-vector-ownership-v1",
+  "status": "pass",
+  "candidate": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+  "source_sha256": "c0ceb32f35e124577ab9074e420196fbc51bfb5ade762bda1aaafe63cd5de5e4",
+  "compiled_metadata_sha256": "d53c017d7bbca867654c653db6c4521b0c5d710d268851caead23f28b7a357de",
+  "proof_script_sha256": "bba65eba38c923a6a7d73121191bd17c27f597a50a628be01fd001c32c7a2597",
+  "AIC_has_no_state_writes": true,
+  "State_formal_typed_ABI_verified": true,
+  "original_and_adapted_disjoint_complete_1024_elements": true,
+  "state_load_increment_store_chain_verified": true,
+  "actual_compiler_inputs_objects_final_bytes_verified": true,
+  "proof_scope": "actual SDK/LLVM address+mask extent ownership for fixed frozen shape/config; not full ISA/scheduler proof",
+  "results": [
+    {
+      "phase": "original",
+      "module_sha256": "ad463c95fab8f02b8080671f81bfa2d821430c2f93eca14c5e6ae7ca90df95d2",
+      "regions": [
+        {
+          "program": 0,
+          "subblock": 0,
+          "first_element": 0,
+          "element_count": 256
+        },
+        {
+          "program": 0,
+          "subblock": 1,
+          "first_element": 256,
+          "element_count": 256
+        },
+        {
+          "program": 1,
+          "subblock": 0,
+          "first_element": 512,
+          "element_count": 256
+        },
+        {
+          "program": 1,
+          "subblock": 1,
+          "first_element": 768,
+          "element_count": 256
+        }
+      ]
+    },
+    {
+      "phase": "adapted",
+      "module_sha256": "fcbe7909918e2bb3d9f8348a4e2c3ab4b7bfe3ce707678564a9e804b39867b67",
+      "regions": [
+        {
+          "program": 0,
+          "subblock": 0,
+          "first_element": 0,
+          "element_count": 256
+        },
+        {
+          "program": 0,
+          "subblock": 1,
+          "first_element": 256,
+          "element_count": 256
+        },
+        {
+          "program": 1,
+          "subblock": 0,
+          "first_element": 512,
+          "element_count": 256
+        },
+        {
+          "program": 1,
+          "subblock": 1,
+          "first_element": 768,
+          "element_count": 256
+        }
+      ]
+    }
+  ],
+  "forgery": [
+    {
+      "case": "actor_overlap",
+      "rejected": true
+    },
+    {
+      "case": "foreign_state",
+      "rejected": true
+    },
+    {
+      "case": "missing_transfer",
+      "rejected": true
+    }
+  ],
+  "original_failure_closed": false
+}
