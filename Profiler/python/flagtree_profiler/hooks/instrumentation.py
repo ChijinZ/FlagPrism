@@ -44,8 +44,57 @@ class CudaAllocator:
 
     def __init__(self, instrumentation_hook):
         self.instrumentation_hook = instrumentation_hook
+        self._census_admission = ContextVar(
+            'nvidia_census_allocation_admission', default=None)
+
+    def validate_launch(self, *, function, grid, scratch_size, alignment,
+                        num_ctas):
+        if not self.instrumentation_hook.census:
+            return
+        self._census_admission.set(None)
+        from ..nvidia_census import census_descriptor
+        from math import prod
+        metadata = self.instrumentation_hook.observation_metadata.get(function)
+        if metadata is None:
+            raise RuntimeError(
+                'NVIDIA census preallocation requires actual function metadata'
+            )
+        compiler = metadata.get('compiler_metadata') or {}
+        if (type(scratch_size) is not int or scratch_size < 0
+                or type(num_ctas) is not int
+                or num_ctas != compiler.get('num_ctas', 1)
+                or scratch_size != compiler.get('profile_scratch_size')
+                or alignment
+                != self.instrumentation_hook.profile_buffer_alignment):
+            raise RuntimeError(
+                'NVIDIA census preallocation contradicts compiler scratch ABI')
+        # Geometry validation belongs to the common descriptor builder; do not
+        # derive the source-site count from the padded allocation size.
+        if (not isinstance(grid, (list, tuple)) or len(grid) != 3
+                or any(type(value) is not int or value < 0 for value in grid)):
+            raise RuntimeError(
+                'NVIDIA census preallocation requires actual launch geometry')
+        size = prod(grid) * num_ctas * scratch_size
+        allocated = max((size + alignment - 1) // alignment * alignment,
+                        self.instrumentation_hook.profile_buffer_size)
+        try:
+            census_descriptor(
+                metadata, {'grid': grid}, allocated,
+                self.instrumentation_hook.observation_plan['output_selection'])
+        except RuntimeError as error:
+            raise RuntimeError('NVIDIA census preallocation rejected: ' +
+                               str(error)) from error
+
+        self._census_admission.set((size, alignment))
 
     def __call__(self, size: int, alignment: int, stream: Optional[int]):
+        if self.instrumentation_hook.census:
+            admitted = self._census_admission.get()
+            self._census_admission.set(None)
+            if admitted != (size, alignment):
+                raise RuntimeError(
+                    'NVIDIA census allocation requires compiler/launch preflight; rebuild the launcher with preallocation-admission.patch'
+                )
         if alignment != self.instrumentation_hook.profile_buffer_alignment:
             raise RuntimeError(
                 f"Alignment mismatch: {alignment} != {self.instrumentation_hook.profile_buffer_alignment}"

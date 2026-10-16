@@ -14,10 +14,15 @@ git -C "$compiler" apply --check "$component/integration/patches/nvidia/flagtree
 git -C "$compiler" apply "$component/integration/patches/nvidia/flagtree-source.patch"
 git -C "$compiler" apply --check "$component/integration/patches/nvidia/automatic-scopes.patch"
 git -C "$compiler" apply "$component/integration/patches/nvidia/automatic-scopes.patch"
+git -C "$compiler" apply --check "$component/integration/patches/nvidia/preallocation-admission.patch"
+git -C "$compiler" apply "$component/integration/patches/nvidia/preallocation-admission.patch"
 ```
 
 The first patch supplies the integrated build and cache identity policy. The
 second adds the completed-TTGIR hook for automatic scopes in Triton and Gluon.
+The third patch lets the profiling allocator validate the actual function,
+compiler stride and launch grid before global or profile scratch allocation.
+It is optional for stock allocators and leaves their ABI unchanged.
 The pass and Python bindings are built from this component; replacing only the
 Python package cannot supply this feature.
 
