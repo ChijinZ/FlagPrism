@@ -127,10 +127,13 @@ function and grid to the allocator before either scratch allocation. An older
 launcher is rejected before allocation instead of bypassing this check. A grid
 exceeding either limit is rejected rather than silently truncated to its first
 programs. See the [census protocol](source_site_census.md).
-Ascend physical version 2 reserves three actor banks with the compiler's actual
-selected source-site count S (1–128) per bank: 32 header bytes plus
-`program_count * 3 * S * 8` bytes. Both budgets include the reserved actor banks.
-The reader retains support for version 1 captures with 128 cells per bank. The actual
+Ascend physical version 3 reserves three actor banks with the compiler's actual
+selected source-site count S (1–128) per bank: 64 zero header bytes plus
+`program_count * 3 * alignUp(S * 8, 64)` bytes. The cell budget is the complete
+byte count divided by eight, including the header and all actor padding.
+The reader retains the original layouts for version 1/2 captures, with unknown
+transport loss and inexact counts; a zero legacy cell does not establish
+non-execution. See the [census protocol](source_site_census.md). The actual
 backend plan, selected locations, unselected inventory when available, and
 protocol-specific loss evidence are retained in the bundle. A bounded selection
 is not a claim that every operation was observed.

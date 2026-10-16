@@ -93,15 +93,15 @@ def prepare(event):
         if census:
             version = event.metadata.get(
                 'flagprism_ascend_source_census_version')
-            if type(version) is not int or version not in (1, 2):
+            if type(version) is not int or version not in (1, 2, 3):
                 raise ValueError(
                     'Ascend census requires an actual prepared frontend ABI')
-            if version == 2:
+            if version >= 2:
                 abi = event.metadata.get('debug_ascend_census_abi') or {}
                 columns = event.metadata.get('debug_census_columns')
                 if (type(columns) is not int or not 1 <= columns <= 128
                         or abi.get('site_count') != columns
-                        or abi.get('version') != 2
+                        or abi.get('version') != version
                         or abi.get('records_per_instance') != 3 * columns):
                     raise ValueError(
                         'Ascend census requires actual native frontend columns'

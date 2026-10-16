@@ -577,12 +577,14 @@ public:
         getStringOr(metadata, "debug_record_layout", "");
     const auto isAscendCensus = [](const std::string &layout) {
       return layout == "ascend_source_census_v1" ||
-             layout == "ascend_source_census_v2";
+             layout == "ascend_source_census_v2" ||
+             layout == "ascend_source_census_v3";
     };
     if (isAscendCensus(runtimeMetadata.recordLayout) ||
         isAscendCensus(compiledCensusLayout)) {
-      const bool compact = compiledCensusLayout == "ascend_source_census_v2";
-      const uint32_t version = compact ? 2 : 1;
+      const bool aligned = compiledCensusLayout == "ascend_source_census_v3";
+      const bool compact = aligned || compiledCensusLayout == "ascend_source_census_v2";
+      const uint32_t version = aligned ? 3 : compact ? 2 : 1;
       const uint32_t columns =
           compact ? getUInt32Or(metadata, "debug_census_columns", 0) : 128;
       if (!isAscendCensus(compiledCensusLayout) ||
@@ -607,7 +609,7 @@ public:
           throw std::invalid_argument(
               "Ascend census v2 requires the actual frontend column inventory");
         auto abi = metadata["debug_ascend_census_abi"].cast<py::dict>();
-        if (getUInt32Or(abi, "version", 0) != 2 ||
+        if (getUInt32Or(abi, "version", 0) != version ||
             getUInt32Or(abi, "site_count", 0) != columns ||
             getUInt32Or(abi, "record_size", 0) != 8 ||
             getUInt32Or(abi, "records_per_instance", 0) != 3 * columns ||
@@ -615,19 +617,28 @@ public:
           throw std::invalid_argument("Ascend census v2 native frontend ABI "
                                       "conflicts with compiler metadata");
       }
+      const uint64_t actorCells = aligned ? ((columns + 7) / 8) * 8 : columns;
       uint64_t cells = checkedMulU64(launchGridProduct(runtimeMetadata),
-                                     3 * columns, "Ascend census cells");
+                                     3 * actorCells, "Ascend census cells");
+      // V3 cell budgets include the complete 64-byte header and all actor
+      // padding. The shared runtime allocator contributes its original 32-byte
+      // prefix, so reserve four fewer payload cells than the total cell budget.
+      if (aligned) {
+        if (cells > std::numeric_limits<uint64_t>::max() - 8)
+          throw std::invalid_argument("Ascend census header cell overflow");
+        cells += 8;
+      }
       if (cells > std::numeric_limits<uint32_t>::max())
         throw std::invalid_argument(
             "Ascend census grid exceeds native cell index range");
       uint64_t bytes =
-          32 + checkedMulU64(cells, 8, "Ascend physical census bytes");
+          (aligned ? 0 : 32) + checkedMulU64(cells, 8, "Ascend physical census bytes");
       if (cells > getUInt64Or(metadata, "debug_max_census_cells", 0) ||
           bytes > getUInt64Or(metadata, "debug_max_census_bytes", 0) ||
           bytes > static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
         throw std::invalid_argument("Ascend census actual grid exceeds "
                                     "physical cell/byte/index budgets");
-      compileRequest.options.recordCapacity = static_cast<uint32_t>(cells);
+      compileRequest.options.recordCapacity = static_cast<uint32_t>(aligned ? cells - 4 : cells);
     }
     if (runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
         compiledCensusLayout == "gcu_site_census_v1") {

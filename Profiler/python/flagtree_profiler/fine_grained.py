@@ -117,6 +117,8 @@ def candidate_observation_status(captures, records):
 
 
 def normalize(document):
+    from .source_census import derive_transport_visibility
+    document = derive_transport_visibility(document)
     records = []
     for group in document['groups']:
         for event in group['observations']:
@@ -153,8 +155,9 @@ def normalize(document):
                             'relative_start_ns', 'unit', 'truncated',
                             'sampling', 'association_evidence', 'count',
                             'count_exact', 'counter_kind', 'site_role',
-                            'overflow', 'mask_activity', 'storage',
-                            'raw_offset', 'raw_sha256')
+                            'transport_visibility', 'unknown_loss', 'overflow',
+                            'mask_activity', 'storage', 'raw_offset',
+                            'raw_sha256')
             }
             row['actor'] = event.get('actor', event.get('actor_slot'))
             row['compiler_actor'] = compiler.get(
@@ -512,6 +515,9 @@ def require_automatic_records(output, request):
         count_overflow = (any(
             row.get('overflow') is True for row in count_rows)
                           or bool(census_loss.get('overflow_cells')))
+        unknown_visibility_loss = (any(
+            row.get('unknown_loss') is True for row in count_rows)
+                                   or census_loss.get('unknown_loss') is True)
         source_linked = [row for row in matched if row.get('source_locations')]
         valid = [
             row for row in source_linked
@@ -520,18 +526,21 @@ def require_automatic_records(output, request):
                 int and row['count'] > 0 and row.get('count_exact') is True))
         ]
         reason = (
-            'source_census_count_overflow' if count_overflow else
-            None if valid else 'capture_has_no_verified_invocation_identity'
-            if not identity_valid else
-            'internal_records_lack_valid_source_snapshot_positions' if matched
-            else 'selected_programs_produced_no_source_linked_internal_records'
-        )
+            'source_census_count_overflow'
+            if count_overflow else 'source_census_transport_visibility_unknown'
+            if unknown_visibility_loss else None if valid else
+            'capture_has_no_verified_invocation_identity' if not identity_valid
+            else 'internal_records_lack_valid_source_snapshot_positions'
+            if matched else
+            'selected_programs_produced_no_source_linked_internal_records')
         coverage.append(
             dict(capture_id=capture_id,
                  invocation_id=invocation,
                  binary_id=binary,
                  status='complete' if reason is None else 'incomplete',
                  reason=reason,
+                 transport_visibility=census_loss.get('transport_visibility'),
+                 unknown_loss=unknown_visibility_loss,
                  internal_records=len(matched),
                  source_linked_records=len(source_linked)))
         if identity_valid:
@@ -555,6 +564,10 @@ def require_automatic_records(output, request):
         'Inspect the raw census flags and use a shorter application workload; '
         'this capture cannot establish exact visit counts.'
         if reason == 'source_census_count_overflow' else
+        'Historical Ascend census storage can lose scalar GM writes through shared cache lines. '
+        'Retained counts are inexact; zero does not establish non-execution. '
+        'Use a new version-3 capture for isolated actor storage.'
+        if reason == 'source_census_transport_visibility_unknown' else
         'Inspect ai/source_index.json diagnostics and source_location_candidates '
         'in ai/fine_grained.json. Captured source snapshots must match their '
         'digest and compiler positions must fall within an unambiguous file snapshot.'
@@ -569,8 +582,8 @@ def require_automatic_records(output, request):
         'All admitted programs were collected; changing the displayed program '
         'cannot create missing primary observations. Preserve this capture when '
         'reporting a compiler-plan coverage defect for executed source regions.'
-        if isinstance(request, dict)
-        and request.get('program_policy') == 'all_grid_census' else
+        if isinstance(request, dict) and request.get('program_policy') ==
+        'all_grid_census' else
         'Inspect the retained plan, capture/loss status and selected programs. '
         'For conditional work, choose a program that executes the region with '
         'a public ObservationRequest; no application replay was performed.')

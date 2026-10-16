@@ -1434,7 +1434,7 @@ def _default_launch_prepare_hook(
                                 metadata_dict.get("backend_name"))
     if metadata_dict.get("debug_record_layout") in {
             "ascend_actor_dynamic_v1", "ascend_source_census_v1",
-            "ascend_source_census_v2"
+            "ascend_source_census_v2", "ascend_source_census_v3"
     }:
         backend = "ascend"
     from .graph_guard import require_eager
@@ -1451,7 +1451,7 @@ def _default_launch_prepare_hook(
     launch_metadata = _materialize_launch_metadata(launch_metadata)
     if metadata_dict.get("debug_record_layout") in {
             "ascend_actor_dynamic_v1", "ascend_source_census_v1",
-            "ascend_source_census_v2"
+            "ascend_source_census_v2", "ascend_source_census_v3"
     }:
         handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
         if handoff.get("phase") != "finished" or not handoff.get("artifacts"):
@@ -1468,7 +1468,7 @@ def _default_launch_prepare_hook(
     grid = _normalize_launch_grid(launch_metadata)
     if metadata_dict.get("debug_record_layout") in {
             "gcu_site_census_v1", "ascend_source_census_v1",
-            "ascend_source_census_v2"
+            "ascend_source_census_v2", "ascend_source_census_v3"
     }:
         if grid is None:
             raise ValueError("Source census requires the actual launch grid")
@@ -1495,12 +1495,13 @@ def _default_launch_prepare_hook(
                 "GCU census runtime builder contradicts actual compiler layout/stride"
             )
     if metadata_dict.get("debug_record_layout") in {
-            "ascend_source_census_v1", "ascend_source_census_v2"
+            "ascend_source_census_v1", "ascend_source_census_v2",
+            "ascend_source_census_v3"
     }:
         from flagtree.profiler.ascend_census import plan_layout
         version = metadata_dict["debug_census_version"]
         columns = metadata_dict.get(
-            "debug_census_columns") if version == 2 else 128
+            "debug_census_columns") if version >= 2 else 128
         plan_layout(grid,
                     max_cells=metadata_dict["debug_max_census_cells"],
                     max_bytes=metadata_dict["debug_max_census_bytes"],
@@ -1569,7 +1570,8 @@ def _default_launch_prepare_hook(
                 from .gcu_census import attach_export
                 exported_run = attach_export(exported_run, metadata_dict)
             elif metadata_dict.get("debug_record_layout") in {
-                    "ascend_source_census_v1", "ascend_source_census_v2"
+                    "ascend_source_census_v1", "ascend_source_census_v2",
+                    "ascend_source_census_v3"
             }:
                 import uuid
                 from flagtree.profiler.ascend_census import compiler_actor_views, decode_shared_census
@@ -1577,7 +1579,7 @@ def _default_launch_prepare_hook(
                 handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
                 version = metadata_dict["debug_census_version"]
                 columns = metadata_dict.get(
-                    "debug_census_columns") if version == 2 else 128
+                    "debug_census_columns") if version >= 2 else 128
                 actors = compiler_actor_views(
                     handoff,
                     metadata_dict["debug_ascend_census_sites"],

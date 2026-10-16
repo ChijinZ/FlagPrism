@@ -48,16 +48,16 @@ def prepared_source():
 
 def test_actual_source_site_marker_and_hidden_formal():
     fd, module, selected, context = prepared_source()
-    assert fd.ASCEND_SOURCE_CENSUS_VERSION == 2
+    assert fd.ASCEND_SOURCE_CENSUS_VERSION == 3
     abi = dict(fd.prepare_ascend_source_census_abi(module, selected))
-    assert abi == dict(version=2,
+    assert abi == dict(version=3,
                        hidden_argument_index=2,
                        site_count=1,
                        records_per_instance=3,
                        record_size=8,
-                       record_layout='ascend_source_census_v2')
+                       record_layout='ascend_source_census_v3')
     text = str(module)
-    assert f'flagprism.source_census_site.v2:{selected[0]}:0:1' in text
+    assert f'flagprism.source_census_site.v3:{selected[0]}:0:1' in text
     assert text.count('tt.get_program_id') == 3
     assert text.count('tt.get_num_programs') == 3
     assert 'flagtree.debug.record_size = 8' in text
@@ -65,8 +65,8 @@ def test_actual_source_site_marker_and_hidden_formal():
     assert 'flagtree_debug.collect' not in text
     body = text.split('tt.func public', 1)[1]
     assert body.index('scf.for') < body.index(
-        'flagprism.source_census_site.v2:')
-    assert body.index('flagprism.source_census_site.v2:') < body.index(
+        'flagprism.source_census_site.v3:')
+    assert body.index('flagprism.source_census_site.v3:') < body.index(
         'arith.addf')
 
 

@@ -160,6 +160,14 @@ def reconstruct(payload, launches, binaries, native_events):
 
 def render(document):
     panels = []
+    if any(
+            capture.get('unknown_loss')
+            for capture in document.get('captures', [])):
+        panels.append(
+            '<section><h2>Historical Ascend visibility loss</h2>'
+            '<p>Retained counts are inexact because shared scalar GM cache lines '
+            'can lose writes. Zero does not establish non-execution. '
+            'The original raw evidence is preserved.</p></section>')
     failures = [
         capture for capture in document.get('captures', [])
         if capture.get('capture_status') == 'decode_failed'
@@ -232,6 +240,8 @@ def write_view(output, payload, report):
     output = Path(output)
     document = reconstruct(payload, report['launches'], report['binaries'],
                            report['events'] + report['untimed_events'])
+    from .source_census import derive_transport_visibility
+    document = derive_transport_visibility(document)
     from .export_refs import compact
     exported = compact(document,
                        payload,

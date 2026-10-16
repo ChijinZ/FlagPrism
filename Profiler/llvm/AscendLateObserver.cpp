@@ -167,7 +167,7 @@ static json::Object describeOperation(Instruction &instruction,
 }
 static unsigned censusVersion() {
   const auto mode = environment("FLAGPRISM_ASCEND_TRACE_MODE");
-  return mode == "source_census_v2" ? 2 : mode == "source_census_v1" ? 1 : 0;
+  return mode == "source_census_v3" ? 3 : mode == "source_census_v2" ? 2 : mode == "source_census_v1" ? 1 : 0;
 }
 static uint64_t selectedSemantics() {
   if (censusVersion() != 0) {
@@ -206,7 +206,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             json::Object &runtimeActorBinding) {
   const bool census = censusVersion() != 0;
   uint64_t censusColumns = 128;
-  if (censusVersion() == 2) {
+  if (censusVersion() >= 2) {
     const std::string encodedColumns =
         environment("FLAGPRISM_ASCEND_CENSUS_COLUMNS");
     if (StringRef(encodedColumns).getAsInteger(10, censusColumns) ||
@@ -361,16 +361,15 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         StringRef marker(assembly->getAsmString());
         if (!marker.startswith("/* flagprism.source_census_site."))
           continue;
-        if (!marker.consume_front(censusVersion() == 2
-                                      ? "/* flagprism.source_census_site.v2:"
-                                      : "/* flagprism.source_census_site.v1:"))
+        if (!marker.consume_front("/* flagprism.source_census_site.v" +
+                                  std::to_string(censusVersion()) + ":"))
           report_fatal_error("Ascend census marker physical version mismatch");
         if (!marker.consume_back(" */"))
           report_fatal_error("invalid Ascend source census marker terminator");
         auto fields = marker.split(':');
         uint64_t sourceId = 0, column = 0, markerColumns = censusColumns;
         StringRef columnText = fields.second;
-        if (censusVersion() == 2) {
+        if (censusVersion() >= 2) {
           auto layout = fields.second.split(':');
           columnText = layout.first;
           if (layout.second.getAsInteger(10, markerColumns) ||
@@ -488,20 +487,19 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
       {"value_use", "same_emitted_i64_for_segment_offset_and_record_word5"},
       {"basis", "actual_emitted_logger_actor_value"}};
   if (census) {
-    runtimeActorBinding["layout"] = censusVersion() == 2
-                                        ? "ascend_source_census_v2"
-                                        : "ascend_source_census_v1";
+    runtimeActorBinding["layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
     runtimeActorBinding.erase("record_actor_word");
     runtimeActorBinding.erase("segment_words");
     runtimeActorBinding["value_use"] =
         "same_emitted_actor_for_exclusive_count_segment";
-    runtimeActorBinding["header_bytes"] = 32;
+    const uint64_t actorStride = censusVersion() == 3 ? ((8 * censusColumns + 63) / 64) * 64 : 8 * censusColumns;
+    runtimeActorBinding["header_bytes"] = censusVersion() == 3 ? 64 : 32;
     runtimeActorBinding["reserved_columns_per_actor"] =
         static_cast<int64_t>(censusColumns);
     runtimeActorBinding["actor_stride_bytes"] =
-        static_cast<int64_t>(8 * censusColumns);
+        static_cast<int64_t>(actorStride);
     runtimeActorBinding["program_stride_bytes"] =
-        static_cast<int64_t>(24 * censusColumns);
+        static_cast<int64_t>(3 * actorStride);
     runtimeActorBinding["source_program_binding"] = json::Object{
         {"version", static_cast<int64_t>(censusVersion())},
         {"basis", "actual_selected_source_site_marker_operands"},
@@ -524,7 +522,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                                     marker.call->getArgOperand(2)))));
       flagprism_ascend::appendCensus(marker.call,
                                      function.getArg(argumentIndex), program,
-                                     actor, marker.column, censusColumns);
+                                     actor, marker.column, censusColumns, censusVersion());
       json::Object site{
           {"site_id", static_cast<int64_t>(siteNumber++)},
           {"source_op_id", static_cast<int64_t>(marker.sourceId)},
@@ -1012,9 +1010,7 @@ public:
         {"actors", std::move(actors)}};
     if (censusVersion() != 0) {
       manifest["dynamic_clock"] = nullptr;
-      manifest["dynamic_record_layout"] = censusVersion() == 2
-                                              ? "ascend_source_census_v2"
-                                              : "ascend_source_census_v1";
+      manifest["dynamic_record_layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
       manifest["effective_semantics"] = json::Array{"counter"};
       manifest["observation_plan_version"] = 3;
       manifest["count_semantics"] = "source_control_visit_count";

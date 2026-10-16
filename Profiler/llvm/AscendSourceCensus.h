@@ -14,10 +14,13 @@ inline constexpr uint64_t kCensusReservedSites = 128;
 inline void appendCensus(llvm::Instruction *position, llvm::Value *pointer,
                          llvm::Value *sourceProgram, llvm::Value *actor,
                          uint64_t column,
-                         uint64_t columns = kCensusReservedSites) {
+                         uint64_t columns = kCensusReservedSites,
+                         unsigned physicalVersion = 1) {
   if (!columns || columns > kCensusReservedSites || column >= columns)
     llvm::report_fatal_error(
         "Ascend census column exceeds physical reserved stride");
+  const uint64_t headerBytes = physicalVersion == 3 ? 64 : kCensusHeaderBytes;
+  const uint64_t strideColumns = physicalVersion == 3 ? ((columns + 7) / 8) * 8 : columns;
   llvm::IRBuilder<> builder(position);
   auto *i32 = builder.getInt32Ty();
   auto *cell = builder.CreateAdd(
@@ -26,9 +29,9 @@ inline void appendCensus(llvm::Instruction *position, llvm::Value *pointer,
               builder.CreateMul(sourceProgram,
                                 builder.getInt64(kCensusActorSlots)),
               actor),
-          builder.getInt64(columns)),
+          builder.getInt64(strideColumns)),
       builder.getInt64(column));
-  auto *word = builder.CreateAdd(builder.getInt64(kCensusHeaderBytes / 4),
+  auto *word = builder.CreateAdd(builder.getInt64(headerBytes / 4),
                                  builder.CreateMul(cell, builder.getInt64(2)));
   auto *address = builder.CreateGEP(i32, pointer, word);
   auto *flagAddress = builder.CreateGEP(

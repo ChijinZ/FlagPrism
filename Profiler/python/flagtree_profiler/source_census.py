@@ -23,6 +23,70 @@ VISITED = 1
 OVERFLOW = 2
 DEFAULT_MAX_CELLS = 1048576
 DEFAULT_MAX_BYTES = 8388608
+LEGACY_ASCEND_LAYOUTS = {'ascend_source_census_v1', 'ascend_source_census_v2'}
+
+
+def _transport_layouts(descriptor):
+    """Collect explicitly retained transport names from supported placements."""
+    layouts = [descriptor.get('record_layout')]
+    for actor in descriptor.get('actors', []):
+        compiler = actor.get('compiler_actor') or {}
+        layouts.extend([
+            compiler.get('layout'),
+            (compiler.get('runtime_actor_binding') or {}).get('layout')
+        ])
+    return layouts
+
+
+def legacy_ascend_visibility_hazard(descriptor):
+    """Recognize historical transport from retained backend/compiler metadata."""
+    return any(layout in LEGACY_ASCEND_LAYOUTS
+               for layout in _transport_layouts(descriptor))
+
+
+def derive_transport_visibility(document):
+    """Copy and consistently retag derived views of known unsafe transports."""
+    # Derived reports must retract historical exactness even when the retained
+    # bundle already contains decoded events. Preserve the original evidence.
+    document = copy.deepcopy(document)
+    hazardous_captures = set()
+    for capture in document.get('captures', []):
+        metadata = capture.get('runtime_metadata') or {}
+        census = metadata.get('ascend_source_census') or {}
+        physical = census.get('physical_plan') or {}
+        if (legacy_ascend_visibility_hazard(capture)
+                or legacy_ascend_visibility_hazard(metadata)
+                or physical.get('layout')
+                in {'ascend_source_census_v1', 'ascend_source_census_v2'}):
+            if capture.get('capture_id'):
+                hazardous_captures.add(capture['capture_id'])
+            state = dict(
+                transport_visibility='legacy_ascend_cache_line_hazard',
+                unknown_loss=True)
+            capture.update(state)
+            metadata = capture.setdefault('runtime_metadata', {})
+            census = metadata.setdefault('ascend_source_census', {})
+            census.setdefault('loss', {}).update(exact=False, **state)
+            census.setdefault('summary', {}).update(state)
+            for key in ('source_census', 'census', 'decoded'):
+                if isinstance(capture.get(key), dict):
+                    capture[key].setdefault('loss', {}).update(exact=False,
+                                                               **state)
+                    capture[key].setdefault('summary', {}).update(state)
+    for group in document.get('groups', []):
+        for event in group.get('observations', []):
+            compiler = event.get('compiler_site') or {}
+            if (event.get('semantic') == 'counter' and
+                (event.get('capture_id') in hazardous_captures
+                 or legacy_ascend_visibility_hazard(
+                     dict(actors=[
+                         dict(compiler_actor=compiler.get('compiler_actor'))
+                     ])))):
+                event.update(
+                    count_exact=False,
+                    unknown_loss=True,
+                    transport_visibility='legacy_ascend_cache_line_hazard')
+    return document
 
 
 def _uint(value, name, minimum=0):
@@ -99,6 +163,10 @@ class CensusReader:
                 raise ValueError('duplicate logical observer')
             actor_ids.add((kind, identity))
         cells = programs * len(actors) * len(sites)
+        layouts = _transport_layouts(desc)
+        if 'ascend_source_census_v3' in layouts and (len(raw) +
+                                                     7) // 8 > max_cells:
+            raise ValueError('Ascend census physical cell budget exceeded')
         if cells > max_cells:
             raise ValueError('source census cell budget exceeded')
         offset = _uint(desc.get('cells_offset'), 'cells_offset')
@@ -119,6 +187,7 @@ class CensusReader:
             raise ValueError('truncated source census matrix')
         self.raw = raw
         self._descriptor = desc
+        self._visibility_hazard = legacy_ascend_visibility_hazard(desc)
         self.program_count = programs
         self._sites = sites
         self._actors = actors
@@ -157,6 +226,9 @@ class CensusReader:
             selection_policy='lowest_program_with_primary_visits',
             selection_is_presentation_only=True,
             mask_activity='unobserved',
+            transport_visibility=('legacy_ascend_cache_line_hazard' if
+                                  self._visibility_hazard else 'not_flagged'),
+            unknown_loss=self._visibility_hazard,
             status=('count_overflow'
                     if overflow_cells else 'primary_visits_available'
                     if primary_programs else 'no_primary_visits'))
@@ -187,16 +259,22 @@ class CensusReader:
                 or bool(flags & VISITED) != bool(count)
                 or (flags & OVERFLOW and count != UINT32_MAX)):
             raise ValueError('invalid source census count/flags')
-        return dict(program=program,
-                    actor=copy.deepcopy(self._actors[actor_index]),
-                    site=self._sites[site_index]['site'],
-                    site_index=site_index,
-                    role=self._sites[site_index]['role'],
-                    count=count,
-                    visited=bool(flags & VISITED),
-                    overflow=bool(flags & OVERFLOW),
-                    exact=not bool(flags & OVERFLOW),
-                    raw_offset=offset)
+        return dict(
+            program=program,
+            actor=copy.deepcopy(self._actors[actor_index]),
+            site=self._sites[site_index]['site'],
+            site_index=site_index,
+            role=self._sites[site_index]['role'],
+            count=count,
+            visited=bool(flags & VISITED),
+            overflow=bool(flags & OVERFLOW),
+            exact=not bool(flags & OVERFLOW) and not self._visibility_hazard,
+            transport_visibility=('legacy_ascend_cache_line_hazard' if
+                                  self._visibility_hazard else 'not_flagged'),
+            unknown_loss=self._visibility_hazard,
+            zero_execution_status=('unknown' if self._visibility_hazard
+                                   and not count else 'not_applicable'),
+            raw_offset=offset)
 
     def observations(self,
                      program,
@@ -259,6 +337,8 @@ class CensusReader:
                     count=cell['count'],
                     value=cell['count'],
                     count_exact=cell['exact'],
+                    transport_visibility=cell['transport_visibility'],
+                    unknown_loss=cell['unknown_loss'],
                     overflow=cell['overflow'],
                     unit='visits',
                     occurrence=None,
@@ -283,6 +363,11 @@ class CensusReader:
                         'Only the declared logical observer in each program is counted; '
                         'other lanes or warps are not inferred.',
                     ])
+                if self._visibility_hazard:
+                    event['limits'].append(
+                        'Historical Ascend scalar GM cache-line sharing can lose writes; '
+                        'retained counts are not exact and zero does not establish non-execution.'
+                    )
                 result.append(observation(event))
         return result
 
@@ -313,11 +398,15 @@ def decode_source_census(raw,
                                  binary_id=binary_id,
                                  association_evidence=association_evidence,
                                  source=source)
-    return dict(schema_version=1,
-                storage='source_site_census_v1',
-                observations=events,
-                summary=reader.summary,
-                loss=dict(exact=not bool(reader.summary['overflow_cells']),
-                          overflow_cells=reader.summary['overflow_cells'],
-                          sampling=False,
-                          capture_policy='all_grid_census'))
+    return dict(
+        schema_version=1,
+        storage='source_site_census_v1',
+        observations=events,
+        summary=reader.summary,
+        loss=dict(exact=not bool(reader.summary['overflow_cells'])
+                  and not reader.summary['unknown_loss'],
+                  transport_visibility=reader.summary['transport_visibility'],
+                  unknown_loss=reader.summary['unknown_loss'],
+                  overflow_cells=reader.summary['overflow_cells'],
+                  sampling=False,
+                  capture_policy='all_grid_census'))

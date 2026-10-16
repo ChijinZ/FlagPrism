@@ -65,6 +65,49 @@ def decode(raw, descriptor, **kwargs):
                                        **kwargs)
 
 
+@pytest.mark.parametrize('layout,hazard', [('ascend_source_census_v1', True),
+                                           ('ascend_source_census_v2', True),
+                                           ('ascend_source_census_v3', False),
+                                           ('gcu_site_census_v1', False),
+                                           ('nvidia_source_census_v1', False)])
+@pytest.mark.parametrize('placement', ['record_layout', 'compiler_actor'])
+def test_known_legacy_ascend_transport_retracts_exact_without_changing_raw(
+        layout, hazard, placement):
+    raw, desc = capture([[0, 5]])
+    if placement == 'record_layout':
+        desc['record_layout'] = layout
+    else:
+        desc['actors'][0]['compiler_actor'] = dict(runtime_actor_binding=dict(
+            layout=layout))
+    reader = census.CensusReader(raw, desc)
+    assert reader.raw == raw and reader.descriptor == desc
+    assert reader.cell(0, 0, 0)['exact'] == (not hazard)
+    assert reader.cell(0, 0,
+                       0)['zero_execution_status'] == ('unknown' if hazard else
+                                                       'not_applicable')
+    result = decode(raw, desc)
+    assert result['loss']['exact'] == (not hazard)
+    assert result['loss']['unknown_loss'] == hazard
+    assert result['summary']['unknown_loss'] == hazard
+    assert result['observations'][0]['count_exact'] == (not hazard)
+    assert result['observations'][0]['unknown_loss'] == hazard
+    assert result['observations'][0]['count'] == 5
+
+
+def test_legacy_visibility_hazard_does_not_reinterpret_saturation_flag():
+    raw, desc = capture([[0, 0xffffffff]])
+    raw = bytearray(raw)
+    struct.pack_into('<II', raw, 40, 0xffffffff, 3)
+    raw = bytes(raw)
+    desc['raw_sha256'] = hashlib.sha256(raw).hexdigest()
+    desc['record_layout'] = 'ascend_source_census_v2'
+    result = decode(raw, desc)
+    assert result['loss']['overflow_cells'] == 1
+    assert result['loss']['unknown_loss'] is True
+    assert result['observations'][0]['overflow'] is True
+    assert result['observations'][0]['count'] == 0xffffffff
+
+
 @pytest.mark.parametrize('stride', [8, 64])
 def test_inactive_program_zero_selects_actual_active_instance_and_retains_raw(
         stride):
@@ -327,3 +370,50 @@ def test_exact_census_request_rejects_fixed_instance_sampling_and_invalid_budget
     values.update(changes)
     with pytest.raises(ValueError):
         contract.ObservationRequest(**values)
+
+
+@pytest.mark.parametrize(
+    'placement', ['record_layout', 'compiler_actor', 'compiler_actor_layout'])
+def test_direct_v3_reader_charges_complete_shared_physical_storage(placement):
+    _, desc = capture([[0, 0]])
+    raw = bytes(256)
+    desc.update(raw_sha256=hashlib.sha256(raw).hexdigest(),
+                cells_offset=64,
+                actor_stride=64,
+                program_stride=192,
+                sites=desc['sites'][:1])
+    if placement == 'record_layout':
+        desc['record_layout'] = 'ascend_source_census_v3'
+    elif placement == 'compiler_actor_layout':
+        desc['actors'][0]['compiler_actor'] = dict(
+            layout='ascend_source_census_v3')
+    else:
+        desc['actors'][0]['compiler_actor'] = dict(runtime_actor_binding=dict(
+            layout='ascend_source_census_v3'))
+    with pytest.raises(ValueError, match='physical cell budget'):
+        census.CensusReader(raw, desc, max_cells=1)
+    assert census.CensusReader(raw, desc,
+                               max_cells=32).cell(0, 0, 0)['exact'] is True
+    with pytest.raises(ValueError, match='byte budget'):
+        census.CensusReader(raw, desc, max_cells=32, max_bytes=255)
+
+
+def test_legacy_derived_retag_is_idempotent_and_scoped_to_actual_capture():
+    original = dict(
+        captures=[
+            dict(
+                capture_id='legacy',
+                runtime_metadata=dict(record_layout='ascend_source_census_v2'))
+        ],
+        groups=[
+            dict(observations=[
+                dict(capture_id='legacy', semantic='counter',
+                     count_exact=True),
+                dict(capture_id='other', semantic='counter', count_exact=True)
+            ])
+        ])
+    derived = census.derive_transport_visibility(original)
+    assert original['groups'][0]['observations'][0]['count_exact'] is True
+    assert derived['groups'][0]['observations'][0]['count_exact'] is False
+    assert derived['groups'][0]['observations'][1]['count_exact'] is True
+    assert census.derive_transport_visibility(derived) == derived

@@ -156,10 +156,12 @@ def _take_instrumentation_runs() -> list[dict]:
             run.get("source_census"),
             "raw_encoding":
             ("base64_source_census_v1" if runtime_metadata.get("record_layout")
-             == "gcu_site_census_v1" else "base64_ascend_source_census_v2" if
-             runtime_metadata.get("record_layout") == "ascend_source_census_v2"
-             else "base64_ascend_source_census_v1" if runtime_metadata.get(
-                 "record_layout") == "ascend_source_census_v1" else
+             == "gcu_site_census_v1" else "base64_ascend_source_census_v3" if
+             runtime_metadata.get("record_layout") == "ascend_source_census_v3"
+             else "base64_ascend_source_census_v2" if runtime_metadata.get(
+                 "record_layout") == "ascend_source_census_v2" else
+             "base64_ascend_source_census_v1" if runtime_metadata.
+             get("record_layout") == "ascend_source_census_v1" else
              "base64_ascend_actor_dynamic_v1" if runtime_metadata.
              get("record_layout") ==
              "ascend_actor_dynamic_v1" else "base64_debugger_protocol_v2"),

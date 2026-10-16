@@ -570,6 +570,32 @@ def test_census_gate_checks_overflow_in_programs_not_expanded_for_display(
             tmp_path, dict(automatic=True, program_policy='all_grid_census'))
 
 
+def test_legacy_ascend_visibility_loss_has_explicit_report_reason(
+        view, tmp_path):
+    capture = automatic_capture('c-A',
+                                'launch-A',
+                                'binary-A',
+                                runtime_owned=True)
+    capture['runtime_metadata']['ascend_source_census'] = dict(
+        loss=dict(exact=False,
+                  unknown_loss=True,
+                  overflow_cells=0,
+                  transport_visibility='legacy_ascend_cache_line_hazard'))
+    record = automatic_record('c-A', 'launch-A', 'binary-A')
+    record.update(storage='source_site_census_v1',
+                  semantic='counter',
+                  site_role='primary',
+                  count=5,
+                  count_exact=False,
+                  unknown_loss=True,
+                  overflow=False)
+    write_automatic_input(tmp_path, [capture], [record])
+    with pytest.raises(RuntimeError,
+                       match='source_census_transport_visibility_unknown'):
+        view.require_automatic_records(
+            tmp_path, dict(automatic=True, program_policy='all_grid_census'))
+
+
 def test_census_coverage_counts_located_context_without_accepting_it_as_body(
         view, tmp_path):
     import json
@@ -652,3 +678,29 @@ def test_candidate_status_distinguishes_retention_selection_and_scope_identity(
     assert 'control_region' in html and 'control_computation' in html
     assert 'conditional body' in html
     assert 'notexecuted' not in html
+
+
+def test_reexport_legacy_decoded_records_retracts_exact_without_mutating_evidence(
+        view):
+    import copy
+    original = document()
+    event = original['groups'][0]['observations'][0]
+    event.update(semantic='counter',
+                 storage='source_site_census_v1',
+                 count=1,
+                 count_exact=True,
+                 capture_id='legacy')
+    original['captures'] = [
+        dict(capture_id='legacy',
+             runtime_metadata=dict(
+                 record_layout='ascend_source_census_v2',
+                 ascend_source_census=dict(
+                     loss=dict(exact=True, overflow_cells=0))))
+    ]
+    frozen = copy.deepcopy(original)
+    result = view.normalize(original)
+    assert original == frozen
+    assert result['records'][0]['count_exact'] is False
+    assert result['records'][0]['unknown_loss'] is True
+    assert result['captures'][0]['runtime_metadata']['ascend_source_census'][
+        'loss']['exact'] is False

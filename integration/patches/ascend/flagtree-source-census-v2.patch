@@ -434,7 +434,7 @@ index 076ad5083..10c2ebd1d 100644
        rewriteGeneraleOp(op, user, rewriter);
 +    } else if (auto anchor = dyn_cast<LLVM::InlineAsmOp>(user);
 +               anchor && (anchor.getAsmString() == "/* flagprism.source_program_axes.v1 */" ||
-+                   ((anchor.getAsmString().starts_with("/* flagprism.source_census_site.v1:") || anchor.getAsmString().starts_with("/* flagprism.source_census_site.v2:")) &&
++                   ((anchor.getAsmString().starts_with("/* flagprism.source_census_site.v1:") || anchor.getAsmString().starts_with("/* flagprism.source_census_site.v2:") || anchor.getAsmString().starts_with("/* flagprism.source_census_site.v3:")) &&
 +                    anchor.getAsmString().ends_with(" */"))) &&
 +               anchor.getHasSideEffects() && anchor.getOperands().size() == 6 &&
 +               anchor.getConstraints() == "l,l,l,l,l,l") {
