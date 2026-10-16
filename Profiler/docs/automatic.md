@@ -110,8 +110,11 @@ and typed requests remain advanced interfaces. Automatic selection defaults to
 eight source-operation sites. NVIDIA and Enflame now use a bounded source-site
 visit census across the admitted launch grid: at most 1,048,576 logical cells
 and 8 MiB of physical storage by default. The byte limit includes alignment,
-headers and publisher padding; the compiler/runtime checks both limits before
-allocation. A grid exceeding either limit is rejected, rather than silently
+headers and publisher padding. Both limits are checked before the original
+kernel launch. Enflame checks both before allocation. NVIDIA's allocator checks
+the byte limit before allocation; its cell check currently follows bounded
+allocation when launch metadata becomes available. A grid exceeding either
+limit is rejected, rather than silently
 truncated to its first programs. See the [census protocol](source_site_census.md).
 Default retained capacity remains 4096 records per actor on Ascend's checkpoint
 path; its replacement census integration is still being validated.
