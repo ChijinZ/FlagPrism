@@ -1,0 +1,30 @@
+{
+  "state": "three_extra_specified_code_reviews_and_affected_deltas_complete_confirmed_findings_closed",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "native_source_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "xhigh",
+  "original_fork_turns": "none",
+  "actual_resolved_model_exposed_by_tool": null,
+  "configuration_provenance": "accepted-spawn-configurations.json preserves original three explicit requests/tool acceptance; existing reviewers resumed by followup_task for finite deltas",
+  "review_reports": {
+    "C1": {
+      "path": "code-review/C1-delta-bd61acd.md",
+      "sha256": "4352e3a0b18530f06b949adabd92bc9fa82b73ca744abff90d97fae266edbce8",
+      "scope": "finite affected-source and final installed receipts; independent full cohort not included"
+    },
+    "C2": {
+      "path": "code-review/C2-delta-bd61acd.md",
+      "sha256": "9e42cf39df72627342c09ff0a614e047a0549315541dccf2221785456e836767",
+      "scope": "finite affected-source and final installed receipts; independent full cohort not included"
+    },
+    "C3": {
+      "path": "code-review/C3-delta-bd61acd.md",
+      "sha256": "c7b57229a99f505baeeb9bc7512d4d297b5784974c9c2d113cff3b99054ae649",
+      "scope": "finite affected-source and final installed receipts; independent full cohort not included"
+    }
+  },
+  "overall_qualification_pass": false,
+  "ascend_r13_matrix_state": "authorized and running; registered24 ordinary then all eligible cold/warm, no completed result claimed",
+  "original_ascend_scalar_failure": "preserved as historical unexplained; not closed by review or public cases"
+}

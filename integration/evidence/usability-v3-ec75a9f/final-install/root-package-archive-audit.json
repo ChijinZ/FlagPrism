@@ -1,0 +1,30 @@
+{
+  "scope": "offline retained package receipts/member bytes independently rehashed, not new test/device execution",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "checks": {
+    "ascend": {
+      "status": "pass",
+      "archive_sha256": "944a9e690918c55b33c125ee8088e17c984f35a8b0297ff33f22e74325191bf9",
+      "indexed_files_verified": 34,
+      "cpu_summary": "320 passed, 3 skipped in 1.56s",
+      "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206",
+      "actual_python": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/bin/python"
+    },
+    "nvidia": {
+      "status": "pass",
+      "archive_sha256": "f7ff3f9d36d38a3dd76f5bbb774fb86d5c1bca606992a3ab3bb9e42b70b791eb",
+      "indexed_files_verified": 33,
+      "cpu_summary": "314 passed, 3 skipped in 0.78s",
+      "wheel_sha256": "48fd503f5d78dbd83ce8e1b43a8e26e18e172ffde87c1f9282c1217a9cc3c0bf",
+      "actual_python": "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python"
+    },
+    "gcu": {
+      "status": "pass",
+      "archive_sha256": "79a58a5111fed05685126f096afc339aa6c983c358e471900e2ed9454aa9de63",
+      "indexed_files_verified": 33,
+      "cpu_summary": "314 passed, 3 skipped in 0.83s",
+      "wheel_sha256": "2dad4c6937a6120de3011d0e249398ad6bbca359bfe3b8ac1d004b58b8f9885b",
+      "actual_python": "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python"
+    }
+  }
+}

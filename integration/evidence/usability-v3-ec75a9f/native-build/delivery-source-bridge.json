@@ -1,0 +1,3635 @@
+{
+  "status": "pass",
+  "delivery_commit": "2bc91bf",
+  "product_commit": "e6644ff",
+  "native_commit": "bd61acd",
+  "doc_only_paths": [
+    "Profiler/docs/automatic.md"
+  ],
+  "files": [
+    {
+      "path": "Debugger/CMakeLists.txt",
+      "git_blob": "360dbddba1b27c1c1557feb61c950e0dac1f914f",
+      "sha256": "c3620f616dd5cdd0cfc04459a7fd41fe5ec7157e6705672ceb8c545e7d712a55",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/examples/abs_level1.py",
+      "git_blob": "6977c7267ac6481a00d16adb99049c6611c86309",
+      "sha256": "4fc602bf52f8734f32359f8675b3ff61720fe07a91d9abdf67efc7ec4321e012",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/examples/abs_level2.py",
+      "git_blob": "4e727c302cd1ec9a6464771186da6aaa010b39ef",
+      "sha256": "6c2cd698358f7e0e0c75df3b9c089dddc7819a790fe25ff506ade8ae93143cc0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/examples/softmax_dim1_level1.py",
+      "git_blob": "7271014d6e3f407ec867a336c6cdfe115730987e",
+      "sha256": "93a18102045d546f21f5d54cff0cd84a6d5890fcbdfb4f76e5b84c002560c6fd",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/examples/softmax_dim1_level2.py",
+      "git_blob": "84978cb43e598f986ae21e365d6fb5998aeb6c4f",
+      "sha256": "cf47a796c16014e94995990a8fad75786479737daae68b703eb2471ef4abbfac",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/examples/tianshu_corex_vector_add.py",
+      "git_blob": "da69d006c855be7859193fe469f799938a07eaae",
+      "sha256": "682d7eb137c77fdede4eec8484ad2eb481b62e58bbf9abdf4f7e8ff1cf1f4184",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/examples/tianshu_corex_vector_add_debug.py",
+      "git_blob": "a93a1af5b2322d1ef23ade8315cf99e1a24a5353",
+      "sha256": "0044a0ed44b81f9991449ab5cd3d7d2266974c8eae0faaadbc3a596b1c32bdbc",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/include/Debugger/CMakeLists.txt",
+      "git_blob": "ad8d1ac1c51d8db7cb9c16825e19276195aa7111",
+      "sha256": "1cf8cfc933248898356c0bb43193fca9d8097bc862027d85afaa5ae37eda4078",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Common/Protocol.h",
+      "git_blob": "54c0622bb8b49cbf960132e3aa06d0a92fd14c4d",
+      "sha256": "04b1aeca4b77a93acdea060779a201717344e15f9a80a33537099a5e03484dfe",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Debugger.h",
+      "git_blob": "4501c4b778a4ed3dd27eedc3e12059641a549f77",
+      "sha256": "04ea345b71834c274e460ef8ea651aa574e39230511605a7fe7af64e78e247d9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Decode/Decoder.h",
+      "git_blob": "5075d48247b5e1ccdbd1dd8f223687fc80f402d7",
+      "sha256": "e5a5b14a526b2cc414c53f4025ecb071b4655b72c4c4ea26a9f38b04a9acd173",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Decode/Reporter.h",
+      "git_blob": "e79f01372c63047539962ba9cce6699494432e1b",
+      "sha256": "d27e7ccc4dc72b9cca276194cc4e0c5e300eafa3646d7de06836970194642be3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Frontend/Bridge.h",
+      "git_blob": "7a1ee21dab78b4614b27e457d22e7205728ea81f",
+      "sha256": "94026c3f0df1b7cd92c7f210ffdc19f13bbfbd194a43ed9e16c9162b08ff1b85",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/IR/CMakeLists.txt",
+      "git_blob": "3673c1c5adafbcdcf5c806662e6042782d1c7860",
+      "sha256": "53ca84c1d9737c02f73cd2128bb4592bf440c30744206cca3106fb1b8ea1c09e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/IR/Dialect.h",
+      "git_blob": "8fc3b7f6218519c315b8de441002ca80dd7ffa81",
+      "sha256": "2b83d94e2e8432463024b0e44e73424a55478ebaf9498cfe269ae9c81b22a275",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/IR/FlagTreeDebugDialect.td",
+      "git_blob": "1997b534653ba860db067e41783d1751c9321d40",
+      "sha256": "ae391913e061a74b9caf4d1f76cf41648659ad49da14c631ccf8ed030836d500",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/IR/FlagTreeDebugOps.td",
+      "git_blob": "9d1c405a3ddc70cb6c96b69f41d3d2d0c99ea82a",
+      "sha256": "e5efe593d576dea84ad64ad5fafce29eed934977fb10d569e98e50adb28e4d26",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Instrumentation/AscendProgramAnchor.h",
+      "git_blob": "6aa1843b3621ae843aef9025d8a85765d19b9215",
+      "sha256": "3a69b21903b8a5dccfaaa78a31745c95a28b4b981a29515e984c80cabb2bcfcf",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Instrumentation/Collectors.h",
+      "git_blob": "2761e041f343e2974d7add02f12bc8bc47799e99",
+      "sha256": "d27448c742b197b98bc674be085c72fc388b5dd7b4a7c4bf57a81a5437195426",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Instrumentation/Passes.h",
+      "git_blob": "1b7e5d467eaa18195d60f3c3b43d35df376b2178",
+      "sha256": "ffc52d2c481572f8220a4ca7611bb699f7e8df2990271983b2f9e8ed309ab862",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Instrumentation/RecordBuilder.h",
+      "git_blob": "43db6eef5388656728b06b2154f64d3c3e2ef708",
+      "sha256": "d47401ea2361358d706e212ccb374e4e6bc309c7a2e11a4cd946c63728695e28",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Instrumentation/Writer.h",
+      "git_blob": "27632d7445ae524d11eae0081b6cf91ceb3e06e6",
+      "sha256": "458485d8efa9df41963d38270f424680d6e7c66c74054c4386e7f1876aaad533",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Metadata/Passes.h",
+      "git_blob": "1aedceed5b38d5e4ae71dd882a4ca88dccf07cde",
+      "sha256": "2f129e6bd0e1c240226f545e59b4e5b1db5e8d88647598c1147ac325fd1559d2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Metadata/TrackedOpTable.h",
+      "git_blob": "74a9d33f711964f87951cfeabe5d355a3ffa94be",
+      "sha256": "1401524ff52da7de0525ec939ad0bddee9f4ed53ca81b4ae5704262e7b3fb267",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Runtime/BufferLayout.h",
+      "git_blob": "0f91e0c4db9957d54c0622f17c972a889247635d",
+      "sha256": "38d17778f9756bab1ed1d4dc75e1fa1e846f3cac5bbf4c0decc43fb52feaaa50",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/include/Debugger/Runtime/TransferEngine.h",
+      "git_blob": "82b5b2cbcb11b6a546705928143e4e87000c341e",
+      "sha256": "48c87e21f5b6cffed9b00462f9e6611426021c0e5165154a4f291170ad0b6d33",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/CMakeLists.txt",
+      "git_blob": "631dbcc13f5266971326f0995f2ed2d980500494",
+      "sha256": "f33a03b6ab419ff95be9549f70d681e699418c2da08861a38ae4b521b40b7e4d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Decode/Decoder.cpp",
+      "git_blob": "a673f155ea46492f09495746887296f6aa72ad50",
+      "sha256": "515e83b77db747335e193433e723e456529f5dba59c01af08b49ec2d21d46d72",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Decode/Reporter.cpp",
+      "git_blob": "fe73f97f54409f919cb4015973681dc5ec993f22",
+      "sha256": "c70f824cb103a9f05d1a2b5aac3221cc901e910223d86a384320167ca8f63978",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Frontend/Bridge.cpp",
+      "git_blob": "9933bc419b47c1312030077682fca4c00fca18fa",
+      "sha256": "365a8cc272b3a0a9a9f32289499edec1d80946d22b8a9b14ad97ae58a9cc59a1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/IR/CMakeLists.txt",
+      "git_blob": "a3a91742a7f7251bf23fa8d7f6dae0c65ce59404",
+      "sha256": "c7c5aae612640094bdf773a55a4c5f7dd23ea7c44910162fa633978541a58f5d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/IR/Dialect.cpp",
+      "git_blob": "4f38df28e3f8f023e30111794cfc56c5a539ef65",
+      "sha256": "656419487425c69bb7dde6dec8e21bca40723865a4c8ebe6942bfb54519c9c95",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/IR/Ops.cpp",
+      "git_blob": "d1ef1011a0fbd3e57b8812b2e465cc774f3a3d42",
+      "sha256": "4319073c2f16cd30050a4aeab80e3ab2f9464633a6365e8f2d975270693234be",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Instrumentation/AscendProgramAnchor.cpp",
+      "git_blob": "040f5042f65a7e9705eda4f0fc7bf63ffc295ee3",
+      "sha256": "f93c06e501587cdd94ed018a9870ddf01eb9b79efdd9538d9370ee5790d3a3e0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Instrumentation/Collectors.cpp",
+      "git_blob": "40aafc7f4063c793578150964409d4df0a45bc10",
+      "sha256": "e9832392a9176071431d429098e6859f0821bbb8786dd59d2fe21fe7aad38fb4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Instrumentation/Passes.cpp",
+      "git_blob": "c1476f4f897a757548253e4ad9958b9353c2472e",
+      "sha256": "eddd93dfbd0dfbae66f6daac80ebbab58fbcc79a2d5e10cf96c64bf858921f52",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Instrumentation/RecordBuilder.cpp",
+      "git_blob": "1e568bfc5b79002fbd62939ab6181abcdcf374f7",
+      "sha256": "0d609ae1aba1cee621138bcf5a88ef0ccf20475d33c45f0916f0f807d8856477",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Instrumentation/Writer.cpp",
+      "git_blob": "61614e2976d978aaf76cb7e4d031a9589e27743b",
+      "sha256": "79aab36385eb44dbea00b9c5df2f30361a39b0d38bdc3d846a19fa6429f82746",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Metadata/Passes.cpp",
+      "git_blob": "0b3f94eeb0984174fe6cacde20f1a727aa64f318",
+      "sha256": "cd3a5629d599f15b6aa69f7949da75bd591dd2f1f37082c5cea6a2d4168e19b9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Metadata/TrackedOpTable.cpp",
+      "git_blob": "cc2d741e93982aabaa9f0d7bf7ec6f6af47b5cf1",
+      "sha256": "a886b076313dff88e5945ffae7184b727dd69c602d61d34b762a41591ec107d9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/AsyncExportLoopTest.cpp",
+      "git_blob": "543765d1f81541a1840564cbc1adf3971a71328b",
+      "sha256": "c5b30fe70b2f3329b7a402164034e7640b4d63d77076e7068cc6d6857d4f41cb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/BackendAdapter.h",
+      "git_blob": "20e36b96fc37fa34068b8c4c252e65e67c586795",
+      "sha256": "ec19ac91fe48c95c5e55864e204f6fb0cb7c3b5e8245bbc46df672daef1e7ec2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/BufferLayout.cpp",
+      "git_blob": "018d101a3b0fd090468fb7bcc8f19d67f608b64c",
+      "sha256": "5222eb796c5fa88b21219292e1ded338cfec05eb824d7b2c1c1982d016440855",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/CANN.cmake",
+      "git_blob": "6b8fc138778a18fd31b35af7e6ead061533be895",
+      "sha256": "0027019769cf228927437e389ae9e09e03e541e028b8687ea4448f2d85e64158",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/CMakeLists.txt",
+      "git_blob": "7328cb9d061c208cd21abd766f5a6d38ef9b69f5",
+      "sha256": "4e68c35ca9865be961ae99f860fa113b74976b357b6e03c9fc7a5640204192b3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/CoreX.cmake",
+      "git_blob": "10c2a8cd887a5ea8c51f257fe64620553bbe0ef1",
+      "sha256": "7b8358a5e2d08652b5bb3411baf65a4144619767279e1d1dfb28709dc58fc53e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/Enflame.cmake",
+      "git_blob": "103bef4eaedc74a30ba225b18485c76ac596c686",
+      "sha256": "030b743e90bb6523b0cc83ded4dd844da2b4e9fda5f6c9ac6e06bd3cba62e5e0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/EnflameSmokeTest.cpp",
+      "git_blob": "5406d389629b67722b9549cc3c554e148050488c",
+      "sha256": "3ce33a56f243dc0026775622bb4cf2cf58321c5381d2a674019bb2eb77d75e73",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/MUSA.cmake",
+      "git_blob": "e0e521c936ff20c2bc803a398ee0ff5d031caea6",
+      "sha256": "ff92fe1bad811430f62ed1008f9509b1c0f62fa9f05d01a6b82243c8317d0cb5",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/RuntimeTraceDemo.cpp",
+      "git_blob": "e6e4b70a13c212b687df8c957fe4974e97ab7f60",
+      "sha256": "e36d89f584ec16e4310b9e2e028876492fe19620b4e82653cc83cae3fd384bdb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/SmokeTest.cpp",
+      "git_blob": "b94afd24165da9be422a50652dc3c21760fc2086",
+      "sha256": "719f6e5ae564978853aeac17d7e462a3ee61b35ef7414719b51e2ab0c7343d53",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/lib/Runtime/TransferEngine.cpp",
+      "git_blob": "1c819da381b18173b6b498d9d883955e1b92934e",
+      "sha256": "7160c3f051afbfa4cdf6b2905b4aeb34720690354f543b2dcd9ba0ad6057f247",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/native/CMakeLists.txt",
+      "git_blob": "321782092c4449b67096b5c9a6f8b5e87dd1f812",
+      "sha256": "e996d8756fd81061da843a765de7253935d8c0926c6b8009f1890c28459e37c1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/python/Bindings.cpp",
+      "git_blob": "f4195b28981e1b36a8ad14282d018fcfa16efc7e",
+      "sha256": "61ea476d6d6fd24d987e35466582743804fbe8e27f93b4d02926ee8cc540ec86",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/python/CompilerBindings.cpp",
+      "git_blob": "6b81d5fabe7cf9b1107779739cb471672a6dc4c5",
+      "sha256": "aa432ba49f4714c44ed50920c01829d78fde539233d67eaa5be29f18156003c5",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/python/CompilerPlugin.cpp",
+      "git_blob": "6f2257b1e08e949907989fa210e8a89b9c98ee97",
+      "sha256": "d8f91816399a07726c6ad6ff9602bad2e6bd95886f1e560c3142fe5d4ccf2b29",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/python/NativeModule.cpp",
+      "git_blob": "e0a0590ecd8d0b6f2bb7cb4a27ef367ce3d28c55",
+      "sha256": "40f944fb531b7da0082a2ab83267956363d8c7e4bb1a56c2a08b499f2fc5daa2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/__init__.py",
+      "git_blob": "c42c8fc26a929f29acdad2fb97f2bf49aa240377",
+      "sha256": "8c64da33e3ce10ec374a50a6c083911001cc889c64964b30720c20b365e655db",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/api.py",
+      "git_blob": "fe653218fe2b3322b45b7950052d091164821d0d",
+      "sha256": "5b9788cb8c1f82d4f94998fb892018a70d1af673b20e4cbcd78510e55e6625d7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/automatic_plan.py",
+      "git_blob": "3e9535ef7336285f29ee6aa0cecda7aac85aa86a",
+      "sha256": "95a937b58b518054d166f920c23b72340c8b72237e05cfba2c6a7f8ca30047c2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/compiler.py",
+      "git_blob": "a93be1541e55f33c5103c536eacca579e5b1dcf8",
+      "sha256": "983976ee8ef1643416f6e6acc8ea98df17e068fc738d09e58fc7976830a53301",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/gcu_census.py",
+      "git_blob": "3c71dcc84e428bbfcc7ad4a71135fbdcbaee7595",
+      "sha256": "1552d0e92f63013ebadd0dc043cbfa66a24a3b6c58973a37c8dbfe413232061b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/graph_guard.py",
+      "git_blob": "afb442872c98e80ebff3d8e570d5ef6b599e0f0b",
+      "sha256": "f2087022e7e1361462a570355da20f1927d7c9e5885bf3bc10fd4d7e1a127d0e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/language.py",
+      "git_blob": "4c11cc21dad009b5fda63cf3ea60bbf7333af446",
+      "sha256": "f8a3784178ccd25cf4756d0d700d513d08f273dd8c040f9c3f66e7e94e9ae7c7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/native.py",
+      "git_blob": "c211ac00197f0ed76bac38a37e540a864cf55d9a",
+      "sha256": "5e129eb3c3cd8241b1a4213f5f336aa179f8c088d9f8e18bfb90cd11a7e720ea",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/runtime.py",
+      "git_blob": "a607b51459b693b6a57a45e277a6653a67d261a1",
+      "sha256": "d04e9003d8713fb7c87c088c4779f859c1c56bd9e23984145ef7b8cacd1855f8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/python/flagtree_debugger/statement.py",
+      "git_blob": "c5ed6b7e741cf4f64504ae387e0695372cd05acd",
+      "sha256": "7f66e41fb70c7f28b1b141f68e1a5d376f57bd1f7bd3dfef06eade0e148ca80b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/census_runtime_smoke.cpp",
+      "git_blob": "426c2dabe4d2d82c5e6c596c37459123b74287bd",
+      "sha256": "1b6c584000d8c6aa456d196d46e823b78aa3a6a54c4a5fb0bc6e2489cd782233",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/lit/CMakeLists.txt",
+      "git_blob": "e670c0ddf2965e45a0a0493a9409f942bdd9895e",
+      "sha256": "1f2e4e9e3c8011e03fbb71bd63e88b86f4e795c67e6ea55b9f5a9a51ea8361b0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/lit/Inputs/filecheck.py",
+      "git_blob": "600d70ea11b8c6cee7be4888c2b839496030f4c3",
+      "sha256": "4f6b0af0cbc92bc8b4841437139e96b27c00a17cef25c859392e1166bba69c0a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/lit/Inputs/not.py",
+      "git_blob": "ffbb276c748e20fa8d51127cd82126da87715573",
+      "sha256": "314b8464391ecb6e25d63bf1a40d3fc230914244c033c282fd1759da10163233",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/lit/complex_ascend_debugger_probe.py",
+      "git_blob": "40c813fcb10575f1cc988e406610ebcda4fe2c7d",
+      "sha256": "49b84a4f572a6cd3a2875086b8f3cef7229e3dbf3c487eabada81d9f2a75809f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/lit/lit.cfg.py",
+      "git_blob": "898b769175b6624ef7fc57afb2fd5f6806480784",
+      "sha256": "3695992568e97d7ca3f3d757d51662ed9cba7b4c454fbdfd92fec46d08b4b497",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/lit/non_debug_abs_check.py",
+      "git_blob": "a216c74a14ddf8269fa472a816083b2d6761532d",
+      "sha256": "2628c5d5dfd4570acc6f7ae544b4cb00d5f23f685e68ce8cf14486d5b8a010e5",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/lit/statement_report_example.cpp",
+      "git_blob": "392197baf02f23433d0e187c8adc0d4ce1c9de6b",
+      "sha256": "3e397938e19b1f9ca73028438db6aa7b96167cd0a4c1d3d2a2cc78606dbd4240",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/python/_module_a_doc.py",
+      "git_blob": "8985d260da595b6df4475bdc6a048345ae3b96f1",
+      "sha256": "0ede3205d2d006f20341600441b0f579afa36310f54425e52298a86dd3c1ae13",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/__init__.py",
+      "git_blob": "46deb8f32b799a8090a000bb8e34cd125abc7314",
+      "sha256": "43ba29079c11150a0704ec203b7059e342291ceb49f0b4547bf06d82099d751e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/conftest.py",
+      "git_blob": "96f22810e7444b6edb43543b1876f6879eb71491",
+      "sha256": "fd7f1cc765e3345ea3852699264ac692a72c2bb0b01b8d4d3b3abbd9301df2ec",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/operator_test_utils.py",
+      "git_blob": "24790191864e38f503dcfd85809de12c00323986",
+      "sha256": "c9106f8663d0f24fa9a02a70613ffab4d139158093232a7d2011024d022f61d1",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/test_debugger_metrics.py",
+      "git_blob": "dd0e1e87c8d5c2b8e483c089d0dc74b7b8c970a5",
+      "sha256": "cb8874c2e1815db10d324c7d98c2aad3e8e0ce2317f6efdaabd060d95c155447",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/test_operator_linear_memory.py",
+      "git_blob": "229564997e53b7038d9b825fd9146e7d950a0b53",
+      "sha256": "eaa69dc3fc71534e61f2c99d6262993e3e35d778c5ca18ceadd7392fa231cf13",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/test_operator_nn.py",
+      "git_blob": "c46d1e00d23a47be4b828e5c5343324bb1f7c34b",
+      "sha256": "46757e058a762c66865f845fbad6f262ca9682c378dcf55d3490576d63266b47",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/test_operator_pointwise.py",
+      "git_blob": "a4445344580ffb1c22743afc51d066ef63abd07a",
+      "sha256": "4bd2828285ba261accfcebdcdcd37efd218f50daa50e542f7974a3ce0032d5b2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/ascend/test_operator_tensor_reduction.py",
+      "git_blob": "fbecb3911f693a7d4707dc5da0680899c3733a6c",
+      "sha256": "e906e3a669e49614be542a29a9bd6636eced5629a2a86bb1c6a5a8728aa17e2f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/conftest.py",
+      "git_blob": "639ba166cfb827ff658419cdcfd5f4867814212b",
+      "sha256": "6bda83dff20d6bae0d09efa1661a36ba282266dceab4d055161219bb505236f7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_debug_collect.py",
+      "git_blob": "bcaa43e58f5234d6b82aa5369c513659b194e377",
+      "sha256": "6f08df46a4b47c91595d6a6d727dac82070ab50dc2ed7ffc5e6ab073e34e136e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_A1_markers_ttir.py",
+      "git_blob": "3af4e7fff7b0af49c240b271ebc3b1d5200e39a6",
+      "sha256": "85fb0740125d606ac16354ebcea19825bf3248a2a4e1da6665c10b0b54d67b86",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_A1_negative_pairing.py",
+      "git_blob": "aa2e80479463ffa60739c789fb3240a6911ed945",
+      "sha256": "df0d5534a0df4f7670fcdf6d7968e36ce2cdd80aacbde2021f25f7fb284ae432",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_A2_metadata_contract.py",
+      "git_blob": "998605781b1b436d8f359572c915509f0be99291",
+      "sha256": "35f29743248a4dae6e8912f02a80f8c79d37e0cd05ffd14e2beec0870fb4a2fe",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_CTT1_scope_id.py",
+      "git_blob": "f0f7f2d26e52192a1bbe8e435e6819fead71b7b5",
+      "sha256": "15f1893dbc0f8cb40acd5f93e03603a383de30e7abf050328b30716ff7ab8431",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_design_example_ir_flag.py",
+      "git_blob": "9fb9f5249c8ab36e84d322f2ee3eed4f9b027838",
+      "sha256": "7ff351a46db3a6da5ed4acfb59244907c655af9fae3e9a7c5cec4fc90db37b6c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_pass_registration_smoke.py",
+      "git_blob": "b5b987462acb037b8e2bd9f76ece49d74e2df441",
+      "sha256": "54037a395f4701cc7643aa4fa03ec7616df2161a33bbd8723719e089bc743f73",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_module_a_phase1_compile_run_smoke.py",
+      "git_blob": "b013cb52de2f42e556460635a72964fdd743108a",
+      "sha256": "f056d5e49a0a7c61b7533cad924d87b1dde1813dff237db231307c0043d92c06",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/language/test_prepare_late_observation_abi.py",
+      "git_blob": "a887dc71c75e284d6bdb7a06f6076364fe2ca09c",
+      "sha256": "dff2e86b8fafe877dd5b62e7ebd718edbe1e8ca6fce04e32cba8220a8f314d33",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/module_a_contract_checklist.py",
+      "git_blob": "6ecb95547d6e726d361c15a349a3f5eea5e21ebf",
+      "sha256": "d70921c3fa5ad245da15c4bcb5831c761c5cf3970444704cda58dc4e0cd04733",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/mthreads/test_debugger_mthreads.py",
+      "git_blob": "32be6a5214d714aea410ce1fe18138d78f2dea9a",
+      "sha256": "5e0e531c615e09d0f32c3a53a37a7a401db33f52c1923993b1c2488d2f0ec05b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/runtime/test_debug_collect_runtime.py",
+      "git_blob": "68e3bc09e6df40c62714196c28d3ce20fdbeb436",
+      "sha256": "cbc2e66bddf725f0380b0e9b9fec625fbcebcf388557e5b48a3363058f244f8e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/runtime/test_debug_deferred_modules_CFD.py",
+      "git_blob": "0ff49ceef399a23a2711829c65cc175f9b55c933",
+      "sha256": "083fc5c1aa6080da66b05f74c613fdaae08444f88638ec80df8debdfa1f5041b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/runtime/test_debugger_launch.py",
+      "git_blob": "eda5938cbd344ac8ed220053f3aabea04255d56a",
+      "sha256": "7c861509f7105721adb1572811c6f4a226359010887c86971e489f1d324069a2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/runtime/test_module_a_A3_launcher_cuda.py",
+      "git_blob": "1b8145dd2c5e99062ef569ba89dd4bf602e706e4",
+      "sha256": "58f7ae4195bd6486e328beb481bcb82c7b67a056884e2ed3b17de6b734ae79a0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/runtime/test_module_a_CTT3_hidden_arg_abi.py",
+      "git_blob": "6bf5be95480e5a63c42f80ec306c8a5681a159b1",
+      "sha256": "776a041b6193dba19fecfff6ac848f9dc93f3cccffbe59b1c3073572a1b6be6d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/test_native_bindings.py",
+      "git_blob": "789dbb9a2ac660c533b403206c5533d2c89274cd",
+      "sha256": "e11b581921f74d67bc0c8debb609ade8c20ba2eee82afa01857ff7d87662b094",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/python/test_native_census_admission.py",
+      "git_blob": "ca162867dabea085ad070f595779a4388788548f",
+      "sha256": "6647c68167608b92ab87efd08f83bc0aeae1051ac39f45e096db43c072ba4885",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/test_ascend_source_census_abi.py",
+      "git_blob": "23fd4a7c37bf9abcc97e3056f9236634ebf39d91",
+      "sha256": "79bc3d1cde332ca00f9fc192cc52c4b6b096ceacc7650395a942ddc97494d4e1",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/test_automatic_plan.py",
+      "git_blob": "8a1ce59b0cbbf9440f3bf1c5d623f0e34199f7b3",
+      "sha256": "b0d2381dcae5782c9bce2e381944368bd4d1984d260cdf74c06b27ab54fef37e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/test_control_flow_metadata.py",
+      "git_blob": "77b15d703327b44db766e8c47061d85baaa231cf",
+      "sha256": "8b74bc2c567640b311a19e5703df3ef1e04aba8588c898fb72752e629b26dbf1",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/test_gcu_census.py",
+      "git_blob": "6edcaefab7e240f890d095b6a2b0ce540fefd396",
+      "sha256": "915013b1face41b2e957f58ff3d93787bd401645dc3eea82f93562dc3c8251f8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Debugger/test/unittest/CMakeLists.txt",
+      "git_blob": "dc46c14c1d3b37a1b12315b8a27c413a40dfb5de",
+      "sha256": "d15f98b1e0a278faab2de8971a9d616ee4c608176b7c7435be2d5114bd66cf89",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/CannPrepareFaultTest.cpp",
+      "git_blob": "986bba72716c2737d5f5e96991067a1545de977c",
+      "sha256": "27e8d2487e6d5735c6215167a136d6bdc98dfe68f35e15ee803843225778d85d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/DecodeTest.cpp",
+      "git_blob": "aa43bae9a184fd0a4fe8bfb26b8b07a6621c8d83",
+      "sha256": "7640293eb5e105b399fa3ebd6ca70bebee26fadc903344ecf35a0621b7891885",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/EnflamePrepareFaultTest.cpp",
+      "git_blob": "c01072e0f33c4208218d03cfb23d8533ba5800c3",
+      "sha256": "272856cf9b52da769907530b91421edc25aa3a1d41f326eea1b3be3dde1cd5e2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/FrontendBridgeTest.cpp",
+      "git_blob": "232273bf2cd9689cc905bc7eb817cfb14dfea015",
+      "sha256": "12c05e477573f1cf2e2e9b16d083c7ce98c6eaa0f3d43e38d1c43913121edde8",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/InstrumentationTest.cpp",
+      "git_blob": "bed0af691e2774301c4f66f4cfdda08389f912c7",
+      "sha256": "b4fe9a24bd0d5c5f756f414ec67424c8de352a7b43cfdf638eb5bb4f851f5095",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/MetadataTest.cpp",
+      "git_blob": "36b4d14cb43fbc5408e722809689915f83c611c4",
+      "sha256": "d2d9f59ce95d807d4865cde09c612fc6e9dd8b5bed3b024711d46f0586e96574",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/RuntimeTransferEngineTest.cpp",
+      "git_blob": "d20619fbb9d33df6dd2e25ac4b799ebc62032729",
+      "sha256": "8e2c09e58820a85d14c4e3ae5cae11e2d2d4982949208d3991a2af2775b8a1f3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Debugger/test/unittest/TestFixtures.h",
+      "git_blob": "f5938f0d9376773faca09076962da95272d2f806",
+      "sha256": "b425166b24ea6e1f758329dc25fc0d77084a62817de06608cb8a06db4189401c",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/CMakeLists.txt",
+      "git_blob": "9a00198e1b24fa4b698635de1e65fb909c17e87c",
+      "sha256": "e8ced9273d0335aa1b16f7bf20e31bf5cf98ec3f40cb79c252f33e85348000ef",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/CMakeLists.txt",
+      "git_blob": "afcc9b5eacb2f7caa709bdb4926c99339bd9a8b5",
+      "sha256": "d4cb44ca0bd3a0edebc6d28da92afcd053f2e3500049c13202786394e6cc96db",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Analysis/AutomaticScopes.h",
+      "git_blob": "adc2efd9dcb30aca042c1be0468bc0bfd8e999d7",
+      "sha256": "a1f27828549e280d49e34790e8787ab160cb8f93afb0a075086121513c013d15",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Analysis/ScopeIdAllocation.h",
+      "git_blob": "ebae38af5992320f6f7e35b73cfba511e81767e9",
+      "sha256": "0b31d8a5995fe776b616a2ddcf47934e0fb974898f2b74845e532deeca694155",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/CMakeLists.txt",
+      "git_blob": "5c6ab30594c8bb16b2d16972e698b0a9ccf6c0b1",
+      "sha256": "1f7f4c02331a650cbee66c638aff5c4a0f2c014a68456a55223a94cb15432569",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/CMakeLists.txt",
+      "git_blob": "13d8b85e52e5a1ce9f8423d1ab042918584fbca4",
+      "sha256": "e27d0f4b419116c62a526a7f21632c881dfa890ab22311255821291b4e128bc5",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/CMakeLists.txt",
+      "git_blob": "e2e0a7ecfbde22c9e0e024b2f6556b7bdef2d5e5",
+      "sha256": "72d16ea5be61cb94d3539cd3e0909adc083f84b543c7505b7e72525f1cf0e7b0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Passes.h",
+      "git_blob": "5e08f9dc1b6f3fa7267853844bd59c9730de0427",
+      "sha256": "4f7971f691af63ebf08e17202cdec36c775cd43eb68ce1a4efd2110556e6e07e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Passes.td",
+      "git_blob": "800694b1bec8c2eb7b639dcf5f32b2edb3cc4802",
+      "sha256": "cf0a472769a5344d32a3b542049a41b71d8699a995dd4552e53e44e1a81045ff",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/PatternProtonGPUOpToLLVM.h",
+      "git_blob": "869d4864bc41c3a4cdbe09224bee869a721a5a63",
+      "sha256": "e04893ca1557e91809cc0c2c8b67b2310dbdb5c1bd4096f6a50bf12b545b0732",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AMDPatternProtonGPUOpToLLVM.h",
+      "git_blob": "9e0304dbe5619a11b2298735395665624dbbc56c",
+      "sha256": "9b84ad2406f58827817bf39c5eb421c36d2ea9fe2fa212c9286f909d56bba30b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/CMakeLists.txt",
+      "git_blob": "b3b7f514b5456ad7abaaafebe7086a6e47254bed",
+      "sha256": "1fb874d9bb9f87f59f80572ff60100d524bbe7a4c17166e53fcf4a619f86a900",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/Passes.h",
+      "git_blob": "6f5fb5df7a318b536892e2c2ca04c4266b4d9143",
+      "sha256": "81c3aa5574692d0aae86aaaf958c37aa736b476bde26673edbd2e9fc8b718971",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/Passes.td",
+      "git_blob": "632d424dd5c1fd5c1918a599b4c253cecb98d618",
+      "sha256": "a3345ce9ad5ad7d1f0d4ff1101c1a77a6938e016af1386bef2ea557b876a1a97",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/TargetInfo.h",
+      "git_blob": "21196302c501a66640b3765464b4ceba1b1a365a",
+      "sha256": "b5300ec3bd3eda8ef62c285d02ffdeb7024449fcffb54819510692cc065f0cd1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/CMakeLists.txt",
+      "git_blob": "baca67454bf0959e6d305942bb761d7861176ebf",
+      "sha256": "eba09357caa1dbe1ab26cb42b1865ddf4b5cc70df51f97d3aa3e03c042a2c3f9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/NvidiaPatternProtonGPUOpToLLVM.h",
+      "git_blob": "083d344b79220c7027c65fa665b98fd11fdb1c35",
+      "sha256": "c0f0e57e96e8497401ef07419dfd5d1a80c8387566dfe062762b9e20b075e3d4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/Passes.h",
+      "git_blob": "0284d053c53cb08c52eccae8896583833d415941",
+      "sha256": "c16b29b751dc73f0035c40dea0c1d10ae500f4fcd0932d94f7d5e166affb86c0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/Passes.td",
+      "git_blob": "21f055f1ce87a9bf1a9ccaec5b9d6d9322e70b88",
+      "sha256": "6f2c5f45948cdab53e17cb490151a9a68a0ec22f9b88043ff4cd2083102c7295",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.h",
+      "git_blob": "8c2b905b79f6e53c5c2b5d27d2c70899d501e17a",
+      "sha256": "1f7e95c0be35ae05f9148a6b04215d4848c56ec97cf690da83fe817561fcf0ab",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/TargetInfoBase.h",
+      "git_blob": "82952dbe336f7e2d520d2aa0109c2c0b0a66a322",
+      "sha256": "46b5dde3797838ebba1452edbbb42e2cd35c59486c1a504374bb661048b9405a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonGPUToLLVM/Utility.h",
+      "git_blob": "69e49327265e163ab0472bc09abb5a9b04b016e0",
+      "sha256": "1f342c400f81e761a365ab92ac974be6afc4a93feeaf245844158b78f9537607",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/CMakeLists.txt",
+      "git_blob": "e58639d317d7bda6221d0b891cca4631d5131cd5",
+      "sha256": "de2865ea56ba22b1aa1b790fd59642df65f31e3e50a2dd56cbf8b16879f62f60",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/Passes.h",
+      "git_blob": "1de4b059417636813c029aa9e7e95c4cc9b0b1b1",
+      "sha256": "3352e4423c67de8ce379af8f2c8f9b9b1c6bcc05572090aab7dccc059cd9c96b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Conversion/ProtonToProtonGPU/Passes.td",
+      "git_blob": "bf5b22b1cfbe1453b988efdb424e3b8215a1d200",
+      "sha256": "b84eecc21a5f5ac5a0af7a89efa3bb85bef1ab57cc39058477e5aba5eafe9c42",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/CMakeLists.txt",
+      "git_blob": "adc6d78575641d2a5724b08da239c75170f9d265",
+      "sha256": "45fe2d5bdaec6eb634346b03ae53cb10a18081dfeb233143b8fdbcb6de86e2da",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/CMakeLists.txt",
+      "git_blob": "f33061b2d87cffc48b072763eb55d349e9070aba",
+      "sha256": "eba9ec1a29e615acb508f3bf73f29f5c353d8475568ab8a4da155dd96e6f08ce",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/IR/CMakeLists.txt",
+      "git_blob": "9cb56c8d7ba8ba3fa271b93efce9bc614d049ac2",
+      "sha256": "03ff9286882724c452609bdea6ac700897c0f6f7f3f3a492e63c8eff1168d561",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/IR/Dialect.h",
+      "git_blob": "d9cb1934501bc2a7091dfa0f50f3df913f86ecb0",
+      "sha256": "3393aebdabbbcd4e565bf28acacd30b81d90f9c5a30583c5f536e7c8bb236305",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/IR/ProtonAttrDefs.td",
+      "git_blob": "7c55136dfe166a6a3abccdefc5ad27d7bdf77c81",
+      "sha256": "0799682fc96caaec5a75e21da51c112377938f29c044a787e7bbd4656088b846",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/IR/ProtonDialect.td",
+      "git_blob": "8d35a5ec1091da2e8dc3c5448541e8c3416ebbbe",
+      "sha256": "3a1a3568d6ca03cd88627ba8beb92ac0a00a32c54c128d82f9184b843d80c792",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/Proton/IR/ProtonOps.td",
+      "git_blob": "dcf9f7ee3ecae240bbc7ff498acfc8177b8e5d25",
+      "sha256": "57418683bfc5aed2c98b64b8a294ea66f5346c66f02928f01bf4ec366f0fb724",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/CMakeLists.txt",
+      "git_blob": "9f57627c321fb0c74b3e4a404e3c36bd435f64a7",
+      "sha256": "488a485d253425e1db2aee4e0725f80afce617201939e009759a898b6360c552",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/CMakeLists.txt",
+      "git_blob": "05222e610d8098f2f8fd48ec9c777592d668cc55",
+      "sha256": "af1f02ad4dfd06ba6eea9a8466f5214fa3ceb630eb4ccf6e405c754409c83ab4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/Dialect.h",
+      "git_blob": "192827e8170ee3a4ad9ae4654e9d232ed0ffbd4c",
+      "sha256": "1b95f07e3c55e2d2bff5bd62e64bd90aa1c61f7c6c0382b5333355c00e3a2534",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUAttrDefs.td",
+      "git_blob": "ddf203c8908023abf05582393c908622655cd4a0",
+      "sha256": "9ecc15a0e94249b5460a2ccdf6e0ba5295cd0b96b64ea2440cd390e16c78eef9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUDialect.td",
+      "git_blob": "9fe146f5e7cf5b1974d1965a6a6e79fcfb0b47ca",
+      "sha256": "342e0f63ad6b59f69491e80c1cc364feec80cad5d73dca461a663fef3e3c1147",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUOps.td",
+      "git_blob": "22bdb954b41e0c177fda8ead32e7e8384835228a",
+      "sha256": "bd617e6c50712a2430799ce925e018b7701d80a5770333ee77c48285a6571658",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/ProtonGPUTypes.td",
+      "git_blob": "f7441ee0182c733be2c19c8e4ffb1d9b6c553b97",
+      "sha256": "7cfafe9906d9c4a2b681b4f3472808674bb644e7c6fcbbaebb61f1e04df8b897",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/IR/Types.h",
+      "git_blob": "780bbab2882389ef4708abb404446129fb8658de",
+      "sha256": "b7af34363f81a94214bad9addb3a322ae5af3f7595bde23faabcb09685d36ba0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/CMakeLists.txt",
+      "git_blob": "3b2c8e1560334e0b5c056c1d7cbfb18dda8746bd",
+      "sha256": "3ac9a1de6b566fa44bfdcdba5b342f95dd15d1c49830b24734f876500b9f9234",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/Passes.h",
+      "git_blob": "8636024a1bc13e9317a5ef48141731f50d2cb094",
+      "sha256": "589f0622e1d91d520cc19ed86b130a5b9f3ef8e3a023719645d66d61dec606bf",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Dialect/ProtonGPU/Transforms/Passes.td",
+      "git_blob": "42088b3ed98dad6c3b27f2237dc7c842df8f12ec",
+      "sha256": "be7545bf011944ad51b5b8373683b7515480fa5a7e432aa98922c7ba75a8aea8",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/include/Integration/Registration.h",
+      "git_blob": "20dcacc9e9c8faba58c5db82fb1036ff9b62dd13",
+      "sha256": "c6a5e6db7839ac1d60bc2af1d1dd0c85d3f82b514d36179539d387df0002791b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Analysis/CMakeLists.txt",
+      "git_blob": "a08c3c6e408a84e0a7c4893a6a27b4fc4d52f3a9",
+      "sha256": "0c1d419c9f5aa4d4fa9c1ca2e6149a207cc9cb44a0d31cb5e60e061c7cc33926",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Analysis/ScopeIdAllocation.cpp",
+      "git_blob": "c952499684e4a0682935049970144d0c4c3c5207",
+      "sha256": "7c6a1d2d906050e137e531b075aff27c2af795da14011e11a09cbb43bda6c576",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/CMakeLists.txt",
+      "git_blob": "0cabf065cce22634b8af171b54f52a6813771e57",
+      "sha256": "1b4dac9add6e54e91e7f1386b417d99dcfd815cdd6e661af34de9fd788471051",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/CMakeLists.txt",
+      "git_blob": "adc6d78575641d2a5724b08da239c75170f9d265",
+      "sha256": "45fe2d5bdaec6eb634346b03ae53cb10a18081dfeb233143b8fdbcb6de86e2da",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/Proton/CMakeLists.txt",
+      "git_blob": "f33061b2d87cffc48b072763eb55d349e9070aba",
+      "sha256": "eba9ec1a29e615acb508f3bf73f29f5c353d8475568ab8a4da155dd96e6f08ce",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/Proton/IR/CMakeLists.txt",
+      "git_blob": "7fa2ff43cd9022cd454a77d4e03fcecd581015da",
+      "sha256": "7607a8c0d4b40f9b865f83d4c6f6e0fc50d998e3fad849c63e5472b3132f470a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/Proton/IR/Dialect.cpp",
+      "git_blob": "b94464fd20a61a7a73096eac35e7988d05b69994",
+      "sha256": "0da9f3ab2873d81c1b4d8bcf16f2f1d2175ce530e580497fbc89ad5a075429ec",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/Proton/IR/Ops.cpp",
+      "git_blob": "fda836a1c42e655cde3caa1c6dd6c6718ba83aa4",
+      "sha256": "ce027ff200ef558b414e8a56195ae1296a291bd0bb2ff7a2659d669c7d6b37ec",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/CMakeLists.txt",
+      "git_blob": "9f57627c321fb0c74b3e4a404e3c36bd435f64a7",
+      "sha256": "488a485d253425e1db2aee4e0725f80afce617201939e009759a898b6360c552",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/CMakeLists.txt",
+      "git_blob": "d7b29312a068103ee02030c31934a791909688cb",
+      "sha256": "4ee520f9411815f3fa389142bd5de9b99a5a1baebcd67c0aba009ff13ddb1b61",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Dialect.cpp",
+      "git_blob": "1e22b48b31aee3908a798133e1b6914118291d78",
+      "sha256": "78b97883525323d77c9b99712b12270bb5285cd2a32b46460eb6bbed5b72aa09",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Ops.cpp",
+      "git_blob": "a8e6d8650e48e0a383c4cd00eae97739dda479ba",
+      "sha256": "cb4432f38d19ea59099f9c821c38a35c48ba3e8f1880ee507ec5968e1f65bf0a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/IR/Types.cpp",
+      "git_blob": "236537eb358b38427734fae7ce90902b7bfc46cc",
+      "sha256": "5912bcb8c8614541311c20bd251aba1a07aeee7a18294f6ac7a7876ea8a2c137",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/Transforms/CMakeLists.txt",
+      "git_blob": "e3280ba73842fa189b767a5e932aa7d19c4efb3c",
+      "sha256": "1e6d18d26843bbbc80d1deca4ec0359d6c9e6b768ee7463b831f8dbc5dec5432",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Dialect/ProtonGPU/Transforms/ProtonGPUTransformsPass.cpp",
+      "git_blob": "ed3323e5ad1d7cb5cc3d9f1e22c580554926e888",
+      "sha256": "caa471436472deb2472329abfb586e02ed93e105546c193794c8f80be4726c9d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/Integration/Registration.cpp",
+      "git_blob": "7a874a71dbfffadc95d1256b4baf66f4f4dcba2a",
+      "sha256": "4beedb224e098aeb92d0239bd657e6012f30643c6274273e32a6a8a7d4d17c2d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/AllocateProtonGlobalScratchBuffer.cpp",
+      "git_blob": "f3830e766b689f0841fab7e85aed2b638a22ee83",
+      "sha256": "e192865a0557164024cd2c9755c8f921e7eb0362af8782d8e5dfc48f9bc7aecf",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/AllocateProtonSharedMemory.cpp",
+      "git_blob": "87dfe22aaacc6cfd10f30111bada16a7978039ba",
+      "sha256": "2043ef7f10f765593d8d57115924e6a4d0a1f0e5cf32882e95539a9a2140beb1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/CMakeLists.txt",
+      "git_blob": "8fc4f9e71c42e381e4dcefbd91f221d314ee1a21",
+      "sha256": "6015635b7c12908f87693ecda4a643e7da5a514e035ceda0134bcbae919a63fe",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/PatternProtonGPUOpToLLVM.cpp",
+      "git_blob": "55bdb1ff23b826bdaa1d89aa85c3b2c6df422979",
+      "sha256": "ef402ea65368ba10b06dad0bff3433d2a5337a62a7fb703a9d118d69753918a1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AMDPatternProtonGPUOpToLLVM.cpp",
+      "git_blob": "7cd214eb7a1c5bb4246c6fffbb05a873c01997b7",
+      "sha256": "0891f7aeb4772eb9c9c3b44c17080e280a0e641c80af40ab045764d0192eb929",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/AddSchedBarriers.cpp",
+      "git_blob": "7ed0633e91a71341efdd5bca0904494ca78a3e3f",
+      "sha256": "16a21a4a2050695cd1d7634380dfc81264c8ad27e95bf6e99a9515a294f8a0ad",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/CMakeLists.txt",
+      "git_blob": "6d8e3a06b001a161efb8bd781c185b61f58fa254",
+      "sha256": "6433c78abcc3e9f2874c96617a6aee8f8d84c70a6bc2616e61bcbede7fc63b25",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/ConvertProtonGPUToLLVM.cpp",
+      "git_blob": "2f7410b6d71a9d7fba1fa1e769a1ca36be07bde5",
+      "sha256": "b7160bcc332ad7894eb159a181134f5cfcc892dcec65051ec047100d57b2e00d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/TargetInfo.cpp",
+      "git_blob": "357a92506e034a6d4c80e236f652f18a4a32d4cb",
+      "sha256": "c98eda27f83c34373126a7577c86ce573ec06826b8cea808c46710a55bd33656",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/CMakeLists.txt",
+      "git_blob": "ac0da3bbb561fae8bbc78424c0a1e6a7dda67d79",
+      "sha256": "35c0eab74e60364e4e5d9f32ff2322b05c17ee8536872ba6cef52de9d7c7badb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/ConvertProtonGPUToLLVM.cpp",
+      "git_blob": "ca7744b7246a5f01ab1736b7fa5d3d6ac493bbf1",
+      "sha256": "c6ab6ff951435798f9caba834b20a7c83de08c0fc9daa9e6f8a527b6e00f4fa7",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/NvidiaPatternProtonGPUOpToLLVM.cpp",
+      "git_blob": "b23798693f427c2b41cad52266f98c969259f36f",
+      "sha256": "28ac121c1992ce5b971e42ad905c497af896009773e86ef2afa782e045c71e39",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.cpp",
+      "git_blob": "5dfabbf780dd04ffb04403578b6402f169e2a406",
+      "sha256": "a263f6f833654ae811853360b9a8acdaa698f5996b91ad68266447774f498a76",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonGPUToLLVM/Utility.cpp",
+      "git_blob": "ea7f4836998b0686f6d042c6ca12df828e22b0ce",
+      "sha256": "e6dc32ec37583bf92f97da8d810ffab491343cfe426aaf5bb084a22375452cdd",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonToProtonGPU/AutomaticScopes.cpp",
+      "git_blob": "e2e63327de9ebe10dbe63097e3a9e8adb399d86c",
+      "sha256": "50bba1b47ae81f7776847d91c4c03aa67668465c4efb0cd0ce92d1962ed136e9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonToProtonGPU/CMakeLists.txt",
+      "git_blob": "affbf88800031fe16917cdb8f845b5520fe12e66",
+      "sha256": "99cfcea141ce6038b1954bebdd01ffcbe2f2ee0276c8e74cc15a904af0293ef9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/lib/ProtonToProtonGPU/ProtonToProtonGPUPass.cpp",
+      "git_blob": "00739ae36e554f7fe8ebd8ad0a83601470640f33",
+      "sha256": "785e0403b2a20b2ae8698c6843de842f189b97f383d6b3907ad35bbee0ffec19",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/test/CMakeLists.txt",
+      "git_blob": "94d090f4781cc5c840ce6b4e8e509f0cc2853db3",
+      "sha256": "5f86e18e2d452fed7e1dcb7253c1b047464bfb095ce25eb639dd19b1bf2d5a1f",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/test/TestScopeIdAllocation.cpp",
+      "git_blob": "28b16200b1c453267bc9fcf2f8b14a3b911638d9",
+      "sha256": "69a720df763da8dc92da7c07f7acd96fe9c90fe755e22993fbca359f3a87c7d2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/Dialect/triton_proton.cc",
+      "git_blob": "3395c88afee1296aae3ab0a26185caab33bd696e",
+      "sha256": "4ff138dec9d6e3eda270edd2eb718e2ef8525aaa029ee44849bec95eeeb8a9b1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/cmake/ProtonDialectObjects.cmake",
+      "git_blob": "e1a3c6eb4a4dfd40c6cbec204d782235cb129ba2",
+      "sha256": "bf064cb1e0bdc594c2a947777bd90ee0ece400f7bb65fe081fa17ed2ab125bbd",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/CMakeLists.txt",
+      "git_blob": "3ea7a4199b2556b83820e4d8711d95f11c318795",
+      "sha256": "94a3aaf4494aef5f58017bc1d590255693e25cbe79cbf6575376186953442628",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/Device.h",
+      "git_blob": "c7938a72672b8c0156f2684128a1f54b037828b5",
+      "sha256": "07acb8b4d37c506c499553ec58c0ae7541368cef564eb7723e5d0bc6bc4ecf0a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/TraceDataIO/ByteSpan.h",
+      "git_blob": "bc9a8a98e39ac2f7c79c58d93faff3d3b548575e",
+      "sha256": "795ee53327f8be1254589c12011269b58a879e80eb332617be85a9f533865901",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/TraceDataIO/CircularLayoutParser.h",
+      "git_blob": "5680ac631b9be8d023e53f38c38300d33a62ccf4",
+      "sha256": "d6e7fed9830868fdd0eee2d038876b51efd2b6732192b9b530a5718af6143116",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/TraceDataIO/EntryDecoder.h",
+      "git_blob": "de174206b3d78642fd2a128833a482bca61f4745",
+      "sha256": "76f519d749f3408a9d90ed1f33b168e8209df29db51bd4cb3bd82ce15217466e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/TraceDataIO/Parser.h",
+      "git_blob": "c774e5f41d85c09a929e0fca56f7fc1f2312c0be",
+      "sha256": "9df2b7b1a9adb5d00e0548a117ccfa660eec251f19e89b511398d41ae25a4c7e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/include/TraceDataIO/TraceWriter.h",
+      "git_blob": "a75ee89c0db671afbc0fcb716d984ad79c529208",
+      "sha256": "a26e93b76b78ece7ab3ee517e245ab0f42e0da50da239ab7179b212fc9189a37",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/CMakeLists.txt",
+      "git_blob": "5646a3832ad8ec707e134b57e47cbc7dad594936",
+      "sha256": "821d2204d0ac701ecb367b4174ac246de47f924b26084f3affd4ac8606edcaf8",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/ByteSpan.cpp",
+      "git_blob": "5e3de445a8e031aca56264a2ef56e0b6db8ab939",
+      "sha256": "42e363d0cf16bcf7d89e997d7c08758e2e95f8283156bfcb8d4023ea6a8edb29",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/CMakeLists.txt",
+      "git_blob": "1d58f6b8b9baebc427886065866276cf5d84ce0e",
+      "sha256": "fedb9775caf08b07f79ec1e1206f87208b8bc14cf0912799888aa3cadf456b62",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/CircularLayoutParser.cpp",
+      "git_blob": "c455ca6cad660e5aaa0ac25f13f956d036b7013e",
+      "sha256": "7efc38c48a2446d088a3128212044cc9b9ff7345085465f2db7112c9602125b6",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/EntryDecoder.cpp",
+      "git_blob": "168ddda99c5175420041629d8f650d7a58604b97",
+      "sha256": "bd0454e508c5fbf8b2cfe3b7cc0feab0723bc007ed777e2115cf349ead333de1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/Parser.cpp",
+      "git_blob": "819db452449f47d12fe62255d223d31ee2d5c081",
+      "sha256": "c38fe50879e2d6d902bf30331953238993f39888a4244b2fee8de98858e98d90",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/common/lib/TraceDataIO/TraceWriter.cpp",
+      "git_blob": "5f3afec669e62b0f21b755a18cd6ca9e39dc148c",
+      "sha256": "f909b6f270539905e2ea306a536bbacc993e82551a95964d275990ec7160b911",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/CMakeLists.txt",
+      "git_blob": "3ac7a87f0b36dcc9e7fed540d63b603d42b5faf2",
+      "sha256": "9a3f6375dade2bf6141d202b7f384d18a8d22e6817543a32638bfc0f78c08608",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/Profiler.cpp",
+      "git_blob": "f9e28e74cd89063e8e854810ef46e3d0a53ea49e",
+      "sha256": "5b8b2c9b0ee4ee53ce2e18ba4854f593a597ac2bb76fbf9b0c6ac7c013edeed6",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Context/Context.h",
+      "git_blob": "134ec7579b54be83744671375f77ef69ef90fc54",
+      "sha256": "13047660c19093b7dae83748021fe6afb3d26058647b2594d71148c0b6dbd06e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Context/Python.h",
+      "git_blob": "f58f32b766d7f973085da054589b237f85590dd6",
+      "sha256": "ca2e743e200be56e9504715642007c814744c45c23b186e6ed9b6f457e39dcb3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Context/Shadow.h",
+      "git_blob": "0cd3c7013d4bff5286e98fa7d8357bce767c6557",
+      "sha256": "25b9b54d142b7b1251059f1e1cd8d3684898c011df3d9aab05d35a3fb8ad397b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Data/Artifacts.h",
+      "git_blob": "f26d0a0b17acfc5fe1d2e5997ed546a26a06fd3c",
+      "sha256": "646d3a295868eb265b14037d95b0c28648a94c4786a85265bdb223942bd90de2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Data/Data.h",
+      "git_blob": "7f8f0cbab20292380cc123e79ccc3535ffd07a62",
+      "sha256": "ed09bb5a3ca57584b686ef4a9cbfd182a2ca92fd4eacf734e00ef87fbb14f501",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Data/Metric.h",
+      "git_blob": "67f95e3f165c47b1b8b4e0a674564824f7b2bee6",
+      "sha256": "9ca3a016afafd489d6322ccbbb0605622737852ad53bf03777ba64eab931db64",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Data/TraceData.h",
+      "git_blob": "89f4c596b3613bdc1ab02e870690b0310c2fb5da",
+      "sha256": "75cb7fa4a63596994f1e517e7dfe4bdd6e6d52221e3abd855b94208ea89f4698",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Data/TreeData.h",
+      "git_blob": "35ec617351b6d8c3108a732d3d3ce861b44bccf1",
+      "sha256": "620661578338cf5a26ca45ad2a0fdc25c3fcfbedcaf272456c63bc2cc7a11ab0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/Ascend/AscendApi.h",
+      "git_blob": "d5b272256f5053a795c1995d1c3cfb63bdf76af8",
+      "sha256": "6b222a578fa8c28d30703f9a9ec109b7c972c6e41e5fe06fdef28571f7d8adee",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/Dispatch.h",
+      "git_blob": "81f6b5b329c79cf5b721d54f1786b53e5a5ef9f3",
+      "sha256": "14d983f91d91525fa02a6f14b2d3897dffdadacec077806121da16a665211575",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/GPU/CudaApi.h",
+      "git_blob": "e520acc629fe159dd2f61c02350796f2bbf1c1dd",
+      "sha256": "6352752109d611f78d37329615d5d041a49451f264cd1ba53e7f6560b4f7d941",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/GPU/CuptiApi.h",
+      "git_blob": "4e6c09968ef29d5bcb9b987119eaba9b83ff14f8",
+      "sha256": "86ddca1f9bba397f3b5dc11eea33f759fc5ff8a1b7fc77aa14b602d75796b1a3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/GPU/HipApi.h",
+      "git_blob": "486a4f9e51196fdb3e25004e5f580cc93c71145a",
+      "sha256": "2e21bc3aeffc7a36dda453dc9b576a06dc4903c6793a8888a99c3fa3e3f4e0bc",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/GPU/HsaApi.h",
+      "git_blob": "b891746c47c7b779bb0dcfb398e7257b7540af9b",
+      "sha256": "082a88b7bda998f8b0c98cd17f544cc199d2246ab3800092d8990d5fe005cd2c",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/GPU/RoctracerApi.h",
+      "git_blob": "c1ab3260eb2226342d0729d731991a4a864787c8",
+      "sha256": "668c53c09b878aa36f081fa9870527a3d33e36cc2d22cf567877de6a23cbfa14",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/Mthreads/MthreadsApi.h",
+      "git_blob": "42a52ef49fcb925a21437721d2b2e88653c51d87",
+      "sha256": "727f986f805ecb8e3b53c2a277d359112460de1588ad9861ea73ef445f1918df",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Driver/Tianshu/TianshuApi.h",
+      "git_blob": "066e6a3d39cdb9bc28f668be47777ba87ef190fc",
+      "sha256": "a53e2d8ace05ee3e689ca043cedd6c25234cf7d0705222435d5ef6e8dacdc2b7",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler.h",
+      "git_blob": "c771772f7fbe2de2b732804e24c29bcc8fcc35b5",
+      "sha256": "22ac3ca299892422e505d757b58047962bb4289093371ac2b50e3b17f933b3d1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Cupti/CuptiPCSampling.h",
+      "git_blob": "263d17100ddd00a870df93a51bb6126dce075157",
+      "sha256": "fb1a4b7c7479ccdfcd56fab80699f34269679c813b3332c0a7b1a19c375cac4d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Cupti/CuptiProfiler.h",
+      "git_blob": "5804f39e8619f1e6bfb0cab41f8b4c7d6ff181be",
+      "sha256": "4680ee92670be6b27838a0b36c3ba82a2c1e3226aa3d7ae4a2e22df06fb89e52",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/GPUProfiler.h",
+      "git_blob": "640735aaf780e45d86874637b5a56a6d99a6ac3e",
+      "sha256": "3746013647c9bc330a9a5386a16b239b67e0b5e567af93df17f7feec84b21748",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Instrumentation/CudaRuntime.h",
+      "git_blob": "b0c9a0cb307194fa31887118ba987c3b25ec1126",
+      "sha256": "ab4e715c70f30e1c1e8286e521272486a367e0dfd96597c6e32ac08cdae93a5e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Instrumentation/HipRuntime.h",
+      "git_blob": "51f7fdf2ed7d6f70cfbb44a83580db7110a5e5b0",
+      "sha256": "f72cd36a0c73485c219f3a4cb82294b1d4edea4f9facd3890e41e5d0c2c11565",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Instrumentation/InstrumentationProfiler.h",
+      "git_blob": "6927948d76e3471b3e7b532dbb593409240a29da",
+      "sha256": "c8a559ddf5bbcde4d052d7612d30f0052185f0fd0601627ac7d227553c93d478",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Instrumentation/Metadata.h",
+      "git_blob": "eddea3f933e7cbdcbbbbfd1a1637a06f657b03d8",
+      "sha256": "fcadd5d6c69bd70a3d167db9568e0cd16311c5b1d39ffa48f3960ea52f219b1d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Instrumentation/Runtime.h",
+      "git_blob": "35d7318e0850ea1d573eba46c15fb97b1f3adbee",
+      "sha256": "30533c8b4975ee6628f0afb6b9a7d6d6e99c5f093e30d661b5c858d6f27a1715",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Profiler.h",
+      "git_blob": "02335c0c99e356cf9b07a7bf82c30f176cbc38d5",
+      "sha256": "6e56ad1e500e033c7bea12a3cf47da2ec28cdd52b7a03e059dd7706796987abf",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Roctracer/RoctracerProfiler.h",
+      "git_blob": "b9bc08de8e837c42a06597afd9278881e1650cf8",
+      "sha256": "5673da98941bfc2beac41e9cf09f8c315049fa669778fdbc2a5d27d75744a316",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/SdkCleanup.h",
+      "git_blob": "d917f98b55d0044713f267dcd5f5068e5013433f",
+      "sha256": "ca5bc69732f25a3c6f4335b51035039537695fb4ca6b93bfa260eafb2388a869",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/Adapter.h",
+      "git_blob": "835de883f215d6eb86b7c134c4a74e55420e941b",
+      "sha256": "c9fe013054df60eabb1be802186a1b5b4eba19bca285d93c554545d653c7a4df",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/CannAdapter.h",
+      "git_blob": "76a6b4a52646468139087ac3ec8e20750a942c60",
+      "sha256": "499c4a5e3594406ee3a13704152ef4a626c0597a4b5d117f593a44c70a79f759",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h",
+      "git_blob": "b0bce2e212091ca542d6e35be6bad72fbbc69495",
+      "sha256": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/CannProfiler.h",
+      "git_blob": "18b68b26c36429a8805ebe6c99545614f7733ad8",
+      "sha256": "a2173cf2c7034108c2c8e175420e127779c00ac92debe5056269843430b7fe51",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/EnflameProfiler.h",
+      "git_blob": "d798cd3c1df9bbab4da6bcabae6b8bbe898731c1",
+      "sha256": "99b2fce96814393fb9c349dbfae861c0f32df8409560b6c144e47b7cdae2f020",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/Mode.h",
+      "git_blob": "67d982e629ad6eb23ee135f82ceaf54adeeb6606",
+      "sha256": "bd88046c3989a6f39944e0af15d835ff8f02e232a4b44b5f2701ddbec3075abb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/MthreadsAdapter.h",
+      "git_blob": "ec6b6b5310f1094017dac69bdf5776f52193cb83",
+      "sha256": "76f1f137132c34935c6a052afc95a3a08c67f90438231fbdc596982b16ce2b70",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/MthreadsProfiler.h",
+      "git_blob": "627b207a85747df3bb21be2b6173221c4e70000d",
+      "sha256": "d641e5bed22f6b3267aa66903aea1d795f8c8763157f4a4c5de750ce8499fb5d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/TianshuAdapter.h",
+      "git_blob": "02171e88425722e1bc4bbe967e8410de6ef121ee",
+      "sha256": "5d4680562f08aa71e1368bb6963041a52fb13bc1600b2ac246e3c829029685e2",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Profiler/Vendor/TianshuProfiler.h",
+      "git_blob": "36728acd9d31177e458e61456ec14b93e303292a",
+      "sha256": "a54eb6b3a25cdaf3a8dbb2818b2ebac8dab0ece39cc8bf09aa162f416e396801",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Session/Session.h",
+      "git_blob": "8dad9833068117fda3271fcec514feffa34db65d",
+      "sha256": "61a669dc6e867a78fdf967e60cc54afe779367722ce3b37c641bd9693fc3edb9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/TraceDataIO/TraceWriter.h",
+      "git_blob": "8ce86fcbe4c96b365492b16b952d18f94ac5eba0",
+      "sha256": "616674708bee68d4c8d432b08281ad9af0a633438a95464bb0f2f13b41bbe7b9",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Atomic.h",
+      "git_blob": "0f759e0d61b9ab28dd8b86011b3c1cea24ce3410",
+      "sha256": "a3597f0c60e4109eb130f7912739d6c688c367aeb93677809a33bfea7b6d2b1f",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Errors.h",
+      "git_blob": "09c44025dc45d56eb47fc621c2f044c0b631c9b7",
+      "sha256": "ee50238be367ea8458dd54c31fa38f086b1fb0b4494bff67950689d7036b1cb7",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Map.h",
+      "git_blob": "c173d163e5f71c2cb5cedca11424f1acc466cc00",
+      "sha256": "0dc2223d3565f35e8a7be58005504bd5ae166dd6ca808c6392585a9cf2cd90f4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Numeric.h",
+      "git_blob": "61de2aa305451940da0538d66a757cd856dac5a5",
+      "sha256": "7933be62935847001fe09471ec1f3ee9615ea60fadd8790e80cc77feb868f206",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Set.h",
+      "git_blob": "50ce165db00a6ce2f069635c1b535b94dfe57758",
+      "sha256": "ad16801732b4e2cf180c3137adef8746c2dde247595e70436428375a238118fc",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Singleton.h",
+      "git_blob": "f91fef1437e79a52df58a47e21e5f429ccba92b5",
+      "sha256": "426717bacd46ac6c77949a8bbb9339d0fe25b088b9303173afccb5a4ba848c3d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/String.h",
+      "git_blob": "3fca23ed1bddf682d34b727f94b119da07f9a42a",
+      "sha256": "619f1afeb410fafba09732ec58bdb31a91946a520d6fa23b8eb74df0c49a47c3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/include/Utility/Traits.h",
+      "git_blob": "bdc43906e9b2084a2426cb18909054b6119d461f",
+      "sha256": "dce9ffb92d317fe2e68b044b2690ec67704c87cf667faf95691dfc41f3344354",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/CMakeLists.txt",
+      "git_blob": "564901af34cb4e3995219e9d85391c358e89c433",
+      "sha256": "df6949464e16da3e794c0e7a50a9180c90003f99697f34b65b5a9a3aca72f020",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Context/CMakeLists.txt",
+      "git_blob": "2c8041a9703f7e8b86f31c1a45f60a180395041b",
+      "sha256": "8f5788275d5f89e143fe170c0c6529083bca104e5c188173a379665718c0e82b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Context/Context.cpp",
+      "git_blob": "ba3d67f44e4a21d9d9d1f39f48ae7b78bf143f6c",
+      "sha256": "afc557cf5b2e5284ad6634aead8c80daa5e398622d8e9ca55dfd4b116220d1d5",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Context/Python.cpp",
+      "git_blob": "c62dbb6bd9de87a551d523679a40251d4363440c",
+      "sha256": "ec02794ca7a7f1ea64097a8aaba5e7ada887ff369d856bee2afe8f0cd622d4ce",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Context/Shadow.cpp",
+      "git_blob": "7c4c22290c1f9b6835425b43f03a8c4be1c67088",
+      "sha256": "23521147fe0181a7876c822b16eaabbfb0278748ab137f3b170b8cf52b021c60",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Data/CMakeLists.txt",
+      "git_blob": "f410edf5690e67bfcd55b1a2fa1b6f00f461be51",
+      "sha256": "83e3da529a116d067bb1b1893967bc4b18a93690ca1f53fbfbe701b6be90443f",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Data/Data.cpp",
+      "git_blob": "d3af5cc5c5da0cb96ffa9815d9b6551840256a8b",
+      "sha256": "6ff7558ebaf96c10b9d7dcfcdb22cd0daf79991bdfc913e2847f87465260a32e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Data/TraceData.cpp",
+      "git_blob": "800ae74cf47f0636492ab049eb52fd30e92d08f2",
+      "sha256": "288a498e588dd52bda049ac846f2ca6b2b0c773f03099abcd508014a7401a639",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Data/TreeData.cpp",
+      "git_blob": "0ec6b9345eee113912fc70f9918a57afdb1d10e3",
+      "sha256": "e3c97322a4388e5b9b3068bc614cff35f6afc7d9a2d0d926d5c1f0fd900ebbee",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/Ascend/AscendApi.cpp",
+      "git_blob": "e3d33c19c9fefdc3e32ba229cfaafbdbf01f8894",
+      "sha256": "cfcfa11b817744d40c383885b422222def2e2eaca94f4055f8b10c1df8362a27",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/CMakeLists.txt",
+      "git_blob": "62005ee7932be211dd646cc415f2f7c306ea0110",
+      "sha256": "3528532d48210293104ea4f6ee2346ce2978b51efe1deff5c6dca9009f93f845",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/Device.cpp",
+      "git_blob": "85334dab0845317c22782c9d7ccdb6f642b466aa",
+      "sha256": "e7572dfe738f3b3356edf9e521423e4548317a73c9d676e6fcbc1f5b23267a32",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/GPU/CudaApi.cpp",
+      "git_blob": "beec3069b21ab421f383e86f4dc326f7c1f0797a",
+      "sha256": "d8ed0b5b4eab22d4e49922fbf0213509cfb27319ead8769e8d1bd233e313a636",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/GPU/CuptiApi.cpp",
+      "git_blob": "cf2e461571f205b7633ffee29303e8521af1c1b6",
+      "sha256": "1edcdd8341fef6eec4d8f03a4f9f349f3535c573805f7783116d607067de11aa",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/GPU/HipApi.cpp",
+      "git_blob": "fccf4edb81dfb18af706d05e8a7b0f4faf945d64",
+      "sha256": "99574372beb6f639835df4c8a984cb0014c28f90b287d66b52c529c62996bdf4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/GPU/HsaApi.cpp",
+      "git_blob": "7c607b4b99ec3547aa47a4a1ee65775a8101cf71",
+      "sha256": "948336528f6707153c02dc6724cccb869152b78f91d66c608292bcb1681169cb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/GPU/RoctracerApi.cpp",
+      "git_blob": "a6dcdcf346eab7e506a70e3da3031f4482fd9e77",
+      "sha256": "ddc50ae332f07eddb0dc6ff5342884bc4dee2c60af5af5ce89f07dedfdbac468",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/Mthreads/MthreadsApi.cpp",
+      "git_blob": "3d1645ded08732200927acae08c8d992da55eea9",
+      "sha256": "8345f77b77ea91f4e50808708c045043463ba5c67b79b905f30223147a391e23",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Driver/Tianshu/TianshuApi.cpp",
+      "git_blob": "00ef156d0b7fc277cab5bf390914e7ab71e72368",
+      "sha256": "84287d83ae1b6ee87e78208ee9668f59da8927104e5bbc9d26a4e99a544c05bb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/CMakeLists.txt",
+      "git_blob": "9171ad2bb537d5e096a174554a9f5d2fab4e5a62",
+      "sha256": "8c8832b5f0bbfe6c56284c4c5bcbfdf7e324aea45e69a5a5d000e9337d2bc47a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Cupti/CuptiPCSampling.cpp",
+      "git_blob": "436024d805d08cf671d02f20c69e404b16885078",
+      "sha256": "b6c1070df6332dfc08d50decdde87be92465528aa33b7a16c700f2d74c6ad285",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Cupti/CuptiProfiler.cpp",
+      "git_blob": "b1643916e7d49f03a32b45064b45b11857a32494",
+      "sha256": "ac2bcdab9a5f212280e0de90050d434c4f95446e6afabb8dcc735400862f22ac",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Instrumentation/CudaRuntime.cpp",
+      "git_blob": "e9828645187139edd88a7c04841b136abccca420",
+      "sha256": "45108c4a528aec607fb55ff1f3ff9b101489746bb7cb0637a9f0a58d9635fb41",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Instrumentation/HipRuntime.cpp",
+      "git_blob": "7272b6ea9d148db060e95b1bb17be94663738a89",
+      "sha256": "1efc401879c789fe159a71968490b3590fb7b6a010a9f7a5b0c0fa62203f1e9b",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Instrumentation/InstrumentationProfiler.cpp",
+      "git_blob": "020fa5e32b5de18162ab375ad15ba63c47edd343",
+      "sha256": "c140b027c57b146113f53d7f343f9786392183436926be93dcad1ec3ec78fed4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Instrumentation/Metadata.cpp",
+      "git_blob": "0bf9147b2cfb0ab2c6b157e0fa0c7579b3fb130b",
+      "sha256": "e4d798d8e340259671a9ff9defc37e84e0edcc72b1f945948558eae1ec6bc631",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/RocTracer/RoctracerProfiler.cpp",
+      "git_blob": "6efc1e6fdb728696d7844b8d73fe16d5ab1a7a0b",
+      "sha256": "b9f868314d7870274f96e508d7c4181fe7a9496b42115ec7bf3b18e8fe8fd0bb",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/Adapter.cpp",
+      "git_blob": "7e485c03075d85dc53f0186bbd9bf9f5e029068e",
+      "sha256": "3e2f2f1b503d2fb1d8dbe1106237204264addbf41de4bd32642fa218d43485d0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/CannAdapter.cpp",
+      "git_blob": "a9841602a91e4ec841e66ee87855e40960f9f551",
+      "sha256": "529d04bb154fd131e96647e61797b2e566e1570e389041df407a348abfc832c7",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/CannProfiler.cpp",
+      "git_blob": "22c7f2e2c1f31655a2c5a944c93152ae2992d553",
+      "sha256": "154359df2b7ca9b8a8af154c42a14334c95bb57b85d061001cca9635917d495d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/EnflameProfiler.cpp",
+      "git_blob": "161bd10ec220b2b7306988568b4df1b7d11ebd34",
+      "sha256": "374cf67663492e215b2386a22875f200851efaf642a49c8e23043b37c6349eaa",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/Mode.cpp",
+      "git_blob": "70d844ec6193f9f91dc19e2c982de5cf0e89bfe1",
+      "sha256": "bab4092da989e583bbccfbe41b7c70aaab31f52882a4751ce67a3051b70f9191",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/MthreadsAdapter.cpp",
+      "git_blob": "f3f4ae351fa01356ff4bf2e13837e22bc697132e",
+      "sha256": "5e2a4c025fc7b3cd81a7439d413de359242f67270ce1838b803ea17bcddb906e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/MthreadsProfiler.cpp",
+      "git_blob": "c21b500170447bf8e73b12f55cce800eb2b465d4",
+      "sha256": "ce4715e6f97bcd844abc589a54403a01d61ace313c7f854708c56f61cc6c11d0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/TianshuAdapter.cpp",
+      "git_blob": "85a8b3f79e36e5bee1f8861e2be2029dfb53b001",
+      "sha256": "0c116705277ad7a0cbe9864a14fd5eba609466aec3462d97c91e892806369800",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Profiler/Vendor/TianshuProfiler.cpp",
+      "git_blob": "2b311106675dcc606faa8135acf00cd6fa843cea",
+      "sha256": "cd2e4b6df2a8ca5bbe6609bb46bbbdab5e21b30c86a7982dadfb6796959ca3fe",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Session/CMakeLists.txt",
+      "git_blob": "e1d88b958b1d2ecbde39b6be9edad2cb35ea2b6b",
+      "sha256": "7d4f251793d0f58df6f673216c9d15b1795a00b74513d19d2e23048fc89ada60",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/csrc/lib/Session/Session.cpp",
+      "git_blob": "dda69cc5cecddb95c5df2a01b5b9fd46932c3843",
+      "sha256": "cdd3574f8b2e4001ac43a527f6ae386cc10d4662f23abb36447bb9ebe9458470",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/examples/complex_matmul_profile.py",
+      "git_blob": "b0516419fde8caafa478091fac9bf8498d76f717",
+      "sha256": "db290917808beffb0d8b25d05ec676389f801df01c3f8d7977f8370c7aa354d2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/internal_timeline_profile.py",
+      "git_blob": "12c4df5e9043b929ac4919b19c9384f03ff3e8b2",
+      "sha256": "6da6182a68f7f72c69efd27468e425a6fe81aead4f54ac7f10fd45ddf6882baa",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/medium_softmax_profile.py",
+      "git_blob": "28341ec2e3c9a439ac35e7ae533cb5b4d34bc27c",
+      "sha256": "f51a12d3e5d79b4e568fdcae48cbb4e689a25dad47f3e506f93fb5a295ba969c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/simple_vector_add_profile.py",
+      "git_blob": "9689e03ff3dd1e8fdc38fd895a9b4eb86197de9d",
+      "sha256": "268e66b27447b067317a9695328e8c10701642fd658829e422a9aa3eae9520f9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/tianshu_corex_python_operator.py",
+      "git_blob": "30bbcf3bbd3fe685c88512637f6b26fcf841984d",
+      "sha256": "ad5dbd3e9c5c9affa05086093b6fcb6de651c02aecf93c68679cc778cdaaf0dd",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/timeline_showcase_profile.py",
+      "git_blob": "232164814a70915667543b06a5e7d088b21b3f89",
+      "sha256": "a3719494d620624a482195a52e6b479a7e476705c30bbecbb826ef13608a79e4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/examples/tiny_mlp_profile.py",
+      "git_blob": "1167fd0301610b6b52771fef822699915c21e08a",
+      "sha256": "06d2319c93d3881468cf5d4831d8bf49dfdbcc7819f23df993b7e86709a09b90",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/llvm/AscendLateObserver.cpp",
+      "git_blob": "78f200f92e19136dee1d514ca4a53e41469b8eec",
+      "sha256": "43031d521108bfc7b2bdb0145e4e1af65f01bfba5cc0ace92515c348ef782ea6",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/llvm/AscendSourceCensus.h",
+      "git_blob": "a596e0b02f325df292b81a23396577144d118ef9",
+      "sha256": "e76313457cbdbd497cd1df15b7dbea3b0dc18eb7a7741aa2f4ab295571e7dee3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/llvm/CMakeLists.txt",
+      "git_blob": "939404b0340285670bb8f3a604d39daf7fb9a9d5",
+      "sha256": "54d173913111e3299526329d83fa16ce3f8f0dce2eff6cb8b64a97c522f5f925",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/__init__.py",
+      "git_blob": "b80803ad79ca8a97f58d939e360f504fa7785898",
+      "sha256": "06c2df89ca9d7ada60e4641de71c47c3c70c84a8d13d77911a587d996be77d67",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_backends.py",
+      "git_blob": "d752a8cd6f1d429264d4c32ebadcab265bae8af7",
+      "sha256": "5b32d015af8319d8a71b14dcd65d77f25bb79100a6fe88375da0ad313deb596d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_bootstrap.py",
+      "git_blob": "9b99011705d0609c5419032808f7dd1e5f8ad280",
+      "sha256": "4b520e556adeff61be539c57c5da6b4518a5d5129e726ae4d8cc325ee8fad976",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_capture.py",
+      "git_blob": "2c1319a1e08cd0b47f61b2d2d624f0acbcf7cfbc",
+      "sha256": "9301a0cd3dcea92d1c027aa66498e74b32630dfbe439c3e608b6a476f5b2464a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_deadline.py",
+      "git_blob": "da06bc7c2de372251c1adb747bee8f63962bb5bd",
+      "sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_metadata.py",
+      "git_blob": "e1ec313052758fd0fcd7f89f70785d663cfd1864",
+      "sha256": "a59bef29569aab461d1842a02711b460bc0cd36cc65a6d14542ce8aeac5bac04",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/_report.py",
+      "git_blob": "37a6c1c90924d7910c807a3b94c63a5c64ff634d",
+      "sha256": "9af204d9ed54e8ba3ffa0dce87f946246599dd19fb0b8ef1b36ed55f1f8b496a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_abi.py",
+      "git_blob": "dd71b14312273164debeb23a7b9d688f27283c8e",
+      "sha256": "13156d984e7f06f4f27fa4cf6142f4c5b0e7beb7207cb0283ba54cabb2249b91",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_actor_binding.py",
+      "git_blob": "6b56690f1a9f50e6794ed4e09cde2551ba946264",
+      "sha256": "defac8552bf3027633e4a176587184c6cbd9ebb8170e35c96d836ed11b244f12",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_census.py",
+      "git_blob": "a42eb59cec6361e859aa03370d18e11e6668bf39",
+      "sha256": "8c23e0e542e728ac3273ce75363255bdadafd0a24903211cb78657fb84143859",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_clock.py",
+      "git_blob": "3e5626bcbe82c5b04ed70667930884494934128a",
+      "sha256": "b73451d0a456bd0934219803873a21024afc2022aa82171c00d4357f24fb49a5",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_compiler.py",
+      "git_blob": "a394d60cff5f46aa136c5d65521c322a24f72392",
+      "sha256": "026faef3fbd13e0acffe874a023306acfda7be110cd9878d68653c1fe66e5f75",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_driver.py",
+      "git_blob": "d9e987bf2bad33724a47a815a3ee2f9543c1e23c",
+      "sha256": "d44b9216188cf77366ba90db06e777de842f68465a0fb50a5633338bb51d891f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_hivm.py",
+      "git_blob": "08523e248bb1968b19bee717419eb531a9eb6410",
+      "sha256": "f7be42dab09492700987be8966d060ceda8e85b4de3123ca767f8d80d84eb117",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_launch.py",
+      "git_blob": "ecfecdd922f0ed254b396420307813a822088b84",
+      "sha256": "03bba9dca24cdefaad2d4fc2c670bfcfdefab1d248c25c58d7c25e3359b13c76",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/ascend_sdk_driver.py",
+      "git_blob": "0c6023d0311024d6e3da8b5a88f8fa77b791576c",
+      "sha256": "e6e180fad9cca7ce2f3581c89a5ae4e70085cad5e4a004f45670dbdebdaadae7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann.py",
+      "git_blob": "b67ec882932f84e137c2b2f5b71c5dff2805128c",
+      "sha256": "d63d2d173024a93a077d1f2287ebb854e24b548729fcc0c166ad0356ec84bfc0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_artifacts.py",
+      "git_blob": "06df30df4082580b6a886fad84e00804f720dcd7",
+      "sha256": "ba990af1827083acc227bbc2272b758bf65aa847036ac30cd6a4f81167577205",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_joint.py",
+      "git_blob": "f0a204a34b0f2dea7300fc416dacbeff44f9e5c9",
+      "sha256": "26b4f22c84b06c70165bedf6acc279f466f8daf3bdd5ea0d71996707dac0deb3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_native.py",
+      "git_blob": "9e5b68a8328e07015d64e141ad5dbcc457476829",
+      "sha256": "806e63b9f5648b37b93e9e52721e22045656726838a0a9103ede205fd65abee8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_raw_sys.py",
+      "git_blob": "b351ddc502d892e803adbab5dc0e33067c65526b",
+      "sha256": "d259239bee16f02fe1604054097c1000e34b5f47964d6d61843043bf70aec23c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cann_source_clock.py",
+      "git_blob": "57e87cd175e5569a3c1f06719a90ba9ec8f529e2",
+      "sha256": "f9c2048c4d672995561e3e3cbe66bf185355db18cc81cd27cf3a2ded3e3f754f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/cli.py",
+      "git_blob": "59dbce03a73699d856e0c5b2009557764d658fc6",
+      "sha256": "c1199753ea7a263134b0fecf190b993d75ece9131ee6aed877734e0318eb4a95",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/context.py",
+      "git_blob": "cd421c37a382b4b89106ea03ee3a14942815d92d",
+      "sha256": "7d398c8a89aa967b1a113474dc18fb1551731e837ca607bd596a9177cdc3d8bb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/execution.py",
+      "git_blob": "b8862b5eddc6d00f4a74648b6fa102a853abe050",
+      "sha256": "c2c19ea881e89aed972f25657b8b36da1d797d061a99433878d242a42a905759",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/execution_ascend.py",
+      "git_blob": "5f43205ef813b9b3122ba2b9f48d940a1ba8aa38",
+      "sha256": "fc56bb161a9ab00ee565221a6a48795a30e2081da0163a772abab4cac63a71e2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/execution_enflame.py",
+      "git_blob": "3014827ff8e970793d74d8bd62da89ba8da720ba",
+      "sha256": "20f0434887a30e25662a6b112f06d237ef6630f4275fe17780efc0c605632c1a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/execution_nvidia.py",
+      "git_blob": "0a005cef6d79525641262e4aea9d9a584d743408",
+      "sha256": "b75b1e1cfc576cf4cf89f01dfc8b42183dd1d08de8f04144476bb5d74406d4db",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/execution_view.py",
+      "git_blob": "2db5cf491defdadbad7de3e4d962f73b18e05eaa",
+      "sha256": "fcef27f307a92211f3063d04badeb4b1aa15139c26911de0ad418ae381a50dfa",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/export_refs.py",
+      "git_blob": "89b69fcc4ce5dd3082d15c4330347f835279f735",
+      "sha256": "31016647681480221aa6b0e14d7ecba32a52f2496c21c11406f41ae8e7031b3a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/export_timing.py",
+      "git_blob": "29e41fe2456c88dbcc667c17f2a768b321ce39ff",
+      "sha256": "0d69c31172d5ff2eb91159678a5f3042dbc485e9eb1237b6d903e0bd2008b209",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/fine_grained.py",
+      "git_blob": "dfe069e8353249c44c0d1da0e28f7a32c70a237f",
+      "sha256": "1e33722303267dca3c261dd2435fbbd4d9e771db2747844cecf08be1670598a6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/flags.py",
+      "git_blob": "a79c3b495b26fb7e475c8b66ce89d248e5d31495",
+      "sha256": "42911adf7411294b65e0862ab1c763b3c17e41bcb5be5baaa5f59179c1a157bb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/__init__.py",
+      "git_blob": "5ba3ff539527cd54e488828e92db7c4f7aaed882",
+      "sha256": "ab06fcca92d0d2838503787d33746d5353a1251ff07761194ca276a453477aea",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/graph_guard.py",
+      "git_blob": "18e755a38b5675ead271b65967baf25cafdf5387",
+      "sha256": "97513351f6a405d40e438714d385609d66428afc01b7b05ec11adcd610598fa6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/hook.py",
+      "git_blob": "a900f8256705bb11d16376d2680464e43ef2e867",
+      "sha256": "cc884a520eac9d009b9a5e6d2402fc9c3384ea41adc1fa307a36aa68835b7c68",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/instrumentation.py",
+      "git_blob": "196026b40f7c3256bff5a3a0f6353b98dff11225",
+      "sha256": "5e8b6e2b5d6554eaccd501260fe1724e104c8984dd24d587f04fb2f704da36ae",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/hooks/launch.py",
+      "git_blob": "88f2073e7dfd541e585f5cf8714126862c40f883",
+      "sha256": "ac193a7a47e844c730db1bcf31d7411535041ed407023081a086742c51fa7f35",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/language.py",
+      "git_blob": "a5bacac0f4d5f28df9f9f0a4051b2ebbcbaaaed8",
+      "sha256": "2abf18ed559e4f2c19df9a3622f3debbe410ff236d12c903811e3d19d2ab3988",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/mode.py",
+      "git_blob": "d61de83b678480904b8a30899ee204f2841729eb",
+      "sha256": "00fbf53edef15bb421a87fc32292694385bf150d4c87b05e5643edf58b645a12",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/mthreads.py",
+      "git_blob": "d117a57a265e50e7a892d881ec94a6ad49c53b32",
+      "sha256": "abc3502c47196c2c5e3d4b7a770c8fa8e5475028f1ef192774083160ea5d9076",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/native.py",
+      "git_blob": "29df9cce47c86a58607031e6074b08890230b9be",
+      "sha256": "d9e18eae4b2f48d9ff69c57787e127302a887609f07a5cab879d26af0774f0ab",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/nvidia_census.py",
+      "git_blob": "87051348e5578b36e902e6cddc2f7603436dd716",
+      "sha256": "6eb608e8718e1d98930bd1f25969a0902cb7ea0b661ce06e0cab87921812638e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/observations.py",
+      "git_blob": "b97a0213b05d52849da971a788119c9a10bfc9d7",
+      "sha256": "dffb0eaffa85cff464423d2fd22212a64b907a09e53ab502f527d1059a8c82b0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/observations_ascend.py",
+      "git_blob": "d8b9d8ed3cced00b4f9e57fab44973bc773b51ea",
+      "sha256": "a73ba510100485cfec63bb5c62686cf122775340592732f5ce991fb6a146f03a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/observations_nvidia.py",
+      "git_blob": "fa3962104b52d46c4c3347450d097a1ae79cb3b3",
+      "sha256": "966a0506d5dcd595bede9680f62cc40c4bab70375966a8549379a5e4d93a9770",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/profile.py",
+      "git_blob": "a5aafe6b9601f529f1742c0f67929f4de716231b",
+      "sha256": "2fd2199f56f6cadf42b2d12d505409e1788f1bd7769f43851ee9848358133fea",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/reconstruction.py",
+      "git_blob": "7b11030eeeb45b95e25f3cdb2aba11fc56ff4feb",
+      "sha256": "98b74ff71d1d4556183bcba3bb41c0b4579dd78cf4329440c18f3923602612b8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/scope.py",
+      "git_blob": "b21477262d259ac8c4ab2b848de560b54a064ad3",
+      "sha256": "2844e349352cb986c32d2c0062ccdfe25fb48ed74dc87c9ec4b510f626b149a8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/source_capture.py",
+      "git_blob": "284f7ebe549e9e88f631a8d38db83cb25a3e05b9",
+      "sha256": "12e9b2fd81ed3a19c4f11facce242fe2c8227a9944a606218674b5e339651ef0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/source_census.py",
+      "git_blob": "399e37d4de993437f236d555a63dec6a22b11afc",
+      "sha256": "a6e699dad73c13b6fdecdd7fd58b4b2a73729c2d72649ad6a98a3f12f9feb46d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/source_origins_nvidia.py",
+      "git_blob": "da7454f6abbef9ddefdc2fa992bfedbc7d97126d",
+      "sha256": "b969d0d9dae13821f9739557c2cfc3c4b1196c49995fc77df6301b76c78ae360",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/source_view.py",
+      "git_blob": "e1a805ee2e216776f6dc09f615dfbd2aaad62dfc",
+      "sha256": "74eb96122c0daf1cb8bccb6396c1cbfc143ec711134827c070416b662ade303d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/specs.py",
+      "git_blob": "d11a52405c6144ad9524795fa87ee2497b67ce4c",
+      "sha256": "87a2739559bb1ef022a03026bb4acf152b0a890b3220e6181697543b3c6e430c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/state.py",
+      "git_blob": "4880f5a6ed52f49df84983b8ab51418cf99a4b41",
+      "sha256": "3bef03466c7cb93a5e6bc07d0e02f92a5ced94c4ef630926d905a55cbdb3bb27",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/tcu.py",
+      "git_blob": "dff3085a7762fb96da5e2487aec7be4d4cff84be",
+      "sha256": "5dbc968a57fdc022b376da4fc616fc604f0c9d2c4d79fda326c65c72dce17950",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/tianshu.py",
+      "git_blob": "8f5ea193aee79c2c7165e6fbc7ef622bd0562854",
+      "sha256": "d06fe37a431bdd363a7a11c526a06b236457ad52e8f3a3fbac499cba667e79d3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/python/flagtree_profiler/viewer.py",
+      "git_blob": "f17771a48a9408cab3ea0015126a483a141bf320",
+      "sha256": "df7f2f376955c3a29674cf7e85c8e0627cfde5bbd5acce8ab40518ec10ab754a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/cann_native_acl_mstx_validate.py",
+      "git_blob": "a5db5325e1028f7d903d9800d2e5e8757e25425b",
+      "sha256": "b67513968fa284c3822df596373927210e5ab0ae1c444fa69ef99408328e4748",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/cann_post_import_msprof.py",
+      "git_blob": "a7480e5d4b171011fe081c4e7a509025d512c758",
+      "sha256": "0162735a108fe8923b258f82bef23e49eb400febaf2f29c044138fbd1e2f2448",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/cann_real_msprof_validate.py",
+      "git_blob": "21f890691b838ad08780376f514306138d1a8643",
+      "sha256": "9781cbd6dfdfb935563a029eb0193bbaaf06d765606748d8560fa0bc2c7dc246",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/cann_real_npu_workload.py",
+      "git_blob": "077120466d47433b411bce115a67a2e10e227970",
+      "sha256": "f635fcb325daa2979867e3059b83896488e161c954d576e12aa343ba1f0c133b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/cann_vendor_raw_report.py",
+      "git_blob": "23a2ea0486ff5fcf79dc456c68f0e928121dcf34",
+      "sha256": "957e2856d03880b8d4cbd8abd221173decf27dd2838971973fad620a1060ab10",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/gpt_triton_profile_runner.py",
+      "git_blob": "52a268f52829c787491aff2526793a1875412b0a",
+      "sha256": "9d280a20712ac2b91d70535531918999b4829c0355f3189c0bed1d2c87f43222",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/scripts/hatchet_summary_report.py",
+      "git_blob": "46f1bcb8cc2873f530cbdcb8435de7c4dbf8a73d",
+      "sha256": "02305848b737d83ddca9c990c6e4a5f1a00b010903eef79566f703567c82b104",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/CMakeLists.txt",
+      "git_blob": "e250d49f282ee25ea679e2c4e5a5829bb675e00c",
+      "sha256": "4343baa81ff75480abb1d15983e771d4c2047ae980e7837ff230e660ddfaeacd",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/cann_smoke_workload.py",
+      "git_blob": "af32834eb209a169be14cd4ae6be1ee5281ac2c2",
+      "sha256": "f4f684cd73e92ad4b044e310084ecdb01013b6c1f2e33ad9b0a2b05f921b473a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/developer/warp_specialization_affine.py",
+      "git_blob": "53f22f08f91e0bab16029bdb1376a5a539b0a7bd",
+      "sha256": "19478c2cb489f79ddb597861ba28b514f13bdab3aa689fd6243ab3a864c6b492",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/developer/warp_specialization_affine_smoke.py",
+      "git_blob": "dad195151e387a1209daf26abd5e3d92d7056a6d",
+      "sha256": "742a8bfa59bcd89b989a4df608dc9778a73faf49c18cc932f770289ec2d68a25",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/developer/warp_specialization_matmul.py",
+      "git_blob": "9b28284068c68603dbbd8be81815762812bedb34",
+      "sha256": "4f060d0e452603872d479396b90ea41cb22178aea3ace24adb7da0ca0fe035cb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/developer/warp_specialization_smoke.py",
+      "git_blob": "e7ebf0396693d37fcc34d01b2ba40fac6ada4969",
+      "sha256": "7bc8071401d61110330d0fcf811f542bd01702e77f212d760441951b1ea36000",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/enflame_llvm_clock_legality_probe.py",
+      "git_blob": "ac6329f304c552fefc27e684730bce3d6a7b0764",
+      "sha256": "e95f7c79f4c7b9f53909bc4cbfff3a57bdbf0c77e5f16962439de4dfd5e2b21e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/enflame_method_fidelity.py",
+      "git_blob": "da499c3ea9398ba7df08ffab5736e6d13b64799f",
+      "sha256": "9cc9fe23c58b76f748d5fd4d62057dd5913460b69d915cd57a938f3e09613523",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/enflame_method_matrix.py",
+      "git_blob": "3406dc583b12739578fbf0de38b46565dc5964fb",
+      "sha256": "a2f2c0cf824735e579fa891a26469e7ffd9f9cbfd6ac290a4fe4b177ab858a00",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/fixtures/enflame_method/kernels.py",
+      "git_blob": "e3d52955c3952c86170622ade5d6520a743bfafe",
+      "sha256": "b48a1247af0808063e40c793aafccd9e235d60711c98e8e81e7a8f75207f642e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/fixtures/enflame_method/run_case.py",
+      "git_blob": "cfce046b69ff9d18ad44cde5a34bb441f3923180",
+      "sha256": "d453cf065ee656baf9f0acfaae98a40c2b80849d0cdb62db06143085026d5f8b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/helper.py",
+      "git_blob": "fb71819f85b6421f29e6fb9597af90c13fbc5189",
+      "sha256": "e8c1c1f78e995b59fe7c25264f35ca1323ea6cda2aadf14fd4b0e18f5de37dc4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/helper_kernels.py",
+      "git_blob": "fc85b32db95cd3da1a64e060b6377b1dd27b2fd4",
+      "sha256": "1c1907ecf842e81a77d94283a3861dcdd57b0ea15c85e529773e5c3fc009c4a9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/llvm/AscendCensusPrimitiveTest.cpp",
+      "git_blob": "8232c207163979b8929572ac9627f0d03d2b2e79",
+      "sha256": "452e8781f9bca907228f4e953435f57d9860acd96416376caff1033bdf977b5c",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/override_helper.py",
+      "git_blob": "c60bc6938844f20d275ff0e2d3ca5c6fc359563a",
+      "sha256": "ca28b0d541b2a0862e085ae72efe527a7f503c6835ad7b089da3ff41f1ba83ac",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_api.py",
+      "git_blob": "e73226628ace5e3bf7b948165e25b0b1dba3951c",
+      "sha256": "ffd58e2e22dc4492143b7a745bef16218a552ef741b34b65f20716b2c5213a18",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_abi.py",
+      "git_blob": "2507f3c0e8d476c6ecd4becd301e1c5339b04d18",
+      "sha256": "2016889c84638b3837f7fe26e87d6a2e95ffc372638bb8146b3e327a4329b3d6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_acceptance_identity.py",
+      "git_blob": "df69864cc05673541938f93728d25b148c917373",
+      "sha256": "e672ae362b00f65a123e58e002851991e5290bf8602b5b8774e79b1c21e44a9e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_acceptance_plans.py",
+      "git_blob": "490982cf21cf95e790749789f691081dbaf9b986",
+      "sha256": "0c099e4d445cdd6d28c91d8ef034db33bfef64c92fe9d823d8afc60b2137fa0a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_actor_binding.py",
+      "git_blob": "b15eb8cf4c7fbb23b0221d991ec7f2d41213ea12",
+      "sha256": "8b08423713072475c575ab00ca9e6663af2a5cfe760cafe7a52cc94184a674df",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_bootstrap.py",
+      "git_blob": "acb2af4728bf97986e88468cda279792fc8c63c9",
+      "sha256": "d16d5d3d657edcc5bc68c040dc292f2e1f013cfe1d28e6816077712f0077c3a8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_census.py",
+      "git_blob": "da53d10c2a19b1232055c668c0f4759ac84e46b4",
+      "sha256": "decb690ac79f49783849778723f10ef3a33361cea51121e832f6fe5a25786acb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_clock.py",
+      "git_blob": "e24baf9b03a3276da6008be519bc90394d0326c2",
+      "sha256": "e18e172187c57bbf11ca40e8751faff431f51966c14126c4bbf1813a0f53b910",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_compiler.py",
+      "git_blob": "e684827e5de3a9ea292d9da85e86069073193f72",
+      "sha256": "4174e811f5b9c76263269ddcae17b5f35b4c5863223e98ab8539655ac7d101fc",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_driver_receipts.py",
+      "git_blob": "580988dce3cb31c4a2ce6ef2d03a320b4f1d43c7",
+      "sha256": "6e394e847f74e197cdf7e13f03ba8d56b9f24155a55e80755d41fcb893953856",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_graph_guard.py",
+      "git_blob": "b2db7ddf3d508d1a071cfbb2dc03931ec19da618",
+      "sha256": "b894b8876194c6011802eba17be70ba09d667b8a4c8bb11d10db7979b4e5a5a2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_graph_routes.py",
+      "git_blob": "b30d8a17ffe7b6a1325f22234e21dd9e8e23af20",
+      "sha256": "3fdd968cde7074ab99e5aaed8d2070aab4a5ae8fbdb8e035f60e9de41c6b4870",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_hivm.py",
+      "git_blob": "5b6abb5a0d7cf29c40c426677dc310e8d865176e",
+      "sha256": "12dbd710acd69c85d682369c0f66f65348da41bfc6a573011045638b95488771",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_launch.py",
+      "git_blob": "c8a67ea1b939095170cfce878bd487750bc8af70",
+      "sha256": "b0a8b428d0baac31b1542cae955ad5e7fd326dc4593f6e61c6ba1ba330932031",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_native_prepare_faults.py",
+      "git_blob": "2747dbf4c9686de5a8c09a6c5b5299f46af813e6",
+      "sha256": "dd1f75b40d963db9a814d639e0a7ca5edceb258e90b2af7ff5ed2f831147c0a3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_sdk_watchdog.py",
+      "git_blob": "a769088da57241eccc4a5353c40fa96035d7b20d",
+      "sha256": "e61f4d094416092ed5c79728027f9a8de9f8a892b9d2163f9af57f92b204d283",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_selection_metadata.py",
+      "git_blob": "3217914eae12f59dd54fe9f7e1e63b697597dc0b",
+      "sha256": "42737048c48c6cc924cdf2affc4efa761d66d748d90ab11e2c0f50189db7928a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_ascend_semantic_selection.py",
+      "git_blob": "8de9d5e99fd06a400e96c146adfdaf764f03c885",
+      "sha256": "2369a7f6f5ae6e913591237d68210a31c1467fac51f087fb7a13d26118742034",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_automatic_record_budget.py",
+      "git_blob": "6732529c8b2ab0ff8c2b7e1e5666ada569ae6795",
+      "sha256": "ced7af4c1363c06767f3061e8e231a19cba6796865f1433491239cc33a023ece",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_artifacts.py",
+      "git_blob": "a45e8c8f99618f8d2904c5a960887d7cab068300",
+      "sha256": "0968c2a659f17e29400ac07e3a5f48c9b96e6801734969890d14e0ac783b197d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_importer.py",
+      "git_blob": "fe872c29aa902ab8df5ce4e78c9a72fedc1624ab",
+      "sha256": "17a2c2a6afbc8ea3794da7316ab12b47575c727579e64f1b695e2c95e80f5251",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_joint.py",
+      "git_blob": "a8d2f3a9314fc0c8cb9244f84ef43fe47b89f137",
+      "sha256": "b71e9563ec9f319280c2787631860e650bbb8436ca290bad0a2c447d73373215",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_launch_receipts.py",
+      "git_blob": "eafede2ecac87de1362e31fd511f8698ee05cbea",
+      "sha256": "3e02194ff036381f0b95fd0b626a1b5bde51f983d8f91f4bbaf596acf2ccd447",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_native.py",
+      "git_blob": "482ab633e5ea8d1ec42300bec528d87a88d63f1c",
+      "sha256": "6d207bd61ad94bddefcaebf1daca30e1cf3837c71fe2cb3ad36b59c0884ccf98",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_raw_sys.py",
+      "git_blob": "d1b6d464833b9c7624c4f01f4b13176ec07908cf",
+      "sha256": "c7e726ee35b48b5cd7de9707ef9b39a4f4a9dc842e57615b02f5087c945ef3c5",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_receipt_recovery.py",
+      "git_blob": "51753332b3cf83b7216aa9f0afb4526edda033c4",
+      "sha256": "d7bbc2959c0d672c0d10e6028859db0728ce978aad39d3d6e2d8abba71a12cd2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_smoke.py",
+      "git_blob": "08a301492be795fba2c0850972ee3731f6a7b439",
+      "sha256": "03c77950366c574d257b7844858f1047e4b017d32ed03dd18827f7e54953a147",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cann_source_clock.py",
+      "git_blob": "72a8d1ad17388f69a37321796d4a428bbf0ca426",
+      "sha256": "26a8ea136ec5e120cc8fbebb60c7c9cb0858b2f20818162830ee592c775d9fc6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cli_device.py",
+      "git_blob": "915bde6d2ce75ae3e67032fc816aea690a5f6b46",
+      "sha256": "a00be1c1f6f450776cbcad010b2fdeab01eed946feb9290f8ff7fc0a804a0510",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_cmd.py",
+      "git_blob": "53263ec267e479ae019b2e0c269e4f64009ae320",
+      "sha256": "8c153d4a0566d9407a6f97c3f567adfd4da8aeccf9c9f432ddbe36da8b509bfe",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_deadline.py",
+      "git_blob": "9631a587030ba94893816b51e3dc9f882ff1a0ef",
+      "sha256": "57a7c19c7d8c34829873fdd3dbc14d5ff843579b728c045e100cbcdc6c1db11b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame.py",
+      "git_blob": "502e61299141f3bc3fa56671b2eb1c70a79679ad",
+      "sha256": "601a19893791abdec0100f5d206301d2b7e70cec371b5ece45685a62083d23fd",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame_dynamic_bounds_hardware.py",
+      "git_blob": "186f4c7e151803f44a196e061210c619dc6a1ec1",
+      "sha256": "04c3b3da349fbddd0790f32c70fd188388630f81134417f89201871c6768f172",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame_native_prepare_faults.py",
+      "git_blob": "334b0814155f0584ffa4caf455a404fcf946cba7",
+      "sha256": "433963afde8eca7b54b00f8ad803932faeee021f6c6ad2935f430e584ef0130a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame_publication_hardware.py",
+      "git_blob": "313d71833568a47aa7bea8fea2e85336b31b7bb4",
+      "sha256": "a97d1271012abf7bd96ce4711d560f979d5ac13c1faf3c7d85464d7cdcc3bc36",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame_softmax_diagnostic_hardware.py",
+      "git_blob": "8a9105d0f97927a19f1de31403460b9d80375150",
+      "sha256": "e093fe7b0b607b5f222edc0d9c14fac2e230ebaaa866f3fa43177d96f569fb78",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_enflame_two_stream_hardware.py",
+      "git_blob": "8a1c4c3c47d55a9152a0aadb158d546510f1e63c",
+      "sha256": "7805ab39394a51eaa381d85883cbe646f49f915b0b4cddf0fdfe6ffb1cc17dc8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_execution_ascend.py",
+      "git_blob": "0dcff69e4d61c09781e1720ee25d377c7446441d",
+      "sha256": "97e7480812785ad937741558555da94808d773d1997222bd9c1b17b2c305036a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_execution_enflame.py",
+      "git_blob": "bcab777cc3e6978c92e1c506bd33a61927c84454",
+      "sha256": "7331a1dc077423558093297f9efea6f4f6ec9ca577880c1e359d1cede0af0e68",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_execution_enflame_dynamic_hardware.py",
+      "git_blob": "60b1f63815d81bc1fbe83505b460260afd05455e",
+      "sha256": "fee89af60a4312c6ac0a21ad6d3894dd4a3d349a78251472f6041d880cac3478",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_execution_enflame_hardware.py",
+      "git_blob": "196552aef2040e9790f387b3e1b2979cb8336a92",
+      "sha256": "8a8bf96ba82e56ae7275a565d8f0457a164354d2a7b3341958160d5abee52dba",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_export_refs.py",
+      "git_blob": "b2c854438bd1ae652c7ccd01feb013ccb1d1922e",
+      "sha256": "c0d7989fd6e46b276ab5f19d7e76feb4e8b9c5e5d617facec0cce23bc341f85a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_export_timing.py",
+      "git_blob": "09fab0b378397f10c732e4d6d93941c3a635a155",
+      "sha256": "d04aec7d9a28c12184503086a26ce93ea2a03f8f13ac2817ea2e946780ce3f14",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_fine_grained.py",
+      "git_blob": "7e0aaf19ffb0e109e11678dc25a0a2041d30ac42",
+      "sha256": "152691f0cc0ead8e929730a570ab75e99667701285eac8fac5c5a239a102283a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_hook_rollback.py",
+      "git_blob": "38724c08987549e49d792a32d146aec49d56e4e8",
+      "sha256": "b0e325fbc05bc238f39382ef7675eef7b36ea9033c95c56eff8b60f1635b2f22",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_instrumentation.py",
+      "git_blob": "88a7eebdc2ff03a10099271a4f842f9491f65b7e",
+      "sha256": "a08ee71399d70a6c9b7424ad91cfcb36caf847bb830331912a65683d0f854345",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_instrumentation_wrapper_ownership.py",
+      "git_blob": "1c496dfb5c456de338e390b41aa04503d0eb5ef7",
+      "sha256": "d3079d0eaaffe7ff56978cebfb417bfd78c1979606181563fb6d5bfb21bebae3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_internal_time_semantics.py",
+      "git_blob": "fd4fde533c6124db014c22f07e6abbab4f5037cb",
+      "sha256": "e5f0c46b6af3141fbd784c0ff6ae2edbe5bb801c0a44e4dccaf6d7fb506105f9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_launch_metadata.py",
+      "git_blob": "bd884b141b7b2ca27c848b802516c6231132a632",
+      "sha256": "c33afa1894877836c4fb1f9e03bcbcdcfda8af4054142f5a9ab26ddb4b8ae407",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_lib.py",
+      "git_blob": "0de8b56628f763baf4d191c6363742dcacff64e5",
+      "sha256": "be5be1caddc1146e8ab25861c002c27bad428b21f0ab7aade5154768958e0c4b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_mthreads.py",
+      "git_blob": "08726d301bca7a1f70eec2d01344f289aca40e39",
+      "sha256": "3683e01840715c7baf2cbf0d09122c1086387d83de994113ea2e83db12ec9369",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_native_observation_recovery.py",
+      "git_blob": "1f8b388994845acfcef1995379d66d213ca3275a",
+      "sha256": "218b201ae731348f6d21363cc11e8999ecb5e70770d36e920dadecce036a8886",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_nvidia_census.py",
+      "git_blob": "2d921035c16befcc65c036545bd9cf9e48b11305",
+      "sha256": "a46554c2b29d97d9932a75ef9c4c9124b36c88e2c40ca36f400ba8f93494597e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_nvidia_preallocation.py",
+      "git_blob": "2c3eeaff4cab5a05de6a7bc964884155880c0383",
+      "sha256": "aa9394715ea996c0de769b00664f3d114ea71cedc1aa22c87c869d1eb5643bdd",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_observation_contract.py",
+      "git_blob": "272993e9df6e4c7406f86763a210a21031f54598",
+      "sha256": "575a92e5fe9e73758fe56846712117c886b1b8cfe6eb7b88c9dc89dc8ef1de04",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_observations_ascend.py",
+      "git_blob": "f416e58306965e4f567b3339f71f632d510848c8",
+      "sha256": "41aabcfffc880711a08e0c1e8e81bed4e31475e811a88187b352278fe78bd392",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_observer_allocation_contract.py",
+      "git_blob": "7edd4bdc3aa5af471498db3e0b3686cf39f7ce53",
+      "sha256": "1dcc382557f43cf75ed25ca1ffda9ea7cc2bff7d4f025bda7030af6c235dcfd4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_observer_decode_recovery.py",
+      "git_blob": "5b6906a2c9b43bc1d6da64d420dc5eed3b428d85",
+      "sha256": "e8401e718d8a1072d798a8f4a740b7d0299557294eaf4e94b0c0890d28675d70",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_override.py",
+      "git_blob": "886edc17b0995d468de647b743a53fd786b5f353",
+      "sha256": "0cc3774a81a3e6dde64cbe9cef0393e13e0cd22eb366eb3d4fa7efad52ae1505",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_pc_sampling_preflight.py",
+      "git_blob": "9bc49ff6e7eb811dc05e661a897e7ee6ff4a97cb",
+      "sha256": "67b63d7d637d5e481b8c42d28b86b733de5d8de502f5516f10aaf5c5762bcb41",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_portable_capture.py",
+      "git_blob": "a87d280541172011100de04599968f4f59a648c7",
+      "sha256": "841ec24c09d2b75f31bdca33eaf915c5a27f13c471667e9ff56a468173f16ae0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_profile.py",
+      "git_blob": "6aa41210a37dbfaad3523a03674a465e93ae5406",
+      "sha256": "0b500bded3a8d1252e94a6bd00bf9e3054ff6a564ec179372d008b4444b42d47",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_reconstruction.py",
+      "git_blob": "7e84216a48459bdcd4f8fb298aa6cd9cca05d189",
+      "sha256": "d9cf162bd28740c4659cc8308539f7cfa02715ca66b9c4bbaac05f786e5b6d45",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_report.py",
+      "git_blob": "dba4bee998994dd755f723b3d7a73d04a381843f",
+      "sha256": "c182dac5b742fe82e8c765c101a62ef908efb3540e6e6fda3caf60fac53551e8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_session_mode_rejection_hardware.py",
+      "git_blob": "dfc7591b3be1b4bd60f7e19ed0f802381a2a5b69",
+      "sha256": "fa2e9d285c75ddc474871276077be7b4294c11d6efdc124b360edb70b5a00e2b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_source_census.py",
+      "git_blob": "96cddc6dbe10919ef606eca3eff2ee77aaaf463a",
+      "sha256": "d5c2b7942853ee84eb762ef2298e58a8203054b27218f72f7d726e2653e7e9de",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_source_navigation.py",
+      "git_blob": "3f6d6798f3d7953c6e534969667e380458ec09b4",
+      "sha256": "d7faec3e63d7d9ced9141e2480fee2419f78bb027a557cfb13841e0bcea3e291",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_tcu.py",
+      "git_blob": "62d28e234eb32e729828712741f2cf2f1d576476",
+      "sha256": "b7ba4ab06c5cd31f6c17868d37f6174802bf26cce6fd6f127a74fbd898dab77a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_tianshu.py",
+      "git_blob": "63820e98835b31fb8bd79061bfc2dd2a40e13e31",
+      "sha256": "7b9afc67b463d47efd89a68d15ced712ce676a23757b4c56fca73447371119fd",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/test_viewer.py",
+      "git_blob": "a1ea4372426829490cf90c0a570788dd03be6c05",
+      "sha256": "f74476ff9f1724f80684c02620e5db67b643d4ee9cdcffcf7cf98d4a097dafe2",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/test/unittest/CMakeLists.txt",
+      "git_blob": "7d4244c52cc9152de22e50068e7e93dd013fa7f3",
+      "sha256": "ca7e67c50b6a4df76279e753e8452c59902c410ff0b8f7c014563a0d2c54246c",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/CannLaunchReceiptTest.cpp",
+      "git_blob": "32223328a425016d2c586f27c5a203fc4a28add2",
+      "sha256": "fcf50c7c3e13d469e508e689de0ff5a35f140a8901b76c8cfb501352c4a9c424",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/CuptiSdkCleanupTest.cpp",
+      "git_blob": "147ec3e71652961a0151f289b6b40beb626e073b",
+      "sha256": "66718059edc195646c9538c7773aff076ecafd589d65db5c31ca0c9b33fddca4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/CuptiSdkTestShim.cpp",
+      "git_blob": "bc78ca2cd8b886a0ebc66938c7c3bb46c6faa070",
+      "sha256": "ca50174f165d184f9382e13bc1d7d357d55c7c655f56645fed743bc4af892f23",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/CuptiSdkTestShim.h",
+      "git_blob": "47f48f1868c636b6dcdafb4504d496852f4dd22f",
+      "sha256": "0974a19053e283717b788a6a98f5644ce38c6bca353c199a9177f0ed75052763",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/EnflameSdkCleanupTest.cpp",
+      "git_blob": "bf74c602ae83fdde917b29964f36bb8279706fb7",
+      "sha256": "4972bdbbe23be9f53678edc719711f07e3768e8667106dd54176c1533b898008",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/ProfilerStartRecoveryTest.cpp",
+      "git_blob": "99b51391ecc0d87c845405037454b5bd4c945af7",
+      "sha256": "7ec30a661b4f18207db807b50700ed0c2c60ce3877844c933e7eb4d90fc8fed4",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/SessionLifecycleSdkStub.cpp",
+      "git_blob": "131f0f7bd2a6d85f3dbba9a7fafa46e67867dbaa",
+      "sha256": "57526d886c7103dbc2463f53aae21987b13b816b62b7188789e278f271a4ab08",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/SessionLifecycleTest.cpp",
+      "git_blob": "59d065c060baa69d2a58a29db2bd0d3f8ea203bb",
+      "sha256": "fda97fca2aafa9aaba613d22529e36b7dab710a9b257b5a72b3730b51bde7a7e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/TraceDataIO/ByteSpanTest.cpp",
+      "git_blob": "49f03d58c95d1b8760d07251d1a71b1f449873d1",
+      "sha256": "4b8baabc97971c62ac71656189a169d261f2ad0e432d5c15366ff2ccc3f927a1",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/TraceDataIO/CMakeLists.txt",
+      "git_blob": "3ff9b6b0590aaf1d423f7570645e99e4b49754a5",
+      "sha256": "278b5b1c3fd54c396d9e114e68f1be7d2eeaf5afe2ff1cdd2aaee391459c1995",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/TraceDataIO/ChromeTraceWriterTest.cpp",
+      "git_blob": "ebcacf8642a0b7f73a7848435064cd5afd4c7e94",
+      "sha256": "8f5061f2d21404a77c539f4ebd662b53586e6c0c5f688648b6e9d05a341e412d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/TraceDataIO/CircularLayoutParserTest.cpp",
+      "git_blob": "e70d427d8a3e62491b59cdcecb9b911eb3a6bc14",
+      "sha256": "34713ded55a52bc92e11bff6ad1643dbbd76d05d4aae35f27d8c12e964811e9e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/TraceDataIO/DecoderTest.cpp",
+      "git_blob": "f38c1779b6f506c58b006f686e72a95258057c50",
+      "sha256": "001d39467efedb2386bcdf79450d30f1e36d22552d3f286c0de147cb8697961a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "Profiler/test/unittest/util/trace_gen.py",
+      "git_blob": "563566d88601108590844bc6328b1de02b4cef65",
+      "sha256": "92cc079581c02f68070c1fa009e1e9d7deb445ecdc509b905ce6c77e21f1fb89",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/tutorials/dynamic-net.py",
+      "git_blob": "3acf252111c9cb0fc2647478aac9447a39feae90",
+      "sha256": "dde15b6fb81f6731416e3e2ee2afaa0c791dc85d257ba3c269b255d8b2aca593",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/tutorials/matmul.py",
+      "git_blob": "66ca1fc860ef27feca307908e1181a6631af310e",
+      "sha256": "c54663af279f456f82c052e9f22460944896ee01ab73f5f5a2cb6483f5c03983",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/tutorials/ttgir_override/vector-add-instrumented.py",
+      "git_blob": "c4122a65bb97ceaaa3a60b2122de8b1e90d17352",
+      "sha256": "f16798bace4f383dc7dc28c26aec6988657aedb6955b721328f39ed0e5a4f2f4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "Profiler/tutorials/ttgir_override/vector-add.py",
+      "git_blob": "afeeddae6adf53562f18fdf629cd02f62aeb70fe",
+      "sha256": "1a4bf60c5e9b15f8d757cabd17cf368f79c42303c5a7f7fe4cba22a7cc6aa671",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "cmake/FlagPrism.cmake",
+      "git_blob": "9639a3a1b6dd149fa070e3286fdec080bd2b8cd8",
+      "sha256": "14dbaf04bc10e1712b07e6389451a22963ec2067e6c3510ff68b2afe6af14e8a",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/evidence/ascend-final-closure-20261015/audit-longk-full-raw-r29.py",
+      "git_blob": "23223feac6f33ea96c02453e1d2ac6c5bccffcfc",
+      "sha256": "e36f89f6b043703eb5df9bd50c1cd2c8cd9b11b894020bb3a0f98045131893e9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-final-closure-20261015/audit-m2-full-raw-r28.py",
+      "git_blob": "39a961576e50d21f6ddee6bb9905b1a06aa41d5a",
+      "sha256": "4ca0d65ad4bcaf92feac316a8bc2492b67e1e0a9368b59ce7ce9bda2fd8a0c38",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-final-provenance-20261015/audit-origin-local-artifacts.py",
+      "git_blob": "bcb4cdfbe22b76fb473c36e012eec7282cd8ff97",
+      "sha256": "6c904fe3f584283492bfc7990bdff5c9161fa3d813bcb536a99efa77e1fb2740",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-final-raw-20261015/audit-functional-archives-r27.py",
+      "git_blob": "0c0684892b4b96d829db3ccb27010a70f17c7305",
+      "sha256": "364849be13a1d05e824b32e17edb760b90b547f944858a814df764b7bbd237fc",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-static-readiness-20261015/audit-mix-hivm-r27.py",
+      "git_blob": "c09ac97d72395397122d009f10e110bbb0dd28ac",
+      "sha256": "50a14099fd50ac588c3bbc7ca292107637cb07177c6c6edff138d3e9e445b27f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-wait-fidelity-20261015/root-minimal-counter-audit.py",
+      "git_blob": "4ea097af7fb4d5fee351607462a65c0eb4575632",
+      "sha256": "aaea4c296722351952ffb6e4b37334c7542a8e44fc26076189a48f55e4a52dc8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/ascend-wait-fidelity-20261015/root-source-fidelity-audit.py",
+      "git_blob": "d64d3af4accae386f2c5f15b4f7c0086cfae2ae9",
+      "sha256": "680598f6071fabb91ea3babc00d3ed4cda0551bcb19febedbbc216f63fa983c4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/enflame-diagnostic-20261015/root-independent-audit.py",
+      "git_blob": "2387b90fe04e9a0aec146249ca16a4d7fb0aa49f",
+      "sha256": "80cc49db834c0242d665513115da0634c730bed6922aa3e032a4d8dc8dc18567",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/final-common-20261015/ascend-bootstrap-r29-fixed.py",
+      "git_blob": "1d42ea5473056e01f0da2ce4d3066a86fcbaf7cf",
+      "sha256": "b2028580c2ddc8c180048757664c77b85623022da7b5ab96a8f3f181a8969c42",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/final-common-20261015/enflame-bootstrap-r29-fixed.py",
+      "git_blob": "ec0bf461ef31da938e599ff7d61f6975974bac6f",
+      "sha256": "811b45591cc23918e11e6dcc513f3c99cbe03b18388d9a9714fe98c48e61c153",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/final-common-20261015/nvidia-bootstrap-r29.py",
+      "git_blob": "9aafb6da257a7c2459a073bc27d75ba8bb56733f",
+      "sha256": "a4be2a1c1f6edb617bf3085a2dc44bbe90efc5d33f940564c9030df91ad94228",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/final-common-20261015/nvidia-request-r29-fixed.py",
+      "git_blob": "3c8c15bb89840b0bd203d3f60727a433d0f7e204",
+      "sha256": "e75c86dbd4140dd3dcee873a648724445c872df68e8da7b1c1c6aa1fde81838b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/method-counterexamples-20261015/counterexamples.py",
+      "git_blob": "964a42539d8c7aa47a8f23bd2f7d2bb8de52508d",
+      "sha256": "6ebeb65d4b511af7777835cebf116a838898d6ce478697252fec0e86e83810db",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/method-counterexamples-20261015/workflow-replay.py",
+      "git_blob": "460ea3d3f299fe47bc4fb87a2781d68d792762e7",
+      "sha256": "6e5d2510528a08108b0982ee89cb84814ea961956212b22116cd94873971395f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/evidence/method-review-r1/correct-overview-device-label-r29.py",
+      "git_blob": "b08946c1a0d3307900e4185e313c39009c49fd29",
+      "sha256": "d4a0e1b034c2fa81e63b7b6a50e4cdb615028dfe4ea601333b9217d8b16b8581",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/automatic-import-order.patch",
+      "git_blob": "67a4b75cb87c1f57bbf783d9ae7eac9ec578f769",
+      "sha256": "d09e70d114736a91853ff8fb0bf6a58fce2ac95920c6abb3f2ed3f6376f88b05",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/automatic-source-origins.patch",
+      "git_blob": "50cea090b63055be27d7231e8cb1ce7056422067",
+      "sha256": "9986b4828f78156993ebfbee31c4f87ae93f01af71e6249c8008302ad4eb69fe",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/build_automatic_wheel.py",
+      "git_blob": "ee7298eb17d7cd0adba47e43b6c9e38765dd97bf",
+      "sha256": "2238f5bc99582bd41c2cfa9763052f68aeb1899742a6dcced8cac9f99a852de7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/build_from_source.py",
+      "git_blob": "24dff73d45be4843f0edf3fa6629b5ca4f788a0a",
+      "sha256": "10d4bc3ea3c729c86790202707d5db47685dc9aefaca34f62364eebc19a90ca6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/flagtree-driver-handoff-complete.patch",
+      "git_blob": "e435d733609e1c1647b28a536d7c5a55b7e1c800",
+      "sha256": "a0d612e6ca1d7d30728c3dec1b901d2a282c8190dc65912248c04a91f8a1ff92",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/flagtree-offline-backend-tools.patch",
+      "git_blob": "ddc30ad7c13e05781fd5e0ab19edf13c4df58a3f",
+      "sha256": "753497828f67313d7673b9bf57e100aaf29a5c3c9d49e1a9f58e621ac509a67e",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/flagtree-packaged-header.patch",
+      "git_blob": "f8c0534e8a6f8ba73c51b14c0defaa2f37697def",
+      "sha256": "2fa810cd7331ef634d3a084f9c788ea18d8f1580b8df5dd6c23a0dae9000811f",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/flagtree-source-census-v2.patch",
+      "git_blob": "8c9deb233321febb4494aeee71786fd8d11531f2",
+      "sha256": "5fef33247362989407e6fbce6240294b6a2bb45b68d598aaf53552da8d090d7f",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/flagtree-source.patch",
+      "git_blob": "b6b95be510be999a97de1427babef9d2bb5f5f33",
+      "sha256": "d18294b2e01805de1f18d395bf5ef88e95763499883957b1db56c17ec7cb68c3",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/flir-source-census-v2.patch",
+      "git_blob": "0631903a04a36aec2acc43c1d30e69027bceef07",
+      "sha256": "dbc80ecf0b93647554edca5b6e2dbd6da8bb09b6d3ffb9a6fd6caa47887e47e0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/initial-handoff.patch",
+      "git_blob": "628ea6eeed8c19b0151906c9ff7b5a5757425ddb",
+      "sha256": "9a67673d0e55c3ae1e8941552a5f924b3117f101231568231d90e892fcc20c0d",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/ascend/patch_launch_receipts.py",
+      "git_blob": "fac8ad0a1842ff587d3596f10a6f51ec6bafa323",
+      "sha256": "a24be6e58fdabeaa7d57ac5da0b0545671f6b3424b5f296832a3f55aa82e33ac",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/restore_core_handoff.py",
+      "git_blob": "433798c3f5634b6fb6519e645040e52a76125c16",
+      "sha256": "072b57acb2956066de63c310c7c101d215fe8846ca41e9ef412bfe2452c72da5",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/test_auto_blockify_cache.py",
+      "git_blob": "4228f0b61cfe4f787866b6b06e1529392f712809",
+      "sha256": "bac4133d3920dc3ce821cbd22bf7289e4acd35f1fa62d8ccf9aa0bd61979f871",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/ascend/test_build_from_source.py",
+      "git_blob": "b847e149274500e94408bd7c39616dbde4f12de3",
+      "sha256": "7cb2abbe6c0fc1270357bef34538fd97f06e39139ace4c0e7cdf42ae633a49aa",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/enflame/build_automatic_wheel.py",
+      "git_blob": "8bcc029269d47026ea88e3444f4b73c99d09d3b2",
+      "sha256": "c9a896f808cd4606981d8a8f93a9aa932af92b1919146797789c6f964d171000",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/enflame/build_from_source.py",
+      "git_blob": "c905fe68a5148815fd9342248da6b5ce327ec5a3",
+      "sha256": "4e7eb512710e1e79cf9e8c26d90e0e99966a832af383bafcdf24cb6669531be6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/enflame/flagtree-source.patch",
+      "git_blob": "03345d0123a7dcd993f3699c3c9ab03744b5f187",
+      "sha256": "25eae310e7fdfb43f55a2aec9752c187234b3a0afc8c1558faf13f8ed69889ce",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/enflame/test_build_from_source.py",
+      "git_blob": "5737121a7d352b09b3bb5bbc35fa50540b16e3a2",
+      "sha256": "d7f539ab560f885e1618615be39d83839f6c60451ccf612917d25f2a3fd8892d",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "integration/patches/nvidia/automatic-scopes.patch",
+      "git_blob": "afb14b20005cd88ad2f4116c0b7833f665cb9d43",
+      "sha256": "51209fdfd471e578881c14411fcbfef2a6960f214ded438eb55c132a80855da8",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/nvidia/flagtree-source.patch",
+      "git_blob": "df016bb9e8ad4b6743c8ff94393bd773aea048c1",
+      "sha256": "8590231de799333ca2e3623daa8dbd7607250e6e499473937277dbf2918df075",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "integration/patches/nvidia/preallocation-admission.patch",
+      "git_blob": "0d6db9685d75ef0906ea54a82a98cc44e7beb7d3",
+      "sha256": "c59a81c4cd098be2a22590db3e4a8d83243478657d4c1fa1751b04bc54ef9eb5",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "python/flagprism_build.py",
+      "git_blob": "b2c15616ada076321388f30bdb9d4578860d29d6",
+      "sha256": "2fbf3de0a8c7b1df605bfc33f9307d16bdc080a3a329d25934d8f3d9d7dd1f35",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "test.py",
+      "git_blob": "bfbbc620564ef20718982a479181c5a8bd6f4885",
+      "sha256": "2bdcbda0a71a6f8057c60a2b720ffb40928968a2aa973aa6f3a46376724cc4a4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/acceptance.py",
+      "git_blob": "b97ac945007377188531b824706dff1ef906a524",
+      "sha256": "27616cf01a1986ef06b5b6b34f71c1697378c08a72e7f910d15c51de663b445f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/active_program_developer.py",
+      "git_blob": "a943b81bfb3587df2ecee4145d5ec317046b2c0d",
+      "sha256": "0e207664e3404aa8cb706487d2b14efb6e59c5b8c68ed170a738779c06e51902",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/active_program_geometry.py",
+      "git_blob": "db77c5231e3ba82eadb954199d52ce0d9d072ec3",
+      "sha256": "bf7e365be0d91fb9bfcfdfe657ef055e93f7381c7c6ee33bd784c42c94b918d7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/automatic_cli_app.py",
+      "git_blob": "a702950d503cfd6af8cdbb2fc6196366bfca8f26",
+      "sha256": "dc17abe9cd5b63b5789870c5b9e138dc63dd471ef1d2becb45e0ab558fd57a9c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/automatic_graph_rejection.py",
+      "git_blob": "76500d00111affe48116b9d08fe0441a5c334f53",
+      "sha256": "1b0a239b82b5ac2e434505979b8bd9271899b57773799aaf9569c7cc5db779bb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/automatic_hardware.py",
+      "git_blob": "29ed05a38c0f316cedbbf0e0eee5748f8d01b751",
+      "sha256": "0fea16fb87fff82569c642881ae3efc7294099a83333bf75f8541b4e2ae8e94c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/automatic_record_budget.py",
+      "git_blob": "6fb962dfa02255d597c2cb80a79e5259bf3b4212",
+      "sha256": "098fa02f17e675b728e52d96640523934947add614e2f19b7d30b8a854a259fa",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/heldout_workloads.py",
+      "git_blob": "22b4dc7ab64beff1f8fa0b01069afebc1b862186",
+      "sha256": "d9eeea21074634bbd6110f6876123197df643d681917588ed20f84f686850aef",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/native_receipt_smoke.py",
+      "git_blob": "f7674ffce89c462c931b9adbc9b888bac54f3b88",
+      "sha256": "0027204e70c052689b6133b8d6731b8b1cb1f6b1ca6e65714e1e9ccb0de0135f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend/program_anchor_probe.py",
+      "git_blob": "d8d39378dfbc183416caf00d7258591137794f37",
+      "sha256": "d39e463236347367c05e2c59a5410d67f303006be3093ee3094788c5f8001740",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend_census_vector_loop_probe.py",
+      "git_blob": "50217996c941cbbf909733b5e8837560ef280af0",
+      "sha256": "b1f088ee067e95c2f967f4100e6130060f616c533a1f86a96f5365ec8cb2b809",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/ascend_census_visibility_probe.py",
+      "git_blob": "5150c93fd4c93570e682cf9cc58322193133ea7b",
+      "sha256": "bf1f5014cf637442e577df75d922407bf7f6cd18326d291b775ffab5f32f76e6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/automatic_block_pointer.py",
+      "git_blob": "ededd5cad7a2b172327a2292978fcdcb6431a140",
+      "sha256": "d28fe189b25d9fd101b3dbec6ad06d3dcbab60217ac34ccb1f2ac00aeb18ca6c",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/automatic_cli_app.py",
+      "git_blob": "32ce1f161e96fbd368e572cfe4523e636c8a0716",
+      "sha256": "e8f9477323e0f8d48632db99a92406b7c01e582c7f31f809c12bdcbc98bf16cb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/automatic_hardware.py",
+      "git_blob": "19eddbc13d26b1962cfaf190f1ed7de5321bf118",
+      "sha256": "7092a768554297e0f90efa14e518389cd435d32035e919b7e51770931f2a43d9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/automatic_helpers.py",
+      "git_blob": "c6b8af8ac5c744c7333d8c071f43dfde5c9a8b2b",
+      "sha256": "69a69d17f81c15e0481b821803f3da69983f9792953209ae89d4d2cc7e789645",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/automatic_structures.py",
+      "git_blob": "4a2e88985a3f19447e9ed06b328af5a632dade7e",
+      "sha256": "ce4ca6060a3934fd632ba21099bd2ea18ced48c72012e25b38993ced801b77e9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/control_flow_hardware.py",
+      "git_blob": "a675851ede592e4b768725ebba4ca1117344db93",
+      "sha256": "1b66c0df8264c71686612e8b06fce9013c09f6273dd96f14e544821134e4a868",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/installed_environment.py",
+      "git_blob": "5d2b5aca410bb7e62fe38eba7f055a082e992431",
+      "sha256": "54884c8681b145e6832b09e5457d411e54bc8c75a64977dc6ceb1acbff305694",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/enflame/source_census_application.py",
+      "git_blob": "fdf5ad65d013f7b5ebf6b51c0b8cc52238ec60a5",
+      "sha256": "2a4b0fa6044aef918c86f5279aad00a8288424156d3bc52905454789d6103c68",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_cli_application.py",
+      "git_blob": "6fbf5f7eff6cffcee4cfdec141fd0092eeca7cdc",
+      "sha256": "ec1f9fa27ad6a45432f53efdb767489b4c5b9dd40ab795f60935f0f86009a806",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_control_cli_application.py",
+      "git_blob": "196d1829b112716f0fde5f321df2d8770d2e7b33",
+      "sha256": "82231a772c1bf59f120e0757bc0a7eebba30e3e0615b7cde7f3309d565df3169",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_control_hardware.py",
+      "git_blob": "dfd5e65875369d040cade034ded2fd0a13f68cf9",
+      "sha256": "87b82898673f1c3fd39a4d530fa5abc39ec8484a84daa1f94b1198c95f1f5c7b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_graph_rejection.py",
+      "git_blob": "fcec1d91771984854dfa66e366ae3cdb5d967ee3",
+      "sha256": "4bf9272f1b3d36cf0b542400f32a39c7dcaf6d7f0c5aa6273e1f58837c5d5e35",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_hardware.py",
+      "git_blob": "2d2cdfdd99e32cbad4a44aafe7d9f3d5c3f77ecf",
+      "sha256": "00145f88c3fe5066ea3ba5886b1471740afbbf28359efcd68cbdc9d572d41d78",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_manual_compatibility.py",
+      "git_blob": "3bec5991a9f2d67f1f6a8fa97a7130867992961e",
+      "sha256": "fc226450f5933ffc6a1b3927bf34745b01ad7928b9483ab7899b698df0ca5a20",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_many_branches_cli_application.py",
+      "git_blob": "a4cf650b52558617a4adb4fecbaf5a006755ee4c",
+      "sha256": "74b2fb3708ef1b79a6d2acb77d98245167efc0716d6c61a656d463524dcd5c3a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/automatic_structures_hardware.py",
+      "git_blob": "bcb83f11af805a41c5945cec5ce9b3c630599928",
+      "sha256": "e48512dd56589c5c42a83f9bedf47954dbf4d303997f8a120d975fec0535ca17",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/execution_hardware.py",
+      "git_blob": "0d836fa79b85ef272179df7d9ddcd2a2297071e2",
+      "sha256": "6980ccf58a89da7bab1008c30419a5ee6692872e39a6a49acd78e41e9ccac9b4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/graph_hardware.py",
+      "git_blob": "912d83349430a0277c009a085ddeb7623779af76",
+      "sha256": "71fcb80eb99e1bb94f84eb94cf699ab0f05b061927614d12cb91be567eaf947b",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/instrumentation_hardware.py",
+      "git_blob": "04f82b767a807b295e768012c4c4add46c1f63c0",
+      "sha256": "e4a0b2c3645ff61a4c473d8ad9c99eb246e615c769e156e3d7035e518771db40",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/lifecycle_hardware.py",
+      "git_blob": "76d53e523ca7787c24a732e4b5b86752caee2aa5",
+      "sha256": "203b772c3f4518dfa8f30b4a2e3df519c0f3f4d7f1ac857b3e64808b4b70fbbc",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/native_smoke.py",
+      "git_blob": "1af63174d47db838720c8b4ba70d4c9b52737af7",
+      "sha256": "726444d575e460e52599eb7ff5fe83eb8ddf97d63e28463deaac48246b9dbaa7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/operator_validation.py",
+      "git_blob": "2b008bef1e2c887edb75eec7bdf340b4d85419ad",
+      "sha256": "ea0e36762f2c8eaab9683e66465c32cff91c7d051e503c1e318d42d5b561f707",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/overhead_hardware.py",
+      "git_blob": "1d7bc2b350d1758c20a59d4a316ecae0baebe9c8",
+      "sha256": "4068978ba59655809750e0a3ca063c24fbe221d5fe619fc55207f65f121f05cf",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/reference_cupti.cpp",
+      "git_blob": "7f6370afc9a985efa9c6322377acfbfd2740490b",
+      "sha256": "85810db38cf4eb236d9034e92bd7765a97c7c11edf377cb66d3b1c67c1d2a7b0",
+      "native_unchanged_from_bd61acd": true
+    },
+    {
+      "path": "tests/nvidia/reference_workloads.py",
+      "git_blob": "e74f9b28df69d0536ca4ff343fde90b19452b41b",
+      "sha256": "f9a64e4f93270febd31ffa9bd12fae1c5e5dcd5a8c6c66e431d91a7836ca6823",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/request_hardware.py",
+      "git_blob": "ae222cf7d6d5a1005f720355f6f18e60ece0712f",
+      "sha256": "0c96b21b50e17a5a5cf732a9ec3ccfdf08415bb5a7b626aa7a6211332d815789",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/run_proton_lit.py",
+      "git_blob": "76f8a8ef82afd87e64067530c79ed584d069b797",
+      "sha256": "578e04f81b134769aaa993e03407f3e05ad073d7fbe11684abdd3bd05f88a5a7",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/run_pytest.py",
+      "git_blob": "34b2e7697af6c0e3106639cbd5919192e4e55bd2",
+      "sha256": "c855876ed117b859804f36b522c57abe5649ca9f640c9f4c9e9a983634cc3c15",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/source_location_contracts.py",
+      "git_blob": "8bc81979a9a7ef55097d818d7e1b90177813019a",
+      "sha256": "038e0bb5f0efd45dcc4ad2f49e1964ae7b1553fc1a8875762cd6b41bbb733e67",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/source_origins_hardware.py",
+      "git_blob": "44cf191c84d8b5da0ab4e439bc02188b076714ed",
+      "sha256": "f137a31823b977e26125a4c10c6ed7bbbf361f2c37d9a88cbdf77555f66f0155",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/test_automatic_hook.py",
+      "git_blob": "20273c29dfea73221ba2f8aa2f88529a56edf93d",
+      "sha256": "412714ec264f589cc81c1c585c32a4c203c2cf0f0f870a2add5990c44f206169",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/test_automatic_scopes.py",
+      "git_blob": "2ccb65aa39010083ced95572d77b38031d2b3aa2",
+      "sha256": "606f490a04229abfce6de85f8ae4dc3ef40552ca7c192c76d16cfcde594b3cd4",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/test_execution_nvidia.py",
+      "git_blob": "c65018c04b0cdddb8f3deab7aa9e19876e2ecb87",
+      "sha256": "2016ccc57bfd8049dd23c7ce0ec150b059d05b4578ee83f0cdcc35c3cc507eff",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/test_proton_ring.py",
+      "git_blob": "3ef8c480a7b0673f66dea02ebfe6c3bb854b9f31",
+      "sha256": "15fde950b4391c37fec331d07e70370ea2a51625ae0e5f447409e2e70f998378",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/nvidia/test_source_origins_nvidia.py",
+      "git_blob": "fb88678992413bcd4af5c83555c04be545fe8a25",
+      "sha256": "58e79a87a8469530227f9890d67642a7215cd1bc11ff281ffd1fefe14f8997db",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/operators.py",
+      "git_blob": "0800c321f8208b0fa6bcbe21c9d4ae148060434e",
+      "sha256": "395d2592169ab839143061b902da422997a354491b32e1946926c9f9dd4dc6bb",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/source_census_assertions.py",
+      "git_blob": "4f77b25351558540dc46aab0a7f98da0e6f2a218",
+      "sha256": "9638131716a4605ddf3e4e6c4e470ec0bdcae787aba1c75b7080dbcb34ddebc9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/source_census_public_regression.py",
+      "git_blob": "c2bcf2272958ac3507701884968026bf97517b33",
+      "sha256": "685622089fa1c2583025d2de0f1b11ca1a2a07622b42b2392444ad9dd254c542",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/test_runner.py",
+      "git_blob": "5e0a8c5c4ee2f641093b9b20c2998144e1d87092",
+      "sha256": "24f1ac71263dbe984385295a45385e0d962e3ee83d27ebfa85b5095cd4394908",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/ascend_startup.py",
+      "git_blob": "835ab02441bd23c75df16a8bf372f7b790e17a8c",
+      "sha256": "54b7480f0ecfaa23ca2857ae028a399eeaaefb0eb2e03d97df2928b3f695ce73",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/ascend_window_startup.py",
+      "git_blob": "c9f62dd2e6cf7c344310bf106919975ccaa18c98",
+      "sha256": "a40ce80bcc9b5c33769f4f0868be4f7a88db0df7f2cb7cb1f13b9b92ea711165",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/baseline_dynamic.py",
+      "git_blob": "3c92ed8f036d96acec381c4a8741d2e83acde940",
+      "sha256": "af5e4cb4836ce1e6135da504cd919f8f7824a5067b6f95b4f8c736c40dcd3e87",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/c1_actor_binding.py",
+      "git_blob": "0b95babab5c01c5df37d3ff27fcf77dc063336cb",
+      "sha256": "ea145c7175b0779b1726ed2dfd43cc1d6aa6b2d98a2870a731f2d59e8331f8f5",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/c1_public_plan.py",
+      "git_blob": "a445fbc1ebddd9568104628d88106c9c8b3d6c07",
+      "sha256": "e1a3c2e51b45302f669a7effd8207605cc48b7e011b333902232b6ff5388bbed",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/c1_verifier_authorization.py",
+      "git_blob": "e0a461bc4dbdb7667a246933ba29811b629df6db",
+      "sha256": "0632a06980a11b05151cacad1b17b9a9c72ae9204dabe53b320f8409b85b90e9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/c1_verifier_authorization_r4.py",
+      "git_blob": "e08213ba3d90a592236cb166406e687a4f550068",
+      "sha256": "2da4c70d839b7136097197d8f9387d92dc5afdc4096604b6a719971b4760d5e8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/c1_verifier_authorization_r5.py",
+      "git_blob": "f9f8692de74770d5be999912757e90fe7814ce79",
+      "sha256": "568eeb9ea0a8932820c8894d4a386fe580aad5bb15bb6373eaf6984e01210347",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/check_common_report.py",
+      "git_blob": "deb8e244bd395a697179da2eac67067b7e33b354",
+      "sha256": "4d432cde7bc9ceae67e5afb438ffd640f5912a2ce25b0cdfbc4968c74096daa1",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/check_common_report_c1.py",
+      "git_blob": "180ba97d338f20ba285547a7269072cabab1fab5",
+      "sha256": "cd029e6f1ca95b0960cbe9697fb09eca3b831d329275a57dfc6fdec53f0bd141",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/check_dynamic_report.py",
+      "git_blob": "f580670e4456d05fed27da5a8f58e9303b92e635",
+      "sha256": "1e5bee8d8f221ad27968bae83fdd10a41084b042581be2c7b10e1762b01a63de",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/check_dynamic_report_c1.py",
+      "git_blob": "e9aa1967f453b357aa9fef24068d1a4f9e8b7ad8",
+      "sha256": "b7f226f71dd1c27cc9a291ae93bce85057c3400c36978365fe8af9b463f7c1d9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/check_report.py",
+      "git_blob": "274854b95be833b4c9c854a8e93d70838c4b3a18",
+      "sha256": "59fa1f6fa526aba4717cfa7592ecb5cd3c8ab8cf6d9ae22ee61950590c159ff6",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/kernels.py",
+      "git_blob": "c8dcb7d97331c989b627855fd5a5cff7f012c46f",
+      "sha256": "d1d4d471dfa17c4921a52fb9d2ecd299f74dd590eae28467d5662286e183bbb8",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/profile_dynamic.py",
+      "git_blob": "db3f9bd10867932aa5ffc461c388dec5eca3a781",
+      "sha256": "320004be347b1ac8b63798ae31cefc0c1574cb76388eb31eda96e2fe7bf00064",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/profile_dynamic_c1.py",
+      "git_blob": "ca85d440aec9f4206cfaf0ae4080481618ecc360",
+      "sha256": "15e723607b9573d75748c65c4198820bf9b85894000dee49deb38913d181989e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/profile_dynamic_r4.py",
+      "git_blob": "ae2f415d7aa154530f4a4a4d80abf0d218af7a9b",
+      "sha256": "ede2e1d456a5745f6b29c6abe8a6d2c8e45e44e9c83b4e678f57a5c5f420152a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/profile_dynamic_r5.py",
+      "git_blob": "0711c2b9522be818f82910dfa78d5547a2413cf6",
+      "sha256": "857c7b5d5d3732248fc7ff8e149a4720cbfd731f5087f179d3fc25f35424f04f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/qualify.py",
+      "git_blob": "a679b447d8e676cc99cced2484df7d87e4a7b0e1",
+      "sha256": "0462b26257fc0d2996bcc02cc7717be020d42869eac8ffcc78793d31ef076bb0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/qualify_startup.py",
+      "git_blob": "1a28d0a3ced7d2b704c94921d6365e6455fd4866",
+      "sha256": "d73e1cd805567fb5103e7db9c77b29bb2c28084008b8037d5d03ed6da5eab65a",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/reserve_dynamic.py",
+      "git_blob": "f1cba1fdde2785fc3d16a336eccc23eb9ae6c8c6",
+      "sha256": "85e5c10abd07c4a106894b9bfd27dd5f98fd89f867e22159f2a367979458e39e",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/reserve_matrix.py",
+      "git_blob": "009f6d90f9272bb36cad3fad0ab9cab3bb709418",
+      "sha256": "fcae494e70ba8c23a31cb8d6de3318c98722eea9eb7d46662d741564c19755fa",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/reserve_window.py",
+      "git_blob": "7e712827260a78a9aed9c1634f528d2203f0adb0",
+      "sha256": "43c6d0756b467a94a1c1579d1eefe68f36b6f4f563a045de68fbe904cd91814f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/run_common.py",
+      "git_blob": "a75d002eebf97a008f446e039346aed58a9cc53c",
+      "sha256": "24f8928564f01410159ad1964efe2f5415f1ef3fda028dea10b98c164fc894bc",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/run_common_c1.py",
+      "git_blob": "2bf1ba94c3bf4c37f60f9287eb475e7a4173dcf0",
+      "sha256": "148b70c15dc349f92cb151fdb1e3e5d60b21cea9db052a254108f595ec2ca52f",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/run_common_r4.py",
+      "git_blob": "23159c763b065003cb1c6a87f909f135ff15d4d8",
+      "sha256": "c132b906f791b7b35976e1815f96ce4c83428664a45edf77a23b85be63e15ce9",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/run_common_r5.py",
+      "git_blob": "79f1804518eddc7cb5fa938fd62c9e1335a6b56c",
+      "sha256": "ff28b7ce7b1bfade8e013d15dc0a59fea3f95600de39f3a5433e62794850c9ac",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_c1_actor_binding.py",
+      "git_blob": "0a21200fe7d8f7cdf9bb61fad6f592c340225b53",
+      "sha256": "4af1106f06bff3f809a436a1949c6e1bb9cab0cc3b8c3373be23f32f624c0ba3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_c1_public_plan.py",
+      "git_blob": "48cf0bc6f94e292d55a1fdce28f21380ee9a28d3",
+      "sha256": "926e5dccc7dc1c80fe370af40c66dba4666308befcf97c82bd75f932ea080196",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_dynamic_checker.py",
+      "git_blob": "c298580030f66743e256b8ee97a27985834c75bf",
+      "sha256": "a29c845fd85b429434c88cf8caabe3f74fc487306191e1ffe30d4de96ed91f88",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_public_checker.py",
+      "git_blob": "3113c36b1138f13858926014c897a5b0f07e2e2d",
+      "sha256": "b93bf8deb3e75eabf3fd368ca3163d5c33b64ff9741263f2b8175eaec1e7ff36",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_r4_verifier_authorization.py",
+      "git_blob": "be7cb4ccd4a41e6087076a43d246fb47f424f512",
+      "sha256": "a27ba876c6994a83229868a83a51bd60175e62d106ccc2959f82aad2c42cfab3",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/test_r5_verifier_authorization.py",
+      "git_blob": "dcd724b78798029958c7a5e2183d6f0c7daa2fb0",
+      "sha256": "e3e2a306ae32cebe3d6f7b1c8211f2d261d7a752e4acaebb51008396aee49af0",
+      "native_unchanged_from_bd61acd": false
+    },
+    {
+      "path": "tests/usability_qualification/workload.py",
+      "git_blob": "1b2cad2e8a941dc386c47b6d3aa9519fed385e73",
+      "sha256": "ac359215da139e0b22e9dc7c4936f0b17c56081a32aa35ea9493e99bc61bb833",
+      "native_unchanged_from_bd61acd": false
+    }
+  ]
+}

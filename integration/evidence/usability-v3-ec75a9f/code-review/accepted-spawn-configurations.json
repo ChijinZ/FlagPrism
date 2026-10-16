@@ -1,0 +1,50 @@
+[
+  {
+    "seat": "C1",
+    "tool": "collaboration.spawn_agent",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "xhigh",
+    "requested_fork_turns": "none",
+    "requested_task_name": "final_sol61_c1_compiler",
+    "accepted_tool_response": {
+      "task_name": "/root/final_sol61_c1_compiler"
+    },
+    "actual_model_exposed_by_tool": null,
+    "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+    "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+    "report": "C1-report.md",
+    "state": "running"
+  },
+  {
+    "seat": "C2",
+    "tool": "collaboration.spawn_agent",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "xhigh",
+    "requested_fork_turns": "none",
+    "requested_task_name": "final_sol61_c2_runtime",
+    "accepted_tool_response": {
+      "task_name": "/root/final_sol61_c2_runtime"
+    },
+    "actual_model_exposed_by_tool": null,
+    "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+    "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+    "report": "C2-report.md",
+    "state": "running"
+  },
+  {
+    "seat": "C3",
+    "tool": "collaboration.spawn_agent",
+    "requested_model": "gpt-6.1-sol",
+    "requested_reasoning_effort": "xhigh",
+    "requested_fork_turns": "none",
+    "requested_task_name": "final_sol61_c3_delivery",
+    "accepted_tool_response": {
+      "task_name": "/root/final_sol61_c3_delivery"
+    },
+    "actual_model_exposed_by_tool": null,
+    "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+    "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+    "report": "C3-report.md",
+    "state": "running"
+  }
+]

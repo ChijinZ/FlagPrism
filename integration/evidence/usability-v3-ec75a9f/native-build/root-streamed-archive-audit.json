@@ -1,0 +1,44 @@
+{
+  "scope": "offline streamed independently rehash existing archive/member bytes only; no test/device execution",
+  "checks": {
+    "package-evidence-verification.json": {
+      "ascend": {
+        "status": "pass",
+        "archive_sha256": "96a65183dbd066fa5536b53218788ddda9ce8d66aeb104d4d8bf51aa2c022c20",
+        "members": 95,
+        "index_or_bundle_manifest_files_verified": 94,
+        "bundles": 0
+      },
+      "nvidia": {
+        "status": "pass",
+        "archive_sha256": "b2242f4e74d9f73e7582ef3d2eee27ddf4300629508fd963177128026ca31696",
+        "members": 75,
+        "index_or_bundle_manifest_files_verified": 74,
+        "bundles": 0
+      },
+      "gcu": {
+        "status": "pass",
+        "archive_sha256": "2adbcb67e376d2973b22f7d33d920b4ba15827b26f326282eb9a9286e0c5321e",
+        "members": 77,
+        "index_or_bundle_manifest_files_verified": 76,
+        "bundles": 0
+      }
+    },
+    "functional-evidence-verification.json": {
+      "nvidia": {
+        "status": "pass",
+        "archive_sha256": "193a3638d150c403a42a367d65ec1227dc35d3857f4d7e312f89616897475369",
+        "members": 262,
+        "index_or_bundle_manifest_files_verified": 161,
+        "bundles": 5
+      },
+      "gcu": {
+        "status": "pass",
+        "archive_sha256": "6b5a20aec97addd2b233c8f02def84420315759c93a4822f5e8132b7e4623a74",
+        "members": 188,
+        "index_or_bundle_manifest_files_verified": 115,
+        "bundles": 3
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "status": "pass",
+  "public_entrypoint": "_capture.export_capture",
+  "new_output": "/tmp/chijin-census-visibility/legacy-full-reexport",
+  "input_files_unchanged": true,
+  "preserved_producer_raw_bytes": true,
+  "derived": [
+    {
+      "file": "reconstruction",
+      "retained_counters": 8,
+      "all_inexact": true
+    },
+    {
+      "file": "fine_grained",
+      "retained_counters": 8,
+      "all_inexact": true
+    }
+  ],
+  "expected_incomplete_legacy_error": "Automatic profiling is incomplete: source_census_transport_visibility_unknown. Original capture and plan retained at /tmp/chijin-census-visibility/legacy-full-reexport; see ai/selection_status.json."
+}

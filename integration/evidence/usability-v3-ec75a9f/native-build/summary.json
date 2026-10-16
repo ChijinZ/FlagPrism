@@ -1,0 +1,812 @@
+{
+  "status": "native_package_cpu_pass",
+  "full_delivery_commit": "2bc91bf36dceeb39a279c3aed4eea22fb34c6d7a",
+  "python_source_commit": "e6644ff23d65ad3d6b76944678ba771847bd4aec",
+  "native_source_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+  "backends": {
+    "ascend": {
+      "status": "pass",
+      "source_commit": "e6644ff23d65ad3d6b76944678ba771847bd4aec",
+      "wheel": "/tmp/chijin-r13-ascend-census-v3/wheel-e6644ff/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+      "wheel_sha256": "05ef12ea2acd5e2b1309119238718729b4989833df0df035dd9ce3834397c3fe",
+      "python": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/bin/python",
+      "imports": {
+        "triton": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+        "flagtree.profiler._native": "/tmp/chijin-r13-ascend-census-v3/venv-e6644ff/lib/python3.11/site-packages/flagtree/profiler/_native.cpython-311-aarch64-linux-gnu.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 379,
+        "python_sources": 248,
+        "native_origins": 107
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native": {
+        "status": "pass",
+        "compiled_TUs": [
+          "/tmp/chijin-r11-ascend-public-entry/FlagTree/third_party/ascend/lib/AutoBlockify/AutoBlockify.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Debugger/python/CompilerBindings.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Debugger/lib/Instrumentation/AscendProgramAnchor.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Debugger/python/Bindings.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Debugger/lib/Runtime/TransferEngine.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Debugger/lib/Decode/Decoder.cpp",
+          "/tmp/chijin-r11-ascend-public-entry/component/Profiler/llvm/AscendLateObserver.cpp"
+        ],
+        "reused_object_count": 476,
+        "full_core_rebuilt": false,
+        "device_work": false,
+        "relinked_outputs": [
+          {
+            "new_output": "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+            "sha256": "6722f0ed1ca5271fe712221ac2ebeebe645989b6969aac561046179a78bc992f"
+          },
+          {
+            "new_output": "/tmp/chijin-r13-ascend-census-v3/core-build/third_party/ascend/bin/triton-mlir-opt",
+            "sha256": "0d75ea636e56378012805ce3d540ef9747619a6bdd8855652547a6a7f60cbde5"
+          },
+          {
+            "new_output": "/tmp/chijin-r13-ascend-census-v3/native-python/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+            "sha256": "88315d31f88f9171bbe2bf41662d4137eaa7c6d2da0f9f97d9b2d04fd1b1b56b"
+          },
+          {
+            "new_output": "/tmp/chijin-r13-ascend-census-v3/observer-build/FlagPrismAscendLateObserver.so",
+            "sha256": "164769a1a5fd2666190ee93b24ed421a572e5cb2c0f5396db39cd9bb3593c496"
+          }
+        ]
+      },
+      "host_alignment_cases": {
+        "aligned_actual_allocation_verified": 5,
+        "explicitly_rejected": 9
+      },
+      "host_cases": [
+        {
+          "columns": 1,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 3136,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 1,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 92224,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        }
+      ],
+      "cpu_summary": "309 passed, 3 skipped in 1.35s",
+      "fresh_compiled_TU_count": 7
+    },
+    "nvidia": {
+      "status": "pass",
+      "source_commit": "e6644ff23d65ad3d6b76944678ba771847bd4aec",
+      "wheel": "/workspace/chijin-r13-census-v3/wheel-e6644ff/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+      "wheel_sha256": "15982fe8586ae79d57e4f87084f380385e851bc865c4c45d4c45b1078eb086b7",
+      "python": "/workspace/chijin-r13-census-v3/venv-e6644ff/bin/python",
+      "imports": {
+        "triton": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/flagtree/debugger/_native.cpython-310-x86_64-linux-gnu.so",
+        "flagtree.profiler._native": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.10/site-packages/flagtree/profiler/_native.cpython-310-x86_64-linux-gnu.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 597,
+        "python_sources": 348,
+        "native_origins": 216
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native": {
+        "status": "pass",
+        "compiled_TUs": [
+          "/workspace/chijin-r11-nvidia-final-source-build/FlagPrism/Debugger/python/CompilerBindings.cpp",
+          "/workspace/chijin-r11-nvidia-final-source-build/FlagPrism/Debugger/lib/Instrumentation/AscendProgramAnchor.cpp",
+          "/workspace/chijin-r11-nvidia-final-source-build/FlagPrism/Debugger/python/Bindings.cpp",
+          "/workspace/chijin-r11-nvidia-final-source-build/FlagPrism/Debugger/lib/Runtime/TransferEngine.cpp",
+          "/workspace/chijin-r11-nvidia-final-source-build/FlagPrism/Debugger/lib/Decode/Decoder.cpp"
+        ],
+        "reused_object_count": 379,
+        "full_core_rebuilt": false,
+        "device_work": false,
+        "relinked_outputs": [
+          {
+            "new_output": "/workspace/chijin-r13-census-v3/core-build/libtriton.so",
+            "sha256": "c390fcab336036d8898dbcf6ea6df8f72f4611cf15bd65cd2586dd1a77c8d57b"
+          },
+          {
+            "new_output": "/workspace/chijin-r13-census-v3/native-python/flagtree/debugger/_native.cpython-310-x86_64-linux-gnu.so",
+            "sha256": "f9e60e5eac680d78862dc8d6873666f38b1021867fd1ebb7c1b778dcdece0608"
+          }
+        ]
+      },
+      "host_alignment_cases": {
+        "explicitly_rejected": 14
+      },
+      "host_cases": [
+        {
+          "columns": 1,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 3136,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 1,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 92224,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        }
+      ],
+      "cpu_summary": "303 passed, 3 skipped in 0.75s",
+      "fresh_compiled_TU_count": 5,
+      "functional": {
+        "status": "pass",
+        "commands": [
+          {
+            "phase": "default",
+            "argv": [
+              "/workspace/chijin-r13-census-v3/venv-e6644ff/bin/python",
+              "-B",
+              "-I",
+              "-c",
+              "import pathlib,runpy,sys;p=pathlib.Path(sys.argv[1]).resolve();sys.path.insert(0,str(p.parent));sys.argv=sys.argv[1:];runpy.run_path(str(p),run_name=\"__main__\")",
+              "/workspace/chijin-r13-census-v3/component-e6644ff/tests/nvidia/automatic_hardware.py",
+              "/workspace/chijin-r13-census-v3/functional-e6644ff/result-default"
+            ],
+            "pid": 19592,
+            "start": 1792151043.727966,
+            "exit": 0,
+            "wall_s": 3.469130516052246
+          }
+        ],
+        "archive": "artifacts/usability/run-013/ascend-v3-build/nvidia-functional-evidence.tgz",
+        "archive_sha256": "193a3638d150c403a42a367d65ec1227dc35d3857f4d7e312f89616897475369",
+        "captures": 5,
+        "terminal_state": {
+          "owned_live_processes": [],
+          "device_lease_releasable": true
+        },
+        "visits": [
+          {
+            "loops": 0,
+            "visits": 0
+          },
+          {
+            "loops": 1,
+            "visits": 1
+          },
+          {
+            "loops": 3,
+            "visits": 3
+          },
+          {
+            "loops": 7,
+            "visits": 7
+          }
+        ]
+      }
+    },
+    "gcu": {
+      "status": "pass",
+      "source_commit": "e6644ff23d65ad3d6b76944678ba771847bd4aec",
+      "wheel": "/workspace/chijin-r13-census-v3/wheel-e6644ff/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+      "wheel_sha256": "efc876a599e4b9ad78cd5dbf5d91929075ce3ff564fd5777cbf44b9090c59e85",
+      "python": "/workspace/chijin-r13-census-v3/venv-e6644ff/bin/python",
+      "imports": {
+        "triton": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so",
+        "flagtree.profiler._native": "/workspace/chijin-r13-census-v3/venv-e6644ff/lib/python3.12/site-packages/flagtree/profiler/_native.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 438,
+        "python_sources": 359,
+        "native_origins": 63
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native": {
+        "status": "pass",
+        "compiled_TUs": [
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/lib/Runtime/TransferEngine.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/lib/Instrumentation/AscendProgramAnchor.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/lib/Decode/Decoder.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/python/CompilerBindings.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/python/Bindings.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/lib/Runtime/TransferEngine.cpp",
+          "/workspace/chijin-r11-gcu-final-source-build/work/FlagPrism/Debugger/lib/Decode/Decoder.cpp"
+        ],
+        "reused_object_count": 348,
+        "full_core_rebuilt": false,
+        "device_work": false,
+        "relinked_outputs": [
+          {
+            "new_output": "/workspace/chijin-r13-census-v3/core-build/libtriton.so",
+            "sha256": "f3eadb5aa02312a604fdc5232de08b057de1e35812678cee8b4a6d14f903cca0"
+          },
+          {
+            "new_output": "/workspace/chijin-r13-census-v3/native-python/flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so",
+            "sha256": "79e001ca81b706a4791b8a37679c50814fb87a251176b676df494df6d858c281"
+          }
+        ]
+      },
+      "host_alignment_cases": {
+        "explicitly_rejected": 13,
+        "aligned_actual_allocation_verified": 1
+      },
+      "host_cases": [
+        {
+          "columns": 1,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 256,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 448,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            1
+          ],
+          "physical_bytes": 3136,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 1,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 2,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 4,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 8,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 5824,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 9,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 16,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 11584,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "explicitly_rejected",
+          "subsequent_host_transaction": "pass"
+        },
+        {
+          "columns": 128,
+          "grid": [
+            2,
+            3,
+            5
+          ],
+          "physical_bytes": 92224,
+          "budget_negative_cases": 2,
+          "layout_negative_cases": 5,
+          "host_alignment": "aligned_actual_allocation_verified"
+        }
+      ],
+      "cpu_summary": "303 passed, 3 skipped in 0.68s",
+      "fresh_compiled_TU_count": 7,
+      "functional": {
+        "status": "pass",
+        "commands": [
+          {
+            "phase": "baseline",
+            "argv": [
+              "/workspace/chijin-r13-census-v3/venv-e6644ff/bin/python",
+              "-B",
+              "-I",
+              "-c",
+              "import pathlib,runpy,sys;p=pathlib.Path(sys.argv[1]).resolve();sys.path.insert(0,str(p.parent));sys.argv=sys.argv[1:];runpy.run_path(str(p),run_name=\"__main__\")",
+              "/workspace/chijin-r13-census-v3/component-e6644ff/tests/enflame/automatic_hardware.py",
+              "/workspace/chijin-r13-census-v3/functional-e6644ff/result-baseline",
+              "--baseline-only"
+            ],
+            "pid": 354822,
+            "start": 1792151052.301667,
+            "exit": 0,
+            "wall_s": 8.977979183197021
+          },
+          {
+            "phase": "default",
+            "argv": [
+              "/workspace/chijin-r13-census-v3/venv-e6644ff/bin/python",
+              "-B",
+              "-I",
+              "-c",
+              "import pathlib,runpy,sys;p=pathlib.Path(sys.argv[1]).resolve();sys.path.insert(0,str(p.parent));sys.argv=sys.argv[1:];runpy.run_path(str(p),run_name=\"__main__\")",
+              "/workspace/chijin-r13-census-v3/component-e6644ff/tests/enflame/automatic_hardware.py",
+              "/workspace/chijin-r13-census-v3/functional-e6644ff/result-default"
+            ],
+            "pid": 355168,
+            "start": 1792151061.2810571,
+            "exit": 0,
+            "wall_s": 13.985254049301147
+          }
+        ],
+        "archive": "artifacts/usability/run-013/ascend-v3-build/gcu-functional-evidence.tgz",
+        "archive_sha256": "6b5a20aec97addd2b233c8f02def84420315759c93a4822f5e8132b7e4623a74",
+        "captures": 3,
+        "terminal_state": {
+          "owned_live_processes": [],
+          "device_lease_releasable": true
+        },
+        "site_counts": [
+          {
+            "steps": 2,
+            "counts": {
+              "17": 2,
+              "7": 1,
+              "8": 1,
+              "22": 1,
+              "9": 1,
+              "16": 1,
+              "10": 1,
+              "21": 1
+            }
+          },
+          {
+            "steps": 5,
+            "counts": {
+              "17": 5,
+              "7": 1,
+              "8": 1,
+              "22": 1,
+              "9": 1,
+              "16": 1,
+              "10": 1,
+              "21": 1
+            }
+          },
+          {
+            "steps": null,
+            "counts": {
+              "12": 1,
+              "13": 1,
+              "8": 1,
+              "11": 1,
+              "3": 1,
+              "10": 1,
+              "4": 1,
+              "9": 1
+            }
+          }
+        ]
+      }
+    }
+  },
+  "device_scope": "NVIDIA/GCU limited default functionality only; Ascend device verification owned by visibility engineer; no performance benchmarks"
+}

@@ -1,0 +1,126 @@
+{
+  "v3-mixed": {
+    "manifest_files_rehashed": 38,
+    "raw_bytes": 448,
+    "raw_sha256": "1ba1cc3216586771e6e3b8388aa2bac4e03e59c7665cdb0f2808c172051f5201",
+    "physical_cells": 56,
+    "physical_count_histogram": {
+      "1": 48
+    },
+    "nonzero_cells": 48,
+    "exported_events_checked": 24,
+    "source_snapshots_rehashed": 3,
+    "artifacts": [
+      {
+        "actor": [
+          "AIV"
+        ],
+        "adapted_sha256": "f85aea0bc199b688326a2ff7bd9f6896c4ee02e44d7e6b5b9ea2bfe9049ff908",
+        "volatile_loads": 16,
+        "volatile_stores": 16,
+        "header_i32_offset_16": 8,
+        "marker_v3": 8
+      },
+      {
+        "actor": [
+          "AIC"
+        ],
+        "adapted_sha256": "e74ce8a4f8184e017a07f5f70408b8ba57c4d9fbbd6439e7469eacefb5bc9f1f",
+        "volatile_loads": 16,
+        "volatile_stores": 16,
+        "header_i32_offset_16": 8,
+        "marker_v3": 8
+      }
+    ],
+    "state_receipt": {
+      "status": "pass",
+      "baseline": false,
+      "shape": [
+        32,
+        32,
+        19
+      ],
+      "binary": "abd3b2fa68e7657ffbb19f5a7d9cd4319d628492b75eeca830533e21a6dd33f4",
+      "state_elements": 1024,
+      "state_values": [
+        1
+      ],
+      "pid": 1793949
+    }
+  },
+  "v3-vector-loop": {
+    "manifest_files_rehashed": 37,
+    "raw_bytes": 832,
+    "raw_sha256": "3e77ce79a131511cb76823fb0027ffe26f131b287f0af9a3ffda05b20e2ae00d",
+    "physical_cells": 104,
+    "physical_count_histogram": {
+      "0": 64,
+      "4": 8,
+      "1": 24
+    },
+    "nonzero_cells": 32,
+    "exported_events_checked": 8,
+    "source_snapshots_rehashed": 2,
+    "artifacts": [
+      {
+        "actor": [
+          "AIV"
+        ],
+        "adapted_sha256": "9155eb85c1d789b822b8fd901c4fdf11024b5cb4c28d9374a029d25689ed0a9a",
+        "volatile_loads": 16,
+        "volatile_stores": 16,
+        "header_i32_offset_16": 8,
+        "marker_v3": 8
+      }
+    ],
+    "state_receipt": {
+      "status": "pass",
+      "binary": "f0b0da7d3bbae21e3c71f0023784440b6bc96e0a19540f7bfb125e057f4628c8",
+      "state_elements": 1024,
+      "state_values": [
+        1
+      ],
+      "pid": 1795605
+    }
+  },
+  "retained_generated": {
+    "retained_metadata_references_checked": 44,
+    "unique_retained_byte_files": 13,
+    "excluded_sdk_dependency_references": 38
+  },
+  "legacy_offline": {
+    "original_rows": 8,
+    "original_exact_true_preserved": true,
+    "derived_reconstruction_rows_inexact": 8,
+    "derived_fine_grained_rows_inexact": 8,
+    "retained_values_offsets_digests_unchanged": true,
+    "raw_sha256": "6cbe61d884d8731ac2cefca3cfb92b4020b8e8f86828d6c252d0472f5ae808dd",
+    "coverage": "source_census_transport_visibility_unknown",
+    "archive_sha256": "9720a10a13406bd776350df273de6e74c576c2f2c9bef957ade0c4df76b9c287"
+  },
+  "other_backend_functionality": {
+    "nvidia": {
+      "command_exits": [
+        0
+      ],
+      "installed_e664_import_receipt": true,
+      "bundles": 5,
+      "manifest_files_rehashed": 161,
+      "counter_events_checked": 33,
+      "descriptor_cells_checked": 35,
+      "archive_sha256": "193a3638d150c403a42a367d65ec1227dc35d3857f4d7e312f89616897475369"
+    },
+    "gcu": {
+      "command_exits": [
+        0,
+        0
+      ],
+      "installed_e664_import_receipt": true,
+      "bundles": 3,
+      "manifest_files_rehashed": 115,
+      "counter_events_checked": 24,
+      "descriptor_cells_checked": 0,
+      "archive_sha256": "6b5a20aec97addd2b233c8f02def84420315759c93a4822f5e8132b7e4623a74"
+    }
+  }
+}

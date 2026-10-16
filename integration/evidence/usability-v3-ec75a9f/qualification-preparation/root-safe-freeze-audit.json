@@ -1,0 +1,39 @@
+{
+  "scope": "Only explicitly safe aggregate/freeze metadata; private math/IR never read",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206",
+  "registered_baselines": 24,
+  "profiles_per_eligible": 2,
+  "actual_public_positive": 2,
+  "structural_negative_rejected": 35,
+  "wire_positive": 8,
+  "wire_negative_rejected": 63,
+  "status": "pass",
+  "files": [
+    {
+      "path": "snapshot.json",
+      "bytes": 15792,
+      "sha256": "1368cbc831a1c0fc30137d8077c217dce3b65b0957f03a89be5adf1ddf5991f1"
+    },
+    {
+      "path": "CPU-003.json",
+      "bytes": 20216,
+      "sha256": "5f808aa32346db637119501da5064f8cbc7013c3264f6915787a8a6f01b0efe4"
+    },
+    {
+      "path": "CPU-003.log",
+      "bytes": 153,
+      "sha256": "6fb0d5dfcd786195789749b2adc1b050b2d9fc99e84997e611ac62001dc0b718"
+    },
+    {
+      "path": "PRE_GPU_CPU.json",
+      "bytes": 868,
+      "sha256": "6686c749c6d567a142432839746bc01f72fd68df8a0cd4bc896463336b852c9f"
+    },
+    {
+      "path": "PRE_GPU_CPU.log",
+      "bytes": 868,
+      "sha256": "6686c749c6d567a142432839746bc01f72fd68df8a0cd4bc896463336b852c9f"
+    }
+  ]
+}

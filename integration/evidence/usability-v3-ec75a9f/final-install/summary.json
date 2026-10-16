@@ -1,0 +1,130 @@
+{
+  "status": "pass",
+  "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+  "native_input_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+  "backends": {
+    "ascend": {
+      "status": "pass",
+      "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+      "wheel": "/tmp/chijin-r13-ascend-census-v3/wheel-ec75a9f/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+      "wheel_sha256": "821b929b9582080b2f2a6996be25ccd7c41a6443dfcd9da39129e10a554d7206",
+      "python": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/bin/python",
+      "imports": {
+        "triton": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/flagtree/debugger/_native.cpython-311-aarch64-linux-gnu.so",
+        "flagtree.profiler._native": "/tmp/chijin-r13-ascend-census-v3/venv-ec75a9f/lib/python3.11/site-packages/flagtree/profiler/_native.cpython-311-aarch64-linux-gnu.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 379,
+        "python_sources": 248,
+        "native_origins": 107
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native_bridge": {
+        "native_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+        "native_source_files": 281,
+        "identical_e664_native_members": 107,
+        "native_build_repeated": false
+      },
+      "cpu_summary": "320 passed, 3 skipped in 1.56s",
+      "host_outcomes": {
+        "explicitly_rejected": 14
+      },
+      "archive": "artifacts/usability/run-013/ascend-v3-build/final-ec75a9f/ascend-package-evidence.tgz",
+      "archive_sha256": "944a9e690918c55b33c125ee8088e17c984f35a8b0297ff33f22e74325191bf9",
+      "archive_bytes": 215056,
+      "archive_indexed_files": 34,
+      "archive_members": 35,
+      "original_e664_package_evidence": "artifacts/usability/run-013/ascend-v3-build/ascend-package-evidence.tgz",
+      "original_e664_package_evidence_sha256": "96a65183dbd066fa5536b53218788ddda9ce8d66aeb104d4d8bf51aa2c022c20"
+    },
+    "nvidia": {
+      "status": "pass",
+      "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+      "wheel": "/workspace/chijin-r13-census-v3/wheel-ec75a9f/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+      "wheel_sha256": "48fd503f5d78dbd83ce8e1b43a8e26e18e172ffde87c1f9282c1217a9cc3c0bf",
+      "python": "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python",
+      "imports": {
+        "triton": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/flagtree/debugger/_native.cpython-310-x86_64-linux-gnu.so",
+        "flagtree.profiler._native": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.10/site-packages/flagtree/profiler/_native.cpython-310-x86_64-linux-gnu.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 597,
+        "python_sources": 348,
+        "native_origins": 216
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native_bridge": {
+        "native_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+        "native_source_files": 281,
+        "identical_e664_native_members": 216,
+        "native_build_repeated": false
+      },
+      "cpu_summary": "314 passed, 3 skipped in 0.78s",
+      "host_outcomes": {
+        "explicitly_rejected": 11,
+        "aligned_actual_allocation_verified": 3
+      },
+      "archive": "artifacts/usability/run-013/ascend-v3-build/final-ec75a9f/nvidia-package-evidence.tgz",
+      "archive_sha256": "f7ff3f9d36d38a3dd76f5bbb774fb86d5c1bca606992a3ab3bb9e42b70b791eb",
+      "archive_bytes": 231488,
+      "archive_indexed_files": 33,
+      "archive_members": 34,
+      "original_e664_package_evidence": "artifacts/usability/run-013/ascend-v3-build/nvidia-package-evidence.tgz",
+      "original_e664_package_evidence_sha256": "b2242f4e74d9f73e7582ef3d2eee27ddf4300629508fd963177128026ca31696"
+    },
+    "gcu": {
+      "status": "pass",
+      "source_commit": "ec75a9f0592c76f22d64eff443034ab89442b477",
+      "wheel": "/workspace/chijin-r13-census-v3/wheel-ec75a9f/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+      "wheel_sha256": "2dad4c6937a6120de3011d0e249398ad6bbca359bfe3b8ac1d004b58b8f9885b",
+      "python": "/workspace/chijin-r13-census-v3/venv-ec75a9f/bin/python",
+      "imports": {
+        "triton": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/triton/__init__.py",
+        "flagtree.profiler": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/flagtree/profiler/__init__.py",
+        "flagtree.debugger": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/flagtree/debugger/__init__.py",
+        "triton._C.libtriton.debugger": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/triton/_C/libtriton.so",
+        "flagtree.debugger._native": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so",
+        "flagtree.profiler._native": "/workspace/chijin-r13-census-v3/venv-ec75a9f/lib/python3.12/site-packages/flagtree/profiler/_native.so"
+      },
+      "counts": {
+        "git_files": 968,
+        "package_files": 438,
+        "python_sources": 359,
+        "native_origins": 63
+      },
+      "cpu_exit": 0,
+      "device_work": false,
+      "native_bridge": {
+        "native_commit": "bd61acdadc8b9582f243ca1ee5dc1869ed73e4ad",
+        "native_source_files": 281,
+        "identical_e664_native_members": 63,
+        "native_build_repeated": false
+      },
+      "cpu_summary": "314 passed, 3 skipped in 0.83s",
+      "host_outcomes": {
+        "explicitly_rejected": 13,
+        "aligned_actual_allocation_verified": 1
+      },
+      "archive": "artifacts/usability/run-013/ascend-v3-build/final-ec75a9f/gcu-package-evidence.tgz",
+      "archive_sha256": "79a58a5111fed05685126f096afc339aa6c983c358e471900e2ed9454aa9de63",
+      "archive_bytes": 207199,
+      "archive_indexed_files": 33,
+      "archive_members": 34,
+      "original_e664_package_evidence": "artifacts/usability/run-013/ascend-v3-build/gcu-package-evidence.tgz",
+      "original_e664_package_evidence_sha256": "2adbcb67e376d2973b22f7d33d920b4ba15827b26f326282eb9a9286e0c5321e"
+    }
+  },
+  "scope": "Official wheel and clean installation update; unchanged native reused with byte/SHA bridges; no compiler/dependency audit rerun; no GPU jobs or benchmarks"
+}

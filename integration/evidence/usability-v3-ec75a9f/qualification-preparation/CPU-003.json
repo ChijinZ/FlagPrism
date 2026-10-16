@@ -1,0 +1,802 @@
+{
+  "actual_positive": [
+    {
+      "name": "v3-mixed",
+      "proof_complete": true,
+      "physical_cells": 56,
+      "raw_bytes": 448,
+      "assigned_cells": 48,
+      "visits": {
+        "1": 48
+      },
+      "exact_capture_set": [
+        "launch-1"
+      ],
+      "public_State_writer_visits": [
+        {
+          "program": 0,
+          "actor_slot": 1,
+          "site": 63,
+          "count": 1,
+          "raw_offset": 168,
+          "raw_sha256": "1ba1cc3216586771e6e3b8388aa2bac4e03e59c7665cdb0f2808c172051f5201",
+          "capture_id": "a6c70c52-f105-4d94-bc8a-fb433a40b4b2"
+        },
+        {
+          "program": 0,
+          "actor_slot": 2,
+          "site": 63,
+          "count": 1,
+          "raw_offset": 232,
+          "raw_sha256": "1ba1cc3216586771e6e3b8388aa2bac4e03e59c7665cdb0f2808c172051f5201",
+          "capture_id": "a6c70c52-f105-4d94-bc8a-fb433a40b4b2"
+        },
+        {
+          "program": 1,
+          "actor_slot": 1,
+          "site": 63,
+          "count": 1,
+          "raw_offset": 360,
+          "raw_sha256": "1ba1cc3216586771e6e3b8388aa2bac4e03e59c7665cdb0f2808c172051f5201",
+          "capture_id": "a6c70c52-f105-4d94-bc8a-fb433a40b4b2"
+        },
+        {
+          "program": 1,
+          "actor_slot": 2,
+          "site": 63,
+          "count": 1,
+          "raw_offset": 424,
+          "raw_sha256": "1ba1cc3216586771e6e3b8388aa2bac4e03e59c7665cdb0f2808c172051f5201",
+          "capture_id": "a6c70c52-f105-4d94-bc8a-fb433a40b4b2"
+        }
+      ]
+    },
+    {
+      "name": "v3-vector-loop",
+      "proof_complete": true,
+      "physical_cells": 104,
+      "raw_bytes": 832,
+      "assigned_cells": 64,
+      "visits": {
+        "4": 8,
+        "1": 24,
+        "0": 32
+      },
+      "exact_capture_set": [
+        "launch-1"
+      ]
+    }
+  ],
+  "negative": [
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actual raw source visit contradicts proved writer/control context",
+      "name": "v3-mixed",
+      "case": "valid_zero_cell_contradicts_proved_State_writer"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "unknown Asc census encoding/layout",
+      "name": "v3-mixed",
+      "case": "legacy_encoding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc physical producer layout/header mismatch",
+      "name": "v3-mixed",
+      "case": "physical_budget_excludes_header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "name": "v3-mixed",
+      "case": "header_nonzero"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 saturation/inexact physical cell",
+      "name": "v3-mixed",
+      "case": "overflow_unpresented"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc typed actor slot mismatch",
+      "name": "v3-mixed",
+      "case": "actor_unknown"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc raw view offset/digest mismatch",
+      "name": "v3-mixed",
+      "case": "actor_alias"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 unknown flags or invalid visited/count pair",
+      "name": "v3-mixed",
+      "case": "reserved_slot_nonzero"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc count units/exactness/presentation",
+      "name": "v3-mixed",
+      "case": "row_fake_exactness"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc count units/exactness/presentation",
+      "name": "v3-mixed",
+      "case": "row_zero_loss_claim"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc normalized/raw mismatch program",
+      "name": "v3-mixed",
+      "case": "row_permutation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "legacy or unknown frontend cannot authorize v3 exact counts",
+      "name": "v3-mixed",
+      "case": "frontend_v2"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "empty/duplicate actual site-column markers",
+      "name": "v3-mixed",
+      "case": "marker_v2_rehashed"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actual publisher offset/program/actor/column layout mismatch",
+      "name": "v3-mixed",
+      "case": "publisher_header32_rehashed"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actual full source bytes mismatch",
+      "name": "v3-mixed",
+      "case": "source_line"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actor codegen job not in actual SDK group",
+      "name": "v3-mixed",
+      "case": "object_foreign_bytes"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "cross-group/failed actual codegen job",
+      "name": "v3-mixed",
+      "case": "SDK_group"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "compiler manifest actual bytes mismatch",
+      "name": "v3-mixed",
+      "case": "false_module_binding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "unknown Asc census encoding/layout",
+      "name": "v3-vector-loop",
+      "case": "legacy_encoding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc physical producer layout/header mismatch",
+      "name": "v3-vector-loop",
+      "case": "physical_budget_excludes_header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "name": "v3-vector-loop",
+      "case": "header_nonzero"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 saturation/inexact physical cell",
+      "name": "v3-vector-loop",
+      "case": "overflow_unpresented"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc typed actor slot mismatch",
+      "name": "v3-vector-loop",
+      "case": "actor_unknown"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc raw view offset/digest mismatch",
+      "name": "v3-vector-loop",
+      "case": "actor_alias"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "name": "v3-vector-loop",
+      "case": "reserved_slot_nonzero"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc count units/exactness/presentation",
+      "name": "v3-vector-loop",
+      "case": "row_fake_exactness"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc count units/exactness/presentation",
+      "name": "v3-vector-loop",
+      "case": "row_zero_loss_claim"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc normalized/raw mismatch program",
+      "name": "v3-vector-loop",
+      "case": "row_permutation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "legacy or unknown frontend cannot authorize v3 exact counts",
+      "name": "v3-vector-loop",
+      "case": "frontend_v2"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "empty/duplicate actual site-column markers",
+      "name": "v3-vector-loop",
+      "case": "marker_v2_rehashed"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actual publisher offset/program/actor/column layout mismatch",
+      "name": "v3-vector-loop",
+      "case": "publisher_header32_rehashed"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actual full source bytes mismatch",
+      "name": "v3-vector-loop",
+      "case": "source_line"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "actor codegen job not in actual SDK group",
+      "name": "v3-vector-loop",
+      "case": "object_foreign_bytes"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "cross-group/failed actual codegen job",
+      "name": "v3-vector-loop",
+      "case": "SDK_group"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "compiler manifest actual bytes mismatch",
+      "name": "v3-vector-loop",
+      "case": "false_module_binding"
+    }
+  ],
+  "wire_positive": [
+    {
+      "S": 1,
+      "bytes": 1216,
+      "physical_cells": 152
+    },
+    {
+      "S": 7,
+      "bytes": 1216,
+      "physical_cells": 152
+    },
+    {
+      "S": 8,
+      "bytes": 1216,
+      "physical_cells": 152
+    },
+    {
+      "S": 9,
+      "bytes": 2368,
+      "physical_cells": 296
+    },
+    {
+      "S": 63,
+      "bytes": 9280,
+      "physical_cells": 1160
+    },
+    {
+      "S": 64,
+      "bytes": 9280,
+      "physical_cells": 1160
+    },
+    {
+      "S": 127,
+      "bytes": 18496,
+      "physical_cells": 2312
+    },
+    {
+      "S": 128,
+      "bytes": 18496,
+      "physical_cells": 2312
+    }
+  ],
+  "wire_negative": [
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 1,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero actor padding",
+      "S": 1,
+      "case": "padding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 1,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 1,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 1,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 1,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 1,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 1,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 7,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero actor padding",
+      "S": 7,
+      "case": "padding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 7,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 7,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 7,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 7,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 7,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 7,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 8,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 8,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 8,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 8,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 8,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 8,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 8,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 9,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero actor padding",
+      "S": 9,
+      "case": "padding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 9,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 9,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 9,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 9,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 9,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 9,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 63,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero actor padding",
+      "S": 63,
+      "case": "padding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 63,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 63,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 63,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 63,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 63,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 63,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 64,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 64,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 64,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 64,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 64,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 64,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 64,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 127,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero actor padding",
+      "S": 127,
+      "case": "padding"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 127,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 127,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 127,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 127,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 127,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 127,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero header",
+      "S": 128,
+      "case": "header"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 nonzero unused actor/column",
+      "S": 128,
+      "case": "unused_actor"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 128,
+      "case": "byte_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical header/padding exceeds admitted budget",
+      "S": 128,
+      "case": "cell_budget"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 truncated or extended physical allocation",
+      "S": 128,
+      "case": "truncation"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 site count out of bounds",
+      "S": 128,
+      "case": "bool_sites"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "v3 physical plan differs from complete padded allocation",
+      "S": 128,
+      "case": "wrong_stride"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc same binary/module/compile/function/program/site/typedactor count witness missing",
+      "case": "no_real_runtime_count_witness"
+    },
+    {
+      "rejected": true,
+      "error_type": "CensusError",
+      "error": "Asc same binary/module/compile/function/program/site/typedactor count witness missing",
+      "case": "no_real_runtime_count_witness"
+    }
+  ],
+  "GPU_execution": false,
+  "final_runtime_authorized": false
+}
