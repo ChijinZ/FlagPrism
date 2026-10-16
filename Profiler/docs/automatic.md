@@ -41,6 +41,11 @@ requires `--device 4`. Backend selection and device selection are separate.
 Do not set line-info, plugin-path, capture-directory or publisher environment
 variables for normal automatic profiling; those are advanced overrides.
 
+The new Ascend census also requires the source-coordinate lowering bridge and
+matching native census ABI. Its complete clean-build recipe is still being
+finalized in this development branch. An older checkpoint-only wheel does not
+implement the new default; Python file replacement alone is insufficient.
+
 ## Run your own script
 
 With the installed environment active and its SDK environment initialized:
@@ -107,22 +112,27 @@ finally:
 `detail="auto"` supplies the backend-specific observation request and hook.
 Do not combine it with an explicit observation request or mode. Explicit scopes
 and typed requests remain advanced interfaces. Automatic selection defaults to
-eight source-operation sites. NVIDIA and Enflame now use a bounded source-site
-visit census across the admitted launch grid: at most 1,048,576 logical cells
+eight source-operation sites. NVIDIA, Enflame and Ascend use a bounded source-site
+visit census across the admitted launch grid: at most 1,048,576 count cells
 and 8 MiB of physical storage by default. The byte limit includes alignment,
 headers and publisher padding. Both limits are checked before the original
-kernel launch. Enflame checks both before allocation. NVIDIA's allocator checks
+kernel launch. Enflame and Ascend check both before allocation. NVIDIA's allocator checks
 the byte limit before allocation; its cell check currently follows bounded
 allocation when launch metadata becomes available. A grid exceeding either
 limit is rejected, rather than silently
 truncated to its first programs. See the [census protocol](source_site_census.md).
-Default retained capacity remains 4096 records per actor on Ascend's checkpoint
-path; its replacement census integration is still being validated.
-Ascend also observes original control primitives and loop headers outside the
-eight-operation-site budget; the record capacity bounds their retained visits. The actual
+Ascend's current physical version 1 reserves three actor banks of 128 cells per
+program; those reserved cells count against its limits even when fewer source
+sites are selected. The actual
 backend plan, selected locations, unselected inventory when available, and
 protocol-specific loss evidence are retained in the bundle. A bounded selection
 is not a claim that every operation was observed.
+
+Ascend automatic mode disables additional aclprof/MSTX activity collection and
+host timing fallback. It retains actual JIT invocation/binary association and
+source counts; native task timelines may therefore be absent. Its device setting
+comes from the current application runtime device at session start. Native-only
+and explicit advanced modes remain available for vendor activity collection.
 
 ## Read the result
 
@@ -194,7 +204,7 @@ for arbitrary input sizes or loop counts.
 See the [version 1 JSON field contract](automatic_schema.md) for field types,
 identity namespaces, backend loss accounting and a read-only inspection example.
 
-Read the semantic and clock columns together. The NVIDIA and Enflame automatic
+Read the semantic and clock columns together. The automatic
 census records the number of times a selected source control position was
 reached. It does not measure duration: its clock, occurrence, iteration and
 timing fields are null. A count of five is one record with five visits, not
@@ -205,7 +215,7 @@ programs outside the default display.
 
 Explicit fixed-program interval requests remain a separate advanced mode.
 NVIDIA intervals use SM-local counter ticks; Enflame intervals use the SDK timer,
-whose frequency is not assumed. Ascend's checkpoint path can record
+whose frequency is not assumed. Ascend's explicit checkpoint path can record
 source-operation and loop checkpoints as well as existing issue/wait classes.
 A checkpoint is evidence of an occurrence, not operation duration. No view
 turns an issue interval into engine occupancy or an instrumented interval into
@@ -224,10 +234,11 @@ control computations and SCF control intervals; bounded entry evidence does not
 mean every branch body was observed. Explicit one- or two-site requests retain
 region-first selection and may leave entry context unobserved. Enflame similarly
 uses compiler-verified public kernel entry operations, with condition producers
-preferred. Ascend reserves source checkpoints from the actual original LLVM
-entry block. These positions may describe coordinate or condition computation;
-they do not establish that a tensor branch body executed. The Enflame and Ascend
-entry policies prefer distinct source lines where the candidates permit it.
+preferred. Ascend's census binds selected frontend operations to their actual
+emitted source markers and compiler actors. Context positions may describe
+coordinate or condition computation;
+they do not establish that a tensor branch body executed. Entry context policies
+prefer distinct source lines where the candidates permit it.
 A selected program that takes an empty branch can therefore expose its own
 entry or control activity. Census entry/context rows alone do not satisfy the
 automatic body-observation gate; a source-linked, exact, nonzero primary count
