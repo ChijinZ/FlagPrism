@@ -130,6 +130,54 @@ def test_unassociated_cannot_borrow_source(view):
     assert record['association_status'] == 'unassociated'
 
 
+@pytest.mark.parametrize('field', ['source_loc', 'sourceLoc'])
+def test_inline_library_operation_keeps_user_callsite_in_public_report(
+        view, field):
+    data = document()
+    event = data['groups'][0]['observations'][0]
+    event['source_region_origin'] = {
+        field: 'loc(callsite("/installed/standard.py":309:36 at '
+        '"reduce"("/user/kernel.py":40:55)))',
+        'source_locations': [{
+            'file': '/installed/standard.py',
+            'line': 309
+        }],
+    }
+    row = view.normalize(data)['records'][0]
+    assert {
+        'file': '/user/kernel.py',
+        'line': 40,
+        'column': 55
+    } in row['source_locations']
+    assert {
+        'file': '/installed/standard.py',
+        'line': 309,
+        'column': 36
+    } in row['source_locations']
+    assert any(candidate['file'] == '/user/kernel.py'
+               and candidate['role'] == 'compiler_location_candidate'
+               for candidate in row['source_location_candidates'])
+    assert '/user/kernel.py:40:55' in view.render(view.normalize(data))
+    event['reconstruction_association'] = 'unassociated'
+    assert view.normalize(data)['records'][0]['source_locations'] == []
+
+
+def test_fused_nested_callsites_preserve_escaped_paths_without_guessing_aliases(
+        view):
+    data = document()
+    data['groups'][0]['observations'][0]['source_region_origin'] = {
+        'source_loc':
+        'loc(fused[callsite("/lib/a.py":2:3 at '
+        'callsite("/lib/b.py":4:5 at "/user/with\\20space.py":6:7)), #missing])'
+    }
+    row = view.normalize(data)['records'][0]
+    assert {(loc['file'], loc['line'], loc['column'])
+            for loc in row['source_locations']} == {('/lib/a.py', 2, 3),
+                                                    ('/lib/b.py', 4, 5),
+                                                    ('/user/with space.py', 6,
+                                                     7)}
+
+
 def test_empty_is_not_success(view):
     data = document()
     data['groups'] = []

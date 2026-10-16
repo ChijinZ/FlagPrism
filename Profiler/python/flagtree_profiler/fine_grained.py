@@ -38,6 +38,18 @@ def _location_candidates(value):
                 location = dict(file=file, line=line, column=column, role=role)
                 found[(file, line, column, role)] = location
             for key, child in node.items():
+                if key in ('source_loc', 'sourceLoc') and isinstance(
+                        child, str):
+                    # Preserve every actual MLIR location atom, including the
+                    # caller of an inlined library operation. A candidate is
+                    # not an assertion of exclusive source ownership.
+                    from .execution_enflame import _location_evidence
+                    evidence, _ = _location_evidence(child, {})
+                    for item in evidence['locations']:
+                        candidate = dict(item,
+                                         role='compiler_location_candidate')
+                        found[(item['file'], item['line'], item['column'],
+                               candidate['role'])] = candidate
                 child_role = {
                     'inline_chain': 'inline_callsite',
                     'inlined_at': 'inline_callsite',

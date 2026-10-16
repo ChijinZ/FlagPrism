@@ -24,10 +24,12 @@ request = ObservationRequest(
 ```
 
 The byte budget includes physical padding and headers. Both budgets are checked
-before the original launch. Byte limits are also checked before allocation;
-NVIDIA currently validates its cell count at the prelaunch hook after bounded
-scratch allocation. This ordering remains an engineering gap until the allocator
-receives exact compiled launch geometry. Explicit requests may change these limits, subject to
+before the original launch. Byte limits are also checked before allocation.
+The patched NVIDIA launcher validates both limits using the actual function,
+compiled layout and launch grid before allocating global or profiling scratch.
+An older launcher without this preflight is rejected before profiling allocation;
+install the required `preallocation-admission.patch` from the NVIDIA build recipe.
+Explicit requests may change these limits, subject to
 the backend's representable index and allocation range. Export uses the same
 compiler-recorded request limits; it rejects conflicting descriptor limits.
 The ordinary reader keeps its safe defaults unless its caller supplies an
