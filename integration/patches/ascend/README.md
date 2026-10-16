@@ -1,22 +1,32 @@
-# Ascend integration: pinned source and validated boundaries
+# Ascend integration: pinned source builds
 
-Use `flagtree-source.patch` as the **complete diff against FlagTree
-0364ed4bc39d1dfae483741ec272298297fa5bda**. Do not layer the historical
-`initial-handoff.patch` or the packaging-only patches onto it. The full patch
-includes both SDK compiler callbacks/cache identity, the retained CANN launch
-receipt bridge, standalone-tool link/include repairs, packaged receipt header,
-and backend-specific offline setup metadata handling.
+The current source recipe uses two complete diffs against exact upstream pins:
 
-The actual independent Docker worktree committed these six tracked source files
-as `00650233fcaa9c55134e8aae690067a32d97ad45`. Its tracked worktree is clean;
-untracked build products and dependency checkouts are retained. The full patch
-SHA256 is `d18294b2e01805de1f18d395bf5ef88e95763499883957b1db56c17ec7cb68c3`.
-`flagtree-source-manifest.json` records exact source and binary provenance.
+| Repository | Upstream commit | Complete patch |
+| --- | --- | --- |
+| FlagTree | `0364ed4bc39d1dfae483741ec272298297fa5bda` | `flagtree-source-census-v2.patch` |
+| FLIR | `ff91e64b6042a27e0db053f28ea3741be65d24d0` | `flir-source-census-v2.patch` |
+| AscendNPU-IR | `4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9` | none |
 
-Required official dependencies, both tracked-clean in that actual worktree:
+Apply each complete patch once to its own repository. Do not layer the old
+`flagtree-source.patch`, `automatic-source-origins.patch`,
+`automatic-import-order.patch`, or `initial-handoff.patch` onto the new patch.
+Those files describe earlier build checkpoints and remain for provenance.
 
-- AscendNPU-IR: `4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9`.
-- FLIR: `ff91e64b6042a27e0db053f28ea3741be65d24d0`.
+The FlagTree patch includes SDK callbacks, source-origin retention, launch
+receipts, packaging/import fixes, source-program marker transport through
+AutoBlockify, and effective AutoBlockify options in the compiler cache key.
+The FLIR patch records roles and source-axis information at actual ABI argument
+creation. The component supplies the source marker pass, late LLVM observer,
+runtime transport and decoder. Version 2 reserves three actor banks with the
+actual selected source-site count S per program, rather than 128 cells per
+bank. Legacy version 1 remains readable with its original fixed layout.
+
+Validation status: the v2 transport has Docker CPU coverage and the LLVM15
+observer has compiled. Full fresh compiler/runtime builds and device/cache
+validation are in progress; these patches are not yet a qualified release.
+The historical paths and build results below describe their earlier snapshots,
+not an installation receipt for current sources.
 
 FlagTree0364 leaves FLIR unpinned; the later 516ad31 revision uses a TLE API
 absent from this baseline and fails compilation. The compatible pin above
@@ -91,10 +101,9 @@ imports/compiler ABI/preallocation checks under Python -I with the extracted
 wheel as the only triton/flagtree package source. Import installed torch and
 torch_npu before triton, as the supported Ascend runner does.
 
-The automatic mode additionally applies `automatic-source-origins.patch` after
-`flagtree-source.patch`. Also apply `automatic-import-order.patch` to load the
-Ascend Torch runtime before the vendor compiler is discovered during a cold
-CLI import. The source-origin patch enables the SDK's real debug locations when the
+The complete FlagTree v2 patch loads the Ascend Torch runtime before vendor
+compiler discovery during a cold CLI import. Its source-origin changes enable
+the SDK's real debug locations when the
 frozen `NPUOptions.instrumentation_mode` contains an automatic observation
 request, on both SDK routes. It does not require `TRITON_DISABLE_LINE_INFO` or
 change process-wide compiler flags. The automatic request participates in the
@@ -226,8 +235,9 @@ repositories listed above. Offline users may pass `--flagtree-repository`,
 `--ascend-ir-repository`, and `--flir-repository` as local **source Git mirrors**;
 these are cloned into the independent work directory and exact commits checked.
 No native/build directory is read from those mirrors. The helper applies the
-three complete patch layers in this order: `flagtree-source.patch`,
-`automatic-source-origins.patch`, `automatic-import-order.patch`. It snapshots
+complete FlagTree v2 patch and the complete FLIR v2 patch to their respective
+repositories. Each patch has a recorded SHA256 and a tracked diff against HEAD;
+resume rejects additional staged or unstaged modifications. It snapshots
 current component sources under `$WORK/component`, configures a fresh Ninja
 graph, builds `triton`, `triton-mlir-opt`, `flagtree_profiler_native`,
 `flagtree_debugger_native`, and the separate LLVM15 observer, and only then

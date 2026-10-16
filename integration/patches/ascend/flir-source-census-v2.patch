@@ -1,0 +1,18 @@
+diff --git a/lib/Conversion/TritonToLinalgIncubated/TritonToLinalgPass.cpp b/lib/Conversion/TritonToLinalgIncubated/TritonToLinalgPass.cpp
+index e109349..b18f443 100644
+--- a/lib/Conversion/TritonToLinalgIncubated/TritonToLinalgPass.cpp
++++ b/lib/Conversion/TritonToLinalgIncubated/TritonToLinalgPass.cpp
+@@ -182,6 +182,13 @@ void TritonToLinalgIncubatedPass::addProgramInfo(triton::FuncOp func,
+   // Append the arguments to the entry block.
+   for (unsigned i = 0; i < TRITON_PROGRAM_INFO_ARG_COUNT; i++) {
+     func.getBody().front().addArgument(b.getI32Type(), func.getLoc());
++    // Roles are emitted at actual creation, not reconstructed from ordinals.
++    const unsigned index = origInputTypes.size() + i;
++    const unsigned rank = TRITON_PROGRAM_INFO_ARG_COUNT / 2;
++    func.setArgAttr(index, "flagtree.profile.program_info_role",
++        b.getStringAttr(i < rank ? "num_programs" : "program_id"));
++    func.setArgAttr(index, "flagtree.profile.program_axis",
++        b.getI32IntegerAttr(i % rank));
+   }
+ 
+   if (globalKernel) {

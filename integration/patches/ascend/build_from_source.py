@@ -20,8 +20,10 @@ PINS = {
     'ascend_ir': '4c30492166f6cfbc5fa0c81a72f53630b9a3e6a9',
     'flir': 'ff91e64b6042a27e0db053f28ea3741be65d24d0',
 }
-PATCHES = ('flagtree-source.patch', 'automatic-source-origins.patch',
-           'automatic-import-order.patch')
+PATCHES = {
+    'flagtree': ('flagtree-source-census-v2.patch', ),
+    'flir': ('flir-source-census-v2.patch', ),
+}
 
 
 def digest(path):
@@ -30,7 +32,8 @@ def digest(path):
 
 def source_manifest(root):
     result = {}
-    for folder in ('Debugger', 'Profiler', 'cmake', 'python'):
+    for folder in ('Debugger', 'Profiler', 'cmake', 'python',
+                   'integration/patches/ascend'):
         for path in (root / folder).rglob('*'):
             if path.is_file() and not any(part in path.parts for part in (
                     '__pycache__', '.pytest_cache',
@@ -143,7 +146,7 @@ class Recipe:
                      ['git', '-C', target, 'checkout', '--detach', PINS[name]])
         commit = self.run(name + '-pin',
                           ['git', '-C', target, 'rev-parse', 'HEAD']).strip()
-        if name != 'flagtree':
+        if name not in PATCHES:
             status = self.run(name + '-clean', [
                 'git', '-C', target, 'status', '--porcelain',
                 '--untracked-files=no'
@@ -154,6 +157,43 @@ class Recipe:
         if commit != PINS[name]:
             raise ValueError(
                 f'{name} pin mismatch: {commit}; expected {PINS[name]}')
+
+    def apply_patches(self, name, target, patch_files):
+        """Resume only our recorded tracked diff, including staged changes."""
+        receipt = self.root / f'{name}-patches-applied.json'
+        hashes = {n: digest(patch_files / n) for n in PATCHES[name]}
+        previous = json.loads(
+            receipt.read_text()) if receipt.exists() else None
+        if previous is not None:
+            if previous['patches'] != hashes:
+                raise ValueError(
+                    'Patch bytes changed; use a new work directory')
+        else:
+            status = self.run(name + '-before-patches', [
+                'git', '-C', target, 'status', '--porcelain',
+                '--untracked-files=no'
+            ]).strip()
+            if status:
+                raise ValueError(
+                    f'{name} has unrecorded tracked changes; use a fresh work directory'
+                )
+            for index, filename in enumerate(PATCHES[name]):
+                patch = patch_files / filename
+                self.run(f'{name}-patch-{index}-check',
+                         ['git', '-C', target, 'apply', '--check', patch])
+                self.run(f'{name}-patch-{index}-apply',
+                         ['git', '-C', target, 'apply', patch])
+        diff = self.run(name + '-diff',
+                        ['git', '-C', target, 'diff', '--binary', 'HEAD'])
+        diff_sha = hashlib.sha256(diff.encode()).hexdigest()
+        if previous is not None and previous['diff_sha256'] != diff_sha:
+            raise ValueError(
+                f'{name} patched source changed unexpectedly; use a fresh work directory'
+            )
+        result = dict(patches=hashes, diff_sha256=diff_sha)
+        if previous is None:
+            receipt.write_text(json.dumps(result, indent=2) + '\n')
+        return result
 
     def dependencies(self):
         evidence = {}
@@ -232,24 +272,15 @@ class Recipe:
                                  sort_keys=True).encode()).hexdigest())
         tree = self.root / 'FlagTree'
         self.checkout('flagtree', a.flagtree_repository, tree)
-        applied = self.root / 'patches-applied.json'
         patch_files = component / 'integration/patches/ascend'
-        hashes = {n: digest(patch_files / n) for n in PATCHES}
-        if applied.exists():
-            if json.loads(applied.read_text()) != hashes:
-                raise ValueError(
-                    'Patch bytes changed; use a new work directory')
-        else:
-            for index, name in enumerate(PATCHES):
-                self.run(f'patch-{index}-check', [
-                    'git', '-C', tree, 'apply', '--check', patch_files / name
-                ])
-                self.run(f'patch-{index}-apply',
-                         ['git', '-C', tree, 'apply', patch_files / name])
-            applied.write_text(json.dumps(hashes, indent=2) + '\n')
+        patches = {
+            'flagtree': self.apply_patches('flagtree', tree, patch_files)
+        }
         self.checkout('ascend_ir', a.ascend_ir_repository,
                       tree / 'third_party/ascend/AscendNPU-IR')
-        self.checkout('flir', a.flir_repository, tree / 'third_party/flir')
+        flir = tree / 'third_party/flir'
+        self.checkout('flir', a.flir_repository, flir)
+        patches['flir'] = self.apply_patches('flir', flir, patch_files)
         link = tree / 'third_party/FlagPrism'
         if not link.exists():
             link.symlink_to(component, target_is_directory=True)
@@ -257,17 +288,7 @@ class Recipe:
             raise ValueError(
                 'FlagPrism integration link must resolve to this isolated component snapshot'
             )
-        diff = self.run('flagtree-diff',
-                        ['git', '-C', tree, 'diff', '--binary'])
-        diff_sha = hashlib.sha256(diff.encode()).hexdigest()
-        previous = self.document.get('flagtree_diff_sha256')
-        if previous is not None and previous != diff_sha:
-            raise ValueError(
-                'Patched parent source changed unexpectedly; use a fresh work directory'
-            )
-        self.save(state='prepared',
-                  patches=hashes,
-                  flagtree_diff_sha256=diff_sha)
+        self.save(state='prepared', patches=patches)
 
     def configure(self):
         a = self.args

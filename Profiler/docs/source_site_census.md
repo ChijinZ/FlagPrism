@@ -104,3 +104,35 @@ compiler's128-byte scratch alignment; both cell and actual-byte admission count
 all observer planes. Nested captures use the enclosing region's argument rather
 than an out-of-scope pointer. No atomics, cross-partition counter sharing, replay
 or synthetic timestamp intervals are introduced.
+
+
+## Ascend source-program census
+
+Ascend uses physical layout `ascend_source_census_v2`. The native frontend
+selects S source sites (1–128), emits their IDs/columns and transports each
+site's three program coordinates and three grid extents through actor lowering
+and AutoBlockify. The late LLVM pass requires those compiler markers and their
+actual operands; a physical block ID cannot substitute for source coordinates.
+
+Storage is a 32-byte zero header followed by P source programs, three actor
+banks and S eight-byte cells. Each bank has stride `S * 8`; each program has
+stride `3 * S * 8`. AIC occupies slot 0. On the supported 910B target, the
+actual AIV subblock value selects slot 1 or 2. Unused columns and actor banks
+must stay zero. Split actors may retain different, sparse subsets of selected
+columns; a missing emitted column does not become a synthetic unvisited site.
+The common logical descriptor remains version 1 with these explicit strides.
+Legacy physical `ascend_source_census_v1` always retains its fixed 128-column
+banks and is never reinterpreted using the new compact layout.
+
+All programs are collected within both admitted budgets. Presentation selects
+the lowest program with actual primary visits, while loss/overflow validation
+covers the full raw allocation. Reaching an all-false masked source position
+still counts as a control visit; these counts do not measure productive lanes,
+completed operations or duration.
+
+Compiler evidence retains raw SDK input bytes separately from LLVM's canonical
+text, actual wrapped compiler commands, enclosing SDK process-group receipts and
+exact final output bytes/hashes. Runtime binary association uses the actual
+loaded binary hash. These are distinct from the compiler cache key and source
+site IDs. The default counter path disables additional vendor activity capture;
+missing vendor timelines do not authorize invented timestamps.

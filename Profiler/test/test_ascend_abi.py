@@ -23,3 +23,14 @@ def test_unsupported_or_multiple_entries_do_not_guess():
 def test_missing_or_overlapping_compiler_roles_cannot_shift_hidden_pointer():
     for changed in [SOURCE.replace('WorkspaceArgIdx = 1 : i64, ',''),SOURCE.replace('WorkspaceArgIdx = 1','WorkspaceArgIdx = 0'),SOURCE.replace('WorkspaceArgIdx = 1','WorkspaceArgIdx = 999')]:
         with pytest.raises(ValueError):m.source_abi(changed,trace_source_argument=1)
+
+
+def test_program_formal_roles_are_explicit_creation_attributes_not_names():
+    changed = SOURCE.replace('%n: i32', '%arbitrary: i32 {flagtree.profile.program_info_role = "program_id", flagtree.profile.program_axis = 2 : i32}')
+    role = m.source_abi(changed)['formals'][-1]['compiler_program_role']
+    assert role['role'] == 'program_id' and role['axis'] == 2
+    assert role['final_llvm_mapping'] == 'not_established_by_formal_role_alone'
+    with pytest.raises(ValueError, match='both actual role and axis'):
+        m.source_abi(changed.replace(', flagtree.profile.program_axis = 2 : i32', ''))
+    with pytest.raises(ValueError, match='unsupported axis/type'):
+        m.source_abi(changed.replace('program_axis = 2', 'program_axis = 3'))

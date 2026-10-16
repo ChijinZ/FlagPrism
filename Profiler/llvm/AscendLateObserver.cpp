@@ -1,5 +1,6 @@
 // An actual upstream LLVM15 pass applied by the compiler driver adapter.
 // Capture post-actor lowering evidence before forwarding IR to the SDK.
+#include "AscendSourceCensus.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/StringExtras.h"
@@ -164,7 +165,17 @@ static json::Object describeOperation(Instruction &instruction,
   attachSourceOrigin(site, instruction);
   return site;
 }
+static unsigned censusVersion() {
+  const auto mode = environment("FLAGPRISM_ASCEND_TRACE_MODE");
+  return mode == "source_census_v2" ? 2 : mode == "source_census_v1" ? 1 : 0;
+}
 static uint64_t selectedSemantics() {
+  if (censusVersion() != 0) {
+    if (environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS") != "counter")
+      report_fatal_error(
+          "Ascend source census requires only counter semantics");
+    return 0;
+  }
   const std::string option = environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS");
   if (option.empty())
     return 7;
@@ -193,6 +204,16 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             json::Array &sites, json::Object &operationPlan,
                             json::Object &controlPlan,
                             json::Object &runtimeActorBinding) {
+  const bool census = censusVersion() != 0;
+  uint64_t censusColumns = 128;
+  if (censusVersion() == 2) {
+    const std::string encodedColumns =
+        environment("FLAGPRISM_ASCEND_CENSUS_COLUMNS");
+    if (StringRef(encodedColumns).getAsInteger(10, censusColumns) ||
+        !censusColumns || censusColumns > 128)
+      report_fatal_error(
+          "Ascend census v2 requires actual frontend column count");
+  }
   if (argumentIndex >= function.arg_size() ||
       !function.getArg(argumentIndex)->getType()->isPointerTy())
     report_fatal_error("FlagPrism trace argument must identify a "
@@ -321,6 +342,79 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
       "original_entry_source_context_then_evenly_spaced";
   DominatorTree dominance(function);
   LoopInfo loopInfo(dominance);
+  struct CensusMarker {
+    CallInst *call;
+    uint64_t sourceId;
+    uint64_t column;
+  };
+  SmallVector<CensusMarker, 16> censusMarkers;
+  json::Array anchorManifest;
+  if (census) {
+    DenseMap<uint64_t, uint64_t> columns;
+    for (BasicBlock &block : function)
+      for (Instruction &instruction : block) {
+        auto *call = dyn_cast<CallInst>(&instruction);
+        auto *assembly =
+            call ? dyn_cast<InlineAsm>(call->getCalledOperand()) : nullptr;
+        if (!assembly)
+          continue;
+        StringRef marker(assembly->getAsmString());
+        if (!marker.startswith("/* flagprism.source_census_site."))
+          continue;
+        if (!marker.consume_front(censusVersion() == 2
+                                      ? "/* flagprism.source_census_site.v2:"
+                                      : "/* flagprism.source_census_site.v1:"))
+          report_fatal_error("Ascend census marker physical version mismatch");
+        if (!marker.consume_back(" */"))
+          report_fatal_error("invalid Ascend source census marker terminator");
+        auto fields = marker.split(':');
+        uint64_t sourceId = 0, column = 0, markerColumns = censusColumns;
+        StringRef columnText = fields.second;
+        if (censusVersion() == 2) {
+          auto layout = fields.second.split(':');
+          columnText = layout.first;
+          if (layout.second.getAsInteger(10, markerColumns) ||
+              markerColumns != censusColumns)
+            report_fatal_error(
+                "Ascend census marker disagrees with frontend column count");
+        }
+        if (fields.first.getAsInteger(10, sourceId) || !sourceId ||
+            sourceId > INT32_MAX || columnText.getAsInteger(10, column) ||
+            column >= censusColumns)
+          report_fatal_error("invalid Ascend source census marker identity");
+        if (!assembly->hasSideEffects() || !call->getType()->isVoidTy() ||
+            assembly->getConstraintString() != "l,l,l,l,l,l" ||
+            call->arg_size() != 6)
+          report_fatal_error("invalid Ascend source census marker ABI");
+        auto previous = columns.find(column);
+        if (previous != columns.end() && previous->second != sourceId)
+          report_fatal_error(
+              "Ascend census column binds different source operations");
+        columns[column] = sourceId;
+        json::Array operands;
+        for (Value *operand : call->args()) {
+          if (!operand->getType()->isIntegerTy(64))
+            report_fatal_error(
+                "Ascend source census marker needs six i64 values");
+          if (auto *definition = dyn_cast<Instruction>(operand))
+            if (!dominance.dominates(definition, call))
+              report_fatal_error("Ascend source census marker coordinate does "
+                                 "not dominate its use");
+          operands.push_back(printValue(*operand));
+        }
+        censusMarkers.push_back({call, sourceId, column});
+        anchorManifest.push_back(json::Object{
+            {"source_op_id", static_cast<int64_t>(sourceId)},
+            {"census_column", static_cast<int64_t>(column)},
+            {"source_site_count", static_cast<int64_t>(censusColumns)},
+            {"original_block", printValue(block)},
+            {"operands", std::move(operands)},
+            {"operand_roles",
+             json::Array{"x", "y", "z", "grid_x", "grid_y", "grid_z"}}});
+      }
+    // An actor without a selected marker is valid, but carries no observations.
+    // Never synthesize a marker from a physical BLOCK.IDX or an entry anchor.
+  }
   struct OriginalLoopHeader {
     BasicBlock *header;
     Instruction *origin;
@@ -353,9 +447,12 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   IRBuilder<> entry(&*function.getEntryBlock().getFirstInsertionPt());
   Type *i64 = entry.getInt64Ty();
   FunctionType *coordinateType = FunctionType::get(i64, false);
-  auto blockFunction = function.getParent()->getOrInsertFunction(
-      "llvm.hivm.GET.BLOCK.IDX", coordinateType);
-  Value *program = entry.CreateCall(blockFunction, {});
+  Value *program = nullptr;
+  if (!census) {
+    auto blockFunction = function.getParent()->getOrInsertFunction(
+        "llvm.hivm.GET.BLOCK.IDX", coordinateType);
+    program = entry.CreateCall(blockFunction, {});
+  }
   Value *actor = entry.getInt64(0);
   if (actorKind == "AIV") {
     auto subFunction = function.getParent()->getOrInsertFunction(
@@ -390,12 +487,75 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
       {"expression", std::move(expression)},
       {"value_use", "same_emitted_i64_for_segment_offset_and_record_word5"},
       {"basis", "actual_emitted_logger_actor_value"}};
+  if (census) {
+    runtimeActorBinding["layout"] = censusVersion() == 2
+                                        ? "ascend_source_census_v2"
+                                        : "ascend_source_census_v1";
+    runtimeActorBinding.erase("record_actor_word");
+    runtimeActorBinding.erase("segment_words");
+    runtimeActorBinding["value_use"] =
+        "same_emitted_actor_for_exclusive_count_segment";
+    runtimeActorBinding["header_bytes"] = 32;
+    runtimeActorBinding["reserved_columns_per_actor"] =
+        static_cast<int64_t>(censusColumns);
+    runtimeActorBinding["actor_stride_bytes"] =
+        static_cast<int64_t>(8 * censusColumns);
+    runtimeActorBinding["program_stride_bytes"] =
+        static_cast<int64_t>(24 * censusColumns);
+    runtimeActorBinding["source_program_binding"] = json::Object{
+        {"version", static_cast<int64_t>(censusVersion())},
+        {"basis", "actual_selected_source_site_marker_operands"},
+        {"llvm_operand_binding", "each_marker_actual_def_use_and_dominance"},
+        {"frontend_source_identity",
+         "requires_actual_selected_site_plan_and_lowering_closure"},
+        {"anchors", std::move(anchorManifest)},
+        {"linear_expression", "x + grid_x * (y + grid_y * z)"},
+        {"site_binding", "actual_marker_position_with_own_coordinate_tuple"}};
+    uint64_t siteNumber = 0;
+    for (const CensusMarker &marker : censusMarkers) {
+      IRBuilder<> builder(marker.call);
+      Value *program = builder.CreateAdd(
+          marker.call->getArgOperand(0),
+          builder.CreateMul(
+              marker.call->getArgOperand(3),
+              builder.CreateAdd(
+                  marker.call->getArgOperand(1),
+                  builder.CreateMul(marker.call->getArgOperand(4),
+                                    marker.call->getArgOperand(2)))));
+      flagprism_ascend::appendCensus(marker.call,
+                                     function.getArg(argumentIndex), program,
+                                     actor, marker.column, censusColumns);
+      json::Object site{
+          {"site_id", static_cast<int64_t>(siteNumber++)},
+          {"source_op_id", static_cast<int64_t>(marker.sourceId)},
+          {"census_column", static_cast<int64_t>(marker.column)},
+          {"source_site_count", static_cast<int64_t>(censusColumns)},
+          {"public_semantic", "counter"},
+          {"count_semantics", "source_control_visit_count"},
+          {"point_phase", "before_source_operation"},
+          {"operation_class", "compiler_carried_source_site_marker"},
+          {"site_role", "requires_frontend_selected_site_plan"},
+          {"original_block", printValue(*marker.call->getParent())}};
+      attachSourceOrigin(site, *marker.call);
+      // The compiler marker carries the exact selected TTIR identity. A
+      // surviving optional debug-origin tag is secondary provenance only.
+      site["source_op_id"] = static_cast<int64_t>(marker.sourceId);
+      sites.push_back(std::move(site));
+    }
+    operationPlan["policy"] = "actual_frontend_selected_source_site_markers";
+    operationPlan["selected_count"] =
+        static_cast<int64_t>(censusMarkers.size());
+    controlPlan["selected_count"] = 0;
+    runtimeActorBinding["selected_marker_instances"] =
+        static_cast<int64_t>(censusMarkers.size());
+    return !censusMarkers.empty();
+  }
   uint64_t siteNumber = 0, selectedControls = 0;
   json::Array controlInventory;
   for (CallInst *call : selected) {
     const bool wait = call->getCalledFunction()->getName().contains("WAIT");
     const uint64_t siteId = siteNumber++;
-    const bool enabled = semanticMask & (wait ? 2 : 1);
+    const bool enabled = !census && (semanticMask & (wait ? 2 : 1));
     auto describe = [&]() {
       json::Object site{
           {"site_id", static_cast<int64_t>(siteId)},
@@ -564,6 +724,12 @@ public:
     module.print(irStream, nullptr);
     irStream.flush();
     const auto moduleHash = digest(ir);
+    // Keep raw SDK input identity distinct from LLVM's canonical printer.
+    // The driver retains those exact bytes, including binary bitcode inputs.
+    auto rawInput = MemoryBuffer::getFile(module.getModuleIdentifier());
+    json::Value inputHash = rawInput
+                                ? json::Value(digest((*rawInput)->getBuffer()))
+                                : json::Value(nullptr);
     json::Array actors;
     json::Array dynamicSites;
     json::Object operationPlan, controlPlan, runtimeActorBinding;
@@ -838,11 +1004,24 @@ public:
         {"phase", "post_actor_lowering_pre_scalar_optimization"},
         {"module_sha256", moduleHash},
         {"module_identifier", module.getModuleIdentifier()},
+        {"module_input_sha256", std::move(inputHash)},
         {"target_triple", module.getTargetTriple()},
         {"compile_id", environment("FLAGPRISM_ASCEND_COMPILE_ID")},
         {"source_association",
          "surviving_source_metadata_and_full_debug_locations"},
         {"actors", std::move(actors)}};
+    if (censusVersion() != 0) {
+      manifest["dynamic_clock"] = nullptr;
+      manifest["dynamic_record_layout"] = censusVersion() == 2
+                                              ? "ascend_source_census_v2"
+                                              : "ascend_source_census_v1";
+      manifest["effective_semantics"] = json::Array{"counter"};
+      manifest["observation_plan_version"] = 3;
+      manifest["count_semantics"] = "source_control_visit_count";
+      manifest["count_limits"] =
+          "Reached control positions, including all-false masks; not data-lane "
+          "activity or elapsed time.";
+    }
     raw_fd_ostream jsonFile((base + ".json").str(), fileError,
                             sys::fs::OF_None);
     if (fileError)

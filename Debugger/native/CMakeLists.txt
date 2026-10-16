@@ -48,6 +48,7 @@ set(DEBUGGER_COMPILER_IMPLEMENTATION_SOURCES
   "${DEBUGGER_ROOT}/lib/Metadata/TrackedOpTable.cpp"
   "${DEBUGGER_ROOT}/lib/Instrumentation/Collectors.cpp"
   "${DEBUGGER_ROOT}/lib/Instrumentation/Passes.cpp"
+  "${DEBUGGER_ROOT}/lib/Instrumentation/AscendProgramAnchor.cpp"
   "${DEBUGGER_ROOT}/lib/Instrumentation/RecordBuilder.cpp"
   "${DEBUGGER_ROOT}/lib/Instrumentation/Writer.cpp"
 )
@@ -69,6 +70,7 @@ add_triton_plugin(TritonDebugger
 
   LINK_LIBS
   MLIRIR
+  MLIRLLVMDialect
   MLIRPass
   MLIRPtrDialect
   LLVMSupport

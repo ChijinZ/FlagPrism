@@ -573,6 +573,62 @@ public:
 
     DebugRuntimeMetadata runtimeMetadata =
         parseRuntimeMetadata(runtimeMetadataValue);
+    const auto compiledCensusLayout =
+        getStringOr(metadata, "debug_record_layout", "");
+    const auto isAscendCensus = [](const std::string &layout) {
+      return layout == "ascend_source_census_v1" ||
+             layout == "ascend_source_census_v2";
+    };
+    if (isAscendCensus(runtimeMetadata.recordLayout) ||
+        isAscendCensus(compiledCensusLayout)) {
+      const bool compact = compiledCensusLayout == "ascend_source_census_v2";
+      const uint32_t version = compact ? 2 : 1;
+      const uint32_t columns =
+          compact ? getUInt32Or(metadata, "debug_census_columns", 0) : 128;
+      if (!isAscendCensus(compiledCensusLayout) ||
+          runtimeMetadata.recordLayout != compiledCensusLayout || !columns ||
+          columns > 128 ||
+          getUInt32Or(metadata, "debug_census_version", 0) != version ||
+          getUInt32Or(metadata, "debug_record_size", 0) != 8 ||
+          getUInt32Or(metadata, "debug_records_per_instance", 0) !=
+              3 * columns ||
+          runtimeMetadata.recordsPerInstance != 3 * columns ||
+          !runtimeMetadata.hasLaunchGrid)
+        throw std::invalid_argument("Ascend census requires actual grid and "
+                                    "matching compiler physical layout");
+      if (compact) {
+        if (!metadata.contains("debug_census_columns") ||
+            !PyLong_CheckExact(metadata["debug_census_columns"].ptr()) ||
+            !metadata.contains("debug_ascend_census_sites") ||
+            !py::isinstance<py::list>(metadata["debug_ascend_census_sites"]) ||
+            py::len(metadata["debug_ascend_census_sites"]) != columns ||
+            !metadata.contains("debug_ascend_census_abi") ||
+            !py::isinstance<py::dict>(metadata["debug_ascend_census_abi"]))
+          throw std::invalid_argument(
+              "Ascend census v2 requires the actual frontend column inventory");
+        auto abi = metadata["debug_ascend_census_abi"].cast<py::dict>();
+        if (getUInt32Or(abi, "version", 0) != 2 ||
+            getUInt32Or(abi, "site_count", 0) != columns ||
+            getUInt32Or(abi, "record_size", 0) != 8 ||
+            getUInt32Or(abi, "records_per_instance", 0) != 3 * columns ||
+            getStringOr(abi, "record_layout", "") != compiledCensusLayout)
+          throw std::invalid_argument("Ascend census v2 native frontend ABI "
+                                      "conflicts with compiler metadata");
+      }
+      uint64_t cells = checkedMulU64(launchGridProduct(runtimeMetadata),
+                                     3 * columns, "Ascend census cells");
+      if (cells > std::numeric_limits<uint32_t>::max())
+        throw std::invalid_argument(
+            "Ascend census grid exceeds native cell index range");
+      uint64_t bytes =
+          32 + checkedMulU64(cells, 8, "Ascend physical census bytes");
+      if (cells > getUInt64Or(metadata, "debug_max_census_cells", 0) ||
+          bytes > getUInt64Or(metadata, "debug_max_census_bytes", 0) ||
+          bytes > static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
+        throw std::invalid_argument("Ascend census actual grid exceeds "
+                                    "physical cell/byte/index budgets");
+      compileRequest.options.recordCapacity = static_cast<uint32_t>(cells);
+    }
     if (runtimeMetadata.recordLayout == "gcu_site_census_v1") {
       if (getStringOr(metadata, "debug_record_layout", "") !=
               "gcu_site_census_v1" ||
@@ -693,6 +749,9 @@ public:
     artifacts.metadataJson = getStringOr(metadata, "debug_metadata_json", "");
     artifacts.bufferPlan.recordSize = getUInt32Or(
         metadata, "debug_record_size", artifacts.bufferPlan.recordSize);
+    if (isAscendCensus(runtimeMetadata.recordLayout))
+      artifacts.bufferPlan.recordCapacity =
+          compileRequest.options.recordCapacity;
     uint64_t fullDumpPayloadBytesPerInstance =
         getUInt64Or(metadata, "debug_full_dump_payload_bytes_per_instance", 0);
     if (fullDumpPayloadBytesPerInstance != 0) {

@@ -8,28 +8,39 @@ import sys
 import time
 import pytest
 
-DRIVER = Path(__file__).parents[1] / 'python/flagtree_profiler/ascend_sdk_driver.py'
+DRIVER = Path(
+    __file__).parents[1] / 'python/flagtree_profiler/ascend_sdk_driver.py'
 
 
 def run(tmp_path, code, timeout='120'):
-    env = dict(os.environ, FLAGPRISM_ASCEND_COMPILER_OUTPUT=str(tmp_path),
+    env = dict(os.environ,
+               FLAGPRISM_ASCEND_COMPILER_OUTPUT=str(tmp_path),
                FLAGPRISM_ASCEND_COMPILE_ID='watchdog-test',
                FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S=timeout)
-    result = subprocess.run([sys.executable, str(DRIVER), sys.executable, '-c', code],
-                            env=env, capture_output=True, timeout=15)
+    result = subprocess.run(
+        [sys.executable,
+         str(DRIVER), sys.executable, '-c', code],
+        env=env,
+        capture_output=True,
+        timeout=15)
     return result
 
 
 @pytest.mark.parametrize('exit_code', [0, 7])
 def test_normal_exit_preserves_original_exit_and_streams(tmp_path, exit_code):
-    result = run(tmp_path, 'import sys; print("sdk stdout",flush=True); print("sdk stderr",file=sys.stderr,flush=True); sys.exit(' + str(exit_code) + ')')
+    result = run(
+        tmp_path,
+        'import sys; print("sdk stdout",flush=True); print("sdk stderr",file=sys.stderr,flush=True); sys.exit('
+        + str(exit_code) + ')')
     receipt = json.loads((tmp_path / 'sdk-compiler.json').read_text())
     assert result.returncode == exit_code
-    assert receipt['state'] == ('failed' if exit_code else 'finished') and receipt['returncode'] == exit_code
+    assert receipt['state'] == ('failed' if exit_code else 'finished'
+                                ) and receipt['returncode'] == exit_code
     assert receipt['timeout_s'] == 120
     assert (tmp_path / 'sdk-stdout.txt').read_text() == 'sdk stdout\n'
     assert (tmp_path / 'sdk-stderr.txt').read_text() == 'sdk stderr\n'
-    assert not any(stream['truncated'] for stream in receipt['streams'].values())
+    assert not any(stream['truncated']
+                   for stream in receipt['streams'].values())
 
 
 def test_deadline_kills_sdk_descendants_and_keeps_partial_logs(tmp_path):
@@ -65,12 +76,18 @@ def test_invalid_deadline_cannot_start_sdk_process(tmp_path, timeout):
 
 
 def test_cancelled_wrapper_cleans_only_its_sdk_group_and_keeps_error(tmp_path):
-    env = dict(os.environ, FLAGPRISM_ASCEND_COMPILER_OUTPUT=str(tmp_path),
+    env = dict(os.environ,
+               FLAGPRISM_ASCEND_COMPILER_OUTPUT=str(tmp_path),
                FLAGPRISM_ASCEND_COMPILE_ID='cancel-test')
     code = 'import time;print("SDK active",flush=True);time.sleep(60)'
-    process = subprocess.Popen([sys.executable, str(DRIVER), sys.executable, '-c', code],
-                               env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    unrelated = subprocess.Popen([sys.executable, '-c', 'import time;time.sleep(60)'])
+    process = subprocess.Popen(
+        [sys.executable,
+         str(DRIVER), sys.executable, '-c', code],
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
+    unrelated = subprocess.Popen(
+        [sys.executable, '-c', 'import time;time.sleep(60)'])
     try:
         receipt_path = tmp_path / 'sdk-compiler.json'
         deadline = time.monotonic() + 5
@@ -80,7 +97,8 @@ def test_cancelled_wrapper_cleans_only_its_sdk_group_and_keeps_error(tmp_path):
                 receipt = json.loads(receipt_path.read_text())
             except (FileNotFoundError, json.JSONDecodeError):
                 pass
-            if receipt.get('process_id') and (tmp_path / 'sdk-stdout.txt').exists():
+            if receipt.get('process_id') and (tmp_path /
+                                              'sdk-stdout.txt').exists():
                 break
             time.sleep(.01)
         assert receipt.get('process_id'), 'SDK did not start'
@@ -98,7 +116,8 @@ def test_cancelled_wrapper_cleans_only_its_sdk_group_and_keeps_error(tmp_path):
         process.send_signal(signal.SIGINT)
         stdout, stderr = process.communicate(timeout=10)
         receipt = json.loads(receipt_path.read_text())
-        assert process.returncode != 0 and 'KeyboardInterrupt' in receipt['error']
+        assert process.returncode != 0 and 'KeyboardInterrupt' in receipt[
+            'error']
         assert receipt['state'] == 'failed'
         assert receipt['sdk_process_returncode'] == -signal.SIGKILL
         assert 'SDK active' in (tmp_path / 'sdk-stdout.txt').read_text()
@@ -109,3 +128,40 @@ def test_cancelled_wrapper_cleans_only_its_sdk_group_and_keeps_error(tmp_path):
             process.wait()
         unrelated.terminate()
         unrelated.wait(timeout=5)
+
+
+@pytest.mark.parametrize('exit_code, writes_output', [(0, True), (0, False),
+                                                      (7, False)])
+def test_final_sdk_output_is_bound_to_successful_job(tmp_path, exit_code,
+                                                     writes_output):
+    import hashlib
+    output = tmp_path / 'final SDK binary.o'
+    env = dict(os.environ,
+               FLAGPRISM_ASCEND_COMPILER_OUTPUT=str(tmp_path),
+               FLAGPRISM_ASCEND_COMPILE_ID='final-output-fixture',
+               FLAGPRISM_ASCEND_FINAL_OUTPUTS=json.dumps(
+                   {'binary': str(output)}))
+    code = 'import pathlib;'
+    if writes_output:
+        code += f'pathlib.Path({str(output)!r}).write_bytes(b"actual CPU fixture output\\x00");'
+    code += f'raise SystemExit({exit_code})'
+    result = subprocess.run(
+        [sys.executable,
+         str(DRIVER), sys.executable, '-c', code],
+        env=env,
+        capture_output=True,
+        timeout=10)
+    receipt = json.loads((tmp_path / 'sdk-compiler.json').read_text())
+    if exit_code == 0 and writes_output:
+        assert result.returncode == 0 and receipt['state'] == 'finished'
+        assert receipt['outputs']['binary'] == dict(
+            path=str(output),
+            bytes=len(output.read_bytes()),
+            sha256=hashlib.sha256(output.read_bytes()).hexdigest())
+        assert receipt['process_group_id'] == receipt['process_id']
+    elif exit_code:
+        assert result.returncode == exit_code and receipt['state'] == 'failed'
+        assert receipt['returncode'] == exit_code
+    else:
+        assert result.returncode != 0 and receipt['state'] == 'failed'
+        assert 'FileNotFoundError' in receipt['error']

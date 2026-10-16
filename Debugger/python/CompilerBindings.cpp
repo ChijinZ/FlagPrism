@@ -1,4 +1,5 @@
 #include "Debugger/IR/Dialect.h"
+#include "Debugger/Instrumentation/AscendProgramAnchor.h"
 #include "Debugger/Instrumentation/Passes.h"
 #include "Debugger/Metadata/Passes.h"
 #include "ir.h"
@@ -83,6 +84,26 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
     loadDebuggerDialect(*builder.getContext());
     return builder.create<CollectEndOp>(IntegerAttr());
   });
+  m.attr("ASCEND_SOURCE_PROGRAM_ANCHOR_VERSION") = 1;
+  m.def("prepare_ascend_program_anchors", [](ModuleOp mod) {
+    if (auto error = prepareAscendProgramAnchors(mod))
+      throw py::value_error(llvm::toString(std::move(error)));
+  });
+  m.attr("ASCEND_SOURCE_CENSUS_VERSION") = 2;
+  m.def("prepare_ascend_source_census_abi",
+        [](ModuleOp mod, const std::vector<uint32_t> &selectedSiteIds) {
+          auto result = prepareAscendSourceCensusAbi(mod, selectedSiteIds);
+          if (!result)
+            throw py::value_error(llvm::toString(result.takeError()));
+          py::dict abi;
+          abi["version"] = 2;
+          abi["hidden_argument_index"] = *result;
+          abi["site_count"] = selectedSiteIds.size();
+          abi["records_per_instance"] = 3 * selectedSiteIds.size();
+          abi["record_size"] = 8;
+          abi["record_layout"] = "ascend_source_census_v2";
+          return abi;
+        });
   m.def("prepare_late_observation_abi", [](ModuleOp mod) {
     auto result = prepareLateObservationAbi(mod);
     if (!result)
@@ -124,6 +145,7 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
   m.def("set_debug_addr_level", [](ModuleOp mod, int32_t addrLevel) {
     setDebugAddrLevel(mod, addrLevel);
   });
+  m.def("set_debug_census_enabled", &setDebugCensusEnabled);
   m.def("set_debug_dynamic_timeline_options", [](ModuleOp mod, uint32_t program,
                                                  uint32_t actor,
                                                  uint32_t sampleEvery) {

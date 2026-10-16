@@ -81,7 +81,21 @@ def source_abi(text, *, trace_source_argument=None):
             continue
         value = argument.split(':',1)[1].strip()
         kind = 'global_pointer' if value.startswith('memref<') else (re.match(r'(i\d+|f\d+|index)\b', value)[0] if re.match(r'(i\d+|f\d+|index)\b', value) else 'unsupported')
-        formals.append({'source_formal_index': index, 'kind': kind, 'role': roles.get(index), 'evidence': argument})
+        formal = {'source_formal_index': index, 'kind': kind, 'role': roles.get(index), 'evidence': argument}
+        program_role = re.search(r'flagtree\.profile\.program_info_role\s*=\s*"(num_programs|program_id)"', argument)
+        program_axis = re.search(r'flagtree\.profile\.program_axis\s*=\s*(\d+)\s*:\s*i32', argument)
+        if bool(program_role) != bool(program_axis):
+            raise ValueError('compiler program formal needs both actual role and axis')
+        if program_role:
+            axis = int(program_axis[1])
+            if axis not in (0, 1, 2) or kind != 'i32':
+                raise ValueError('compiler program formal has unsupported axis/type')
+            formal['compiler_program_role'] = {
+                'role': program_role[1], 'axis': axis,
+                'basis': 'actual_addProgramInfo_creation_attribute',
+                'final_llvm_mapping': 'not_established_by_formal_role_alone',
+            }
+        formals.append(formal)
     if any(position >= len(formals) for position in roles):
         raise ValueError('compiler formal role attribute is outside the signature')
     ordinary = [item for item in formals if item['role'] not in {'synchronization_lock','workspace'}]

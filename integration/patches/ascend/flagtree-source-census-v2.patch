@@ -1,0 +1,437 @@
+diff --git a/python/flagtree/__init__.py b/python/flagtree/__init__.py
+index 226622f39..7d7260733 100644
+--- a/python/flagtree/__init__.py
++++ b/python/flagtree/__init__.py
+@@ -1,5 +1,30 @@
+ """FlagPrism debugger and profiler components bundled with FlagTree."""
+ 
++import importlib
++import importlib.util
++import os
++from pathlib import Path
++import sys
++
++
++def _prepare_runtime_imports():
++    # Ascend's vendor backend imports TorchDynamo during compiler discovery.
++    # Load its runtime first, before Triton starts package initialization.
++    if 'triton' in sys.modules:
++        return
++    backend = os.environ.get('FLAGTREE_BACKEND')
++    if backend is None:
++        spec = importlib.util.find_spec('triton')
++        if spec is not None and spec.origin:
++            marker = Path(spec.origin).with_name('FLAGTREE_BACKEND')
++            if marker.is_file():
++                backend = marker.read_text().strip()
++    if backend == 'ascend':
++        importlib.import_module('torch')
++        importlib.import_module('torch_npu')
++
++
++_prepare_runtime_imports()
+ from triton import __version__
+ 
+ __all__ = ["__version__"]
+diff --git a/python/flagtree/_flagprism.py b/python/flagtree/_flagprism.py
+index f47380fda..54a664f80 100644
+--- a/python/flagtree/_flagprism.py
++++ b/python/flagtree/_flagprism.py
+@@ -19,6 +19,7 @@ HOST_API_VERSION = (2, 0)
+ HOST_CAPABILITIES = frozenset({
+     "compiler.dialects.v1",
+     "compiler.events.v1",
++    "compiler.driver.v1",
+     "compiler.options.v1",
+     "frontend.statement_events.v1",
+     "language.debug_collect.v1",
+@@ -309,3 +310,49 @@ def debugger_launch_context(
+             kernel_args=kernel_args,
+         ),
+     )
++
++
++@dataclass
++class CompilerDriverEvent:
++    """A per-compile external-driver handoff; command and environment are private copies."""
++    backend: str
++    command: list[str]
++    environment: dict[str, str]
++    metadata: dict[str, Any]
++    output_files: dict[str, str] | None = None
++
++
++def prepare_compiler_driver(*, backend: str, command: list[str], environment: dict[str, str], metadata: dict[str, Any], output_files: dict[str, str] | None = None) -> CompilerDriverEvent:
++    event = CompilerDriverEvent(str(backend), list(command), dict(environment), metadata, dict(output_files or {}))
++    for callback in _registered_callbacks("on_prepare_compiler_driver"):
++        callback(event)
++    return event
++
++
++def finish_compiler_driver(event: CompilerDriverEvent, *, returncode: int) -> None:
++    for callback in _registered_callbacks("on_finish_compiler_driver"):
++        callback(event, returncode=int(returncode))
++
++
++def compiler_driver_cache_key() -> str:
++    """Components identify codegen-affecting driver configuration before caching."""
++    values = []
++    for callback in _registered_callbacks("compiler_driver_cache_key"):
++        values.append(str(callback()))
++    return "|".join(values)
++
++
++def get_cann_launch_receipt_abi() -> str:
++    """Optional authoritative C ABI for generated SDK launch-worker receipts."""
++    values = []
++    for callback in _registered_callbacks("get_cann_launch_receipt_abi"):
++        value = callback()
++        if value:
++            if not isinstance(value, str):
++                raise TypeError("CANN receipt ABI provider must return header text")
++            values.append(value)
++    if not values:
++        return ""
++    if len(set(values)) != 1:
++        raise RuntimeError("multiple incompatible CANN receipt ABI providers")
++    return values[0]
+diff --git a/python/setup_tools/utils/tools.py b/python/setup_tools/utils/tools.py
+index 7e187cb82..2ed77f88c 100644
+--- a/python/setup_tools/utils/tools.py
++++ b/python/setup_tools/utils/tools.py
+@@ -303,27 +303,32 @@ class OfflineBuildManager:
+ 
+     def handle_triton_origin_toolkits(self):
+ 
+-        # detect system/arch/version, the same with setup.py
+-        system = platform.system()
+-        arch = platform.machine()
+-        arch = {"arm64": "sbsa", "aarch64": "sbsa"}.get(arch, arch)
+-        supported = {"Linux": "linux", "Darwin": "linux"}
+-        system = supported[system]
+-        nvidia_version_path = os.path.join(get_base_dir(), "cmake", "nvidia-toolchain-version.json")
+-        with open(nvidia_version_path, "r") as nvidia_version_file:
+-            # parse this json file to get the version of the nvidia toolchain
+-            NVIDIA_TOOLCHAIN_VERSION = json.load(nvidia_version_file)
+-
+-        ptxas_cache_path = os.path.join("nvidia/nvcc",
+-                                        f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas']}-archive")
+-        ptxas_blackwell_cache_path = os.path.join(
+-            "nvidia/nvcc", f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas-blackwell']}-archive")
+-        cudacrt_cache_path = os.path.join("nvidia/nvcc",
+-                                          f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['cudacrt']}-archive")
+-        triton_origin_toolkits = [
+-            ptxas_cache_path, ptxas_blackwell_cache_path, cudacrt_cache_path, "nvidia/nvdisasm", "nvidia/cuobjdump",
+-            "nvidia/cudart", "nvidia/cupti", "json"
+-        ]
++        # Ascend does not consume the NVIDIA toolchain. Keep the shared JSON
++        # offline dependency check, without constructing unrelated CUDA keys.
++        if flagtree_configs.flagtree_backend == "ascend":
++            triton_origin_toolkits = ["json"]
++        else:
++            # detect system/arch/version, the same with setup.py
++            system = platform.system()
++            arch = platform.machine()
++            arch = {"arm64": "sbsa", "aarch64": "sbsa"}.get(arch, arch)
++            supported = {"Linux": "linux", "Darwin": "linux"}
++            system = supported[system]
++            nvidia_version_path = os.path.join(get_base_dir(), "cmake", "nvidia-toolchain-version.json")
++            with open(nvidia_version_path, "r") as nvidia_version_file:
++                # parse this json file to get the version of the nvidia toolchain
++                NVIDIA_TOOLCHAIN_VERSION = json.load(nvidia_version_file)
++
++            ptxas_cache_path = os.path.join("nvidia/nvcc",
++                                            f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas']}-archive")
++            ptxas_blackwell_cache_path = os.path.join(
++                "nvidia/nvcc", f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['ptxas-blackwell']}-archive")
++            cudacrt_cache_path = os.path.join("nvidia/nvcc",
++                                              f"cuda_nvcc-{system}-{arch}-{NVIDIA_TOOLCHAIN_VERSION['cudacrt']}-archive")
++            triton_origin_toolkits = [
++                ptxas_cache_path, ptxas_blackwell_cache_path, cudacrt_cache_path, "nvidia/nvdisasm", "nvidia/cuobjdump",
++                "nvidia/cudart", "nvidia/cupti", "json"
++            ]
+         for toolkit in triton_origin_toolkits:
+             toolkit_cache_path = os.path.join(self.triton_cache_path, toolkit)
+             if os.path.exists(toolkit_cache_path):
+diff --git a/setup.py b/setup.py
+index 11be83331..316688386 100644
+--- a/setup.py
++++ b/setup.py
+@@ -902,6 +902,7 @@ setup(
+     package_dir=dict(get_package_dirs()),
+     entry_points=get_entry_points(),
+     include_package_data=True,
++    package_data={"flagtree.profiler": ["_cann_launch_receipt.h"]} if FLAGPRISM_SETUP.enabled else {},
+     ext_modules=[CMakeExtension("triton", "triton/_C/")],
+     cmdclass={
+         "bdist_wheel": plugin_bdist_wheel,
+diff --git a/third_party/ascend/backend/compiler.py b/third_party/ascend/backend/compiler.py
+--- a/third_party/ascend/backend/compiler.py
++++ b/third_party/ascend/backend/compiler.py
+@@ -21,6 +21,7 @@
+ import ctypes
+ import functools
+ import hashlib
++import json
+ import glob
+ import os
+ import re
+@@ -68,6 +69,18 @@
+ from triton.tools.get_ascend_devices import is_compile_on_910_95
+ 
+ 
++def _flagprism_automatic_source_info(opt):
++    # The public automatic request is frozen in instrumentation_mode and its
++    # normal NPUOptions hash. Preserve source locations only for that compile;
++    # do not change process-global debug settings or device completion semantics.
++    mode = getattr(opt, "instrumentation_mode", "")
++    if "|config=" not in mode:
++        return False
++    config = json.loads(mode.split("|config=", 1)[1])
++    request = config.get("debug_observation_request")
++    return isinstance(request, dict) and request.get("automatic") is True
++
++
+ # TODO: materialize the concrete min shape
+ def min_dot_size(target: GPUTarget):
+     return lambda lhsType, rhsType: (1, 1, 1)
+@@ -411,7 +424,7 @@
+             _compile_option_list += ["--disable-ffts"]
+         if _is_ascend_sanitizer_enabled():
+             _compile_option_list += ["--enable-sanitizer=true"]
+-        if not _is_debug_line_info_disabled():
++        if not _is_debug_line_info_disabled() or _flagprism_automatic_source_info(opt):
+             _compile_option_list += ["--enable-debug-info=true"]
+ 
+         if _enable_print_ub_bits():
+@@ -513,13 +526,9 @@
+                 _compile_option_list += \
+                     [f"--link-aicore-bitcode={bitcode}"]
+ 
+-        enable_auto_blockify = metadata["enable_auto_blockify"]
+-        if _is_auto_map_parallel_blocks_enabled():
+-            if (enable_auto_blockify is None or enable_auto_blockify):
+-                _compile_option_list += ["--enable-auto-blockify-loop"]
+-        else:
+-            if enable_auto_blockify:
+-                _compile_option_list += ["--enable-auto-blockify-loop"]
++        # Use the effective option frozen by parse_options and its cache key.
++        if opt.enable_auto_blockify:
++            _compile_option_list += ["--enable-auto-blockify-loop"]
+ 
+         npu_compiler_path, env = _get_npucompiler_path()
+         if npu_compiler_path.endswith("bishengir-compile"):
+@@ -550,7 +559,13 @@
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata, output_files={"binary": bin_path})
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -631,7 +646,7 @@
+ 
+         if _is_ascend_sanitizer_enabled():
+             _compile_option_list += ["--enable-sanitizer=true"]
+-        if not _is_debug_line_info_disabled():
++        if not _is_debug_line_info_disabled() or _flagprism_automatic_source_info(opt):
+             _compile_option_list += ["--enable-debug-info=true"]
+ 
+         if _enable_print_ub_bits():
+@@ -728,7 +743,8 @@
+             _compile_option_list += \
+                 [f"--disable-size-align-for-cast={disable_size_align_for_cast}"]
+ 
+-        if _is_auto_map_parallel_blocks_enabled():
++        # Use the effective option frozen by parse_options and its cache key.
++        if opt.enable_auto_blockify:
+             _compile_option_list += ["--enable-auto-blockify-loop"]
+         npu_compiler_path, env = _get_npucompiler_path()
+         if npu_compiler_path.endswith("bishengir-compile"):
+@@ -746,7 +762,13 @@
+             print(f"[DEBUG] cmd_list: {' '.join(cmd_list)}")
+ 
+         try:
+-            ret = subprocess.run(cmd_list, env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            driver_event = _flagprism.prepare_compiler_driver(backend="ascend", command=cmd_list, environment=env, metadata=metadata, output_files={"binary": bin_path})
++            try:
++                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
++            except subprocess.CalledProcessError as error:
++                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)
++                raise
++            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)
+         except subprocess.CalledProcessError as e:
+             if opt.debug:
+                 _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
+@@ -902,7 +924,7 @@
+ 
+     def hash(self):
+         key = "_".join([f"{name}-{val}" for name, val in self.__dict__.items()])
+-        key = "_".join([key, get_cann_version_file_hash()])
++        key = "_".join([key, get_cann_version_file_hash(), _flagprism.compiler_driver_cache_key()])
+         return hashlib.sha256(key.encode("utf-8")).hexdigest()
+ 
+ 
+@@ -943,16 +965,9 @@
+                 if bisheng_options is not None:
+                     _compile_option_list += [f"--append-bisheng-options={bisheng_options}"]
+ 
+-            # Enable SIMT auto-blockify if user opted in, or if the env var is
+-            # set and the user didn't explicitly opt out (matches the SIMD path
+-            # at line ~541).
+-            enable_auto_blockify = opt.enable_auto_blockify
+-            if _is_auto_map_parallel_blocks_enabled():
+-                if enable_auto_blockify is None or enable_auto_blockify:
+-                    _compile_option_list += ["--enable-auto-blockify-loop"]
+-            else:
+-                if enable_auto_blockify:
+-                    _compile_option_list += ["--enable-auto-blockify-loop"]
++            # SIMD and SIMT share the effective, cache-bound option.
++            if opt.enable_auto_blockify:
++                _compile_option_list += ["--enable-auto-blockify-loop"]
+ 
+         npu_compiler_path, env = _get_npucompiler_path()
+         cmd_list = ([npu_compiler_path, src_path] + _compile_option_list + ["-o", bin_file])
+@@ -983,6 +998,8 @@
+         if self.target.backend == "npu":
+             args = {k: opts[k] for k in NPUOptions.__dataclass_fields__.keys() if k in opts}
+             args.setdefault("arch", self.target.arch)
++            if args.get("enable_auto_blockify") is None:
++                args["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
+             options = NPUOptions(**args)
+         else:
+             raise NotImplementedError(f"Backend '{self.target.backend}' is not supported. "
+diff --git a/third_party/ascend/backend/driver.py b/third_party/ascend/backend/driver.py
+index ce3a73ee2..fbb483df6 100644
+--- a/third_party/ascend/backend/driver.py
++++ b/third_party/ascend/backend/driver.py
+@@ -40,6 +40,15 @@ from triton.backends.ascend.utils import (_precompile_npu_hash, _precompile_npu_
+                                           get_backend_func)
+ 
+ 
++
++
++def _flagprism_cann_receipt_cpp(abi):
++    """Embed exact provider bytes; wrapper_src cache identity includes this ABI."""
++    common = '\n#include <memory>\n#include <dlfcn.h>\n#include <unistd.h>\n#include <sys/syscall.h>\n\nstatic PyObject* flagprism_receipt_capsule(PyObject* metadata) {\n  if (!metadata || metadata == Py_None) return nullptr;\n  if (PyDict_Check(metadata)) {\n    PyObject* value = PyDict_GetItemString(metadata, "_flagprism_cann_launch_receipt_v1");\n    if (value) { Py_INCREF(value); return value; }\n  }\n  PyObject* value = PyObject_GetAttrString(metadata, "_flagprism_cann_launch_receipt_v1");\n  if (!value && PyErr_ExceptionMatches(PyExc_AttributeError)) PyErr_Clear();\n  return value;\n}\n'
++    supported = '\nusing FlagPrismReceiptSinkHandle = std::shared_ptr<proton::CannLaunchReceiptSinkV1>;\n\nstatic FlagPrismReceiptSinkHandle flagprism_get_receipt_sink(PyObject* metadata) {\n  PyObject* capsule = flagprism_receipt_capsule(metadata);\n  if (!capsule) return {};\n  if (capsule == Py_None) { Py_DECREF(capsule); return {}; }\n  if (!PyCapsule_IsValid(capsule, proton::kCannLaunchReceiptCapsuleName)) {\n    Py_DECREF(capsule);\n    PyErr_SetString(PyExc_TypeError, "CANN launch receipt capsule name/version mismatch");\n    return {};\n  }\n  auto* sink = static_cast<proton::CannLaunchReceiptSinkV1*>(\n      PyCapsule_GetPointer(capsule, proton::kCannLaunchReceiptCapsuleName));\n  if (!sink || sink->abiVersion != proton::kCannLaunchReceiptAbiVersion ||\n      sink->structSize != sizeof(proton::CannLaunchReceiptSinkV1) ||\n      !sink->context || !sink->retain || !sink->release || !sink->publish || !sink->cancel) {\n    Py_DECREF(capsule);\n    PyErr_SetString(PyExc_ValueError, "CANN launch receipt capsule ABI is incomplete");\n    return {};\n  }\n  sink->retain(sink->context);\n  Py_DECREF(capsule);\n  try {\n    return FlagPrismReceiptSinkHandle(sink, [](auto* retained) {\n      retained->release(retained->context);\n    });\n  } catch (const std::bad_alloc&) {\n    // shared_ptr\'s constructor invokes the deleter on allocation failure.\n    PyErr_NoMemory();\n    return {};\n  }\n}\n\nstatic void flagprism_publish_receipt(const FlagPrismReceiptSinkHandle& sink,\n                                     rtStream_t stream, rtError_t launchStatus,\n                                     uint32_t actualBlockNum) {\n  if (!sink) return;\n  proton::CannLaunchWorkerRecordV1 record;\n  record.processId = static_cast<uint64_t>(getpid());\n  record.threadId = static_cast<uint64_t>(syscall(SYS_gettid));\n  record.streamHandle = reinterpret_cast<uint64_t>(stream);\n  record.launchStatus = static_cast<int32_t>(launchStatus);\n  if (launchStatus == RT_ERROR_NONE && actualBlockNum) {\n    // Read the last task before any other SDK call, on this actual worker.\n    using TaskQuery = aclError (*)(uint32_t*);\n    using StreamQuery = aclError (*)(aclrtStream, int32_t*);\n    using DeviceQuery = aclError (*)(int32_t*);\n    static auto taskQuery = reinterpret_cast<TaskQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtGetThreadLastTaskId"));\n    static auto streamQuery = reinterpret_cast<StreamQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtStreamGetId"));\n    static auto deviceQuery = reinterpret_cast<DeviceQuery>(\n        dlsym(RTLD_DEFAULT, "aclrtGetDevice"));\n    record.taskQueryStatus = taskQuery ? taskQuery(&record.taskId) : -2;\n    record.streamQueryStatus = streamQuery ? streamQuery(stream, &record.streamId) : -2;\n    record.deviceQueryStatus = deviceQuery ? deviceQuery(&record.deviceId) : -2;\n  }\n  sink->publish(sink->context, &record);\n}\n'
++    legacy = '\nusing FlagPrismReceiptSinkHandle = std::shared_ptr<void>;\nstatic FlagPrismReceiptSinkHandle flagprism_get_receipt_sink(PyObject* metadata) {\n  PyObject* capsule = flagprism_receipt_capsule(metadata);\n  if (!capsule) return {};\n  bool present = capsule != Py_None;\n  Py_DECREF(capsule);\n  if (present) PyErr_SetString(PyExc_RuntimeError,\n      "CANN receipt capsule supplied but its ABI provider is unavailable; rebuild the profiler/launcher");\n  return {};\n}\nstatic void flagprism_publish_receipt(const FlagPrismReceiptSinkHandle&,\n                                     rtStream_t, rtError_t, uint32_t) {}\n'
++    return common + (abi + supported if abi else legacy)
++
+ class NPUUtils(object):
+ 
+     def __new__(cls):
+@@ -563,6 +572,7 @@ def make_launcher(constants, signature, metadata):
+         *args_expand
+     """
+     debug_abi = _DebuggerHiddenArgABI.from_metadata(metadata)  # FlagPrism
++    receipt_cpp = _flagprism_cann_receipt_cpp(_flagprism.get_cann_launch_receipt_abi())
+ 
+     args_format = ''.join([format_of(ty) for ty in signature.values()])
+     format = "iiiKKOOOO" + args_format + debug_abi.parse_format  # FlagPrism
+@@ -844,11 +854,12 @@ extern "C" {
+ #define TENSOR_KIND_INPUT_OUTPUT 2
+ 
+ {cpp_msprof_extern}
++{receipt_cpp}
+ 
+ {cpp_device_pointer}
+ 
+ // FlagPrism: append the optional debugger pointer to the generated launch ABI.
+-static void _launch(const char* kernelName, const void* func, rtStream_t stream, int gridX, int gridY, int gridZ, std::vector<std::vector<int64_t>> &tensorShapes, std::vector<int> &tensorKinds{', ' + arg_decls if len(signature) > 0 else ''}{debug_abi.launch_declaration}) {{
++static void _launch(const char* kernelName, const void* func, rtStream_t stream, int gridX, int gridY, int gridZ, FlagPrismReceiptSinkHandle receiptSink, std::vector<std::vector<int64_t>> &tensorShapes, std::vector<int> &tensorKinds{', ' + arg_decls if len(signature) > 0 else ''}{debug_abi.launch_declaration}) {{
+   // only 1D parallelization is supported for NPU
+   // Pointer type becomes flattend 1-D Memref tuple: base_ptr, data_ptr, offset, shape, stride
+   // base_ptr offset shape and stride are not used, arbitrarily set for now
+@@ -923,6 +934,7 @@ static void _launch(const char* kernelName, const void* func, rtStream_t stream,
+     }};
+     {cpp_msprof_call_before_launch}
+     {cpp_kernel_launch}
++    flagprism_publish_receipt(receiptSink, stream, ret, blockNum);
+     {'void *&stream_ref = const_cast<void*&>(stream);' if enable_device_print else ''}
+     {'cce::internal::DebugTunnel::Close(DTData, stream_ref);' if enable_device_print else ''}
+     {cpp_msprof_call_after_launch}
+@@ -1001,6 +1013,9 @@ static PyObject* launch(PyObject* self, PyObject* args) {{
+       return NULL;
+   }}
+ 
++  auto receiptSink = flagprism_get_receipt_sink(launch_metadata);
++  if (PyErr_Occurred()) return NULL;
++
+   // get kernel_name
+   PyObject *kernelNameObj = PyDict_GetItemString(packedMetadata, "kernel_name");
+   const char *kernelName = PyUnicode_AsUTF8(kernelNameObj);
+@@ -1018,7 +1033,7 @@ static PyObject* launch(PyObject* self, PyObject* args) {{
+   // raise exception asap
+   {newline.join(ptr_decls)}
+   // FlagPrism: forward the optional pointer after all user arguments.
+-  _launch(kernelName, function, stream, gridX, gridY, gridZ, tensorShapes, tensorKinds{', ' + ', '.join(internal_args_list) if len(internal_args_list) > 0 else ''}{debug_abi.call_argument});
++  _launch(kernelName, function, stream, gridX, gridY, gridZ, receiptSink, tensorShapes, tensorKinds{', ' + ', '.join(internal_args_list) if len(internal_args_list) > 0 else ''}{debug_abi.call_argument});
+   if (PyErr_Occurred()) {{
+     return NULL;
+   }}
+diff --git a/third_party/ascend/bin/CMakeLists.txt b/third_party/ascend/bin/CMakeLists.txt
+index 627d5d6b1..1ab9d9793 100644
+--- a/third_party/ascend/bin/CMakeLists.txt
++++ b/third_party/ascend/bin/CMakeLists.txt
+@@ -3,6 +3,13 @@ get_property(triton_libs GLOBAL PROPERTY TRITON_LIBS)
+ include_directories(
+     ${PROJECT_SOURCE_DIR}/third_party/ascend/AscendNPU-IR/bishengir/include
+     ${PROJECT_BINARY_DIR}/third_party/ascend/AscendNPU-IR/bishengir/include
++    # RegisterTritonDialects.h includes configured AMD/NVIDIA generated headers.
++    ${PROJECT_SOURCE_DIR}/third_party/amd/include
++    ${PROJECT_BINARY_DIR}/third_party/amd/include
++    ${PROJECT_SOURCE_DIR}/third_party/nvidia/include
++    ${PROJECT_BINARY_DIR}/third_party/nvidia/include
++    ${PROJECT_SOURCE_DIR}/third_party/nvidia/hopper/include
++    ${PROJECT_BINARY_DIR}/third_party/nvidia/hopper/include
+   )
+ 
+ add_llvm_executable(triton-opt triton-opt.cpp PARTIAL_SOURCES_INTENDED)
+@@ -183,6 +190,8 @@ llvm_update_compile_flags(triton-mlir-opt)
+ 
+ target_link_libraries(triton-mlir-opt PRIVATE
+   ${triton_libs}
++  # TLE lowering uses the configured NVIDIA PTXBuilder implementation.
++  TritonNVIDIAGPUToLLVM
+   # MLIR core
+   MLIROptLib
+   MLIRPass
+diff --git a/third_party/ascend/lib/AutoBlockify/AutoBlockify.cpp b/third_party/ascend/lib/AutoBlockify/AutoBlockify.cpp
+index 076ad5083..10c2ebd1d 100644
+--- a/third_party/ascend/lib/AutoBlockify/AutoBlockify.cpp
++++ b/third_party/ascend/lib/AutoBlockify/AutoBlockify.cpp
+@@ -27,6 +27,7 @@
+ 
+ #include "mlir/Dialect/ControlFlow/IR/ControlFlowOps.h"
+ #include "mlir/Pass/PassManager.h"
++#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+ #include "mlir/Transforms/GreedyPatternRewriteDriver.h"
+ #include "mlir/Transforms/Passes.h"
+ 
+@@ -107,6 +108,18 @@ PropagateUnrealizedCastDown::matchAndRewrite(UnrealizedConversionCastOp op,
+                isa<triton::BroadcastOp, triton::JoinOp, triton::ReshapeOp,
+                    triton::PrintOp, triton::ascend::AnnotationOp>(user)) {
+       rewriteGeneraleOp(op, user, rewriter);
++    } else if (auto anchor = dyn_cast<LLVM::InlineAsmOp>(user);
++               anchor && (anchor.getAsmString() == "/* flagprism.source_program_axes.v1 */" ||
++                   ((anchor.getAsmString().starts_with("/* flagprism.source_census_site.v1:") || anchor.getAsmString().starts_with("/* flagprism.source_census_site.v2:")) &&
++                    anchor.getAsmString().ends_with(" */"))) &&
++               anchor.getHasSideEffects() && anchor.getOperands().size() == 6 &&
++               anchor.getConstraints() == "l,l,l,l,l,l") {
++      // Follow the same scalar blockify-loop transport as existing side effects.
++      // The anchor receives the actual rewritten source coordinates in the loop.
++      auto *newOp = createBlockifyLoop(user, op, logicalBlockId, logicalBlockNum,
++                                      autoBlockifySize, rewriter);
++      rewriter.setInsertionPoint(newOp);
++      handleBlockifyLoop(*getBlockifyLoop(newOp), newOp, rewriter);
+     } else if (isa<triton::AtomicCASOp>(user)) {
+       auto *newOp =
+           createBlockifyLoop(user, op, logicalBlockId, logicalBlockNum,

@@ -1020,7 +1020,9 @@ void synthesizeExportHeader(const DebugLaunchContext &ctx,
                             BackendTransferAllocation &allocation) {
   if (ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
       ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
-      ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1")
+      ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
+      ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
+      ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2")
     return; // The actual writer publishes its own counts, including overflow.
   if (!ctx.runtimeMetadata.hasLaunchGrid ||
       ctx.runtimeMetadata.recordsPerInstance == 0 || !allocation.hostBuffer ||
@@ -1160,13 +1162,17 @@ public:
     // it synchronous so the instrumented kernel never observes stale allocation
     // contents when different backend launch APIs are mixed in one process.
     const uint64_t initializationStream =
-        ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1"
+        (ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
+         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
+         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2")
             ? ctx.streamHandle
             : 0;
     adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes,
                            initializationStream);
 
-    if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
+    if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
+        ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
+        ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2") {
       allocation->asyncExportPending = false;
       allocation->asyncCopySubmitted = false;
       return; // Actor-local headers are initialized by the actual selected

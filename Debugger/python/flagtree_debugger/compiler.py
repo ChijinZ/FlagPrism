@@ -267,6 +267,102 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     if request is not None and _target_backend(metadata) in {
             "ascend", "cann", "npu"
     }:
+        census = request.get("program_policy") == "all_grid_census"
+        if census:
+            if request.get("semantics") != [
+                    "counter"
+            ] or request.get("programs") is not None or request.get(
+                    "sample_every") != 1:
+                raise ValueError(
+                    "Ascend census requires an all-grid unsampled counter request"
+                )
+            for key in ("max_census_cells", "max_census_bytes"):
+                if type(request.get(key)) is not int or request[key] <= 0:
+                    raise ValueError("Ascend census requires positive " + key)
+            # Inline first: the IDs subsequently assigned name the actual final
+            # TTIR operations to which the source-site markers are attached.
+            inline_pm = ir.pass_manager(mod.context)
+            passes.common.add_inliner(inline_pm)
+            passes.common.add_symbol_dce(inline_pm)
+            _run_pass_manager(inline_pm, mod, "flagtree_ascend_census_inline")
+            metadata_pm = ir.pass_manager(mod.context)
+            fd.add_resolve_debug_scope(metadata_pm)
+            fd.add_assign_debug_op_id(metadata_pm)
+            _run_pass_manager(metadata_pm, mod,
+                              "flagtree_ascend_census_metadata")
+            metadata[
+                "debug_metadata_json"] = fd.get_debug_kernel_metadata_json(mod)
+            metadata["debug_tracked_table"] = json.loads(
+                fd.get_debug_tracked_op_table_json(mod))
+            metadata["debug_kernel_id"] = fd.get_debug_kernel_id(mod)
+            from .automatic_plan import plan_operations
+            plan = plan_operations(metadata["debug_tracked_table"],
+                                   request.get("max_sites", 32),
+                                   census=True)
+            selected = request.get("sites")
+            if selected is not None:
+                raise ValueError(
+                    "Ascend census currently requires the compiler automatic source-site plan"
+                )
+            from .gcu_census import compiler_sites
+            source_sites = compiler_sites(plan)
+            if getattr(fd, "ASCEND_SOURCE_CENSUS_VERSION", 0) != 2:
+                raise RuntimeError(
+                    "Ascend census requires the matching version-2 compiler ABI"
+                )
+            abi = dict(
+                fd.prepare_ascend_source_census_abi(mod,
+                                                    plan["selected_sites"]))
+            if (abi.get("version") != 2
+                    or abi.get("record_layout") != "ascend_source_census_v2"
+                    or type(abi.get("site_count")) is not int
+                    or abi["site_count"] != len(source_sites)
+                    or abi.get("records_per_instance") != 3 * abi["site_count"]
+                    or abi.get("record_size") != 8):
+                raise RuntimeError(
+                    "Ascend native census ABI disagrees with the actual source selection"
+                )
+            index = abi["hidden_argument_index"]
+            metadata.update({
+                "debug_launch_hidden_arg":
+                True,
+                "debug_protocol_version":
+                2,
+                "debug_record_level":
+                1,
+                "debug_record_size":
+                8,
+                "debug_record_layout":
+                abi["record_layout"],
+                "debug_records_per_instance":
+                abi["records_per_instance"],
+                "debug_census_columns":
+                abi["site_count"],
+                "debug_ascend_census_abi":
+                abi,
+                "debug_record_capacity":
+                0,
+                "debug_export_mode":
+                "POST_KERNEL_EXPORT",
+                "debug_record_plan": [],
+                "debug_automatic_plan":
+                plan,
+                "debug_ascend_census_sites":
+                source_sites,
+                "debug_census_version":
+                2,
+                "debug_max_census_cells":
+                request["max_census_cells"],
+                "debug_max_census_bytes":
+                request["max_census_bytes"],
+                "flagprism_ascend_trace_source_argument_index":
+                int(index),
+                "flagprism_ascend_observation_request":
+                request,
+                "flagprism_ascend_source_census_version":
+                2,
+            })
+            return
         programs = request.get("programs")
         if not isinstance(programs, list) or len(programs) != 1:
             raise ValueError(

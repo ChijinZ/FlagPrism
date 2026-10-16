@@ -17,7 +17,8 @@ def main():
     command = sys.argv[1:]
     if not command:
         raise ValueError('SDK compiler argv is empty')
-    timeout_s = int(os.environ.get('FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S', '120'))
+    timeout_s = int(os.environ.get('FLAGPRISM_ASCEND_COMPILE_TIMEOUT_S',
+                                   '120'))
     if not 1 <= timeout_s <= 300:
         raise ValueError('Ascend SDK compiler timeout must be 1..300 seconds')
     started = time.monotonic()
@@ -30,8 +31,10 @@ def main():
         'state':
         'started',
         'streams': {},
-        'timeout_s': timeout_s,
-        'timeout_policy': 'SDK_job_process_group_hard_deadline',
+        'timeout_s':
+        timeout_s,
+        'timeout_policy':
+        'SDK_job_process_group_hard_deadline',
         'compile_id':
         os.environ.get('FLAGPRISM_ASCEND_COMPILE_ID'),
         'sdk_tool_sha256':
@@ -107,10 +110,12 @@ def main():
         threads = [
             threading.Thread(target=drain,
                              args=(process.stdout, 'stdout',
-                                   sys.stdout.buffer), daemon=True),
+                                   sys.stdout.buffer),
+                             daemon=True),
             threading.Thread(target=drain,
                              args=(process.stderr, 'stderr',
-                                   sys.stderr.buffer), daemon=True)
+                                   sys.stderr.buffer),
+                             daemon=True)
         ]
         for thread in threads:
             thread.start()
@@ -128,15 +133,33 @@ def main():
                 pass
             process.wait(timeout=10)
             code = 124
-            print(f'Ascend SDK compiler exceeded {timeout_s}s; '
-                  f'failed compilation evidence retained at {output}',
-                  file=sys.stderr, flush=True)
+            print(
+                f'Ascend SDK compiler exceeded {timeout_s}s; '
+                f'failed compilation evidence retained at {output}',
+                file=sys.stderr,
+                flush=True)
         for thread in threads:
             thread.join()
+        if code == 0:
+            outputs = json.loads(
+                os.environ.get('FLAGPRISM_ASCEND_FINAL_OUTPUTS', '{}'))
+            if not isinstance(outputs, dict) or any(
+                    not isinstance(name, str) or not isinstance(path, str)
+                    for name, path in outputs.items()):
+                raise ValueError(
+                    'SDK final outputs must be an explicit path mapping')
+            receipt['outputs'] = {}
+            for name, path in outputs.items():
+                data = Path(path).read_bytes()
+                receipt['outputs'][name] = dict(
+                    path=path,
+                    sha256=hashlib.sha256(data).hexdigest(),
+                    bytes=len(data))
         receipt.update(returncode=code,
                        sdk_process_returncode=process.returncode,
                        elapsed_s=time.monotonic() - started,
-                       state='timed_out' if timed_out else 'finished' if code == 0 else 'failed')
+                       state='timed_out'
+                       if timed_out else 'finished' if code == 0 else 'failed')
         if errors:
             receipt['capture_errors'] = errors
             if code == 0:
@@ -159,7 +182,8 @@ def main():
                 if thread.ident is not None:
                     thread.join(timeout=2)
             receipt['sdk_process_returncode'] = process.returncode
-        receipt.update(state='failed', error=repr(error),
+        receipt.update(state='failed',
+                       error=repr(error),
                        elapsed_s=time.monotonic() - started)
         if errors:
             receipt['capture_errors'] = errors

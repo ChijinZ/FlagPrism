@@ -237,3 +237,65 @@ def test_build_install_resume_preserves_failed_attempt(recipe_module, tmp_path,
         argv[-1] for label, argv in requested if label == 'assemble-wheel'
     ]
     assert outputs == [str(root / 'wheel'), str(root / 'wheel-resume1')]
+
+
+@pytest.fixture
+def patched_repository(recipe_module, tmp_path, monkeypatch):
+    """Use real Git to exercise patch application and immutable resume."""
+    target = tmp_path / 'upstream'
+    target.mkdir()
+    env = dict(__import__('os').environ,
+               GIT_AUTHOR_NAME='CPU Test',
+               GIT_AUTHOR_EMAIL='test@example.invalid',
+               GIT_COMMITTER_NAME='CPU Test',
+               GIT_COMMITTER_EMAIL='test@example.invalid')
+
+    def git(*args):
+        return subprocess.check_output(
+            ['git', '-C', str(target), *args], env=env)
+
+    git('init', '-q')
+    source = target / 'kernel.cpp'
+    source.write_text('original\n')
+    git('add', 'kernel.cpp')
+    git('commit', '-qm', 'CPU fixture baseline')
+    source.write_text('patched\n')
+    patch_dir = tmp_path / 'patches'
+    patch_dir.mkdir()
+    (patch_dir / 'change.patch').write_bytes(git('diff', '--binary', 'HEAD'))
+    git('checkout', '--', 'kernel.cpp')
+    monkeypatch.setattr(recipe_module, 'PATCHES', {'flir': ('change.patch', )})
+    return recipe_module.Recipe(arguments(tmp_path)), target, patch_dir, git
+
+
+def test_patch_resume_retains_exact_diff(patched_repository):
+    recipe, target, patches, git = patched_repository
+    first = recipe.apply_patches('flir', target, patches)
+    assert (target / 'kernel.cpp').read_text() == 'patched\n'
+    # Staging the same bytes does not change the aggregate HEAD diff.
+    git('add', 'kernel.cpp')
+    assert recipe.apply_patches('flir', target, patches) == first
+
+
+@pytest.mark.parametrize('mutation', ['staged', 'unstaged', 'patch-bytes'])
+def test_patch_resume_rejects_changed_inputs(patched_repository, mutation):
+    recipe, target, patches, git = patched_repository
+    recipe.apply_patches('flir', target, patches)
+    if mutation == 'patch-bytes':
+        with (patches / 'change.patch').open('ab') as output:
+            output.write(b'\n')
+    else:
+        (target / 'kernel.cpp').write_text('unrelated edit\n')
+        if mutation == 'staged':
+            git('add', 'kernel.cpp')
+    with pytest.raises(ValueError, match='changed'):
+        recipe.apply_patches('flir', target, patches)
+
+
+def test_initial_patch_rejects_unrecorded_source(patched_repository):
+    recipe, target, patches, git = patched_repository
+    (target / 'kernel.cpp').write_text('unrecorded local edit\n')
+    with pytest.raises(ValueError, match='unrecorded tracked changes'):
+        recipe.apply_patches('flir', target, patches)
+    assert not (recipe.root / 'flir-patches-applied.json').exists()
+    assert (target / 'kernel.cpp').read_text() == 'unrecorded local edit\n'

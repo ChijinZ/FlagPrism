@@ -20,6 +20,7 @@ llvm::Expected<uint32_t> prepareLateObservationAbi(mlir::ModuleOp module);
 void setDebugHiddenArgAbiEnabled(mlir::ModuleOp module, bool enabled);
 void setDebugAddrLevel(mlir::ModuleOp module, int32_t addrLevel);
 void setDebugTimelineEnabled(mlir::ModuleOp module, bool enabled);
+void setDebugCensusEnabled(mlir::ModuleOp module, bool enabled);
 void setDebugTimelineOnly(mlir::ModuleOp module, bool enabled);
 llvm::Error setDebugDynamicTimelineOptions(mlir::ModuleOp module,
                                            uint32_t program, uint32_t actor,

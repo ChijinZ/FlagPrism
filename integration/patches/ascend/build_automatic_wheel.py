@@ -2,7 +2,8 @@
 
 Run only in the matching Ascend build Docker. This deliberately reuses a supplied
 matching native build; it does not claim to rebuild the native compiler. Apply
-flagtree-source.patch, automatic-source-origins.patch and automatic-import-order.patch to --flagtree first.
+the complete flagtree-source-census-v2.patch to --flagtree and
+flir-source-census-v2.patch to its pinned third_party/flir first.
 Build --plugin from this component's Profiler/llvm using upstream LLVM15 CMake.
 """
 import argparse

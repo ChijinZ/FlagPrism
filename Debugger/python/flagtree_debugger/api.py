@@ -1432,7 +1432,10 @@ def _default_launch_prepare_hook(
     metadata_dict = _build_launch_metadata_dict(metadata)
     backend = metadata_dict.get("debug_backend_name",
                                 metadata_dict.get("backend_name"))
-    if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
+    if metadata_dict.get("debug_record_layout") in {
+            "ascend_actor_dynamic_v1", "ascend_source_census_v1",
+            "ascend_source_census_v2"
+    }:
         backend = "ascend"
     from .graph_guard import require_eager
     require_eager(backend, stream=stream)
@@ -1446,7 +1449,10 @@ def _default_launch_prepare_hook(
             if key != "_flagprism_launch_identity_object"
         }
     launch_metadata = _materialize_launch_metadata(launch_metadata)
-    if metadata_dict.get("debug_record_layout") == "ascend_actor_dynamic_v1":
+    if metadata_dict.get("debug_record_layout") in {
+            "ascend_actor_dynamic_v1", "ascend_source_census_v1",
+            "ascend_source_census_v2"
+    }:
         handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
         if handoff.get("phase") != "finished" or not handoff.get("artifacts"):
             raise RuntimeError(
@@ -1460,19 +1466,42 @@ def _default_launch_prepare_hook(
         if built_runtime_metadata is not None:
             runtime_metadata.update(dict(built_runtime_metadata))
     grid = _normalize_launch_grid(launch_metadata)
-    if metadata_dict.get("debug_record_layout") == "gcu_site_census_v1":
+    if metadata_dict.get("debug_record_layout") in {
+            "gcu_site_census_v1", "ascend_source_census_v1",
+            "ascend_source_census_v2"
+    }:
         if grid is None:
-            raise ValueError("GCU census requires the actual launch grid")
+            raise ValueError("Source census requires the actual launch grid")
         if "grid" in runtime_metadata:
             supplied = runtime_metadata["grid"]
             if (not isinstance(supplied,
                                (tuple, list)) or not 1 <= len(supplied) <= 3
                     or _normalize_launch_grid({"grid": supplied}) != grid):
                 raise ValueError(
-                    "GCU census runtime grid contradicts actual launch")
+                    "Source census runtime grid contradicts actual launch")
         runtime_metadata["grid"] = grid
     elif grid is not None:
         runtime_metadata.setdefault("grid", grid)
+    if metadata_dict.get("debug_record_layout") in {
+            "ascend_source_census_v1", "ascend_source_census_v2"
+    }:
+        from flagtree.profiler.ascend_census import plan_layout
+        version = metadata_dict["debug_census_version"]
+        columns = metadata_dict.get(
+            "debug_census_columns") if version == 2 else 128
+        plan_layout(grid,
+                    max_cells=metadata_dict["debug_max_census_cells"],
+                    max_bytes=metadata_dict["debug_max_census_bytes"],
+                    version=version,
+                    site_count=columns)
+        if (runtime_metadata.get("record_layout",
+                                 metadata_dict["debug_record_layout"])
+                != metadata_dict["debug_record_layout"]
+                or runtime_metadata.get("records_per_instance",
+                                        3 * columns) != 3 * columns):
+            raise ValueError(
+                "Ascend census runtime builder contradicts actual compiler layout/stride"
+            )
     records_per_instance = metadata_dict.get("debug_records_per_instance")
     if records_per_instance is not None:
         runtime_metadata.setdefault("records_per_instance",
@@ -1527,6 +1556,43 @@ def _default_launch_prepare_hook(
                     "debug_record_layout") == "gcu_site_census_v1":
                 from .gcu_census import attach_export
                 exported_run = attach_export(exported_run, metadata_dict)
+            elif metadata_dict.get("debug_record_layout") in {
+                    "ascend_source_census_v1", "ascend_source_census_v2"
+            }:
+                import uuid
+                from flagtree.profiler.ascend_census import compiler_actor_views, decode_shared_census
+                capture_id = str(uuid.uuid4())
+                handoff = metadata_dict.get("flagprism_ascend_handoff") or {}
+                version = metadata_dict["debug_census_version"]
+                columns = metadata_dict.get(
+                    "debug_census_columns") if version == 2 else 128
+                actors = compiler_actor_views(
+                    handoff,
+                    metadata_dict["debug_ascend_census_sites"],
+                    version=version,
+                    site_count=columns)
+                decoded = decode_shared_census(
+                    bytes(exported_run["raw_buffer"]),
+                    grid=exported_runtime_metadata["grid"],
+                    actors=actors,
+                    capture_id=capture_id,
+                    invocation_id=exported_runtime_metadata.get(
+                        "profiler_invocation_id"),
+                    binary_id=(identity or {}).get("binary_id")
+                    or metadata_dict.get("hash"),
+                    association_evidence=exported_runtime_metadata.get(
+                        "profiler_association_evidence"),
+                    max_cells=metadata_dict["debug_max_census_cells"],
+                    max_bytes=metadata_dict["debug_max_census_bytes"],
+                    version=version,
+                    site_count=columns)
+                decoded["actual_request"] = dict(
+                    metadata_dict["flagprism_ascend_observation_request"])
+                exported_run["semantic_observations"] = decoded.pop(
+                    "observations")
+                exported_runtime_metadata["ascend_source_census"] = decoded
+                exported_runtime_metadata["capture_id"] = capture_id
+                exported_run["decoded"] = {"records": [], "dropped": 0}
             elif metadata_dict.get(
                     "debug_record_layout") == "ascend_actor_dynamic_v1":
                 import uuid

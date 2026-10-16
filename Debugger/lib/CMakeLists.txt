@@ -51,6 +51,7 @@ add_triton_library(FlagTreeDebugger
   Metadata/Passes.cpp
   Instrumentation/Collectors.cpp
   Instrumentation/Passes.cpp
+  Instrumentation/AscendProgramAnchor.cpp
   Instrumentation/RecordBuilder.cpp
   Instrumentation/Writer.cpp
   Decode/Decoder.cpp
@@ -64,6 +65,7 @@ add_triton_library(FlagTreeDebugger
   FlagTreeDebuggerRuntime
   MLIRArithDialect
   MLIRIR
+  MLIRLLVMDialect
   MLIRMathDialect
   MLIRPass
   MLIRPtrDialect
