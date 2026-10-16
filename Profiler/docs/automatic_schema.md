@@ -624,7 +624,9 @@ and `bundle_capture_root: "raw/native/cann_sdk.zip"`; `archive` records the
 bundle-relative archive path, stored bytes, SHA-256 and compression settings.
 `directories` preserves the original directories. Each `files` entry has
 `source_relative`, `archive_member`, `bytes` and `sha256` for the original
-uncompressed member. Trees at least 8 MiB are archived with ZIP_DEFLATED level 1.
+uncompressed member. Trees at least 8 MiB are archived with ZIP_DEFLATED level 6.
+Older level-1 archives remain readable; the manifest records the level actually
+used. Compression changes stored size without changing member bytes.
 The writer checks archive bytes, every member's bytes/hash/CRC, directory
 inventory and unchanged capture source before releasing temporary SDK output.
 Paths, duplicate members, links, unsupported member types and extra/missing

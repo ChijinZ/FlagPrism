@@ -18,6 +18,7 @@ _TREE = "raw/native/cann_sdk"
 _MANIFEST = "raw/native/cann-sdk-retention.json"
 _ARCHIVE = "raw/native/cann_sdk.zip"
 _ARCHIVE_THRESHOLD_BYTES = 8 * 1024 * 1024
+_ARCHIVE_COMPRESSION_LEVEL = 6
 
 
 def _true(value):
@@ -187,7 +188,7 @@ def _retain_archive(source, output, inventory, manifest):
     with zipfile.ZipFile(archive,
                          'x',
                          compression=zipfile.ZIP_DEFLATED,
-                         compresslevel=1,
+                         compresslevel=_ARCHIVE_COMPRESSION_LEVEL,
                          allowZip64=True) as retained:
         for relative in inventory['directories']:
             retained.write(source / relative, relative + '/')
@@ -205,7 +206,7 @@ def _retain_archive(source, output, inventory, manifest):
                     },
                     archive=dict(bundle_relative=_ARCHIVE,
                                  compression='ZIP_DEFLATED',
-                                 compresslevel=1,
+                                 compresslevel=_ARCHIVE_COMPRESSION_LEVEL,
                                  **archive_digest),
                     files=[
                         dict(source_relative=relative,
