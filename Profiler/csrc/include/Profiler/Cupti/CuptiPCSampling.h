@@ -58,7 +58,7 @@ struct ConfigureData {
     if (stallReasonIndices)
       std::free(stallReasonIndices);
     if (pcSamplingData.pPcData) {
-      for (size_t i = 0; i < numValidStallReasons; ++i) {
+      for (size_t i = 0; i < pcSamplingData.collectNumPcs; ++i) {
         std::free(pcSamplingData.pPcData[i].stallReason);
       }
       std::free(pcSamplingData.pPcData);
@@ -112,6 +112,10 @@ public:
   void stop(CUcontext context, uint64_t externId, bool isAPI);
 
   void finalize(CUcontext context);
+
+  // Host allocations may be released only after successful global CUPTI
+  // finalization proves the SDK no longer owns/references them.
+  void releaseAfterRuntimeFinalize();
 
   void loadModule(const char *cubin, size_t cubinSize);
 

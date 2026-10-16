@@ -100,6 +100,8 @@ public:
   }
 
 protected:
+  bool isStarted() const { return started; }
+
   virtual void doStart() = 0;
   virtual void doFlush() = 0;
   virtual void doStop() = 0;

@@ -9,6 +9,7 @@
 
 #include <atomic>
 #include <deque>
+#include <stdexcept>
 #include <thread>
 #include <unordered_map>
 #include <unordered_set>
@@ -32,21 +33,40 @@ public:
   using ApiExternIdSet = ThreadSafeSet<size_t, std::unordered_set<size_t>>;
 
   ConcreteProfilerT &enablePCSampling() {
-    pcSamplingEnabled = true;
+    if (!pcSamplingEnabled) {
+      requireConfigurable();
+      pImpl->prepareConfiguration();
+      pcSamplingEnabled = true;
+    }
     return dynamic_cast<ConcreteProfilerT &>(*this);
   }
   ConcreteProfilerT &disablePCSampling() {
-    pcSamplingEnabled = false;
+    if (pcSamplingEnabled) {
+      requireConfigurable();
+      pImpl->prepareConfiguration();
+      pcSamplingEnabled = false;
+    }
     return dynamic_cast<ConcreteProfilerT &>(*this);
   }
   bool isPCSamplingEnabled() const { return pcSamplingEnabled; }
 
   ConcreteProfilerT &setLibPath(const std::string &libPath) {
-    pImpl->setLibPath(libPath);
+    if (this->libPath != libPath) {
+      requireConfigurable();
+      auto nextPath = libPath;
+      pImpl->prepareConfiguration();
+      pImpl->setLibPath(nextPath);
+      this->libPath.swap(nextPath);
+    }
     return dynamic_cast<ConcreteProfilerT &>(*this);
   }
+  const std::string &getLibPath() const { return libPath; }
 
 protected:
+  void requireConfigurable() const {
+    if (isStarted() || !getDataSet().empty())
+      throw std::runtime_error("Cannot reconfigure an active GPU profiler");
+  }
   // OpInterface
   void startOp(const Scope &scope) override {
     this->correlation.pushExternId(scope.scopeId);
@@ -141,6 +161,7 @@ protected:
         : profiler(profiler) {}
     virtual ~GPUProfilerPimplInterface() = default;
 
+    virtual void prepareConfiguration() {}
     virtual void setLibPath(const std::string &libPath) = 0;
     virtual void doStart() = 0;
     virtual void doFlush() = 0;
@@ -152,6 +173,7 @@ protected:
   std::unique_ptr<GPUProfilerPimplInterface> pImpl;
 
   bool pcSamplingEnabled{false};
+  std::string libPath;
 };
 
 } // namespace proton

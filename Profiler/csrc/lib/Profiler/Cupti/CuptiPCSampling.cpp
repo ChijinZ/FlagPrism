@@ -452,10 +452,18 @@ void CuptiPCSampling::finalize(CUcontext context) {
   cupti::getContextId<true>(context, &contextId);
   if (!contextInitialized.contain(contextId))
     return;
-  auto *configureData = getConfigureData(contextId);
+  // Keep SDK-referenced host storage and initialization ownership on error.
+  disablePCSampling(context);
   contextIdToConfigureData.erase(contextId);
   contextInitialized.erase(contextId);
-  disablePCSampling(context);
+}
+
+void CuptiPCSampling::releaseAfterRuntimeFinalize() {
+  std::scoped_lock lock(contextMutex, pcSamplingMutex);
+  contextIdToConfigureData.clear();
+  contextInitialized.clear();
+  cubinCrcToCubinData.clear();
+  pcSamplingStarted = false;
 }
 
 void CuptiPCSampling::loadModule(const char *cubin, size_t cubinSize) {

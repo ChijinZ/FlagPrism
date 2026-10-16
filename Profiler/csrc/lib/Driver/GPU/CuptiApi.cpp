@@ -114,7 +114,15 @@ DEFINE_DISPATCH(ExternLibCupti, pcSamplingStart, cuptiPCSamplingStart,
 DEFINE_DISPATCH(ExternLibCupti, pcSamplingStop, cuptiPCSamplingStop,
                 CUpti_PCSamplingStopParams *);
 
-void setLibPath(const std::string &path) { ExternLibCupti::defaultDir = path; }
+void setLibPath(const std::string &path) {
+  // Dispatch retains the loaded library and resolved function pointers. A new
+  // directory cannot replace that process-local SDK without invalidating them.
+  if (ExternLibCupti::lib && path != ExternLibCupti::defaultDir)
+    throw std::runtime_error(
+        "CUPTI library is already loaded; configure its path before the first "
+        "capture or start a fresh process to use a different library");
+  ExternLibCupti::defaultDir = path;
+}
 
 } // namespace cupti
 

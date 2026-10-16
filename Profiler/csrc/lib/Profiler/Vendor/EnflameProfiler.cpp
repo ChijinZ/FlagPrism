@@ -1,6 +1,7 @@
 #include "Profiler/Vendor/EnflameProfiler.h"
 #include "Context/Context.h"
 #include "Profiler/Profiler.h"
+#include "Profiler/SdkCleanup.h"
 #include <cstdlib>
 #include <generated_tops_runtime_api_meta.h>
 #include <mutex>
@@ -67,6 +68,7 @@ private:
       TOPSPTI_ACTIVITY_KIND_MEMSET, TOPSPTI_ACTIVITY_KIND_RUNTIME,
       TOPSPTI_ACTIVITY_KIND_DRIVER};
   std::vector<Topspti_ActivityKind> enabledKinds;
+  std::vector<Topspti_CallbackDomain> enabledDomains;
   struct Launch {
     RuntimeTraceEventKey scope;
     std::string name;
@@ -75,6 +77,8 @@ private:
   };
   std::unordered_map<uint32_t, Launch> launches;
   Topspti_SubscriberHandle subscriber = nullptr;
+  bool ownsSubscriber = false;
+  bool subscriptionOwnershipUnknown = false;
   bool enabled = false;
   std::string callbackError;
   void startOp(const Scope &scope) override {
@@ -282,33 +286,41 @@ private:
     std::free(buffer);
   }
   void doStart() override {
+    // Profiler::started is a public session state, not evidence that an SDK
+    // handle from a previous failed stop was released. Retry before acquiring.
+    if (subscriber || !enabledKinds.empty())
+      doStop();
     {
       std::lock_guard<std::mutex> lock(eventsMutex);
       events.clear();
       launches.clear();
       callbackError.clear();
     }
+    enabledKinds.reserve(kinds.size());
+    enabledDomains.reserve(2);
     check(topsptiActivityRegisterCallbacks(request, complete),
           "register activity callbacks");
-    check(topsptiSubscribe(&subscriber, callback, nullptr),
-          "subscribe callbacks");
     try {
+      check(topsptiSubscribe(&subscriber, callback, nullptr),
+            "subscribe callbacks");
+      ownsSubscriber = true;
       check(topsptiEnableDomain(1, subscriber, TOPSPTI_CB_DOMAIN_RUNTIME_API),
             "enable runtime callbacks");
+      enabledDomains.push_back(TOPSPTI_CB_DOMAIN_RUNTIME_API);
       check(topsptiEnableDomain(1, subscriber, TOPSPTI_CB_DOMAIN_DRIVER_API),
             "enable driver callbacks");
+      enabledDomains.push_back(TOPSPTI_CB_DOMAIN_DRIVER_API);
       for (auto kind : kinds) {
         check(topsptiActivityEnable(kind), "enable detailed activity");
         enabledKinds.push_back(kind);
       }
       enabled = true;
     } catch (...) {
-      for (auto kind : enabledKinds)
-        topsptiActivityDisable(kind);
-      enabledKinds.clear();
-      topsptiUnsubscribe(subscriber);
-      subscriber = nullptr;
-      throw;
+      if (subscriber && !ownsSubscriber)
+        subscriptionOwnershipUnknown = true;
+      SdkCleanup cleanup(std::current_exception());
+      cleanup.attempt([&] { doStop(); });
+      cleanup.rethrow();
     }
   }
   void doFlush() override {
@@ -335,16 +347,41 @@ private:
       throw std::runtime_error(callbackError);
   }
   void doStop() override {
-    if (enabled) {
-      for (auto kind : enabledKinds)
-        check(topsptiActivityDisable(kind), "disable detailed activity");
-      enabledKinds.clear();
-      enabled = false;
+    if (subscriptionOwnershipUnknown)
+      throw std::runtime_error(
+          "TOPSPTI subscribe failed with an unverified handle; subscription "
+          "ownership is unknown. Refusing cleanup or a new capture; use a "
+          "fresh "
+          "process after resolving the external collector.");
+    enabled = false;
+    SdkCleanup cleanup;
+    for (auto it = enabledKinds.begin(); it != enabledKinds.end();) {
+      if (cleanup.attempt([&] {
+            check(topsptiActivityDisable(*it), "disable detailed activity");
+          }))
+        it = enabledKinds.erase(it);
+      else
+        ++it;
     }
-    if (subscriber) {
-      check(topsptiUnsubscribe(subscriber), "unsubscribe callbacks");
+    for (auto it = enabledDomains.begin(); it != enabledDomains.end();) {
+      if (cleanup.attempt([&] {
+            check(topsptiEnableDomain(0, subscriber, *it),
+                  "disable callback domain");
+          }))
+        it = enabledDomains.erase(it);
+      else
+        ++it;
+    }
+    if (subscriber && cleanup.attempt([&] {
+          check(topsptiUnsubscribe(subscriber), "unsubscribe callbacks");
+        })) {
       subscriber = nullptr;
+      ownsSubscriber = false;
+      // TOPSPTI unsubscribe guarantees this subscriber receives no callbacks.
+      // A failed domain disable therefore has no live subscription to retry.
+      enabledDomains.clear();
     }
+    cleanup.rethrow();
   }
 };
 class EnflameImporter final : public VendorMetricsImporter {

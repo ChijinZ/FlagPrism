@@ -31,20 +31,11 @@ namespace proton {
 using json = nlohmann::json;
 
 namespace {
-Profiler *getProfiler(const std::string &profilerName,
-                      const std::string &profilerPath,
-                      const std::string &mode) {
+Profiler *getProfiler(const std::string &profilerName) {
 #if FLAGTREE_PROFILER_GPU_RUNTIME
-  if (proton::toLower(profilerName) == "cupti") {
-    auto *profiler = &CuptiProfiler::instance();
-    profiler->setLibPath(profilerPath);
-    if (proton::toLower(mode).find("pcsampling") == 0)
-      profiler->enablePCSampling();
-    return profiler;
-  }
-  if (proton::toLower(profilerName) == "cupti_pcsampling") {
-    return &CuptiProfiler::instance().enablePCSampling();
-  }
+  if (proton::toLower(profilerName) == "cupti" ||
+      proton::toLower(profilerName) == "cupti_pcsampling")
+    return &CuptiProfiler::instance();
   if (proton::toLower(profilerName) == "roctracer") {
     return &RoctracerProfiler::instance();
   }
@@ -893,8 +884,39 @@ std::unique_ptr<Session> SessionManager::makeSession(
     return std::unique_ptr<Session>(session);
   }
 
-  auto *profiler = getProfiler(profilerName, profilerPath, mode);
-  profiler = validateAndSetProfilerMode(profiler, mode, sessions);
+  auto *profiler = getProfiler(profilerName);
+  auto effectiveMode = mode;
+#if FLAGTREE_PROFILER_GPU_RUNTIME
+  if (profiler == &CuptiProfiler::instance()) {
+    const bool wantsPCSampling = toLower(profilerName) == "cupti_pcsampling" ||
+                                 toLower(mode).find("pcsampling") == 0;
+    if (toLower(profilerName) == "cupti_pcsampling" && effectiveMode.empty())
+      effectiveMode = "pcsampling";
+    auto &cupti = CuptiProfiler::instance();
+    bool shared = false;
+    // Complete read-only compatibility checks before touching any singleton
+    // flag or the dispatch library path, including through the backend alias.
+    for (const auto &[existingId, existing] : sessions) {
+      if (existing->getProfiler() != profiler)
+        continue;
+      shared = true;
+      if (profiler->getMode() != splitMode(effectiveMode) ||
+          cupti.isPCSamplingEnabled() != wantsPCSampling ||
+          cupti.getLibPath() != profilerPath)
+        throw std::runtime_error(
+            "Cannot reuse a profiler with a different mode or library path "
+            "across active sessions");
+    }
+    if (!shared) {
+      cupti.setLibPath(profilerPath);
+      if (wantsPCSampling)
+        cupti.enablePCSampling();
+      else
+        cupti.disablePCSampling();
+    }
+  }
+#endif
+  profiler = validateAndSetProfilerMode(profiler, effectiveMode, sessions);
   auto contextSource = makeContextSource(contextSourceName);
   auto data = makeData(dataName, path, contextSource.get());
   auto *session =

@@ -5,12 +5,14 @@
 #include "Driver/GPU/CudaApi.h"
 #include "Driver/GPU/CuptiApi.h"
 #include "Profiler/Cupti/CuptiPCSampling.h"
+#include "Profiler/SdkCleanup.h"
 #include "Utility/Map.h"
 
 #include <algorithm>
 #include <cstdlib>
 #include <iostream>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 #include <unistd.h>
 
@@ -219,10 +221,8 @@ uint32_t processActivity(CuptiProfiler::CorrIdToExternIdMap &corrIdToExternId,
   return correlationId;
 }
 
-void setRuntimeCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
-#define CALLBACK_ENABLE(id)                                                    \
-  cupti::enableCallback<true>(static_cast<uint32_t>(enable), subscriber,       \
-                              CUPTI_CB_DOMAIN_RUNTIME_API, id)
+template <typename Configure> void setRuntimeCallbacks(Configure &&configure) {
+#define CALLBACK_ENABLE(id) configure(CUPTI_CB_DOMAIN_RUNTIME_API, id)
 
   CALLBACK_ENABLE(CUPTI_RUNTIME_TRACE_CBID_cudaLaunch_v3020);
   CALLBACK_ENABLE(CUPTI_RUNTIME_TRACE_CBID_cudaLaunchKernel_v7000);
@@ -241,10 +241,8 @@ void setRuntimeCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
 #undef CALLBACK_ENABLE
 }
 
-void setDriverCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
-#define CALLBACK_ENABLE(id)                                                    \
-  cupti::enableCallback<true>(static_cast<uint32_t>(enable), subscriber,       \
-                              CUPTI_CB_DOMAIN_DRIVER_API, id)
+template <typename Configure> void setDriverCallbacks(Configure &&configure) {
+#define CALLBACK_ENABLE(id) configure(CUPTI_CB_DOMAIN_DRIVER_API, id)
 
   CALLBACK_ENABLE(CUPTI_DRIVER_TRACE_CBID_cuLaunch);
   CALLBACK_ENABLE(CUPTI_DRIVER_TRACE_CBID_cuLaunchGrid);
@@ -261,11 +259,9 @@ void setDriverCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
 #undef CALLBACK_ENABLE
 }
 
-void setGraphCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
+template <typename Configure> void setGraphCallbacks(Configure &&configure) {
 
-#define CALLBACK_ENABLE(id)                                                    \
-  cupti::enableCallback<true>(static_cast<uint32_t>(enable), subscriber,       \
-                              CUPTI_CB_DOMAIN_RESOURCE, id)
+#define CALLBACK_ENABLE(id) configure(CUPTI_CB_DOMAIN_RESOURCE, id)
 
   CALLBACK_ENABLE(CUPTI_CBID_RESOURCE_GRAPHNODE_CREATED);
   CALLBACK_ENABLE(CUPTI_CBID_RESOURCE_GRAPHNODE_CLONED);
@@ -276,10 +272,8 @@ void setGraphCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
 #undef CALLBACK_ENABLE
 }
 
-void setResourceCallbacks(CUpti_SubscriberHandle subscriber, bool enable) {
-#define CALLBACK_ENABLE(id)                                                    \
-  cupti::enableCallback<true>(static_cast<uint32_t>(enable), subscriber,       \
-                              CUPTI_CB_DOMAIN_RESOURCE, id)
+template <typename Configure> void setResourceCallbacks(Configure &&configure) {
+#define CALLBACK_ENABLE(id) configure(CUPTI_CB_DOMAIN_RESOURCE, id)
 
   CALLBACK_ENABLE(CUPTI_CBID_RESOURCE_MODULE_LOADED);
   CALLBACK_ENABLE(CUPTI_CBID_RESOURCE_MODULE_UNLOAD_STARTING);
@@ -311,6 +305,11 @@ struct CuptiProfiler::CuptiProfilerPimpl
       : GPUProfiler<CuptiProfiler>::GPUProfilerPimplInterface(profiler) {}
   virtual ~CuptiProfilerPimpl() = default;
 
+  void prepareConfiguration() override {
+    if (finalizationPending || subscriber || enabledActivity ||
+        !enabledCallbacks.empty())
+      doStop();
+  }
   void setLibPath(const std::string &libPath) override {
     cupti::setLibPath(libPath);
   }
@@ -330,6 +329,12 @@ struct CuptiProfiler::CuptiProfilerPimpl
   static constexpr size_t AttributeSize = sizeof(size_t);
 
   CUpti_SubscriberHandle subscriber{};
+  std::vector<std::pair<CUpti_CallbackDomain, CUpti_CallbackId>>
+      enabledCallbacks;
+  std::optional<CUpti_ActivityKind> enabledActivity;
+  bool finalizationPending{false};
+  bool subscriptionOwnershipUnknown{false};
+  bool pcSamplingNeedsCleanup{false};
   CuptiPCSampling pcSampling;
 
   ThreadSafeMap<uint32_t, size_t, std::unordered_map<uint32_t, size_t>>
@@ -497,24 +502,55 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
 }
 
 void CuptiProfiler::CuptiProfilerPimpl::doStart() {
-  // CUPTI finalization can recycle correlation IDs. Namespace each subscriber
-  // lifetime and reset its completion watermark before accepting new launches.
+  // Public started=false does not certify release of a failed SDK resource.
+  // Retry unresolved cleanup before replacing its handles or configuration.
+  if (finalizationPending || subscriber || enabledActivity ||
+      !enabledCallbacks.empty())
+    doStop();
+  std::vector<std::pair<CUpti_CallbackDomain, CUpti_CallbackId>> requested;
+  auto append = [&](CUpti_CallbackDomain domain, CUpti_CallbackId id) {
+    requested.emplace_back(domain, id);
+  };
+  if (profiler.isPCSamplingEnabled())
+    setResourceCallbacks(append);
+  const auto resourceCallbackCount = requested.size();
+  setGraphCallbacks(append);
+  setRuntimeCallbacks(append);
+  setDriverCallbacks(append);
+  // All potentially allocating bookkeeping is prepared before acquisition.
+  enabledCallbacks.reserve(requested.size());
   profiler.beginActivityCapture();
   profiler.correlation.maxSubmittedCorrelationId.store(0);
   profiler.correlation.maxCompletedCorrelationId.store(0);
   profiler.correlation.corrIdToExternId.clear();
-  cupti::subscribe<true>(&subscriber, callbackFn, nullptr);
-  if (profiler.isPCSamplingEnabled()) {
-    setResourceCallbacks(subscriber, /*enable=*/true);
-    // Continuous PC sampling is not compatible with concurrent kernel profiling
-    cupti::activityEnable<true>(CUPTI_ACTIVITY_KIND_KERNEL);
-  } else {
-    cupti::activityEnable<true>(CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL);
+  try {
+    cupti::subscribe<true>(&subscriber, callbackFn, nullptr);
+    finalizationPending = true;
+    pcSamplingNeedsCleanup = profiler.isPCSamplingEnabled();
+    auto enable = [&](const auto &callback) {
+      cupti::enableCallback<true>(1, subscriber, callback.first,
+                                  callback.second);
+      enabledCallbacks.push_back(callback);
+    };
+    for (size_t i = 0; i < resourceCallbackCount; ++i)
+      enable(requested[i]);
+    const auto kind = profiler.isPCSamplingEnabled()
+                          ? CUPTI_ACTIVITY_KIND_KERNEL
+                          : CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL;
+    cupti::activityEnable<true>(kind);
+    enabledActivity = kind;
+    cupti::activityRegisterCallbacks<true>(allocBuffer, completeBuffer);
+    for (size_t i = resourceCallbackCount; i < requested.size(); ++i)
+      enable(requested[i]);
+  } catch (...) {
+    // A non-null error output does not prove ownership: it may refer to an
+    // external subscriber. Retain it and fail closed without global teardown.
+    if (subscriber && !finalizationPending)
+      subscriptionOwnershipUnknown = true;
+    SdkCleanup cleanup(std::current_exception());
+    cleanup.attempt([&] { doStop(); });
+    cleanup.rethrow();
   }
-  cupti::activityRegisterCallbacks<true>(allocBuffer, completeBuffer);
-  setGraphCallbacks(subscriber, /*enable=*/true);
-  setRuntimeCallbacks(subscriber, /*enable=*/true);
-  setDriverCallbacks(subscriber, /*enable=*/true);
 }
 
 void CuptiProfiler::CuptiProfilerPimpl::doFlush() {
@@ -544,22 +580,50 @@ void CuptiProfiler::CuptiProfilerPimpl::doFlush() {
 }
 
 void CuptiProfiler::CuptiProfilerPimpl::doStop() {
-  if (profiler.isPCSamplingEnabled()) {
-    profiler.disablePCSampling();
-    CUcontext cuContext = nullptr;
-    cuda::ctxGetCurrent<false>(&cuContext);
-    if (cuContext)
-      pcSampling.finalize(cuContext);
-    setResourceCallbacks(subscriber, /*enable=*/false);
-    cupti::activityDisable<true>(CUPTI_ACTIVITY_KIND_KERNEL);
-  } else {
-    cupti::activityDisable<true>(CUPTI_ACTIVITY_KIND_CONCURRENT_KERNEL);
+  if (subscriptionOwnershipUnknown)
+    throw std::runtime_error(
+        "CUPTI subscribe failed with an unverified handle; subscription "
+        "ownership is unknown. Refusing cleanup or a new capture; use a fresh "
+        "process after resolving the external collector.");
+  SdkCleanup cleanup;
+  if (pcSamplingNeedsCleanup) {
+    cleanup.attempt([&] {
+      CUcontext cuContext = nullptr;
+      cuda::ctxGetCurrent<true>(&cuContext);
+      if (cuContext)
+        pcSampling.finalize(cuContext);
+    });
   }
-  setGraphCallbacks(subscriber, /*enable=*/false);
-  setRuntimeCallbacks(subscriber, /*enable=*/false);
-  setDriverCallbacks(subscriber, /*enable=*/false);
-  cupti::unsubscribe<true>(subscriber);
-  cupti::finalize<true>();
+  if (enabledActivity &&
+      cleanup.attempt([&] { cupti::activityDisable<true>(*enabledActivity); }))
+    enabledActivity.reset();
+  for (auto it = enabledCallbacks.begin(); it != enabledCallbacks.end();) {
+    if (cleanup.attempt([&] {
+          cupti::enableCallback<true>(0, subscriber, it->first, it->second);
+        }))
+      it = enabledCallbacks.erase(it);
+    else
+      ++it;
+  }
+  if (subscriber &&
+      cleanup.attempt([&] { cupti::unsubscribe<true>(subscriber); })) {
+    subscriber = nullptr;
+    enabledCallbacks.clear();
+  }
+  if (finalizationPending &&
+      cleanup.attempt([&] { cupti::finalize<true>(); })) {
+    // This collector uses the V1 single-subscriber API. Its successful global
+    // finalize destroys all CUPTI resources, including a failed unsubscribe.
+    // https://docs.nvidia.com/cuda/archive/11.0_GA/cupti/Cupti/r_main.html
+    // Never infer this transition from started=false or from a failed finalize.
+    subscriber = nullptr;
+    enabledCallbacks.clear();
+    enabledActivity.reset();
+    finalizationPending = false;
+    pcSamplingNeedsCleanup = false;
+    pcSampling.releaseAfterRuntimeFinalize();
+  }
+  cleanup.rethrow();
 }
 
 CuptiProfiler::CuptiProfiler() {
