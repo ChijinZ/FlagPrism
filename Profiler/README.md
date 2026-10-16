@@ -64,6 +64,8 @@ observations and invocation-associated reconstruction. See
 [semantic profiling and support boundaries](docs/semantic_profiling.md) and
 [method acceptance tests](docs/method_testing.md). Automatic-mode product qualification and independent installation results are
 tracked separately from earlier explicitly selected instrumentation tests.
+See the [current three-backend validation checkpoint](docs/qualification.md)
+for installed versions, default commands, results and measurement limits.
 
 ## Automatic internal profiling
 

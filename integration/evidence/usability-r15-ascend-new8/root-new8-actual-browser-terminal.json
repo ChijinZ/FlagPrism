@@ -1,0 +1,28 @@
+{
+  "schema": "r15-browser-actual-terminal-safe-v1",
+  "status": "pass",
+  "attempts": [
+    {
+      "attempt": "results",
+      "driver_pid": 28417,
+      "driver_start_ticks": 3557361,
+      "wrapper_pgid": 28411,
+      "driver_absent": true,
+      "wrapper_absent": true
+    },
+    {
+      "attempt": "results-v2",
+      "driver_pid": 28656,
+      "driver_start_ticks": 3563544,
+      "wrapper_pgid": 28650,
+      "driver_absent": true,
+      "wrapper_absent": true
+    }
+  ],
+  "remaining_headless_shell_or_playwright_node_processes": 0,
+  "signal_actions": 0,
+  "device_execution": false,
+  "v2_terminal_returncode": 0,
+  "v1_terminal_returncode": 1,
+  "v1_failure": "CPU navigation driver assumed raw counters were standalone files; actual original capture retains base64 in observations.json; KeyError preserved with original script/results; v2 reads exact existing encoding without product or device change"
+}

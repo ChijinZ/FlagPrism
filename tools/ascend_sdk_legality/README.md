@@ -240,7 +240,11 @@ an atomic rename for same-path tool upgrades and preserve old caches for
 upgrade verification. Both ordinary and profile use the same selected tool;
 never substitute it only for profiling.
 
-No NPU run is part of this recipe. The original ec75 plus stock SDK result is
-42/44 with two real State failures still open; see the
-[original qualification report](../../integration/evidence/usability-v3-ec75a9f/qualification-final/REPORT.md).
-The new legality compiler requires separately authorized device validation.
+No NPU run is part of this build recipe. Separately authorized device
+validation of the installed fixed compiler has since passed the
+[original failing combinations](../../integration/evidence/usability-r15-independent-finite2/),
+the [full original independent cohort](../../integration/evidence/usability-r15-ascend-main24/)
+and [two new independent mathematical kernels](../../integration/evidence/usability-r15-ascend-new8/).
+The historical ec75 plus stock SDK result remains 42/44 with two State failures;
+its [original report](../../integration/evidence/usability-v3-ec75a9f/qualification-final/REPORT.md)
+is preserved rather than relabelled as a first-pass success.

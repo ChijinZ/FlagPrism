@@ -1,0 +1,41 @@
+{
+  "GPU": false,
+  "tests": [
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 4.384506769478321,
+        "interrupted_signal": 15,
+        "returncode": 143,
+        "timed_out": false
+      },
+      "test": "SIGTERM"
+    },
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 4.385069638490677,
+        "interrupted_signal": 2,
+        "returncode": 130,
+        "timed_out": false
+      },
+      "test": "SIGINT"
+    },
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 5.0760661363601685,
+        "interrupted_signal": null,
+        "returncode": -15,
+        "timed_out": true
+      },
+      "test": "timeout"
+    }
+  ]
+}

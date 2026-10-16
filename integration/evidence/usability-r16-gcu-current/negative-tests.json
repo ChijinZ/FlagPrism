@@ -1,0 +1,92 @@
+{
+  "qualification": false,
+  "GPU": false,
+  "positive_actual_receipt_projection": true,
+  "negatives": [
+    {
+      "case": "missing_call",
+      "rejected": true,
+      "reason": "missing/extra independent numerical calls"
+    },
+    {
+      "case": "duplicate_call",
+      "rejected": true,
+      "reason": "missing/extra independent numerical calls"
+    },
+    {
+      "case": "call_order",
+      "rejected": true,
+      "reason": "duplicate/reordered original call set"
+    },
+    {
+      "case": "call_index_bool",
+      "rejected": true,
+      "reason": "invalid original call-index type"
+    },
+    {
+      "case": "input_sha",
+      "rejected": true,
+      "reason": "original numerical/seed configuration changed: input_sha256"
+    },
+    {
+      "case": "seed",
+      "rejected": true,
+      "reason": "original numerical/seed configuration changed: output_initial_sha256"
+    },
+    {
+      "case": "input_mutation",
+      "rejected": true,
+      "reason": "original numerical input/canary check failed"
+    },
+    {
+      "case": "canary",
+      "rejected": true,
+      "reason": "original numerical input/canary check failed"
+    },
+    {
+      "case": "tolerance",
+      "rejected": true,
+      "reason": "original elementwise numerical tolerance changed"
+    },
+    {
+      "case": "both_zero_witness",
+      "rejected": true,
+      "reason": "missing/zero/nonfinite original replay witness"
+    },
+    {
+      "case": "witness_mismatch",
+      "rejected": true,
+      "reason": "original per-call mathematical/replay evidence changed: non_idempotence_witness_max_abs"
+    },
+    {
+      "case": "runtime_input",
+      "rejected": true,
+      "reason": "original per-call mathematical/replay evidence changed: runtime_input_sha256"
+    },
+    {
+      "case": "state",
+      "rejected": true,
+      "reason": "original per-program side effect/replay state changed"
+    },
+    {
+      "case": "output_missing",
+      "rejected": true,
+      "reason": "actual output/binary/runtime input identity missing"
+    },
+    {
+      "case": "nonfinite_error",
+      "rejected": true,
+      "reason": "invalid numerical result diagnostic"
+    },
+    {
+      "case": "terminal_fail",
+      "rejected": true,
+      "reason": "independent numerical source did not finish successfully"
+    },
+    {
+      "case": "ledger_duplicate",
+      "rejected": true,
+      "reason": "actual independent host ledger/pid/case mismatch"
+    }
+  ]
+}

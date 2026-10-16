@@ -30,20 +30,24 @@ cannot establish non-execution. See the
 The complete patch filenames retain `v2` for compatibility with the build
 recipe; the FlagTree patch carries the current version 3 marker transport.
 
-Validation checkpoint: source `ec75a9f` has clean installation and installed CPU
-evidence on all three backends. Its native inputs match the actually compiled
-`bd61acd` build; the final reader-only refresh reuses those unchanged native
-bytes. Ascend public mixed and
-vector-loop device checks passed, including an upgrade with the original source,
-path and old cache retained. The complete independent Ascend qualification matrix
-for `ec75a9f` with the original SDK ended at 42/44, with two real State
-assertion failures still open. The isolated SDK tiling-legality compiler has
-passed CPU build, pass regressions and public driver compilation; device
-validation is still required and those failures have not been closed. See the
-[final qualification report](../../evidence/usability-v3-ec75a9f/qualification-final/REPORT.md).
-Public cases do not replace that acceptance. Exact source,
-wheel hashes, build scope and review evidence are retained in the
-[v3 engineering checkpoint](../../evidence/usability-v3-ec75a9f/README.md).
+Current validation checkpoint: component Python source `a829a331` is installed
+in the fresh Ascend environment with byte-verified native inputs from the
+actual `bd61acd` build. The isolated SDK scalar-store legality repair passed
+[public strict device checks](../../evidence/usability-r15-public-sdk-strict12/),
+the [two original failing combinations](../../evidence/usability-r15-independent-finite2/),
+and the [complete original independent cohort](../../evidence/usability-r15-ascend-main24/):
+24 ordinary combinations and 48 cold/warm default profile runs. An additional
+[two independent mathematical kernels](../../evidence/usability-r15-ascend-new8/)
+passed 8 ordinary combinations and 16 cold/warm profile runs. These are
+repaired-version results with original inputs, numerical tolerances, State
+checks and full raw/source gates; they do not rewrite first-pass history.
+
+Historical checkpoint: `ec75a9f` with the original SDK ended at 42/44 with two
+real State assertion failures. Its unchanged
+[original qualification report](../../evidence/usability-v3-ec75a9f/qualification-final/REPORT.md)
+and [v3 engineering checkpoint](../../evidence/usability-v3-ec75a9f/README.md)
+remain available. Public development cases alone were not used to close those
+failures; the current independent revalidation above supplies that evidence.
 The historical paths and build results below describe their earlier snapshots,
 not installation receipts for current sources.
 

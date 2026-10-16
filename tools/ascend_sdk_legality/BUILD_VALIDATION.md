@@ -3,7 +3,9 @@
 The actual isolated build is `/tmp/chijin-r15-sdk-scalar-legality` in Docker
 `chijin_v3.5.x`. This is CPU compiler evidence; no kernel or NPU execution was
 performed by this engineering task. Device mathematical, State, input/canary
-and full qualification criteria remain unchanged and pending.
+and full qualification criteria remained unchanged and were pending at this
+CPU-build checkpoint. Subsequent separately authorized device validation is
+linked from the [current validation status](README.md).
 
 | Material | SHA256 |
 | --- | --- |

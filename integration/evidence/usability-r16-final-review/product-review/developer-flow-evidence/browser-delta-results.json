@@ -1,0 +1,116 @@
+{
+  "page_errors": [],
+  "programs": [
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0"
+  ],
+  "visits": [
+    "1",
+    "1",
+    "1",
+    "2",
+    "1",
+    "1",
+    "1",
+    "2",
+    "1",
+    "1",
+    "1",
+    "5",
+    "1",
+    "1",
+    "1",
+    "5"
+  ],
+  "actors": [
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "program observer 1",
+    "program observer 1",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "warp 0",
+    "program observer 1",
+    "program observer 1"
+  ],
+  "worker_source_target": "38    tl.atomic_add(Calls, 1)2 retained records",
+  "worker_backlink_rows": [
+    "warp_specialization_affine.py:38:25 3 compiler source roles\ttt.atomic_rmw\tlaunch-1\t9bcfb63e8cc3\u2026\t0\twarp 0\t7\tcounter\t1\tTrue\tprimary\tverified",
+    "warp_specialization_affine.py:38:25 3 compiler source roles\ttt.atomic_rmw\tlaunch-3\t9bcfb63e8cc3\u2026\t0\twarp 0\t7\tcounter\t1\tTrue\tprimary\tverified"
+  ],
+  "records_json_url": "file:///workspace/chijin-r15-python-alignment-r2/public-smoke-r15/bundle/ai/fine_grained.json",
+  "records_json_keys": [
+    "schema_version",
+    "records",
+    "candidate_observation_status",
+    "captures",
+    "rejected",
+    "status",
+    "limits",
+    "automatic_selection_status",
+    "export_references"
+  ],
+  "raw_navigation": {
+    "ai/observations.json": {
+      "url": "file:///workspace/chijin-r15-python-alignment-r2/public-smoke-r15/bundle/ai/observations.json",
+      "type": "dict",
+      "keys": [
+        "schema_version",
+        "observations",
+        "captures"
+      ]
+    },
+    "raw/native/capture.observations.json": {
+      "url": "file:///workspace/chijin-r15-python-alignment-r2/public-smoke-r15/bundle/raw/native/capture.observations.json",
+      "type": "dict",
+      "keys": [
+        "schema_version",
+        "observations",
+        "captures"
+      ]
+    },
+    "raw/native/capture.launches.json": {
+      "url": "file:///workspace/chijin-r15-python-alignment-r2/public-smoke-r15/bundle/raw/native/capture.launches.json",
+      "type": "dict",
+      "keys": [
+        "binaries",
+        "launches",
+        "software",
+        "context",
+        "observation_request",
+        "metadata_rejections"
+      ]
+    },
+    "raw/native/capture.finalization.json": {
+      "url": "file:///workspace/chijin-r15-python-alignment-r2/public-smoke-r15/bundle/raw/native/capture.finalization.json",
+      "type": "dict",
+      "keys": [
+        "schema_version",
+        "collector_finalize_s",
+        "scope",
+        "includes_bundle_export"
+      ]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "GPU": false,
+  "authorization_sha256": "925b8cb034597a3b23fc96fb143f6a6cf34eec676cd6d71a11c024999b6ecd63",
+  "backend": "enflame",
+  "captures_max": 48,
+  "controller_sha256": "27f6f0386d1a8d0efb1c01d125eb8bda3a7022d4e359eb4082be5d164d17be67",
+  "device": 0,
+  "freeze_sha256": "0a81905568c8d0a3a9477cb7ced3fc3957a0645e391e378dc21bf8ce14486ba4",
+  "gate_sha256": "c1a71e1cfe00835a21515ecaba8d0de668daadfdece456ea1c125ec6bd674412",
+  "lifecycle_negative_tests": [
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 4.384506769478321,
+        "interrupted_signal": 15,
+        "returncode": 143,
+        "timed_out": false
+      },
+      "test": "SIGTERM"
+    },
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 4.385069638490677,
+        "interrupted_signal": 2,
+        "returncode": 130,
+        "timed_out": false
+      },
+      "test": "SIGINT"
+    },
+    {
+      "owned_descendants": 2,
+      "substitute_only": true,
+      "survivors": [],
+      "terminal": {
+        "host_process_wall_s": 5.0760661363601685,
+        "interrupted_signal": null,
+        "returncode": -15,
+        "timed_out": true
+      },
+      "test": "timeout"
+    }
+  ],
+  "lifecycle_sha256": "938d4d56ad45698d5f98360f053f33184b7c321df8f69dcfa076b6705b1016bd",
+  "manifest_sha256": "10492a70eba6e2e5c8e8f885d731a390cdd6790d0415a398b133a9a3e4c9614f",
+  "negative_rejections": 17,
+  "no_device_initialization": true,
+  "ordinary_planned": 24,
+  "original_gate_unchanged": true,
+  "owner": "qualification_r16_gcu",
+  "runner_sha256": "e50028e4c8121e67fd1a0a22e67d81fddb43b723047819478ffef6319f7ce162",
+  "source_sha256": "fdf1a3dea018caf5c84a40ccb2785f88962cf8b1cb1637751679e667a256a1bc",
+  "status": "CPU_READY_GPU_NOT_AUTHORIZED"
+}

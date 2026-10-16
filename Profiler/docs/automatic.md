@@ -19,9 +19,9 @@ For Ascend, use the complete pinned source-census patches through the source
 recipe linked below, and build/package the LLVM15 observer. The observer runs
 out of process with upstream opt; it must not be loaded into the vendor LLVM fork.
 For Enflame, use its pinned combined compiler integration and this component's
-automatic planner. Backend wheel recipes and independent installation evidence
-are being qualified in this branch; development smoke tests alone are not a
-claim that every supported compiler structure has passed product acceptance.
+automatic planner. Current installed-version results and their limits are in
+the [validation checkpoint](qualification.md). Development smoke tests alone
+are not a claim that every compiler structure has passed product acceptance.
 
 Select the installed compiler backend explicitly in multi-backend environments:
 
