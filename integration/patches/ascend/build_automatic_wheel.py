@@ -35,23 +35,34 @@ def main():
     if not integrated.exists():
         integrated.symlink_to(args.component, target_is_directory=True)
     if not (integrated / 'python/flagprism_build.py').is_file():
-        raise ValueError('Component source must include python/flagprism_build.py')
+        raise ValueError(
+            'Component source must include python/flagprism_build.py')
     os.chdir(args.flagtree)
     sys.path.insert(0, str(args.flagtree))
-    os.environ.update(TRITON_BUILD_FLAGPRISM='ON', TRITON_BUILD_PROTON='OFF',
-                      FLAGPRISM_SOURCE_DIR=str(args.component), TRITON_OFFLINE_BUILD='ON',
-                      FLAGTREE_BACKEND='ascend', TORCH_DEVICE_BACKEND_AUTOLOAD='0',
-                      USE_FLAGCX='OFF', USE_FLIR='OFF', USE_FLAGPRISM='OFF')
+    os.environ.update(TRITON_BUILD_FLAGPRISM='ON',
+                      TRITON_BUILD_PROTON='OFF',
+                      FLAGPRISM_SOURCE_DIR=str(args.component),
+                      TRITON_OFFLINE_BUILD='ON',
+                      FLAGTREE_BACKEND='ascend',
+                      TORCH_DEVICE_BACKEND_AUTOLOAD='0',
+                      USE_FLAGCX='OFF',
+                      USE_FLIR='OFF',
+                      USE_FLAGPRISM='OFF')
     import setuptools
     from setuptools import Distribution
     from setuptools.command.build_py import build_py
     original_popen = subprocess.Popen
 
     def no_rebuild(command, *positional, **kwargs):
-        words = shlex.split(command) if isinstance(command, str) else list(command)
-        if kwargs.get('shell') or (words and Path(str(words[0])).name in {'bash', 'sh', 'zsh'}) or any(
-                Path(str(word)).name in {'cmake', 'ninja', 'make'} for word in words):
-            raise RuntimeError('Wheel assembly must not configure/build a different native library')
+        words = shlex.split(command) if isinstance(command,
+                                                   str) else list(command)
+        if kwargs.get('shell') or (words and Path(str(
+                words[0])).name in {'bash', 'sh', 'zsh'}) or any(
+                    Path(str(word)).name in {'cmake', 'ninja', 'make'}
+                    for word in words):
+            raise RuntimeError(
+                'Wheel assembly must not configure/build a different native library'
+            )
         return original_popen(command, *positional, **kwargs)
 
     subprocess.Popen = no_rebuild
@@ -101,15 +112,17 @@ def main():
     # Header bytes are part of the generated launcher's cache identity. Always
     # package this source snapshot's canonical ABI header, even with reused
     # matching runtime libraries.
-    shutil.copy2(args.component / 'Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h',
-                 stage / 'flagtree/profiler/_cann_launch_receipt.h')
+    shutil.copy2(
+        args.component /
+        'Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h',
+        stage / 'flagtree/profiler/_cann_launch_receipt.h')
     core_target = stage / 'triton/_C'
     core_target.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.core_library, core_target / 'libtriton.so')
     # Existing documented standalone frontend tool is a matching compiler build
     # artifact too; package it rather than relying on the developer checkout.
     tools = args.core_library.parent / 'third_party/ascend/bin'
-    for name in ('triton-mlir-opt',):
+    for name in ('triton-mlir-opt', ):
         if (tools / name).is_file():
             shutil.copy2(tools / name, core_target / name)
     plugin_target = stage / 'flagtree/profiler/lib'
@@ -125,35 +138,93 @@ def main():
     assert len(paths) == 1, paths
     files = {}
     with zipfile.ZipFile(paths[0]) as archive:
-        for path in list(stage.rglob('*.so')) + list(stage.rglob('*.h')) + [stage / 'triton/backends/ascend/compiler.py', stage / 'flagtree/__init__.py', stage / 'triton/FLAGTREE_BACKEND']:
+        for path in list(stage.rglob('*.so')) + list(stage.rglob('*.h')) + [
+                stage / 'triton/backends/ascend/compiler.py', stage /
+                'flagtree/__init__.py', stage / 'triton/FLAGTREE_BACKEND'
+        ]:
             relative = path.relative_to(stage).as_posix()
             assert archive.read(relative) == path.read_bytes(), relative
             files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        # Both public and Ascend-dispatched JIT paths are executed at runtime.
+        # Compare against intended source, not merely a self-consistent stage.
+        parent_python = {
+            'triton/runtime/jit.py': 'python/triton/runtime/jit.py',
+            'triton/spec/ascend/runtime/jit.py':
+            'python/triton/spec/ascend/runtime/jit.py',
+            'triton/backends/ascend/compiler.py':
+            'third_party/ascend/backend/compiler.py',
+            'triton/backends/ascend/driver.py':
+            'third_party/ascend/backend/driver.py',
+            'triton/backends/ascend/utils.py':
+            'third_party/ascend/backend/utils.py',
+            'flagtree/_flagprism.py': 'python/flagtree/_flagprism.py',
+        }
+        parent_python_sha256 = {}
+        for entry, relative in parent_python.items():
+            data = (args.flagtree / relative).read_bytes()
+            assert (stage / entry).read_bytes() == data, entry
+            assert archive.read(entry) == data, entry
+            parent_python_sha256[entry] = hashlib.sha256(data).hexdigest()
         python_count = 0
         component_python_sha256 = {}
         for component in ('Profiler', 'Debugger'):
-            source = args.component / component / 'python' / ('flagtree_' + component.lower())
+            source = args.component / component / 'python' / (
+                'flagtree_' + component.lower())
             for path in source.rglob('*.py'):
                 if '__pycache__' in path.parts:
                     continue
-                entry = 'flagtree/' + component.lower() + '/' + path.relative_to(source).as_posix()
+                entry = 'flagtree/' + component.lower(
+                ) + '/' + path.relative_to(source).as_posix()
                 assert archive.read(entry) == path.read_bytes(), entry
-                component_python_sha256[entry] = hashlib.sha256(path.read_bytes()).hexdigest()
+                component_python_sha256[entry] = hashlib.sha256(
+                    path.read_bytes()).hexdigest()
                 python_count += 1
         plugin_entry = 'flagtree/profiler/lib/' + args.plugin.name
         assert archive.read(plugin_entry) == args.plugin.read_bytes()
-    result = {'wheel': str(paths[0]), 'wheel_sha256': hashlib.sha256(paths[0].read_bytes()).hexdigest(),
-              'files': files, 'component_python_files_verified': python_count,
-              'component_python_sha256': component_python_sha256,
-              'component_source_snapshot_sha256': hashlib.sha256(json.dumps(component_python_sha256, sort_keys=True).encode()).hexdigest(),
-              'flagtree_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=args.flagtree, text=True).strip(),
-              'flagtree_tracked_diff_sha256': hashlib.sha256(subprocess.check_output(['git', 'diff', '--binary'], cwd=args.flagtree)).hexdigest(),
-              'plugin_sources': {name: hashlib.sha256((args.component / 'Profiler/llvm' / name).read_bytes()).hexdigest()
-                                 for name in ('AscendLateObserver.cpp', 'CMakeLists.txt')},
-              'native_provenance': 'packaging copies supplied artifacts without compiling; see their external native build/source audit',
-              'plugin': str(args.plugin), 'plugin_source': str(args.component / 'Profiler/llvm'),
-              'flagtree': str(args.flagtree), 'component': str(args.component)}
-    (args.output / 'result.json').write_text(json.dumps(result, indent=2) + '\n')
+    result = {
+        'wheel':
+        str(paths[0]),
+        'wheel_sha256':
+        hashlib.sha256(paths[0].read_bytes()).hexdigest(),
+        'files':
+        files,
+        'component_python_files_verified':
+        python_count,
+        'component_python_sha256':
+        component_python_sha256,
+        'parent_python_sha256':
+        parent_python_sha256,
+        'component_source_snapshot_sha256':
+        hashlib.sha256(
+            json.dumps(component_python_sha256,
+                       sort_keys=True).encode()).hexdigest(),
+        'flagtree_commit':
+        subprocess.check_output(['git', 'rev-parse', 'HEAD'],
+                                cwd=args.flagtree,
+                                text=True).strip(),
+        'flagtree_tracked_diff_sha256':
+        hashlib.sha256(
+            subprocess.check_output(['git', 'diff', '--binary'],
+                                    cwd=args.flagtree)).hexdigest(),
+        'plugin_sources': {
+            name:
+            hashlib.sha256((args.component / 'Profiler/llvm' /
+                            name).read_bytes()).hexdigest()
+            for name in ('AscendLateObserver.cpp', 'CMakeLists.txt')
+        },
+        'native_provenance':
+        'packaging copies supplied artifacts without compiling; see their external native build/source audit',
+        'plugin':
+        str(args.plugin),
+        'plugin_source':
+        str(args.component / 'Profiler/llvm'),
+        'flagtree':
+        str(args.flagtree),
+        'component':
+        str(args.component)
+    }
+    (args.output /
+     'result.json').write_text(json.dumps(result, indent=2) + '\n')
     print(json.dumps(result, indent=2))
 
 

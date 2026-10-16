@@ -462,3 +462,18 @@ diff --git a/python/triton/runtime/jit.py b/python/triton/runtime/jit.py
  
          key = compute_cache_key(kernel_key_cache, specialization, options)
          kernel = kernel_cache.get(key, None)
+diff --git a/python/triton/spec/ascend/runtime/jit.py b/python/triton/spec/ascend/runtime/jit.py
+--- a/python/triton/spec/ascend/runtime/jit.py
++++ b/python/triton/spec/ascend/runtime/jit.py
+@@ -724,6 +724,11 @@
+         # specialization is list[tuple[str, Any]], where first element of tuple is
+         # the type and the second parameter is the 'specialization' value.
+         bound_args, specialization, options = binder(*args, **kwargs)
++        normalize_options = getattr(backend, "normalize_launch_options", None)
++        if normalize_options is not None:
++            options = normalize_options(options)
++            # Freeze the same effective values for the cache key and compile.
++            kwargs.update(options)
+ 
+         key = compute_cache_key(kernel_key_cache, specialization, options)
+         kernel = kernel_cache.get(key, None)

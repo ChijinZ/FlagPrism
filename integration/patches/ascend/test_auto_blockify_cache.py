@@ -24,8 +24,8 @@ def cache_placeholder(x):
     return x
 
 
-@pytest.fixture
-def jit_cache(monkeypatch):
+@pytest.fixture(params=['generic', 'ascend'])
+def jit_cache(request, monkeypatch):
     import torch  # noqa: F401
     import torch_npu
     import triton.runtime.jit
@@ -33,13 +33,17 @@ def jit_cache(monkeypatch):
     parent = os.environ.get('FLAGPRISM_TEST_ASCEND_PARENT')
     if parent:
         parent = Path(parent)
-        jit_path = parent / 'python/triton/runtime/jit.py'
+        jit_path = parent / ('python/triton/runtime/jit.py'
+                             if request.param == 'generic' else
+                             'python/triton/spec/ascend/runtime/jit.py')
         backend_path = parent / 'third_party/ascend/backend/compiler.py'
     else:
-        jit_path = Path(triton.runtime.jit.__file__)
+        jit_path = (Path(triton.__file__).parent /
+                    'runtime/jit.py' if request.param == 'generic' else Path(
+                        triton.runtime.jit.__file__))
         backend_path = Path(triton.backends.ascend.compiler.__file__)
-    jit = load('triton.runtime._cache_normalization_test', jit_path,
-               monkeypatch)
+    jit = load('triton.runtime._cache_normalization_test_' + request.param,
+               jit_path, monkeypatch)
     module = load('triton.backends.ascend._cache_normalization_test',
                   backend_path, monkeypatch)
     backend = module.AscendBackend(module.GPUTarget('npu', 'Ascend910B', 0))
