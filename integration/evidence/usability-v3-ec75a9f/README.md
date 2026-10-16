@@ -32,17 +32,28 @@ finite affected-source and final-install receipt review. Confirmed findings are
 closed. Tool acceptance proves the requested configuration, but the tool does
 not expose the actual resolved model version. See `review-state.json`.
 
-The independent Ascend r13 cohort is now running on the final ec75 installation:
-24 original ordinary configurations, then all baseline-eligible configurations
-with cold/warm default profiling, plus separately reported strong state-writer
-regressions. Its independent gate passed two actual public positives, 35
-structural forgery negatives, eight layout positives and 63 boundary negatives.
-Private math and verifier sources are not included here; only explicitly safe
-aggregate/freeze metadata is copied. The snapshot intentionally records the
-pre-authorization state; execution authorization is a separate later file.
+The independent Ascend r13 main cohort naturally completed with **22 eligible
+and two ordinary State-assertion failures out of 24 original configurations**.
+Of 44 actual cold/warm profiles, **42 passed the full gate and two failed the
+original scalar-State assertion in the real CLI**, without timeouts or retries.
+One reproduces the historical failure on the same exact configuration: its
+current ordinary run and warm profile passed, while the cold profile failed.
+The historical failure is preserved; no root cause has been established, and
+this checkpoint does **not** meet the overall stable-usability acceptance.
 
-The preceding cohort's original scalar-state failure remains preserved and
-unexplained. Public cases and code reviews do not erase it or substitute for the
-new complete matrix. Large archives, SDK libraries/headers, private qualification
+A separately frozen new mathematical kernel and stronger known-case regressions
+are being assessed; their results do not remove the main failures. The independent
+gate passed two actual public positives, 35 structural forgery negatives, eight
+layout positives and 63 boundary negatives. A further same-byte CPU supplement
+checked the actual generated LLVM inputs against executed driver arguments for
+all 42 successful main bundles (52 generated inputs, 2,389,666 bytes). The two
+CLI failures lack complete exported compiler bundles and are excluded from that
+supplement, rather than counted as passes. Original results and raw evidence
+remain unchanged. Private math and verifier sources are not included here; only
+explicitly safe aggregate/freeze metadata is copied. The snapshot intentionally
+records the pre-authorization state; execution authorization is a separate later
+file.
+
+Large archives, SDK libraries/headers, private qualification
 code, credentials and caches are excluded from Git. `index.json` records original
 workspace evidence paths and SHA-256 values. No paper or Study was edited.
