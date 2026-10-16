@@ -1,0 +1,176 @@
+{
+  "nvidia": {
+    "status": "pass",
+    "source_commit": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+    "run_exit": "0",
+    "archive_sha256": "002d6e0503b35f1d9dc1b768abf3b91f83a496c46454350da99e88974d77847e",
+    "archive_bytes": 746418,
+    "members": 216,
+    "files_sha_verified": 215,
+    "capture_bundles": [
+      {
+        "path": "result-default/loop-0/ai/observations.json",
+        "captures": 1,
+        "observations": 5
+      },
+      {
+        "path": "result-default/loop-1/ai/observations.json",
+        "captures": 1,
+        "observations": 7
+      },
+      {
+        "path": "result-default/loop-3/ai/observations.json",
+        "captures": 1,
+        "observations": 7
+      },
+      {
+        "path": "result-default/loop-7/ai/observations.json",
+        "captures": 1,
+        "observations": 7
+      },
+      {
+        "path": "result-default/reduction/ai/observations.json",
+        "captures": 1,
+        "observations": 7
+      }
+    ],
+    "total_capture_bundles": 5,
+    "total_captures": 5,
+    "phases": [
+      {
+        "phase": "default",
+        "exit": 0,
+        "pid": 18966
+      }
+    ]
+  },
+  "gcu": {
+    "status": "pass",
+    "source_commit": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+    "run_exit": "0",
+    "archive_sha256": "0da010a94b71ea722f00310c8598307cf03449cc6c87cd4bfb4127d8a3ea74e0",
+    "archive_bytes": 2615101,
+    "members": 280,
+    "files_sha_verified": 279,
+    "capture_bundles": [
+      {
+        "path": "result-after-rejection/loop-2/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-after-rejection/loop-5/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-after-rejection/reduction/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/loop-2/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/loop-5/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/reduction/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      }
+    ],
+    "total_capture_bundles": 6,
+    "total_captures": 6,
+    "phases": [
+      {
+        "phase": "baseline",
+        "exit": 0,
+        "pid": 353104
+      },
+      {
+        "phase": "default",
+        "exit": 0,
+        "pid": 353436
+      }
+    ],
+    "real_metadata_negatives": {
+      "status": "prelaunch_negatives_pass",
+      "pid": 353934,
+      "native": "/workspace/chijin-final-admission-fix/venv/lib/python3.12/site-packages/flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so",
+      "source_metadata_path": "/workspace/chijin-final-admission-fix/functional/result-default/loop-2/ai/execution.json",
+      "source_metadata_sha256": "6cc5541cea1e305bdd32d8c041b99b716a51a57f936d0e1a6846a23170c4971a",
+      "compiled_layout": "gcu_site_census_v1",
+      "negative_kernel_launches": 0,
+      "negative_cases": [
+        {
+          "layout": "",
+          "rejected": "GCU census requires actual grid and matching compiler layout"
+        },
+        {
+          "layout": "unknown",
+          "rejected": "GCU census requires actual grid and matching compiler layout"
+        },
+        {
+          "layout": "selected_dynamic_timeline_v1",
+          "rejected": "GCU census requires actual grid and matching compiler layout"
+        }
+      ]
+    },
+    "negative_recovery_exit": "0"
+  },
+  "ascend": {
+    "status": "pass",
+    "source_commit": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+    "run_exit": "0",
+    "archive_sha256": "3b5683f06a265a2e89fc07f66900f10790561538d38f085097afa416a0335158",
+    "archive_bytes": 61051684,
+    "members": 276,
+    "files_sha_verified": 275,
+    "capture_bundles": [
+      {
+        "path": "result-default/dynamic2/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/dynamic5/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/fused/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/matrix/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      },
+      {
+        "path": "result-default/reduced/ai/observations.json",
+        "captures": 1,
+        "observations": 8
+      }
+    ],
+    "total_capture_bundles": 5,
+    "total_captures": 5,
+    "phases": [
+      {
+        "phase": "baseline",
+        "exit": 0,
+        "pid": 1744972
+      },
+      {
+        "phase": "default",
+        "exit": 0,
+        "pid": 1745963
+      }
+    ]
+  }
+}

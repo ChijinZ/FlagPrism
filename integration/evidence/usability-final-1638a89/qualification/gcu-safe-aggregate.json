@@ -1,0 +1,1152 @@
+{
+  "backend": "enflame",
+  "main": {
+    "schema": "independent-r11-main-cohort-aggregate-v1",
+    "backend": "enflame",
+    "product_revision": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+    "registered_baselines": 24,
+    "baseline_eligible": 24,
+    "baseline_ineligible": 0,
+    "registered_profile_slots": 48,
+    "attempted_profiles": 48,
+    "original_profile_failures_preserved": true,
+    "derived_status_counts": {
+      "pass": 48
+    },
+    "all_available_original_bundles_unchanged": 48,
+    "actual_profile_calls": 64,
+    "max_complete_bundle_bytes": 23149634,
+    "max_complete_finalize_export_s": 0.5416472125798464,
+    "max_first_call_compile_launch_sync_wall_s": 7.373652806505561,
+    "max_cold_first_call_compile_launch_sync_wall_s": 7.373652806505561,
+    "ordinary_compile_launch_sync_max_s": 2.7285061944276094,
+    "compiler_only_duration_s": null,
+    "measurement_scope": "actual user host compile+launch+synchronize wall; separate compiler-only time not retained",
+    "legal_output_hash_different_calls": 0,
+    "profiles": [
+      {
+        "index": 0,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.9664954096078873,
+          0.0025879740715026855
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17984678,
+        "complete_finalize_export_s": 0.3503919839859009,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 1,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.9833400268107653,
+          0.0025981534272432327
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17946486,
+        "complete_finalize_export_s": 0.3505015857517719,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 2,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.625218501314521,
+          0.002009935677051544
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17985971,
+        "complete_finalize_export_s": 0.35188248939812183,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 3,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.9819407798349857,
+          0.0018813256174325943
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17947616,
+        "complete_finalize_export_s": 0.341614319011569,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 4,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.676234595477581,
+          0.002300310879945755
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17987542,
+        "complete_finalize_export_s": 0.35407859086990356,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 5,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.9847092423588037,
+          0.0021767131984233856
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17936974,
+        "complete_finalize_export_s": 0.3431090619415045,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 6,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.6916445400565863,
+          0.002044983208179474
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17988669,
+        "complete_finalize_export_s": 0.3543753158301115,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 7,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.992265559732914,
+          0.0024459268897771835
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17937531,
+        "complete_finalize_export_s": 0.3477935828268528,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 8,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          6.588066704571247
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 22873624,
+        "complete_finalize_export_s": 0.4615480713546276,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 9,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0496814660727978
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 22837205,
+        "complete_finalize_export_s": 0.46373825147747993,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 10,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          5.053914522752166
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20367447,
+        "complete_finalize_export_s": 0.5088121592998505,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 11,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0313704144209623
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20329778,
+        "complete_finalize_export_s": 0.42580626532435417,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 12,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          7.373652806505561
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 23003922,
+        "complete_finalize_export_s": 0.5416472125798464,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 13,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.056496700271964
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 22966349,
+        "complete_finalize_export_s": 0.5334400180727243,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 14,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          6.8883173409849405
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 23149634,
+        "complete_finalize_export_s": 0.4721855092793703,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 15,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0614791233092546
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 23111975,
+        "complete_finalize_export_s": 0.5283573996275663,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 16,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.3904042690992355
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13697887,
+        "complete_finalize_export_s": 0.22592085227370262,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 17,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9859693925827742
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13660976,
+        "complete_finalize_export_s": 0.228905675932765,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 18,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.4602769520133734
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13700008,
+        "complete_finalize_export_s": 0.23141531459987164,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 19,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9894926585257053
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13662405,
+        "complete_finalize_export_s": 0.2337155118584633,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 20,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.492762865498662
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13699363,
+        "complete_finalize_export_s": 0.23720739595592022,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 21,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9805627893656492
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13661434,
+        "complete_finalize_export_s": 0.22981016151607037,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 22,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.5135389398783445
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13702496,
+        "complete_finalize_export_s": 0.2322486098855734,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 23,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9857750739902258
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 13665637,
+        "complete_finalize_export_s": 0.22859697602689266,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 24,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.3079162538051605
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12561927,
+        "complete_finalize_export_s": 0.22573761455714703,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 25,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9807766545563936
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12523461,
+        "complete_finalize_export_s": 0.22020144388079643,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 26,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.3261080868542194
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12564121,
+        "complete_finalize_export_s": 0.22125401720404625,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 27,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9840901549905539
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12526572,
+        "complete_finalize_export_s": 0.21800906211137772,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 28,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.3651019521057606
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12562974,
+        "complete_finalize_export_s": 0.2218674886971712,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 29,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9777634274214506
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12517951,
+        "complete_finalize_export_s": 0.21898195520043373,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 30,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          3.4307198636233807
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12559412,
+        "complete_finalize_export_s": 0.21923904307186604,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 31,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "reduction",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          0.9898042231798172
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 12528922,
+        "complete_finalize_export_s": 0.22067118808627129,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 32,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          6.238750295713544
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20820852,
+        "complete_finalize_export_s": 0.43420522287487984,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 33,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0360913500189781
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20790566,
+        "complete_finalize_export_s": 0.4361361600458622,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 34,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          4.180717451497912
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 18271030,
+        "complete_finalize_export_s": 0.3033619895577431,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 35,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0139500461518764
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 18225960,
+        "complete_finalize_export_s": 0.30040491186082363,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 36,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          6.703244002535939
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20950434,
+        "complete_finalize_export_s": 0.4435799680650234,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 37,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0338558796793222
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20920338,
+        "complete_finalize_export_s": 0.44072023406624794,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 38,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          5.9302795603871346
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20994333,
+        "complete_finalize_export_s": 0.43880775943398476,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 39,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "matrix",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 1,
+        "compile_launch_sync_wall_s": [
+          1.0242456328123808
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 20957029,
+        "complete_finalize_export_s": 0.4364384859800339,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 40,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.873516032472253,
+          0.002148471772670746
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17926798,
+        "complete_finalize_export_s": 0.34651091508567333,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 41,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.991119921207428,
+          0.002133723348379135
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17889637,
+        "complete_finalize_export_s": 0.34236778505146503,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 42,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.857822334393859,
+          0.001974174752831459
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17929290,
+        "complete_finalize_export_s": 0.34343429654836655,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 43,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 0,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.9923882652074099,
+          0.0023045316338539124
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17892089,
+        "complete_finalize_export_s": 0.34338195621967316,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 44,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.904750579968095,
+          0.002186112105846405
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17930018,
+        "complete_finalize_export_s": 0.35334901325404644,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 45,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 0,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.988473117351532,
+          0.0026468709111213684
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17892759,
+        "complete_finalize_export_s": 0.34448178857564926,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 46,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "cold",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          3.938470672816038,
+          0.0019904933869838715
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17932058,
+        "complete_finalize_export_s": 0.3519840519875288,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      },
+      {
+        "index": 47,
+        "status": "pass",
+        "original_bundle_unchanged": true,
+        "category": "pointwise",
+        "shape_index": 1,
+        "config_index": 1,
+        "repetition": "warm",
+        "actual_calls": 2,
+        "compile_launch_sync_wall_s": [
+          0.9878677763044834,
+          0.002031223848462105
+        ],
+        "baseline_cold_compile_budget_s": 120,
+        "complete_bundle_bytes": 17894269,
+        "complete_finalize_export_s": 0.34263369254767895,
+        "enforced_cli_deadline_s": {
+          "startup": 120,
+          "compile": 120,
+          "export": 60
+        }
+      }
+    ]
+  },
+  "original_failures_preserved": true,
+  "overall_all_backend_qualification_pass": false,
+  "old_failure_regression": {
+    "profile_count": 16,
+    "original_gate_statuses": {
+      "pass": 16
+    },
+    "actual_terminal_returncodes": {
+      "not-retained-here": 16
+    },
+    "max_complete_bundle_bytes": 27172743,
+    "max_complete_finalize_export_s": 0.6229592282325029,
+    "max_first_call_compile_launch_sync_wall_s": 4.253686228767037,
+    "max_cold_first_call_compile_launch_sync_wall_s": 4.253686228767037,
+    "compiler_only_duration_s": null,
+    "measurement_scope": "actual user host compile+launch+synchronize; separate compiler-only time not retained",
+    "cli_deadline_seconds": [
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      },
+      {
+        "startup": 120,
+        "compile": 120,
+        "export": 60
+      }
+    ]
+  }
+}

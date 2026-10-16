@@ -1,0 +1,82 @@
+{
+  "state": "three_independent_reviews_complete_confirmed_findings_closed_qualification_incomplete",
+  "started_at_utc": "2026-10-16T10:27:46.766247+00:00",
+  "required_reviewers": 3,
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "xhigh",
+  "requested_fork_turns": "none",
+  "final_source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+  "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+  "qualification_freeze_commits": [
+    "8975cd9",
+    "916674b"
+  ],
+  "qualification_overall_pass": false,
+  "known_open_issue": "Ascend 1/46 original eligible profile state assertion failed; original state values unavailable; repeated exact/public controls did not reproduce; not closed.",
+  "agents": [
+    {
+      "seat": "C1",
+      "tool": "collaboration.spawn_agent",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "requested_fork_turns": "none",
+      "requested_task_name": "final_sol61_c1_compiler",
+      "accepted_tool_response": {
+        "task_name": "/root/final_sol61_c1_compiler"
+      },
+      "actual_model_exposed_by_tool": null,
+      "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+      "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+      "report": "C1-report.md",
+      "state": "review_and_affected_delta_complete",
+      "report_sha256": "77d0102ea2b615b2276db7eded7b7139e8124e3a5467b143a3ccf40be9d536de",
+      "delta_report": "C1-delta-1638a89.md",
+      "delta_sha256": "67a0dbbb71cc37bfc9f4b1dc6fac3ce6373a4130748e7e74913dce3f63cad38c"
+    },
+    {
+      "seat": "C2",
+      "tool": "collaboration.spawn_agent",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "requested_fork_turns": "none",
+      "requested_task_name": "final_sol61_c2_runtime",
+      "accepted_tool_response": {
+        "task_name": "/root/final_sol61_c2_runtime"
+      },
+      "actual_model_exposed_by_tool": null,
+      "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+      "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+      "report": "C2-report.md",
+      "state": "review_and_affected_delta_complete",
+      "report_sha256": "cc082121c5e87206760f9f29bfe710504ad0777b54fe82f7f9f4255515809687",
+      "delta_report": "C2-delta-1638a89.md",
+      "delta_sha256": "aff841ebdd44d87d769ef2c0e25e05a0a992f218db7be43488bf461990bf9b5e"
+    },
+    {
+      "seat": "C3",
+      "tool": "collaboration.spawn_agent",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "requested_fork_turns": "none",
+      "requested_task_name": "final_sol61_c3_delivery",
+      "accepted_tool_response": {
+        "task_name": "/root/final_sol61_c3_delivery"
+      },
+      "actual_model_exposed_by_tool": null,
+      "source_commit": "0f6e1da62d6b789c9742e526d6bfc95274b8b649",
+      "runtime_package_commit": "ce00df63828c5e657c0307d7b69c99706dc12d49",
+      "report": "C3-report.md",
+      "state": "review_and_affected_delta_complete",
+      "report_sha256": "3e50f230c63e4d513a204f92a2150842a882c2c6415658224ed639e5b25dfa97",
+      "delta_report": "C3-delta-1638a89.md",
+      "delta_sha256": "14e82df2da180079e69e2defcb9d29e303e189a267d83d1227673e721c2611a6"
+    }
+  ],
+  "model_evidence_limit": "Tool accepted the explicit requested model/reasoning/fork configuration and returned task names. Tool does not expose actual resolved model/version; no self-report used as proof.",
+  "fix_source_commit": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+  "confirmed_findings": {
+    "C1": "minor default census documentation closed by independent delta",
+    "C2": "major compiled/runtime GCU layout admission bypass closed by independent static and new installed native/CPU/hardware receipt delta",
+    "C3": "major implicit CANN external counter replay and minor patch sequence closed by independent static and new installed CPU/native/hardware receipt delta"
+  }
+}

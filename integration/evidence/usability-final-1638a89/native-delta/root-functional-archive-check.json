@@ -1,0 +1,27 @@
+{
+  "scope": "offline existing evidence byte audit only; no device/test execution",
+  "source_commit": "1638a899d80c2ff134efbdb703aa695dbb39c39d",
+  "checks": {
+    "nvidia": {
+      "archive_sha256": "002d6e0503b35f1d9dc1b768abf3b91f83a496c46454350da99e88974d77847e",
+      "archive_bytes": 746418,
+      "indexed_files_verified": 215,
+      "captures": 5,
+      "status": "pass"
+    },
+    "gcu": {
+      "archive_sha256": "0da010a94b71ea722f00310c8598307cf03449cc6c87cd4bfb4127d8a3ea74e0",
+      "archive_bytes": 2615101,
+      "indexed_files_verified": 279,
+      "captures": 6,
+      "status": "pass"
+    },
+    "ascend": {
+      "archive_sha256": "3b5683f06a265a2e89fc07f66900f10790561538d38f085097afa416a0335158",
+      "archive_bytes": 61051684,
+      "indexed_files_verified": 275,
+      "captures": 5,
+      "status": "pass"
+    }
+  }
+}
