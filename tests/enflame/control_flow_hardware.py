@@ -4,12 +4,9 @@ No held-out mathematical source is used here. Kernels are ordinary Triton; the
 outer runner uses only the public automatic session API. Run in booked Docker.
 """
 import argparse
-import base64
 from collections import Counter
-import hashlib
 import json
 from pathlib import Path
-import struct
 import time
 
 import torch
@@ -17,6 +14,7 @@ import torch_gcu  # noqa: F401
 import triton
 import triton.language as tl
 import flagtree.profiler as profiler
+from automatic_hardware import validate_census_bundle, read_view
 
 
 @triton.jit(do_not_specialize=['steps'])
@@ -61,10 +59,8 @@ def weighted_memory_loop(X, A, B, Y, State, N, steps, BLOCK: tl.constexpr):
 
 
 def inspect_bundle(bundle):
-    fine = json.loads((bundle / 'ai/fine_grained.json').read_text())
-    raw = json.loads((bundle / 'ai/observations.json').read_text())
-    plans = json.loads(
-        (bundle / 'ai/observation_plan.json').read_text())['plans']
+    raw, cells, summaries, fine = validate_census_bundle(bundle, 'enflame')
+    plans = read_view(bundle, 'observation_plan.json', raw)['plans']
     assert len(plans) == 1 and len(raw['captures']) == 2
     plan = plans[0]['plan']
     assert plan['max_sites'] == 8 and plan['policy_version'] == 4
@@ -77,32 +73,16 @@ def inspect_bundle(bundle):
     assert all(row['coverage_status'] == 'direct_representative'
                for row in loop_regions)
     records = fine['records']
-    assert all(
-        row['source_locations'] and row['operation']
-        and row['native_event_ids'] and row['association_status'] == 'verified'
-        and row['program'] == 0 and row['duration_ns'] is None
-        and row['clock']['domain'] == 'enflame.sdk.global_timer'
-        for row in records)
+    # Source counters have no timer or native timing-event join requirement.
     visits = []
     for steps, capture in zip((2, 5), raw['captures']):
-        assert capture['capture_status'] == 'decoded' and capture[
-            'decode_error'] is None
-        assert not capture['counter_saturated']
-        payload = base64.b64decode(capture['raw_base64'])
-        assert hashlib.sha256(payload).hexdigest() == capture['raw_sha256']
-        written, cap, dropped, flags, stride, _, attempted, reserved = struct.unpack_from(
-            '<8I', payload)
-        assert written == attempted and cap == 256 and stride == 64 and dropped == flags == reserved == 0
-        for index in range(written):
-            assert struct.unpack_from(
-                '<IIQQ', payload,
-                32 + index * 64 + 40) == (0, index, index, 0x465044594e563031)
         selected = [
             row for row in records
             if row['capture_id'] == capture['capture_id']
         ]
-        assert len(selected) == written
-        counts = Counter(row['site'] for row in selected)
+        counts = Counter()
+        for row in selected:
+            counts[row['site']] += row['count']
         by_region = []
         for region in loop_regions:
             direct = set(region['direct_sites']) & set(
@@ -117,12 +97,17 @@ def inspect_bundle(bundle):
                 'visits': expected
             })
         visits.append({
-            'steps': steps,
-            'written': written,
-            'attempted': attempted,
-            'dropped': dropped,
-            'site_counts': dict(counts),
-            'regions': by_region
+            'steps':
+            steps,
+            'normalized_rows':
+            len(selected),
+            'census':
+            next(row for row in summaries
+                 if row['capture_id'] == capture['capture_id']),
+            'site_counts':
+            dict(counts),
+            'regions':
+            by_region
         })
     report = json.loads((bundle / 'report/report.json').read_text())
     for binary in report['binaries']:

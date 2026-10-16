@@ -13,6 +13,7 @@ import triton
 import triton.language as tl
 import flagtree.profiler as profiler
 from automatic_hardware import validate_bundle
+from source_census_assertions import validate_bundle as validate_census_bundle
 
 
 @triton.jit
@@ -113,16 +114,17 @@ def main(output):
         assert calls.cpu().tolist() == counts  # no hidden application replay
         assert torch.equal(x, original)
         records, capture = validate_bundle(base)
-        fine = json.loads(
-            (base / 'ai/fine_grained.json').read_text())['records']
-        # All measured work belongs to selected program zero. Other programs'
-        # tensor computations run normally but are never claimed as observed.
-        assert {row['program'] for row in fine} == {0}, fine
+        _, cells, summaries, fine_view = validate_census_bundle(base, 'nvidia')
+        fine = fine_view['records']
+        # The lowest program with primary visits is a presentation choice;
+        # every actual grid program remains in the raw census.
+        active = [program for program, count in enumerate(counts) if count]
+        assert summaries[0]['selected_program'] == min(active)
+        assert summaries[0]['active_programs'] == active
+        assert {row['program'] for row in fine} == {min(active)}
         assert len({row['invocation_id'] for row in fine}) == 1
         operations = {row['operation'] for row in fine}
-        assert 'tt.get_program_id' in operations
-        assert any(op.startswith('arith.cmp') for op in operations)
-        assert not {'tt.load', 'tt.store', 'tt.atomic_rmw'} & operations
+        assert 'tt.load' in operations and 'tt.store' in operations
         assert len({(loc.get('file'), loc.get('line'))
                     for row in fine
                     for loc in row['source_locations']}) >= 2
@@ -186,7 +188,7 @@ def main(output):
             for i in r['selected_candidates']
         ]
         visits = {
-            site: sum(r['site'] == site for r in records)
+            site: sum(r['count'] for r in records if r['site'] == site)
             for site in scopes
         }
         assert visits and all(count == loops

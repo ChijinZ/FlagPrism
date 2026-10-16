@@ -1,16 +1,13 @@
-"""Development evidence for bounded late-LLVM automatic checkpoint budgets.
+"""Development evidence for bounded default automatic census storage.
 
 Two ordinary programs intentionally exercise different compiler-generated loops.
 This is an engineering regression, not an independent acceptance holdout.
 """
 import argparse
-import base64
-from collections import Counter
 import hashlib
 import json
 import os
 from pathlib import Path
-import struct
 import time
 
 os.environ['TORCH_DEVICE_BACKEND_AUTOLOAD'] = '0'
@@ -19,6 +16,11 @@ import torch_npu  # noqa: F401
 import triton
 import triton.language as tl
 from flagtree import profiler
+
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from source_census_assertions import validate_bundle as validate_census_bundle
 
 
 @triton.jit
@@ -54,6 +56,10 @@ def main():
     p.add_argument('--expect-loss', action='store_true')
     p.add_argument('--rounds', type=int, nargs='+', default=[64, 128])
     args = p.parse_args()
+    if args.expect_loss:
+        p.error(
+            "--expect-loss describes the historical checkpoint ring; default census asserts exact counters instead"
+        )
     args.output.mkdir(parents=True, exist_ok=False)
     torch.npu.set_device(args.device)
     device = f'npu:{args.device}'
@@ -93,38 +99,18 @@ def main():
             guards = storage.cpu()
             assert (guards[:16] == -12345.).all() and (guards[-16:]
                                                        == -12345.).all()
-            payload = json.loads((target / 'ai/observations.json').read_text())
+            payload, cells, summaries, fine = validate_census_bundle(
+                target, 'ascend')
             events = payload['observations']
-            assert events and all(e['association_status'] == 'verified'
-                                  for e in events)
-            positions = {(e['compiler_site']['source_file'],
-                          e['compiler_site']['line'])
-                         for e in events}
+            assert events
+            positions = {(loc['file'], loc['line'])
+                         for row in fine['records']
+                         for loc in row['source_locations']}
             assert len(positions) >= 2
-            captures = payload['captures']
-            dropped = sum(c['dropped'] for c in captures)
-            raw_headers = []
-            capacity = compiled.metadata.flagprism_ascend_trace_capacity
-            for capture in captures:
-                raw = base64.b64decode(capture['raw_base64'])
-                assert hashlib.sha256(raw).hexdigest() == capture['raw_sha256']
-                for actor in range(3):
-                    version, committed, attempted, lost = struct.unpack_from(
-                        '<4Q', raw, actor * (32 + capacity * 64))
-                    assert version in (0, 1) and committed <= capacity
-                    assert attempted == committed + lost
-                    decoded = capture['actors'][actor]
-                    assert (committed, attempted,
-                            lost) == tuple(decoded[k]
-                                           for k in ('committed', 'attempted',
-                                                     'dropped'))
-                    raw_headers.append(
-                        dict(actor=actor,
-                             version=version,
-                             committed=committed,
-                             attempted=attempted,
-                             dropped=lost))
-            assert sum(h['committed'] for h in raw_headers) == len(events)
+            # Storage is bounded by physical actor/site cells rather than loop
+            # event capacity; repeated visits remain actual integer counts.
+            primary = [e for e in events if e['site_role'] == 'primary']
+            assert any(e['count'] in (rounds, 2 * rounds) for e in primary)
             bundle_bytes = sum(f.stat().st_size for f in target.rglob('*')
                                if f.is_file())
             row = dict(kind=kind,
@@ -135,16 +121,13 @@ def main():
                        export_s=export_s,
                        elapsed_s=time.monotonic() - start,
                        bundle_bytes=bundle_bytes,
-                       raw_headers=raw_headers,
-                       capacity=capacity,
-                       event_count=len(events),
-                       dropped=dropped,
+                       census=summaries,
+                       normalized_rows=len(events),
+                       exact=True,
                        source_positions=sorted(positions),
-                       frequencies={
-                           str(k): v
-                           for k, v in Counter(
-                               (e['actor_slot'], e['site'], e['semantic'])
-                               for e in events).items()
+                       source_visit_counts={
+                           str((e['actor']['id'], e['site'])): e['count']
+                           for e in events
                        },
                        math='passed',
                        inputs='unchanged',
@@ -158,12 +141,6 @@ def main():
             (args.output / 'result.json').write_text(
                 json.dumps(result, indent=2))
             assert bundle_bytes <= 64 * 1024**2 and export_s <= 60
-            if not args.expect_loss:
-                assert dropped == 0, f'{kind}: default capacity lost {dropped} records'
-    if args.expect_loss:
-        assert any(
-            r['dropped']
-            for r in rows), 'did not reproduce the original default loss'
     for kind in ('recurrence', 'nested_memory'):
         assert len({r['binary'] for r in rows if r['kind'] == kind}) == 1
     print(json.dumps(result, indent=2))

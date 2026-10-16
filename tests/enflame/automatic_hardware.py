@@ -4,12 +4,10 @@ All execution and CPU references belong inside the booked server Docker.
 This is development data, separate from independent held-out qualification.
 """
 import argparse
-import base64
 from collections import Counter
 import hashlib
 import json
 from pathlib import Path
-import struct
 import time
 
 import torch
@@ -17,6 +15,13 @@ import torch_gcu  # noqa: F401
 import triton
 import triton.language as tl
 import flagtree.profiler as profiler
+
+# Also support direct execution of this hardware driver.
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from source_census_assertions import read_view
+from source_census_assertions import validate_bundle as validate_census_bundle
 
 
 @triton.jit(do_not_specialize=['steps'])
@@ -38,50 +43,30 @@ def squared_shift(X, Y, N, BLOCK: tl.constexpr):
 
 
 def check(bundle):
-    fine = json.loads((bundle / 'ai/fine_grained.json').read_text())
+    raw, cells, summaries, fine = validate_census_bundle(bundle, 'enflame')
+    assert len(raw['captures']) == 1
+    plan = read_view(bundle, 'observation_plan.json', raw)
+    assert plan['plans'] and all(row['plan']['max_sites'] == 8
+                                 for row in plan['plans'])
+    plans = {row['binary_id']: row['plan'] for row in plan['plans']}
+    for row in raw['observations']:
+        selected = set(plans[row['binary_id']]['selected_sites'])
+        assert row['site'] in selected
+        inventory = plans[row['binary_id']]['inventory']
+        assert {item['opId']
+                for item in inventory if item['selected']} == selected
     records = fine['records']
     assert len({row['site'] for row in records}) >= 2, records
-    assert all(row['association_status'] == 'verified' and row['invocation_id']
-               and row['binary_id'] and row['source_locations']
-               and row['operation'] and row['program'] == 0
-               for row in records), records
-    assert all(row['clock']['domain'] == 'enflame.sdk.global_timer'
-               and row['duration_ns'] is None for row in records), records
-    plan = json.loads((bundle / 'ai/observation_plan.json').read_text())
-    assert plan['plans'], plan
-    assert all(row['plan']['max_sites'] == 8 for row in plan['plans'])
-    assert (bundle / 'report/fine_grained.html').is_file()
     timing = json.loads((bundle / 'ai/export_timing.json').read_text())
     assert timing['complete_finalize_and_export'] and timing[
-        'export_wall_s'] < 60, timing
-    raw = json.loads((bundle / 'ai/observations.json').read_text())
-    assert len(raw['captures']) == 1
-    capture = raw['captures'][0]
-    assert capture['capture_status'] == 'decoded' and capture[
-        'decode_error'] is None
-    payload = base64.b64decode(capture['raw_base64'])
-    assert hashlib.sha256(payload).hexdigest() == capture['raw_sha256']
-    header = struct.unpack_from('<8I', payload)
-    committed, capacity, dropped, flags, stride, _, attempted, reserved = header
-    assert stride == 64 and capacity == 256 and dropped == flags == reserved == 0, header
-    assert attempted == committed == len(records), (header, len(records))
-    assert not capture['counter_saturated']
-    for index, record in enumerate(raw['observations']):
-        # The final 24 bytes are actor/sequence, pre-sampling ordinal and
-        # publication tag.  Inspect actual device bytes independently of JSON.
-        actor, sequence, ordinal, commit = struct.unpack_from(
-            '<IIQQ', payload, 32 + index * 64 + 40)
-        assert (actor, sequence, ordinal, commit) == (0, index, index,
-                                                      0x465044594e563031)
-        assert record['sequence'] == sequence and record[
-            'attempted_ordinal'] == ordinal
-    selected = set(plan['plans'][0]['plan']['selected_sites'])
-    assert {row['site'] for row in records} <= selected
-    inventory = plan['plans'][0]['plan']['inventory']
-    assert {row['opId'] for row in inventory if row['selected']} == selected
+        'export_wall_s'] < 60
     size = sum(file.stat().st_size for file in bundle.rglob('*')
                if file.is_file())
     assert size <= 64 * 1024 * 1024, size
+    # Counts aggregate real source visits; rows are not expanded into events.
+    counts = Counter()
+    for row in records:
+        counts[row['site']] += row['count']
     return {
         'records': len(records),
         'sites': sorted({row['site']
@@ -89,11 +74,8 @@ def check(bundle):
         'binary_ids': sorted({row['binary_id']
                               for row in records}),
         'bytes': size,
-        'attempted': attempted,
-        'committed': committed,
-        'dropped': dropped,
-        'sampled_out': 0,
-        'site_counts': dict(Counter(row['site'] for row in records)),
+        'census': summaries,
+        'site_counts': dict(counts),
         'observations': records
     }
 

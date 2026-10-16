@@ -15,6 +15,10 @@ import triton
 import triton.language as tl
 import flagtree.profiler as profiler
 
+# Also support direct execution of this hardware driver.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from source_census_assertions import validate_bundle as validate_census_bundle
+
 
 @triton.jit(do_not_specialize=['loops'])
 def repeated_affine(X, Y, N, loops, BLOCK: tl.constexpr):
@@ -36,7 +40,7 @@ def centered_energy(X, Y, N, BLOCK: tl.constexpr):
 
 
 def validate_bundle(base):
-    exported = json.loads((base / 'ai/observations.json').read_text())
+    exported, cells, summaries, fine = validate_census_bundle(base, 'nvidia')
     assert len(exported['captures']) == 1, exported.keys()
     capture = exported['captures'][0]
     plan = capture['automatic_plan']
@@ -61,27 +65,8 @@ def validate_bundle(base):
         else:
             assert row['scope_id'] is None and row[
                 'selected_scope_name'] is None
-    decoded = capture['decoded']
-    assert decoded['dropped_records'] == 0, decoded['losses']
-    assert not decoded['unpaired_records'], decoded['unpaired_records']
     records = exported['observations']
     assert len({record['site'] for record in records}) >= 2, records
-    assert all(
-        record['invocation_id'] and record['association_status'] == 'verified'
-        for record in records)
-    assert all(
-        record['compiler_site']['kind'] == 'automatic_compiler_operation'
-        and record['compiler_site']['origin']['operation']
-        and record['compiler_site']['origin']['source_capture']
-        and record['compiler_site']['origin']['status'] != 'unknown'
-        for record in records), records
-    fine = json.loads((base / 'ai/fine_grained.json').read_text())
-    assert len(fine['records']) == len(records), fine
-    assert all(row['source_locations'] and row['operation']
-               and row['association_status'] == 'verified'
-               for row in fine['records']), fine
-    assert (base / 'report/fine_grained.html').is_file()
-    assert (base / 'ai/observation_plan.json').is_file()
     return records, capture
 
 
@@ -130,17 +115,25 @@ def main(output):
             record for record in records
             if record['compiler_site']['origin']['operation'] == 'arith.mulf'
         ]
-        assert len(repeated) == loops, (loops, repeated, records)
+        assert sum(r['count']
+                   for r in repeated) == loops, (loops, repeated, records)
         summaries.append({
-            'loops': loops,
-            'binary_id': compiled.hash,
-            'observations': len(records),
-            'repeated_multiply_visits': len(repeated),
-            'automatic_plan': capture['automatic_plan'],
+            'loops':
+            loops,
+            'binary_id':
+            compiled.hash,
+            'observations':
+            len(records),
+            'repeated_multiply_visits':
+            sum(r['count'] for r in repeated),
+            'automatic_plan':
+            capture['automatic_plan'],
             'baseline_compile_launch_wall_seconds':
             baseline_compile_launch_seconds,
-            'instrumented_compile_launch_wall_seconds': compile_launch_seconds,
-            'export_wall_seconds': export_seconds
+            'instrumented_compile_launch_wall_seconds':
+            compile_launch_seconds,
+            'export_wall_seconds':
+            export_seconds
         })
     assert len(binaries) == 1, binaries
     z = torch.empty((), device='cuda')
