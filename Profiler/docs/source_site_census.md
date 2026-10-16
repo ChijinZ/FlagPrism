@@ -132,6 +132,14 @@ original 32-byte header and original strides when read. Version 1 always has
 Frontend markers, native allocation, compiler manifests and readers explicitly
 carry version 3 for new captures.
 
+The current reader marks historical Ascend version-1/version-2 counts as
+inexact with `transport_visibility="legacy_ascend_cache_line_hazard"` and
+`unknown_loss=true`, even when no saturation flag was retained. Scalar GM
+cache-line sharing can lose count writes; a zero cell does not establish that
+the source position was never reached. Retained raw bytes and overflow flags
+remain unchanged. Previously generated static reports retain their original
+text; derive a fresh view with the current reader to obtain this warning.
+
 All programs are collected within both admitted budgets. Presentation selects
 the lowest program with actual primary visits, while loss/overflow validation
 covers the full raw allocation. Reaching an all-false masked source position

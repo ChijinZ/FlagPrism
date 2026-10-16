@@ -65,6 +65,48 @@ def decode(raw, descriptor, **kwargs):
                                        **kwargs)
 
 
+@pytest.mark.parametrize('layout,hazard', [
+    ('ascend_source_census_v1', True),
+    ('ascend_source_census_v2', True),
+    ('ascend_source_census_v3', False),
+    ('gcu_site_census_v1', False),
+    ('nvidia_source_census_v1', False)])
+@pytest.mark.parametrize('placement', ['record_layout', 'compiler_actor'])
+def test_known_legacy_ascend_transport_retracts_exact_without_changing_raw(layout, hazard, placement):
+    raw, desc = capture([[0, 5]])
+    if placement == 'record_layout':
+        desc['record_layout'] = layout
+    else:
+        desc['actors'][0]['compiler_actor'] = dict(
+            runtime_actor_binding=dict(layout=layout))
+    reader = census.CensusReader(raw, desc)
+    assert reader.raw == raw and reader.descriptor == desc
+    assert reader.cell(0, 0, 0)['exact'] == (not hazard)
+    assert reader.cell(0, 0, 0)['zero_execution_status'] == (
+        'unknown' if hazard else 'not_applicable')
+    result = decode(raw, desc)
+    assert result['loss']['exact'] == (not hazard)
+    assert result['loss']['unknown_loss'] == hazard
+    assert result['summary']['unknown_loss'] == hazard
+    assert result['observations'][0]['count_exact'] == (not hazard)
+    assert result['observations'][0]['unknown_loss'] == hazard
+    assert result['observations'][0]['count'] == 5
+
+
+def test_legacy_visibility_hazard_does_not_reinterpret_saturation_flag():
+    raw, desc = capture([[0, 0xffffffff]])
+    raw = bytearray(raw)
+    struct.pack_into('<II', raw, 40, 0xffffffff, 3)
+    raw = bytes(raw)
+    desc['raw_sha256'] = hashlib.sha256(raw).hexdigest()
+    desc['record_layout'] = 'ascend_source_census_v2'
+    result = decode(raw, desc)
+    assert result['loss']['overflow_cells'] == 1
+    assert result['loss']['unknown_loss'] is True
+    assert result['observations'][0]['overflow'] is True
+    assert result['observations'][0]['count'] == 0xffffffff
+
+
 @pytest.mark.parametrize('stride', [8, 64])
 def test_inactive_program_zero_selects_actual_active_instance_and_retains_raw(
         stride):

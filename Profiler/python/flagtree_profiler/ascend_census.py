@@ -337,8 +337,14 @@ def decode_shared_census(raw,
             actors=summaries,
             selection_is_presentation_only=True,
             selection_policy='lowest_program_with_primary_visits',
+            transport_visibility=('legacy_ascend_cache_line_hazard'
+                                  if version < 3 else 'not_flagged'),
+            unknown_loss=version < 3,
             source_program_identity='requires_compiler_producer_evidence'),
-        loss=dict(exact=not bool(overflow),
+        loss=dict(exact=not bool(overflow) and version == 3,
+                  transport_visibility=('legacy_ascend_cache_line_hazard'
+                                        if version < 3 else 'not_flagged'),
+                  unknown_loss=version < 3,
                   overflow_cells=overflow,
                   sampling=False,
                   capture_policy='all_grid_census'))
