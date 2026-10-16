@@ -570,6 +570,20 @@ def test_census_gate_checks_overflow_in_programs_not_expanded_for_display(
             tmp_path, dict(automatic=True, program_policy='all_grid_census'))
 
 
+def test_legacy_ascend_visibility_loss_has_explicit_report_reason(view, tmp_path):
+    capture = automatic_capture('c-A', 'launch-A', 'binary-A', runtime_owned=True)
+    capture['runtime_metadata']['ascend_source_census'] = dict(loss=dict(
+        exact=False, unknown_loss=True, overflow_cells=0,
+        transport_visibility='legacy_ascend_cache_line_hazard'))
+    record = automatic_record('c-A', 'launch-A', 'binary-A')
+    record.update(storage='source_site_census_v1', semantic='counter',
+                  site_role='primary', count=5, count_exact=False,
+                  unknown_loss=True, overflow=False)
+    write_automatic_input(tmp_path, [capture], [record])
+    with pytest.raises(RuntimeError, match='source_census_transport_visibility_unknown'):
+        view.require_automatic_records(tmp_path, dict(automatic=True, program_policy='all_grid_census'))
+
+
 def test_census_coverage_counts_located_context_without_accepting_it_as_body(
         view, tmp_path):
     import json
