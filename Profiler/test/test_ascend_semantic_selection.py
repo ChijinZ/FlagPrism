@@ -369,3 +369,74 @@ def test_real_pass_manifest_binds_cpu_record_fixture(tmp_path, monkeypatch,
                 'compiler_actor_status': event['compiler_actor_status']
             },
             indent=2))
+
+
+def entry_and_branch_operations_ir():
+    """Independent LLVM CFG: two entry ops and ten conditional body ops."""
+    body = [
+        'source_filename = "user_module"',
+        'define dso_local void @fresh_actor(ptr addrspace(1) %log, i32 %x) !dbg !4 {',
+        'entry:', ' %entry_a = add i32 %x, 1, !dbg !8',
+        ' %entry_b = mul i32 %entry_a, 3, !dbg !9', ' br label %condition0'
+    ]
+    for index in range(10):
+        target = f'condition{index + 1}' if index < 9 else 'exit'
+        body.extend([
+            f'condition{index}:',
+            f' %predicate{index} = icmp eq i32 %entry_b, {index + 1}, !dbg !10',
+            f' br i1 %predicate{index}, label %body{index}, label %{target}',
+            f'body{index}:',
+            f' %value{index} = add i32 %x, {index + 7}, !dbg !10',
+            f' br label %{target}',
+        ])
+    body.extend(['exit:', ' ret void, !dbg !10', '}'])
+    return '\n'.join(
+        body) + OPERATIONS_IR[OPERATIONS_IR.index('!hivm.annotations'):]
+
+
+@pytest.mark.parametrize("same_line_prefix", [False, True])
+def test_default_selection_keeps_two_real_entry_positions_before_conditional_bodies(
+        tmp_path, monkeypatch, same_line_prefix):
+    monkeypatch.setenv('FLAGPRISM_ASCEND_TRACE_MAX_SITES', '8')
+    ir = entry_and_branch_operations_ir()
+    if same_line_prefix:
+        ir = ir.replace(
+            ' %entry_a =',
+            ' %same_line = load i32, ptr addrspace(1) %log, !dbg !8\n %entry_a ='
+        )
+    result, path = execute(tmp_path, 'operation_checkpoint', ir)
+    assert result.returncode == 0, result.stderr.decode()
+    manifest, = [json.loads(p.read_text()) for p in path.glob('*.json')]
+    plan = manifest['operation_plan']
+    selected = [row for row in plan['inventory'] if row['selected']]
+    assert len(selected) == plan['selected_count'] == 8
+    assert {11, 12}.issubset({row['line'] for row in selected})
+    entry = [
+        row for row in selected
+        if row['selection_reason'] == 'original_entry_source_context'
+    ]
+    assert [row['line'] for row in entry] == [11, 12]
+    assert [row['operation'] for row in entry
+            ] == ['load' if same_line_prefix else 'add', 'mul']
+    assert all(row['original_block'] == '%entry' for row in entry)
+    assert all(row['selection_reason'] == 'original_entry_source_context'
+               for row in entry)
+    assert all(row['block_representation'] ==
+               'original_pre_instrumentation_canonical_llvm'
+               for row in plan['inventory'])
+    assert plan['policy_version'] == 2
+    assert plan['candidate_count'] == 12 + same_line_prefix
+    assert len(manifest['dynamic_sites']) == 8
+    assert (path / 'adapted.ll').read_text().count('MOV $0, SYS_CNT') == 8
+
+
+@pytest.mark.parametrize('budget,expected', [(1, [0]), (2, [0, 11])])
+def test_explicit_narrow_operation_budgets_preserve_previous_selection(
+        tmp_path, monkeypatch, budget, expected):
+    monkeypatch.setenv('FLAGPRISM_ASCEND_TRACE_MAX_SITES', str(budget))
+    result, path = execute(tmp_path, 'operation_checkpoint',
+                           entry_and_branch_operations_ir())
+    assert result.returncode == 0, result.stderr.decode()
+    manifest, = [json.loads(p.read_text()) for p in path.glob('*.json')]
+    assert [row['site_id'] for row in manifest['dynamic_sites']] == expected
+    assert (path / 'adapted.ll').read_text().count('MOV $0, SYS_CNT') == budget

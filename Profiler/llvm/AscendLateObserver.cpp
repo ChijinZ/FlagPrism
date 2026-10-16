@@ -1,5 +1,6 @@
 // An actual upstream LLVM15 pass applied by the compiler driver adapter.
 // Capture post-actor lowering evidence before forwarding IR to the SDK.
+#include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/Analysis/LoopInfo.h"
@@ -218,6 +219,8 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   // so allocation/ABI scaffolding without a user location is not presented as a
   // user operation. No operator or source-file allowlist is involved.
   SmallVector<Instruction *, 64> operationCandidates;
+  SmallPtrSet<Instruction *, 8> originalEntryCandidates;
+  DenseMap<Instruction *, std::string> originalBlocks;
   for (BasicBlock &block : function) {
     std::set<std::tuple<const MDNode *, std::string>> regions;
     for (Instruction &instruction : block) {
@@ -246,8 +249,12 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
       } else {
         continue;
       }
-      if (regions.emplace(location.get(), kind).second)
+      if (regions.emplace(location.get(), kind).second) {
         operationCandidates.push_back(&instruction);
+        originalBlocks[&instruction] = printValue(block);
+        if (&block == &function.getEntryBlock())
+          originalEntryCandidates.insert(&instruction);
+      }
     }
   }
   uint64_t maxSites = 32;
@@ -258,12 +265,60 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   SmallVector<Instruction *, 64> operationSites;
   const uint64_t selectedCount =
       std::min<uint64_t>(maxSites, operationCandidates.size());
-  for (uint64_t index = 0; index < selectedCount; ++index)
+  // Keep actual entry operations observable when the selected program skips
+  // conditional tensor bodies. This is a source checkpoint, not evidence that
+  // a branch body ran. Snapshot before logger insertion splits the CFG.
+  SmallPtrSet<Instruction *, 2> entryContextSites;
+  std::set<const MDNode *> entryLocations;
+  std::set<std::tuple<std::string, std::string, unsigned>> entryLines;
+  const uint64_t entryLimit = std::min<uint64_t>(2, selectedCount);
+  if (maxSites >= 3) {
+    // Prefer different real source lines before a same-line fallback. Multiple
+    // lowered operation classes at one source position are not more coverage.
+    for (Instruction *candidate : operationCandidates) {
+      const DebugLoc &location = candidate->getDebugLoc();
+      if (entryContextSites.size() < entryLimit &&
+          originalEntryCandidates.contains(candidate) &&
+          entryLines
+              .emplace(location->getDirectory().str(),
+                       location->getFilename().str(), location.getLine())
+              .second) {
+        operationSites.push_back(candidate);
+        entryContextSites.insert(candidate);
+        entryLocations.insert(location.get());
+      }
+    }
+    for (Instruction *candidate : operationCandidates)
+      if (entryContextSites.size() < entryLimit &&
+          originalEntryCandidates.contains(candidate) &&
+          entryLocations.insert(candidate->getDebugLoc().get()).second) {
+        operationSites.push_back(candidate);
+        entryContextSites.insert(candidate);
+      }
+  }
+  SmallVector<Instruction *, 64> remainingCandidates;
+  for (Instruction *candidate : operationCandidates)
+    if (std::find(operationSites.begin(), operationSites.end(), candidate) ==
+        operationSites.end())
+      remainingCandidates.push_back(candidate);
+  const uint64_t remainingCount = selectedCount - operationSites.size();
+  for (uint64_t index = 0; index < remainingCount; ++index)
     operationSites.push_back(
-        operationCandidates[selectedCount == 1
+        remainingCandidates[remainingCount == 1
                                 ? 0
-                                : index * (operationCandidates.size() - 1) /
-                                      (selectedCount - 1)]);
+                                : index * (remainingCandidates.size() - 1) /
+                                      (remainingCount - 1)]);
+  auto describeCandidate = [&](Instruction *candidate, uint64_t siteId) {
+    json::Object item = describeOperation(*candidate, siteId);
+    item["original_block"] = originalBlocks.lookup(candidate);
+    item["block_representation"] =
+        "original_pre_instrumentation_canonical_llvm";
+    item["is_original_entry_block"] =
+        originalEntryCandidates.contains(candidate);
+    return item;
+  };
+  const char *operationPolicy =
+      "original_entry_source_context_then_evenly_spaced";
   DominatorTree dominance(function);
   LoopInfo loopInfo(dominance);
   struct OriginalLoopHeader {
@@ -434,21 +489,22 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     json::Array inventory;
     for (uint64_t index = 0; index < operationCandidates.size(); ++index) {
       Instruction *candidate = operationCandidates[index];
-      json::Object item = describeOperation(*candidate, siteNumber + index);
+      json::Object item = describeCandidate(candidate, siteNumber + index);
       const bool selected =
           std::find(operationSites.begin(), operationSites.end(), candidate) !=
           operationSites.end();
       item["selected"] = selected;
-      item["selection_reason"] = selected
-                                     ? "source_location_class_evenly_spaced"
-                                     : "static_site_budget";
+      item["selection_reason"] = !selected ? "static_site_budget"
+                                 : entryContextSites.contains(candidate)
+                                     ? "original_entry_source_context"
+                                     : "source_location_class_evenly_spaced";
       inventory.push_back(std::move(item));
     }
     operationPlan["plan_kind"] = "operation";
     operationPlan["budget_scope"] = "source_operation_candidates_only";
     operationPlan["control_sites_included"] = false;
-    operationPlan["policy"] =
-        "source_location_class_per_original_block_evenly_spaced";
+    operationPlan["policy"] = operationPolicy;
+    operationPlan["policy_version"] = 2;
     operationPlan["max_sites"] = static_cast<int64_t>(maxSites);
     operationPlan["candidate_count"] =
         static_cast<int64_t>(operationCandidates.size());
@@ -460,12 +516,12 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
           std::distance(operationCandidates.begin(),
                         std::find(operationCandidates.begin(),
                                   operationCandidates.end(), position));
-      json::Object site = describeOperation(*position, siteId);
+      json::Object site = describeCandidate(position, siteId);
       site["candidate_count"] =
           static_cast<int64_t>(operationCandidates.size());
       site["selected_count"] = static_cast<int64_t>(selectedCount);
-      site["selection_policy"] =
-          "source_location_class_per_original_block_evenly_spaced";
+      site["selection_policy"] = operationPolicy;
+      site["selection_policy_version"] = 2;
       IRBuilder<> builder(position);
       Value *tick = timestamp(builder);
       auto *terminator = SplitBlockAndInsertIfThen(
