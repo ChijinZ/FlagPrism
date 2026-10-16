@@ -107,8 +107,14 @@ finally:
 `detail="auto"` supplies the backend-specific observation request and hook.
 Do not combine it with an explicit observation request or mode. Explicit scopes
 and typed requests remain advanced interfaces. Automatic selection defaults to
-eight source-operation sites. Default retained capacity is 4096 records per
-actor on Ascend and 256 records per selected instance on NVIDIA and Enflame.
+eight source-operation sites. NVIDIA and Enflame now use a bounded source-site
+visit census across the admitted launch grid: at most 1,048,576 logical cells
+and 8 MiB of physical storage by default. The byte limit includes alignment,
+headers and publisher padding; the compiler/runtime checks both limits before
+allocation. A grid exceeding either limit is rejected, rather than silently
+truncated to its first programs. See the [census protocol](source_site_census.md).
+Default retained capacity remains 4096 records per actor on Ascend's checkpoint
+path; its replacement census integration is still being validated.
 Ascend also observes original control primitives and loop headers outside the
 eight-operation-site budget; the record capacity bounds their retained visits. The actual
 backend plan, selected locations, unselected inventory when available, and
@@ -120,7 +126,10 @@ is not a claim that every operation was observed.
 Open `profile-run/report/index.html` and follow **Source-linked internal dynamic
 records**. The view can filter by source path, operation, invocation or actor;
 each row identifies its source location, compiler operation, binary, call,
-program, actor, site, semantic class and retained occurrence. The execution and
+program, actor, site and semantic class. Census rows show **Visits**, **Exact**
+and **Site role**, rather than an empty timing table. The default display picks
+the lowest program with primary-site visits after collecting the admitted grid;
+this display choice does not discard other programs' raw cells. The execution and
 clock-group view links the related native activity when uniquely associated.
 
 Select a source position to open **Captured source** at that line. This uses
@@ -161,8 +170,9 @@ Machine-readable counterparts are:
   These values measure host engineering cost, not GPU/kernel latency.
 
 Large repeated fields in derived JSON can use digest-checked references to the
-complete `ai/observations.json`. Normalized record clock, actor and source fields
-remain directly available. The schema guide gives the public `restore` reader.
+complete `ai/observations.json`, including clock or compiler-provenance fields.
+Report pages resolve these references. Machine consumers should use the public
+`restore` reader in the schema guide before inspecting referenced fields.
 Large CANN SDK trees are retained losslessly in `raw/native/cann_sdk.zip`, with
 member paths, byte counts and SHA-256 in `raw/native/cann-sdk-retention.json`.
 Small trees retain the directory layout. Extract an archived tree into a new,
@@ -181,20 +191,30 @@ for arbitrary input sizes or loop counts.
 See the [version 1 JSON field contract](automatic_schema.md) for field types,
 identity namespaces, backend loss accounting and a read-only inspection example.
 
-Read the semantic and clock columns together. NVIDIA records instrumented
-source-control intervals in SM-local counter ticks. Enflame records source
-control using the SDK timer; its frequency is not assumed. Ascend can record
+Read the semantic and clock columns together. The NVIDIA and Enflame automatic
+census records the number of times a selected source control position was
+reached. It does not measure duration: its clock, occurrence, iteration and
+timing fields are null. A count of five is one record with five visits, not
+five fabricated intervals. All-false data masks can still reach a source
+position; visits do not establish productive memory transactions or engine busy
+time. Saturation in any retained program makes the capture inexact, including
+programs outside the default display.
+
+Explicit fixed-program interval requests remain a separate advanced mode.
+NVIDIA intervals use SM-local counter ticks; Enflame intervals use the SDK timer,
+whose frequency is not assumed. Ascend's checkpoint path can record
 source-operation and loop checkpoints as well as existing issue/wait classes.
 A checkpoint is evidence of an occurrence, not operation duration. No view
 turns an issue interval into engine occupancy or an instrumented interval into
 an uninstrumented performance measurement. `None` means unavailable; unverified
 clock frames are not overlaid on native timelines.
 
-`occurrence` counts retained visits of a site for its invocation/program/actor;
+For interval and checkpoint protocols, `occurrence` counts retained visits of a
+site for its invocation/program/actor;
 it is not automatically a loop iteration number. Loop conditions may execute
 once more than their bodies. Sampling, unselected sites and dropped records
 have different meanings. Use the original capture statistics; an unselected
-site is not proof of nonexecution. NVIDIA's current automatic policy reserves
+site is not proof of nonexecution. The compiler selection policy reserves
 up to two entry-level control positions before distributing the remaining
 default budget across actual repeating/branch regions. It observes real scalar
 control computations and SCF control intervals; bounded entry evidence does not
@@ -206,10 +226,14 @@ entry block. These positions may describe coordinate or condition computation;
 they do not establish that a tensor branch body executed. The Enflame and Ascend
 entry policies prefer distinct source lines where the candidates permit it.
 A selected program that takes an empty branch can therefore expose its own
-entry or control activity. An interval
+entry or control activity. Census entry/context rows alone do not satisfy the
+automatic body-observation gate; a source-linked, exact, nonzero primary count
+is required. An interval
 around `scf.if` describes the control operation; it does not mean that the
-conditional body ran. This remains a bounded program/warp/site sample and does
-not observe tensor work performed only by other programs. Plans distinguish
+conditional body ran. Fixed-program interval mode remains a bounded instance/site
+sample. Census mode collects selected positions across every admitted program,
+while still bounding the selected sites and logical observers. Neither mode
+claims to observe every hardware lane or operation. Plans distinguish
 regions with no eligible operation, direct or descendant coverage, and regions
 excluded by the finite site budget.
 
@@ -217,9 +241,11 @@ Every captured invocation must have its own verified, source-linked internal
 records. An empty, unassociated or unlocated invocation makes automatic export
 incomplete even when another kernel has useful records. Failed captures retain
 `ai/selection_status.json`, the plan and raw data. Inspect their selection and
-loss state and, when more detail is needed, use a public `ObservationRequest` to
-select another program. The tool does not replay the application to discover
-another selection.
+loss state. For census captures, query retained programs with the public
+`CensusReader`; changing the displayed program cannot recover a missing site or
+make an overflow exact. For fixed-program modes, a public `ObservationRequest`
+can select another program for a future capture. The tool does not replay the
+application to discover another selection.
 
 ## Diagnose installation provenance
 

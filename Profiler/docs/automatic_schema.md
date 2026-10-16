@@ -20,6 +20,10 @@ is also written on success. Its `captures` array reports `capture_id`,
 `invocation_id`, `binary_id`, `status`, nullable `reason`, `internal_records` and
 `source_linked_records` for each capture. An expected invocation with no capture
 has `capture_id: null` and reason `invocation_has_no_internal_capture`.
+For source-site census captures, validity additionally requires a source-linked,
+exact, nonzero primary-site count. Located context records are included in
+`source_linked_records`, but cannot alone establish body observation. Overflow
+in any program makes the capture incomplete, even if the displayed rows are exact.
 
 ## `ai/fine_grained.json`
 
@@ -61,6 +65,17 @@ Every normalized record has the following keys. Nullable fields are present as
 | `unit` | string or null | Producer unit; inspect the clock even when this is absent |
 | `truncated` | boolean or null | Record-level loss indication; capture accounting remains authoritative |
 | `sampling` | object or null | Backend selection/sampling evidence; missing does not mean all instances |
+
+Source-site census records additionally carry `storage:
+"source_site_census_v1"`, `semantic: "counter"`, `count` (nonnegative integer),
+`count_exact` and `overflow` (booleans), `counter_kind:
+"source_control_visit_count"`, `unit: "visits"`, `site_role` (`primary` or
+`context`), `raw_offset` and `raw_sha256`. `mask_activity: "unobserved"` means
+the count does not establish active data lanes. `occurrence`, `iteration`,
+`clock` and every timing field are null. A source count of N is retained as one
+scalar record. The [census protocol](source_site_census.md) specifies the raw
+matrix, typed logical observers, budgets and reader. A logical observer is not
+automatically a physical SM, warp or execution engine.
 
 For example, the following abbreviated record describes one retained interval;
 it is illustrative, not an expected duration or a device-independent site ID:
