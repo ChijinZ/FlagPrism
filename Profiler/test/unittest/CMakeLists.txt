@@ -101,7 +101,9 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND FLAGTREE_PROFILER_GPU_RUNTIME)
   target_link_libraries(CuptiSdkCleanupTest PRIVATE CuptiSdkTestShim
     Python3::Python ${CMAKE_DL_LIBS})
   foreach(_case disable unsubscribe callback repeat partial external pc-finalize
-                mode alias path shared pc-to-normal path-after-load pc-release external-partial)
+                mode alias path shared pc-to-normal path-after-load pc-release external-partial
+                probe-active probe-shared probe-idle probe-enable-failure
+                probe-pending probe-start probe-config)
     add_test(NAME CuptiSdkCleanup.${_case}
       COMMAND "${CMAKE_COMMAND}" -E env
         "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:CuptiSdkTestShim>:$ENV{LD_LIBRARY_PATH}"

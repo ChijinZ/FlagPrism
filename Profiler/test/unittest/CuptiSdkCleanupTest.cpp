@@ -28,7 +28,100 @@ int main(int argc, char **argv) {
     std::string test = argv[1], path = argv[2];
     auto &profiler = proton::CuptiProfiler::instance();
     profiler.setLibPath(path);
-    if (test == "external" || test == "external-partial") {
+    if (test == "probe-active" || test == "probe-shared") {
+      proton::SessionManager manager;
+      const bool pc = test == "probe-shared";
+      auto id =
+          manager.addSession("/tmp/chijin-r7-" + test, "cupti", path, "shadow",
+                             "tree", pc ? "pcsampling:interval=1000" : "");
+      manager.activateSession(id);
+      const int enable = r7Calls("pc-enable"), disable = r7Calls("pc-disable");
+      const int context = r7Calls("ctx-current"),
+                subscribe = r7Calls("subscribe");
+      if (pc) {
+        profiler.validatePCSamplingSupport(path, "pcsampling:interval=1000");
+        failure([&] {
+          profiler.validatePCSamplingSupport(path, "pcsampling:interval=2000");
+        });
+        failure([&] {
+          profiler.validatePCSamplingSupport(path + "/wrong",
+                                             "pcsampling:interval=1000");
+        });
+      } else {
+        failure([&] {
+          profiler.validatePCSamplingSupport(path, "pcsampling:interval=1000");
+        });
+      }
+      require(r7Calls("pc-enable") == enable &&
+                  r7Calls("pc-disable") == disable &&
+                  r7Calls("ctx-current") == context &&
+                  r7Calls("subscribe") == subscribe,
+              "Live collector preflight mutated SDK/context state");
+      require(profiler.isPCSamplingEnabled() == pc,
+              "Preflight changed the active collector selection");
+      profiler.flush();
+      manager.finalizeSession(id, "");
+    } else if (test == "probe-idle" || test == "probe-enable-failure") {
+      r7Context(1);
+      if (test == "probe-enable-failure") {
+        r7Fail("pc-enable", 1);
+        failure(
+            [&] { profiler.validatePCSamplingSupport(path, "pcsampling"); });
+        require(r7Calls("pc-disable") == 0 &&
+                    !proton::CuptiPCSampling::instance()
+                         .hasPendingSupportProbeCleanup(),
+                "Failed enable was treated as owned probe resources");
+      } else {
+        profiler.validatePCSamplingSupport(path, "pcsampling");
+        require(r7Calls("pc-enable") == 1 && r7Calls("pc-disable") == 1,
+                "Idle probe did not release its acquired SDK resource");
+      }
+      require(r7Calls("subscribe") == 0 && r7Calls("finalize") == 0,
+              "Capability probe acquired/finalized a collector lifecycle");
+    } else if (test == "probe-pending" || test == "probe-start" ||
+               test == "probe-config") {
+      r7Context(1);
+      const bool unsupported = test == "probe-pending";
+      if (unsupported)
+        r7StallReasons(0);
+      r7Fail("pc-disable", 2);
+      auto first = failure(
+          [&] { profiler.validatePCSamplingSupport(path, "pcsampling"); });
+      require(
+          proton::CuptiPCSampling::instance().hasPendingSupportProbeCleanup(),
+          "Failed probe disable lost its context ownership");
+      const int context = r7Calls("ctx-current");
+      std::string second;
+      if (test == "probe-start")
+        second = failure([&] { profiler.start(); });
+      else if (test == "probe-config")
+        second = failure([&] { profiler.setLibPath(path + "/wrong"); });
+      else
+        second = failure([&] {
+          profiler.validatePCSamplingSupport(path + "/wrong", "pcsampling");
+        });
+      require(second == first,
+              "Pending cleanup replaced the original probe failure");
+      require(r7Calls("pc-enable") == 1 && r7Calls("pc-disable") == 2 &&
+                  r7Calls("ctx-current") == context &&
+                  r7Calls("subscribe") == 0 && profiler.getLibPath() == path,
+              "Failed cleanup issued fresh probe/subscription or changed path");
+      if (unsupported) {
+        r7StallReasons(1);
+        profiler.validatePCSamplingSupport(path, "pcsampling");
+        require(r7Calls("pc-enable") == 2 && r7Calls("pc-disable") == 4,
+                "New probe started without first releasing old probe context");
+      } else {
+        profiler.start();
+        profiler.stop();
+        require(
+            r7Calls("subscribe") == 1,
+            "Collector did not recover after one successful pending cleanup");
+      }
+      require(
+          !proton::CuptiPCSampling::instance().hasPendingSupportProbeCleanup(),
+          "Successful cleanup did not release pending ownership");
+    } else if (test == "external" || test == "external-partial") {
       r7ExternalSubscriber(test == "external-partial" ? 2 : 1);
       failure([&] { profiler.start(); });
       require(r7Calls("finalize") == 0 && r7Calls("unsubscribe") == 0,

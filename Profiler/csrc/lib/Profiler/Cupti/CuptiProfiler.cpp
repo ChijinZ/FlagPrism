@@ -7,6 +7,7 @@
 #include "Profiler/Cupti/CuptiPCSampling.h"
 #include "Profiler/SdkCleanup.h"
 #include "Utility/Map.h"
+#include "Utility/String.h"
 
 #include <algorithm>
 #include <cstdlib>
@@ -306,6 +307,7 @@ struct CuptiProfiler::CuptiProfilerPimpl
   virtual ~CuptiProfilerPimpl() = default;
 
   void prepareConfiguration() override {
+    CuptiPCSampling::instance().retrySupportProbeCleanup();
     if (finalizationPending || subscriber || enabledActivity ||
         !enabledCallbacks.empty())
       doStop();
@@ -502,6 +504,7 @@ void CuptiProfiler::CuptiProfilerPimpl::callbackFn(void *userData,
 }
 
 void CuptiProfiler::CuptiProfilerPimpl::doStart() {
+  CuptiPCSampling::instance().retrySupportProbeCleanup();
   // Public started=false does not certify release of a failed SDK resource.
   // Retry unresolved cleanup before replacing its handles or configuration.
   if (finalizationPending || subscriber || enabledActivity ||
@@ -624,6 +627,35 @@ void CuptiProfiler::CuptiProfilerPimpl::doStop() {
     pcSampling.releaseAfterRuntimeFinalize();
   }
   cleanup.rethrow();
+}
+
+void CuptiProfiler::validatePCSamplingSupport(const std::string &libPath,
+                                              const std::string &mode) {
+  if (!mode.empty() && toLower(split(mode, ":").front()) != "pcsampling")
+    throw std::runtime_error(
+        "PC sampling capability probe requires a pcsampling mode");
+  const auto &requestedPath = libPath.empty() ? getLibPath() : libPath;
+  auto &probe = CuptiPCSampling::instance();
+  if (isStarted() || !getDataSet().empty()) {
+    if (!isStarted() || !isPCSamplingEnabled() ||
+        requestedPath != getLibPath() ||
+        (!mode.empty() && getMode() != split(mode, ":")))
+      throw std::runtime_error(
+          "Cannot probe PC sampling with a different mode or library path "
+          "while a CUPTI collector is active");
+    if (probe.hasPendingSupportProbeCleanup())
+      throw std::runtime_error(
+          "Cannot probe PC sampling while prior probe cleanup is pending and "
+          "a CUPTI collector is active");
+    // Identical live configuration has already passed collection startup.
+    // Do not enable/disable PC sampling or query/synchronize its context.
+    return;
+  }
+  pImpl->prepareConfiguration();
+  setLibPath(requestedPath);
+  CUcontext context = nullptr;
+  cuda::ctxGetCurrent<true>(&context);
+  probe.validateSupport(context);
 }
 
 CuptiProfiler::CuptiProfiler() {

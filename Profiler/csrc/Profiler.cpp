@@ -203,14 +203,10 @@ static void initProfiler(pybind11::module &&m) {
 #if FLAGTREE_PROFILER_GPU_RUNTIME
   m.def(
       "validate_pc_sampling_support",
-      [](const std::string &libPath) {
-        if (!libPath.empty())
-          cupti::setLibPath(libPath);
-        CUcontext context = nullptr;
-        cuda::ctxGetCurrent<false>(&context);
-        CuptiPCSampling::instance().validateSupport(context);
+      [](const std::string &libPath, const std::string &mode) {
+        CuptiProfiler::instance().validatePCSamplingSupport(libPath, mode);
       },
-      pybind11::arg("lib_path") = "");
+      pybind11::arg("lib_path") = "", pybind11::arg("mode") = "");
   m.def("set_observation_programs", [](const std::vector<uint32_t> &programs) {
     InstrumentationProfiler::instance().setObservationPrograms(programs);
   });

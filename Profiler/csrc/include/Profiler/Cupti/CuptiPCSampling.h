@@ -7,6 +7,7 @@
 #include "Utility/Map.h"
 #include "Utility/Singleton.h"
 #include <atomic>
+#include <exception>
 #include <mutex>
 
 namespace proton {
@@ -102,6 +103,8 @@ class CuptiPCSampling : public Singleton<CuptiPCSampling> {
 
 public:
   void validateSupport(CUcontext context);
+  bool hasPendingSupportProbeCleanup();
+  void retrySupportProbeCleanup();
   CuptiPCSampling() = default;
   virtual ~CuptiPCSampling() = default;
 
@@ -122,6 +125,11 @@ public:
   void unloadModule(const char *cubin, size_t cubinSize);
 
 private:
+  void retrySupportProbeCleanupLocked();
+  CUcontext supportProbeContext{nullptr};
+  std::exception_ptr supportProbeFailure;
+  std::mutex supportProbeMutex;
+
   ConfigureData *getConfigureData(uint32_t contextId);
 
   CubinData *getCubinData(uint64_t cubinCrc);

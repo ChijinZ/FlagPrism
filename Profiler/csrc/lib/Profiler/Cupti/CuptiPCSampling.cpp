@@ -2,6 +2,7 @@
 #include "Data/Metric.h"
 #include "Driver/GPU/CudaApi.h"
 #include "Driver/GPU/CuptiApi.h"
+#include "Profiler/SdkCleanup.h"
 #include "Utility/Atomic.h"
 #include "Utility/Map.h"
 #include "Utility/String.h"
@@ -325,25 +326,52 @@ CubinData *CuptiPCSampling::getCubinData(uint64_t cubinCrc) {
   return &(cubinCrcToCubinData[cubinCrc].first);
 }
 
+bool CuptiPCSampling::hasPendingSupportProbeCleanup() {
+  std::lock_guard<std::mutex> lock(supportProbeMutex);
+  return supportProbeContext != nullptr;
+}
+
+void CuptiPCSampling::retrySupportProbeCleanupLocked() {
+  if (!supportProbeContext)
+    return;
+  SdkCleanup cleanup(supportProbeFailure);
+  if (cleanup.attempt([&] { disablePCSampling(supportProbeContext); })) {
+    supportProbeContext = nullptr;
+    supportProbeFailure = {};
+    return;
+  }
+  cleanup.rethrow();
+}
+
+void CuptiPCSampling::retrySupportProbeCleanup() {
+  std::lock_guard<std::mutex> lock(supportProbeMutex);
+  retrySupportProbeCleanupLocked();
+}
+
 void CuptiPCSampling::validateSupport(CUcontext context) {
+  std::lock_guard<std::mutex> lock(supportProbeMutex);
+  retrySupportProbeCleanupLocked();
   if (!context)
     throw std::runtime_error(
         "CUPTI PC sampling capability probe requires an active CUDA context; "
         "initialize CUDA before starting pcsampling");
   enablePCSampling(context);
-  try {
-    auto count = getNumStallReasons(context);
-    if (!count)
+  supportProbeContext = context; // A successful enable establishes ownership.
+  SdkCleanup cleanup;
+  cleanup.attempt([&] {
+    if (!getNumStallReasons(context))
       throw std::runtime_error("CUPTI PC sampling unsupported: the active "
                                "device/SDK exposes zero stall reasons");
+  });
+  if (cleanup.attempt([&] { disablePCSampling(context); }))
+    supportProbeContext = nullptr;
+  try {
+    cleanup.rethrow();
   } catch (...) {
-    try {
-      disablePCSampling(context);
-    } catch (...) {
-    }
+    if (supportProbeContext)
+      supportProbeFailure = std::current_exception();
     throw;
   }
-  disablePCSampling(context);
 }
 
 void CuptiPCSampling::initialize(CUcontext context) {
@@ -459,7 +487,9 @@ void CuptiPCSampling::finalize(CUcontext context) {
 }
 
 void CuptiPCSampling::releaseAfterRuntimeFinalize() {
-  std::scoped_lock lock(contextMutex, pcSamplingMutex);
+  std::scoped_lock lock(contextMutex, pcSamplingMutex, supportProbeMutex);
+  supportProbeContext = nullptr;
+  supportProbeFailure = {};
   contextIdToConfigureData.clear();
   contextInitialized.clear();
   cubinCrcToCubinData.clear();

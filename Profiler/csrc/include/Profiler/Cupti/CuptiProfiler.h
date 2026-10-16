@@ -13,6 +13,11 @@ public:
   CuptiProfiler();
   virtual ~CuptiProfiler();
 
+  // Capability probing must preserve a live collector and retry any probe
+  // resource cleanup before querying context or enabling PC sampling again.
+  void validatePCSamplingSupport(const std::string &libPath,
+                                 const std::string &mode = {});
+
   // Session membership is captured at API entry, before asynchronous buffers
   // arrive. The name of the kernel is descriptive, never an association key.
   VendorProfileArtifact collectActivityArtifact(const std::string &sessionPath);

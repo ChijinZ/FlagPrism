@@ -13,6 +13,8 @@ std::set<CUpti_ActivityKind> activities;
 std::set<std::pair<CUpti_CallbackDomain, CUpti_CallbackId>> callbacks;
 bool subscriberLive = false, pcLive = false;
 bool externalErrorHandle = false;
+bool currentContext = false;
+int stallReasonCount = 1;
 bool call(const char *operation) {
   ++counts[operation];
   auto &left = failures[operation];
@@ -30,6 +32,8 @@ void r7ExternalSubscriber(int active) {
   subscriberLive = active != 0;
   externalErrorHandle = active == 2;
 }
+void r7Context(int active) { currentContext = active != 0; }
+void r7StallReasons(int count) { stallReasonCount = count; }
 int r7LiveResources() {
   return static_cast<int>(activities.size() + callbacks.size()) +
          subscriberLive + pcLive;
@@ -106,8 +110,9 @@ CUptiResult cuptiGetVersion(uint32_t *version) {
   return CUPTI_SUCCESS;
 }
 CUptiResult cuptiPCSamplingEnable(CUpti_PCSamplingEnableParams *) {
+  if (!call("pc-enable"))
+    return CUPTI_ERROR_UNKNOWN;
   pcLive = true;
-  call("pc-enable");
   return CUPTI_SUCCESS;
 }
 CUptiResult cuptiPCSamplingDisable(CUpti_PCSamplingDisableParams *) {
@@ -118,7 +123,9 @@ CUptiResult cuptiPCSamplingDisable(CUpti_PCSamplingDisableParams *) {
 }
 CUptiResult
 cuptiPCSamplingGetNumStallReasons(CUpti_PCSamplingGetNumStallReasonsParams *p) {
-  *p->numStallReasons = 1;
+  if (!call("stall-count"))
+    return CUPTI_ERROR_UNKNOWN;
+  *p->numStallReasons = static_cast<size_t>(stallReasonCount);
   return CUPTI_SUCCESS;
 }
 CUptiResult
@@ -132,8 +139,13 @@ CUptiResult cuptiPCSamplingSetConfigurationAttribute(
   return CUPTI_SUCCESS;
 }
 CUresult cuCtxGetCurrent(CUcontext *ctx) {
-  *ctx = nullptr;
-  call("ctx-current");
+  if (!call("ctx-current"))
+    return CUDA_ERROR_INVALID_CONTEXT;
+  *ctx = currentContext ? reinterpret_cast<CUcontext>(0x789a) : nullptr;
+  return CUDA_SUCCESS;
+}
+CUresult cuCtxSynchronize() {
+  call("ctx-sync");
   return CUDA_SUCCESS;
 }
 CUresult cuInit(unsigned int) {
