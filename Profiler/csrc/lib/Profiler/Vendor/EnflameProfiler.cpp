@@ -298,12 +298,15 @@ private:
     }
     enabledKinds.reserve(kinds.size());
     enabledDomains.reserve(2);
-    check(topsptiActivityRegisterCallbacks(request, complete),
-          "register activity callbacks");
     try {
       check(topsptiSubscribe(&subscriber, callback, nullptr),
             "subscribe callbacks");
       ownsSubscriber = true;
+      // Activity handlers are process-global: acquire the exclusive subscriber
+      // before registering ours, so a rejected start cannot mutate another
+      // collector's handlers. Registration failure still releases our handle.
+      check(topsptiActivityRegisterCallbacks(request, complete),
+            "register activity callbacks");
       check(topsptiEnableDomain(1, subscriber, TOPSPTI_CB_DOMAIN_RUNTIME_API),
             "enable runtime callbacks");
       enabledDomains.push_back(TOPSPTI_CB_DOMAIN_RUNTIME_API);

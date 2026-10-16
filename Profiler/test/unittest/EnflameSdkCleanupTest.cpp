@@ -20,7 +20,11 @@ std::vector<std::string> calls;
 bool subscribed = false;
 bool externalErrorHandle = false;
 int subscribes = 0, unsubscribes = 0, failUnsubscribe = 0;
-int failDisable = 0, failEnable = 0;
+int failDisable = 0, failEnable = 0, failRegister = 0;
+void externalRequest(uint8_t **, size_t *, size_t *) {}
+void externalComplete(uint8_t *, size_t, size_t) {}
+Topspti_BuffersCallbackRequestFunc requestHandler = externalRequest;
+Topspti_BuffersCallbackCompleteFunc completeHandler = externalComplete;
 Topspti_ActivityKind failKind = TOPSPTI_ACTIVITY_KIND_KERNEL;
 void require(bool condition, const char *message) {
   if (!condition)
@@ -91,8 +95,15 @@ TopsptiResult topsptiActivityDisable(Topspti_ActivityKind kind) {
   return TOPSPTI_SUCCESS;
 }
 TopsptiResult
-topsptiActivityRegisterCallbacks(Topspti_BuffersCallbackRequestFunc,
-                                 Topspti_BuffersCallbackCompleteFunc) {
+topsptiActivityRegisterCallbacks(Topspti_BuffersCallbackRequestFunc request,
+                                 Topspti_BuffersCallbackCompleteFunc complete) {
+  calls.push_back("register-handlers");
+  if (failRegister > 0) {
+    --failRegister;
+    return TOPSPTI_ERROR_INVALID_PARAMETER;
+  }
+  requestHandler = request;
+  completeHandler = complete;
   return TOPSPTI_SUCCESS;
 }
 TopsptiResult topsptiActivityFlushAll(uint32_t) { return TOPSPTI_SUCCESS; }
@@ -118,6 +129,11 @@ int main(int argc, char **argv) {
       failure([&] { profiler->start(); });
       require(subscribed && unsubscribes == 0,
               "Failed acquisition destroyed an external subscriber");
+      require(requestHandler == externalRequest &&
+                  completeHandler == externalComplete &&
+                  std::count(calls.begin(), calls.end(), "register-handlers") ==
+                      0,
+              "Failed acquisition replaced external activity handlers");
       if (externalErrorHandle) {
         auto error = failure([&] { profiler->start(); });
         require(
@@ -127,6 +143,25 @@ int main(int argc, char **argv) {
                 "Unknown subscriber ownership attempted teardown");
       }
       subscribed = false;
+    } else if (test == "register") {
+      failRegister = 1;
+      auto error = failure([&] { profiler->start(); });
+      require(error.find("register activity callbacks") != std::string::npos,
+              "Registration failure lost original SDK error");
+      require(!subscribed && unsubscribes == 1 && activities.empty() &&
+                  domains.empty(),
+              "Registration failure did not release the owned subscriber");
+      require(requestHandler == externalRequest &&
+                  completeHandler == externalComplete,
+              "Failed registration changed handler pointers");
+      profiler->start();
+      require(subscribes == 2 && subscribed &&
+                  requestHandler != externalRequest &&
+                  completeHandler != externalComplete,
+              "Registration failure did not recover on a fresh start");
+      require(calls.size() >= 3 && calls[0] == "subscribe" &&
+                  calls[1] == "register-handlers" && calls[2] == "unsubscribe",
+              "Activity handlers were registered before subscriber ownership");
     } else if (test == "disable") {
       profiler->start();
       failDisable = 1;

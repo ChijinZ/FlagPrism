@@ -57,7 +57,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND FLAGPRISM_BACKEND STREQUAL "enflame")
     "${TOPS_INCLUDE_DIR}" "${TOPSPTI_INCLUDE_DIR}")
   target_compile_features(EnflameSdkCleanupTest PRIVATE cxx_std_17)
   target_compile_options(EnflameSdkCleanupTest PRIVATE -fexceptions -Werror)
-  foreach(_case disable unsubscribe repeat partial external external-partial)
+  foreach(_case disable unsubscribe repeat partial external external-partial register)
     add_test(NAME EnflameSdkCleanup.${_case}
       COMMAND EnflameSdkCleanupTest ${_case})
   endforeach()
