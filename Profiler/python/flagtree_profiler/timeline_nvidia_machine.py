@@ -16,6 +16,7 @@ import sys
 import time
 
 LIMIT = 32 * 1024 * 1024
+MAX_CALL_REFERENCES = 65536
 _MARKER = re.compile(r'flagprism_timeline_v1_site_(\d+)_(entry|exit)\s*;?\s*\Z')
 _GETTER = re.compile(r'(?:@!?%[\w.$]+\s+)?mov\.(?:u64|b64)\s+[%\w.$]+,\s*%globaltimer\s*;\Z')
 
@@ -334,11 +335,16 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
     _need(pcs, 'No actual mapped counter PCs')
     # Bind a read to all of its exact direct call sites. A callee can contain
     # multiple reads and a read can have multiple callers; neither is collapsed.
-    counter_calls = []
+    counter_calls, callers = [], {}
+    for call in calls:
+        if call['target_status'] == 'resolved':
+            callers.setdefault(call['callee'], []).append(call)
+    reference_count = 0
     for counter in pcs:
-        references = [dict(call) for call in calls
-                      if call['callee'] == counter['function'] and
-                      call['target_status'] == 'resolved']
+        direct = callers.get(counter['function'], ())
+        reference_count += len(direct)
+        _need(reference_count <= MAX_CALL_REFERENCES, 'Counter call reference budget exceeded')
+        references = [dict(call) for call in direct]
         counter_calls.append(dict(function=counter['function'], pc=counter['pc'],
                                   site_id=counter['site_id'], phase=counter['phase'],
                                   direct_call_sites=references))

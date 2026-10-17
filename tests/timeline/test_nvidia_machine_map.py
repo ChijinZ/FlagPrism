@@ -241,6 +241,12 @@ class CounterMapTests(unittest.TestCase):
         a['sass_lines'] = a['sass_lines'].replace(b'SB0, 0x2', b'SB0, 0x0')
         with self.assertRaises(ValueError): machine.counter_map(**a)
 
+    def test_call_reference_expansion_has_a_bounded_output(self):
+        a, _ = self._called_helper()
+        with patch.object(machine, 'MAX_CALL_REFERENCES', 1):
+            with self.assertRaisesRegex(ValueError, 'reference budget'):
+                machine.counter_map(**a)
+
     def test_malformed_elf_and_missing_debug_section(self):
         for blob in [b'\x7fELF', elf()[:250], elf().replace(b'.nv_debug_ptx_txt', b'.nv_debug_ptx_bad')]:
             with self.assertRaises(ValueError): machine.embedded_ptx(blob)
