@@ -87,6 +87,7 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
         if type(site) is not int:
             raise ValueError('Tracked operation identity must be an integer')
         if site in selected:
+            _integer(row.get('scopeId'), 'compiler source scope')
             _need(site not in origins, 'Ambiguous tracked source identity')
             origins[site] = row
     _need(set(origins) == set(selected), 'Missing actual source origins')

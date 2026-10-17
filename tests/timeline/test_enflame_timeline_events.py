@@ -60,6 +60,18 @@ class EnflameEventsTests(unittest.TestCase):
         self.assertEqual(value['boundary_status'], 'unverified')
         self.assertIsNone(value['observers'][0]['physical_identity'])
 
+    def test_v2_endpoint_stream_keeps_stricter_time_order(self):
+        value = convert()
+        value['observers'][0]['record_order'] = 'endpoint_stream'
+        value['records'][2]['tick'] = 35
+        value['events'][1]['start_tick'] = 35
+        for event in value['events']:
+            event['occurrence_basis'] = 'complete_entry_order'
+        validate_raw_batch(value)
+        value['records'][2]['tick'] = 10
+        value['events'][1]['start_tick'] = 10
+        with self.assertRaises(ValueError): validate_raw_batch(value)
+
     def test_export_local_ids_do_not_alias_owning_sessions(self):
         first, second = convert(namespace='session-one'), convert(namespace='session-two')
         for field in ['records', 'events', 'observers']:
@@ -113,6 +125,8 @@ class EnflameEventsTests(unittest.TestCase):
                        lambda c,m: m.update(debug_protocol_version=True),
                        lambda c,m: m.update(debug_clock_bits=64),
                        lambda c,m: m.update(debug_record_capacity=3),
+                       lambda c,m: (m['debug_tracked_table'][0].update(scopeId=True),
+                                    c['runtime_metadata']['record_plan'][0].update(scope_id=1)),
                        lambda c,m: c['runtime_metadata']['record_plan'][0].update(scope_id=3),
                        lambda c,m: m['debug_tracked_table'].append(copy.deepcopy(m['debug_tracked_table'][0]))]:
             capture, metadata = fixture(); change(capture, metadata)
