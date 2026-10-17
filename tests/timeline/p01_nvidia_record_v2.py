@@ -78,6 +78,18 @@ def main():
         tl.store(C + r[:, None] * N + c[None, :], accum,
                  (r[:, None] < M) & (c[None, :] < N))
 
+    @triton.jit
+    def grid_map(X, Y, State, N, BLOCK: tl.constexpr):
+        pid = (tl.program_id(0) + tl.program_id(1) * tl.num_programs(0) +
+               tl.program_id(2) * tl.num_programs(0) * tl.num_programs(1))
+        lane = tl.arange(0, BLOCK)
+        ix = pid * BLOCK + lane
+        value = tl.load(X + ix, ix < N, 0)
+        value = value * 0.625 + 0.25
+        tl.store(Y + ix, value, ix < N)
+        prior = tl.load(State + pid + lane, lane == 0, 0)
+        tl.store(State + pid + lane, prior + 1, lane == 0)
+
     allocations = []
 
     class Allocator:
@@ -301,6 +313,36 @@ def main():
                     calls.append({'name': 'gemm-stages' + str(stages), 'kind': 'ordinary'})
                 require(torch.allclose(result.cpu().double(), reference, rtol=1e-2, atol=1e-2), 'GEMM math changed')
                 require(torch.equal(left.cpu(), left_cpu) and torch.equal(right.cpu(), right_cpu), 'GEMM input changed')
+        grid_input_cpu = torch.rand(960, dtype=torch.float32)
+        grid_input = grid_input_cpu.cuda()
+        grid_output = torch.empty(968, dtype=torch.float32, device='cuda')
+        grid_state = torch.empty(15, dtype=torch.int32, device='cuda')
+        grid_hashes = []
+        for index, geometry in enumerate(((1, 1, 1), (7, 1, 1), (3, 5, 1), (1, 1, 1))):
+            count = prod(geometry)
+            n = count * 64 - 3
+            for detailed in (False, True):
+                grid_output.fill_(-17.25)
+                grid_state.zero_()
+                launch = lambda token, warmup=False: grid_map[geometry](
+                    grid_input, grid_output, grid_state, n, 64, num_warps=4,
+                    instrumentation_mode=token, warmup=warmup)
+                name = 'grid-map-' + str(index)
+                if detailed:
+                    compiled = collect(name, launch, None)
+                    grid_hashes.append(compiled.hash)
+                else:
+                    launch('')
+                    calls.append({'name': name, 'kind': 'ordinary'})
+                require(torch.allclose(grid_output[:n].cpu(),
+                    grid_input_cpu[:n] * 0.625 + 0.25, rtol=2e-6, atol=2e-6),
+                    'Grid-map math changed')
+                require(torch.equal(grid_output[n:].cpu(), torch.full((968-n,), -17.25)),
+                        'Grid-map tail canary changed')
+                require(grid_state.cpu().tolist() == [1] * count + [0] * (15-count),
+                        'Grid-map ordinary invocation was replayed or program mapping changed')
+                require(torch.equal(grid_input.cpu(), grid_input_cpu), 'Grid-map input changed')
+        require(len(set(grid_hashes)) == 1, 'Runtime grid facts leaked into the binary cache key')
         save('result.json', {'status': 'real_record_v2_math_passed_not_full_P01',
                             'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                             'decoder_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
