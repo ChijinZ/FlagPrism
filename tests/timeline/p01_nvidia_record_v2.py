@@ -284,7 +284,7 @@ def main():
             for detailed in (False, True):
                 y.fill_(-17.25)
                 state.zero_()
-                launch = lambda token, warmup=False: recurrence[(3,)](x, y, k_device, state, 129, 64,
+                launch = lambda token, warmup=False: recurrence.run(x, y, k_device, state, 129, 64, grid=(3,),
                                                         num_warps=4, instrumentation_mode=token, warmup=warmup)
                 if detailed:
                     compiled = collect('recurrence-k' + str(k), launch, (0, 2))
@@ -304,7 +304,7 @@ def main():
         reference = left_cpu.double() @ right_cpu.double()
         for stages in (2, 3):
             for detailed in (False, True):
-                launch = lambda token, warmup=False: gemm[(2, 2)](left, right, result, 48, 56, 96, 32, 32, 32,
+                launch = lambda token, warmup=False: gemm.run(left, right, result, 48, 56, 96, 32, 32, 32, grid=(2, 2),
                                                     num_warps=4, num_stages=stages, instrumentation_mode=token, warmup=warmup)
                 if detailed:
                     collect('gemm-stages' + str(stages), launch, None)
@@ -324,8 +324,8 @@ def main():
             for detailed in (False, True):
                 grid_output.fill_(-17.25)
                 grid_state.zero_()
-                launch = lambda token, warmup=False: grid_map[geometry](
-                    grid_input, grid_output, grid_state, n, 64, num_warps=4,
+                launch = lambda token, warmup=False: grid_map.run(
+                    grid_input, grid_output, grid_state, n, 64, grid=geometry, num_warps=4,
                     instrumentation_mode=token, warmup=warmup)
                 name = 'grid-map-' + str(index)
                 if detailed:
