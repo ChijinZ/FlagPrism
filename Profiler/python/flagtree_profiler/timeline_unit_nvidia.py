@@ -45,9 +45,14 @@ def nvidia_counter_unit_proofs(batch, *, machine_map, max_elapsed_ns):
     if any(row['timer_bits'] != 64 for row in batch['observers']):
         raise ValueError('NVIDIA unit provider requires full-width timer records')
     digest = document_sha256(machine_map)
+    from . import timeline_nvidia_machine
+    implementation = document_sha256({
+        'unit_provider': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        'machine_rules': hashlib.sha256(Path(timeline_nvidia_machine.__file__).read_bytes()).hexdigest()})
     return [CounterUnitProof(**batch['identity'], raw_sha256=batch['raw_artifact']['sha256'],
         observer_id=observer['id'], period_numerator_ns=1, period_denominator=1,
         max_elapsed_ns=max_elapsed_ns, provider='nvidia.sm120.globaltimer_counter_unit.v1',
+        implementation_sha256=implementation,
         evidence_ids=('nvidia.PTX_ISA_9.4.section_10.28', 'actual_machine_map_sha256:'+digest))
         for observer in batch['observers']]
 

@@ -29,11 +29,14 @@ class CounterUnitProof:
     max_elapsed_ns: int
     provider: str
     evidence_ids: tuple
+    implementation_sha256: str | None = None
 
     def __post_init__(self):
         for field in ('capture_id', 'invocation_id', 'binary_id', 'observer_id', 'provider'):
             _text(getattr(self, field), field)
         _sha(self.raw_sha256)
+        if self.implementation_sha256 is not None:
+            _sha(self.implementation_sha256)
         for field in ('period_numerator_ns', 'period_denominator', 'max_elapsed_ns'):
             _integer(getattr(self, field), field, 1)
         if (type(self.evidence_ids) is not tuple or not self.evidence_ids or
@@ -94,6 +97,7 @@ def derive_counter_ns_views(batch, proofs):
             source_boundary_status=batch['boundary_status'],
             cross_observer_epoch_verified=False, time_arrows_verified=False,
             unit_proof=dict(provider=proof.provider, evidence_ids=list(proof.evidence_ids),
+                implementation_sha256=proof.implementation_sha256,
                 period_numerator_ns=proof.period_numerator_ns,
                 period_denominator=proof.period_denominator,
                 max_elapsed_ns=proof.max_elapsed_ns),
