@@ -46,7 +46,9 @@ def canonicalize_nvidia_capture(decoded, *, owner, metadata, raw_sha256, raw_byt
                             candidate.get('location') if source_sha is None else None)
             sources[key] = dict(id=key, source_sha256=source_sha,
                 relation='compiler_origin_navigation', location=source,
-                provenance='actual_compiler_origin_and_retained_source_snapshot')
+                provenance=('actual_compiler_origin_and_retained_source_snapshot'
+                            if source_sha is not None else
+                            'actual_compiler_location_without_retained_source_snapshot'))
             if key not in refs:
                 refs.append(key)
         sites.append(dict(id=sid, name=candidate.get('selected_scope_name') or candidate['operation'],

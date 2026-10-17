@@ -63,7 +63,7 @@ def main():
             require(state.cpu().tolist() == [1, 1, 1], 'Math launch was replayed')
             llir = compiled.asm['llir']
             require('timeline_llvm_begin_dependency' in llir and
-                    'timeline_llvm_end_dependency' in llir,
+                    'timeline_llvm_counter_dependency' in llir,
                     'Actual compiled SSA dependencies are absent')
             getter_lines = [line for line in llir.splitlines() if '%globaltimer' in line]
             require(getter_lines and all('~{memory}' in line and 'asm sideeffect' in line

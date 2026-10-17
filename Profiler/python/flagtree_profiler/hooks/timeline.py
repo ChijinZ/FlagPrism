@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import time
 
 
 def _persist(path, payload):
@@ -96,17 +97,19 @@ class TimelineInstrumentationMixin:
         self._timeline_zero = ContextVar('timeline_zero_grid', default=False)
         self._timeline_descriptors = {}
         self._timeline_rows = []
+        self._timeline_machine = {}
         self.allocator = TimelineAllocator(self)
 
     def _timeline_fingerprint(self):
         from ..native import compiler_binding
         from triton._C import libtriton
         from .. import timeline_runtime, timeline_cuda_runtime
-        from .. import timeline_events, timeline_events_nvidia
+        from .. import timeline_events, timeline_events_nvidia, timeline_nvidia_machine
         binding = compiler_binding()
         if (getattr(binding, 'TIMELINE_RECORD_VERSION', None) != 2 or
                 getattr(binding, 'TIMELINE_STORAGE_VERSION', None) != 1 or
-                getattr(binding, 'TIMELINE_BOUNDARY_VERSION', None) != 1):
+                getattr(binding, 'TIMELINE_BOUNDARY_VERSION', None) != 1 or
+                getattr(binding, 'TIMELINE_MARKER_VERSION', None) != 1):
             raise RuntimeError('Timeline requires its matching native compiler ABI')
         driver = importlib.import_module('triton.backends.nvidia.driver')
         if getattr(driver.CudaLauncher, 'profile_admission_version', None) != 2:
@@ -114,6 +117,7 @@ class TimelineInstrumentationMixin:
         paths = [libtriton.__file__, driver.__file__, __file__,
                  str(Path(__file__).with_name('instrumentation.py')),
                  timeline_events.__file__, timeline_events_nvidia.__file__,
+                 timeline_nvidia_machine.__file__,
                  timeline_runtime.__file__, timeline_cuda_runtime.__file__]
         return hashlib.sha256(''.join(
             hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -164,6 +168,7 @@ class TimelineInstrumentationMixin:
         from ..timeline_events_nvidia import canonicalize_nvidia_capture
         directory = Path(base).with_suffix('.timeline')
         directory.mkdir(parents=True, exist_ok=True)
+        machine_deadline = time.monotonic()+60
         for identity in self.timeline_pool.invocation_ids:
             owner = self.timeline_pool.snapshot(identity)
             if owner['state'] in ('armed', 'submitting', 'quarantined', 'admitted'):
@@ -210,13 +215,19 @@ class TimelineInstrumentationMixin:
                          (json.dumps(decoded, indent=2)+'\n').encode())
                 _persist(directory / prefix.with_suffix('.async.json'),
                          (json.dumps(facts, indent=2)+'\n').encode())
-            _persist(directory / prefix.with_suffix('.json'),
-                     (json.dumps(capture, indent=2)+'\n').encode())
             for artifact in metadata.get('timeline_artifacts', []):
                 payload = Path(artifact['path']).read_bytes()
                 if hashlib.sha256(payload).hexdigest() != artifact['sha256']:
                     raise RuntimeError('Compiled timeline artifact changed before export')
                 _persist(directory / artifact['retained_file'], payload)
+            from ..timeline_nvidia_machine import inspect_capture_binary
+            key = (str(directory), owner['binary_id'])
+            if key not in self._timeline_machine:
+                self._timeline_machine[key] = inspect_capture_binary(directory,
+                    metadata=metadata, plan=owner['plan'], deadline=machine_deadline)
+            capture['machine_counter_mapping'] = self._timeline_machine[key]
+            _persist(directory / prefix.with_suffix('.json'),
+                     (json.dumps(capture, indent=2)+'\n').encode())
             if not any(row['invocation_id'] == identity for row in self._timeline_rows):
                 self._timeline_rows.append(dict(invocation_id=identity,
                     capture_id=owner['capture_id'], binary_id=owner['binary_id'],

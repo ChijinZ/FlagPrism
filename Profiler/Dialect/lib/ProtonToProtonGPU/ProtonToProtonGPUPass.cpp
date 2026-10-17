@@ -114,8 +114,15 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
         if (supportsBoundaryValue(value.getType()))
           dependencies.push_back(value);
     }
-    Value counter = builder.create<gpu::ReadCounterOp>(
+    auto read = builder.create<gpu::ReadCounterOp>(
         record.getLoc(), clkType, metricType, dependencies);
+    if (module->hasAttr("proton.timeline_marker_version")) {
+      read->setAttr("proton.timeline_site_id",
+                    builder.getI32IntegerAttr(scopeInfo.getOpScopeId(record)));
+      read->setAttr("proton.timeline_is_start",
+                    builder.getBoolAttr(record.getIsStart()));
+    }
+    Value counter = read;
     if (operation && record.getIsStart())
       for (OpOperand &operand : operation->getOpOperands())
         if (supportsBoundaryValue(operand.get().getType())) {
@@ -469,6 +476,16 @@ public:
   void runOnOperation() override {
     ModuleOp m = getOperation();
     Location loc = m->getLoc();
+
+    if (m->hasAttr("proton.timeline_marker_version")) {
+      auto marker = m->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
+      auto boundary = m->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
+      if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
+          !boundary || boundary.getInt() != 1) {
+        m.emitError("Unsupported timeline marker version or missing boundary ABI");
+        return signalPassFailure();
+      }
+    }
 
     if (m->hasAttr("proton.timeline_boundary_version")) {
       auto boundary = m->getAttrOfType<IntegerAttr>(

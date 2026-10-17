@@ -8,6 +8,7 @@
 #include "mlir/IR/PatternMatch.h"
 #include "third_party/nvidia/include/TritonNVIDIAGPUToLLVM/PTXAsmFormat.h"
 #include "triton/Conversion/TritonGPUToLLVM/Utility.h"
+#include <string>
 
 namespace mlir::triton {
 namespace proton::gpu {
@@ -166,8 +167,20 @@ struct ReadCounterOpConversion
           return op.emitError("Unsupported timeline counter dependency type");
         dependencies.push_back(bits);
       }
+    std::string marker;
+    if (module->hasAttr("proton.timeline_marker_version")) {
+      auto version = module->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
+      auto site = op->getAttrOfType<IntegerAttr>("proton.timeline_site_id");
+      auto start = op->getAttrOfType<BoolAttr>("proton.timeline_is_start");
+      if (!version || !version.getType().isInteger(32) || version.getInt() != 1 ||
+          !site || !site.getType().isInteger(32) || site.getInt() < 0 ||
+          site.getInt() > 0x7fffffff || !start)
+        return op.emitError("Missing or invalid timeline counter marker identity");
+      marker = "flagprism_timeline_v1_site_" + std::to_string(site.getInt()) +
+               (start.getValue() ? "_entry" : "_exit");
+    }
     Value clock = targetInfo.clockWithDependencies(
-        rewriter, op.getLoc(), isClock64, dependencies);
+        rewriter, op.getLoc(), isClock64, dependencies, marker);
     if (!clock)
       return op.emitError("Target does not implement counter dependencies");
     rewriter.replaceOp(op, clock);

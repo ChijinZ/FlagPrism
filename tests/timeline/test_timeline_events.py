@@ -97,6 +97,16 @@ class EventsTests(unittest.TestCase):
             canonicalize_nvidia_capture(decoded, owner=owner, metadata=metadata,
                                        raw_sha256='a'*64, raw_bytes=256)
 
+    def test_missing_snapshot_is_only_a_compiler_location(self):
+        decoded, owner, metadata = fixture()
+        metadata['scope_id_origins'] = {}
+        batch = canonicalize_nvidia_capture(decoded, owner=owner, metadata=metadata,
+                                           raw_sha256='a'*64, raw_bytes=256)
+        self.assertTrue(batch['sources'])
+        self.assertTrue(all(s['source_sha256'] is None and s['provenance'] ==
+            'actual_compiler_location_without_retained_source_snapshot'
+            for s in batch['sources']))
+
     def test_large_ticks_stay_exact(self):
         decoded, owner, metadata = fixture()
         for record in decoded['records']:

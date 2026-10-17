@@ -19,7 +19,8 @@ public:
 
   Value clockWithDependencies(ConversionPatternRewriter &rewriter, Location loc,
                               bool isClock64,
-                              ArrayRef<Value> dependencies) const override;
+                              ArrayRef<Value> dependencies,
+                              StringRef marker) const override;
   Value anchorValue(ConversionPatternRewriter &rewriter, Location loc,
                      Value counter, Value bits) const override;
 

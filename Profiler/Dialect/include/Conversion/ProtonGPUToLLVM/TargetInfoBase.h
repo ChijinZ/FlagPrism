@@ -24,8 +24,10 @@ public:
   // need inspection; a backend must not advertise a hardware fence from them.
   virtual Value clockWithDependencies(ConversionPatternRewriter &rewriter,
                                       Location loc, bool isClock64,
-                                      ArrayRef<Value> dependencies) const {
-    return dependencies.empty() ? clock(rewriter, loc, isClock64) : Value{};
+                                      ArrayRef<Value> dependencies,
+                                      StringRef marker = {}) const {
+    return dependencies.empty() && marker.empty()
+               ? clock(rewriter, loc, isClock64) : Value{};
   }
   virtual Value anchorValue(ConversionPatternRewriter &, Location, Value,
                              Value) const { return {}; }

@@ -1,0 +1,188 @@
+"""CPU counter-map contracts; synthetic ELF/tool fixtures are not device evidence."""
+import copy
+import hashlib
+import json
+import os
+from pathlib import Path
+import struct
+import sys
+import tempfile
+import time
+import unittest
+from unittest.mock import patch
+from flagtree.profiler import timeline_nvidia_machine as machine
+
+PTX = '''.version 8.8
+.target sm_120a
+.address_size 64
+.visible .entry kernel() {
+// flagprism_timeline_v1_site_0_entry;
+mov.u64 %rd1, %globaltimer;
+// flagprism_timeline_v1_site_0_exit;
+mov.u64 %rd2, %globaltimer;
+}
+'''
+DEBUG = '''.version 8.8
+.target sm_120a
+.address_size 64
+.visible .entry kernel() {
+
+mov.u64 %rd1, %globaltimer;
+
+mov.u64 %rd2, %globaltimer;
+}
+'''
+SASS = '''.section .text.kernel,"ax",@progbits
+//## File ".nv_debug_ptx_txt", line 6
+/*0000*/ CS2R R2, SR_GLOBALTIMERLO;
+//## File ".nv_debug_ptx_txt", line 8
+/*0010*/ CS2R R4, SR_GLOBALTIMERLO;
+'''
+DOC = [{'SchemaVersion': {'major': 13, 'minor': 2, 'revision': 0},
+        'SM': {'version': {'major': 12, 'minor': 0}}},
+       [{'function-name': 'kernel', 'start': 0, 'length': 32,
+         'sass-instructions': [{'opcode': 'CS2R', 'operands': 'R2,SR_GLOBALTIMERLO'},
+                               {'opcode': 'CS2R', 'operands': 'R4,SR_GLOBALTIMERLO'}]}]]
+
+
+def elf(debug=DEBUG):
+    strings = b'\0.shstrtab\0.nv_debug_ptx_txt\0'
+    data = b'\0'.join(v.encode() for v in debug.splitlines())+b'\0'
+    header = struct.pack('<16sHHIQQQIHHHHHH', b'\x7fELF\x02\x01\x01'+b'\0'*9,
+                         2, 190, 1, 0, 0, 64, 0, 64, 0, 0, 64, 3, 1)
+    tables = [bytes(64), struct.pack('<IIQQQQIIQQ', 1, 3, 0, 0, 256,
+                                     len(strings), 0, 0, 1, 0),
+              struct.pack('<IIQQQQIIQQ', strings.index(b'.nv_debug'), 1, 0, 0,
+                          256+len(strings), len(data), 0, 0, 1, 0)]
+    return header+b''.join(tables)+strings+data
+
+
+def args():
+    return dict(cubin=elf(), ptx=PTX.encode(), sass_lines=SASS.encode(),
+                sass_json=json.dumps(DOC).encode(), binary_id='a'*64,
+                scope_ids=(0,), expected_sm=(12, 0))
+
+
+class CounterMapTests(unittest.TestCase):
+    def test_complete_mapping_is_not_a_certificate(self):
+        value = machine.counter_map(**args())
+        self.assertEqual([(p['site_id'], p['phase'], p['pc']) for p in value['counter_pcs']],
+                         [(0, 'entry', 0), (0, 'exit', 16)])
+        self.assertFalse(value['region_boundaries_verified'])
+        self.assertFalse(value['clock_qualified'])
+        self.assertNotIn('time_ns', value)
+
+    def test_missing_marker_does_not_guess_nearest_clock(self):
+        a = args(); a['ptx'] = PTX.replace('// flagprism_timeline_v1_site_0_entry;', '').encode()
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_changed_source_tokens_or_line_numbers_rejected(self):
+        for text in [PTX.replace('%rd1', '%rd3'), '\n'+PTX]:
+            a = args(); a['ptx'] = text.encode()
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_source_binding_does_not_confer_64bit_getter(self):
+        a = args(); a['ptx'] = PTX.replace('mov.u64', 'mov.u32').encode()
+        a['cubin'] = elf(DEBUG.replace('mov.u64', 'mov.u32'))
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_wrong_ptx_line_is_not_nearest_clock(self):
+        a = args(); a['sass_lines'] = SASS.replace('line 6', 'line 5').encode()
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_actual_json_predicate_and_pc_must_match_text(self):
+        for key, value in [('predicate', '@P1'), ('opcode', 'S2R')]:
+            a = args(); doc = copy.deepcopy(DOC); doc[1][0]['sass-instructions'][0][key] = value
+            a['sass_json'] = json.dumps(doc).encode()
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_complete_instruction_coverage_required(self):
+        a = args(); a['sass_lines'] = SASS.replace('/*0010*/ CS2R R4, SR_GLOBALTIMERLO;', '').encode()
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_foreign_scope_and_wrong_phase_rejected(self):
+        for text in [PTX.replace('site_0_entry', 'site_1_entry'),
+                     PTX.replace('site_0_exit', 'site_0_entry')]:
+            a = args(); a['ptx'] = text.encode()
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_duplicated_machine_pc_candidates_stay_static(self):
+        a = args(); doc = copy.deepcopy(DOC); f = doc[1][0]
+        f['length'] = 48
+        f['sass-instructions'].insert(1, {'opcode': 'CS2R', 'operands': 'R2,SR_GLOBALTIMERLO'})
+        a['sass_json'] = json.dumps(doc).encode()
+        a['sass_lines'] = SASS.replace('//## File ".nv_debug_ptx_txt", line 8',
+            '/*0010*/ CS2R R2, SR_GLOBALTIMERLO;\n//## File ".nv_debug_ptx_txt", line 8').replace('/*0010*/ CS2R R4', '/*0020*/ CS2R R4').encode()
+        value = machine.counter_map(**a)
+        self.assertEqual(len(value['counter_pcs']), 3)
+        self.assertFalse(value['region_boundaries_verified'])
+
+    def test_malformed_elf_and_missing_debug_section(self):
+        for blob in [b'\x7fELF', elf()[:250], elf().replace(b'.nv_debug_ptx_txt', b'.nv_debug_ptx_bad')]:
+            with self.assertRaises(ValueError): machine.embedded_ptx(blob)
+
+    def test_boolean_versions_scopes_and_targets_rejected(self):
+        for key, value in [('marker_version', True), ('scope_ids', (True,)),
+                           ('expected_sm', (12, False))]:
+            a = args(); a[key] = value
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+        a = args(); doc = copy.deepcopy(DOC); doc[0]['SchemaVersion']['revision'] = False
+        a['sass_json'] = json.dumps(doc).encode()
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_quoted_comment_characters_are_preserved(self):
+        a = args(); old = '.address_size 64'; new = '.file 1 "https://x/a // not a comment"'
+        a['ptx'] = PTX.replace(old, new).encode()
+        a['cubin'] = elf(DEBUG.replace(old, new))
+        self.assertEqual(len(machine.counter_map(**a)['counter_pcs']), 2)
+
+    def _inputs(self, root):
+        rows = []
+        for name, raw in [('x.cubin', elf()), ('x.ptx', PTX.encode())]:
+            (root/name).write_bytes(raw)
+            rows.append(dict(retained_file=name, sha256=hashlib.sha256(raw).hexdigest()))
+        return dict(binary_id='a'*64, scope_id_names=[(0, 'one')],
+            timeline_artifacts=rows, compiler_metadata={'target': {'backend': 'cuda', 'arch': 120}})
+
+    def _tool(self, root, body):
+        path = root/'tool'
+        path.write_text('#!'+sys.executable+'\n'+body)
+        path.chmod(0o700)
+        return str(path)
+
+    def test_tool_failure_is_durable_and_never_verified(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); meta = self._inputs(root)
+            tool = self._tool(root, 'raise SystemExit(7)\n')
+            with patch.dict(os.environ, FLAGTREE_NVDISASM=tool):
+                first = machine.inspect_capture_binary(root, metadata=meta, plan={'timeline_marker_version': 1})
+                second = machine.inspect_capture_binary(root, metadata=meta, plan={'timeline_marker_version': 1})
+            self.assertEqual(first, second)
+            self.assertEqual(first['status'], 'counter_mapping_unavailable')
+            receipt = json.loads((root/'machine'/('a'*64)/'commands.json').read_text())[0]
+            self.assertEqual(receipt['returncode'], 7)
+            self.assertEqual(receipt['state'], 'failed')
+
+    def test_tool_timeout_is_owned_stopped_and_reaped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); meta = self._inputs(root)
+            tool = self._tool(root, 'import time\ntime.sleep(30)\n')
+            with patch.dict(os.environ, FLAGTREE_NVDISASM=tool):
+                value = machine.inspect_capture_binary(root, metadata=meta,
+                    plan={'timeline_marker_version': 1}, deadline=time.monotonic()+0.1)
+            self.assertEqual(value['status'], 'counter_mapping_unavailable')
+            receipt = json.loads((root/'machine'/('a'*64)/'commands.json').read_text())[0]
+            self.assertEqual(receipt['state'], 'stopped')
+            self.assertIsNotNone(receipt['returncode'])
+
+    def test_tool_output_budget_is_not_a_success(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp); meta = self._inputs(root)
+            tool = self._tool(root, 'print("x"*32768)\n')
+            with patch.dict(os.environ, FLAGTREE_NVDISASM=tool), patch.object(machine, 'LIMIT', 8192):
+                value = machine.inspect_capture_binary(root, metadata=meta, plan={'timeline_marker_version': 1})
+            self.assertEqual(value['status'], 'counter_mapping_unavailable')
+            self.assertIn('output budget', value['reason'])
+
+
+if __name__ == '__main__': unittest.main()

@@ -24,7 +24,8 @@ def main():
     from flagtree.profiler.native import compiler_binding
     from flagtree.profiler.mode import Default
     b = compiler_binding()
-    require(b.TIMELINE_BOUNDARY_VERSION == 1, 'Wrong installed boundary compiler')
+    require(b.TIMELINE_BOUNDARY_VERSION == 1 and b.TIMELINE_MARKER_VERSION == 1,
+            'Wrong installed boundary/marker compiler')
     context = ir.context()
     ir.load_dialects(context)
     nvidia.load_dialects(context)
@@ -53,7 +54,8 @@ def main():
 
     m = prepare(True)
     plan = b.get_automatic_proton_plan(m)
-    require(plan.get('timeline_boundary_version') == 1 and
+    require(plan.get('timeline_marker_version') == 1 and
+            plan.get('timeline_boundary_version') == 1 and
             plan.get('timeline_boundary_strategy') == 'llvm_ssa_pending_machine_audit',
             'Plan incorrectly describes compiler-only boundary strength')
     (a.output / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
@@ -85,6 +87,25 @@ def main():
                 rejected.append(label + '-' + name)
             else:
                 raise RuntimeError('Unknown boundary ABI accepted: ' + label + '-' + name)
+    for label, replacement in [('unknown-marker', '99 : i32'),
+                               ('string-marker', '"1"'),
+                               ('boolean-marker', 'true')]:
+        bad_text, count = re.subn(r'proton\.timeline_marker_version\s*=\s*1\s*:\s*i32',
+                                 'proton.timeline_marker_version = ' + replacement,
+                                 original, count=1)
+        require(count == 1, 'Cannot construct marker version negative')
+        path = a.output / (label + '.ttgir')
+        path.write_text(bad_text)
+        for name, action in [('plan', lambda: b.get_automatic_proton_plan(parse(path))),
+                             ('lower', lambda: lower(parse(path)))]:
+            try:
+                action()
+            except RuntimeError:
+                rejected.append(label + '-' + name)
+            else:
+                raise RuntimeError('Invalid marker ABI accepted: ' + label + '-' + name)
+    require('proton.timeline_site_id' in text and 'proton.timeline_is_start' in text,
+            'Actual lowered counters lost their site/phase identities')
     (a.output / 'result.json').write_text(json.dumps({
         'status': 'compiler_dependency_contract_passed_not_machine_certified',
         'anchors': anchors, 'dependent_counter_reads': dependent_reads,

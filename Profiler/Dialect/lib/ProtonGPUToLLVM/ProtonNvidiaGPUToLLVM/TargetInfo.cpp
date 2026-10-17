@@ -12,12 +12,13 @@ namespace mlir::triton::proton::gpu::NVIDIA {
 
 Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
                         bool isClock64) const {
-  return clockWithDependencies(rewriter, loc, isClock64, {});
+  return clockWithDependencies(rewriter, loc, isClock64, {}, {});
 }
 
 Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
                                         Location loc, bool isClock64,
-                                        ArrayRef<Value> dependencies) const {
+                                        ArrayRef<Value> dependencies,
+                                        StringRef marker) const {
   // One PTX read avoids combining words across rollover. Legacy modes keep
   // SM-local cycles. Timeline explicitly selects a different device timer;
   // this does not establish a join to CUPTI/host or certify its resolution.
@@ -25,6 +26,13 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
       rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
   bool timeline = mod->hasAttr("proton.timeline_timer");
   PTXBuilder builder;
+  // Retained PTX comments identify compiler counters; actual SASS association
+  // still comes from the cubin's PTX debug-line table, not comment proximity.
+  std::string markerText = "// " + marker.str();
+  if (!marker.empty()) {
+    auto &tag = *builder.create(markerText);
+    tag(llvm::ArrayRef<PTXBuilder::Operand *>{});
+  }
   auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
   auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
   auto *clock = builder.newConstantOperand(
@@ -43,7 +51,7 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
   // are intentionally not presented as a machine-level dependency/fence.
   for (Value dependency : dependencies) {
     auto width = cast<IntegerType>(dependency.getType()).getWidth();
-    auto &consume = *builder.create("// timeline_llvm_end_dependency");
+    auto &consume = *builder.create("// timeline_llvm_counter_dependency");
     consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
   }
   Value result = builder.launch(rewriter, loc,

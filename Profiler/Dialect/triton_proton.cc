@@ -75,6 +75,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
   m.attr("TIMELINE_BOUNDARY_VERSION") = 1;
+  m.attr("TIMELINE_MARKER_VERSION") = 1;
   m.attr("TIMELINE_STORAGE_VERSION") = 1;
   m.attr("TIMELINE_PLAN_VERSION") = 1;
 
@@ -198,6 +199,14 @@ void init_triton_proton(py::module &&m) {
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
+    if (module->hasAttr("proton.timeline_marker_version")) {
+      auto marker = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_marker_version");
+      auto boundary = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_boundary_version");
+      if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
+          !boundary || boundary.getInt() != 1)
+        throw std::runtime_error("Unsupported timeline marker version or missing boundary ABI");
+      result["timeline_marker_version"] = 1;
+    }
     if (module->hasAttr("proton.timeline_boundary_version")) {
       auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
           "proton.timeline_boundary_version");
