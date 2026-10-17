@@ -1,0 +1,258 @@
+{
+  "status": "ordinary_compile_only_barrier_comparison",
+  "actual_math_launches": 0,
+  "canaries_unchanged": true,
+  "objects": [
+    {
+      "name": "recurrence",
+      "source_sha256": "bb209084a3a5a993a296f4fd1a1610b151b90df70fedbfab69ba0cfb96015364",
+      "ordinary_cubin_sha256": "aeef8a9cee9eb4bdf1460fa1237161854db4e24260553ab145aa727e39614e56",
+      "instrumented_cubin_sha256": "c554957bc7f3c58ab423220f5926ca5b844e708c5b6e29d9264267eb42365c12",
+      "ordinary_barriers": [],
+      "instrumented_barriers": [],
+      "ordinary_counts": {},
+      "instrumented_counts": {},
+      "static_barrier_counts_match": true
+    },
+    {
+      "name": "gemm",
+      "source_sha256": "bb209084a3a5a993a296f4fd1a1610b151b90df70fedbfab69ba0cfb96015364",
+      "ordinary_cubin_sha256": "7e716038ae62a47c5f7738b626a87bb6027a1049734eef14f8c0b89a63131fe5",
+      "instrumented_cubin_sha256": "4464a8b3901b85e97f0e491a661315473031959f4eb1345ee337d44139fe8a2d",
+      "ordinary_barriers": [
+        {
+          "function": "gemm",
+          "pc": 752,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 832,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 864,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1056,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1088,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1104,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x2"
+        },
+        {
+          "function": "gemm",
+          "pc": 1120,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1248,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1360,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1392,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1456,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x2"
+        },
+        {
+          "function": "gemm",
+          "pc": 1472,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1600,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1712,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1744,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 1808,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x2"
+        },
+        {
+          "function": "gemm",
+          "pc": 1824,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 1904,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 2000,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 2048,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 2192,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 2352,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 2672,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        }
+      ],
+      "instrumented_barriers": [
+        {
+          "function": "gemm",
+          "pc": 1824,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 2800,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 3200,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 3664,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 4528,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 5472,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x2"
+        },
+        {
+          "function": "gemm",
+          "pc": 5504,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 9488,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 10048,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 11248,
+          "opcode": "LDGDEPBAR",
+          "operands": null
+        },
+        {
+          "function": "gemm",
+          "pc": 12208,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 12240,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        },
+        {
+          "function": "gemm",
+          "pc": 12944,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0"
+        }
+      ],
+      "ordinary_counts": {
+        "LDGDEPBAR": 10,
+        "BAR.SYNC.DEFER_BLOCKING": 9,
+        "DEPBAR.LE": 4
+      },
+      "instrumented_counts": {
+        "LDGDEPBAR": 6,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2
+      },
+      "static_barrier_counts_match": false
+    }
+  ],
+  "limitations": [
+    "Static barrier counts do not certify dynamic schedule, source regions or clocks."
+  ]
+}

@@ -90,3 +90,29 @@ GCU/Ascend producers and complete P01, shared ns/Perfetto export with actual SQL
 and UI, independent new math and the final extra three specified code reviewers.
 Static calls, positive ticks, build success and this checkpoint cannot fill those
 requirements. Goal remains active.
+
+## Additional ordinary-control investigation (not passed)
+
+After the successful raw/object checkpoint above, a new compile-only control
+compared the same source/config ordinary recurrence and GEMM with the profiled
+objects. Output canaries and state remained unchanged, confirming no requested
+math launch. The original strict static-barrier equality test **failed** for
+GEMM; [terminal](unprofiled-first-terminal.json) and [result](unprofiled-first-result.json)
+are preserved. Recurrence has no barriers in either object. Ordinary GEMM has
+10 commits / 9 block barriers / 4 waits; profiled static code has 6 / 5 / 2.
+
+The ordinary final math is fully unrolled (12 HMMA), while the profiled object
+retains a loop (4 HMMA per body). Retained induction instructions suggest three
+iterations. Expanding that candidate loop makes the selected opcode counts match,
+but **copy/wait/dot interleaving still differs**. [Investigation](unprofiled-investigation.json)
+preserves both sequences and actual loop-control instructions. This is not a
+passed schedule-preservation check; static count equality would be insufficient
+even if it held. Do not silently delete the failing criterion or certify the
+original pipeline from this result. Next assess actual mechanism/control paths,
+which dependencies remain and which ordering changes arise from observation,
+including the planned sparse/dense comparison. No clock/region/P01 qualification
+is granted. This is an implementation investigation, not an environment blocker.
+
+The additional [artifact index](unprofiled-artifact-index.json) binds the actual
+ordinary IR/ISA/CFG and failed job. It is separate from the immutable 860-member
+primary archive; the primary successful raw audit retains its original scope.

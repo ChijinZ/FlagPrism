@@ -423,3 +423,10 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - 首只读机器输入检查因调度代码换行转义SyntaxError失败，原件machine-input.txt保留；第二版只修打印换行并成功，无设备重放。其余本轮新producer回归无已知math/compiler故障。
 - 原件archive artifacts/timeline/run-012/preflight/outlined-final-original-evidence.tgz，6241355bytes/SHA079f43e6f8169a9eebc627a9e16c5ce198beafd100aa336f76485e056c37c7b8、860members。Git小证据与可重现stdlib审计在integration/evidence/timeline-outlined-r012；工作机只审留存bytes，没有import产品/oracle。自动region/clock仍unverified，无pftrace/P01/其它后端新producer/独立资格，完整goal保持active。
 - 先前noinline call primitive最终v3原件63483bytes/SHA9035e0249d28d893eb7127b1ec108f9f5b16128377348dd90fc239f4979ce7a1，8实际数学调用/168内区间，forwarded/read-only FP32/int64及runtimeK均通过，机器保call/FMA顺序；不是自动或clock证明。此原语曾有v2编译期字符串错误，原失败仍在旧archive，不改旧结果。
+
+### T019 新增普通编译对照：发现流水调度扰动，未通过的门保持失败
+
+- 已提交/推送d72caf2的自动raw/机器对象checkpoint后，为核同步是否被插桩改变，新增p01_nvidia_unprofiled_objects.py；在同r012实际Docker/独立安装对相同source/config作普通.warmup纯编译。state0/output canary不变，actual_math_launches0，无应用重放。
+- unprofiled-objects-v1 owner46140/start10137276、worker46141/start10137279；实际terminal1/4.972s，worker missing/controllerZ。失败是测试最后的静态同步数严格相等门，不是编译或math失败；原stderr/result和普通IR/ISA/CFG全保。recurrence barrier均空；ordinary GEMM commits10/BAR9/DEPBAR4，对照profile static6/5/2。
+- 留存bytes继续检查：ordinary数学全展开12HMMA，profile retained loop4HMMA；actual初始化R10=0x40、每轮+0x20、比较0xa0、回边0x2d10→0x1430给3轮候选。按候选展开后opcode数量相同，但copy/wait/dot交错仍不同。因此不能把差异只解释成静态展开，也不能宣布原始流水保持或直接删失败门。后续需核mechanism/control-path、稀疏/较密观测与关键依赖/顺序变化，评估实现/呈现边界。不是环境阻碍，goal保持active。
+- 新archive artifacts/timeline/run-012/preflight/unprofiled-objects-original-evidence.tgz SHA见独立unprofiled-artifact-index.json。primary860member成功raw/object原件不变；新增失败作为另外受控对照保留，不覆写任何通过/失败收据。
