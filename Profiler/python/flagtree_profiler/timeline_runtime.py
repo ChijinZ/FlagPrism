@@ -129,6 +129,8 @@ class TimelineOwnerPool:
             'stream': stream, 'plan': copy.deepcopy(plan), 'layout': layout,
             'physical_bytes': physical_bytes, 'guard_bytes': self.guard_bytes,
             'state': 'admitted', 'resource': None, 'raw': None,
+            'host_admission_ns': time.monotonic_ns(),
+            'host_window_clock': 'python.monotonic_ns',
             'submission_outcome': 'not_submitted', 'error': None,
         }
         self._bytes += physical_bytes
@@ -211,6 +213,7 @@ class TimelineOwnerPool:
             raise
         if ready:
             owner['completion_known'] = True
+            owner['host_completion_observed_ns'] = time.monotonic_ns()
         return ready
 
     def readback_guard(self, invocation_id):
