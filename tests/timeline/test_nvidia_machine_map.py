@@ -72,6 +72,35 @@ class CounterMapTests(unittest.TestCase):
         self.assertFalse(value['clock_qualified'])
         self.assertNotIn('time_ns', value)
 
+    def test_actual_marker_spacing_and_debug_metadata_erasure(self):
+        a = args()
+        text = PTX.replace('entry;', 'entry ;').replace('exit;', 'exit ;')
+        text = text.replace('.address_size 64', '.loc 1 3 0')
+        text += '.file 1 "kernel.py"\n.section .debug_info\n{\n.b32 .debug_line\n.b8 3\n}\n'
+        debug = DEBUG.replace('.address_size 64', '')
+        debug += '\n.section .debug_info\n{\n\n\n}\n'
+        a['ptx'], a['cubin'] = text.encode(), elf(debug)
+        result = machine.counter_map(**a)
+        self.assertEqual(len(result['counter_pcs']), 2)
+        self.assertEqual([x['kind'] for x in result['ptx_debug_omissions']],
+            ['location_directive', 'file_directive', 'dwarf_data', 'dwarf_data'])
+        self.assertFalse(result['region_boundaries_verified'])
+
+    def test_metadata_erasure_cannot_hide_code_or_change_line_positions(self):
+        for token in ['mov.u64 %rd9, %globaltimer;', '.b32 3',
+                      '.loc 1 3 0; add.u32 %r1, %r2, 1;']:
+            a = args(); a['ptx'] = PTX.replace('.address_size 64', token).encode()
+            a['cubin'] = elf(DEBUG.replace('.address_size 64', ''))
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+        a = args()
+        a['ptx'] += b'.section .debug_info\n{\nadd.u32 %r1, %r2, 1;\n}\n'
+        a['cubin'] = elf(DEBUG+'.section .debug_info\n{\n\n}\n')
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+        for text in [PTX.replace('.address_size 64', '.loc 1 3 0'),
+                     PTX.replace('.address_size 64', '.file 1 "x.py"')]:
+            a = args(); a['ptx'] = text.encode()
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+
     def test_missing_marker_does_not_guess_nearest_clock(self):
         a = args(); a['ptx'] = PTX.replace('// flagprism_timeline_v1_site_0_entry;', '').encode()
         with self.assertRaises(ValueError): machine.counter_map(**a)

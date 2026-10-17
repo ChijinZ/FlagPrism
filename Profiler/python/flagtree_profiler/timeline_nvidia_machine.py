@@ -16,7 +16,7 @@ import sys
 import time
 
 LIMIT = 32 * 1024 * 1024
-_MARKER = re.compile(r'flagprism_timeline_v1_site_(\d+)_(entry|exit);?\s*\Z')
+_MARKER = re.compile(r'flagprism_timeline_v1_site_(\d+)_(entry|exit)\s*;?\s*\Z')
 _GETTER = re.compile(r'(?:@!?%[\w.$]+\s+)?mov\.(?:u64|b64)\s+[%\w.$]+,\s*%globaltimer\s*;\Z')
 
 
@@ -117,6 +117,42 @@ def _lex(text):
     return lines, markers
 
 
+def _bind_debug_lines(source, debug):
+    """Accept PTXAS's erased debug metadata, preserving every instruction line.
+
+    PTXAS retains line slots but removes .loc/.file and DWARF data declarations.
+    Only those specific non-executable forms may differ, and only by becoming
+    empty. Debug section braces/headers, executable tokens and line count must
+    match. This does not certify the contents of source/DWARF metadata.
+    """
+    _need(len(source) == len(debug), 'PTX line count differs from cubin debug text')
+    pending_debug, in_debug, omissions = False, False, []
+    for number, (left, right) in enumerate(zip(source, debug), 1):
+        if re.fullmatch(r'\.section\.debug_[a-zA-Z0-9_.]+', left):
+            _need(not pending_debug and not in_debug, 'Nested PTX debug section')
+            pending_debug = True
+        elif left == '{' and pending_debug:
+            pending_debug, in_debug = False, True
+        elif left == '}' and in_debug:
+            in_debug = False
+        elif left and pending_debug:
+            raise ValueError('Invalid PTX debug section opening')
+        if left == right:
+            continue
+        kind = None
+        if re.fullmatch(r'\.loc[0-9]+', left):
+            kind = 'location_directive'
+        elif re.fullmatch(r'\.file[0-9]+"(?:[^"\\]|\\.)*"', left):
+            kind = 'file_directive'
+        elif in_debug and re.fullmatch(r'\.b(?:8|16|32|64)(?:-?[0-9]+|\.debug_[a-zA-Z0-9_.]+)', left):
+            kind = 'dwarf_data'
+        _need(right == '' and kind is not None,
+              'PTX executable tokens/line numbers differ from cubin debug text')
+        omissions.append(dict(line=number, kind=kind))
+    _need(not pending_debug and not in_debug, 'Unterminated PTX debug section')
+    return omissions
+
+
 def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
                 expected_sm, marker_version=1):
     """Pure bounded validation, binding input hashes and every actual getter PC."""
@@ -139,7 +175,7 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
     source_lines, annotations = _lex(ptx.decode('utf-8'))
     debug_text = '\n'.join(raw_debug.decode('utf-8').split('\0')[:-1])
     debug_lines, _ = _lex(debug_text)
-    _need(source_lines == debug_lines, 'PTX tokens/line numbers differ from cubin debug text')
+    debug_omissions = _bind_debug_lines(source_lines, debug_lines)
     sites = set(scope_ids)
     by_line, pending = {}, None
     marker_lines = {number: (site, phase) for number, site, phase in annotations}
@@ -238,6 +274,7 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
         artifacts={'cubin_sha256': _sha(cubin), 'ptx_sha256': _sha(ptx),
             'embedded_ptx_sha256': _sha(raw_debug), 'sass_lines_sha256': _sha(sass_lines),
             'sass_json_sha256': _sha(sass_json)}, counter_pcs=pcs,
+        ptx_debug_omissions=debug_omissions,
         region_boundaries_verified=False, clock_qualified=False,
         notes=['Static counter PCs are not exact dynamic PC attribution when code is duplicated.',
                'PTX collection predication does not prove SASS read suppression.',
