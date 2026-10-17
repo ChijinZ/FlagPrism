@@ -1,0 +1,174 @@
+[
+  {
+    "name": "tools-install-v1",
+    "terminal": {
+      "controller": {
+        "pid": 39124,
+        "ppid": 1,
+        "pgid": 39112,
+        "startticks": 9039008
+      },
+      "worker": {
+        "pid": 39125,
+        "ppid": 39124,
+        "pgid": 39125,
+        "startticks": 9039011
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r008/input-v1/install-disassembly-tools.py",
+        "--output",
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output"
+      ],
+      "argv_sha256": "ee3276dce0e79c68edcddaf447a324350e35dfdf8f992dc9a5b65dd709dac729",
+      "script_sha256": "d1dd74b025dc2ca116cc562322d0fbe52bd28214b1c62439e12ac844e5c85e3d",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 120,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 2118268860
+    },
+    "current_proc": {
+      "controller": {
+        "state": "Z",
+        "startticks": 9039008,
+        "same_identity": true
+      },
+      "worker": {
+        "state": "missing"
+      }
+    },
+    "live_owned_worker_group": []
+  },
+  {
+    "name": "clock-scale-v1",
+    "terminal": {
+      "controller": {
+        "pid": 39165,
+        "ppid": 1,
+        "pgid": 39150,
+        "startticks": 9046584
+      },
+      "worker": {
+        "pid": 39166,
+        "ppid": 39165,
+        "pgid": 39166,
+        "startticks": 9046587
+      },
+      "argv": [
+        "/workspace/chijin-timeline-r007/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r008/clock-input-v1/p01_nvidia_clock_scale.py",
+        "--output",
+        "/workspace/chijin-timeline-r008/runs/clock-scale-v1/output"
+      ],
+      "argv_sha256": "c43037962a56ca1356d74df67e69b03e78b8e3c3b9929a57bb8961efed6e3f81",
+      "script_sha256": "39bfe3dc8ad10dc61be246301e3dcec5c9ce7c20e542a5bd9eac0733c1b35413",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 180,
+      "state": "terminal",
+      "returncode": 1,
+      "wall_ns": 2619088965
+    },
+    "current_proc": {
+      "controller": {
+        "state": "Z",
+        "startticks": 9046584,
+        "same_identity": true
+      },
+      "worker": {
+        "state": "missing"
+      }
+    },
+    "live_owned_worker_group": []
+  },
+  {
+    "name": "clock-scale-v2",
+    "terminal": {
+      "controller": {
+        "pid": 39352,
+        "ppid": 1,
+        "pgid": 39335,
+        "startticks": 9056270
+      },
+      "worker": {
+        "pid": 39353,
+        "ppid": 39352,
+        "pgid": 39353,
+        "startticks": 9056273
+      },
+      "argv": [
+        "/workspace/chijin-timeline-r007/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r008/clock-input-v2/p01_nvidia_clock_scale.py",
+        "--output",
+        "/workspace/chijin-timeline-r008/runs/clock-scale-v2/output"
+      ],
+      "argv_sha256": "11f234da9824172ec6b1f000adaa9cd26e8240573b3fd4483640d5c2530075b8",
+      "script_sha256": "858f5eb7d6aff42d7bef55b0f3822134a636aa978367baf3ef105171f0e3ab11",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 180,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 2668971497
+    },
+    "current_proc": {
+      "controller": {
+        "state": "Z",
+        "startticks": 9056270,
+        "same_identity": true
+      },
+      "worker": {
+        "state": "missing"
+      }
+    },
+    "live_owned_worker_group": []
+  },
+  {
+    "name": "object-inspection-v1",
+    "terminal": {
+      "controller": {
+        "pid": 39455,
+        "ppid": 1,
+        "pgid": 39444,
+        "startticks": 9063125
+      },
+      "worker": {
+        "pid": 39456,
+        "ppid": 39455,
+        "pgid": 39456,
+        "startticks": 9063128
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r008/inspect-input/inspect-final-objects.py",
+        "--output",
+        "/workspace/chijin-timeline-r008/runs/object-inspection-v1/output"
+      ],
+      "argv_sha256": "1c0b4a611c4f55dfedef40e8b0230bd8d739eefb1f3378d0226ef6c9eff44d5a",
+      "script_sha256": "c0ebe59a94b4b3a3235ca71e0788e624273d96fa66e5079666036bb83c6092de",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 90,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 3570522165
+    },
+    "current_proc": {
+      "controller": {
+        "state": "Z",
+        "startticks": 9063125,
+        "same_identity": true
+      },
+      "worker": {
+        "state": "missing"
+      }
+    },
+    "live_owned_worker_group": []
+  }
+]

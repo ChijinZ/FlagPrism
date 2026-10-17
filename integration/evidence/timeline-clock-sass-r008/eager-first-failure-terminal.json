@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 39165,
+    "ppid": 1,
+    "pgid": 39150,
+    "startticks": 9046584
+  },
+  "worker": {
+    "pid": 39166,
+    "ppid": 39165,
+    "pgid": 39166,
+    "startticks": 9046587
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r007/runs/install-v2/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r008/clock-input-v1/p01_nvidia_clock_scale.py",
+    "--output",
+    "/workspace/chijin-timeline-r008/runs/clock-scale-v1/output"
+  ],
+  "argv_sha256": "c43037962a56ca1356d74df67e69b03e78b8e3c3b9929a57bb8961efed6e3f81",
+  "script_sha256": "39bfe3dc8ad10dc61be246301e3dcec5c9ce7c20e542a5bd9eac0733c1b35413",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 2619088965
+}

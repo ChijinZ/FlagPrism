@@ -1,0 +1,208 @@
+{
+  "status": "clock_scale_consistency_passed_not_certified",
+  "registration": {
+    "target": "cuda:120",
+    "device": 0,
+    "programs": 1,
+    "block": 128,
+    "runtime_k": [
+      4096,
+      16384,
+      65536
+    ],
+    "repetitions": 3,
+    "requested_math_launches": 9,
+    "explicit_compile_only": true,
+    "bracket": "explicit_calibration_graph_external_event_nodes",
+    "capture_must_execute_no_math": true,
+    "candidate_period_numerator_ns": 1,
+    "candidate_period_denominator": 1,
+    "event_minus_internal_allowance_ns": 10000,
+    "event_relative_allowance_numerator": 2,
+    "event_relative_allowance_denominator": 100,
+    "rtol": 2e-06,
+    "atol": 2e-06,
+    "scope": "scale consistency only, not a frequency/epoch certificate",
+    "source_sha256": "858f5eb7d6aff42d7bef55b0f3822134a636aa978367baf3ef105171f0e3ab11"
+  },
+  "calls": [
+    {
+      "runtime_k": 4096,
+      "repetition": 0,
+      "raw_start_tick": 1792224311603378944,
+      "raw_end_tick": 1792224311603389440,
+      "tick_delta": 10496,
+      "event_elapsed_ms": 0.017952000722289085,
+      "event_elapsed_ns_rounded": 17952,
+      "candidate_internal_ns": 10496,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565059454598,
+      "host_after_ns": 90565059497332,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 1
+    },
+    {
+      "runtime_k": 4096,
+      "repetition": 1,
+      "raw_start_tick": 1792224311604181152,
+      "raw_end_tick": 1792224311604191552,
+      "tick_delta": 10400,
+      "event_elapsed_ms": 0.012959999963641167,
+      "event_elapsed_ns_rounded": 12960,
+      "candidate_internal_ns": 10400,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565060272986,
+      "host_after_ns": 90565060297933,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 2
+    },
+    {
+      "runtime_k": 4096,
+      "repetition": 2,
+      "raw_start_tick": 1792224311604560288,
+      "raw_end_tick": 1792224311604570592,
+      "tick_delta": 10304,
+      "event_elapsed_ms": 0.012799999676644802,
+      "event_elapsed_ns_rounded": 12800,
+      "candidate_internal_ns": 10304,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565060652916,
+      "host_after_ns": 90565060676681,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 3
+    },
+    {
+      "runtime_k": 16384,
+      "repetition": 0,
+      "raw_start_tick": 1792224311604954688,
+      "raw_end_tick": 1792224311604995040,
+      "tick_delta": 40352,
+      "event_elapsed_ms": 0.043136000633239746,
+      "event_elapsed_ns_rounded": 43136,
+      "candidate_internal_ns": 40352,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565061047828,
+      "host_after_ns": 90565061101749,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 4
+    },
+    {
+      "runtime_k": 16384,
+      "repetition": 1,
+      "raw_start_tick": 1792224311605337792,
+      "raw_end_tick": 1792224311605378272,
+      "tick_delta": 40480,
+      "event_elapsed_ms": 0.04396799951791763,
+      "event_elapsed_ns_rounded": 43968,
+      "candidate_internal_ns": 40480,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565061431043,
+      "host_after_ns": 90565061485745,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 5
+    },
+    {
+      "runtime_k": 16384,
+      "repetition": 2,
+      "raw_start_tick": 1792224311605975008,
+      "raw_end_tick": 1792224311606015328,
+      "tick_delta": 40320,
+      "event_elapsed_ms": 0.04403200000524521,
+      "event_elapsed_ns_rounded": 44032,
+      "candidate_internal_ns": 40320,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565062067808,
+      "host_after_ns": 90565062122770,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 6
+    },
+    {
+      "runtime_k": 65536,
+      "repetition": 0,
+      "raw_start_tick": 1792224311606375552,
+      "raw_end_tick": 1792224311606536576,
+      "tick_delta": 161024,
+      "event_elapsed_ms": 0.1642879992723465,
+      "event_elapsed_ns_rounded": 164288,
+      "candidate_internal_ns": 161024,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565062468909,
+      "host_after_ns": 90565062644302,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 7
+    },
+    {
+      "runtime_k": 65536,
+      "repetition": 1,
+      "raw_start_tick": 1792224311607058624,
+      "raw_end_tick": 1792224311607218848,
+      "tick_delta": 160224,
+      "event_elapsed_ms": 0.16208000481128693,
+      "event_elapsed_ns_rounded": 162080,
+      "candidate_internal_ns": 160224,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565063151853,
+      "host_after_ns": 90565063325173,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 8
+    },
+    {
+      "runtime_k": 65536,
+      "repetition": 2,
+      "raw_start_tick": 1792224311607577504,
+      "raw_end_tick": 1792224311607738368,
+      "tick_delta": 160864,
+      "event_elapsed_ms": 0.16473600268363953,
+      "event_elapsed_ns_rounded": 164736,
+      "candidate_internal_ns": 160864,
+      "event_allowance_ns": 10000,
+      "host_before_ns": 90565063670691,
+      "host_after_ns": 90565063846115,
+      "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "state": 9
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "clock-math.source",
+      "bytes": 9744,
+      "sha256": "4e2846c6ac42100608044eb7bf79772f90336e26558dfb8c5fedc1e7849bb075"
+    },
+    {
+      "path": "clock-math.ttir",
+      "bytes": 6550,
+      "sha256": "176bbe815c257d9994269ed0a890f488cb9fbcb51cbfa18f69e460084c0ae925"
+    },
+    {
+      "path": "clock-math.ttgir",
+      "bytes": 6967,
+      "sha256": "c7951d4834cbf2971cf77df2d48da096808ac422c03f810ea32c8018447faa63"
+    },
+    {
+      "path": "clock-math.llir",
+      "bytes": 9183,
+      "sha256": "5c2bb2ac9531611638408ff5ee91bcc20aa43862461eca44e732ef0ac9ce4a56"
+    },
+    {
+      "path": "clock-math.ptx",
+      "bytes": 14703,
+      "sha256": "0187318b262090683d314b29a20475a8be23ef28500f9b33bb3924e7b663cfbe"
+    },
+    {
+      "path": "clock-math.cubin",
+      "bytes": 13984,
+      "sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0"
+    }
+  ],
+  "device": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+  "torch": "2.8.0+cu128",
+  "triton": "3.6.0",
+  "cuda_runtime": "12.8",
+  "limits": [
+    "not automatic profiling qualification",
+    "device bracket includes kernel prologue/epilogue and event-node gap",
+    "coarse consistency gate is not a fine-grained error bound",
+    "no cross-SM epoch or clock-drift proof",
+    "inspect actual SASS dependencies before boundary claims"
+  ]
+}

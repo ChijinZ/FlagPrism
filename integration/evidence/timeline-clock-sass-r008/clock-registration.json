@@ -1,0 +1,25 @@
+{
+  "target": "cuda:120",
+  "device": 0,
+  "programs": 1,
+  "block": 128,
+  "runtime_k": [
+    4096,
+    16384,
+    65536
+  ],
+  "repetitions": 3,
+  "requested_math_launches": 9,
+  "explicit_compile_only": true,
+  "bracket": "explicit_calibration_graph_external_event_nodes",
+  "capture_must_execute_no_math": true,
+  "candidate_period_numerator_ns": 1,
+  "candidate_period_denominator": 1,
+  "event_minus_internal_allowance_ns": 10000,
+  "event_relative_allowance_numerator": 2,
+  "event_relative_allowance_denominator": 100,
+  "rtol": 2e-06,
+  "atol": 2e-06,
+  "scope": "scale consistency only, not a frequency/epoch certificate",
+  "source_sha256": "858f5eb7d6aff42d7bef55b0f3822134a636aa978367baf3ef105171f0e3ab11"
+}

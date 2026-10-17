@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r008/clock-input-v1/p01_nvidia_clock_scale.py", line 165, in <module>
+    main()
+  File "/workspace/chijin-timeline-r008/clock-input-v1/p01_nvidia_clock_scale.py", line 149, in main
+    require(abs(event_ns - ticks) <= allowance,
+  File "/workspace/chijin-timeline-r008/clock-input-v1/p01_nvidia_clock_scale.py", line 19, in require
+    raise RuntimeError(message)
+RuntimeError: 1ns hypothesis is inconsistent with CUDA Event bracket

@@ -1,0 +1,170 @@
+{
+  "status": "retained_bytes_and_clock_consistency_audited_not_clock_or_boundary_certified",
+  "source_sha256": "858f5eb7d6aff42d7bef55b0f3822134a636aa978367baf3ef105171f0e3ab11",
+  "explicit_math_calls": 9,
+  "binary_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+  "state_after_capture": 0,
+  "event_minus_ticks_ns_range": [
+    1856,
+    7456
+  ],
+  "same_binary_all_calls": true,
+  "physical_record_bits": "raw integers retained, not float absolute ticks",
+  "final_objects": [
+    {
+      "index": 0,
+      "function": "gemm",
+      "cubin_sha256": "2e0f758ab2caa18da59470e7a5124e23246703242fe2005b77969652c164a735",
+      "instructions": 864,
+      "machine_counts": {
+        "globaltimer": 44,
+        "ffma": 0,
+        "async_copy": 6,
+        "commit": 6,
+        "wait": 2
+      },
+      "actual_compiler_metadata": {
+        "ELF": {
+          "layout-id": 2,
+          "ei_osabi": 65,
+          "ei_abiversion": 8
+        },
+        "SM": {
+          "version": {
+            "major": 12,
+            "minor": 0
+          }
+        },
+        "SchemaVersion": {
+          "major": 13,
+          "minor": 2,
+          "revision": 0
+        },
+        "Producer": "nvdisasm V13.2.86 Build cuda_13.2.r13.2/compiler.37953736_0",
+        "Description": "",
+        ".note.nv.cuver": {
+          "nv_note_cuver": 1,
+          "nv_note_cu_virt_smver": 120
+        },
+        ".note.nv.tkinfo": {
+          "tki_toolkitVersion": 129,
+          "tki_objFname": "",
+          "tki_toolName": "ptxas-blackwell",
+          "tki_toolVersion": "Cuda compilation tools, release 12.9, V12.9.86",
+          "tki_toolBranch": "Build cuda_12.9.r12.9/compiler.36037853_0",
+          "tki_toolOptions": "-v  -lineinfo  -arch sm_120a "
+        }
+      }
+    },
+    {
+      "index": 1,
+      "function": "recurrence",
+      "cubin_sha256": "6cb6cadad81143bb6a2eac5311dbe203982a2ebbb4187ba6f11c28ac385612ac",
+      "instructions": 496,
+      "machine_counts": {
+        "globaltimer": 16,
+        "ffma": 9,
+        "async_copy": 0,
+        "commit": 0,
+        "wait": 0
+      },
+      "actual_compiler_metadata": {
+        "ELF": {
+          "layout-id": 2,
+          "ei_osabi": 65,
+          "ei_abiversion": 8
+        },
+        "SM": {
+          "version": {
+            "major": 12,
+            "minor": 0
+          }
+        },
+        "SchemaVersion": {
+          "major": 13,
+          "minor": 2,
+          "revision": 0
+        },
+        "Producer": "nvdisasm V13.2.86 Build cuda_13.2.r13.2/compiler.37953736_0",
+        "Description": "",
+        ".note.nv.cuver": {
+          "nv_note_cuver": 1,
+          "nv_note_cu_virt_smver": 120
+        },
+        ".note.nv.tkinfo": {
+          "tki_toolkitVersion": 129,
+          "tki_objFname": "",
+          "tki_toolName": "ptxas-blackwell",
+          "tki_toolVersion": "Cuda compilation tools, release 12.9, V12.9.86",
+          "tki_toolBranch": "Build cuda_12.9.r12.9/compiler.36037853_0",
+          "tki_toolOptions": "-v  -lineinfo  -arch sm_120a "
+        }
+      }
+    },
+    {
+      "index": 2,
+      "function": "clock_math",
+      "cubin_sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+      "instructions": 104,
+      "machine_counts": {
+        "globaltimer": 2,
+        "ffma": 8,
+        "async_copy": 0,
+        "commit": 0,
+        "wait": 0
+      },
+      "actual_compiler_metadata": {
+        "ELF": {
+          "layout-id": 2,
+          "ei_osabi": 65,
+          "ei_abiversion": 8
+        },
+        "SM": {
+          "version": {
+            "major": 12,
+            "minor": 0
+          }
+        },
+        "SchemaVersion": {
+          "major": 13,
+          "minor": 2,
+          "revision": 0
+        },
+        "Producer": "nvdisasm V13.2.86 Build cuda_13.2.r13.2/compiler.37953736_0",
+        "Description": "",
+        ".note.nv.cuver": {
+          "nv_note_cuver": 1,
+          "nv_note_cu_virt_smver": 120
+        },
+        ".note.nv.tkinfo": {
+          "tki_toolkitVersion": 129,
+          "tki_objFname": "",
+          "tki_toolName": "ptxas-blackwell",
+          "tki_toolVersion": "Cuda compilation tools, release 12.9, V12.9.86",
+          "tki_toolBranch": "Build cuda_12.9.r12.9/compiler.36037853_0",
+          "tki_toolOptions": "-v  -lineinfo  -arch sm_120a "
+        }
+      }
+    }
+  ],
+  "archives": {
+    "clock-objects-original-evidence.tgz": {
+      "bytes": 179778,
+      "sha256": "354952d0678ea328059a5108db6067999a312c4025fd772517a63d4bcf3cbe33"
+    },
+    "tools-installed-evidence.tgz": {
+      "bytes": 4847069,
+      "sha256": "23e22297cb20e74179c1a8c1d1814a419b9321dfe2e68536e0dc966deead5924"
+    },
+    "disassembly-tools-original.tgz": {
+      "bytes": 4762266,
+      "sha256": "a2c039f25b40e501e2f48133aa998c4000653397e14017f85762b374e8f2954a"
+    }
+  },
+  "limits": [
+    "device math assertions are reported by the executed harness, not rerun by this byte audit",
+    "static opcode counts do not certify site mapping, predication, completion, buffer identity or loss closure",
+    "9 graph calls validate this dedicated clock primitive, not public graph capture support or full P01",
+    "neither a fine-grained error bound nor a cross-SM epoch certificate"
+  ]
+}

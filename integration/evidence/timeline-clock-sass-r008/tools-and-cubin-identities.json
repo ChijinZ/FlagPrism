@@ -1,0 +1,121 @@
+{
+  "status": "actual_retained_cubins_disassembled_not_boundary_certified",
+  "tools": {
+    "nvdisasm": {
+      "path": "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+      "sha256": "6df0054fac801e7ab7d251506cfe52a1171c207de0923d8a3d57fdd5a1f6d982"
+    },
+    "cuobjdump": {
+      "path": "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/cuobjdump",
+      "sha256": "5057de4afc073b1d9eed457234cd7c27bcae8c0fdfd63314dc760a74b225edf7"
+    }
+  },
+  "cubins": [
+    {
+      "cubin": "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin",
+      "sha256": "2e0f758ab2caa18da59470e7a5124e23246703242fe2005b77969652c164a735"
+    },
+    {
+      "cubin": "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin",
+      "sha256": "6cb6cadad81143bb6a2eac5311dbe203982a2ebbb4187ba6f11c28ac385612ac"
+    }
+  ],
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "offline-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "--report",
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/install-report.json",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_cuobjdump-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "nvdisasm-version",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--version"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "nvdisasm-help",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--help"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cuobjdump-version",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/cuobjdump",
+        "--version"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cuobjdump-help",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/cuobjdump",
+        "--help"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cubin-0-nvdisasm",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cubin-0-cuobjdump",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/cuobjdump",
+        "--dump-sass",
+        "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cubin-1-nvdisasm",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "cubin-1-cuobjdump",
+      "argv": [
+        "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/cuobjdump",
+        "--dump-sass",
+        "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin"
+      ],
+      "returncode": 0
+    }
+  ]
+}

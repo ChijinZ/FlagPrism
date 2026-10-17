@@ -1,0 +1,128 @@
+[
+  {
+    "index": 0,
+    "cubin": "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin",
+    "sha256": "2e0f758ab2caa18da59470e7a5124e23246703242fe2005b77969652c164a735",
+    "steps": [
+      {
+        "kind": "lines",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--print-line-info",
+          "--print-line-info-ptx",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "c99d24ce3e22b82dd94f963961da94774edcdb0af2b26e1e9cb2738e667c32ea",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "json",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--emit-json",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "a8e9f67f514a38f07f901da5ff1411ca043686f6a4ce87289266e7d3b14962d8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "cfg",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--output-control-flow-graph",
+          "--print-instr-offsets-cfg",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/47656a391c1bfdc3a1be11b9e10bedc91eeedccd50a593db6c11e26c734a22bc/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "349faf6b247bc39940916a2b204b635cac3e18bb317f1255772e44e3fd59bac8",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  {
+    "index": 1,
+    "cubin": "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin",
+    "sha256": "6cb6cadad81143bb6a2eac5311dbe203982a2ebbb4187ba6f11c28ac385612ac",
+    "steps": [
+      {
+        "kind": "lines",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--print-line-info",
+          "--print-line-info-ptx",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "6adfacf1f6d49d4376fb5bac1ddffaa7dfe0f3f6525db5575372d1ef4bd11c30",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "json",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--emit-json",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "495c17b3c8773b0034f5f42278380ed6ac810fb9fbbd6b258c6ad0fa419155b5",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "cfg",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--output-control-flow-graph",
+          "--print-instr-offsets-cfg",
+          "/workspace/chijin-timeline-r007/runs/device-public-v2/output/api-cold/timeline/binaries/948490972af6a972eedc23cad0d2de944233550a4930d9b5555cd5e481160aa9/5.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "1cad50841f8e4ee20c6a0fe7a8b4d23ee7e1319baba0f39ff1b06b51899b5d3d",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "cubin": "/workspace/chijin-timeline-r008/runs/clock-scale-v2/output/clock-math.cubin",
+    "sha256": "2cc47b0fd3147bc9f715e2510b870cd81429dbf7f16ccc9d1f81a3dd89bf2ae0",
+    "steps": [
+      {
+        "kind": "lines",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--print-line-info",
+          "--print-line-info-ptx",
+          "/workspace/chijin-timeline-r008/runs/clock-scale-v2/output/clock-math.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "c9807e49734a0a367748213758bfdedec3d23e3459810051dc2234a858149127",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "json",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--emit-json",
+          "/workspace/chijin-timeline-r008/runs/clock-scale-v2/output/clock-math.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "fa133a8231ec9ab9321aeba25ccc6b0ad66860d1eaebd3dbb057f901a976ff8b",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "kind": "cfg",
+        "argv": [
+          "/workspace/chijin-timeline-r008/runs/tools-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--output-control-flow-graph",
+          "--print-instr-offsets-cfg",
+          "/workspace/chijin-timeline-r008/runs/clock-scale-v2/output/clock-math.cubin"
+        ],
+        "returncode": 0,
+        "stdout_sha256": "31709e7301ecf9f793ca041ba5bdf953d45db86fcf47f010b408e4fa5a87ac12",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  }
+]
