@@ -1,29 +1,29 @@
 {
-  "scope": "Sixth independent documentation feasibility review; concrete handoffs and executable checks; no product changes or new device execution",
+  "scope": "Seventh independent documentation feasibility review; component handoff, raw order/wrap, owner separation and executable acceptance; no product changes or new device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "design_revision_from_commit": "4f5b2bff76ec61537bcec6d98075639d7f9ef731",
-  "root_contract_sha256": "70da4b7ff287ab76446bbd3da65cb7f682e6698002c9caabe334420f11ffdbda",
+  "design_revision_from_commit": "7fceb5e41e33359146353edca36e37feb18527c3",
+  "root_contract_sha256": "275b39fc3adadc94d5564a4127306f2d956a6225eb4052ad49ff7cf6abaf02c7",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 32,
+  "local_links_checked": 36,
   "review_initials_preserved": true,
   "historical_round1_followups_bound_to_commit": "2932311bd103db9b2eeea8fa8ca0574befc913b7",
   "historical_round2_followups_bound_to_commit": "d109df5",
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 56908,
-      "sha256": "7cf4205f950e1bb1cb183b38966f4db52b743d4b3df61f7d1c32cb051fab8975"
+      "bytes": 64215,
+      "sha256": "93ce59020892a921a354df26302c6c856daa8089f515e28dcbaab5e537747391"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 37838,
-      "sha256": "eea0937096889ac2cf248921df1895d2f11fd879471bbad8811096997051cd42"
+      "bytes": 42718,
+      "sha256": "924716da9d59d98a698208c47b40f7ecaf199a18460c0a77770e5f6a6ab1ec36"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 3162,
-      "sha256": "c866030efffc43d92cc53c855cf7c88294b3ed4a700ec22223b85e1ad8eb3daa"
+      "bytes": 3420,
+      "sha256": "82af29143c46ac5d78486ff34a14d40041cf061d2bd4ded8cd40d27bc892eecf"
     },
     "integration/plans/timeline/goal_prompt.md": {
       "bytes": 18399,
-      "sha256": "70da4b7ff287ab76446bbd3da65cb7f682e6698002c9caabe334420f11ffdbda"
+      "sha256": "275b39fc3adadc94d5564a4127306f2d956a6225eb4052ad49ff7cf6abaf02c7"
     },
     "integration/plans/timeline/record.initial.md": {
       "bytes": 2068,
@@ -225,25 +225,29 @@
       "bytes": 763,
       "sha256": "aa1458e446a2407265870607c56c771f8495f703fb9d3fe1d53fe95a8d6969d8"
     },
-    "integration/plans/timeline/reviews/round6/README.md": {
-      "bytes": 3410,
-      "sha256": "3e82b079863d6f0e9e2778f6351072bb526ca44ccc39f3532a24ed38fef02d57"
-    },
-    "integration/plans/timeline/reviews/round6/R1-compiler.md": {
-      "bytes": 10385,
-      "sha256": "62bd6d1b2848ea6554612afd786fe636f79c947c6e0bcc54d58641c972bebbd8"
+    "integration/plans/timeline/reviews/round6/INITIAL_DOCS.patch": {
+      "bytes": 9753,
+      "sha256": "e1bc7b4323bda24e0801f5704d287f80b3e0986aea816260a8784efeb8121a1e"
     },
     "integration/plans/timeline/reviews/round6/INPUT.json": {
       "bytes": 715,
       "sha256": "b3695d4da7d129a3a6d6e3f2af8c28d17960db4b3b66db055f567e2a0d6bbcb5"
     },
-    "integration/plans/timeline/reviews/round6/R2-runtime.md": {
-      "bytes": 8591,
-      "sha256": "cf99bcc69d28985f3b8b7e12f321a162d7b1559fdfee28b112a130ebc5d51d76"
+    "integration/plans/timeline/reviews/round6/R1-compiler.md": {
+      "bytes": 10385,
+      "sha256": "62bd6d1b2848ea6554612afd786fe636f79c947c6e0bcc54d58641c972bebbd8"
     },
     "integration/plans/timeline/reviews/round6/R1-followup.md": {
       "bytes": 1268,
       "sha256": "69753e67413ad84460d28ea725e4b53ae8a73f1538df1c680ec1bf8808838fa3"
+    },
+    "integration/plans/timeline/reviews/round6/R2-followup.md": {
+      "bytes": 1874,
+      "sha256": "e2d05a6e8be3ead4855a45ae82128f5be06087b9e7dc4338c496e69f5541cafc"
+    },
+    "integration/plans/timeline/reviews/round6/R2-runtime.md": {
+      "bytes": 8591,
+      "sha256": "cf99bcc69d28985f3b8b7e12f321a162d7b1559fdfee28b112a130ebc5d51d76"
     },
     "integration/plans/timeline/reviews/round6/R3-followup.md": {
       "bytes": 1271,
@@ -253,17 +257,57 @@
       "bytes": 8903,
       "sha256": "8deef73b8e8b2d97af7f97a0c72e906e1e5a2d5e813b8cf352ca5b3b204b4984"
     },
-    "integration/plans/timeline/reviews/round6/R2-followup.md": {
-      "bytes": 1874,
-      "sha256": "e2d05a6e8be3ead4855a45ae82128f5be06087b9e7dc4338c496e69f5541cafc"
+    "integration/plans/timeline/reviews/round6/README.md": {
+      "bytes": 3410,
+      "sha256": "3e82b079863d6f0e9e2778f6351072bb526ca44ccc39f3532a24ed38fef02d57"
     },
     "integration/plans/timeline/reviews/round6/REQUEST.json": {
       "bytes": 983,
       "sha256": "302272ccc87bf8d1a903bd62e29590637009adafeb29e56f99fa5f2adc798443"
     },
-    "integration/plans/timeline/reviews/round6/INITIAL_DOCS.patch": {
-      "bytes": 9753,
-      "sha256": "e1bc7b4323bda24e0801f5704d287f80b3e0986aea816260a8784efeb8121a1e"
+    "integration/plans/timeline/reviews/round7/FOLLOWUP_INPUT.json": {
+      "bytes": 403,
+      "sha256": "14d10c6f7b3c6e9e5ee5f325f94b8ad1e378798bafe3c5593e6d284853c04914"
+    },
+    "integration/plans/timeline/reviews/round7/INITIAL_DOCS.patch": {
+      "bytes": 9649,
+      "sha256": "616f1ca8e273250f543324dba9fc3ef1ba40464c99fc1f39b3d966c8740f792a"
+    },
+    "integration/plans/timeline/reviews/round7/INPUT.json": {
+      "bytes": 497,
+      "sha256": "697ce332dcc23c894e702aee8ea43979da419538f0528d89226c203558a519f6"
+    },
+    "integration/plans/timeline/reviews/round7/R1-compiler.md": {
+      "bytes": 11619,
+      "sha256": "d1ec35bcc80a4118564eefe10b1da3bdc4e43e3e60da2a5e074e289a88987774"
+    },
+    "integration/plans/timeline/reviews/round7/R1-followup.md": {
+      "bytes": 5058,
+      "sha256": "ca943d993e07c1646f1c73b32a9f8f6ef287706085355c6a1480ffa5a8b94c91"
+    },
+    "integration/plans/timeline/reviews/round7/R2-followup.md": {
+      "bytes": 4262,
+      "sha256": "6ecb3c77031da02743974377ff7e35702e0bd87a8bed7ba79d1ba5c59ad7490f"
+    },
+    "integration/plans/timeline/reviews/round7/R2-runtime.md": {
+      "bytes": 10395,
+      "sha256": "16fb061a0c67acc60c8dcc058bf9140029365dbcdd564532b2e57cc454439fef"
+    },
+    "integration/plans/timeline/reviews/round7/R3-followup.md": {
+      "bytes": 5537,
+      "sha256": "0d9289dae406cac3279182ecfc97bfb94f7edca7f9fff06223afff253aa756b8"
+    },
+    "integration/plans/timeline/reviews/round7/R3-portability.md": {
+      "bytes": 11136,
+      "sha256": "d6908e14edfff398be48b59f2ac75f179d01edbffc18002fb7b3031fe8917d5d"
+    },
+    "integration/plans/timeline/reviews/round7/README.md": {
+      "bytes": 4600,
+      "sha256": "fe0a506b20d04e2e3fcbc6d208220521905e67e5fd27821c0ef6fe234de3365f"
+    },
+    "integration/plans/timeline/reviews/round7/REQUEST.json": {
+      "bytes": 812,
+      "sha256": "ab0863a35f680ab970d6dd213011665d319571b425097558199ea1f4bf92770a"
     }
   },
   "historical_round3_followups_bound_to_commit": "dad8e7c98632ef7cbd2b4677d9c5101a517a88dc",

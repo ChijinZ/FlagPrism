@@ -1,0 +1,51 @@
+--- a/Profiler/docs/timeline_design.md
++++ b/Profiler/docs/timeline_design.md
+@@ -364,0 +365,26 @@
++### 8.12 本次实施合同：独立适配部件与公共数据交接
++
++本节把 §8.7–8.11 落到实现和验收动作，不另建插件框架；下面字段是目标合同，不能理解为当前已提供同名 API。实现仍先闭合三个现有后端，新型号接入留到后续。
++
++**按变化原因拆部件。** 一个后端注册项选择实际 compiler hook、launch transport、physical decoder、clock provider 和 mechanism mapper 的组合；这些可以是现有函数。decoder 不依赖设备执行，clock proof 不由 decoder 构造，exporter 不读取厂商 raw。只有 timer/getter 或工具链变化时，重核对应证据及其依赖结论；不能因为更换 decoder 就自动失效或自动继承全部资格。同工具链、同物理 ABI、同 getter、同异步机制是四项不同的复用条件，不用“同厂商”代替。新增型号若需要改公共层，记录无法表达的事实、版本迁移和原三后端回归，不要求零公共修改。
++
++**交接产物的最低内容：**
++
++| 产物 | 必须携带 | 产生者 / 消费者 |
++| --- | --- | --- |
++| 编译 manifest | target/工具链身份、site/source M:N 映射、合法边界与未证原因、logger/storage/隐藏 ABI、布局公式、机制覆盖与规则版本 | compiler hook → admission、transport、decoder、mapper |
++| invocation 快照 | capture/session 唯一命名空间、本次 binary、实际 grid 与 slot→program、observer、device/context/stream、选择/预算、owner 和完成条件 | launch transport → 完成回收、持久化、解码 |
++| raw batch | 不可变 bytes/SHA、生产者与布局版本、发布/完整性信息、对应 manifest 和 invocation；失败阶段及已取得原件 | transport/原件存储 → physical decoder |
++| canonical batch | 真实端点或原生事件的精确 raw 引用、site/observer/domain/epoch、记录顺序与配对规则、有单位的 loss、资格缺口 | decoder → 公共 validator、mapper、clock 派生 |
++| clock/机制事实 | 适用 target/binary/site/domain/capture 范围、实际来源与版本、尺度/误差或动态覆盖/代际；未知项显式保留 | provider/mapper → 公共资格检查与派生视图 |
++
++完成条件是运行时持有的实际句柄/条件，不要求序列化设备句柄；持久化部分保存可审计身份和完成收据。transport 在解析前持久化已经安全取得的 raw 及关联快照；失败的 decoder 不得阻止保留原件。解码重试只读同一原件，不重新执行应用。传输尚未取得完整 bytes 时只记实际取得部分和阶段，不能造出完整 batch。分配/初始化失败、取消、超时仍按 §8.7 的潜在写者规则处理。
++
++**公共记录不能强制一种物理写入顺序。** 当前公共 schema 1 保留旧端点流语义；schema 2 支持 `endpoint_stream` 和 `paired_endpoints`（实际合同见 [timeline_events.md](timeline_events.md)）。某后端在区域退出时提交 start/end 一对，外层区域可能晚提交但 start 更早；保物理提交顺序和两字段各自 offset，不为满足单调性排序。配对完成顺序不是循环 iteration。schema 2 的 attempted/committed/retained/dropped/filtered/overwritten 统一以 canonical 端点引用计数；一个物理 pair 对应两个端点，同时另保 native 记录数量/单位。容量溢出是 dropped 还是 overwritten 必须由实际生产者决定。schema 1 的历史语义不改，新 raw ABI 不必等于公共 schema 版本。
++
++**离线 adapter 与可用 profiler 分开验收。** 已有 Enflame 物理解码器能读取旧 advanced 捕获，不意味着 `detail="timeline"` 已支持 GCU。接入默认入口还要完成自动 planner、真实首末 program 的紧凑写址、调用 owner/完成、预算、raw 先保留及错误恢复。当前 decoder 只接受其实际支持的 program/actor；扩大范围应先实现并核验生产者/transport，不能只放宽 Python 校验。同理，机器 counter PC 映射不授予源区域边界，clock 有尺度不授予跨主体 epoch。
++
++**先执行可证伪的最小纵向样本。** 第一条链使用普通 load→有依赖 runtime 循环→store，改变 K 证明相同 binary 的动态次数；另选 ordinary 对象中确有异步机制的样本。逐项得到 boundary、publication、clock、mechanism 和 export 证据。NVIDIA 当前普通/插桩 GEMM 的展开及调度差异尚未闭合，必须比较关键依赖和真实 copy/commit/wait/compute 关系，不能仅以指令总数相等放行。不能在无法保持的流水上承诺解释原执行；必要时调整通用插桩位置或采样策略。GCU 的 ns 尺度和异步机制、Ascend 的新 timeline 发布协议也分别需要真实证明。没有证明时保 partial 和具体阻碍，不能用抽象合理性替代可行性。
++
++适配成本最终报告回答：此次新增了哪些部件、复用了哪些实际实现、为什么需要公共改动、哪些设备证据必须重做。不给新增芯片固定天数或“写一个 decoder 即可”的承诺。原三后端未通过之前，不以第四后端或模拟注册冲淡缺口。
++
+--- a/Profiler/docs/timeline_testing.md
++++ b/Profiler/docs/timeline_testing.md
+@@ -136 +136 @@
+-遵守设计第 8.1–8.11 节。只用现有 NVIDIA/Enflame/Ascend 完成验证，不启动第四芯片适配。下表包含真实设备正例与 CPU 合同负例，必须在证据中区分；CPU 测试仍在服务器 Docker。建议复用同一份参数化公共消费者测试，后端分别提供真实 producer/安装证据。
++遵守设计第 8.1–8.12 节。只用现有 NVIDIA/Enflame/Ascend 完成验证，不启动第四芯片适配。下表包含真实设备正例与 CPU 合同负例，必须在证据中区分；CPU 测试仍在服务器 Docker。建议复用同一份参数化公共消费者测试，后端分别提供真实 producer/安装证据。
+@@ -236,0 +237,16 @@
++### 8.7 独立部件与默认入口的可执行验收
++
++对应设计 §8.12，以下补充既有 P/E，不扩大全量资格矩阵。每个正例注明真实设备、真实旧 raw 重读或合成 fixture；只有前两类可证明相应实际记录路径，旧 raw 重读不证明新生产者/默认入口。全部产品运行仍在服务器 Docker。
++
++| 对应门 | 输入和操作 | 判定及必须保留的证据 |
++| --- | --- | --- |
++| P02/P09：可独立替换 | 从实际公开调用链列 compiler/transport/decoder/clock/mapper 组合；在有真实相容组合时复用部件，再以不相容描述做负例 | 复用条件逐部件可定位，不按品牌继承资格。没有真实替代组合时只报告接口/合同证据，不虚构硬件正例；新增公共概念有兼容回归 |
++| P05/E08：两种记录顺序 | 旧 schema 1 实际 raw；schema 2 实际 GCU pair raw；合成嵌套 pair、坏端点流、交叉配对、重复/倒序序列、非法版本 | 正例保原顺序、start/end 精确字段 offset 和唯一调用身份；晚提交的外层 start 可更早。坏流拒绝，禁止时间排序修复。迭代未知仍未知。normal 与 Python -O 同判定 |
++| P05/E04/E12：计数单位 | 对真实采样/溢出记录及明确标注 fixture 核 native header 与 canonical loss；分别构造 drop、overwrite、filter、saturation | 所有公共计数明确端点单位，native pair 数另列；计数守恒及完整状态符合 schema，饱和不报完整，filter 不冒充 loss。真实正常 pair 样本不能充当溢出设备测试 |
++| P01/P05/P09：adapter 到公开采集 | 每后端由文档公开 API/CLI 启动普通多 program 算子；首末 program 不同且含 tail，再测单 program；收集实际 launch/slot/raw | 无手工 scope/隐藏参数或维护者采集脚本；首末真实坐标、未选写入隔离、owner 完成与预算可核。旧 advanced 重读不能过此项。已有 raw 能读但新默认入口不通仍记未完成 |
++| P05/P10/E05：原件与恢复 | 对完成的真实 capture 注入 decoder/exporter 失败；对初始化/完成阶段分别注入异常；恢复解码、再次导出 | 先取得的 raw/manifest/invocation 保 SHA；解码/导出恢复不增加应用次数。未完成 writer 不释放 owner；记录实际终态/隔离资源，下一合法请求可用。CPU 注入仅证合同，至少一次真实完成捕获验证持久化后失败路径 |
++| P03/P07/C2：插桩影响 | ordinary 与稀疏/较密观测的同数学合法配置，保存实际最终对象、动态组/等待/复用信息；分析现有 GEMM 展开差异 | 不强求编译调度逐字节相同；必须说明关键依赖、机制和原有合法 overlap 是否因测量串行化。总指令数或无新增 barrier 单独不够。若结构失真，改通用插桩并重测，不以 profile 图解释 ordinary 流水 |
++| P06/P08：分层资格 | 固定同 raw，分别缺 boundary、scale、epoch、动态关联；另给匹配 proof 和错范围 proof | raw 与初次报告不变；只生成满足全部前提的 ns/源区域归属/时间箭头。clock 合格不补 boundary，原件正确不补 epoch。有效 partial 子集不能缩小完整资格分母 |
++
++本节验收映射到既有 P01–P10 和 E/C 结果，不另设一套通过状态。每项记录输入/源码与安装身份、最小命令、原始产物、预期与实际、退出终态、结论范围。设计评审输出“可执行但待取证”不等于任何设备门已通过；最终三名独立代码 reviewer 仍须在实现和真实验收后另开。
++

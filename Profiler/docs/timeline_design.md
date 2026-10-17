@@ -229,11 +229,12 @@ UI 用明确名称区分“observed dependency”“static candidate”“ambigu
 生命周期的最小状态机：
 
 ```text
-planned → admitted → armed → submitted → completion_observed
-        → raw_ready → decoded → exported → released
+设备 owner：planned → admitted → armed → submitted → completion_observed
+          → raw_ready → 原件与关联快照安全持久化 → released
+文件/派生：原件安全持久化 → decoded → exported（失败可由原件重试）
 ```
 
-这是每 invocation 的逻辑状态，不要求调用者同步等待每条箭头。`armed` 已持有本次 buffer、manifest 快照、device/stream/context、selection、clock/规则版本及 completion owner；实际提交后不可因下一次 launch 覆写。并发 owner 的数量和全部 pending buffer 字节也受 session 总预算限制，不能只限制单调用。预算不足在 launch 前明确失败；禁止通过逐 launch 强同步偷偷满足容量并改变声称支持的跨 stream 行为。
+设备资源和文件/派生是独立状态，不要求调用者同步等待每条箭头。具备覆盖全部写入的完成证明，且 D2H 和重导所需原件/关联快照安全持久化后，设备 scratch 可回收，不能要求 decode/export 成功后才释放。一个 owner 的派生失败不阻止尝试安全取得、持久化和回收其他已完成 owner；保首个错误、逐调用错误与终态。仍有潜在写者的 owner 继续隔离，不因其它调用失败释放。`armed` 已持有本次 buffer、manifest 快照、device/stream/context、selection、clock/规则版本及 completion owner；实际提交后不可因下一次 launch 覆写。并发 owner 的数量和全部 pending buffer 字节也受 session 总预算限制，不能只限制单调用。预算不足在 launch 前明确失败；禁止通过逐 launch 强同步偷偷满足容量并改变声称支持的跨 stream 行为。
 
 若后端能在原 stream 记录轻量完成 event，host 可继续提交，最终化仅等待本次 owner 的完成并读取记录；若只能借助 SDK 的等价完成条件，必须说明其范围与并发限制。最终化允许等待记录已完成，但不得注入新的设备完成屏障改变被测内部流水。普通编译、launch、设备完成、D2H、解码和导出是不同失败阶段：分别记录错误与已取得数据。超时不等于设备已停；确认本次写者结束前保留或隔离 owner，不能释放/复用，也不能杀其它用户任务。无法安全回收时本 session 明确失败并报告保留资源，不能声称已释放。
 
@@ -264,7 +265,7 @@ planned → admitted → armed → submitted → completion_observed
 | `plan_capture` | 请求、源身份及优化后结构 → manifest、所需记录布局、合法选择策略和机制规则版本 | 校验 source/binary 引用与预算公式；输出计划时区分静态需求和 launch 才确定的值 |
 | `prepare_launch` | manifest、实际 grid/device/stream → 本次 owner、紧凑 slot→program 表、物理字节数、完成句柄 | 核当前安装具有匹配 storage/logger ABI，预算 admission 后分配；没有紧凑写址保证的旧 binary 不能配紧凑 buffer |
 | `finish_capture` | 已提交 owner → completion 证明、不可变 raw、发布/loss 状态 | 跟踪安全回收；完成等待和 D2H 可由后端实现，共同约束是不能在设备仍写入时复用内存 |
-| `decode_capture` | raw、manifest、owner 快照 → 带完整 raw 引用的 typed batch、clock proof 和机制事实 | 验证字段/引用/完整性、调用隔离和 clock 资格；不重新识别厂商 ISA |
+| `decode_capture`（编排动作） | raw、manifest、owner 快照 → 物理 decoder 的 typed raw batch；另组合独立 provider 的 clock proof 与 mapper 的机制事实 | 物理 decoder 不探测设备、不构造 proof；编排层验证引用、完整性及资格，不重新识别厂商 ISA |
 | `describe_mechanism` | 声明的机制规则版本及实际记录 → submit/group/wait 覆盖事实与缺失理由 | 检查集合/身份/代际完整性，决定逻辑关联、可比较时间箭头及完成包络的展示资格 |
 
 这些动作可由现有对象组合完成。后端只提供事实与描述；通用验证器和 exporter 不以厂商名选择语义。物理 decoder、目标指令识别、发布协议和机制规则属于后端，并允许复用同执行模型的已验证实现。注册匹配必须检查实际型号/工具链条件；同品牌或相近执行模型不能继承未经验证的 clock/同步证据。
@@ -362,6 +363,34 @@ A/B 允许推进下一项开发；只有 C 达到既有 P01，D 才完成本轮�
 
 **适配交付沿用现有文档和证据，不增加平行台账。** 每后端在接入清单给一条从公开 API 到编译、transport、decoder、clock、mapper、共同 exporter 的实际调用链，以及可重现的最小运行命令。列出复用/新增/公共修正和对应失败恢复测试即可；不要把文件数量、接口数量或测试 fixture 通过当作实际适配成本或设备可行性结论。第一后端纵向样本冻结后接第二、第三后端；需要修订公共合同可以修订，保兼容原因和既有后端回归，不强求设计永不改变。
 
+### 8.12 本次实施合同：独立适配部件与公共数据交接
+
+本节把 §8.7–8.11 落到实现和验收动作，不另建插件框架；下面字段是目标合同，不能理解为当前已提供同名 API。实现仍先闭合三个现有后端，新型号接入留到后续。
+
+**按变化原因拆部件。** 一个后端注册项选择实际 compiler hook、launch transport、physical decoder、clock provider 和 mechanism mapper 的组合；这些可以是现有函数。decoder 不依赖设备执行，clock proof 不由 decoder 构造，exporter 不读取厂商 raw。每个部件或其输入变化时，沿实际依赖范围重核对应证据及结论；例如 getter 变更重核时钟，storage/decoder 变更重核端点身份和发布/解码，不能只盯工具链或自动失效/继承全部资格。同工具链、同物理 ABI、同 getter、同异步机制是四项不同的复用条件，不用“同厂商”代替。新增型号若需要改公共层，记录无法表达的事实、版本迁移和原三后端回归，不要求零公共修改。
+
+**交接产物的最低内容：**
+
+| 产物 | 必须携带 | 产生者 / 消费者 |
+| --- | --- | --- |
+| 编译 manifest | target/工具链身份、site/source M:N 映射、合法边界与未证原因、logger/storage/隐藏 ABI、布局公式、机制覆盖与规则版本 | compiler hook → admission、transport、decoder、mapper |
+| invocation 快照 | capture/session 唯一命名空间、本次 binary、实际 grid 与 slot→program、observer、device/context/stream、选择/预算、owner 和完成条件 | launch transport → 完成回收、持久化、解码 |
+| raw batch | 不可变 bytes/SHA、生产者与布局版本、发布/完整性信息、对应 manifest 和 invocation；失败阶段及已取得原件 | transport/原件存储 → physical decoder |
+| canonical batch | 真实端点或原生事件的精确 raw 引用、site/observer/domain/epoch、记录顺序与配对规则、有单位的 loss、资格缺口 | decoder → 公共 validator、mapper、clock 派生 |
+| clock/机制事实 | 适用 target/binary/site/domain/capture 范围、实际来源与版本、尺度/误差或动态覆盖/代际；未知项显式保留 | provider/mapper → 公共资格检查与派生视图 |
+
+完成条件是运行时持有的实际句柄/条件，不要求序列化设备句柄；持久化部分保存可审计身份和完成收据。transport 在解析前持久化已经安全取得的 raw 及关联快照；失败的 decoder 不得阻止保留原件。解码重试只读同一原件，不重新执行应用。传输尚未取得完整 bytes 时只记实际取得部分和阶段，不能造出完整 batch。分配/初始化失败、取消、超时仍按 §8.7 的潜在写者规则处理。
+
+**公共记录不能强制一种物理写入顺序。** 当前公共 schema 1 保留旧端点流语义；schema 2 支持 `endpoint_stream` 和 `paired_endpoints`（实际合同见 [timeline_events.md](timeline_events.md)）。某后端在区域退出时提交 start/end 一对，外层区域可能晚提交但 start 更早；保物理提交顺序和两字段各自 offset，不为满足单调性排序。配对完成顺序不是循环 iteration。schema 2 的 attempted/committed/retained/dropped/filtered/overwritten 统一以 canonical 端点引用计数；一个物理 pair 对应两个端点，同时另保 native 记录数量/单位。容量溢出是 dropped 还是 overwritten 必须由实际生产者决定。schema 1 的历史语义不改，新 raw ABI 不必等于公共 schema 版本。
+
+**回绕兼容策略明确版本化。** 当前公共 schema 1/2 只接受无回绕的读数关系；它们的保守拒绝不代表物理 raw 无效。实际 timer 发生下降时仍须保原件、布局和关联快照，记录当前 reader 的限制，不能排序、修改 tick 或直接以新值冒充原值。支持短位宽回绕的后续公共版本必须保存 modulo ticks 与物理 sequence，由独立有效窗口/reset 证据决定是否唯一展开，在派生视图中另记展开值、圈数及证明；相同原件可离线升级重读。若本轮实际必需样本跨回绕，须实现该版本与兼容正负例才能过对应门，不能以 partial 绕过完整时间验收。end≥start 的样本也须排除不可判定整圈，沿用 §6。
+
+**离线 adapter 与可用 profiler 分开验收。** 已有 Enflame 物理解码器能读取旧 advanced 捕获，不意味着 `detail="timeline"` 已支持 GCU。接入默认入口还要完成自动 planner、真实首末 program 的紧凑写址、调用 owner/完成、预算、raw 先保留及错误恢复。当前 decoder 只接受其实际支持的 program/actor；扩大范围应先实现并核验生产者/transport，不能只放宽 Python 校验。同理，机器 counter PC 映射不授予源区域边界，clock 有尺度不授予跨主体 epoch。
+
+**先执行可证伪的最小纵向样本。** 第一条链使用普通 load→有依赖 runtime 循环→store，改变 K 证明相同 binary 的动态次数；另选 ordinary 对象中确有异步机制的样本。逐项得到 boundary、publication、clock、mechanism 和 export 证据。NVIDIA 当前普通/插桩 GEMM 的展开及调度差异尚未闭合，必须比较关键依赖和真实 copy/commit/wait/compute 关系，不能仅以指令总数相等放行。不能在无法保持的流水上承诺解释原执行；每组三方对照固定 ordinary 编译配置、输入、grid、数学和异步机制，仅改变观测密度；C2 每个调度变体各自做三方对照。普通 baseline 预登记 commit/group/wait 覆盖、消费前等待、允许 in-flight 的组和 compute 阶段关系；静态保留重叠机会不等于测得硬件重叠。必要时调整通用插桩位置或采样策略。GCU 的 ns 尺度和异步机制、Ascend 的新 timeline 发布协议也分别需要真实证明。没有证明时保 partial 和具体阻碍，不能用抽象合理性替代可行性。
+
+适配成本最终报告回答：此次新增了哪些部件、复用了哪些实际实现、为什么需要公共改动、哪些设备证据必须重做。不给新增芯片固定天数或“写一个 decoder 即可”的承诺。原三后端未通过之前，不以第四后端或模拟注册冲淡缺口。
+
 ## 9. Bundle 与 Perfetto 呈现
 
 建议在原 bundle 合同上增加版本化内容，不建立互相矛盾的第二套身份：
@@ -377,7 +406,7 @@ A/B 允许推进下一项开发；只有 C 达到既有 P01，D 才完成本轮�
 
 track 分组层次：capture/device → 实际 invocation → program/实际 observer → region、submit、wait、completion 或有证据 native engine。详情至少给源文件/行/region、实际 observer/执行身份、semantic、begin/end tick、ns、clock/error、occurrence、token/generation、丢失状态与 raw 来源。
 
-异步重叠事件不得被强塞成同一 stack 上错误嵌套的 B/E；为独立 in-flight operation 使用独立轨道/协议。记录本身的时间不移动，不为排版把重叠事件排成串行。track/flow IDs 稳定且检测 collision；schema/消费者版本明确。
+异步重叠事件不得被强塞成同一 stack 上错误嵌套的 B/E；为独立 in-flight operation 使用独立轨道/协议。记录本身的时间不移动，不为排版把重叠事件排成串行。raw/canonical 保留提交顺序，不妨碍 exporter 生成满足协议的独立时间投影（例如合法排序或独立轨道）；投影不得改变端点、配对、原始 sequence、raw 引用或 occurrence 含义。嵌套 pair 的晚提交外层要通过实际 Trace Processor 验证，不能直接沿物理 append 顺序生成错误 B/E 栈。track/flow IDs 稳定且检测 collision；schema/消费者版本明确。
 
 Perfetto 自身不能自动做源码文件导航的地方，提供可复制 source 位置与配套 bundle 源码页面；事件详情必须直接看见来源，不能要求用户再拼十份 JSON。
 
