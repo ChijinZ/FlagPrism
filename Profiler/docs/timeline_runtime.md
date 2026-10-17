@@ -1,8 +1,30 @@
 # Timeline invocation ownership
 
-This describes implemented low-level runtime components, not an available
-`--detail timeline` command. Public hook/CLI integration, clock certification,
-canonical time events and Perfetto qualification remain separate work.
+The public hook/API/CLI now collect source-linked raw internal timestamps using
+these ownership components. Clock certification, canonical ns events and
+Perfetto qualification remain incomplete. The current output is explicitly
+`partial_clock_unverified`, not a certified time axis or full P01 result.
+
+```bash
+python -m flagtree.profiler.cli --detail timeline --device 0 -n trace-run my_script.py
+```
+
+The equivalent API is `start("trace-run", detail="timeline")`, followed by the
+ordinary workload and `finalize(session)`. Open `trace-run/timeline/index.json`
+to locate original raw records, decoded timestamps, logical async facts,
+source/compiled artifacts and per-invocation metadata. No kernel scope or site
+annotation is required. There is no certified `.pftrace` yet; raw ticks must not
+be interpreted as ns or used for cross-observer overlap without clock proof.
+The current public path is NVIDIA-only, eager and one host thread per session;
+it accepts multiple CUDA streams. Nested sessions are explicitly rejected.
+Other backends still need their timeline producer paths.
+
+Build with the matching `preallocation-admission.patch` v2: it passes the actual
+launch stream before either scratch allocation and exposes admission ABI 2.
+An old launcher is rejected before hook activation. Compiler and launcher/hook/
+runtime file fingerprints enter timeline JIT cache identity before lookup;
+per-capture epoch qualification is separate. Count/native modes keep their
+existing meaning.
 
 `timeline_runtime.TimelineOwnerPool` owns one independent record allocation per
 invocation. `timeline_cuda_runtime.CudaTimelineTransport` supplies the actual
@@ -22,9 +44,9 @@ Only after submissions does the collector call `read`, validate/decode/persist
 the returned immutable raw bytes, then `release` that owner. The live owner
 snapshots the plan, selection, binary, grid and stream, so later invocations do
 not overwrite its metadata. Separate CUDA streams and many pending invocations
-are supported by this component; its pool is restricted to the creating host
-Thread object. This does not declare the legacy instrumentation hook to have
-acquired those capabilities.
+are supported by the timeline path; its pool is restricted to the creating host
+Thread object. The legacy count/native shared-buffer hook retains its existing
+concurrency restrictions.
 
 Initialization may itself submit writes. Consequently, `abort` can immediately
 remove an admitted owner without an allocation, but an armed or possibly
