@@ -698,6 +698,13 @@ public:
             "Ascend dynamic trace allocation capacity must equal "
             "3 * per-actor capacity + 1; rebuild stale kernel metadata");
     }
+    if (runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+        getStringOr(metadata, "debug_record_layout", "") == "gcu_first_last_timeline_v2") {
+      if (runtimeMetadata.recordLayout != "gcu_first_last_timeline_v2" ||
+          getStringOr(metadata, "debug_record_layout", "") != runtimeMetadata.recordLayout ||
+          getUInt32Or(metadata, "debug_dynamic_index_bits", 0) != 32)
+        throw std::invalid_argument("GCU first/last runtime contradicts compiler storage ABI");
+    }
     if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
         runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
         runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {

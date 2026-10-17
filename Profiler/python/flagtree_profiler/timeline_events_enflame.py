@@ -16,19 +16,22 @@ def _need(value, message):
         raise ValueError(message)
 
 
-def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
+def _canonicalize_slot(capture, *, compiler_metadata, capture_id, slot_index=0):
     _text(capture_id, 'owning capture namespace')
-    _need(type(capture) is dict and capture.get('capture_status') == 'decoded',
-          'A successfully published GCU capture is required')
-    _need(capture.get('record_layout') == 'selected_dynamic_timeline_v1', 'Capture layout mismatch')
+    _need(type(capture) is dict, 'A GCU capture is required')
+    first_last = capture.get('record_layout') == 'gcu_first_last_timeline_v2'
+    _need(capture.get('capture_status') in (('decoded','raw_complete') if first_last else ('decoded',)),
+          'A published GCU capture is required')
+    layout = capture.get('record_layout')
+    _need(layout in ('selected_dynamic_timeline_v1','gcu_first_last_timeline_v2'), 'Capture layout mismatch')
     metadata = compiler_metadata
-    _need(type(metadata) is dict and metadata.get('debug_record_layout') == 'selected_dynamic_timeline_v1' and
+    _need(type(metadata) is dict and metadata.get('debug_record_layout') == layout and
           type(metadata.get('debug_protocol_version')) is int and metadata['debug_protocol_version'] == 2,
           'Unknown GCU dynamic protocol')
     _need(type(metadata.get('debug_clock_bits')) is int and metadata['debug_clock_bits'] == 46 and
           metadata.get('debug_clock_domain') == 'enflame.sdk.global_timer', 'Unknown GCU timer encoding')
     runtime = capture.get('runtime_metadata')
-    _need(type(runtime) is dict and runtime.get('record_layout') == 'selected_dynamic_timeline_v1',
+    _need(type(runtime) is dict and runtime.get('record_layout') == layout,
           'Actual GCU launch layout is required')
     association = runtime.get('profiler_association_evidence')
     _need(type(association) is dict and association.get('evidence') == 'same_launch_metadata_object',
@@ -45,7 +48,6 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
     _need(len(set(sessions)) == len(sessions), 'Duplicate native session membership')
     invocation = stable_id((capture_id,), 'enflame-invocation', native_invocation, scope, sorted(sessions))
     identity = (capture_id, invocation, binary)
-    program = _integer(metadata.get('debug_dynamic_selected_program'), 'selected program', 0, 0x7fffffff)
     actor = _integer(metadata.get('debug_dynamic_selected_actor'), 'selected work-item', 0, 0)
     sample = _integer(metadata.get('debug_dynamic_sample_every'), 'sample every', 1, 0x7fffffff)
     grid = runtime.get('grid')
@@ -53,15 +55,36 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
     total = 1
     for dim in grid:
         total *= _integer(dim, 'grid dimension', 1, 0x7fffffff)
-    _need(total <= 0x7fffffff and program < total, 'Selected program exceeds actual grid')
+    _need(total <= 0x7fffffff, 'Actual grid exceeds bounded indexing')
+    if first_last:
+        _need(type(metadata.get('debug_dynamic_storage_version')) is int and
+              metadata['debug_dynamic_storage_version'] == 2 and
+              type(metadata.get('debug_dynamic_index_bits')) is int and metadata['debug_dynamic_index_bits'] == 32 and
+              metadata.get('debug_dynamic_program_policy') == 'runtime_first_last' and
+              'debug_dynamic_selected_program' not in metadata, 'Unknown GCU first/last storage policy')
+        slots = [0] if total == 1 else [0,total-1]
+        _need(type(slot_index) is int and 0 <= slot_index < len(slots), 'Invalid physical ring slot')
+        program = slots[slot_index]
+    else:
+        program = _integer(metadata.get('debug_dynamic_selected_program'), 'selected program', 0, 0x7fffffff)
+        _need(slot_index == 0 and program < total, 'Selected program exceeds actual grid')
     encoded = capture.get('raw_base64')
     _need(type(encoded) is str and len(encoded) <= 12*1024*1024, 'GCU raw input budget exceeded')
     raw = base64.b64decode(encoded, validate=True)
     _need(32 <= len(raw) <= 8*1024*1024 and hashlib.sha256(raw).hexdigest() == _sha(capture.get('raw_sha256')),
           'GCU raw identity or extent mismatch')
+    raw_bytes = len(raw)
+    raw_base = 0
+    if first_last:
+        capacity = _integer(metadata.get('debug_record_capacity'), 'slot capacity', 1, 16384)
+        slot_bytes = _integer(metadata.get('debug_dynamic_slot_bytes'), 'slot bytes', 96)
+        _need(slot_bytes == 32+capacity*64 and raw_bytes == len(slots)*slot_bytes,
+              'Actual GCU compact storage extent differs from manifest/grid')
+        raw_base = slot_index*slot_bytes
+        raw = raw[raw_base:raw_base+slot_bytes]
     written, capacity, dropped, flags, stride, payload, attempted, reserved = struct.unpack_from('<8I', raw)
     _need(capacity > 0 and stride == 64 and payload == len(raw) == 32+capacity*64 and
-          reserved == 0 and not flags & ~0x13 and dropped == max(0, written-capacity) and
+          reserved == (program if first_last else 0) and not flags & ~0x13 and dropped == max(0, written-capacity) and
           bool(flags & 1) == bool(dropped) and attempted >= written,
           'Invalid GCU append header')
     _need(type(metadata.get('debug_record_capacity')) is int and metadata['debug_record_capacity'] == capacity,
@@ -126,7 +149,8 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
         saturated=saturated, complete=complete,
         attributes={'enflame.native_association': association, 'enflame.sample_every': sample,
                     'enflame.physical_pair_bytes': 64, 'enflame.physical_pairs_retained': retained,
-                    'enflame.endpoint_count_basis': 'two_real_field_references_per_committed_pair'})]
+                    'enflame.endpoint_count_basis': 'two_real_field_references_per_committed_pair',
+                    **({'enflame.physical_slot': slot_index, 'enflame.raw_slot_base': raw_base} if first_last else {})})]
     records, events, mapping, occurrences = [], [], {}, defaultdict(int)
     previous_ordinal = -1
     for slot in range(retained):
@@ -142,8 +166,8 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
             seq = 2*sequence+phase_index
             rid = stable_id(identity, 'record', observer, seq)
             records.append(dict(id=rid, observer_id=observer, site_id=ids[site], phase=phase,
-                                tick=tick, sequence=seq, offset=offset+field_offset, length=8))
-            mapping[str(sequence)+'.'+phase] = rid
+                                tick=tick, sequence=seq, offset=raw_base+offset+field_offset, length=8))
+            mapping[(str(program)+'.' if first_last else '')+str(sequence)+'.'+phase] = rid
             refs.append(rid)
         occurrence = occurrences[site]
         occurrences[site] += 1
@@ -155,11 +179,35 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
             coverage='complete_selected_pair_stream' if complete else 'retained_pair_prefix'))
     return validate_raw_batch(dict(schema_version=2,
         identity=dict(zip(('capture_id','invocation_id','binary_id'), identity)),
-        raw_artifact=dict(sha256=capture['raw_sha256'], bytes=len(raw)),
+        raw_artifact=dict(sha256=capture['raw_sha256'], bytes=raw_bytes),
         clock_status='unverified', boundary_status='unverified', sources=sources, sites=sites,
         observers=observers, records=records, events=events, complete=complete,
-        backend_record_map={'enflame.dynamic_pairs.v1': mapping},
+        backend_record_map={('enflame.dynamic_pairs.v2' if first_last else 'enflame.dynamic_pairs.v1'): mapping},
         notes=['Endpoint sequences index real fields in append pairs, not the chronological order of all reads.',
                'Counts use canonical endpoint references; each native committed pair contributes two.',
                'Source locations support navigation, not source cost or hardware-completion attribution.',
                'Raw units/epoch and final source-region boundaries are unverified.']))
+
+
+def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
+    """Decode physical rings, preserving whole-raw offsets and per-slot loss."""
+    first = _canonicalize_slot(capture, compiler_metadata=compiler_metadata,
+                               capture_id=capture_id)
+    if capture.get('record_layout') != 'gcu_first_last_timeline_v2':
+        return first
+    grid = capture['runtime_metadata']['grid']
+    if grid[0]*grid[1]*grid[2] == 1:
+        return first
+    second = _canonicalize_slot(capture, compiler_metadata=compiler_metadata,
+                                capture_id=capture_id, slot_index=1)
+    _need(first['identity'] == second['identity'] and first['raw_artifact'] == second['raw_artifact'],
+          'Physical rings disagree about owning capture')
+    for key in ['sources','sites']:
+        _need(first[key] == second[key], 'Physical rings disagree about compiled sources')
+    for key in ['observers','records','events']:
+        first[key].extend(second[key])
+    first['complete'] = first['complete'] and second['complete']
+    for key,mapping in second['backend_record_map'].items():
+        _need(set(first['backend_record_map'][key]).isdisjoint(mapping), 'Aliased native pair identity')
+        first['backend_record_map'][key].update(mapping)
+    return validate_raw_batch(first)
