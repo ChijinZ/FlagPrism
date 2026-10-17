@@ -152,15 +152,26 @@ public:
   prepareOwnedLaunch(const DebugKernelArtifacts &artifacts,
                      const BufferMeta &meta,
                      const DebugRuntimeMetadata &runtimeMetadata,
-                     uint64_t streamHandle) override {
+                     uint64_t streamHandle, bool initialize) override {
     BufferMeta normalizedMeta = normalizeBufferMeta(artifacts, meta);
 
     PreparedDebugLaunch prepared;
     prepared.transferOptions =
         makeTransferEngineOptions(normalizedMeta.backendKind, streamHandle);
     prepared.transferEngine = createTransferEngine(prepared.transferOptions);
-    prepared.request = prepareLaunch(artifacts, normalizedMeta, runtimeMetadata,
-                                     *prepared.transferEngine);
+    if (initialize) {
+      prepared.request = prepareLaunch(artifacts, normalizedMeta, runtimeMetadata,
+                                       *prepared.transferEngine);
+    } else {
+      if (!artifacts.hiddenArgEnabled)
+        throw std::invalid_argument("Uninitialized launch requires hidden ABI");
+      prepared.request.bufferMeta = normalizedMeta;
+      prepared.request.runtimeMetadata = runtimeMetadata;
+      prepared.request.launchContext = prepared.transferEngine->prepare(
+          normalizedMeta, artifacts.bufferPlan, runtimeMetadata);
+      prepared.request.hiddenArgValue = prepared.transferEngine->hiddenArg(
+          prepared.request.launchContext);
+    }
     return prepared;
   }
 };

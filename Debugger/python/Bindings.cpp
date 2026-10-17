@@ -545,7 +545,7 @@ py::dict toPyDecodedRun(const DecodedDebugRun &run) {
 class PreparedLaunchHandle {
 public:
   PreparedLaunchHandle(const py::dict &metadata, uint64_t streamHandle,
-                       py::handle runtimeMetadataValue) {
+                       py::handle runtimeMetadataValue, bool initialize = true) {
     auto bridge = createFrontendBridge();
 
     DebugCompileRequest compileRequest;
@@ -699,6 +699,7 @@ public:
             "3 * per-actor capacity + 1; rebuild stale kernel metadata");
     }
     if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+        runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
         runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
       // Legacy snapshots retain their minimum allocation. Dynamic capacity is
       // explicit and must not be silently raised by normalizeCompileRequest.
@@ -711,7 +712,8 @@ public:
       // The bounded GCU writer uses signed pointer offsets and unsigned flat
       // program ids. Validate the actual launch before allocating any buffer;
       // compile-time selection alone cannot establish these runtime bounds.
-      if (runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1" ||
+      const bool firstLast = runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+      if ((!firstLast && runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1") ||
           getStringOr(metadata, "debug_clock_carrier", "") !=
               "llvm_i64_words" ||
           getUInt32Or(metadata, "debug_record_size", 0) != 64)
@@ -745,6 +747,14 @@ public:
       if (bufferBytes > signedLimit)
         throw std::invalid_argument(
             "bounded dynamic trace buffer exceeds INT32_MAX pointer offsets");
+      if (firstLast) {
+        if (getStringOr(metadata, "debug_dynamic_program_policy", "") != "runtime_first_last" ||
+            getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 2 ||
+            getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) != bufferBytes ||
+            !compileRequest.options.recordCapacity || compileRequest.options.recordCapacity > 16384 ||
+            launchGridProduct(runtimeMetadata) == 0 || launchGridProduct(runtimeMetadata) > signedLimit)
+          throw std::invalid_argument("GCU first/last manifest/storage mismatch");
+      } else {
       if (!lookup(metadata, "debug_dynamic_selected_program"))
         throw std::invalid_argument(
             "bounded dynamic indexing requires an explicit selected program");
@@ -752,6 +762,7 @@ public:
           signedLimit)
         throw std::invalid_argument(
             "bounded dynamic selected program exceeds INT32_MAX");
+      }
       // A selected id outside the grid intentionally collects no records.
       // Do not reject that supported ablation or silently narrow the id.
     }
@@ -806,7 +817,8 @@ public:
     bufferMeta.backendKind = parseBackendKind(compileRequest.backendName);
 
     prepared_.emplace(bridge->prepareOwnedLaunch(
-        artifacts, bufferMeta, runtimeMetadata, streamHandle));
+        artifacts, bufferMeta, runtimeMetadata, streamHandle, initialize));
+    initialized_ = initialize;
   }
 
   ~PreparedLaunchHandle() noexcept {
@@ -835,11 +847,25 @@ public:
     return toPyRuntimeMetadata(prepared_->request.runtimeMetadata);
   }
 
+  void initialize() {
+    ensurePrepared();
+    if (initialized_)
+      throw py::value_error("debugger launch initialization is not repeatable");
+    initialized_ = true; // May submit writes before throwing; owner must retain.
+    prepared_->transferEngine->initHeader(prepared_->request.launchContext);
+  }
+
+  py::dict readRaw() {
+    ensurePrepared();
+    if (!initialized_)
+      throw py::value_error("debugger launch buffer was not initialized");
+    return toPyExportedRun(prepared_->transferEngine->syncExport(
+        prepared_->request.launchContext));
+  }
+
   py::dict finish() {
     ensurePrepared();
-    DebugExportedRun run =
-        prepared_->transferEngine->syncExport(prepared_->request.launchContext);
-    py::dict exportedRun = toPyExportedRun(run);
+    py::dict exportedRun = readRaw();
     releaseInternal();
     return exportedRun;
   }
@@ -864,6 +890,7 @@ private:
     prepared_.reset();
   }
 
+  bool initialized_ = false;
   std::optional<PreparedDebugLaunch> prepared_;
 };
 
@@ -871,6 +898,8 @@ private:
 
 void init_flagtree_debugger_runtime(py::module &&m) {
   py::class_<PreparedLaunchHandle>(m, "PreparedLaunchHandle")
+      .def("initialize", &PreparedLaunchHandle::initialize)
+      .def("read_raw", &PreparedLaunchHandle::readRaw)
       .def_property_readonly("hidden_arg_value",
                              &PreparedLaunchHandle::hiddenArgValue)
       .def_property_readonly("buffer_meta", &PreparedLaunchHandle::bufferMeta)
@@ -879,6 +908,14 @@ void init_flagtree_debugger_runtime(py::module &&m) {
       .def("finish", &PreparedLaunchHandle::finish)
       .def("release", &PreparedLaunchHandle::release);
 
+  m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
+  m.def("allocate_timeline_launch",
+      [](py::dict metadata, uint64_t streamHandle, py::object runtimeMetadata) {
+        if (getStringOr(metadata, "debug_record_layout", "") != "gcu_first_last_timeline_v2")
+          throw py::value_error("Deferred timeline allocation requires GCU storage v2");
+        return std::make_unique<PreparedLaunchHandle>(metadata, streamHandle,
+                                                      runtimeMetadata, false);
+      });
   m.def(
       "prepare_launch",
       [](const py::dict &metadata, uint64_t streamHandle,

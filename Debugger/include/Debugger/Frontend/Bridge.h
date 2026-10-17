@@ -79,7 +79,7 @@ public:
   prepareOwnedLaunch(const DebugKernelArtifacts &artifacts,
                      const BufferMeta &meta,
                      const DebugRuntimeMetadata &runtimeMetadata,
-                     uint64_t streamHandle = 0) = 0;
+                     uint64_t streamHandle = 0, bool initialize = true) = 0;
 };
 
 std::unique_ptr<FrontendBridge> createFrontendBridge();

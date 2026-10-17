@@ -1018,7 +1018,8 @@ struct BackendTransferAllocation {
 
 void synthesizeExportHeader(const DebugLaunchContext &ctx,
                             BackendTransferAllocation &allocation) {
-  if (ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+  if (ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+      ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
       ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
@@ -1055,6 +1056,17 @@ public:
   DebugLaunchContext
   prepare(const BufferMeta &meta, const DebugBufferPlan &plan,
           const DebugRuntimeMetadata &runtimeMetadata) override {
+    const bool firstLast = runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+    uint64_t programCount = 0;
+    if (firstLast) {
+      programCount = saturatingMul(saturatingMul(runtimeMetadata.gridX,
+          runtimeMetadata.gridY), runtimeMetadata.gridZ);
+      if (meta.backendKind != BackendKind::ENFLAME || !runtimeMetadata.hasLaunchGrid ||
+          !programCount || programCount > std::numeric_limits<int32_t>::max() ||
+          !plan.recordCapacity || plan.recordCapacity > 16384 ||
+          plan.recordSize != 64 || plan.payloadBytes)
+        throw std::invalid_argument("Invalid GCU first/last storage geometry or ABI");
+    }
     // Enflame full-payload lowering elides per-record bounds masks. Enforce
     // its precondition here too, so native callers share the Python guard.
     if (meta.backendKind == BackendKind::ENFLAME && plan.payloadBytes) {
@@ -1106,6 +1118,8 @@ public:
     ctx.streamHandle = options_.streamHandle;
     ctx.layout = computeBufferLayout(plan.recordCapacity, plan.recordSize,
                                      plan.payloadBytes);
+    if (firstLast)
+      ctx.layout.totalBytes *= programCount > 1 ? 2 : 1;
     ctx.bufferSize = ctx.layout.totalBytes;
 
     auto allocation = std::make_unique<BackendTransferAllocation>();
@@ -1165,7 +1179,8 @@ public:
     // it synchronous so the instrumented kernel never observes stale allocation
     // contents when different backend launch APIs are mixed in one process.
     const uint64_t initializationStream =
-        (ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
+        (ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+         ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
          ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
          (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
             ? ctx.streamHandle
@@ -1192,9 +1207,19 @@ public:
     header.reserved0 = 0;
     header.reserved1 = 0;
 
-    std::memcpy(allocation->hostBuffer, &header, sizeof(header));
-    adapter_->copyHostToDevice(allocation->deviceBuffer, allocation->hostBuffer,
-                               sizeof(header), initializationStream);
+    const bool firstLast = ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+    uint64_t programs = saturatingMul(saturatingMul(ctx.runtimeMetadata.gridX,
+        ctx.runtimeMetadata.gridY), ctx.runtimeMetadata.gridZ);
+    const unsigned slots = firstLast && programs > 1 ? 2 : 1;
+    for (unsigned slot = 0; slot < slots; ++slot) {
+      // reserved1 names the actual logical program in this versioned layout.
+      header.reserved1 = firstLast && slot ? static_cast<uint32_t>(programs - 1) : 0;
+      size_t offset = slot * ctx.layout.payloadOffset;
+      auto *host = static_cast<uint8_t *>(allocation->hostBuffer) + offset;
+      auto *device = static_cast<uint8_t *>(allocation->deviceBuffer) + offset;
+      std::memcpy(host, &header, sizeof(header));
+      adapter_->copyHostToDevice(device, host, sizeof(header), initializationStream);
+    }
     allocation->asyncExportPending = false;
     allocation->asyncCopySubmitted = false;
   }

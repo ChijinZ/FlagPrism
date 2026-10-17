@@ -163,6 +163,12 @@ constexpr StringLiteral kAttrDynamicTimeline =
     "flagtree.debug.dynamic_timeline_enabled";
 constexpr StringLiteral kAttrSelectedProgram =
     "flagtree.debug.selected_program";
+constexpr StringLiteral kAttrFirstLastTimeline =
+    "flagtree.debug.dynamic_first_last";
+constexpr StringLiteral kAttrTimelineSlotBytes =
+    "flagtree.debug.dynamic_slot_bytes";
+constexpr StringLiteral kRecordLayoutFirstLastTimeline =
+    "gcu_first_last_timeline_v2";
 constexpr StringLiteral kAttrCensus = "flagtree.debug.source_census";
 constexpr StringLiteral kAttrSelectedActor = "flagtree.debug.selected_actor";
 constexpr StringLiteral kAttrSampleEvery = "flagtree.debug.sample_every";
@@ -1138,6 +1144,19 @@ Value computeDynamicInstanceId(OpBuilder &builder, Location loc) {
       builder.create<arith::MulIOp>(loc, z, xy));
   return builder.create<arith::AddIOp>(loc, x, yz);
 }
+bool isFirstLastTimeline(ModuleOp module) {
+  auto attr = module->getAttrOfType<BoolAttr>(kAttrFirstLastTimeline);
+  return attr && attr.getValue();
+}
+Value lastDynamicProgram(OpBuilder &builder, Location loc) {
+  Value nx = builder.create<triton::GetNumProgramsOp>(loc, 0);
+  Value ny = builder.create<triton::GetNumProgramsOp>(loc, 1);
+  Value nz = builder.create<triton::GetNumProgramsOp>(loc, 2);
+  Value xy = builder.create<arith::MulIOp>(loc, nx, ny);
+  return builder.create<arith::SubIOp>(loc,
+      builder.create<arith::MulIOp>(loc, xy, nz),
+      createI32Constant(builder, loc, 1));
+}
 Value loadDynamicHeaderI32(OpBuilder &builder, Location loc, Value ptr,
                            int64_t offset) {
   return loadI32(builder, loc,
@@ -1158,6 +1177,11 @@ Value selectedDynamicWriter(OpBuilder &builder, Location loc, ModuleOp module,
       loc, arith::CmpIPredicate::eq, logicalInstanceId,
       createI32Constant(builder, loc,
                         dynamicOption(module, kAttrSelectedProgram, 0)));
+  if (isFirstLastTimeline(module)) {
+    Value last = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::eq,
+        logicalInstanceId, lastDynamicProgram(builder, loc));
+    programSelected = builder.create<arith::OrIOp>(loc, programSelected, last);
+  }
   Value actor = builder.create<gpu::ThreadIdOp>(loc, gpu::Dimension::x);
   Value actorSelected = builder.create<arith::CmpIOp>(
       loc, arith::CmpIPredicate::eq, actor,
@@ -1216,6 +1240,16 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     instanceBase = builder.create<arith::MulIOp>(loc, logicalInstanceId,
                                                  recordsPerInstanceI64);
 #ifdef FLAGPRISM_BACKEND_ENFLAME
+  // New storage ABI: independently published per-program rings in compact
+  // first/last slots. No all-grid allocation and no shared write cursor.
+  if (dynamic && isFirstLastTimeline(module)) {
+    Value notFirst = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::ne,
+        logicalInstanceId, createI32Constant(builder, loc, 0));
+    Value offset = builder.create<arith::SelectOp>(loc, notFirst,
+        createI32Constant(builder, loc, dynamicOption(module, kAttrTimelineSlotBytes, 0)),
+        createI32Constant(builder, loc, 0));
+    ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr, offset);
+  }
   Value selectedWriter;
   Value capacity;
   Value payloadOffset;
@@ -4579,6 +4613,7 @@ struct InsertInstrumentationPass
           kAttrRecordLayout,
           builder.getStringAttr(
 #ifdef FLAGPRISM_BACKEND_ENFLAME
+              isFirstLastTimeline(module) ? kRecordLayoutFirstLastTimeline :
               isDynamicTimeline(module) ? kRecordLayoutDynamicTimeline :
 #endif
                                         kRecordLayoutDeterministicCompactV1));
@@ -4690,6 +4725,20 @@ llvm::Error setDebugDynamicTimelineOptions(ModuleOp module, uint32_t program,
   module->setAttr(kAttrSampleEvery, builder.getI64IntegerAttr(sampleEvery));
   return llvm::Error::success();
 #endif
+}
+
+llvm::Error setDebugDynamicTimelineFirstLastOptions(ModuleOp module,
+    uint32_t actor, uint32_t sampleEvery, uint32_t capacity) {
+  if (!capacity || capacity > 16384)
+    return llvm::createStringError(llvm::inconvertibleErrorCode(),
+        "GCU first/last capacity must be in [1,16384]");
+  if (auto error = setDebugDynamicTimelineOptions(module, 0, actor, sampleEvery))
+    return error;
+  OpBuilder builder(module.getContext());
+  module->setAttr(kAttrFirstLastTimeline, builder.getBoolAttr(true));
+  module->setAttr(kAttrTimelineSlotBytes,
+      builder.getI32IntegerAttr(kRingHeaderBytes + capacity * kRecordBytes));
+  return llvm::Error::success();
 }
 
 llvm::Error setDebugDynamicPublicationWorkItems(ModuleOp module,

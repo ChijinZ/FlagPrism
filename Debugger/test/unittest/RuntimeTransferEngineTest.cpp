@@ -336,6 +336,71 @@ TEST(RealTransferEngineTest, AsyncExportCopiesOnWait) {
   engine->release(ctx);
 }
 
+TEST(RealTransferEngineTest, GcuFirstLastUsesTwoCompactIndependentRings) {
+  auto engine = createTransferEngine(makeHostTransferOptions());
+  auto meta = makeTestBufferMeta();
+  meta.backendKind = BackendKind::ENFLAME;
+  DebugBufferPlan plan;
+  plan.recordCapacity = 4;
+  plan.recordSize = 64;
+  DebugRuntimeMetadata runtime;
+  runtime.hasLaunchGrid = true;
+  runtime.gridX = 3;
+  runtime.gridY = 2;
+  runtime.gridZ = 1;
+  runtime.recordLayout = "gcu_first_last_timeline_v2";
+  auto ctx = engine->prepare(meta, plan, runtime);
+  const size_t stride = 32 + 4 * 64;
+  EXPECT_EQ(ctx.bufferSize, 2 * stride);
+  engine->initHeader(ctx);
+  auto *base = static_cast<uint8_t *>(ctx.deviceCtrlPtr);
+  auto *first = reinterpret_cast<RingBufferHeader *>(base);
+  auto *last = reinterpret_cast<RingBufferHeader *>(base + stride);
+  EXPECT_EQ(first->capacity, 4u);
+  EXPECT_EQ(last->capacity, 4u);
+  EXPECT_EQ(first->payloadOffset, stride);
+  EXPECT_EQ(last->payloadOffset, stride);
+  EXPECT_EQ(first->reserved1, 0u);
+  EXPECT_EQ(last->reserved1, 5u);
+  first->writeIdx = 1;
+  last->writeIdx = 3;
+  auto run = engine->syncExport(ctx);
+  EXPECT_EQ(run.rawBuffer.size(), 2 * stride);
+  RingBufferHeader copiedFirst{}, copiedLast{};
+  std::memcpy(&copiedFirst, run.rawBuffer.data(), sizeof(copiedFirst));
+  std::memcpy(&copiedLast, run.rawBuffer.data() + stride, sizeof(copiedLast));
+  EXPECT_EQ(copiedFirst.writeIdx, 1u);
+  EXPECT_EQ(copiedLast.writeIdx, 3u);
+  engine->release(ctx);
+  runtime.gridX = runtime.gridY = 1;
+  ctx = engine->prepare(meta, plan, runtime);
+  EXPECT_EQ(ctx.bufferSize, stride);
+  engine->initHeader(ctx);
+  engine->release(ctx);
+}
+
+TEST(RealTransferEngineTest, GcuFirstLastRejectsInvalidGeometryBeforeAllocation) {
+  auto engine = createTransferEngine(makeHostTransferOptions());
+  auto meta = makeTestBufferMeta();
+  meta.backendKind = BackendKind::ENFLAME;
+  DebugBufferPlan plan;
+  plan.recordSize = 64;
+  DebugRuntimeMetadata runtime;
+  runtime.hasLaunchGrid = true;
+  runtime.recordLayout = "gcu_first_last_timeline_v2";
+  plan.recordCapacity = 16385;
+  EXPECT_THROW(engine->prepare(meta, plan, runtime), std::invalid_argument);
+  plan.recordCapacity = 4;
+  runtime.gridX = 0;
+  EXPECT_THROW(engine->prepare(meta, plan, runtime), std::invalid_argument);
+  runtime.gridX = 0x7fffffff;
+  runtime.gridY = 2;
+  EXPECT_THROW(engine->prepare(meta, plan, runtime), std::invalid_argument);
+  runtime.gridX = runtime.gridY = 1;
+  plan.payloadBytes = 1;
+  EXPECT_THROW(engine->prepare(meta, plan, runtime), std::invalid_argument);
+}
+
 TEST(RealTransferEngineTest, CannDriverRejectsUnavailableOrNonCannBufferMeta) {
   auto engine = createTransferEngine(BackendKind::CANN);
 

@@ -25,6 +25,8 @@ void setDebugTimelineOnly(mlir::ModuleOp module, bool enabled);
 llvm::Error setDebugDynamicTimelineOptions(mlir::ModuleOp module,
                                            uint32_t program, uint32_t actor,
                                            uint32_t sampleEvery);
+llvm::Error setDebugDynamicTimelineFirstLastOptions(mlir::ModuleOp module,
+    uint32_t actor, uint32_t sampleEvery, uint32_t capacity);
 llvm::Error setDebugDynamicPublicationWorkItems(mlir::ModuleOp module,
                                                 uint32_t workItems);
 llvm::Error setDebugDynamicTimelineSites(mlir::ModuleOp module,

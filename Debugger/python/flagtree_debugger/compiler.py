@@ -10,7 +10,7 @@ from .native import compiler_binding
 
 _instrumentation_mode = ""
 # Compiler lowering changes must invalidate both automatic and advanced caches.
-GCU_DYNAMIC_LOWERING_REVISION = 3
+GCU_DYNAMIC_LOWERING_REVISION = 4
 GCU_CENSUS_VERSION = 1
 _DISABLED_BUILD_MESSAGE = (
     "FlagPrism debugger compiler support is unavailable. Reinstall FlagTree "
@@ -484,21 +484,31 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             metadata["debug_census_publication_work_items"] = work_items
         else:
             programs = request.get("programs")
-            if not isinstance(programs, list) or len(programs) != 1:
+            first_last = request.get("program_policy") == "runtime_first_last"
+            if not first_last and (not isinstance(programs, list) or len(programs) != 1):
                 raise ValueError(
                     "GCU selected trace requires exactly one logical program")
             if request.get("semantics") != ["source_control_interval"]:
                 raise ValueError(
                     "GCU IR trace provides source_control_interval only")
-            if type(programs[0]
-                    ) is not int or not 0 <= programs[0] <= 0x7fffffff:
+            if not first_last and (type(programs[0]) is not int or not 0 <= programs[0] <= 0x7fffffff):
                 raise ValueError(
                     "GCU selected program must fit validated signed 32-bit indexing"
                 )
             metadata["debug_dynamic_index_bits"] = 32
             metadata["debug_clock_carrier"] = "llvm_i64_words"
-            fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
-                                                  request["sample_every"])
+            if first_last:
+                if (getattr(fd, 'GCU_TIMELINE_STORAGE_VERSION', None) != 2 or
+                        programs is not None or not request.get('automatic')):
+                    raise ValueError('GCU first/last requires matching storage v2 compiler and automatic selection')
+                capacity = request['max_events_per_instance']
+                fd.set_debug_dynamic_timeline_first_last_options(mod, 0, request['sample_every'], capacity)
+                metadata['debug_dynamic_storage_version'] = 2
+                metadata['debug_dynamic_program_policy'] = 'runtime_first_last'
+                metadata['debug_dynamic_slot_bytes'] = 32+capacity*64
+            else:
+                fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
+                                                      request["sample_every"])
             if request.get("sites") is not None:
                 fd.set_debug_dynamic_timeline_sites(mod, request["sites"])
             publisher = _frozen_gcu_publication_mode(metadata)
@@ -525,7 +535,8 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "debug_dynamic_publication_config_basis"] = "GCU compiler configuration num_warps denotes work-items"
             metadata["debug_dynamic_selected_sites"] = request.get("sites")
             metadata["debug_dynamic_clock_sampling"] = "region_free_sites_only"
-            metadata["debug_dynamic_selected_program"] = programs[0]
+            if not first_last:
+                metadata["debug_dynamic_selected_program"] = programs[0]
             metadata["debug_dynamic_selected_actor"] = 0
             metadata["debug_dynamic_sample_every"] = request["sample_every"]
             metadata["debug_dynamic_attempted_total_offset"] = 24
@@ -593,7 +604,7 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
         _target_backend(metadata) in {"gcu", "enflame"}
         and metadata["debug_full_dump_payload_bytes_per_instance"] > 0)
     if (metadata["debug_records_per_instance"] <= 0 and
-            metadata["debug_record_layout"] != "selected_dynamic_timeline_v1"):
+            metadata["debug_record_layout"] not in {"selected_dynamic_timeline_v1", "gcu_first_last_timeline_v2"}):
         # The user may request dynamic debugger collection, but the IR pass is
         # the source of truth for whether a hidden-arg ABI was actually added.
         # Metadata-only regions must not make the launcher append

@@ -70,10 +70,14 @@ class ObservationRequest:
             raise ValueError('max_sites must be <= 128')
         if self.automatic and self.sites is not None:
             raise ValueError('automatic selection cannot specify manual sites')
-        if self.program_policy not in ('fixed', 'all_grid_census'):
+        if self.program_policy not in ('fixed', 'all_grid_census', 'runtime_first_last'):
             raise ValueError('unsupported program policy')
         _integer(self.max_census_cells, 'max_census_cells', minimum=1)
         _integer(self.max_census_bytes, 'max_census_bytes', minimum=8)
+        if self.program_policy == 'runtime_first_last':
+            if (self.programs is not None or self.semantics != ('source_control_interval',)
+                    or not self.automatic or self.max_events_per_instance > 16384):
+                raise ValueError('runtime_first_last requires automatic intervals, programs=None and capacity<=16384')
         if self.program_policy == 'all_grid_census':
             if self.programs is not None:
                 raise ValueError('all_grid_census requires programs=None')
