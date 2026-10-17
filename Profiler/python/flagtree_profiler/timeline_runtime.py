@@ -209,12 +209,12 @@ class TimelineOwnerPool:
         owner.update(state='raw_ready', raw=raw)
         return raw
 
-    def retry_read(self, invocation_id):
+    def retry_read(self, invocation_id, *, timeout=60.0):
         owner = self._owner(invocation_id)
         if owner['state'] != 'read_failed':
             raise RuntimeError('Owner has no retryable readback failure')
         owner['state'] = 'completion_pending'
-        return self.read(invocation_id)
+        return self.read(invocation_id, timeout=timeout)
 
     def release(self, invocation_id):
         owner = self._owner(invocation_id)

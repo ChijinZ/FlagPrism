@@ -15,12 +15,13 @@ import tempfile
 import time
 
 
-def _persist(path, payload):
+def _persist(path, payload, *, replace=False):
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         if path.read_bytes() == payload:
             return
-        raise RuntimeError('Refusing to replace different timeline evidence: ' + str(path))
+        if not replace:
+            raise RuntimeError('Refusing to replace different timeline evidence: ' + str(path))
     fd, temporary = tempfile.mkstemp(prefix='.timeline-', dir=path.parent)
     try:
         with os.fdopen(fd, 'wb') as out:
@@ -98,6 +99,9 @@ class TimelineInstrumentationMixin:
         self._timeline_descriptors = {}
         self._timeline_rows = []
         self._timeline_machine = {}
+        self._timeline_pending = {}
+        self._timeline_directory = None
+        self._timeline_flush_attempt = 0
         self.allocator = TimelineAllocator(self)
 
     def _timeline_fingerprint(self):
@@ -161,90 +165,139 @@ class TimelineInstrumentationMixin:
             else:
                 raise
 
-    def flush_timeline(self, base):
-        """Persist before releasing; no application replay on export failure."""
+    def _retain_timeline_original(self, identity, directory, deadline):
+        """Durably retain one owner independently of decoding/visualization."""
+        owner = self.timeline_pool.snapshot(identity)
+        if owner['state'] in ('armed', 'submitting', 'quarantined', 'admitted'):
+            self.timeline_pool.abort(identity)
+            if identity not in self.timeline_pool.invocation_ids:
+                self._timeline_descriptors.pop(identity, None)
+                return
+            owner = self.timeline_pool.snapshot(identity)
+        remaining = deadline-time.monotonic()
+        if remaining <= 0:
+            raise TimeoutError('Timeline finalization budget exhausted; owner retained')
+        if owner['state'] == 'read_failed':
+            raw = self.timeline_pool.retry_read(identity, timeout=min(remaining, 60))
+        else:
+            raw = self.timeline_pool.read(identity, timeout=min(remaining, 60))
+        owner = self.timeline_pool.snapshot(identity)
+        descriptor = self._timeline_descriptors[identity]
+        metadata = descriptor['metadata']
+        prefix = Path('captures') / identity
+        _persist(directory / prefix.with_suffix('.raw'), raw)
+        capture = dict(owner=owner, launch=descriptor['launch'], metadata=metadata,
+            raw_file=str(prefix.with_suffix('.raw')),
+            raw_sha256=hashlib.sha256(raw).hexdigest(), clock_status='unverified',
+            time_arrow_verified=False,
+            capture_status='raw_persisted_pending_decode')
+        _persist(directory / prefix.with_suffix('.input.json'),
+                 (json.dumps(capture, indent=2)+'\n').encode())
+        # Retain compiler/source objects before giving up the device owner.
+        # A decoder failure must not prevent another invocation's raw salvage.
+        for artifact in metadata.get('timeline_artifacts', []):
+            payload = Path(artifact['path']).read_bytes()
+            if hashlib.sha256(payload).hexdigest() != artifact['sha256']:
+                raise RuntimeError('Compiled timeline artifact changed before export')
+            _persist(directory / artifact['retained_file'], payload)
+        self._timeline_pending[identity] = str(prefix.with_suffix('.input.json'))
+        self.timeline_pool.release(identity)
+        self._timeline_descriptors.pop(identity, None)
+
+    def _decode_timeline_original(self, identity, directory, deadline):
         from ..timeline_nvidia import decode_timeline_ring
         from ..timeline_nvidia_async import derive_cp_async_facts
         from ..timeline_events_nvidia import canonicalize_nvidia_capture
-        directory = Path(base).with_suffix('.timeline')
+        from ..timeline_nvidia_machine import inspect_capture_binary
+        input_file = directory / self._timeline_pending[identity]
+        capture = json.loads(input_file.read_text())
+        owner, metadata = capture['owner'], capture['metadata']
+        raw = (directory / capture['raw_file']).read_bytes()
+        if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
+            raise RuntimeError('Retained timeline raw changed before decoding')
+        prefix = Path('captures') / identity
+        capture['capture_status'] = 'aborted'
+        if owner['submission_outcome'] == 'returned':
+            warps = metadata['compiler_metadata']['num_warps']
+            decoded = decode_timeline_ring(raw,
+                scratch_size=owner['layout']['scratch_size'], total_warps=warps,
+                selected_warps=tuple(range(warps)), slots=owner['layout']['slots'],
+                scope_ids=frozenset(int(k) for k, _ in metadata['scope_id_names']))
+            capture['capture_status'] = 'raw_complete' if decoded['complete'] else 'incomplete'
+            capture['decoded_file'] = str(prefix.with_suffix('.decoded.json'))
+            capture['async_file'] = str(prefix.with_suffix('.async.json'))
+            facts = derive_cp_async_facts(decoded, owner['plan'],
+                capture_id=owner['capture_id'], invocation_id=identity,
+                binary_id=owner['binary_id'])
+            canonical = canonicalize_nvidia_capture(decoded, owner=owner,
+                metadata=metadata, raw_sha256=capture['raw_sha256'], raw_bytes=len(raw))
+            capture['events_file'] = str(prefix.with_suffix('.events.json'))
+            for suffix, value in (('.events.json', canonical),
+                                  ('.decoded.json', decoded), ('.async.json', facts)):
+                _persist(directory / prefix.with_suffix(suffix),
+                         (json.dumps(value, indent=2)+'\n').encode())
+        key = (str(directory), owner['binary_id'])
+        if key not in self._timeline_machine:
+            self._timeline_machine[key] = inspect_capture_binary(directory,
+                metadata=metadata, plan=owner['plan'], deadline=deadline)
+        capture['machine_counter_mapping'] = self._timeline_machine[key]
+        _persist(directory / prefix.with_suffix('.json'),
+                 (json.dumps(capture, indent=2)+'\n').encode())
+        self._timeline_rows.append(dict(invocation_id=identity,
+            capture_id=owner['capture_id'], binary_id=owner['binary_id'],
+            capture_file=str(prefix.with_suffix('.json')),
+            capture_status=capture['capture_status']))
+        del self._timeline_pending[identity]
+
+    def flush_timeline(self, base):
+        """Salvage all owners before derived work; retry without application replay."""
+        directory = Path(base).with_suffix('.timeline').resolve()
+        if self._timeline_directory not in (None, str(directory)):
+            raise RuntimeError('Recover timeline into its original evidence directory')
+        self._timeline_directory = str(directory)
         directory.mkdir(parents=True, exist_ok=True)
-        machine_deadline = time.monotonic()+60
+        self._timeline_flush_attempt += 1
+        deadline = time.monotonic()+60
+        errors, failures = [], []
+
+        def failed(identity, stage, error):
+            errors.append(error)
+            failures.append(dict(invocation_id=identity, stage=stage,
+                                 error_type=type(error).__name__, error=str(error)))
+
+        # No decoder/formatter can stop this pass. Failed reads remain owned;
+        # safely saved captures no longer consume device-owner admission budget.
         for identity in self.timeline_pool.invocation_ids:
-            owner = self.timeline_pool.snapshot(identity)
-            if owner['state'] in ('armed', 'submitting', 'quarantined', 'admitted'):
-                self.timeline_pool.abort(identity)
-                if identity not in self.timeline_pool.invocation_ids:
-                    continue
-            if owner['state'] == 'read_failed':
-                raw = self.timeline_pool.retry_read(identity)
-            else:
-                raw = self.timeline_pool.read(identity)
-            owner = self.timeline_pool.snapshot(identity)
-            descriptor = self._timeline_descriptors[identity]
-            metadata = descriptor['metadata']
-            prefix = Path('captures') / identity
-            _persist(directory / prefix.with_suffix('.raw'), raw)
-            capture = dict(owner=owner, launch=descriptor['launch'],
-                metadata=metadata, raw_file=str(prefix.with_suffix('.raw')),
-                raw_sha256=hashlib.sha256(raw).hexdigest(),
-                clock_status='unverified', time_arrow_verified=False,
-                capture_status='aborted' if owner['submission_outcome'] != 'returned' else 'raw_complete')
-            # Original identity/source metadata survives any later decoder,
-            # canonicalization, serialization or export failure.
-            _persist(directory / prefix.with_suffix('.input.json'),
-                     (json.dumps(dict(capture,
-                         capture_status='raw_persisted_pending_decode'), indent=2)+'\n').encode())
-            if owner['submission_outcome'] == 'returned':
-                warps = metadata['compiler_metadata']['num_warps']
-                decoded = decode_timeline_ring(raw,
-                    scratch_size=owner['layout']['scratch_size'], total_warps=warps,
-                    selected_warps=tuple(range(warps)), slots=owner['layout']['slots'],
-                    scope_ids=frozenset(int(k) for k, _ in metadata['scope_id_names']))
-                capture['capture_status'] = 'raw_complete' if decoded['complete'] else 'incomplete'
-                capture['decoded_file'] = str(prefix.with_suffix('.decoded.json'))
-                capture['async_file'] = str(prefix.with_suffix('.async.json'))
-                facts = derive_cp_async_facts(decoded, owner['plan'],
-                    capture_id=owner['capture_id'], invocation_id=identity,
-                    binary_id=owner['binary_id'])
-                canonical = canonicalize_nvidia_capture(decoded, owner=owner,
-                    metadata=metadata, raw_sha256=capture['raw_sha256'], raw_bytes=len(raw))
-                capture['events_file'] = str(prefix.with_suffix('.events.json'))
-                _persist(directory / prefix.with_suffix('.events.json'),
-                         (json.dumps(canonical, indent=2)+'\n').encode())
-                _persist(directory / prefix.with_suffix('.decoded.json'),
-                         (json.dumps(decoded, indent=2)+'\n').encode())
-                _persist(directory / prefix.with_suffix('.async.json'),
-                         (json.dumps(facts, indent=2)+'\n').encode())
-            for artifact in metadata.get('timeline_artifacts', []):
-                payload = Path(artifact['path']).read_bytes()
-                if hashlib.sha256(payload).hexdigest() != artifact['sha256']:
-                    raise RuntimeError('Compiled timeline artifact changed before export')
-                _persist(directory / artifact['retained_file'], payload)
-            from ..timeline_nvidia_machine import inspect_capture_binary
-            key = (str(directory), owner['binary_id'])
-            if key not in self._timeline_machine:
-                self._timeline_machine[key] = inspect_capture_binary(directory,
-                    metadata=metadata, plan=owner['plan'], deadline=machine_deadline)
-            capture['machine_counter_mapping'] = self._timeline_machine[key]
-            _persist(directory / prefix.with_suffix('.json'),
-                     (json.dumps(capture, indent=2)+'\n').encode())
-            if not any(row['invocation_id'] == identity for row in self._timeline_rows):
-                self._timeline_rows.append(dict(invocation_id=identity,
-                    capture_id=owner['capture_id'], binary_id=owner['binary_id'],
-                    capture_file=str(prefix.with_suffix('.json')),
-                    capture_status=capture['capture_status']))
-            # The per-capture JSON/raw/artifacts are durable before this ack.
-            self.timeline_pool.release(identity)
+            try:
+                self._retain_timeline_original(identity, directory, deadline)
+            except Exception as error:
+                failed(identity, 'retain_original', error)
+        for identity in tuple(self._timeline_pending):
+            # A failed resource release remains retryable in the owner pool.
+            if identity in self.timeline_pool.invocation_ids:
+                continue
+            try:
+                self._decode_timeline_original(identity, directory, deadline)
+            except Exception as error:
+                failed(identity, 'decode_export', error)
+        attempt = dict(schema_version=1, attempt=self._timeline_flush_attempt,
+            failures=failures, pending_decode=list(self._timeline_pending),
+            retained_owners=list(self.timeline_pool.invocation_ids))
+        _persist(directory / 'attempts' / f'flush-{self._timeline_flush_attempt:04d}.json',
+                 (json.dumps(attempt, indent=2)+'\n').encode())
         index = dict(schema_version=1, status='partial_clock_unverified',
             captures=self._timeline_rows, clock_status='unverified',
+            failures=failures, pending_decode=list(self._timeline_pending),
+            retained_owners=list(self.timeline_pool.invocation_ids),
             notes=['Raw ticks are not certified ns or a shared epoch.',
                    'Logical async facts are not verified time arrows.',
                    'Public collection alone does not satisfy full timeline acceptance.'])
-        payload = (json.dumps(index, indent=2)+'\n').encode()
-        target = directory/'index.json'
-        if target.exists() and target.read_bytes() != payload:
-            # Only this owned mutable journal may change on a retry. Per-call
-            # original data above are immutable and are never replaced.
-            target.unlink()
-        _persist(target, payload)
+        _persist(directory/'index.json', (json.dumps(index, indent=2)+'\n').encode(),
+                 replace=True)
+        if errors:
+            first = errors[0]
+            if hasattr(first, 'add_note'):
+                first.add_note('Timeline attempt retained at '+str(directory / 'attempts' /
+                    f'flush-{self._timeline_flush_attempt:04d}.json'))
+            raise first
         return directory
