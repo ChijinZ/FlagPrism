@@ -10,6 +10,7 @@ import json
 from math import prod
 from pathlib import Path
 import sys
+import uuid
 
 
 def require(condition, message):
@@ -37,6 +38,8 @@ def main():
     module_path = Path(decoder.__file__).resolve()
     require(module_path.is_relative_to(Path(sys.prefix).resolve()),
             'Decoder fell back outside the actual wheel installation')
+    from flagtree.profiler.timeline_nvidia_async import derive_cp_async_facts
+    capture_namespace = uuid.uuid4().hex
     binding = compiler_binding()
     require(binding.TIMELINE_RECORD_VERSION == 2, 'Wrong installed native ABI')
     torch.cuda.set_device(0)
@@ -169,6 +172,18 @@ def main():
                     for row in decoded['observers']),
                 'Compiler silently changed the explicitly requested capacity')
         require(decoded['complete'], 'Default probe overflowed or saturated')
+        facts = derive_cp_async_facts(
+            decoded, dict(plan, binary_id=compiled.hash),
+            capture_id='probe-' + capture_namespace + '-' + str(len(rows)),
+            invocation_id='launch-' + capture_namespace + '-' + str(len(rows)),
+            binary_id=compiled.hash)
+        save(name + '.async-facts.json', facts)
+        if name.startswith('gemm'):
+            require(facts['groups'] and facts['waits'] and facts['dependencies'],
+                    'Real GEMM has no reconstructed group/wait coverage')
+            require(all(not row['groups_not_covered_by_observed_wait']
+                        for row in facts['observers']),
+                    'Real GEMM final drain did not cover every recorded group')
         require({r['program'] for r in decoded['records']} == set(selected),
                 'Actual sampled programs differ from request')
         for slot in set(range(prod(owner['grid']))) - set(selected):
@@ -197,6 +212,9 @@ def main():
         rows.append(dict(name=name, binary_hash=compiled.hash, raw_bytes=len(raw),
                          raw_sha256=hashlib.sha256(raw).hexdigest(), records=len(decoded['records']),
                          pairs=len(pairs), plan=plan, artifacts=artifacts,
+                         async_groups=len(facts['groups']),
+                         async_waits=len(facts['waits']),
+                         async_dependencies=len(facts['dependencies']),
                          max_tick=max(r['tick'] for r in decoded['records']),
                          grid=owner['grid'], scratch_size=owner['stride'],
                          selected_programs=list(selected)))
@@ -254,7 +272,7 @@ def main():
                             'decoder_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
                             'python': sys.executable, 'calls': calls, 'captures': len(rows),
                             'limitations': ['No public timeline API/CLI yet',
-                                           'No dynamic async flows or Perfetto acceptance',
+                                           'Logical cp.async group facts are not verified time arrows or Perfetto acceptance',
                                            'No cross-SM epoch or final marker-order certificate',
                                            'Test collector synchronizes each explicit capture; production deferred owner remains pending']})
     finally:
