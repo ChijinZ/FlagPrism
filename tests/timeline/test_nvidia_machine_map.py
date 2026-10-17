@@ -45,16 +45,18 @@ DOC = [{'SchemaVersion': {'major': 13, 'minor': 2, 'revision': 0},
                                {'opcode': 'CS2R', 'operands': 'R4,SR_GLOBALTIMERLO'}]}]]
 
 
-def elf(debug=DEBUG):
-    strings = b'\0.shstrtab\0.nv_debug_ptx_txt\0'
+def elf(debug=DEBUG, text_bytes=32):
+    strings = b'\0.shstrtab\0.nv_debug_ptx_txt\0.text.kernel\0'
     data = b'\0'.join(v.encode() for v in debug.splitlines())+b'\0'
     header = struct.pack('<16sHHIQQQIHHHHHH', b'\x7fELF\x02\x01\x01'+b'\0'*9,
-                         2, 190, 1, 0, 0, 64, 0, 64, 0, 0, 64, 3, 1)
-    tables = [bytes(64), struct.pack('<IIQQQQIIQQ', 1, 3, 0, 0, 256,
+                         2, 190, 1, 0, 0, 64, 0, 64, 0, 0, 64, 4, 1)
+    tables = [bytes(64), struct.pack('<IIQQQQIIQQ', 1, 3, 0, 0, 320,
                                      len(strings), 0, 0, 1, 0),
               struct.pack('<IIQQQQIIQQ', strings.index(b'.nv_debug'), 1, 0, 0,
-                          256+len(strings), len(data), 0, 0, 1, 0)]
-    return header+b''.join(tables)+strings+data
+                          320+len(strings), len(data), 0, 0, 1, 0),
+              struct.pack('<IIQQQQIIQQ', strings.index(b'.text.kernel'), 1, 6, 0,
+                          320+len(strings)+len(data), text_bytes, 0, 0, 16, 0)]
+    return header+b''.join(tables)+strings+data+bytes(text_bytes)
 
 
 def args():
@@ -138,6 +140,7 @@ class CounterMapTests(unittest.TestCase):
     def test_duplicated_machine_pc_candidates_stay_static(self):
         a = args(); doc = copy.deepcopy(DOC); f = doc[1][0]
         f['length'] = 48
+        a['cubin'] = elf(text_bytes=48)
         f['sass-instructions'].insert(1, {'opcode': 'CS2R', 'operands': 'R2,SR_GLOBALTIMERLO'})
         a['sass_json'] = json.dumps(doc).encode()
         a['sass_lines'] = SASS.replace('//## File ".nv_debug_ptx_txt", line 8',
@@ -145,6 +148,42 @@ class CounterMapTests(unittest.TestCase):
         value = machine.counter_map(**a)
         self.assertEqual(len(value['counter_pcs']), 3)
         self.assertFalse(value['region_boundaries_verified'])
+
+    def _nested(self):
+        a = args(); doc = copy.deepcopy(DOC)
+        child = dict(doc[1][0], **{'function-name': '$kernel$clock', 'start': 16,
+            'length': 16, 'sass-instructions': [doc[1][0]['sass-instructions'][1]]})
+        doc[1][0]['sass-instructions'] = doc[1][0]['sass-instructions'][:1]
+        doc[1].append(child)
+        a['sass_json'] = json.dumps(doc).encode()
+        a['sass_lines'] = SASS.replace('//## File ".nv_debug_ptx_txt", line 8',
+            '.type $kernel$clock,@function\n$kernel$clock:\n//## File ".nv_debug_ptx_txt", line 8').encode()
+        return a, doc
+
+    def test_explicit_nonzero_helper_in_parent_section(self):
+        a, _ = self._nested(); result = machine.counter_map(**a)
+        child = result['counter_pcs'][1]
+        self.assertEqual((child['function'], child['section'], child['pc'],
+                          child['function_start'], child['relative_pc']),
+                         ('$kernel$clock', '.text.kernel', 16, 16, 0))
+        self.assertFalse(result['region_boundaries_verified'])
+        self.assertEqual(len(result['function_ranges']), 2)
+
+    def test_helper_cannot_be_inferred_from_pc_or_name(self):
+        a, _ = self._nested()
+        a['sass_lines'] = a['sass_lines'].replace(b'$kernel$clock:\n', b'nearby_clock:\n')
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
+    def test_function_body_and_elf_extents_are_checked(self):
+        for field, value in [('start', True), ('start', 1), ('start', 0),
+                             ('length', True), ('length', 0), ('length', 32)]:
+            a, doc = self._nested(); doc[1][1][field] = value
+            a['sass_json'] = json.dumps(doc).encode()
+            with self.assertRaises(ValueError): machine.counter_map(**a)
+        a = args(); a['cubin'] = elf(text_bytes=16)
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+        a = args(); a['cubin'] = elf().replace(b'.text.kernel', b'.text.absent')
+        with self.assertRaises(ValueError): machine.counter_map(**a)
 
     def test_malformed_elf_and_missing_debug_section(self):
         for blob in [b'\x7fELF', elf()[:250], elf().replace(b'.nv_debug_ptx_txt', b'.nv_debug_ptx_bad')]:

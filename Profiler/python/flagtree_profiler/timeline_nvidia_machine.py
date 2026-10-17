@@ -34,8 +34,8 @@ def _sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def embedded_ptx(cubin):
-    """Read the canonical uncompressed CUDA ELF64 debug-text section as bytes."""
+def _elf_section(cubin, section_name, *, executable=False):
+    """Read exactly one bounded uncompressed CUDA ELF64 section."""
     _need(type(cubin) is bytes and 64 <= len(cubin) <= LIMIT, 'Invalid cubin bytes')
     _need(cubin[:7] == b'\x7fELF\x02\x01\x01', 'Expected little-endian ELF64 v1')
     _need(struct.unpack_from('<H', cubin, 18)[0] == 190, 'Expected CUDA ELF machine')
@@ -59,11 +59,17 @@ def embedded_ptx(cubin):
         pos = header[0]
         end = names.find(b'\0', pos)
         _need(pos < len(names) and pos <= end <= pos+1024, 'Invalid ELF section name')
-        if names[pos:end] == b'.nv_debug_ptx_txt':
-            _need(not header[2] & 0x800, 'Compressed PTX debug text is unsupported')
+        if names[pos:end] == section_name.encode('utf-8'):
+            _need(not header[2] & 0x800, 'Compressed ELF section is unsupported')
+            _need(not executable or header[2] & 4, 'Code section is not executable')
             matches.append(data(header))
-    _need(len(matches) == 1, 'Missing or ambiguous cubin PTX debug text')
-    raw = matches[0]
+    _need(len(matches) == 1, 'Missing or ambiguous cubin section: ' + section_name)
+    return matches[0]
+
+
+def embedded_ptx(cubin):
+    """Read the canonical uncompressed CUDA ELF64 debug-text section as bytes."""
+    raw = _elf_section(cubin, '.nv_debug_ptx_txt')
     _need(raw.endswith(b'\0') and b'\n' not in raw and b'\r' not in raw,
           'Unsupported PTX debug line encoding')
     return raw
@@ -214,24 +220,37 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
           'Unsupported nvdisasm schema version')
     _need(meta.get('SM', {}).get('version') ==
           {'major': expected_sm[0], 'minor': expected_sm[1]}, 'Actual SM mismatch')
-    instructions = {}
+    instructions, ranges = {}, {}
     for function in functions:
         _need(type(function) is dict, 'Invalid function descriptor')
         name = function.get('function-name')
         body = function.get('sass-instructions')
         _need(type(name) is str and name and name not in instructions and
               type(body) is list and body, 'Invalid or duplicate function')
-        _need(type(function.get('start')) is int and function['start'] == 0 and
-              type(function.get('length')) is int and function['length'] == len(body)*16,
+        start = _int(function.get('start'), 'function start', LIMIT)
+        extent = _int(function.get('length'), 'function length', LIMIT)
+        _need(start % 16 == 0 and extent % 16 == 0 and extent >= len(body)*16,
               'Unsupported function offsets or instruction stride')
-        instructions[name] = {i*16: instruction for i, instruction in enumerate(body)}
+        # A root's declared extent may include explicitly named child functions.
+        # Its actual instruction body must never absorb those child bodies.
+        instructions[name] = {start+i*16: instruction for i, instruction in enumerate(body)}
+        ranges[name] = dict(function=name, start=start, declared_length=extent,
+                            instruction_bytes=len(body)*16)
     function, ptx_line, pcs, seen = None, None, [], set()
+    current_section, function_sections, section_bytes = None, {}, {}
     for line in sass_lines.decode('utf-8').splitlines():
         section = re.match(r'^\s*\.section\s+([^,\s]+)', line)
         if section:
             name = section[1]
-            function = name[6:] if name.startswith('.text.') else None
+            current_section = name if name.startswith('.text.') else None
+            function = name[6:] if current_section else None
             ptx_line = None
+        # nvdisasm prints nested device functions within their parent's .text
+        # section. Only an explicit exact function symbol may switch identity.
+        label = re.fullmatch(r'\s*([^\s:]+):\s*', line)
+        if label and label[1] in instructions:
+            _need(current_section is not None, 'Function symbol outside code section')
+            function, ptx_line = label[1], None
         match = re.match(r'\s*//## File "\.nv_debug_ptx_txt", line (\d+)\s*$', line)
         if match:
             ptx_line = int(match[1])
@@ -239,6 +258,15 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
         if not instruction or function is None:
             continue
         pc = int(instruction[1], 16)
+        _need(current_section is not None, 'Instruction outside code section')
+        if current_section not in section_bytes:
+            section_bytes[current_section] = _elf_section(cubin, current_section, executable=True)
+        _need(function in instructions, 'Unknown disassembled function')
+        previous_section = function_sections.setdefault(function, current_section)
+        _need(previous_section == current_section, 'Function occurs in multiple code sections')
+        limits = ranges[function]
+        _need(limits['start'] + limits['declared_length'] <= len(section_bytes[current_section]),
+              'Function extent exceeds actual code section')
         _need(function in instructions and pc in instructions[function],
               'SASS line PC absent from actual JSON')
         key = (function, pc)
@@ -263,18 +291,28 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
         _need(opcode == 'CS2R' and 'SR_GLOBALTIMERLO' in actual.get('operands', '') and
               ptx_line in by_line, 'Unmapped actual globaltimer read')
         pcs.append(dict(by_line[ptx_line], function=function, pc=pc,
+                        section=current_section, function_start=ranges[function]['start'],
+                        relative_pc=pc-ranges[function]['start'],
                         sass_predicate=predicate, opcode=opcode,
                         operands=actual['operands']))
     _need(seen == {(f, pc) for f, body in instructions.items() for pc in body},
           'Incomplete disassembly text coverage')
     _need({p['ptx_line'] for p in pcs} == set(by_line), 'Getter eliminated or lost debug mapping')
+    occupied = set()
+    for name, body in instructions.items():
+        section = function_sections[name]
+        ranges[name]['section'] = section
+        for pc in body:
+            key = (section, pc)
+            _need(key not in occupied, 'Overlapping function instruction bodies')
+            occupied.add(key)
     _need(pcs, 'No actual mapped counter PCs')
     return dict(schema_version=1, status='counter_mapping_complete_region_unverified',
         binary_id=binary_id, marker_version=1, expected_sm=list(expected_sm),
         artifacts={'cubin_sha256': _sha(cubin), 'ptx_sha256': _sha(ptx),
             'embedded_ptx_sha256': _sha(raw_debug), 'sass_lines_sha256': _sha(sass_lines),
             'sass_json_sha256': _sha(sass_json)}, counter_pcs=pcs,
-        ptx_debug_omissions=debug_omissions,
+        ptx_debug_omissions=debug_omissions, function_ranges=list(ranges.values()),
         region_boundaries_verified=False, clock_qualified=False,
         notes=['Static counter PCs are not exact dynamic PC attribution when code is duplicated.',
                'PTX collection predication does not prove SASS read suppression.',
