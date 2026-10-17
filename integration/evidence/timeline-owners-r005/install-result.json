@@ -1,0 +1,97 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r005/package-2c5c85c/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "5406558bf3c36e7fe949d9dbde62bfad2253e3747da7f97c4e1d7ac19768d03e",
+  "venv": "/workspace/chijin-timeline-r005/runs/install-v2/output/venv",
+  "installed_members_byte_verified": 603,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv"
+      ],
+      "pid": 35942,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8548336,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r005/package-2c5c85c/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 35947,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8548534,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_runtime.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r005/check-input-v2/test_timeline_runtime.py"
+      ],
+      "pid": 35951,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8549719,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_storage.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r005/check-input-v2/test_timeline_storage.py"
+      ],
+      "pid": 35953,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8549732,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_runtime.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r005/check-input-v2/test_timeline_runtime.py"
+      ],
+      "pid": 35954,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8549744,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_storage.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r005/check-input-v2/test_timeline_storage.py"
+      ],
+      "pid": 35956,
+      "ppid": 35941,
+      "pgid": 35941,
+      "startticks": 8549765,
+      "returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,2833 @@
+{
+  "status": "real_two_stream_deferred_owners_passed_not_full_P01",
+  "source_sha256": "75de2cb8d165c9b7293a94f1fbc137e1938539a13178a82a8dad398644df0db2",
+  "runtime_modules": {
+    "flagtree.profiler.timeline_runtime": {
+      "path": "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/lib/python3.10/site-packages/flagtree/profiler/timeline_runtime.py",
+      "sha256": "fa7506e1998325dc69b507c81e3964fe5b61ad56eae3d7d466666b26957b30e1"
+    },
+    "flagtree.profiler.timeline_cuda_runtime": {
+      "path": "/workspace/chijin-timeline-r005/runs/install-v2/output/venv/lib/python3.10/site-packages/flagtree/profiler/timeline_cuda_runtime.py",
+      "sha256": "b729bbe99246fbe387b5ca455b214954cf37a296e6a770feccc918b49a20cf9c"
+    }
+  },
+  "calls": [
+    {
+      "case": 0,
+      "kind": "ordinary"
+    },
+    {
+      "case": 1,
+      "kind": "ordinary"
+    },
+    {
+      "case": 2,
+      "kind": "ordinary"
+    },
+    {
+      "case": 3,
+      "kind": "ordinary"
+    },
+    {
+      "case": 4,
+      "kind": "ordinary"
+    },
+    {
+      "case": 5,
+      "kind": "ordinary"
+    },
+    {
+      "case": 6,
+      "kind": "ordinary"
+    },
+    {
+      "case": 0,
+      "kind": "instrumented"
+    },
+    {
+      "case": 1,
+      "kind": "instrumented"
+    },
+    {
+      "case": 2,
+      "kind": "instrumented"
+    },
+    {
+      "case": 3,
+      "kind": "instrumented"
+    },
+    {
+      "case": 4,
+      "kind": "instrumented"
+    },
+    {
+      "case": 5,
+      "kind": "instrumented"
+    },
+    {
+      "case": 6,
+      "kind": "rejected_before_allocation"
+    },
+    {
+      "case": 6,
+      "kind": "instrumented"
+    }
+  ],
+  "actions": [
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518387084027,
+      "case": 0
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518388039040,
+      "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518388832860,
+      "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79",
+      "pointer": 140213087109120
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518388873211,
+      "case": 0,
+      "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518390964727,
+      "case": 1
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518391247472,
+      "invocation_id": "invocation-cb2410628830498bb527420014ac83de"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518391622494,
+      "invocation_id": "invocation-cb2410628830498bb527420014ac83de",
+      "pointer": 140213089206272
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518391647261,
+      "case": 1,
+      "invocation_id": "invocation-cb2410628830498bb527420014ac83de"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518393576344,
+      "case": 2
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518393835563,
+      "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518394096474,
+      "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0",
+      "pointer": 140213087175168
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518394120300,
+      "case": 2,
+      "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518396064205,
+      "case": 3
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518396336303,
+      "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518396594240,
+      "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8",
+      "pointer": 140213089272320
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518396617665,
+      "case": 3,
+      "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518398524816,
+      "case": 4
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518398788241,
+      "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518399056022,
+      "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f",
+      "pointer": 140213087241216
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518399080409,
+      "case": 4,
+      "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518400979768,
+      "case": 5
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518401261871,
+      "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518401586437,
+      "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df",
+      "pointer": 140213089338368
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518401610974,
+      "case": 5,
+      "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518403524915,
+      "case": 6
+    },
+    {
+      "kind": "submissions_finished",
+      "host_monotonic_ns": 85518403882992,
+      "pending_bytes": 396288
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518403887218,
+      "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518407214027,
+      "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518407239145,
+      "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518409527888,
+      "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518409546816,
+      "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518411367577,
+      "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518411382189,
+      "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518414121317,
+      "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518414143129,
+      "invocation_id": "invocation-cb2410628830498bb527420014ac83de"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518416418942,
+      "invocation_id": "invocation-cb2410628830498bb527420014ac83de"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518416438542,
+      "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518418264160,
+      "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79"
+    },
+    {
+      "kind": "launch_begin",
+      "host_monotonic_ns": 85518434465578,
+      "case": 6
+    },
+    {
+      "kind": "admitted",
+      "host_monotonic_ns": 85518434773980,
+      "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b"
+    },
+    {
+      "kind": "allocated",
+      "host_monotonic_ns": 85518435066890,
+      "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b",
+      "pointer": 140213087109120
+    },
+    {
+      "kind": "launch_return",
+      "host_monotonic_ns": 85518435096584,
+      "case": 6,
+      "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b"
+    },
+    {
+      "kind": "read_begin",
+      "host_monotonic_ns": 85518435376424,
+      "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b"
+    },
+    {
+      "kind": "released",
+      "host_monotonic_ns": 85518437586028,
+      "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b"
+    }
+  ],
+  "captures": [
+    {
+      "case": 5,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-390251ce174148ff9825eb9e2bcb71df",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920887792176,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            5,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 164480,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            4
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 288,
+      "raw_sha256": "b5bdaf21b07d4fe095cc52a70254093e3019a9e30ae236a8e2616dd4e1905d8a",
+      "raw_file": "case-5.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 4,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-d61306692a5a428a9780ba1b05e7d11f",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920888266496,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            3,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 98688,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            2
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 224,
+      "raw_sha256": "4c4ed3b4235fbb038d92973842f7f0e6d98e7f1e80ce84a50702a8c59399ca61",
+      "raw_file": "case-4.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 3,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-08fefadba9b0473b91b9b2eebaf32ed8",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920887792176,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            5,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 164480,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            4
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 160,
+      "raw_sha256": "b60805088899220565d9f03552c2df8d16bff1b66330e59d8eed646f859c78a9",
+      "raw_file": "case-3.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 2,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-afb7baa9a11b4493bd836e42028be1c0",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920888266496,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            3,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 98688,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            2
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 288,
+      "raw_sha256": "0ca3b92eb8ccba5e8445af8b44852b73563793a740067f8b0d5b656bf77ffc28",
+      "raw_file": "case-2.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 1,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-cb2410628830498bb527420014ac83de",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920887792176,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            5,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              4
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 164480,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            4
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 224,
+      "raw_sha256": "b3251e8945a61ac6ba6ddfeb26ebffae419445ef42a619c7845b30ef50823f83",
+      "raw_file": "case-1.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 0,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-1cd31522cd0241da895eeee6a7e7ef79",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920888266496,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            3,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 98688,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            2
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 160,
+      "raw_sha256": "9e1da999276a1539bff81ca75afd6ba9839debde8e0890e07193c057de627300",
+      "raw_file": "case-0.raw",
+      "canary_verified": true
+    },
+    {
+      "case": 6,
+      "owner": {
+        "capture_id": "timeline-1e5e1d3f26c34612a9c0eb34c096bddc",
+        "invocation_id": "invocation-0ba301b4a8bc4a36b64a0b87c951b28b",
+        "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af",
+        "function": 102920915435872,
+        "device": 0,
+        "stream": 102920888266496,
+        "plan": {
+          "timeline_timer": "nvidia.globaltimer.ns",
+          "timeline_getter_bits": 64,
+          "timeline_record_version": 2,
+          "timeline_record_bytes": 16,
+          "timeline_record_clock_bits": 64,
+          "timeline_timer_version": 1,
+          "timeline_storage_version": 1,
+          "timeline_storage_policy": "compact_selected_programs",
+          "timeline_default_program_selection": "runtime_first_last",
+          "timeline_plan_version": 1,
+          "timeline_selection_policy": "bounded_logical_regions_plus_complete_cp_async_boundaries",
+          "timeline_async_boundary_count": 0,
+          "proton.automatic_candidates": 12,
+          "proton.automatic_selected": 8,
+          "schema_version": 2,
+          "selection_policy": "bounded_control_regions_then_source_statements",
+          "selection_policy_version": 2,
+          "control_regions": [
+            {
+              "control_id": 0,
+              "region_index": 0,
+              "block_index": 0,
+              "operation": "scf.for",
+              "coverage_status": "direct_representative",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "repeated": true,
+              "eligible_candidates": [
+                5,
+                6
+              ],
+              "direct_candidates": [
+                5,
+                6
+              ],
+              "selected_candidates": [
+                6
+              ]
+            }
+          ],
+          "inventory": [
+            {
+              "candidate_ordinal": 0,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"ix\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23))",
+                "kind": "named",
+                "descriptive_name": "ix",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":46:23)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 46,
+                  "column": 23
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "source_statement_priority",
+              "selected_scope_name": "auto/0/arith.addi",
+              "scope_id": 0,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "ix = pid * BLOCK + lane"
+            },
+            {
+              "candidate_ordinal": 1,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:33)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 33
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 2,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":47:36)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 47,
+                  "column": 36
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/2/tt.load",
+              "scope_id": 1,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = tl.load(X + ix, ix < N, 0)"
+            },
+            {
+              "candidate_ordinal": 3,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"k\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16))",
+                "kind": "named",
+                "descriptive_name": "k",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":48:16)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 48,
+                  "column": 16
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_computation",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/3/tt.load",
+              "scope_id": 2,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "k = tl.load(K)"
+            },
+            {
+              "candidate_ordinal": 4,
+              "operation": "scf.for",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":49:19)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 49,
+                  "column": 19
+                }
+              },
+              "selected": true,
+              "candidate_class": "control_region",
+              "selection_reason": "entry_control_context",
+              "selected_scope_name": "auto/4/scf.for",
+              "scope_id": 3,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 5,
+              "operation": "arith.mulf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:24)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 24
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 6,
+              "operation": "arith.addf",
+              "location": {
+                "ir_location": "loc(\"value\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31))",
+                "kind": "named",
+                "descriptive_name": "value",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":50:31)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 50,
+                  "column": 31
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "control_flow_region_representative",
+              "selected_scope_name": "auto/6/arith.addf",
+              "scope_id": 4,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "value = value * 0.75 + 0.125"
+            },
+            {
+              "candidate_ordinal": 7,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":51:28)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 51,
+                "column": 28
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/7/tt.store",
+              "scope_id": 5,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Y + ix, value, ix < N)"
+            },
+            {
+              "candidate_ordinal": 8,
+              "operation": "arith.cmpi",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:50)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 50
+                }
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 9,
+              "operation": "tt.load",
+              "location": {
+                "ir_location": "loc(\"prior\"(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53))",
+                "kind": "named",
+                "descriptive_name": "prior",
+                "child": {
+                  "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":52:53)",
+                  "kind": "file_line_column",
+                  "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                  "line": 52,
+                  "column": 53
+                }
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/9/tt.load",
+              "scope_id": 6,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "prior = tl.load(Counter + pid + lane, lane == 0, 0)"
+            },
+            {
+              "candidate_ordinal": 10,
+              "operation": "arith.addi",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:43)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 43
+              },
+              "selected": false,
+              "candidate_class": "internal_operation",
+              "selection_reason": "site_budget_excluded",
+              "selected_scope_name": null,
+              "scope_id": null,
+              "timeline_semantic": "observer_region_elapsed"
+            },
+            {
+              "candidate_ordinal": 11,
+              "operation": "tt.store",
+              "location": {
+                "ir_location": "loc(\"/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py\":53:46)",
+                "kind": "file_line_column",
+                "file": "/workspace/chijin-timeline-r005/check-input-v2/p01_nvidia_deferred_owners.py",
+                "line": 53,
+                "column": 46
+              },
+              "selected": true,
+              "candidate_class": "source_statement",
+              "selection_reason": "timeline_data_operation",
+              "selected_scope_name": "auto/11/tt.store",
+              "scope_id": 7,
+              "timeline_semantic": "observer_region_elapsed",
+              "source_statement": "tl.store(Counter + pid + lane, prior + 1, lane == 0)"
+            }
+          ],
+          "compiler_stage": "completed_ttgir_before_proton_lowering",
+          "binary_id": "c03c2152a057573ab8015b514961014d10ddd368b328edf2607aa9ad71bcd9af"
+        },
+        "layout": {
+          "storage_version": 1,
+          "grid": [
+            3,
+            1,
+            1
+          ],
+          "num_ctas": 1,
+          "slots": [
+            [
+              0,
+              0
+            ],
+            [
+              1,
+              2
+            ]
+          ],
+          "scratch_size": 32896,
+          "alignment": 128,
+          "logical_request_bytes": 98688,
+          "raw_bytes": 65792,
+          "programs": [
+            0,
+            2
+          ]
+        },
+        "physical_bytes": 66048,
+        "guard_bytes": 256,
+        "state": "raw_ready",
+        "submission_outcome": "returned",
+        "error": null
+      },
+      "records": 192,
+      "raw_sha256": "cc76d7c89bf0411f67e2b7c2171a5705ac8c3e593e3f492b1d4b36ea2aaec181",
+      "raw_file": "case-6.raw",
+      "canary_verified": true
+    }
+  ],
+  "limitations": [
+    "Development collector, no public timeline API/CLI integration yet",
+    "No physical clock/epoch or final marker-order certificate",
+    "Not a performance or engine-overlap claim",
+    "No Perfetto/independent qualification"
+  ]
+}
