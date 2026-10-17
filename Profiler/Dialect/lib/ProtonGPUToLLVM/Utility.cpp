@@ -114,7 +114,7 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   auto loc = op.getLoc();
   auto mod = op.getOperation()->getParentOfType<ModuleOp>();
   auto b = TritonLLVMOpBuilder(loc, rewriter);
-  const int bytesPerEntry = proton::gpu::getBytesPerClockEntry();
+  const int bytesPerEntry = proton::gpu::getBytesPerClockEntry(mod);
   const int wordsPerEntry = bytesPerEntry / 4; // 1 word = 4 bytes
 
   auto segmentObj =
@@ -125,9 +125,17 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
 
   // Update the index (could be register promoted).
   Value curIdx = b.load(i32_ty, indexPtr);
+  Value enabled = getProgramCollectionPredicate(mod, loc, rewriter);
+  const bool timeline = bytesPerEntry == 16;
+  Value writable = b.true_val();
   Value newIdx = b.add(curIdx, b.i32_val(wordsPerEntry));
-  newIdx = b.select(getProgramCollectionPredicate(mod, loc, rewriter), newIdx,
-                    curIdx);
+  if (timeline) {
+    // Aligned counters cannot equal this sentinel during normal collection.
+    // Freeze instead of silently wrapping the absolute record sequence.
+    writable = b.icmp_ule(curIdx, b.i32_val(0xffffffffu - wordsPerEntry));
+    newIdx = b.select(writable, newIdx, b.i32_val(0xffffffffu));
+  }
+  newIdx = b.select(enabled, newIdx, curIdx);
   b.store(newIdx, indexPtr);
 
   // Compute the segment size in word (4 bytes).
@@ -164,7 +172,15 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   Value tag = op.getIsStart() ? b.i32_val(maskedScopeId << 23)
                               : b.i32_val(1 << 31 | maskedScopeId << 23);
   Value valsVec;
-  if (clkTy.getWidth() == 64) {
+  if (timeline) {
+    auto clkVec = b.bitcast(clock, vec_ty(i32_ty, 2));
+    Value timelineTag = b.i32_val(
+        (op.getIsStart() ? 0u : 0x80000000u) | uint32_t(op.getScopeId()));
+    valsVec = packLLVector(
+        loc, {timelineTag, b.extract_element(i32_ty, clkVec, b.i32_val(0)),
+              b.extract_element(i32_ty, clkVec, b.i32_val(1)),
+              b.udiv(curIdx, b.i32_val(wordsPerEntry))}, rewriter);
+  } else if (clkTy.getWidth() == 64) {
     auto clkVecTy = vec_ty(i32_ty, 2);
     auto clkVec = b.bitcast(clock, clkVecTy);
     Value clkLower = b.extract_element(i32_ty, clkVec, b.i32_val(0));
@@ -194,6 +210,9 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
     Value isCurWarpEnabled = b.icmp_ne(segmentBase, b.i32_val(-1));
     isWriter = b.and_(isCurWarpEnabled, isWarpMaster);
   }
+
+  if (timeline)
+    isWriter = b.and_(isWriter, b.and_(enabled, writable));
 
   uint32_t addrSpace =
       cast<LLVM::LLVMPointerType>(bufferBaseType).getAddressSpace();

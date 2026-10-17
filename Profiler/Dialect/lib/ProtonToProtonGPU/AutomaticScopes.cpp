@@ -46,6 +46,8 @@ public:
                       StringAttr::get(&getContext(), "nvidia.globaltimer.ns"));
       module->setAttr("proton.timeline_timer_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
+      module->setAttr("proton.timeline_record_version",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 2));
     }
     if (census)
       module->setAttr("proton.source_census", UnitAttr::get(&getContext()));

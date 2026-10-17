@@ -37,6 +37,7 @@ def main():
                 'Module fell back outside the new installation: ' + name)
     binding = compiler_binding()
     require(binding.TIMELINE_TIMER_VERSION == 1, 'New native timer is absent')
+    require(binding.TIMELINE_RECORD_VERSION == 2, 'New native record is absent')
     context = ir.context()
     ir.load_dialects(context)
     nvidia.load_dialects(context)
@@ -59,8 +60,10 @@ def main():
     require(plan['timeline_timer'] == 'nvidia.globaltimer.ns',
             'Compiler omitted the selected timer identity')
     require(plan['timeline_getter_bits'] == 64 and
-            plan['timeline_record_clock_bits'] == 43,
-            'Getter and inherited packed encoding were conflated')
+            plan['timeline_record_clock_bits'] == 64 and
+            plan['timeline_record_version'] == 2 and
+            plan['timeline_record_bytes'] == 16,
+            'Timeline v2 did not preserve the complete 64-bit timer')
     require(plan['timeline_timer_version'] == 1 and plan['inventory'],
             'Compiler failed to retain its versioned actual inventory')
     _, legacy = transform(False)
@@ -90,6 +93,18 @@ def main():
         rejected.append('unknown-timer-version')
     else:
         raise RuntimeError('Unknown timer metadata version was accepted')
+    bad_record, count = re.subn(
+        r'(proton\.timeline_record_version\s*=\s*)2(\s*:\s*i32)',
+        r'\g<1>99\g<2>', str(module), count=1)
+    require(count == 1, 'Cannot construct the unknown-record negative')
+    bad_record_file = args.output / 'unknown-record.ttgir'
+    bad_record_file.write_text(bad_record)
+    try:
+        binding.get_automatic_proton_plan(parse(bad_record_file))
+    except RuntimeError:
+        rejected.append('unknown-record-version')
+    else:
+        raise RuntimeError('Unknown record version was accepted')
     (args.output / 'timeline-plan.json').write_text(json.dumps(plan, indent=2))
     (args.output / 'legacy-plan.json').write_text(json.dumps(legacy, indent=2))
     (args.output / 'timeline.ttgir').write_text(str(module))

@@ -10,6 +10,10 @@
 using namespace mlir;
 
 const int mlir::triton::proton::gpu::getBytesPerClockEntry() { return 8; }
+const int mlir::triton::proton::gpu::getBytesPerClockEntry(ModuleOp mod) {
+  auto version = mod->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+  return version && version.getInt() == 2 ? 16 : getBytesPerClockEntry();
+}
 const int mlir::triton::proton::gpu::getCircularHeaderSize() { return 16; }
 
 void mlir::triton::proton::gpu::ProtonGPUDialect::initialize() {

@@ -143,8 +143,7 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
 }
 
 int getAllocSharedMemSize(int maxSharedMemSize, int sharedMemUsed,
-                          int segmentNum) {
-  const int bytesPerEntry = gpu::getBytesPerClockEntry();
+                          int segmentNum, int bytesPerEntry) {
   const int wordsPerEntry = bytesPerEntry / 4; // 1 word = 4 bytes
   const int circularHeaderSize = gpu::getCircularHeaderSize(); // byte size
   sharedMemUsed = llvm::alignTo(sharedMemUsed, bytesPerEntry);
@@ -222,13 +221,16 @@ public:
       sharedMemUsed =
           mod->getAttrOfType<mlir::IntegerAttr>("ttg.shared").getInt();
 
-    int allocSharedMemSize =
-        getAllocSharedMemSize(maxSharedMemSize, sharedMemUsed, segmentNum);
-
-    const int bytesPerEntry = gpu::getBytesPerClockEntry();
+    const int bytesPerEntry = gpu::getBytesPerClockEntry(mod);
+    int allocSharedMemSize = getAllocSharedMemSize(
+        maxSharedMemSize, sharedMemUsed, segmentNum, bytesPerEntry);
 
     if (bufferSize != 0)
       bufferSize = llvm::alignTo(bufferSize, bytesPerEntry);
+    if (bufferSize != 0 && bufferSize / segmentNum < bytesPerEntry) {
+      mlir::emitError(loc, "profile buffer cannot hold one complete entry per segment");
+      return failure();
+    }
     // Validate buffer size
     if (bufferSize != 0 && !llvm::isPowerOf2_32(bufferSize / segmentNum)) {
       mlir::emitError(loc, "buffer-size per segment(" +
@@ -336,7 +338,10 @@ public:
 
     func.walk([&](triton::ReturnOp ret) {
       builder.setInsertionPoint(ret);
-      builder.create<mlir::gpu::BarrierOp>(loc);
+      // Timeline v2 copies each observer's own shared segment. Do not add a
+      // CTA completion barrier to the original program for logging purposes.
+      if (!mod->hasAttr("proton.timeline_record_version"))
+        builder.create<mlir::gpu::BarrierOp>(loc);
       builder.create<gpu::FinalizeOp>(loc, segment, profileMem);
     });
 
@@ -415,6 +420,17 @@ public:
   void runOnOperation() override {
     ModuleOp m = getOperation();
     Location loc = m->getLoc();
+
+    if (m->hasAttr("proton.timeline_record_version")) {
+      auto version = m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+      auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
+      if (!version || version.getInt() != 2 || !timer ||
+          timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension ||
+          m->hasAttr("proton.source_census")) {
+        m.emitError("Timeline v2 requires its matching 64-bit timer and interval mode");
+        return signalPassFailure();
+      }
+    }
 
     // Validate metric type at runtime instead of using assert
     if (metricType != MetricType::CYCLE) {

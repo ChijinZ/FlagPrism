@@ -73,6 +73,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_VERSION") = 1;
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
+  m.attr("TIMELINE_RECORD_VERSION") = 2;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -202,9 +203,15 @@ void init_triton_proton(py::module &&m) {
         throw std::runtime_error("Missing or unsupported timeline timer version");
       result["timeline_timer"] = timer.str();
       result["timeline_getter_bits"] = 64;
-      // The inherited ring explicitly retains only the low 43 timer bits.
-      // A consumer needs an independently bounded capture/wrap window.
-      result["timeline_record_clock_bits"] = 43;
+      auto recordVersion = module->getAttrOfType<mlir::IntegerAttr>(
+          "proton.timeline_record_version");
+      // Timer-only prototype metadata remains explicitly distinguishable.
+      if (module->hasAttr("proton.timeline_record_version") &&
+          (!recordVersion || recordVersion.getInt() != 2))
+        throw std::runtime_error("Unsupported timeline record version");
+      result["timeline_record_version"] = recordVersion ? 2 : 1;
+      result["timeline_record_bytes"] = recordVersion ? 16 : 8;
+      result["timeline_record_clock_bits"] = recordVersion ? 64 : 43;
       result["timeline_timer_version"] = version.getInt();
     }
     for (auto name :

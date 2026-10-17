@@ -23,6 +23,9 @@ namespace gpu {
 
 const int getBytesPerClockEntry();
 
+// Timeline v2 preserves the complete timer and an absolute per-observer sequence.
+const int getBytesPerClockEntry(ModuleOp mod);
+
 const int getCircularHeaderSize();
 
 const int getTotalNumWarps(ModuleOp mod);

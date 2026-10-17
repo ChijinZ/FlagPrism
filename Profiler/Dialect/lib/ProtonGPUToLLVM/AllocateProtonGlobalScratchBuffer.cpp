@@ -37,7 +37,7 @@ struct AllocateProtonGlobalScratchBufferPass
 
     func.walk([&](proton::gpu::GlobalScratchAllocOp op) {
       int offset = llvm::alignTo(cumulativeMemorySize,
-                                 proton::gpu::getBytesPerClockEntry());
+                                 proton::gpu::getBytesPerClockEntry(mod));
       op->setAttr("offset",
                   IntegerAttr::get(IntegerType::get(ctx, 32), offset));
       cumulativeMemorySize += op.getNbytes();

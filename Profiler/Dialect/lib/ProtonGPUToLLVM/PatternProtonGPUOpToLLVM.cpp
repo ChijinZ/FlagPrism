@@ -84,6 +84,13 @@ struct ReadCounterOpConversion
       auto timer = dyn_cast<StringAttr>(attr);
       auto version = module->getAttrOfType<IntegerAttr>(
           "proton.timeline_timer_version");
+      auto recordVersion = module->getAttrOfType<IntegerAttr>(
+          "proton.timeline_record_version");
+      if (module->hasAttr("proton.timeline_record_version") &&
+          (!recordVersion || recordVersion.getInt() != 2)) {
+        op.emitError("Unsupported timeline record version");
+        return failure();
+      }
       if (!timer || !version || version.getInt() != 1 || !isClock64 ||
           !targetInfo.supportsTimelineTimer(timer.getValue())) {
         op.emitError("Unsupported timeline getter/version or non-64-bit read");
@@ -118,7 +125,7 @@ struct FinalizeOpConversion
 
     auto mod = op.getOperation()->getParentOfType<ModuleOp>();
     auto b = TritonLLVMOpBuilder(loc, rewriter);
-    const int bytesPerEntry = proton::gpu::getBytesPerClockEntry();
+    const int bytesPerEntry = proton::gpu::getBytesPerClockEntry(mod);
     const int wordsPerEntry = bytesPerEntry / 4; // 1 word = 4 bytes
 
     int numWarps = getTotalNumWarps(mod);
@@ -156,7 +163,27 @@ struct FinalizeOpConversion
     Value gmemWarpIndexPtr =
         b.gep(scratchPtrTy, i32_ty, scratchPtr, warpIndexOffset);
     Value index = b.load(i32_ty, segmentObj.indexPtr);
-    b.store(index, gmemWarpIndexPtr);
+    if (bytesPerEntry == 16) {
+      // A single lane publishes each observer counter. Other lanes have private
+      // counters and must not race this global metadata store.
+      Value lane = b.urem(threadId, b.i32_val(
+          triton::gpu::TritonGPUDialect::getThreadsPerWarp(mod)));
+      Value publish = b.and_(b.icmp_eq(lane, b.i32_val(0)),
+                            getProgramCollectionPredicate(mod, loc, rewriter));
+      Block *before = op->getBlock();
+      Block *after = rewriter.splitBlock(before, op->getIterator());
+      Block *write = rewriter.createBlock(after);
+      rewriter.setInsertionPointToEnd(before);
+      rewriter.create<cf::CondBranchOp>(loc, publish, write, after);
+      rewriter.setInsertionPointToStart(write);
+      b.store(index, gmemWarpIndexPtr);
+      rewriter.create<cf::BranchOp>(loc, after);
+      rewriter.setInsertionPoint(op);
+      isFirstThread = b.and_(isFirstThread,
+                            getProgramCollectionPredicate(mod, loc, rewriter));
+    } else {
+      b.store(index, gmemWarpIndexPtr);
+    }
 
     Block *prevBlock = op->getBlock();
     // Add the 'if' block.
@@ -181,7 +208,7 @@ struct FinalizeOpConversion
       b.store(load, gmemPtr);
     };
     // Write back 'preamble'.
-    Value preamble = b.i32_val(0xdeadbeef);
+    Value preamble = b.i32_val(bytesPerEntry == 16 ? 0x46505432 : 0xdeadbeef);
     Value gmemPreambleOffset = b.i32_val(0);
     Value gmemPreamblePtr =
         b.gep(scratchPtrTy, i32_ty, scratchPtr, gmemPreambleOffset);
@@ -237,6 +264,9 @@ struct FinalizeOpConversion
     shouldCopy = b.and_(shouldCopy, b.icmp_ugt(retainedWords, b.i32_val(0)));
     if (warpSpecialized)
       shouldCopy = isFirstThread;
+    if (bytesPerEntry == 16)
+      shouldCopy = b.and_(shouldCopy,
+                         getProgramCollectionPredicate(mod, loc, rewriter));
 
     Block *copyDispatch = rewriter.createBlock(op->getParentRegion(),
                                                Region::iterator(thenBlock));
@@ -255,12 +285,11 @@ struct FinalizeOpConversion
     rewriter.setInsertionPointToStart(writeBackBlock);
     BlockArgument idx = writeBackBlock->getArgument(0);
     Value bufTagOffset = b.add(copyBase, idx);
-    Value bufCounterOffset = b.add(bufTagOffset, b.i32_val(1));
     Value gmemWbTagOffset = b.add(b.i32_val(metadataWordSize), bufTagOffset);
-    Value gmemWbCounterOffset = b.add(gmemWbTagOffset, b.i32_val(1));
     auto memSpace = op.getSegment().getType().getMemorySpace();
-    copyWord(bufTagOffset, gmemWbTagOffset, memSpace);
-    copyWord(bufCounterOffset, gmemWbCounterOffset, memSpace);
+    for (int word = 0; word < wordsPerEntry; ++word)
+      copyWord(b.add(bufTagOffset, b.i32_val(word)),
+               b.add(gmemWbTagOffset, b.i32_val(word)), memSpace);
     Value updatedIdx = b.add(idx, b.i32_val(wordsPerEntry));
     Value pred = b.icmp_ult(updatedIdx, retainedWords);
     rewriter.create<cf::CondBranchOp>(loc, pred, writeBackBlock, updatedIdx,

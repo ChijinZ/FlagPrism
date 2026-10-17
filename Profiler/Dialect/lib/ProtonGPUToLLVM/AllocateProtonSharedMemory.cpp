@@ -32,7 +32,7 @@ struct AllocateProtonSharedMemoryPass
       // triton conversion pass.
       if (!alloc->hasAttr("allocation.offset")) {
         int offset =
-            llvm::alignTo(sharedMemUsed, proton::gpu::getBytesPerClockEntry());
+            llvm::alignTo(sharedMemUsed, proton::gpu::getBytesPerClockEntry(mod));
         alloc->setAttr("allocation.offset",
                        IntegerAttr::get(IntegerType::get(ctx, 32), offset));
         // Compute the proton buffer size in bytes.
