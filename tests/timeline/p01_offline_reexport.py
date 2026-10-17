@@ -27,6 +27,9 @@ def main():
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--original-timeline', type=Path,
         default=Path('/workspace/chijin-timeline-r017/runs/counter-perfetto-v2/output/capture/timeline'))
+    parser.add_argument('--expected-captures', type=int, default=4)
+    parser.add_argument('--expected-traces', type=int, default=32)
+    parser.add_argument('--forbidden-root', default='/workspace/chijin-timeline-r017/')
     args = parser.parse_args();args.output.mkdir(exist_ok=False)
     root = args.output/'retained-timeline'
     shutil.copytree(args.original_timeline, root)
@@ -51,41 +54,52 @@ def main():
     wrapper = '''import sys,runpy
 def audit(event,args):
  if event=='subprocess.Popen':raise RuntimeError('Offline exporter attempted to start a child')
- if event=='open' and isinstance(args[0],str) and args[0].startswith('/workspace/chijin-timeline-r017/'):
+ if event=='open' and isinstance(args[0],str) and args[0].startswith(forbidden):
   raise RuntimeError('Offline exporter attempted to read the original environment: '+args[0])
- if event=='exec' and args[0].co_filename.startswith('/workspace/chijin-timeline-r017/'):
+ if event=='exec' and args[0].co_filename.startswith(forbidden):
   raise RuntimeError('Offline exporter attempted to execute the original workload')
+forbidden=sys.argv[2]
 sys.addaudithook(audit)
 sys.argv=['flagtree.profiler.timeline_reexport',sys.argv[1]]
 runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
 '''
-    second = run('isolated-normal',[sys.executable,'-I','-c',wrapper,str(root)])
-    third = run('isolated-optimized',[sys.executable,'-I','-O','-c',wrapper,str(root)])
+    second = run('isolated-normal',[sys.executable,'-I','-c',wrapper,str(root),args.forbidden_root])
+    third = run('isolated-optimized',[sys.executable,'-I','-O','-c',wrapper,str(root),args.forbidden_root])
     need(first==second==third, 'Same original inputs changed re-export identity')
-    need(first['application_replayed'] is False and len(first['captures'])==4,
+    need(first['application_replayed'] is False and len(first['captures'])==args.expected_captures,
          'Unexpected captures or application execution report')
     for name, expected in originals.items():
         if name != 'index.html':
             need(digest(root/name)==expected, 'Re-export modified original artifact: '+name)
     manifest=[]
     for capture in first['captures']:
-        need(capture['status']=='counter_unit_only', 'Actual unit provider unavailable')
+        need(capture['status']==('counter_unit_only' if args.expected_traces else 'raw_only'),
+             'Unexpected unit-provider qualification')
+        if not args.expected_traces:
+            need(bool(capture['reason']), 'Raw-only export must explain missing unit evidence')
+        canonical=json.loads((root/capture['canonical_file']).read_text())
+        original=next(json.loads(p.read_text()) for p in root.glob('captures/*.events.json')
+            if json.loads(p.read_text())['identity']==canonical['identity'])
+        need(original==canonical, 'Offline decoder changed the original canonical semantics')
         for row in capture['exports']:
             manifest.append(dict(view_file=str(root/row['view_file']),
                 trace_file=str(root/row['trace_file']),sha256=row['sha256'],fixture=False))
-    need(len(manifest)==32, 'Offline export lost actual observers')
+    need(len(manifest)==args.expected_traces, 'Offline export lost actual observers or invented traces')
     path=args.output/'trace-manifest.json';path.write_text(json.dumps(manifest,indent=2)+'\n')
     # The independent reader has its own tools environment and may spawn TP.
     tool_python='/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python'
-    run('TP',[tool_python,'-I',str(Path(__file__).with_name('verify_perfetto_traces.py')),
-        '--manifest',str(path),'--output',str(args.output/'TP')],dict(os.environ))
+    if manifest:
+        run('TP',[tool_python,'-I',str(Path(__file__).with_name('verify_perfetto_traces.py')),
+            '--manifest',str(path),'--output',str(args.output/'TP')],dict(os.environ))
     (args.output/'result.json').write_text(json.dumps(dict(
         status='actual_retained_captures_offline_reexport_passed_not_full_P01',
-        real_captures=4,real_traces=32,fresh_reexport_processes=3,
+        real_captures=args.expected_captures,real_traces=len(manifest),fresh_reexport_processes=3,
         original_artifacts_unchanged=len(originals)-int('index.html' in originals),
         original_environment_denied_in_two_processes=True,
         application_replayed=False,raw_originals={name:sha for name,sha in originals.items() if name.endswith('.raw')},
-        proof_limits='counter_unit_only; precision/boundary/async not qualified'),indent=2)+'\n')
+        proof_limits=('counter_unit_only; precision/boundary/async not qualified' if manifest
+                      else 'raw_only; no validated unit, precision, source boundary or async qualification')),
+        indent=2)+'\n')
 
 
 if __name__ == '__main__':
