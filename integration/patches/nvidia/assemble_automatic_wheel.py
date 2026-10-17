@@ -41,12 +41,16 @@ def main():
                       TRITON_BUILD_PROTON='OFF',
                       FLAGPRISM_SOURCE_DIR=str(args.component),
                       TRITON_OFFLINE_BUILD='ON',
-                      FLAGTREE_BACKEND='nvidia',
                       FLAGPRISM_BACKEND='nvidia',
                       TORCH_DEVICE_BACKEND_AUTOLOAD='0',
                       USE_FLAGCX='OFF',
                       USE_FLIR='OFF',
                       USE_FLAGPRISM='OFF')
+    # This FlagTree baseline prepares its default NVIDIA/AMD backends when the
+    # build selector is unset. An explicit "nvidia" selector instead chooses
+    # only extension backends (empty here), silently dropping all entry points.
+    # Runtime users may still select nvidia from the correctly packaged group.
+    os.environ.pop('FLAGTREE_BACKEND', None)
     import setuptools
     from setuptools import Distribution
     from setuptools.command.build_py import build_py
@@ -147,6 +151,10 @@ def main():
         for entry in ['triton/backends/nvidia/driver.py', 'flagtree/profiler/_cann_launch_receipt.h']:
             if entry not in archive.namelist():
                 raise RuntimeError('Missing required packaged entry: '+entry)
+        entries = [name for name in archive.namelist() if name.endswith('.dist-info/entry_points.txt')]
+        if (len(entries) != 1 or
+                'nvidia = triton.backends.nvidia' not in archive.read(entries[0]).decode()):
+            raise RuntimeError('NVIDIA backend discovery entry point is missing')
     result = {
         'wheel': str(paths[0]),
         'wheel_sha256': hashlib.sha256(paths[0].read_bytes()).hexdigest(),
