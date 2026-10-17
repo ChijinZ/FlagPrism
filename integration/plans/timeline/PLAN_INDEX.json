@@ -1,29 +1,68 @@
 {
-  "scope": "design-only; no implementation or device execution",
+  "scope": "design-only update and three independent design reviews; no implementation or device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "root_contract_sha256": "fa0c1b21c4d98e4a36e8ddb79cda5bb501d9ce77edcc427a4f26864e0c3c332c",
+  "design_revision_from_commit": "775f7b44c879b515a71d2eb48f1196321d75786b",
+  "root_contract_sha256": "08b854213cd214105932e94ff8f2c328ba7ab9b5d4f6a4c46b9f0c80b042ba40",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 8,
+  "local_links_checked": 73,
+  "review_initials_preserved": true,
+  "review_followups_match_final_document_sha256": true,
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 17181,
-      "sha256": "5972e16f88a1d4628f3ccbd9591b802d8b7d85d97cbe3c2b23bd8da36599200d"
+      "bytes": 29743,
+      "sha256": "0b119149db183388c58da6119f7079f13602170eb75d8951019eddced97ae7d0"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 15231,
-      "sha256": "2f999880498e0b46a553ff2ed35911bcb8fd59f9617417958449f1be43680aa2"
-    },
-    "integration/plans/timeline/goal_prompt.md": {
-      "bytes": 16802,
-      "sha256": "fa0c1b21c4d98e4a36e8ddb79cda5bb501d9ce77edcc427a4f26864e0c3c332c"
+      "bytes": 22471,
+      "sha256": "3f2785b024c6430188c39af749462b20af4a67fa93f956d1fbbc0c7a5532946e"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 1646,
-      "sha256": "df524c95dfd607917c66fe7b8cf1a09e9c6f3402f1d24a432cb089132906b235"
+      "bytes": 2144,
+      "sha256": "c0149007ad14d6bfb7960cb1044f65c5c17502fd8db98e1607424002f7f9f423"
+    },
+    "integration/plans/timeline/goal_prompt.md": {
+      "bytes": 18114,
+      "sha256": "08b854213cd214105932e94ff8f2c328ba7ab9b5d4f6a4c46b9f0c80b042ba40"
     },
     "integration/plans/timeline/record.initial.md": {
       "bytes": 2068,
       "sha256": "843bfee3d1d89e2c278a72efdaaa9be5bfaab853fad5cc41d82a168ee7598288"
+    },
+    "integration/plans/timeline/reviews/FOLLOWUP_INPUT.json": {
+      "bytes": 427,
+      "sha256": "53df15b665cc22086067ec76d5fe373f11887a7627ee7e7e3a0e987a9d15bd55"
+    },
+    "integration/plans/timeline/reviews/R1-compiler.md": {
+      "bytes": 26348,
+      "sha256": "18b58ebc35728b00684cb1928a59f5bd8adfb48211d69ec3bb48450161626651"
+    },
+    "integration/plans/timeline/reviews/R1-followup.md": {
+      "bytes": 8145,
+      "sha256": "c749da910a509d4c933dca4438fae7026c00d093d4cee73212e73931145d2302"
+    },
+    "integration/plans/timeline/reviews/R2-followup.md": {
+      "bytes": 8215,
+      "sha256": "54916e6d46e5d881ac26019c3d8160162ef06cddf64e7ecd9f2eb412a4edf357"
+    },
+    "integration/plans/timeline/reviews/R2-runtime.md": {
+      "bytes": 19055,
+      "sha256": "f29f9b792814dcbe72acf36413ca5899d414a7992c8f94d07d72565b3ef38ce4"
+    },
+    "integration/plans/timeline/reviews/R3-followup.md": {
+      "bytes": 7532,
+      "sha256": "b5b71cff1b3fbee00f84422c80af0126074644878c3a1c6fbe02ad2a7a08da91"
+    },
+    "integration/plans/timeline/reviews/R3-portability.md": {
+      "bytes": 18610,
+      "sha256": "871cb9936abe5b6b445c693b97300eaa8020d48a99dfe9b4fc8d4cca61efebfa"
+    },
+    "integration/plans/timeline/reviews/README.md": {
+      "bytes": 5091,
+      "sha256": "f5ede058f90c3708f342172741d042f750780cdba57197963daab613cbcbfaff"
+    },
+    "integration/plans/timeline/reviews/REQUEST.json": {
+      "bytes": 1250,
+      "sha256": "dd4cdf6ee37cc73ab03802e08e742f1e48af8aefc9a0dca34a8a3a84daf93889"
     }
   }
 }

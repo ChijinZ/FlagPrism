@@ -74,6 +74,14 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 
 源码/依赖都相同可以复用原对象，但记录实际改编 TU、link 和依赖 SHA，不能无变化地重复大构建；反过来，新 logger/ABI/pass 必须真正构建安装。SDK 私有文件不进 Git，公开 patch/版本/资源构建方式必须可复现。不得覆写系统 SDK 或修改 host driver/daemon。
 
+### 3.1 本轮必须落实的可扩展边界
+
+执行设计第 8.1–8.6 节和测试 P01–P10/§8.2 的最小实证：使用现有三后端形成小的真实后端接口，不新增第四芯片，不提前搭建无调用者框架。拆分公共观测意图/晚期执行 manifest、编译插桩/运行时记录、主体/clock/async 语义映射与公共验证/Perfetto；保留后端细节，不固定 warp/SM 或一对一 producer-consumer 模型。
+
+按实际 target/compiler/SDK/plugin 探测能力并绑定缓存；同品牌不同目标不自动继承 clock/async 能力。未验证、已知不支持和验证支持分开，profile 失败不改 unsupported。后端各有真实小纵向样本，验证 timer、两区间、动态异步与可比时钟以及 Trace Processor 后再进入最终资格；遇确实的机制/环境阻碍保留事实返回，不用降级目标填图。
+
+第二/第三后端接入留逐后端改动/接口与公共变动理由；公共消费者不增加逐厂商业务分支，注册和语义映射留在后端。确有新公共概念可版本化扩展并共同回归，不以零公共改动/LOC 掩盖设计缺陷。最终三个代码 reviewer 都须评估实际适配边界与可行性证据，不能以 adapter 类存在或 CPU 假后端代替结论。
+
 ## 4. 环境、权限与生命周期
 
 | 服务器 alias | 复用容器 | 初始设备 |
@@ -139,7 +147,7 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 3. 三后端真实内部多区间/循环和每后端至少一个真实异步依赖案例；时间单位、clock比较和语义没有伪造，缺失没有填图。
 4. 标准 `.pftrace` 的真实Trace Processor SQL验证与实际Perfetto UI操作/截图通过，源码/主体/等待/依赖可解释。
 5. 两个受控案例能说明某个内部时间/等待/阶段关系；未插桩参照/噪声/扰动的结论与实际许可和证据一致，不许用插桩时间冒收益。
-6. 配套三后端构建/独立安装/source-native-ABI/关键故障与回归、旧count/原始数据兼容都通过。
+6. 配套三后端构建/独立安装/source-native-ABI/关键故障与回归、旧count/原始数据兼容及适配边界 P01–P10 都通过。
 7. 三名额外指定配置的独立代码走查完成，确认问题已处置并必要复核；不以多数投票豁免。
 8. Git push/remote HEAD/clean真实核，文档/record/证据完整，无遗留自有设备或browser任务，工具任务未写论文/旧Study。
 

@@ -7,11 +7,17 @@ No device experiment is started by committing the plan.
 - [Technical design](../../../Profiler/docs/timeline_design.md).
 - [Real-operator and Perfetto test plan](../../../Profiler/docs/timeline_testing.md).
 - [Initial record](record.initial.md): immutable T000 snapshot; live execution record is workspace-root `timeline_impl_record.md`, outside Git.
+- [Design review and disposition](reviews/README.md): three independent design reviews, document hashes and subsequent resolutions. These are not the final implementation code reviews.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish
 with three independent requested GPT-6.1-Sol/xhigh code reviews. Proposed CLI
 names and example output paths in the design do not claim existing functionality.
+
+The design now requires explicit compiler/runtime/clock/async backend boundaries
+and P01–P10 portability checks using the three existing backends. No fourth
+device port is included. Interface reuse is assessed from real implementations
+and change evidence, not from a dummy backend or a promised porting time.
 
 Copy into Codex when ready to start (this is not a shell command):
 

@@ -2,12 +2,14 @@
 
 状态：**测试设计，尚未执行**。配套 [技术设计](timeline_design.md) 与根目录 `timeline_goal_prompt.md`。本文件所有算子/干预是待运行场景，不是已有性能结果；不预填时间、重叠率或加速比。
 
-## 1. 分开验证四件事
+## 1. 分开验证五件事
 
 1. 算子与应用没有被破坏：数值、输入、tail/canary、请求调用次数、side effect。
 2. 时间数据是真的：实际设备 getter、原始 bytes、实际编译位置、时间单位、调用/主体/配对/损失。
 3. 解释没有越界：issue 不是 engine busy，completion observation 不是精确硬件 end，静态边不冒充动态 flow。
 4. Perfetto 真的可用：用实际导入器和 UI 打开本次真算子 trace，看到可解释的内部结构，而不是只校验 JSON/protobuf 能解码。
+
+5. 后端边界真正可复用：三个真实后端遵守同一事件/时钟/依赖消费合同，架构特有信息没有被削成公共指标；不依赖新增厂商展示分支。
 
 所有产品 import、oracle、测试、编译、设备采集和浏览器在服务器 Docker。工作机只编辑、Git、调度和留存 bytes 审计。CPU 合成记录用于负例，不算真实设备覆盖。
 
@@ -91,7 +93,7 @@ Ascend/GCU 在稳定窗口记录未插桩参照和噪声，避免拿插桩执行
 | E06 | 旧 census、旧 interval、native-only/API 回归 | schema/读写兼容；旧数据不被覆写成新真实时间 |
 | E07 | 同源切换计数/时间、SDK/compiler/plugin 原地升级与 symlink | 实际身份进入 cache；mode/ABI 不串；旧缓存原件保留 |
 | E08 | 修改 raw payload/header/commit flag/offset/ABI、删 begin/end | 必须检测拒绝或明确 partial，不能仍报完整时间线 |
-| E09 | 错 frequency、缺 clock proof、跨 SM/epoch 错配、错误单位、超大 tick | 转换 fail-closed；保原 bytes，不把 cycles 填入 ns |
+| E09 | 错 frequency、缺 clock proof、跨 SM/epoch 错配、错误单位、超大 tick、长区间近边界、end≥start 但整圈回绕不可判定 | 转换与端点比较 fail-closed；保原 bytes，不把 cycles 填入 ns，不把不确定先后/重叠报确定 |
 | E10 | flag/buffer 地址重复、故意串 generation、漏一 producer/consumer | 不产生假 flow；歧义有原因，动态 edge 的精度优先 |
 | E11 | 跨 invocation 的同 site、同名 kernel、不同 capture/replay | 不用名字或时间邻近 join，不跨 replay 伪造一次执行 |
 | E12 | payload saturation、选择之外的记录损失 | 全采集范围损失核，不只检查 UI 当前可见 program |
@@ -115,22 +117,55 @@ Schema、authorization、verifier 和完整性检查必须在普通 Python 与 `
 
 ## 8. 真实 UI 验收与交付内容
 
-每后端至少挑六份当前实际 trace，包含两个不同算法、一个异步案例、cold/warm、不同 program 或 occurrence。至少三个跨后端的异步案例分别在本机真实 Perfetto UI 打开；不能只用自写网页替代 Perfetto。
+每后端至少挑六份当前实际 trace，包含两个不同算法、一个异步案例、cold/warm、不同 program 或 occurrence。三个后端的异步案例分别在对应服务器已有 Docker 中的标准 Perfetto UI 打开；不能只用自写网页替代 Perfetto。
 
-每份操作与截图：
+资格前冻结 UI 覆盖表，列出每份 trace 的算法、cold/warm、program/occurrence、循环/异步适用性及预期步骤。每份操作与截图：
 
 1. 上传/打开本次 `.pftrace`，overview 出现内部多 track，不是只有 kernel bar。
-2. zoom 到一个真实循环，能看见重复的 region/wait 等 slice；显示单位和采集范围。
+2. zoom 到实际内部结构，显示单位和采集范围；循环样本必须看见真实重复 region/wait 等 slice，非循环样本核对实际区域，不要求制造循环。
 3. 点一个 slice，详情能读源码位置、主体、时间、semantic、clock/误差、调用/原始证据 ID。
-4. 点一个有证据的 flow，定位 producer/consumer；静态候选不冒充真实 arrow。
+4. 对有动态 flow 的样本点击端点，核 producer/consumer、generation 和目标时钟；每后端至少一份真实异步 trace 必须执行。无异步的普通样本核没有伪 flow，不将本来没有的 edge 记为失败；应有 edge 的异步样本不能用 N/A 逃避。
 5. 看首/末 program 或两 actor，明确哪些同域可比较；不能从不同域归零图推断重叠。
 6. 从 bundle 定位源 snapshot/原始记录；browser 前后所有 bundle 文件 hash 不变。
-7. 至少三张实际截图：整体、局部循环/流水、slice/flow 详情。截图索引给 trace SHA、UI 版本和选择事件 ID，不用手工重绘波形。
+7. 每份至少三张实际截图：整体、局部内部结构（适用时为循环/流水）、slice 详情；动态 flow 样本另保可定位端点的详情，可与上述截图合并。截图索引给服务器/容器、browser/UI 版本、trace SHA 和选择事件 ID，不用手工重绘波形。
 
 输出：源码/安装/native/compiler/SDK pin；测试注册表；首次结果与修复后结果；每组合 math/raw/time/clock/source/Perfetto gate；真实 `.pftrace`、bundle/原始 bytes、SQL、UI截图和解释；受控案例；已知限制；三个独立最终代码审阅报告及闭环。大型产物放持久路径/hash 索引，Git 只提交可公开的代码/测试/文档/小fixture/必要索引，不提交 SDK 私有库、凭据或巨型 trace。
 
+### 8.1 适配边界与可行性验收（P01–P10）
+
+遵守设计第 8.1–8.5 节。只用现有 NVIDIA/Enflame/Ascend 完成验证，不启动第四芯片适配。下表包含真实设备正例与 CPU 合同负例，必须在证据中区分；CPU 测试仍在服务器 Docker。建议复用同一份参数化公共消费者测试，后端分别提供真实 producer/安装证据。
+
+| ID | 输入/操作 | 通过条件 |
+| --- | --- | --- |
+| P01 | 三后端分别登记真实能力与纵向样本 | 全量资格前有普通数学、实际 getter/单位、至少两源区域真实区间、一个真实异步机制/动态关联/可比时钟、Trace Processor 结果；未知点与硬阻碍单独列明。机制证据全部满足才进入该后端最终资格 |
+| P02 | 目标/SDK/插件能力变化；未知项、错误 capability 声明负例 | 不仅按厂商品牌分支；目标不匹配/证据缺失明确拒绝或 partial，不报 verified；profile 失败不转 unsupported。CPU 构造目标描述只验证合同，不宣称额外硬件覆盖 |
+| P03 | 三后端真实源区域经优化后 fusion/split/loop 的 manifest | 同一公共身份校验器核对源→执行的一对多/多对一与消除状态；实际 begin/end 在声明边界，核纯算术/访存/原 wait 不越界；按实际变换检查 fused 多 origin 不复制 duration 凑两个阶段、split/消除不造点，不用早期源节点冒充晚期 observer/engine |
+| P04 | 三后端真实主体、缺失物理身份负例、额外角色 fixture | 公共 consumers 不强制 warp/SM 树，program/observer/operation/resource 分开；未知身份不补造；命名空间扩展可显示且不覆写核心字段 |
+| P05 | 已有真实 raw 及合法不同 layout 的合同 fixture | 后端解码器承担物理格式，公共配对/时钟/导出消费同一合同；校验 raw offset/version/commit/loss。保 Ascend padding 和旧 ABI 回归；fixture 不代替真实发布可见性测试 |
+| P06 | 同一套时钟负例参数化到三后端输出 | 错 target/epoch/frequency、精度不足、回绕歧义等均明确拒绝或标无比较资格；整数大 tick 换算正确。未知/未对齐域不因 backend label 获得共享时间轴 |
+| P07 | 每后端真实异步样本至少两轮 buffer/flag 复用；批量/部分 wait/多消费者合同 fixtures | 真实机制覆盖的 operation/group 集合与记录一致，generation 不串；同一公共依赖校验器生成 edge；部分 wait 不完成未覆盖组、多消费者不丢第二条边、丢 commit 不平移后续 generation，只有明确锚点才恢复；不要求三后端都具有每种机制。合成 case 只补合同覆盖，不能称该设备支持该机制 |
+| P08 | 实际后端数据通过公共 exporter/报告，扩展属性和新角色 fixture | 三后端用同一个 exporter 与 SQL 语义检查；展示无需厂商专用业务分支；扩展字段保留且 core schema/未知字段策略固定，不因 permissive dictionary 绕过验证 |
+| P09 | 第一实现→第二/第三实现的 Git diff 与公开安装 | 有逐后端适配清单、公共变动理由和回归证据；注册/编译 hook 入口明确，不依赖私有热补丁；公共修正同步验证已有后端。无修改行数硬指标，不把新概念藏进厂商判断 |
+| P10 | target/compiler/plugin/timer/rule/ABI 切换和 capability 失败后恢复 | 缓存/安装身份包含真实依赖，模式不串；早拒绝后下一合法请求可用，无隐式重放/额外完成 barrier；旧 count/native 和数据读取不退化 |
+
+P01 是开发阶段的可行性检查，不是用一个样本代替独立资格。若一后端暂阻，保留证据并继续其它不依赖工作，不标三后端完成。所有未跑的测试保持未验证；设计评审不能替代实现后的真实设备、SQL/UI 或最终代码走查。
+
+适配证据交付至少包含：接口/协议版本、三份后端实现清单、目标能力与证据、实际编译接入及产物、设备正例与 CPU fixture 标签、P01–P10 结果、公共/后端 diff 分类、未解决限制。采用可定位代码的审计，不能仅凭“有 adapter 类”判定通过。公共代码确需新增概念时允许有理由的版本化修改，不把“零公共改动”作为压倒正确性的指标。
+
+### 8.2 评审风险对应的最小实证
+
+不另外扩大独立资格矩阵；在 P01、P03、P05、P07、P10 与 E01/E03/E05/E07/E09 中复用以下检查，并保留实际证据：
+
+- **编译边界**：真实有依赖纯算术 loop、load/compute/store 区域和原 async wait，核普通/插桩最终 IR/ISA 中的顺序、无新完成 barrier、loop occurrence 与真实 runtime 输入对应。volatile/正 duration 本身不足。覆盖已实际出现的 fusion/split/消除，不能要求设备生成本来没有的变换。
+- **时间记录布局**：Ascend 新 timeline 物理协议独立证明 cache-line/commit 可见性，不把 census v3 通过搬给动态 v1；GCU 核实际 work-item 写者及完整 payload；NVIDIA 核 timer 与 packed 位宽/decoder/ABI 一致。
+- **生命周期**：支持的两 stream 交错多次启动，脚本返回前不主动同步，验证无逐 launch host wait 强制串行；pending 时关闭/异常/cancel 不提前复用仍在写的 buffer；D2H/导出失败后下一合法 capture 恢复。允许最终化为安全导出等待本次完成，不能偷加设备全局完成屏障。按真实支持边界执行，不能在冻结后靠 unsupported 改分母。
+- **缓存与目标身份**：同 specialization 改真实 launch grid（含 1D/2D、单 program、零 grid、tail），首末坐标/admission 不串；内存/磁盘缓存查询前取得 SDK/timer/plugin/rule 的实际依赖身份。本次 epoch 不从历史 bundle 继承。
+- **合同与扩展**：第一真实链之后冻结设计 §8.6 的小版本及实例；错类型/core 覆写/未知必需语义/悬空 group/source/binary 引用显式拒绝，ordinary eligibility、target 能力、本次 plan/outcome 不相互覆写。每 slice/flow 保所有端点与组成员所需 raw 证据。
+
+三份设计评审及处置见 [评审记录](../../integration/plans/timeline/reviews/README.md)。这些检查均待实现后执行；评审确认设计合理不等于 timer/epoch、编译顺序、发布可见性或 Perfetto 已通过。
+
 ## 9. 成功判定
 
-只有普通算子真实完成、时间正确、异步解释正确、Perfetto 真导入并可读、独立新数学通过、回归/安装/三个独立最终审阅闭环、Git与进程收尾全部成立，才能完成 goal。
+只有普通算子真实完成、时间正确、异步解释正确、Perfetto 真导入并可读、独立新数学通过、回归/安装/适配边界 P01–P10/三个独立最终审阅闭环、Git与进程收尾全部成立，才能完成 goal。
 
 多几个 timestamp、一个能打开的文件、一组 source count 或漂亮示意截图均不等价于这些条件。时钟未知、某后端缺内部区间、异步关系只能猜、真实 UI 没验等情况属于未完成项，不能把验收降级成旧 usability 标准。

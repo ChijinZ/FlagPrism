@@ -1,0 +1,31 @@
+{
+  "scope": "design review only; no implementation or device validation",
+  "reviewed_document_sha256": {
+    "Profiler/docs/timeline_design.md": "ef6d20936e0a879e1b9bde36c7cbf81e37d98ce3dd680c2388070bc7274327fc",
+    "Profiler/docs/timeline_testing.md": "224a1c94c7748510a68054f1fa4a58b3e3ef34185dd168c64e2d86e6177786e4",
+    "integration/plans/timeline/goal_prompt.md": "567234333175566f4056dc6b09db4a7ad7e3c4e5684f59d7d19dc5bc6b1d69b1"
+  },
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "resolved_serving_model": "not exposed; unknown",
+  "independence": "fresh contexts; no peer report reads; source read only; separate report files",
+  "reviewers": [
+    {
+      "role": "R1 compiler",
+      "agent": "/root/timeline_design_compiler_review",
+      "report": "R1-compiler.md"
+    },
+    {
+      "role": "R2 runtime",
+      "agent": "/root/timeline_design_runtime_review",
+      "report": "R2-runtime.md"
+    },
+    {
+      "role": "R3 portability",
+      "agent": "/root/timeline_design_portability_review",
+      "report": "R3-portability.md"
+    }
+  ],
+  "configuration_acceptance": "spawn_agent returned all three task identities without error; resolved serving version not exposed"
+}
