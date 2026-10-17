@@ -64,7 +64,7 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 
 允许改 FlagPrism、配套 FlagTree、必要 SDK 通用 pass/接口、native ABI、隐藏 launch ABI、自动 planner、时钟 getter/correlation、事件协议、源关联、trace exporter、报告和构建集成。以实际实现而不是旧论文为边界。
 
-公开入口 `--detail timeline` / `detail="timeline"` 已有 NVIDIA-only、`partial_clock_unverified` 的 raw 采集实现；认证 ns、Perfetto 和其它两后端时间 producer 尚未完成，限制见 `Profiler/docs/timeline_runtime.md` 与 `timeline_events.md`。已有 raw 入口不代表本合同完整交付。旧无 detail 的 native 模式、`--detail auto` 计数语义不被静默替换。
+公开入口 `--detail timeline` / `detail="timeline"` 已有 NVIDIA 与 Enflame GCU 的 `partial_clock_unverified` raw 采集实现；认证 ns、Perfetto 和 Ascend 新时间 producer 尚未完成，限制见 `Profiler/docs/timeline_runtime.md` 与 `timeline_events.md`。已有 raw 入口不代表本合同完整交付。旧无 detail 的 native 模式、`--detail auto` 计数语义不被静默替换。
 
 具体工作链：
 

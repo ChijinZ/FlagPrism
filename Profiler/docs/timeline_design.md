@@ -32,7 +32,7 @@
 
 ## 3. 用户入口与采集策略
 
-公共入口如下。NVIDIA 已实现显式 `partial_clock_unverified` 的 raw 采集路径；这不等于本设计的三后端 ns/Perfetto 交付，当前限制见 [timeline_runtime.md](timeline_runtime.md)：
+公共入口如下。NVIDIA 与 Enflame GCU 已实现显式 `partial_clock_unverified` 的 raw 采集路径；这不等于本设计的三后端 ns/Perfetto 交付，当前限制见 [timeline_runtime.md](timeline_runtime.md)：
 
 ```bash
 python -m flagtree.profiler.cli --detail timeline --device 0 \
@@ -282,7 +282,7 @@ UI 用明确名称区分“observed dependency”“static candidate”“ambigu
 
 ### 8.10 适配成本的落实：组合已有能力，保留架构事实
 
-本节是后续实现约束，不是已实现接口或第四芯片支持声明。当前 NVIDIA 已打通公开 raw 路径、安全 owner 和公共 raw schema；经过认证的 ns/Perfetto 及其它两后端时间 producer 仍待完成。当前可执行入口见 [timeline_runtime.md](timeline_runtime.md)，公共 raw schema 见 [timeline_events.md](timeline_events.md)，设备结果以工程记录及原件为准。§8.8 和 §8.9 的历史检查点不能当最新支持表。
+本节是后续实现约束，不是已实现接口或第四芯片支持声明。当前 NVIDIA 与 GCU 已打通公开 raw 路径、安全 owner 和公共 raw schema；经过认证的 ns/Perfetto 及 Ascend 新时间 producer 仍待完成。当前可执行入口见 [timeline_runtime.md](timeline_runtime.md)，公共 raw schema 见 [timeline_events.md](timeline_events.md)，设备结果以工程记录及原件为准。§8.8 和 §8.9 的历史检查点不能当最新支持表。
 
 **适配单位是目标及其工具链，不是算子，也不是厂商品牌。** “新增芯片容易”的实际目标是复用公共采集流程、身份、验证和导出，且可独立替换确实变化的设备部件。不得要求每款芯片重写全链，也不能把 NVIDIA 实现改一个设备名就宣称可用。
 
@@ -385,7 +385,7 @@ A/B 允许推进下一项开发；只有 C 达到既有 P01，D 才完成本轮�
 
 **回绕兼容策略明确版本化。** 当前公共 schema 1/2 只接受无回绕的读数关系；它们的保守拒绝不代表物理 raw 无效。实际 timer 发生下降时仍须保原件、布局和关联快照，记录当前 reader 的限制，不能排序、修改 tick 或直接以新值冒充原值。支持短位宽回绕的后续公共版本必须保存 modulo ticks 与物理 sequence，由独立有效窗口/reset 证据决定是否唯一展开，在派生视图中另记展开值、圈数及证明；相同原件可离线升级重读。若本轮实际必需样本跨回绕，须实现该版本与兼容正负例才能过对应门，不能以 partial 绕过完整时间验收。end≥start 的样本也须排除不可判定整圈，沿用 §6。
 
-**离线 adapter 与可用 profiler 分开验收。** 已有 Enflame 物理解码器能读取旧 advanced 捕获，不意味着 `detail="timeline"` 已支持 GCU。接入默认入口还要完成自动 planner、真实首末 program 的紧凑写址、调用 owner/完成、预算、raw 先保留及错误恢复。当前 decoder 只接受其实际支持的 program/actor；扩大范围应先实现并核验生产者/transport，不能只放宽 Python 校验。同理，机器 counter PC 映射不授予源区域边界，clock 有尺度不授予跨主体 epoch。
+**离线 adapter 与可用 profiler 分开验收。** 物理解码器能读旧 advanced 捕获，本身不能证明默认入口可用。本轮 GCU 后续已实际接通默认 raw 入口的自动选择、首末紧凑写址、owner/流完成、raw 先保留和失败恢复，证据见工程记录 r016；这仍不授予 clock/边界/guard/异步/Perfetto 资格。decoder 只接受其实际支持的 program/actor；扩大范围应先实现并核验生产者/transport，不能只放宽 Python 校验。同理，机器 counter PC 映射不授予源区域边界，clock 有尺度不授予跨主体 epoch。
 
 **先执行可证伪的最小纵向样本。** 第一条链使用普通 load→有依赖 runtime 循环→store，改变 K 证明相同 binary 的动态次数；另选 ordinary 对象中确有异步机制的样本。逐项得到 boundary、publication、clock、mechanism 和 export 证据。NVIDIA 当前普通/插桩 GEMM 的展开及调度差异尚未闭合，必须比较关键依赖和真实 copy/commit/wait/compute 关系，不能仅以指令总数相等放行。不能在无法保持的流水上承诺解释原执行；每组三方对照固定 ordinary 编译配置、输入、grid、数学和异步机制，仅改变观测密度；C2 每个调度变体各自做三方对照。普通 baseline 预登记 commit/group/wait 覆盖、消费前等待、允许 in-flight 的组和 compute 阶段关系；静态保留重叠机会不等于测得硬件重叠。必要时调整通用插桩位置或采样策略。GCU 的 ns 尺度和异步机制、Ascend 的新 timeline 发布协议也分别需要真实证明。没有证明时保 partial 和具体阻碍，不能用抽象合理性替代可行性。
 

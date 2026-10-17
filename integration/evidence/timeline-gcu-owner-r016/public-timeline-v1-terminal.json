@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 380934,
+    "ppid": 1,
+    "pgid": 380928,
+    "startticks": 1006371935
+  },
+  "worker": {
+    "pid": 380935,
+    "ppid": 380934,
+    "pgid": 380935,
+    "startticks": 1006371939
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r016/runs/install-v5/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r016/package-source-v5/tests/timeline/p01_enflame_public_timeline.py",
+    "--output",
+    "/workspace/chijin-timeline-r016/runs/public-timeline-v1/output"
+  ],
+  "argv_sha256": "f01c7f527ba5a5c1b9cb512a33e1ff1a414aa7bf26d3df7e7e9bb2ddd8330931",
+  "script_sha256": "c5586e354a14e1c71a2c3f4494f70b2653517c067da954fd3295d7892328b2a4",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 17194293690
+}

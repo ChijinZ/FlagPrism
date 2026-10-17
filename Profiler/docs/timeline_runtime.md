@@ -15,9 +15,26 @@ to locate original raw records, decoded timestamps, logical async facts,
 source/compiled artifacts and per-invocation metadata. No kernel scope or site
 annotation is required. There is no certified `.pftrace` yet; raw ticks must not
 be interpreted as ns or used for cross-observer overlap without clock proof.
-The current public path is NVIDIA-only, eager and one host thread per session;
-it accepts multiple CUDA streams. Nested sessions are explicitly rejected.
-Other backends still need their timeline producer paths.
+The current public raw paths support NVIDIA and Enflame GCU, eager and one host
+thread per session. Both have real multiple-stream ownership tests. Nested
+sessions are explicitly rejected. Ascend still needs its new timeline producer.
+
+For GCU, use the same API with `backend="enflame"` (or allow backend detection),
+or the CLI with `--backend enflame --device 0`. The normal
+[Enflame build recipe](../../integration/patches/enflame/README.md) must build
+matching compiler/runtime `GCU_TIMELINE_STORAGE_VERSION=2` and
+`GCU_TIMELINE_PUBLISHER_VERSION=2`; an old beta publisher is rejected. The public
+collector selects real first/last programs using compact physical rings, records
+completion events on the original GCU stream and defers readback until
+finalization. It retains the native initialization handle, including host staging,
+until completion and durable retention. Legacy advanced mode keeps its historical
+completion behavior. An arrived-but-empty ring is distinct from a host-initialized
+ring whose selected writer never arrived.
+
+Real API cold/warm, standard CLI and two-stream decoder-failure recovery evidence
+is indexed in [GCU owner evidence](../../integration/evidence/timeline-gcu-owner-r016/README.md).
+This is a raw collection milestone: GCU clock scale/epoch, final source boundaries,
+allocation-guard qualification, async reuse and Perfetto remain unqualified.
 
 Build with the matching `preallocation-admission.patch` v2: it passes the actual
 launch stream before either scratch allocation and exposes admission ABI 2.
@@ -144,14 +161,18 @@ are unchanged.
 The installed common raw reader also supports schema 2 and the GCU
 `timeline_events_enflame` adapter for existing advanced append captures. It
 preserves atomic start/end fields, work-item identity, local-label provenance,
-sampling and dropped-pair counts. This is not yet a GCU default timeline hook,
-ns producer or Perfetto exporter. See [raw events](timeline_events.md) for the
+sampling and dropped-pair counts. The default GCU collector now also uses the distinct compact first/last layout
+and this common reader. Neither path is yet a certified ns producer or Perfetto
+exporter. See [raw events](timeline_events.md) for the
 versioned contract and evidence boundary.
 
 ## Finalization and recovery stages
 
-Finalization first attempts readback and durable retention for every pending
-invocation, before running any decoder or machine mapper. Each original `.raw`,
+Finalization nonblockingly checks completion and gives currently ready owners
+readback/persistence opportunities before polling unknown writers. All owners
+share the bounded finalization deadline; it does not promise arbitrarily many
+ready buffers will fit. Unresolved owners and their states remain in the index.
+Decoding and machine mapping follow this original-retention pass. Each original `.raw`,
 `.input.json`, and required compiled/source artifact is persisted before its
 completed device owner is released. The second pass decodes these retained files;
 a decoder failure does not prevent other invocations from being saved or decoded.
@@ -162,6 +183,13 @@ they are never freed merely because another invocation failed.
 The mutable `index.json` also identifies `pending_decode` and `retained_owners`;
 its replacement is atomic, unlike the immutable per-invocation originals. The
 first failure remains the raised error even if later journal persistence fails.
+A successfully acquired but invalid readback is not a missing D2H result: the
+payload, actual length, integrity errors and available `.guard.raw` are retained
+before interpretation is rejected. Safe release follows completion and durable
+raw/input retention, including corrupt captures. A later decode attempt does not
+read the device again or reinterpret a corrupt guard as valid data. This guard
+carrier is implemented by the CUDA transport; GCU allocation guard qualification
+is still separate.
 JSON slot maps are rehydrated to the physical decoder's tuple contract; raw
 identity is checked again before decoding. This conversion changes no raw fields.
 

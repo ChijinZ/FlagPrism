@@ -1,0 +1,38 @@
+{
+  "status": "gcu_public_CLI_raw_stage_passed_not_full_P01",
+  "argv": [
+    "/workspace/chijin-timeline-r016/runs/install-v5/output/venv/bin/python",
+    "-I",
+    "-m",
+    "flagtree.profiler.cli",
+    "--detail",
+    "timeline",
+    "--backend",
+    "enflame",
+    "--device",
+    "0",
+    "-n",
+    "/workspace/chijin-timeline-r016/runs/public-cli-v1/output/capture",
+    "/workspace/chijin-timeline-r016/extra-tests-input/ordinary_enflame_timeline_workload.py",
+    "--evidence",
+    "/workspace/chijin-timeline-r016/runs/public-cli-v1/output/math"
+  ],
+  "math_calls": 3,
+  "raw_endpoint_references": 132,
+  "events_per_observer": [
+    [
+      10,
+      10
+    ],
+    [
+      14,
+      14
+    ],
+    [
+      18
+    ]
+  ],
+  "clock_qualified": false,
+  "boundary_qualified": false,
+  "perfetto_qualified": false
+}

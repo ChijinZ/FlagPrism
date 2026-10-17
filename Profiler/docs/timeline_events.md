@@ -59,8 +59,9 @@ math or actual Perfetto SQL/UI acceptance.
 
 The GCU adapter `timeline_events_enflame.canonicalize_enflame_capture` consumes
 the existing `selected_dynamic_timeline_v1` native append protocol (Debugger
-protocol 2, 64-byte records). This is a pure installed raw adapter; GCU's default
-`detail="timeline"` path and certified time/export integration are still pending.
+protocol 2, 64-byte records), and the distinct
+`gcu_first_last_timeline_v2` compact layout used by the default GCU collector.
+The decoder remains pure; certified time/export integration is still pending.
 The caller supplies the owning capture namespace, the actual compiler metadata
 and a retained capture document. It must retain the originals; the adapter does
 not launch, replay, write a trace or claim ownership of device resources.
@@ -106,5 +107,16 @@ identity collisions, overwrite-versus-drop semantics, sampling, corrupt payloads
 and type/source/header failures. These are synthetic contracts, not GPU coverage.
 The installed reader separately consumed all 42 actual GCU intervals (84 exact
 raw-field references) and all 26 original NVIDIA v1 batches unchanged, normal and
-`-O`. This validates the shared raw consumer; it does not complete new GCU default
-collection, async/clock qualification, Perfetto or independent-math acceptance.
+`-O`. Those historical results validate the shared raw consumer, not the new producer.
+The subsequent [GCU owner evidence](../../integration/evidence/timeline-gcu-owner-r016/README.md)
+records actual first/last publication, public default API/CLI and deferred owner
+recovery separately; async/clock qualification, Perfetto and independent math
+remain incomplete.
+
+The compact producer has separate storage and publisher versions. Current
+publisher 2 uses byte stride divided by the actual i32 pointer element size;
+changing publisher semantics invalidates the compiler cache even without changing
+the physical layout. Each selected ring retains its real program ID, actual
+writer-arrival flag and per-ring commit/loss state. Host-initialized headers do
+not prove that a selected program executed. Per-observer clock domains remain
+unverified, never implicitly aligned by the SDK timer name.

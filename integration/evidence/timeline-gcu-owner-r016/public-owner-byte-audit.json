@@ -1,0 +1,242 @@
+{
+  "status": "actual_public_raw_and_ownership_byte_audit_passed_not_full_P01",
+  "archive_sha256": "8eab98f1b755e7b0df60d77498dba1366700e8bdfee7fd15e5788608b30e7ec7",
+  "archive_bytes": 10321088,
+  "archive_members": 280,
+  "default_captures": 13,
+  "raw_endpoint_references": 576,
+  "intervals": 288,
+  "positive_intervals": 288,
+  "selected_owned_handle_checks": 964,
+  "independent_install": {
+    "status": "installed_v5_corrected_test_recheck_passed_not_device_or_P01",
+    "product_commit": "ea70da7d5909a1ffe73a58340e98c95875fa33e2",
+    "test_commit": "794a5f6320bda1138265246971922bda83d66c62",
+    "wheel_sha256": "dde171bb115abe7e449209e53ce0c240e1181d9a45374289ff6c3587210cf20e",
+    "installed_members_byte_verified": 450,
+    "versions": [
+      2,
+      2,
+      2,
+      2
+    ],
+    "tests": [
+      {
+        "name": "test_enflame_timeline_events.py",
+        "mode": "normal",
+        "returncode": 0,
+        "source_sha256": "a8cfc138cc162c57c0dadd1172e44f145da7eae0d81b16c97772b990b4724991"
+      },
+      {
+        "name": "test_enflame_first_last.py",
+        "mode": "normal",
+        "returncode": 0,
+        "source_sha256": "6e4beac028fe344724cd34ab5544ade224db8a5a524be8891a4167e2aed18bfc"
+      },
+      {
+        "name": "test_timeline_events.py",
+        "mode": "normal",
+        "returncode": 0,
+        "source_sha256": "dae36a26e899aec720e65de9530aa8cbaf66ccfbc93c255f6a8441e67c1735e8"
+      },
+      {
+        "name": "test_enflame_deferred.py",
+        "mode": "normal",
+        "returncode": 0,
+        "source_sha256": "f0c87bedfbfb816ef88cfb77ffb2ff5a9ebf67e3080b6d68ea931dff0cd75f6a"
+      },
+      {
+        "name": "owner-finalize",
+        "mode": "normal",
+        "returncode": 0
+      },
+      {
+        "name": "test_enflame_timeline_events.py",
+        "mode": "optimized",
+        "returncode": 0,
+        "source_sha256": "a8cfc138cc162c57c0dadd1172e44f145da7eae0d81b16c97772b990b4724991"
+      },
+      {
+        "name": "test_enflame_first_last.py",
+        "mode": "optimized",
+        "returncode": 0,
+        "source_sha256": "6e4beac028fe344724cd34ab5544ade224db8a5a524be8891a4167e2aed18bfc"
+      },
+      {
+        "name": "test_timeline_events.py",
+        "mode": "optimized",
+        "returncode": 0,
+        "source_sha256": "dae36a26e899aec720e65de9530aa8cbaf66ccfbc93c255f6a8441e67c1735e8"
+      },
+      {
+        "name": "test_enflame_deferred.py",
+        "mode": "optimized",
+        "returncode": 0,
+        "source_sha256": "f0c87bedfbfb816ef88cfb77ffb2ff5a9ebf67e3080b6d68ea931dff0cd75f6a"
+      },
+      {
+        "name": "owner-finalize",
+        "mode": "optimized",
+        "returncode": 0
+      }
+    ]
+  },
+  "captures": [
+    {
+      "root": "runs/public-timeline-v1/output/api-cold/timeline",
+      "invocation_id": "enflame-invocation-dd68ad43b31c85de7ef944a40238ef4c7d0c4b7b3799a95ea847942193ae0a60",
+      "raw_sha256": "103b10e713e5cfa1c3e9db6d5076dbc0a003534a311408e6c78abd26dc7d107d",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "positive_intervals": 20,
+      "endpoints": 40
+    },
+    {
+      "root": "runs/public-timeline-v1/output/api-cold/timeline",
+      "invocation_id": "enflame-invocation-11c791871a9a6961ab3fbee89ff10c9d77530a830843baf4cc6358644d55ad77",
+      "raw_sha256": "ddc5111348de25326779ddc0cbb93a84fd77208664e6a925c13e6168bb0e0ee8",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "positive_intervals": 28,
+      "endpoints": 56
+    },
+    {
+      "root": "runs/public-timeline-v1/output/api-cold/timeline",
+      "invocation_id": "enflame-invocation-4e4ee42d40308f084ca3e342fead69e1ef52b967ee3b92df9906420004d36772",
+      "raw_sha256": "2ad552952cc8cdcefe32b42f9957e32548d026d8bc8ea3b762688932b0e1a230",
+      "raw_bytes": 262176,
+      "events_per_observer": [
+        18
+      ],
+      "positive_intervals": 18,
+      "endpoints": 36
+    },
+    {
+      "root": "runs/public-timeline-v1/output/api-warm/timeline",
+      "invocation_id": "enflame-invocation-2416d1ec07f806d618f88b743137427a5e303c6d2d6784e235f2455b999fdaa1",
+      "raw_sha256": "39f7c7435634f46102a6a322ca5f10fcd6ad686b9df8aa1842c75c0335816a59",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "positive_intervals": 20,
+      "endpoints": 40
+    },
+    {
+      "root": "runs/public-timeline-v1/output/api-warm/timeline",
+      "invocation_id": "enflame-invocation-01a9f391f92339d03d14d441e11c68b5649b5903f7535862f48bd55d86f9eeeb",
+      "raw_sha256": "11437b44e350619327debac632116cfa0b081ad77e773ddeb0e5aacd4b33100f",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "positive_intervals": 28,
+      "endpoints": 56
+    },
+    {
+      "root": "runs/public-timeline-v1/output/api-warm/timeline",
+      "invocation_id": "enflame-invocation-0be1df9eaa78753e2884230f1cc74df8e18c114c6a72f82983e2cfb6024d297b",
+      "raw_sha256": "28305ec96478b965d3c2e16903fd647e94066e56056230734a465d8ffc599452",
+      "raw_bytes": 262176,
+      "events_per_observer": [
+        18
+      ],
+      "positive_intervals": 18,
+      "endpoints": 36
+    },
+    {
+      "root": "runs/public-cli-v1/output/capture/timeline",
+      "invocation_id": "enflame-invocation-346f4b3260d2ae33ba3529bb64515ffacd08a9389e534774feed8660308bafc7",
+      "raw_sha256": "67c7b5b6e272748b40ef845f07f9d0d5f8f5b96f32105a24940aeda71e313338",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "positive_intervals": 20,
+      "endpoints": 40
+    },
+    {
+      "root": "runs/public-cli-v1/output/capture/timeline",
+      "invocation_id": "enflame-invocation-291a26aeff3b68be69160e5a1df7388e3b7b4940fc155cb454edf0259cbfcbe5",
+      "raw_sha256": "1f186e6ecaef3f4085ece49fd443eccc40c859d81e088edfa5ac2eec9a8d50da",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "positive_intervals": 28,
+      "endpoints": 56
+    },
+    {
+      "root": "runs/public-cli-v1/output/capture/timeline",
+      "invocation_id": "enflame-invocation-eae2ba74fde428b1fd5a885455965bf3d7b08a5b4457e0f7fccbcc608e06f1ae",
+      "raw_sha256": "891e60bd5bbf1aca3c8446deaccd332d651ffd94c0f8f6ee2a828860f56b37f5",
+      "raw_bytes": 262176,
+      "events_per_observer": [
+        18
+      ],
+      "positive_intervals": 18,
+      "endpoints": 36
+    },
+    {
+      "root": "runs/owner-recovery-v1/output/recovered-originals",
+      "invocation_id": "enflame-invocation-e7b2719acd989b22f2d908a9bf73a4a8bf6543a3a92062a69f2ea8078caf8f7e",
+      "raw_sha256": "96e2834e332d46b957706569d5ba6adcaecc68b5f6a5328f2e2e21f6481aea18",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "positive_intervals": 28,
+      "endpoints": 56
+    },
+    {
+      "root": "runs/owner-recovery-v1/output/recovered-originals",
+      "invocation_id": "enflame-invocation-40c915d223e1dee7e407d4d9ef50254a861d400f06c30376778a99ae3582c47a",
+      "raw_sha256": "dde9c80b45669b47475659298f1eadbf8d263ad434275e2911196cacb899c570",
+      "raw_bytes": 262176,
+      "events_per_observer": [
+        18
+      ],
+      "positive_intervals": 18,
+      "endpoints": 36
+    },
+    {
+      "root": "runs/owner-recovery-v1/output/recovered-originals",
+      "invocation_id": "enflame-invocation-c3dc497456c2f285de60762f2441dc989fc854bc46eb2f1198f89990a807100c",
+      "raw_sha256": "0780a4a50aca33a6b8836601d8e9033eeffdaea2ce7b86b018c78aef5cd61e76",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "positive_intervals": 20,
+      "endpoints": 40
+    },
+    {
+      "root": "runs/owner-recovery-v1/output/after-failure/timeline",
+      "invocation_id": "enflame-invocation-8f47981f190ac48ac9f3adcafa6d9db5577aae54f666235b849ff7fa8a3d50e9",
+      "raw_sha256": "fb5bc3f54f3f703dac4b946dbb4e51e93301c4f651d911729d37711ba834b652",
+      "raw_bytes": 524352,
+      "events_per_observer": [
+        12,
+        12
+      ],
+      "positive_intervals": 24,
+      "endpoints": 48
+    }
+  ],
+  "limitations": [
+    "No product imported or math replayed on workstation",
+    "No clock/epoch, source-boundary, allocation-guard, async reuse, Perfetto or independent-math qualification"
+  ]
+}

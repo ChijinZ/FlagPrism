@@ -1,0 +1,106 @@
+{
+  "status": "original_raw_byte_audit_passed_not_clock_boundary_guard_or_P01",
+  "archive_sha256": "5e2e5d0421b2b4752b732b114f0d813f00b9e25803a8de8a0c2c94353dc45e31",
+  "archive_bytes": 18393566,
+  "archive_members": 1605,
+  "captures": [
+    {
+      "capture": 0,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "raw_bytes": 8256,
+      "raw_sha256": "54617eb98972c6c69400baa957a26a4c7982a56df5324de8896b9f1151b54033",
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "endpoints": 40,
+      "complete": true,
+      "dropped_endpoint_references": 0
+    },
+    {
+      "capture": 1,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "raw_bytes": 8256,
+      "raw_sha256": "299171fc9538e2a098aff549573fd04dca458a00854a1d1721d4a6afc5d5b8f5",
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "endpoints": 56,
+      "complete": true,
+      "dropped_endpoint_references": 0
+    },
+    {
+      "capture": 2,
+      "grid": [
+        1,
+        1,
+        1
+      ],
+      "raw_bytes": 4128,
+      "raw_sha256": "8a77add2794accb8844a5cb0bb51d73e47f94957e1a1f42b2b43ed55cfaf2300",
+      "events_per_observer": [
+        18
+      ],
+      "endpoints": 36,
+      "complete": true,
+      "dropped_endpoint_references": 0
+    },
+    {
+      "capture": 3,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "raw_bytes": 576,
+      "raw_sha256": "ba2d2ba38e47e9de6bcb6f45a393d118ef41f414c5277a13a248ea2c5fb46277",
+      "events_per_observer": [
+        4,
+        4
+      ],
+      "endpoints": 16,
+      "complete": false,
+      "dropped_endpoint_references": 56
+    }
+  ],
+  "standard_advanced_export": {
+    "status": "actual_gcu_standard_advanced_export_passed_not_default_timeline_or_P01",
+    "math_calls": 1,
+    "per_program_side_effects": [
+      1,
+      1,
+      1
+    ],
+    "events": 28,
+    "canonical_records": 56,
+    "raw_sha256": "97bbbe6330d0a25f1f4e7c6ab4bfb1692507674a3e071517889cda1368314495",
+    "actual_programs": [
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0
+      ]
+    ],
+    "clock_qualified": false,
+    "boundary_qualified": false,
+    "perfetto_qualified": false
+  },
+  "limitations": [
+    "No product code imported or application replayed",
+    "No proof of machine source boundaries, clock scale/epoch, allocation guard or Perfetto"
+  ]
+}
