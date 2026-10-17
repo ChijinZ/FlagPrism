@@ -102,6 +102,7 @@ class TimelineInstrumentationMixin:
         from ..native import compiler_binding
         from triton._C import libtriton
         from .. import timeline_runtime, timeline_cuda_runtime
+        from .. import timeline_events, timeline_events_nvidia
         binding = compiler_binding()
         if (getattr(binding, 'TIMELINE_RECORD_VERSION', None) != 2 or
                 getattr(binding, 'TIMELINE_STORAGE_VERSION', None) != 1):
@@ -111,6 +112,7 @@ class TimelineInstrumentationMixin:
             raise RuntimeError('Rebuild the launcher with preallocation-admission.patch v2')
         paths = [libtriton.__file__, driver.__file__, __file__,
                  str(Path(__file__).with_name('instrumentation.py')),
+                 timeline_events.__file__, timeline_events_nvidia.__file__,
                  timeline_runtime.__file__, timeline_cuda_runtime.__file__]
         return hashlib.sha256(''.join(
             hashlib.sha256(Path(path).read_bytes()).hexdigest()
@@ -158,6 +160,7 @@ class TimelineInstrumentationMixin:
         """Persist before releasing; no application replay on export failure."""
         from ..timeline_nvidia import decode_timeline_ring
         from ..timeline_nvidia_async import derive_cp_async_facts
+        from ..timeline_events_nvidia import canonicalize_nvidia_capture
         directory = Path(base).with_suffix('.timeline')
         directory.mkdir(parents=True, exist_ok=True)
         for identity in self.timeline_pool.invocation_ids:
@@ -180,6 +183,10 @@ class TimelineInstrumentationMixin:
                 raw_sha256=hashlib.sha256(raw).hexdigest(),
                 clock_status='unverified', time_arrow_verified=False,
                 capture_status='aborted' if owner['submission_outcome'] != 'returned' else 'raw_complete')
+            # Original identity/source metadata survives any later decoder,
+            # canonicalization, serialization or export failure.
+            _persist(directory / prefix.with_suffix('.input.json'),
+                     (json.dumps(capture, indent=2)+'\n').encode())
             if owner['submission_outcome'] == 'returned':
                 warps = metadata['compiler_metadata']['num_warps']
                 decoded = decode_timeline_ring(raw,
@@ -192,6 +199,11 @@ class TimelineInstrumentationMixin:
                 facts = derive_cp_async_facts(decoded, owner['plan'],
                     capture_id=owner['capture_id'], invocation_id=identity,
                     binary_id=owner['binary_id'])
+                canonical = canonicalize_nvidia_capture(decoded, owner=owner,
+                    metadata=metadata, raw_sha256=capture['raw_sha256'], raw_bytes=len(raw))
+                capture['events_file'] = str(prefix.with_suffix('.events.json'))
+                _persist(directory / prefix.with_suffix('.events.json'),
+                         (json.dumps(canonical, indent=2)+'\n').encode())
                 _persist(directory / prefix.with_suffix('.decoded.json'),
                          (json.dumps(decoded, indent=2)+'\n').encode())
                 _persist(directory / prefix.with_suffix('.async.json'),

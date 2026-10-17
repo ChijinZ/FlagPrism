@@ -585,6 +585,10 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
                      if self.census else
                      'compiler_operation_control_intervals_without_completion_barriers'
                      ))
+                if self.timeline:
+                    automatic_plan.update(
+                        policy=automatic_plan.get('timeline_selection_policy'),
+                        semantics='uncertified_compiler_observer_globaltimer_ticks')
             self.observation_metadata[function] = {
                 'binary_id':
                 hash,

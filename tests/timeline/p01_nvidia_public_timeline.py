@@ -21,6 +21,7 @@ def main():
     import torch
     import flagtree.profiler as profiler
     from flagtree.profiler.hooks.instrumentation import InstrumentationHook
+    from flagtree.profiler.timeline_events import validate_raw_batch
     torch.cuda.set_device(0)
     require(torch.cuda.get_device_capability() == (12, 0), 'Wrong booked device')
     target = Path(__file__).with_name('ordinary_timeline_workload.py')
@@ -40,10 +41,21 @@ def main():
         require(all(c['capture_status']=='raw_complete' for c in captures), 'Public capture incomplete')
         records = []
         groups = 0
+        canonical_intervals = 0
         for capture in captures:
             decoded = json.loads((output/'timeline'/capture['decoded_file']).read_text())
             records.extend(decoded['records'])
             facts = json.loads((output/'timeline'/capture['async_file']).read_text())
+            canonical = validate_raw_batch(json.loads(
+                (output/'timeline'/capture['events_file']).read_text()))
+            require(canonical['complete'] and len(canonical['records'])==len(decoded['records']),
+                    'Canonical events lost raw records')
+            require(all(e['kind']=='interval' for e in canonical['events']),
+                    'Ordinary complete capture has incomplete intervals')
+            canonical_intervals += len(canonical['events'])
+            mapping = canonical['backend_record_map']['nvidia.cp_async.groups.v1']
+            require(all(r in mapping for r in facts['records']),
+                    'Mechanism facts are not linked to canonical records')
             require(not facts['time_arrow_verified'], 'Unverified facts became time arrows')
             groups += len(facts['groups'])
         require(groups > 0, 'Ordinary async GEMM lost dynamic logical group facts')
@@ -51,6 +63,7 @@ def main():
         require(len({c['owner']['stream'] for c in captures[:3]}) == 2, 'Stream association lost')
         require((output/'manifest.json').is_file(), 'Standard bundle manifest missing')
         phases.append(dict(name=name, captures=len(captures), records=len(records),
+                           canonical_intervals=canonical_intervals,
                            logical_groups=groups,
                            binaries=[c['owner']['binary_id'] for c in captures],
                            invocations=[c['owner']['invocation_id'] for c in captures]))
