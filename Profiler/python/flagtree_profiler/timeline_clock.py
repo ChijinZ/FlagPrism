@@ -115,3 +115,48 @@ def compare_points(left, right):
     if left.ns - left.error_ns > right.ns + right.error_ns:
         return 'after'
     return 'unresolved'
+
+
+def bound_causal_offset(exchanges, *, endpoint_errors=(0, 0, 0, 0),
+                        max_samples=4096):
+    """Bound B-A from causal A-send/B-receive/B-send/A-receive quadruples.
+
+    All values/errors must already use the same fixed unit and coordinate
+    origins. The caller groups a single domain/epoch pair and separately proves
+    the release/acquire ordering, scale, validity window and reset/wrap exclusion.
+    This arithmetic neither discovers clock identity nor grants qualification.
+    In particular, a raw-tick result is not automatically nanoseconds.
+
+    Conservative independent endpoint errors expand each causal inequality;
+    they are not a statistical standard deviation. No symmetry, equal one-way
+    delay or midpoint-is-true assumption is made. Inconsistent samples fail
+    rather than fitting a new clock rate or silently discarding observations.
+    """
+    _integer(max_samples, 'max causal clock samples', 1)
+    if max_samples > 65536:
+        raise ValueError('Causal clock sample budget exceeds 65536')
+    if (type(exchanges) not in (list, tuple) or not exchanges or
+            len(exchanges) > max_samples):
+        raise ValueError('Expected a bounded nonempty causal clock sample array')
+    if type(endpoint_errors) is not tuple or len(endpoint_errors) != 4:
+        raise ValueError('Expected four endpoint uncertainty bounds')
+    for error in endpoint_errors:
+        _integer(error, 'causal endpoint uncertainty')
+    lower, upper = None, None
+    for sample in exchanges:
+        if type(sample) not in (list, tuple) or len(sample) != 4:
+            raise ValueError('Expected four causal timestamps')
+        for value in sample:
+            _integer(value, 'causal timestamp')
+            if value >= 1 << 64:
+                raise ValueError('Causal timestamp exceeds uint64')
+        a_send, b_receive, b_send, a_receive = sample
+        if a_receive < a_send or b_send < b_receive:
+            raise ValueError('Local clock reversed within a causal exchange')
+        lo = b_send - a_receive - endpoint_errors[2] - endpoint_errors[3]
+        hi = b_receive - a_send + endpoint_errors[1] + endpoint_errors[0]
+        lower = lo if lower is None else max(lower, lo)
+        upper = hi if upper is None else min(upper, hi)
+        if lower > upper:
+            raise ValueError('Causal observations admit no fixed clock offset')
+    return lower, upper

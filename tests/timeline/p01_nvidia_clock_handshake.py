@@ -39,6 +39,7 @@ def main():
     import torch
     import triton
     import triton.language as tl
+    from flagtree.profiler.timeline_clock import bound_causal_offset
 
     @triton.jit
     def exchange(X, Payload, Y, Ready, Ack, T, SM, State, Error,
@@ -213,12 +214,22 @@ def main():
             # If device clock b = clock a + delta, causality gives
             # b_reply-a_receive <= delta <= b_receive-a_publish.
             offset_intervals.append((cc-dd, bb-aa))
-        lo = max(n[0] for n in offset_intervals)
-        hi = min(n[1] for n in offset_intervals)
+        pairs = sorted({(n[0],n[1]) for n in row['smids']})
+        need(len(pairs) == 1, 'Acquisition changed SM pair; split calibration required')
+        lo, hi = bound_causal_offset(row['ticks'])
+        need((lo,hi) == (max(n[0] for n in offset_intervals),
+                         min(n[1] for n in offset_intervals)),
+             'Common causal algebra disagrees with original inequalities')
+        training = bound_causal_offset(row['ticks'][:rounds//2])
+        heldout = bound_causal_offset(row['ticks'][rounds//2:])
+        row['training_offset_tick_interval'] = list(training)
+        row['heldout_offset_tick_interval'] = list(heldout)
+        row['zero_offset_training_and_heldout_consistent'] = (
+            training[0] <= 0 <= training[1] and heldout[0] <= 0 <= heldout[1])
         row['causal_offset_tick_interval'] = [lo, hi]
         row['zero_offset_consistent'] = lo <= 0 <= hi
         row['offset_interval_width_ticks'] = hi-lo
-        row['distinct_sm_pairs'] = sorted({(n[0],n[1]) for n in row['smids']})
+        row['distinct_sm_pairs'] = pairs
         row['exact_math_input_tail_and_once_passed'] = True
         diffs = [abs(v-u) for ticks in row['ticks'] for u,v in zip(ticks,ticks[1:]) if v!=u]
         row['observed_delta_gcd_ticks'] = math.gcd(*diffs)
