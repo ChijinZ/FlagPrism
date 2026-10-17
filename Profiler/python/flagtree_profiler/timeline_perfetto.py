@@ -156,7 +156,9 @@ def encode_counter_trace(view, canonical, *, max_bytes=16*1024*1024):
             iteration_id=event['iteration_id'], coverage=event['coverage'],
             missing_reason=event['missing_reason'], endpoint_error_ns=None,
             period_numerator_ns=view['unit_proof']['period_numerator_ns'],
-            period_denominator=view['unit_proof']['period_denominator'])
+            period_denominator=view['unit_proof']['period_denominator'],
+            unit_provider=view['unit_proof']['provider'],
+            unit_evidence_ids=view['unit_proof']['evidence_ids'])
         event_type = 1 if event['kind'] == 'interval' else 3
         label = ('counter bracket: ' if event_type == 1 else 'observed endpoint: ')+site['name']
         message = _uint(9, event_type)+_uint(11, tid)+_text(23, label)+_text(22, event['semantic'])
