@@ -1,0 +1,51 @@
+{
+  "status": "actual_call_model_and_gcu_raw_bytes_audited_not_full_P01",
+  "mapper_cpu_methods_v1": 24,
+  "mapper_cpu_methods_v2": 25,
+  "public_cpu_methods_each_mode": 4,
+  "reinspected_real_objects": 7,
+  "reinspected_static_getters": 140,
+  "static_synchronization_sites": 13,
+  "public_dtype_math_calls": 5,
+  "public_dtype_intervals": 320,
+  "gcu_calls": [
+    {
+      "steps": 3,
+      "events": 10,
+      "sites": 8,
+      "repeated_site_counts": {
+        "17": 3
+      },
+      "raw_bytes": 32800,
+      "raw_sha256": "6058fcb61b4aa67ea9d00c9fd5ce768d41ec3bbfce94ca52c018fac0ddbca285",
+      "binary_id": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6"
+    },
+    {
+      "steps": 7,
+      "events": 14,
+      "sites": 8,
+      "repeated_site_counts": {
+        "17": 7
+      },
+      "raw_bytes": 32800,
+      "raw_sha256": "6228263b3fa5ea242a8c32b6694941522e73b3ba59251f956197d6ba1a7ffa65",
+      "binary_id": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6"
+    },
+    {
+      "steps": 11,
+      "events": 18,
+      "sites": 8,
+      "repeated_site_counts": {
+        "17": 11
+      },
+      "raw_bytes": 32800,
+      "raw_sha256": "a1a37ba3abbc19f90fdcda637792a5f235bad5f4a518ffdd9bbdb0e2a34c5acd",
+      "binary_id": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6"
+    }
+  ],
+  "limits": [
+    "No region/clock/physical-generation or original-pipeline certification.",
+    "GCU uses existing advanced producer; public common timeline integration still required.",
+    "Perfetto, other backend P01 and final independent qualification remain incomplete."
+  ]
+}

@@ -56,7 +56,15 @@ through `machine_counter_mapping`. Exact function symbols also bind helpers in
 the parent code section at nonzero offsets; each map retains function ranges,
 code section, section-relative PC and function-relative PC. Actual instruction
 bodies cannot overlap or exceed executable ELF section extents. These fields
-locate reads and do not certify the caller region. Tool absence or a failed mapping preserves
+locate reads and do not certify the caller region. Maps also retain
+`static_model_version=1`, `call_sites`, `counter_call_sites` and
+`synchronization_sites`. Direct calls require exact text/JSON target agreement;
+unknown targets stay unresolved. Synchronization operands are checked too.
+Multiple readers/callers remain explicit; inline readers can have no direct
+caller. Expanded counter/caller references are capped at 65,536; exceeding this
+budget preserves raw data with mapping unavailable. Static inventories cannot
+establish dynamic counts, preserved scheduling, native busy or clock alignment.
+Tool absence or a failed mapping preserves
 raw data with an explicit unavailable reason. No application replay or network
 download is performed. Postprocessing is bounded by the shared export deadline.
 

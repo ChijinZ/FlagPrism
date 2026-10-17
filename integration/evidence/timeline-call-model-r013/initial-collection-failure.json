@@ -1,0 +1,8 @@
+{
+  "status": "retained_byte_audit_rejected_wrong_installed_module_collection",
+  "archive": "artifacts/timeline/run-013/preflight/nvidia-call-model-v2-original-evidence.tgz",
+  "bytes": 84979,
+  "sha256": "bf6bd8eec340c11aede3c2aee651c7ac8b34d4c18ce34efadfe978088ecbdfcf",
+  "reason": "v2 collection included the installed module from install-v1; install-v2 tests and receipts are terminal/successful, but module identity in this archive does not prove v2 installation",
+  "repair": "Correct the collection path and collect a new archive; no application or test replay."
+}

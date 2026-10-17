@@ -1,0 +1,80 @@
+{
+  "status": "real_gcu_automatic_dynamic_source_samples_not_full_P01",
+  "ordinary_math_launches": 1,
+  "profiled_math_launches": 3,
+  "calls": [
+    {
+      "steps": 3,
+      "actual_math_launches": 1,
+      "events": 10,
+      "binary_hash": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6",
+      "sites": [
+        7,
+        16,
+        17,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "observations_sha256": "4fdfa4a01ad519adc8006da7eace9456ccd650033df885370d3bf54d7ae19a66",
+      "exact_input": true,
+      "state": 1,
+      "math_tolerance": {
+        "rtol": 2e-06,
+        "atol": 2e-06
+      }
+    },
+    {
+      "steps": 7,
+      "actual_math_launches": 1,
+      "events": 14,
+      "binary_hash": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6",
+      "sites": [
+        7,
+        16,
+        17,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "observations_sha256": "f62a448761cebcff2a3f89fba94f7d66338334eaa1208e22e9e792b489332830",
+      "exact_input": true,
+      "state": 1,
+      "math_tolerance": {
+        "rtol": 2e-06,
+        "atol": 2e-06
+      }
+    },
+    {
+      "steps": 11,
+      "actual_math_launches": 1,
+      "events": 18,
+      "binary_hash": "95a3bba3bcf06e4cd9232d408dece697ca6d536bc37542cf6fd86d2d40876ec6",
+      "sites": [
+        7,
+        16,
+        17,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "observations_sha256": "d2a119a50b64f2a4527f82fca6beede412f9b60ce4908770a0398b2d2c313df2",
+      "exact_input": true,
+      "state": 1,
+      "math_tolerance": {
+        "rtol": 2e-06,
+        "atol": 2e-06
+      }
+    }
+  ],
+  "limitations": [
+    "Existing advanced producer; common timeline adapter not installed.",
+    "No ns/epoch/region/async or Perfetto qualification."
+  ]
+}

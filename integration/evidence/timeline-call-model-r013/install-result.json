@@ -1,0 +1,158 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r013/package-call-model-v2/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "9a43ee79a78184ac395e57670ea5499b5771276ceba29f0193e5fe1434a996f4",
+  "venv": "/workspace/chijin-timeline-r013/runs/install-v2/output/venv",
+  "installed_members_byte_verified": 607,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv"
+      ],
+      "pid": 46840,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10318669,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r013/package-call-model-v2/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 46845,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10318867,
+      "returncode": 0
+    },
+    {
+      "name": "offline-nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 46849,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10319401,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r013/check-input-v2/test_nvidia_machine_map.py"
+      ],
+      "pid": 46853,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320088,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r013/check-input-v2/test_public_timeline_contract.py"
+      ],
+      "pid": 46857,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320125,
+      "returncode": 0
+    },
+    {
+      "name": "real-object-reinspection-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r013/check-input-v2/p01_nvidia_counter_map_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/reinspection-normal"
+      ],
+      "pid": 46921,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320269,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r013/check-input-v2/test_nvidia_machine_map.py"
+      ],
+      "pid": 46922,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320301,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r013/check-input-v2/test_public_timeline_contract.py"
+      ],
+      "pid": 46926,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320347,
+      "returncode": 0
+    },
+    {
+      "name": "real-object-reinspection-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r013/check-input-v2/p01_nvidia_counter_map_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r013/runs/install-v2/output/reinspection-optimized"
+      ],
+      "pid": 46990,
+      "ppid": 46839,
+      "pgid": 46839,
+      "startticks": 10320495,
+      "returncode": 0
+    }
+  ]
+}

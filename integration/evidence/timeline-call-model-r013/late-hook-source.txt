@@ -1,0 +1,93 @@
+FILE third_party/nvidia/backend/compiler.py
+464         pm.run(mod, 'gluon_to_ttgir')
+465         metadata["tensordesc_meta"] = mod.get_tensordesc_metadata()
+466         return mod
+467 
+468     def make_llir(self, src, metadata, options, capability):
+469         ptx_version = get_ptx_version_from_options(options, self.target.arch)
+470 
+471         mod = src
+472         # TritonGPU -> LLVM-IR (MLIR)
+473         pm = ir.pass_manager(mod.context)
+474         pm.enable_debug()
+475 
+476         passes.ttgpuir.add_combine_tensor_select_and_if(pm)
+512         if not knobs.compilation.disable_line_info and not knobs.compilation.dump_ir_extract_di_local_variables:
+513             passes.llvmir.add_di_scope(pm)
+514 
+515         if CUDABackend.instrumentation:
+516             CUDABackend.instrumentation.patch("llvmir_to_llvm", pm, mod.context)
+517 
+518         pm.run(mod, 'make_llir')
+519         finish_deferred_raw_materialize()
+520 
+521         if knobs.compilation.dump_ir_extract_di_local_variables:
+522             # comments below on why separate it
+523             if not knobs.compilation.disable_line_info:
+524                 pm = ir.pass_manager(mod.context)
+554         if options.extern_libs and nvidia.has_extern_deps(llvm_mod):
+555             paths = [path for (name, path) in options.extern_libs]
+556             llvm.link_extern_libs(llvm_mod, paths)
+557 
+558         llvm.optimize_module(llvm_mod, llvm.OPTIMIZE_O3)
+559 
+560         # Get some metadata
+561         # warp-specialization mutates num_warps
+562         total_num_warps = src.get_int_attr("ttg.total-num-warps")
+563         if total_num_warps is not None:
+564             metadata["num_warps"] = total_num_warps
+565         metadata["shared"] = src.get_int_attr("ttg.shared")
+566         metadata["tmem_size"] = src.get_int_attr("ttg.tensor_memory_size")
+FILE python/src/llvm.cc
+412       .def(py::init<>());
+413   py::class_<llvm::SourceMgr>(m, "source_mgr", py::module_local())
+414       .def(py::init<>());
+415 
+416   py::class_<llvm::Module::FunctionListType>(m, "function_list")
+417       .def(
+418           "__iter__",
+419           [](llvm::Module::FunctionListType &s) {
+420             return py::make_iterator(s.begin(), s.end());
+421           },
+422           py::keep_alive<0, 1>());
+423 
+424   // Module Flag behavior. See
+423 
+424   // Module Flag behavior. See
+425   // https://llvm.org/doxygen/classllvm_1_1Module.html#a0a5c55e12c97b80021330fe82b642293
+426   // for details.
+427   py::class_<llvm::Module::ModFlagBehavior>(m, "module_flag_behavior",
+428                                             py::module_local());
+429   m.attr("MODULE_FLAG_BEHAVIOR_ERROR") = llvm::Module::Error;
+430   m.attr("MODULE_FLAG_BEHAVIOR_WARNING") = llvm::Module::Warning;
+431   m.attr("MODULE_FLAG_BEHAVIOR_REQUIRE") = llvm::Module::Require;
+432   m.attr("MODULE_FLAG_BEHAVIOR_OVERRIDE") = llvm::Module::Override;
+433   m.attr("MODULE_FLAG_BEHAVIOR_APPEND") = llvm::Module::Append;
+434   m.attr("MODULE_FLAG_BEHAVIOR_APPEND_UNIQUE") = llvm::Module::AppendUnique;
+435   m.attr("MODULE_FLAG_BEHAVIOR_MAX") = llvm::Module::Max;
+434   m.attr("MODULE_FLAG_BEHAVIOR_APPEND_UNIQUE") = llvm::Module::AppendUnique;
+435   m.attr("MODULE_FLAG_BEHAVIOR_MAX") = llvm::Module::Max;
+436   m.attr("MODULE_FLAG_BEHAVIOR_MIN") = llvm::Module::Min;
+437 
+438   py::class_<llvm::Module>(m, "module", py::module_local())
+439       .def(
+440           "__str__",
+441           [](llvm::Module *self) {
+442             std::string str;
+443             llvm::raw_string_ostream os(str);
+444             os << *self;
+445             return os.str();
+446           },
+538     mod->setDataLayout(machine->createDataLayout());
+539   });
+540 
+541   m.def(
+542       "optimize_module",
+543       [](llvm::Module *mod, const llvm::OptimizationLevel &opt,
+544          std::string arch, std::string features, std::vector<std::string> flags,
+545          bool enable_fp_fusion) {
+546         if (mlir::triton::tools::getBoolEnv("DISABLE_LLVM_OPT"))
+547           return;
+548         auto options = llvm::cl::getRegisteredOptions();
+549         // Hack for the 3.6 release only. Vectorization of copyable elements
+550         // exposed a bug in ptxas. Manually disable it by modifying the command

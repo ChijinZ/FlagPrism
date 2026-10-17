@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 374860,
+    "ppid": 1,
+    "pgid": 374849,
+    "startticks": 1005368312
+  },
+  "worker": {
+    "pid": 374861,
+    "ppid": 374860,
+    "pgid": 374861,
+    "startticks": 1005368315
+  },
+  "argv": [
+    "/workspace/chijin-r15-python-alignment/venv/bin/python",
+    "-I",
+    "/tmp/chijin-timeline-r013-gcu-input/p01_enflame_dynamic_vertical.py",
+    "--output",
+    "/tmp/chijin-timeline-r013-gcu/run-v1/output"
+  ],
+  "argv_sha256": "f1182bd34611c15de9cc861320044dcaa19708aa8cd4b896e79928e03f41ab8c",
+  "script_sha256": "edaacda581fef0df8ae9b0143c31149b103ec0db1f1a572cd9b0291f70cd44c2",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 16442851361
+}
