@@ -219,6 +219,15 @@ class OwnerTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.pool.release('some-other-invocation')
 
+    def test_nonboolean_completion_cannot_authorize_readback(self):
+        a = self.prepare()
+        self.submit(a)
+        self.backend.ready = 1
+        with self.assertRaises(RuntimeError):
+            self.pool.read(a)
+        self.assertEqual(self.pool.snapshot(a)['state'], 'quarantined')
+        self.assertFalse(any(action[0] == 'read' for action in self.backend.actions))
+
 
 if __name__ == '__main__':
     unittest.main()

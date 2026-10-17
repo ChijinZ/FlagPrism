@@ -41,13 +41,13 @@ class TimelineOwnerPool:
         self.max_owners = max_owners
         self.guard_bytes = guard_bytes
         self.capture_id = 'timeline-' + uuid.uuid4().hex
-        self._thread = threading.get_ident()
+        self._thread = threading.current_thread()
         self._owners = {}
         self._bytes = 0
         self._closed = False
 
     def _check_thread(self):
-        if threading.get_ident() != self._thread:
+        if threading.current_thread() is not self._thread:
             raise RuntimeError('Timeline owner pool does not support host-thread sharing')
 
     def _owner(self, invocation_id):
