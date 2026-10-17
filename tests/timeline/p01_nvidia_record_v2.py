@@ -343,6 +343,27 @@ def main():
                         'Grid-map ordinary invocation was replayed or program mapping changed')
                 require(torch.equal(grid_input.cpu(), grid_input_cpu), 'Grid-map input changed')
         require(len(set(grid_hashes)) == 1, 'Runtime grid facts leaked into the binary cache key')
+        # Explicit advanced selection has its own binary-bound slot order;
+        # it must not accidentally use program IDs as physical slot offsets.
+        geometry, count, n = (3, 5, 1), 15, 957
+        for detailed in (False, True):
+            grid_output.fill_(-17.25)
+            grid_state.zero_()
+            launch = lambda token, warmup=False: grid_map.run(
+                grid_input, grid_output, grid_state, n, 64, grid=geometry,
+                num_warps=4, instrumentation_mode=token, warmup=warmup)
+            if detailed:
+                collect('grid-map-fixed-reordered', launch, (14, 0, 7))
+            else:
+                launch('')
+                calls.append({'name': 'grid-map-fixed-reordered', 'kind': 'ordinary'})
+            require(torch.allclose(grid_output[:n].cpu(),
+                grid_input_cpu[:n] * 0.625 + 0.25, rtol=2e-6, atol=2e-6),
+                'Fixed selection changed original math')
+            require(grid_state.cpu().tolist() == [1] * count,
+                    'Fixed selection changed ordinary program execution')
+            require(torch.equal(grid_output[n:].cpu(), torch.full((968-n,), -17.25)),
+                    'Fixed selection tail canary changed')
         save('result.json', {'status': 'real_record_v2_math_passed_not_full_P01',
                             'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                             'decoder_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
