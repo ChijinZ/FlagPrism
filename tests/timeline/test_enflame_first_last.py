@@ -142,6 +142,12 @@ class FirstLastTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'contradicts retained raw'):
             _validated_timeline_capture(normalized)
 
+    def test_other_advanced_lowering_cannot_silently_treat_first_last_as_all_grid(self):
+        from flagtree.profiler.observations_nvidia import lower_request
+        request=ObservationRequest(programs=None,program_policy='runtime_first_last',automatic=True)
+        with self.assertRaisesRegex(ValueError,'does not support this program policy'):
+            lower_request(request)
+
     def test_first_last_request_is_explicit_and_bounded(self):
         request=ObservationRequest(programs=None,program_policy='runtime_first_last',automatic=True,
                                    max_events_per_instance=4096)

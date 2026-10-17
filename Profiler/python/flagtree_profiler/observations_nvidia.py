@@ -245,6 +245,8 @@ def lower_request(request):
     value = request.as_dict() if hasattr(request, 'as_dict') else dict(request)
     automatic = value.get('automatic', False)
     max_sites = value.get('max_sites', 8)
+    if value.get('program_policy', 'fixed') not in ('fixed', 'all_grid_census'):
+        raise ValueError('This NVIDIA advanced-request lowering does not support this program policy; use detail=timeline for automatic first/last capture')
     if value.get('program_policy', 'fixed') == 'all_grid_census':
         if value.get('semantics') != ['counter'
                                       ] or value.get('programs') is not None:
