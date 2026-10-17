@@ -2,6 +2,7 @@
 import importlib
 import unittest
 from unittest.mock import patch
+from types import SimpleNamespace
 
 from flagtree.profiler.timeline_enflame import plan_enflame_storage
 
@@ -46,7 +47,7 @@ class EnflameDeferredTests(unittest.TestCase):
         guard = importlib.import_module('flagtree.debugger.graph_guard')
         import torch
         import torch_gcu  # noqa: F401
-        metadata = dict(debug_enabled=True, debug_launch_hidden_arg=True)
+        metadata = SimpleNamespace(debug_enabled=True, debug_launch_hidden_arg=True)
         for synchronize in [True, False]:
             actions = []
             prepared = api.PreparedKernelLaunch(kernel_args=(123,),
@@ -67,7 +68,7 @@ class EnflameDeferredTests(unittest.TestCase):
         prepared = api.PreparedKernelLaunch(kernel_args=(123,), synchronize=0)
         with patch.object(api, '_launch_prepare_hook', lambda *a: prepared):
             with self.assertRaises(TypeError):
-                api.prepare_kernel_launch(dict(debug_enabled=True), 0)
+                api.prepare_kernel_launch(SimpleNamespace(debug_enabled=True), 0)
 
 
 if __name__ == '__main__':
