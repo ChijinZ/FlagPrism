@@ -1569,6 +1569,9 @@ def _default_launch_prepare_hook(
                     "debug_record_layout") == "gcu_site_census_v1":
                 from .gcu_census import attach_export
                 exported_run = attach_export(exported_run, metadata_dict)
+            elif metadata_dict.get('debug_record_layout') == 'gcu_first_last_timeline_v2':
+                from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
+                exported_run = attach_enflame_timeline_export(exported_run, metadata_dict)
             elif metadata_dict.get("debug_record_layout") in {
                     "ascend_source_census_v1", "ascend_source_census_v2",
                     "ascend_source_census_v3"

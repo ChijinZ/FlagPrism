@@ -31,7 +31,7 @@ def main():
     from flagtree.debugger import api
     from flagtree.debugger.native import runtime_binding,compiler_binding
     from flagtree.profiler.hooks.timeline import _persist
-    from flagtree.profiler.timeline_events_enflame import canonicalize_enflame_capture
+    from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
     need(runtime_binding().GCU_TIMELINE_STORAGE_VERSION==2 and
          compiler_binding().GCU_TIMELINE_STORAGE_VERSION==2, 'Wrong native storage ABI')
     torch.gcu.set_device(0)
@@ -87,8 +87,12 @@ def main():
             _persist(prefix.with_suffix('.input.json'),
                      (json.dumps(dict(capture=capture,compiler_metadata=actual),indent=2,default=str)+'\n').encode())
             handle.release();owners.remove(handle)
-            canonical=canonicalize_enflame_capture(capture,compiler_metadata=actual,
-                capture_id='producer-probe-'+uuid.uuid4().hex)
+            run['runtime_metadata']=runtime_actual
+            published=attach_enflame_timeline_export(run,actual,capture_id='producer-probe-'+uuid.uuid4().hex)
+            canonical=published['canonical_timeline']
+            # The development transport publishes the same real export as the
+            # product default path; no synthetic/native record reconstruction.
+            api._exported_runs.append(published)
             _persist(prefix.with_suffix('.events.json'),(json.dumps(canonical,indent=2)+'\n').encode())
             records.append(dict(capture_file=str(prefix.with_suffix('.input.json')),
                 canonical_file=str(prefix.with_suffix('.events.json')),raw_file=str(prefix.with_suffix('.raw')),

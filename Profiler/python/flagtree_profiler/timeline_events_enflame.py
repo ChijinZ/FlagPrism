@@ -211,3 +211,57 @@ def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
         _need(set(first['backend_record_map'][key]).isdisjoint(mapping), 'Aliased native pair identity')
         first['backend_record_map'][key].update(mapping)
     return validate_raw_batch(first)
+
+
+def attach_enflame_timeline_export(exported_run, compiler_metadata, *, capture_id=None):
+    """Attach validated common events and source-navigation rows to an SDK export.
+
+    These rows carry observer elapsed semantics and unverified clocks. They do
+    not turn a source location into certified operation cost or hardware busy.
+    The caller owns safe device completion and durable raw retention.
+    """
+    import copy
+    import uuid
+    from .observations import observation
+    _need(type(exported_run) is dict and
+          type(exported_run.get('raw_buffer')) in (bytes,bytearray), 'Actual exported raw bytes are required')
+    raw=bytes(exported_run['raw_buffer'])
+    runtime=copy.deepcopy(exported_run.get('runtime_metadata'))
+    _need(type(runtime) is dict, 'Actual launch runtime metadata is required')
+    runtime['grid']=list(runtime.get('grid',()))
+    namespace=capture_id or 'gcu-timeline-'+uuid.uuid4().hex
+    capture=dict(capture_status='raw_complete',record_layout=runtime.get('record_layout'),
+        runtime_metadata=runtime,raw_base64=base64.b64encode(raw).decode(),
+        raw_sha256=hashlib.sha256(raw).hexdigest())
+    batch=canonicalize_enflame_capture(capture,compiler_metadata=compiler_metadata,capture_id=namespace)
+    runtime['capture_id']=namespace
+    observers={row['id']:row for row in batch['observers']}
+    sites={row['id']:row for row in batch['sites']}
+    refs={row['id']:row for row in batch['records']}
+    grid=runtime['grid']
+    rows=[]
+    for event in batch['events']:
+        observer=observers[event['observer_id']]
+        x,y,z=observer['program_coordinates']
+        rows.append(observation(dict(id=event['id'],capture_id=namespace,
+            invocation_id=runtime['profiler_invocation_id'],binary_id=batch['identity']['binary_id'],
+            canonical_invocation_id=batch['identity']['invocation_id'],
+            association_status='verified',association_evidence=runtime['profiler_association_evidence'],
+            source='flagtree_ir_dynamic',semantic='observer_region_elapsed',storage='selected_dynamic_append',
+            program=x+grid[0]*(y+grid[1]*z),actor=int(observer['local_id']),
+            site=int(sites[event['site_id']]['backend_site_id']),occurrence=event['occurrence'],iteration=None,
+            start_tick=event['start_tick'],end_tick=event['end_tick'],
+            clock=dict(domain=observer['clock_domain_id'],scope=observer['id'],alignment='unverified',
+                       tick_ns=None,wrap_bits=observer['timer_bits']),
+            original_record=dict(canonical_event=event,raw_fields=[refs[r] for r in event['record_ids']],
+                                 raw_artifact=batch['raw_artifact']),
+            observer_complete=observer['complete'],dropped_endpoint_references=observer['dropped_records'],
+            limits=['Observer counter bracket; final source-region boundary is unverified.',
+                    'Raw ticks are not ns or a certified shared epoch.',
+                    'Occurrence is pair completion order, not a loop iteration.'])))
+    result=dict(exported_run,runtime_metadata=runtime,canonical_timeline=batch,
+        debug_kernel_name=compiler_metadata.get('debug_kernel_name',''),
+        debug_tracked_table=copy.deepcopy(compiler_metadata.get('debug_tracked_table',[])),
+        decoded=dict(records=[],dropped=sum(o['dropped_records']//2 for o in batch['observers']),
+                     complete=batch['complete']),semantic_observations=rows,capture_status='decoded')
+    return result

@@ -152,6 +152,8 @@ def _take_instrumentation_runs() -> list[dict]:
             list(run.get("debug_tracked_table") or []),
             "semantic_observations":
             run.get("semantic_observations") or [],
+            "canonical_timeline":
+            run.get("canonical_timeline"),
             "source_census":
             run.get("source_census"),
             "raw_encoding":

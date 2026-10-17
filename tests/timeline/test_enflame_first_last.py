@@ -99,6 +99,24 @@ class FirstLastTests(unittest.TestCase):
         second=canonicalize_enflame_capture(capture,compiler_metadata=metadata,capture_id='different-owner')
         self.assertNotEqual(first['identity'],second['identity'])
 
+    def test_advanced_export_uses_exact_rows_and_separate_unverified_clocks(self):
+        from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
+        from flagtree.profiler.observations import from_ir_runs
+        capture,metadata=fixture()
+        source=dict(raw_buffer=base64.b64decode(capture['raw_base64']),
+                    runtime_metadata=capture['runtime_metadata'],meta={})
+        result=attach_enflame_timeline_export(source,metadata,capture_id='actual-export-owner')
+        rows=from_ir_runs([result])
+        self.assertEqual(len(rows),4)
+        self.assertTrue(all(row['semantic']=='observer_region_elapsed' for row in rows))
+        self.assertTrue(all(row['duration_ns'] is None for row in rows))
+        self.assertEqual({row['program'] for row in rows},{0,5})
+        self.assertEqual(len({row['clock']['domain'] for row in rows}),2)
+        self.assertTrue(all(row['clock']['alignment']=='unverified' for row in rows))
+        self.assertEqual(result['raw_buffer'],source['raw_buffer'])
+        self.assertNotIn('capture_id',source['runtime_metadata'])
+        self.assertEqual(result['canonical_timeline']['raw_artifact']['sha256'],capture['raw_sha256'])
+
     def test_first_last_request_is_explicit_and_bounded(self):
         request=ObservationRequest(programs=None,program_policy='runtime_first_last',automatic=True,
                                    max_events_per_instance=4096)

@@ -13,6 +13,7 @@ SEMANTICS = frozenset({
     'wait_bracket',
     'completion_checkpoint',
     'source_control_interval',
+    'observer_region_elapsed',
     'native_lifecycle',
     'engine_activity',
     'counter',
