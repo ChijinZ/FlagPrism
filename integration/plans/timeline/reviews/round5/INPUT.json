@@ -1,0 +1,49 @@
+{
+  "scope": "Independent design feasibility review; documentation only; no new implementation, server, device or paper changes",
+  "source_head": "f5731a08dbeebff633e416233b5faf857f1fc7da",
+  "inputs": {
+    "Profiler/docs/timeline_design.md": {
+      "bytes": 51039,
+      "sha256": "7dcca82b6e863327ad4ec66fd0097c591e42d5b6e47bbcad9698fb3d55d996d9"
+    },
+    "Profiler/docs/timeline_testing.md": {
+      "bytes": 34497,
+      "sha256": "e11795135f626c555e6e8b85909567008a04d8c0ab5bf4e08872972749151654"
+    },
+    "Profiler/docs/timeline_runtime.md": {
+      "bytes": 5794,
+      "sha256": "6e4c8aecc016c4d8f65660e1c1e7a5cc8a7bc0f829de265d781d791788fb756c"
+    },
+    "Profiler/docs/timeline_events.md": {
+      "bytes": 3641,
+      "sha256": "c41f6949d41f0f5596c358e1a4d0382edda091e2de66a51a1d31184a171527ee"
+    },
+    "integration/plans/timeline/goal_prompt.md": {
+      "bytes": 18399,
+      "sha256": "7f1e288720694faa702262080298f8efd9caa62d5bffc4af80095f918cff4932"
+    }
+  },
+  "reviewers": [
+    {
+      "role": "R1 compiler and boundaries",
+      "agent": "/root/design5_compiler",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    },
+    {
+      "role": "R2 runtime clock and dependency",
+      "agent": "/root/design5_runtime",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    },
+    {
+      "role": "R3 portability and Perfetto acceptance",
+      "agent": "/root/design5_portability",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    }
+  ]
+}

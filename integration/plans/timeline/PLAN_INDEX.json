@@ -1,25 +1,25 @@
 {
-  "scope": "Fourth independent documentation design feasibility review; no product changes or new device execution",
+  "scope": "Fifth independent documentation design feasibility review; component compatibility and scoped qualification; no product changes or new device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "design_revision_from_commit": "dad8e7c98632ef7cbd2b4677d9c5101a517a88dc",
+  "design_revision_from_commit": "f5731a08dbeebff633e416233b5faf857f1fc7da",
   "root_contract_sha256": "7f1e288720694faa702262080298f8efd9caa62d5bffc4af80095f918cff4932",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 111,
+  "local_links_checked": 122,
   "review_initials_preserved": true,
   "historical_round1_followups_bound_to_commit": "2932311bd103db9b2eeea8fa8ca0574befc913b7",
   "historical_round2_followups_bound_to_commit": "d109df5",
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 47143,
-      "sha256": "8c4014188a6033145075446e75061c52a3027e26555d0b31061f84b8e539652f"
+      "bytes": 52970,
+      "sha256": "d0de195519df76018b752933a79089ad2c009923ec0e4ff3f4d5f1b43cb32cdd"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 33003,
-      "sha256": "193b60a0c643622af39642e6792e6d3c7d6a0852b6468e8d4fd618f28a8d35c7"
+      "bytes": 34821,
+      "sha256": "2a4553b4c31a16a6371d87c72c71faff09ccbc64beb691aed5e7a4ce1714664b"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 2717,
-      "sha256": "e82eeeae345d60d04f83cb756ec0cb6929cbb36a0320e07ae76bbb14fe10718d"
+      "bytes": 2931,
+      "sha256": "120873e7298008ae8364ebdef5102eb593899361fc0c839a6b8b37b2d8eb8c63"
     },
     "integration/plans/timeline/goal_prompt.md": {
       "bytes": 18399,
@@ -180,8 +180,49 @@
     "integration/plans/timeline/reviews/round4/REQUEST.json": {
       "bytes": 1405,
       "sha256": "901155ed3efc551c4604400a87743c88537e16f01f09a5c6d3de30b7dccb1ffb"
+    },
+    "integration/plans/timeline/reviews/round5/FOLLOWUP_INPUT.json": {
+      "bytes": 1204,
+      "sha256": "5a8f67d4c026001b1605c5950e2df5bb5daee6c72cf8008363d3e0d3531f3ef7"
+    },
+    "integration/plans/timeline/reviews/round5/INITIAL_DOCS.patch": {
+      "bytes": 8006,
+      "sha256": "617a27e02179335e286e374a4fced54f7a4511c096690122aa785fbcd7244270"
+    },
+    "integration/plans/timeline/reviews/round5/INPUT.json": {
+      "bytes": 1668,
+      "sha256": "5d38b26fb5bf3c6bf0410dfc9fe47f54d2e7cafb9cff7d0b92a594e1596a4303"
+    },
+    "integration/plans/timeline/reviews/round5/R1-compiler.md": {
+      "bytes": 9744,
+      "sha256": "7cef8110cec0b6527d0db36ff04365f49c01e4df79d82ad3b230f7cab711418f"
+    },
+    "integration/plans/timeline/reviews/round5/R1-followup.md": {
+      "bytes": 2940,
+      "sha256": "67747a01228a591117703b64c1aa12bf9149575efcd4416c367b6cbbbbb09556"
+    },
+    "integration/plans/timeline/reviews/round5/R2-followup.md": {
+      "bytes": 2772,
+      "sha256": "89c01a8582a997aea79e2a06e0c6ba0eb1f14473dd5a076696896fae32c53547"
+    },
+    "integration/plans/timeline/reviews/round5/R2-runtime.md": {
+      "bytes": 10198,
+      "sha256": "48c287965bf92b47dae5b45338a8cffb1e542a5981e0c196c28133518659331e"
+    },
+    "integration/plans/timeline/reviews/round5/R3-followup.md": {
+      "bytes": 3783,
+      "sha256": "2a5ee080072945182b791eaf5016e2d7d15a04977da3a9539b6ee6e30d2b70f7"
+    },
+    "integration/plans/timeline/reviews/round5/R3-portability.md": {
+      "bytes": 11126,
+      "sha256": "22a0d3c895c44759657dea3ab403d0486e790787974ecc12c9ea97731fbd4e60"
+    },
+    "integration/plans/timeline/reviews/round5/README.md": {
+      "bytes": 3612,
+      "sha256": "9917a68667a77eba1eba2f2b406003ec293d2bd555bce27a87ef78dcc41952e5"
     }
   },
   "historical_round3_followups_bound_to_commit": "dad8e7c98632ef7cbd2b4677d9c5101a517a88dc",
-  "current_round4_followups_match_final_document_sha256": true
+  "historical_round4_followups_match_their_frozen_document_sha256": true,
+  "current_round5_followups_match_final_document_sha256": true
 }

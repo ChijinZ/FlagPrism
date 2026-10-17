@@ -1,0 +1,39 @@
+--- a/Profiler/docs/timeline_design.md
++++ b/Profiler/docs/timeline_design.md
+@@ -299,6 +299,24 @@
+ 
+ **时间视图是派生数据，不改变 raw 合同。** raw ticks、来源和丢失信息不可变；clock provider 提供适用目标、getter、比例/误差、有效窗口和比较范围。公共层由这些证明生成独立的 ns 视图，exporter 只消费通过资格检查的视图与 edge。未验证的 raw 区间和逻辑 group 仍可保留，但不能因 exporter 能读它们就获得 ns 或时间箭头资格。clock 失效时重新验证或明确 partial，不重新运行应用来补数据。
+ 
++**部件组合要检查兼容条件，而不只检查注册成功。** 每个实际被调用的部件提供版本化描述，至少覆盖下表。描述由已安装实现/实际产物产生，配置不能自行授予 verified。这里是数据合同，不要求新建五套类或实现通用插件系统。
++
++| 兼容轴 | 至少核对什么 | 何时绑定 |
++| --- | --- | --- |
++| 编译接入 | target 条件、compiler/plugin 内容身份、manifest 版本、边界/marker 约束、隐藏 launch ABI | 缓存查询前绑定实现依赖；编译后核实际 manifest/产物 |
++| 记录生产与解码 | logger/storage ABI、完整 timer 位宽、header/stride/alignment、发布协议、物理 program/observer 映射 | 计划中提供布局公式；启动前核当前 grid 的实际容量，解码再核 raw header/commit |
++| transport 与 owner | device/context/stream 类型、初始化和完成条件、可回收条件、支持的并发范围 | 每次启动绑定；不能复用上一调用的完成句柄 |
++| clock provider | 实际 getter/目标条件、tick 格式、比例与误差、有效窗口、epoch/可比范围 | 静态实现进入缓存身份；本次设备/epoch 资格在 capture 绑定 |
++| mechanism mapper | 机制与规则版本、依赖的 manifest/记录字段、状态变更覆盖、动态 token/generation 来源 | 编译对象核覆盖，运行时记录核本次路径和损失 |
++
++组合选择失败必须指出冲突的两端、预期/实际版本和失败阶段。静态已知冲突在本次 launch/设备记录初始化前拒绝；只能从实际 raw 识别的问题保原件并拒绝对应解释，不逆称已在启动前发现。声明兼容的部件仍须通过同一实际设备路径，不能用手写描述绕过检查。跨版本兼容若允许，列出具体兼容规则与正负例；未知必需版本明确拒绝。不同型号可共享 decoder 而使用不同 clock provider，同一目标也可按实际机制选择多个 mapper。
++
++**资格按观测结论授予，不是全 bundle 一次盖章。** 至少区分 raw 完整性、源码导航、最终区域边界、时间尺度、跨 observer 可比性、动态逻辑关联、物理 buffer 复用及原生引擎活动。它们各自绑定所需的 binary/site/observer/clock/mechanism 与 capture 范围。时钟比例正确不证明某源码区域被包住；marker 对应机器 PC 不证明区域内部指令未越界；完整逻辑组不证明物理 buffer generation。一个 site 的合格证明不能覆盖其它 site，一个 clock domain 的证明不能覆盖另一个 domain。
++
++公共层对请求的结论核其全部前提，并输出缺失的具体依据：例如合格时钟下的真实 counter 间隔可显示为 observer elapsed，但没有区域边界证据时不标为该源操作耗时；两端动态身份正确而缺跨域对齐时只保依赖事实，不画共同时间轴上的箭头。`partial` 的有效子集可以查看，但正常完整资格的必需项仍逐项检查，不能挑成功 site 充当全样本通过。以后补充证明只创建新派生视图，保旧 raw 和旧判定/所用 proof 身份；不重跑应用、不原地把旧结论改成已验证。
++
++**先建立可复现的最小证明，再扩大采集。** 每后端的第一份接入清单须明确以下四项：已存在且可复用的代码调用点、尚需实现的通用机制、物理语义的实际来源、能否用当前 SDK 取得的待验证证据。缺少最终边界证据时检查实际 lowering/依赖约束与机器对象；缺少 clock 证据时先做 getter/尺度/窗口验证；缺少物理 generation 时检查真实地址/slot 与控制路径的来源。不得先复制 NVIDIA 路径再靠调展示掩盖缺口；也不预先断言厂商 SDK 无法支持。每项失败保最小输入、命令、产物与失败阶段，区分实现缺失、尚未核验与实际环境/SDK 限制。
++
+ **实施和放行分段，完整门槛不降低：**
+ 
+ ```text
+--- a/Profiler/docs/timeline_testing.md
++++ b/Profiler/docs/timeline_testing.md
+@@ -210,6 +210,9 @@
+ | P06/P08：raw 与 ns 分离 | 同一原始 batch 分别提供有效、缺失、过期和错目标 clock proof；真实设备正例与合成负例明确区分 | 原 raw SHA 不变；只有有效证明生成 ns 派生视图，保原 tick/转换/误差证据；无效 proof 明确 partial/拒绝，无静默 ns 或跨域箭头，不重放应用 |
+ | P07/P08：机制与展示分离 | 三后端各一份实际异步/两轮复用样本；共同依赖消费者与 exporter 处理机制事实；以批量/部分 wait/多消费者 fixture 补合同 | group 集合、buffer/flag 代际及完整引用保持；未知状态无伪 flow。显示名称和扩展属性可异，但时钟/edge 的资格判断不按厂商补分支 |
+ | P08/P09：公共导出可复用 | 冻结公共 exporter/SQL 语义的版本；对三个后端实际 canonical/ns 数据运行同一消费入口，再实际导入 Trace Processor/UI | 保证单位、identity、source、loss、flow 的同义检查；可按 semantic 查询，不靠放宽某厂商 SQL 让其通过。新增真实公共概念可版本化修改，并回归已有实现 |
++| P02/P05/P10：独立部件兼容轴 | 从已使用的三后端组合出发，分别改变 compiler/manifest、storage/logger、transport/launch、clock getter、mechanism rule 的一项必需版本或条件；每项先有合法组合对照 | 实际调用的组合检查拒绝已知不相容项，诊断含冲突两端/预期/实际/阶段；启动前已知冲突无该调用设备写入/初始化。只能在 raw 阶段发现的问题保原件并拒绝解释；未知必需版本不获兼容。CPU fixture 只证明合同，不能声称额外硬件支持 |
++| P03/P06/P07/P08：资格范围隔离 | 同 batch 至少两个 site/observer，分别使一个区域边界缺证、一个 clock 过期或一个 mechanism 不完整；另测仅有 counter PC 映射而无区域顺序证明 | 不把一个有效证明扩散给其它 site/domain/机制；时钟合格不使源区域边界自动合格，机器 PC 映射不等于区域边界，逻辑组不等于物理 generation。有效子集明确 partial；完整资格仍按原必需范围判失败，不能缩分母 |
++| P06/P08：补证与重复导出 | 固定原件和应用调用次数，对同 raw 留存初次判定，再添加范围匹配的有效 proof 重新派生；以错 binary/epoch 的 proof 作负例 | 原 raw 与初次报告 SHA 不变，新视图引用 proof 和旧输入身份；无应用重放。导出和 SQL 只准展示具备该结论全部前提的字段/edge，未满足源边界的 counter 间隔不得冒充源操作耗时 |
+ | P01/P09：阶段与成本证据 | 每后端分别登记设计 A/B/C/D 的结果及证据路径，指出新增/复用/仍缺部件 | A/B 不冒充 P01；C 仍满足完整 P01；D 满足最终合同。以实际修改范围说明成本，不用工期承诺、代码行数或假目标注册声称新增芯片已容易适配 |
+ 
+ 设计中“无需公共层新增厂商分支”通过代码走查加三后端真实消费验证，不要求通用 schema 永远不变。公共版本变化必须说明不可表达的新事实、兼容策略及已有后端回归；合理扩展不算失败。共同消费者可以按明确的 event semantic/clock 资格处理数据，不能把异构细节抹成最小公共指标。

@@ -162,7 +162,7 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 - **缓存与目标身份**：同 specialization 改真实 launch grid（含 1D/2D、单 program、零 grid、tail），首末坐标/admission 不串；内存/磁盘缓存查询前取得 SDK/timer/plugin/rule 的实际依赖身份。本次 epoch 不从历史 bundle 继承。
 - **合同与扩展**：第一真实链之后冻结设计 §8.6 的小版本及实例；错类型/core 覆写/未知必需语义/悬空 group/source/binary 引用显式拒绝，ordinary eligibility、target 能力、本次 plan/outcome 不相互覆写。每 slice/flow 保所有端点与组成员所需 raw 证据。
 
-三份设计评审及处置见 [评审记录](../../integration/plans/timeline/reviews/README.md)。这些检查均待实现后执行；评审确认设计合理不等于 timer/epoch、编译顺序、发布可见性或 Perfetto 已通过。
+历史设计评审见 [评审记录](../../integration/plans/timeline/reviews/README.md)，本轮适配边界与资格范围评审见 [最新评审及处置](../../integration/plans/timeline/reviews/round5/README.md)。这些检查均待实现后执行；评审确认设计合理不等于 timer/epoch、编译顺序、发布可见性或 Perfetto 已通过。
 
 ### 8.3 后端交接与 owner 生命周期的具体判定
 
@@ -173,7 +173,7 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 | P03/P09 | 逐后端列出能力解析、计划、启动、完成、解码、机制映射的真实实现位置 | 输入/输出版本及公共消费者调用点；没有使用的空接口不算复用。通用结构修复可接受，按算子名/shape 派发插桩不可接受 |
 | E01/E03/P10 | 对预登记支持 two-stream 的后端，在两个 stream 交错多 invocation，改变输入/grid/specialization，提交结束后才显式等待 | owner 快照、buffer 标识、原 stream 上完成依赖、实际 launch/host-wait 顺序与输出；先前 owner 不被覆盖，无逐 launch host wait。CPU 模拟仅补状态机，不能替代真实两 stream |
 | E02/E04/P05 | 单调用满足预算但 pending 累积超过 session 字节/owner 上限；另测 grid 改变和 header/padding | admission 在产生被拒调用的设备副作用前完成；不大分配后补检查、不靠隐藏强同步清空队列。已有在途调用安全完成；报错与本次未执行状态明确 |
-| E05/P10 | 在提交前、提交后未完成、完成后 D2H、decode/export 阶段分别注入异常 | 逐阶段状态/owner/资源证据；未提交可释放，已提交无完成证明不得释放或重用；超时仍在写时隔离资源并明确 session 失败。隔离资源的失败 session 不要求原地复用；写者结束、安全清理后的新合法 session 必须可运行 |
+| E05/P10 | 在纯 admitted、初始化部分写入后失败、初始化成功但 kernel 未提交、提交后未完成、完成后 D2H、decode/export 阶段分别注入异常 | 逐阶段状态/owner/资源证据；只有未分配或已证明无任何设备写入者可直接取消回收；初始化也算潜在在途写者，armed/submitting/quarantined 无覆盖全部写入的完成证明不得释放或重用；超时仍在写时隔离资源并明确 session 失败。隔离资源的失败 session 不要求原地复用；写者结束、安全清理后的新合法 session 必须可运行 |
 | E05/P08 | 同一 raw 原件首次导出失败后重导 | 不再次调用用户算子，raw SHA 不变，重导结果与同版本直接导出语义一致；保原失败。失败前未取得完整 raw 时不能伪称可离线恢复 |
 | P06/P07 | 后端提供错误 clock 资格、串 invocation group、丢 commit、错误 generation 或越界 raw 引用 | 公共验证器实际拒绝/partial，不因后端声明 verified 而通过；真实机制语义仍用实际 IR/ISA/SDK 对照，不能仅用两个共享错误逻辑的模块互证 |
 | P09/P10 | 将第二、第三后端逐项接入，审计公共/后端 diff 并回归已有实现 | 导出、身份、时钟算术和依赖完整性走共同合同；物理 ABI 和机制识别可不同。必要的公共版本修改须有原因与旧后端回归；不要求零公共改动或承诺第四芯片适配时间 |
@@ -210,6 +210,9 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 | P06/P08：raw 与 ns 分离 | 同一原始 batch 分别提供有效、缺失、过期和错目标 clock proof；真实设备正例与合成负例明确区分 | 原 raw SHA 不变；只有有效证明生成 ns 派生视图，保原 tick/转换/误差证据；无效 proof 明确 partial/拒绝，无静默 ns 或跨域箭头，不重放应用 |
 | P07/P08：机制与展示分离 | 三后端各一份实际异步/两轮复用样本；共同依赖消费者与 exporter 处理机制事实；以批量/部分 wait/多消费者 fixture 补合同 | group 集合、buffer/flag 代际及完整引用保持；未知状态无伪 flow。显示名称和扩展属性可异，但时钟/edge 的资格判断不按厂商补分支 |
 | P08/P09：公共导出可复用 | 冻结公共 exporter/SQL 语义的版本；对三个后端实际 canonical/ns 数据运行同一消费入口，再实际导入 Trace Processor/UI | 保证单位、identity、source、loss、flow 的同义检查；可按 semantic 查询，不靠放宽某厂商 SQL 让其通过。新增真实公共概念可版本化修改，并回归已有实现 |
+| P02/P05/P10：独立部件兼容轴 | 从已使用的三后端组合出发，分别改变 compiler/manifest、storage/logger、transport/launch、clock getter、mechanism rule 的一项必需版本或条件；每项先有合法组合对照 | 实际调用的组合检查拒绝已知不相容项，诊断含冲突两端/预期/实际/阶段；启动前已知冲突无该调用设备写入/初始化。只能在 raw 阶段发现的问题保原件并拒绝解释；未知必需版本不获兼容。CPU fixture 只证明合同，不能声称额外硬件支持 |
+| P03/P06/P07/P08：资格范围隔离 | 同 batch 至少两个 site/observer，分别使一个区域边界缺证、一个 clock 过期或一个 mechanism 不完整；另测仅有 counter PC 映射而无区域顺序证明 | 不把一个有效证明扩散给其它 site/domain/机制；时钟合格不使源区域边界自动合格，机器 PC 映射不等于区域边界，逻辑组不等于物理 generation。有效子集明确 partial；完整资格仍按原必需范围判失败，不能缩分母 |
+| P06/P08：补证与重复导出 | 固定原件和应用调用次数，对同 raw 留存初次判定，再添加范围匹配的有效 proof 重新派生；以错 binary/epoch 的 proof 作负例 | 原 raw 与初次报告 SHA 不变，新视图引用 proof 和旧输入身份；无应用重放。导出和 SQL 只准展示具备该结论全部前提的字段/edge，未满足源边界的 counter 间隔不得冒充源操作耗时 |
 | P01/P09：阶段与成本证据 | 每后端分别登记设计 A/B/C/D 的结果及证据路径，指出新增/复用/仍缺部件 | A/B 不冒充 P01；C 仍满足完整 P01；D 满足最终合同。以实际修改范围说明成本，不用工期承诺、代码行数或假目标注册声称新增芯片已容易适配 |
 
 设计中“无需公共层新增厂商分支”通过代码走查加三后端真实消费验证，不要求通用 schema 永远不变。公共版本变化必须说明不可表达的新事实、兼容策略及已有后端回归；合理扩展不算失败。共同消费者可以按明确的 event semantic/clock 资格处理数据，不能把异构细节抹成最小公共指标。

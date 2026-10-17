@@ -12,7 +12,9 @@ document revision starts no device experiment.
 - [Second design review](reviews/round2/README.md): refined backend handoffs, lifecycle and evidence gates, plus limited followups.
 - [Third design review and disposition](reviews/round3/README.md): three fresh independent feasibility reviews of the minimal backend contract, compact storage and capability progression. Design reviews do not replace final implementation code reviews.
 
-- [Current design feasibility review](reviews/round4/README.md): component composition, target/toolchain reuse, immutable raw and certified time views, staged acceptance, and three independent reviews.
+- [Fourth design feasibility review](reviews/round4/README.md): component composition, target/toolchain reuse, immutable raw and certified time views, staged acceptance, and three independent reviews.
+
+- [Latest independent design review](reviews/round5/README.md): explicit component compatibility, per-conclusion proof scope, initialization-safe reclamation, and three independent reviews with limited follow-ups.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish
