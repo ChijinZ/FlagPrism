@@ -35,6 +35,9 @@ namespace triton {
 namespace proton::gpu {
 
 Value getLinearCTAId(Location loc, ConversionPatternRewriter &rewriter);
+// Physical record slot, distinct from the logical CTA identity in the header.
+Value getProgramCollectionSlot(ModuleOp mod, Location loc,
+                               ConversionPatternRewriter &rewriter);
 Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
                                     ConversionPatternRewriter &rewriter);
 

@@ -14,6 +14,7 @@
 #include "triton/Dialect/Triton/IR/Dialect.h"
 #include "triton/Dialect/TritonGPU/IR/Dialect.h"
 #include "llvm/Support/Debug.h"
+#include "llvm/ADT/DenseSet.h"
 #include "llvm/Support/MathExtras.h"
 #include <algorithm>
 
@@ -431,6 +432,30 @@ public:
   void runOnOperation() override {
     ModuleOp m = getOperation();
     Location loc = m->getLoc();
+
+    if (m->hasAttr("proton.timeline_storage_version")) {
+      auto storage = m->getAttrOfType<IntegerAttr>(
+          "proton.timeline_storage_version");
+      auto record = m->getAttrOfType<IntegerAttr>(
+          "proton.timeline_record_version");
+      if (!storage || storage.getInt() != 1 || !record || record.getInt() != 2) {
+        m.emitError("Compact timeline storage requires storage v1 and record v2");
+        return signalPassFailure();
+      }
+      if (auto programs = m->getAttrOfType<DenseI32ArrayAttr>(
+              "proton.selected_programs")) {
+        llvm::SmallDenseSet<int32_t, 8> seen;
+        for (int32_t program : programs.asArrayRef())
+          if (program < 0 || !seen.insert(program).second) {
+            m.emitError("Compact timeline program identities must be unique and nonnegative");
+            return signalPassFailure();
+          }
+        if (seen.empty()) {
+          m.emitError("Compact timeline program selection cannot be empty");
+          return signalPassFailure();
+        }
+      }
+    }
 
     if (m->hasAttr("proton.timeline_record_version")) {
       auto version = m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");

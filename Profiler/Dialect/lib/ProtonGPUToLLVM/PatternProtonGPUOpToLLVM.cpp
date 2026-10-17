@@ -446,7 +446,7 @@ struct GlobalScratchAllocOpConversion
         "ttg.profile_scratch_memory_size");
     assert(allocSizeAttr);
 
-    Value linearId = getLinearCTAId(loc, rewriter);
+    Value linearId = getProgramCollectionSlot(mod, loc, rewriter);
 
     auto allocSize = allocSizeAttr.getValue().getZExtValue();
     Value gmemOffset =
@@ -487,6 +487,9 @@ struct InitCtxOpConversion
     // is fine.
     Value threadId = getThreadId(rewriter, loc);
     Value isFirstThread = b.icmp_eq(threadId, b.i32_val(0));
+    if (mod->hasAttr("proton.timeline_storage_version"))
+      isFirstThread = b.and_(
+          isFirstThread, getProgramCollectionPredicate(mod, loc, rewriter));
     const int circularHeaderWordSize = proton::gpu::getCircularHeaderSize() / 4;
 
     Block *prevBlock = op->getBlock();
@@ -553,8 +556,27 @@ struct RestoreCtxOpConversion
     Value warpIndexOffset = b.add(warpId, b.i32_val(circularHeaderWordSize));
     Value gmemWarpIndexPtr =
         b.gep(scratchPtrTy, i32_ty, scratchPtr, warpIndexOffset);
+    Block *selectedBlock = nullptr;
+    Block *continuation = nullptr;
+    if (mod->hasAttr("proton.timeline_storage_version")) {
+      // An unselected CTA aliases a compact slot but owns none of its memory.
+      // Initialize its private cursor without reading any global slot.
+      b.store(b.i32_val(0), segmentObj.indexPtr);
+      Value enabled = getProgramCollectionPredicate(mod, loc, rewriter);
+      Block *before = op->getBlock();
+      continuation = rewriter.splitBlock(before, op->getIterator());
+      selectedBlock = rewriter.createBlock(continuation);
+      rewriter.setInsertionPointToEnd(before);
+      rewriter.create<cf::CondBranchOp>(loc, enabled, selectedBlock,
+                                      continuation);
+      rewriter.setInsertionPointToStart(selectedBlock);
+    }
     Value index = b.load(i32_ty, gmemWarpIndexPtr);
     b.store(index, segmentObj.indexPtr);
+    if (selectedBlock) {
+      rewriter.create<cf::BranchOp>(loc, continuation);
+      rewriter.setInsertionPoint(op);
+    }
 
     rewriter.eraseOp(op);
     return success();
@@ -596,6 +618,9 @@ struct SaveCtxOpConversion
     Value warpId = b.udiv(threadId, warpSize);
     Value laneId = b.urem(threadId, warpSize);
     Value isWarpMaster = b.icmp_eq(laneId, b.i32_val(0));
+    if (mod->hasAttr("proton.timeline_storage_version"))
+      isWarpMaster = b.and_(
+          isWarpMaster, getProgramCollectionPredicate(mod, loc, rewriter));
     const int circularHeaderWordSize = proton::gpu::getCircularHeaderSize() / 4;
 
     Block *prevBlock = op->getBlock();

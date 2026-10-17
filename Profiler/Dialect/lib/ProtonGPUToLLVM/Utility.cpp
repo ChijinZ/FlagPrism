@@ -94,14 +94,57 @@ Value getLinearCTAId(Location loc, ConversionPatternRewriter &rewriter) {
   return linearId;
 }
 
+namespace {
+Value getGridVolume(Location loc, ConversionPatternRewriter &rewriter) {
+  auto b = TritonLLVMOpBuilder(loc, rewriter);
+  Value volume = b.i64_val(1);
+  for (auto dimension : {mlir::gpu::Dimension::x, mlir::gpu::Dimension::y,
+                         mlir::gpu::Dimension::z}) {
+    Value extent = rewriter.create<arith::IndexCastOp>(
+        loc, i64_ty, rewriter.create<mlir::gpu::GridDimOp>(loc, dimension));
+    volume = b.mul(volume, extent);
+  }
+  return volume;
+}
+} // namespace
+
+Value getProgramCollectionSlot(ModuleOp mod, Location loc,
+                               ConversionPatternRewriter &rewriter) {
+  auto b = TritonLLVMOpBuilder(loc, rewriter);
+  Value pid = getLinearCTAId(loc, rewriter);
+  if (!mod->hasAttr("proton.timeline_storage_version"))
+    return pid;
+  if (auto programs =
+          mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs")) {
+    Value slot = b.i32_val(0);
+    for (auto [index, program] : llvm::enumerate(programs.asArrayRef()))
+      slot = b.select(b.icmp_eq(pid, b.i32_val(program)),
+                      b.i32_val(index), slot);
+    return slot;
+  }
+  // Unselected CTAs may compute this pointer, but must never dereference it.
+  // The launch owner admits one slot for grid=1 and two otherwise.
+  return b.select(b.icmp_eq(pid, b.i32_val(0)), b.i32_val(0), b.i32_val(1));
+}
+
 Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
                                     ConversionPatternRewriter &rewriter) {
   auto b = TritonLLVMOpBuilder(loc, rewriter);
   auto programs =
       mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs");
-  if (!programs)
+  if (!programs && !mod->hasAttr("proton.timeline_storage_version"))
     return b.true_val();
   Value pid = getLinearCTAId(loc, rewriter);
+  if (!programs) {
+    Value volume = getGridVolume(loc, rewriter);
+    // Host admission also checks grid bounds and non-cluster execution. Keep
+    // a device guard so an invalid volume cannot select truncated identities.
+    Value valid = b.and_(b.icmp_ugt(volume, b.i64_val(0)),
+                         b.icmp_ule(volume, b.i64_val(0xffffffffu)));
+    Value last = b.trunc(i32_ty, b.sub(volume, b.i64_val(1)));
+    return b.and_(valid, b.or_(b.icmp_eq(pid, b.i32_val(0)),
+                               b.icmp_eq(pid, last)));
+  }
   Value enabled = b.false_val();
   for (int32_t program : programs.asArrayRef())
     enabled = b.or_(enabled, b.icmp_eq(pid, b.i32_val(program)));

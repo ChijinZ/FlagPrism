@@ -74,6 +74,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
+  m.attr("TIMELINE_STORAGE_VERSION") = 1;
   m.attr("TIMELINE_PLAN_VERSION") = 1;
 
   // Proton enums
@@ -214,6 +215,20 @@ void init_triton_proton(py::module &&m) {
       result["timeline_record_bytes"] = recordVersion ? 16 : 8;
       result["timeline_record_clock_bits"] = recordVersion ? 64 : 43;
       result["timeline_timer_version"] = version.getInt();
+      if (module->hasAttr("proton.timeline_storage_version")) {
+        auto storage = module->getAttrOfType<mlir::IntegerAttr>(
+            "proton.timeline_storage_version");
+        if (!storage || storage.getInt() != 1 || !recordVersion)
+          throw std::runtime_error("Unsupported timeline storage version");
+        result["timeline_storage_version"] = 1;
+        result["timeline_storage_policy"] = "compact_selected_programs";
+        result["timeline_default_program_selection"] = "runtime_first_last";
+        if (auto programs = module->getAttrOfType<mlir::DenseI32ArrayAttr>(
+                "proton.selected_programs"))
+          result["timeline_fixed_programs"] =
+              std::vector<int32_t>(programs.asArrayRef().begin(),
+                                   programs.asArrayRef().end());
+      }
       if (auto planVersion = module->getAttrOfType<mlir::IntegerAttr>(
               "proton.timeline_plan_version")) {
         if (planVersion.getInt() != 1)

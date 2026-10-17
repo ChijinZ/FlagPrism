@@ -24,7 +24,8 @@ Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
   auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
   auto *clock = builder.newConstantOperand(
       timeline ? "%globaltimer" : isClock64 ? "%clock64" : "%clock");
-  if (mod->hasAttr("proton.selected_programs")) {
+  if (mod->hasAttr("proton.selected_programs") ||
+      mod->hasAttr("proton.timeline_storage_version")) {
     builder.create("mov")->o(isClock64 ? "u64" : "u32")(
         dest, builder.newConstantOperand(0));
     mov(dest, clock)
