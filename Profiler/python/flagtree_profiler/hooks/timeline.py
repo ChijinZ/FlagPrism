@@ -74,6 +74,10 @@ class TimelineAllocator:
 
     def __call__(self, size, alignment, stream):
         hook = self.hook
+        if hook._timeline_zero.get():
+            if size != 0:
+                raise RuntimeError('Zero-grid timeline launch requested nonzero records')
+            return None
         identity = hook._timeline_current.get()
         snapshot = hook.timeline_pool.snapshot(identity)
         if (size != snapshot['layout']['logical_request_bytes'] or

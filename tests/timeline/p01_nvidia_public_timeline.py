@@ -65,6 +65,37 @@ def main():
         verify(name)
         require(not InstrumentationHook.active_count, 'Hook did not deactivate')
     require(phases[0]['binaries'] == phases[1]['binaries'], 'Warm session changed compiled identity')
+    # A failed export must still close the native collector and retain owners
+    # for raw-only recovery, without executing the ordinary workload again.
+    profile_module = importlib.import_module('flagtree.profiler.profile')
+    session = profiler.start(str(args.output/'api-export-failure'), detail='timeline')
+    hook = profile_module._active_sessions[session]['timeline_hook']
+    original_flush = hook.flush_timeline
+    workload.run(args.output/'api-export-failure-math')
+    def fail_export(base):
+        raise OSError('injected public timeline export failure')
+    hook.flush_timeline = fail_export
+    try:
+        profiler.finalize(session)
+    except RuntimeError as error:
+        require('injected public timeline export failure' in str(error), 'Wrong export failure')
+        (args.output/'export-failure.txt').write_text(str(error)+'\n')
+    else:
+        raise RuntimeError('Injected export failure was ignored')
+    require(session not in profile_module._active_sessions and not InstrumentationHook.active_count,
+            'Failed finalization left session/hooks active')
+    recovered = original_flush(str(args.output/'recovered-raw'))
+    recovery_index = json.loads((recovered/'index.json').read_text())
+    require(len(recovery_index['captures']) == 4 and not hook.timeline_pool.invocation_ids,
+            'Raw recovery replayed/lost calls or leaked owners')
+    phases.append(dict(name='api-export-failure-recovered', captures=4,
+                       raw_directory=str(recovered)))
+    session = profiler.start(str(args.output/'api-after-failure'), detail='timeline')
+    try:
+        workload.run(args.output/'api-after-failure-math')
+    finally:
+        profiler.finalize(session)
+    verify('api-after-failure')
     command = [sys.executable, '-I', '-m', 'flagtree.profiler.cli', '--detail', 'timeline',
                '--device', '0', '-n', str(args.output/'cli'), str(target),
                '--evidence', str(args.output/'cli-math')]
@@ -76,9 +107,21 @@ def main():
         code = subprocess.run(command, stdout=out, stderr=err, env=env).returncode
     require(code == 0, 'Public CLI failed: '+(args.output/'cli.stderr.log').read_text())
     verify('cli')
+    legacy_command = [sys.executable, '-I', '-m', 'flagtree.profiler.cli', '--detail', 'auto',
+        '--device', '0', '-n', str(args.output/'legacy-auto'), str(target),
+        '--evidence', str(args.output/'legacy-auto-math'), '--skip-zero']
+    with (args.output/'legacy.stdout.log').open('wb') as out, (args.output/'legacy.stderr.log').open('wb') as err:
+        code = subprocess.run(legacy_command, stdout=out, stderr=err, env=env).returncode
+    require(code == 0, 'Legacy automatic count path failed: '+(args.output/'legacy.stderr.log').read_text())
+    legacy = json.loads((args.output/'legacy-auto/ai/observations.json').read_text())
+    require(len(legacy.get('captures', [])) == 4 and legacy.get('observations'),
+            'Legacy count observations disappeared')
+    require(not (args.output/'legacy-auto/timeline').exists(), 'Count mode became timeline mode')
     (args.output/'result.json').write_text(json.dumps(dict(
         status='public_collection_raw_stage_passed_not_full_P01', phases=phases,
-        cli_argv=command, limitations=['Raw stage only; no physical clock/epoch proof',
+        cli_argv=command, legacy_argv=legacy_command,
+        legacy_count_captures=len(legacy['captures']),
+        limitations=['Raw stage only; no physical clock/epoch proof',
             'No final marker-order or Perfetto/independent qualification']), indent=2)+'\n')
 
 

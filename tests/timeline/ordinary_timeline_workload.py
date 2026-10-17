@@ -43,7 +43,7 @@ def gemm(A, B, C, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
              (r[:, None] < M) & (c[None, :] < N))
 
 
-def run(evidence):
+def run(evidence, *, include_zero=True):
     evidence = Path(evidence)
     evidence.mkdir(exist_ok=False)
     (evidence/'host-once.txt').write_text('one explicit workload execution\n')
@@ -73,6 +73,11 @@ def run(evidence):
         require(torch.equal(y[n:].cpu(), torch.full((328-n,), -17.25)), 'Tail canary')
         require(state.cpu().tolist() == [1]*grid+[0]*(5-grid), 'Program side effect/replay')
         require(torch.equal(x.cpu(), cpu), 'Input changed')
+    # Legal zero-grid launch: no device work, owner or synthetic event.
+    if include_zero:
+        x, y, state, kd, n, grid, _, _ = cases[-1]
+        recurrence[(0,)](x, y, state, kd, n, 64, num_warps=4)
+        require(state.cpu().tolist() == [1]*grid+[0]*(5-grid), 'Zero-grid launch changed state')
     a_cpu = torch.randn(48, 96, dtype=torch.float16)
     b_cpu = torch.randn(96, 56, dtype=torch.float16)
     a, b = a_cpu.cuda(), b_cpu.cuda()
@@ -87,4 +92,6 @@ def run(evidence):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', required=True, type=Path)
-    run(parser.parse_args().evidence)
+    parser.add_argument('--skip-zero', action='store_true')
+    parsed = parser.parse_args()
+    run(parsed.evidence, include_zero=not parsed.skip_zero)

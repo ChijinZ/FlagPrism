@@ -1945,10 +1945,10 @@ def _finalize_impl(session: Optional[int] = None,
             attempt("native finalize",
                     lambda: profiler_native.finalize_all(output_format))
         for state in states:
+            timeline_ok = True
             if state.get('timeline_hook') is not None:
-                if not attempt('timeline raw export',
-                        lambda: state['timeline_hook'].flush_timeline(state['name']), state):
-                    continue
+                timeline_ok = attempt('timeline raw export',
+                    lambda: state['timeline_hook'].flush_timeline(state['name']), state)
             if state.get("instrumentation_hook") and have_runs and state.get(
                     "name"):
                 attempt(
@@ -1964,7 +1964,7 @@ def _finalize_impl(session: Optional[int] = None,
             receipts_ok = attempt(
                 "CANN worker receipts",
                 lambda: _snapshot_cann_launch_receipts(state), state)
-            if not (native_ok and snapshot_ok and stopped and receipts_ok and
+            if not (timeline_ok and native_ok and snapshot_ok and stopped and receipts_ok and
                     (have_runs or not state.get("instrumentation_hook"))):
                 attempt("native observation recovery",
                         lambda: _export_native_observations(state), state)
