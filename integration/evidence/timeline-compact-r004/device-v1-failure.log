@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r004/check-input-v1/p01_nvidia_record_v2.py", line 364, in <module>
+    main()
+  File "/workspace/chijin-timeline-r004/check-input-v1/p01_nvidia_record_v2.py", line 293, in main
+    launch('')
+  File "/workspace/chijin-timeline-r004/check-input-v1/p01_nvidia_record_v2.py", line 287, in <lambda>
+    launch = lambda token, warmup=False: recurrence[(3,)](x, y, k_device, state, 129, 64,
+  File "/workspace/chijin-timeline-r004/runs/install-v1/output/venv/lib/python3.10/site-packages/triton/runtime/jit.py", line 400, in <lambda>
+    return lambda *args, **kwargs: self.run(grid=grid, warmup=False, *args, **kwargs)
+TypeError: triton.runtime.jit.JITFunction.run() got multiple values for keyword argument 'warmup'

@@ -1,0 +1,95 @@
+{
+  "status": "real_record_v2_math_passed_not_full_P01",
+  "source_sha256": "40a18a6ad1f3c5b47562eb38d1b855fc8b19ee8943a70269381a534f6845a58c",
+  "decoder_sha256": "f815d68fd651849091af072d50efaa99799f83c9de1c288b24b4e5b9591a8bd2",
+  "python": "/workspace/chijin-timeline-r004/runs/install-v1/output/venv/bin/python",
+  "calls": [
+    {
+      "name": "recurrence-k3",
+      "kind": "ordinary"
+    },
+    {
+      "name": "recurrence-k3",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "recurrence-k7",
+      "kind": "ordinary"
+    },
+    {
+      "name": "recurrence-k7",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "recurrence-k11",
+      "kind": "ordinary"
+    },
+    {
+      "name": "recurrence-k11",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "gemm-stages2",
+      "kind": "ordinary"
+    },
+    {
+      "name": "gemm-stages2",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "gemm-stages3",
+      "kind": "ordinary"
+    },
+    {
+      "name": "gemm-stages3",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "grid-map-0",
+      "kind": "ordinary"
+    },
+    {
+      "name": "grid-map-0",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "grid-map-1",
+      "kind": "ordinary"
+    },
+    {
+      "name": "grid-map-1",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "grid-map-2",
+      "kind": "ordinary"
+    },
+    {
+      "name": "grid-map-2",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "grid-map-3",
+      "kind": "ordinary"
+    },
+    {
+      "name": "grid-map-3",
+      "kind": "explicit_automatic_record_capture"
+    },
+    {
+      "name": "grid-map-fixed-reordered",
+      "kind": "ordinary"
+    },
+    {
+      "name": "grid-map-fixed-reordered",
+      "kind": "explicit_automatic_record_capture"
+    }
+  ],
+  "captures": 10,
+  "limitations": [
+    "No public timeline API/CLI yet",
+    "Logical cp.async group facts are not verified time arrows or Perfetto acceptance",
+    "No cross-SM epoch or final marker-order certificate",
+    "Test collector synchronizes each explicit capture; production deferred owner remains pending"
+  ]
+}

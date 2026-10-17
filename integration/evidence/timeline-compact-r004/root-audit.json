@@ -1,0 +1,185 @@
+{
+  "status": "retained_bytes_independently_audited_not_full_P01",
+  "archive_sha256": "4f31ae247eb543f5829b3f67fc8e4b4cc57f3dce51e87b2493d98012e59ed017",
+  "archive_bytes": 1147214,
+  "records": 2528,
+  "captures": [
+    {
+      "name": "recurrence-k3",
+      "binary_hash": "7b578fe77d8ba505f75c7f0908adacec6f3236c4348cdbb2edf8dcb1ed1ce1f3",
+      "grid": [
+        3,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0,
+        2
+      ],
+      "raw_bytes": 65792,
+      "records": 160,
+      "canary_intact": true,
+      "full_grid_request_bytes": 98688
+    },
+    {
+      "name": "recurrence-k7",
+      "binary_hash": "7b578fe77d8ba505f75c7f0908adacec6f3236c4348cdbb2edf8dcb1ed1ce1f3",
+      "grid": [
+        3,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0,
+        2
+      ],
+      "raw_bytes": 65792,
+      "records": 224,
+      "canary_intact": true,
+      "full_grid_request_bytes": 98688
+    },
+    {
+      "name": "recurrence-k11",
+      "binary_hash": "7b578fe77d8ba505f75c7f0908adacec6f3236c4348cdbb2edf8dcb1ed1ce1f3",
+      "grid": [
+        3,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0,
+        2
+      ],
+      "raw_bytes": 65792,
+      "records": 288,
+      "canary_intact": true,
+      "full_grid_request_bytes": 98688
+    },
+    {
+      "name": "gemm-stages2",
+      "binary_hash": "d7f69da1f127ef85482cb4d0c7a75b7fd20ec32c78f22a43dd695ee57ee6527f",
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "selected_programs": [
+        0,
+        3
+      ],
+      "raw_bytes": 65792,
+      "records": 608,
+      "canary_intact": true,
+      "full_grid_request_bytes": 131584
+    },
+    {
+      "name": "gemm-stages3",
+      "binary_hash": "3a7dcdeb0af1d18a97391f3260a01a113c5f9bb85ff442048f7c4919586546f6",
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "selected_programs": [
+        0,
+        3
+      ],
+      "raw_bytes": 65792,
+      "records": 672,
+      "canary_intact": true,
+      "full_grid_request_bytes": 131584
+    },
+    {
+      "name": "grid-map-0",
+      "binary_hash": "041d8464fe3c08b9a05392109d63ab9ad2d057eadc09c03182ea4f79922fe9f3",
+      "grid": [
+        1,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0
+      ],
+      "raw_bytes": 32896,
+      "records": 64,
+      "canary_intact": true,
+      "full_grid_request_bytes": 32896
+    },
+    {
+      "name": "grid-map-1",
+      "binary_hash": "041d8464fe3c08b9a05392109d63ab9ad2d057eadc09c03182ea4f79922fe9f3",
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0,
+        6
+      ],
+      "raw_bytes": 65792,
+      "records": 128,
+      "canary_intact": true,
+      "full_grid_request_bytes": 230272
+    },
+    {
+      "name": "grid-map-2",
+      "binary_hash": "041d8464fe3c08b9a05392109d63ab9ad2d057eadc09c03182ea4f79922fe9f3",
+      "grid": [
+        3,
+        5,
+        1
+      ],
+      "selected_programs": [
+        0,
+        14
+      ],
+      "raw_bytes": 65792,
+      "records": 128,
+      "canary_intact": true,
+      "full_grid_request_bytes": 493440
+    },
+    {
+      "name": "grid-map-3",
+      "binary_hash": "041d8464fe3c08b9a05392109d63ab9ad2d057eadc09c03182ea4f79922fe9f3",
+      "grid": [
+        1,
+        1,
+        1
+      ],
+      "selected_programs": [
+        0
+      ],
+      "raw_bytes": 32896,
+      "records": 64,
+      "canary_intact": true,
+      "full_grid_request_bytes": 32896
+    },
+    {
+      "name": "grid-map-fixed-reordered",
+      "binary_hash": "08a307fcb23e7e4d8b9bd114544968fffde109d554cd6d99f38e2d75e4089e17",
+      "grid": [
+        3,
+        5,
+        1
+      ],
+      "selected_programs": [
+        14,
+        0,
+        7
+      ],
+      "raw_bytes": 98688,
+      "records": 192,
+      "canary_intact": true,
+      "full_grid_request_bytes": 493440
+    }
+  ],
+  "actual_grid_binary_shared": true,
+  "normal_and_optimized_storage_tests": 7,
+  "native_negative_cases_each_mode": 11,
+  "limitations": [
+    "No production owner/public timeline yet",
+    "No clock/epoch/final timing boundary certificate",
+    "No Perfetto/independent qualification accepted"
+  ]
+}
