@@ -46,8 +46,17 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
     auto &consume = *builder.create("// timeline_llvm_end_dependency");
     consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
   }
-  return builder.launch(rewriter, loc,
-                        rewriter.getIntegerType(isClock64 ? 64 : 32), true);
+  Value result = builder.launch(rewriter, loc,
+                                 rewriter.getIntegerType(isClock64 ? 64 : 32), true);
+  if (timeline && mod->hasAttr("proton.timeline_boundary_version")) {
+    // SSA inputs/forwarding constrain values; the clobber also constrains LLVM
+    // memory motion (notably stores with no result). It emits no GPU barrier
+    // and is not a certificate of final PTXAS scheduling or hardware completion.
+    auto assembly = cast<LLVM::InlineAsmOp>(result.getDefiningOp());
+    assembly->setAttr("constraints", rewriter.getStringAttr(
+        assembly.getConstraints().str() + ",~{memory}"));
+  }
+  return result;
 }
 
 Value TargetInfo::anchorValue(ConversionPatternRewriter &rewriter, Location loc,
