@@ -186,7 +186,8 @@ class TimelineInstrumentationMixin:
             # Original identity/source metadata survives any later decoder,
             # canonicalization, serialization or export failure.
             _persist(directory / prefix.with_suffix('.input.json'),
-                     (json.dumps(capture, indent=2)+'\n').encode())
+                     (json.dumps(dict(capture,
+                         capture_status='raw_persisted_pending_decode'), indent=2)+'\n').encode())
             if owner['submission_outcome'] == 'returned':
                 warps = metadata['compiler_metadata']['num_warps']
                 decoded = decode_timeline_ring(raw,

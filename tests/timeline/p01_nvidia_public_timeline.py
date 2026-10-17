@@ -43,6 +43,10 @@ def main():
         groups = 0
         canonical_intervals = 0
         for capture in captures:
+            original_input = json.loads((output/'timeline'/
+                Path(capture['raw_file']).with_suffix('.input.json')).read_text())
+            require(original_input['capture_status']=='raw_persisted_pending_decode',
+                    'Undecoded input journal falsely claims complete records')
             decoded = json.loads((output/'timeline'/capture['decoded_file']).read_text())
             records.extend(decoded['records'])
             facts = json.loads((output/'timeline'/capture['async_file']).read_text())
@@ -119,6 +123,8 @@ def main():
     require(len(overflow_index['captures'])==1, 'Overflow replayed the application')
     overflow = json.loads((overflow_prefix/overflow_index['captures'][0]['capture_file']).read_text())
     canonical = validate_raw_batch(json.loads((overflow_prefix/overflow['events_file']).read_text()))
+    original_input = json.loads((overflow_prefix/Path(overflow['raw_file']).with_suffix('.input.json')).read_text())
+    require(original_input['capture_status']=='raw_persisted_pending_decode', 'Overflow journal claims complete data')
     require(overflow['capture_status']=='incomplete' and not canonical['complete'],
             'Lost history became a complete capture')
     require(any(o['overwritten_records']>0 for o in canonical['observers']), 'Overflow was not actually triggered')
