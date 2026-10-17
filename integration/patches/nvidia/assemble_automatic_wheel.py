@@ -136,25 +136,36 @@ def main():
         for path in list(stage.rglob('*.so')) + list(stage.rglob('*.h')):
             relative = path.relative_to(stage).as_posix()
             if archive.read(relative) != path.read_bytes():
-                raise RuntimeError('Packaged native/header mismatch: '+relative)
+                raise RuntimeError('Packaged native/header mismatch: ' +
+                                   relative)
             files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
         python_count = 0
         for component in ('Profiler', 'Debugger'):
-            source = args.component / component / 'python' / ('flagtree_'+component.lower())
+            source = args.component / component / 'python' / (
+                'flagtree_' + component.lower())
             for path in source.rglob('*.py'):
                 if '__pycache__' in path.parts:
                     continue
-                entry = 'flagtree/'+component.lower()+'/'+path.relative_to(source).as_posix()
+                entry = 'flagtree/' + component.lower(
+                ) + '/' + path.relative_to(source).as_posix()
                 if archive.read(entry) != path.read_bytes():
-                    raise RuntimeError('Packaged component Python mismatch: '+entry)
+                    raise RuntimeError('Packaged component Python mismatch: ' +
+                                       entry)
                 python_count += 1
-        for entry in ['triton/backends/nvidia/driver.py', 'flagtree/profiler/_cann_launch_receipt.h']:
+        for entry in [
+                'triton/backends/nvidia/driver.py',
+                'flagtree/profiler/_cann_launch_receipt.h'
+        ]:
             if entry not in archive.namelist():
-                raise RuntimeError('Missing required packaged entry: '+entry)
-        entries = [name for name in archive.namelist() if name.endswith('.dist-info/entry_points.txt')]
-        if (len(entries) != 1 or
-                'nvidia = triton.backends.nvidia' not in archive.read(entries[0]).decode()):
-            raise RuntimeError('NVIDIA backend discovery entry point is missing')
+                raise RuntimeError('Missing required packaged entry: ' + entry)
+        entries = [
+            name for name in archive.namelist()
+            if name.endswith('.dist-info/entry_points.txt')
+        ]
+        if (len(entries) != 1 or 'nvidia = triton.backends.nvidia'
+                not in archive.read(entries[0]).decode()):
+            raise RuntimeError(
+                'NVIDIA backend discovery entry point is missing')
     result = {
         'wheel': str(paths[0]),
         'wheel_sha256': hashlib.sha256(paths[0].read_bytes()).hexdigest(),

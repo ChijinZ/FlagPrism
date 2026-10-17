@@ -31,9 +31,10 @@ class TimelineReadback:
     validation_errors: tuple = ()
 
     def __post_init__(self):
-        if (type(self.raw) is not bytes or type(self.guard) is not bytes or
-                type(self.validation_errors) is not tuple or
-                any(type(item) is not str or not item for item in self.validation_errors)):
+        if (type(self.raw) is not bytes or type(self.guard) is not bytes
+                or type(self.validation_errors) is not tuple or any(
+                    type(item) is not str or not item
+                    for item in self.validation_errors)):
             raise ValueError('Invalid timeline readback result')
 
 
@@ -49,12 +50,16 @@ class TimelineOwnerPool:
     driver call is not safely interrupted by releasing its memory from Python.
     """
 
-    def __init__(self, transport, *, max_pending_bytes=8 * 1024 * 1024,
-                 max_owners=64, guard_bytes=0):
-        for name, value, low, high in (
-                ('max_pending_bytes', max_pending_bytes, 1, 0x7fffffff),
-                ('max_owners', max_owners, 1, 4096),
-                ('guard_bytes', guard_bytes, 0, 4096)):
+    def __init__(self,
+                 transport,
+                 *,
+                 max_pending_bytes=8 * 1024 * 1024,
+                 max_owners=64,
+                 guard_bytes=0):
+        for name, value, low, high in (('max_pending_bytes', max_pending_bytes,
+                                        1, 0x7fffffff), ('max_owners',
+                                                         max_owners, 1, 4096),
+                                       ('guard_bytes', guard_bytes, 0, 4096)):
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'Invalid {name}')
         self.transport = transport
@@ -69,7 +74,8 @@ class TimelineOwnerPool:
 
     def _check_thread(self):
         if threading.current_thread() is not self._thread:
-            raise RuntimeError('Timeline owner pool does not support host-thread sharing')
+            raise RuntimeError(
+                'Timeline owner pool does not support host-thread sharing')
 
     def _owner(self, invocation_id):
         self._check_thread()
@@ -93,11 +99,11 @@ class TimelineOwnerPool:
         self._check_thread()
         if self._closed:
             raise RuntimeError('Timeline owner pool is closed')
-        if (not isinstance(plan, Mapping) or
-                type(binary_id) is not str or not binary_id or
-                plan.get('binary_id') != binary_id):
+        if (not isinstance(plan, Mapping) or type(binary_id) is not str
+                or not binary_id or plan.get('binary_id') != binary_id):
             raise ValueError('Timeline plan is not bound to the loaded binary')
-        validate_executable = getattr(self.transport, 'validate_executable', None)
+        validate_executable = getattr(self.transport, 'validate_executable',
+                                      None)
         if validate_executable is not None:
             validate_executable(function, binary_id=binary_id)
         elif type(function) is not int or function <= 0:
@@ -108,30 +114,45 @@ class TimelineOwnerPool:
             raise ValueError('An actual stream handle is required')
         # All admission, including session totals, precedes any allocation.
         layout = self.transport.plan_storage(
-            plan, grid=grid, scratch_size=scratch_size, alignment=alignment,
-            num_ctas=num_ctas, max_raw_bytes=self.max_pending_bytes)
-        if (not isinstance(layout, Mapping) or
-                type(layout.get('raw_bytes')) is not int or
-                not 0 <= layout['raw_bytes'] <= self.max_pending_bytes):
-            raise ValueError('Backend returned an invalid physical byte requirement')
+            plan,
+            grid=grid,
+            scratch_size=scratch_size,
+            alignment=alignment,
+            num_ctas=num_ctas,
+            max_raw_bytes=self.max_pending_bytes)
+        if (not isinstance(layout, Mapping)
+                or type(layout.get('raw_bytes')) is not int
+                or not 0 <= layout['raw_bytes'] <= self.max_pending_bytes):
+            raise ValueError(
+                'Backend returned an invalid physical byte requirement')
         if not layout['raw_bytes']:
             raise ValueError('Zero-grid launches have no timeline owner')
         layout = copy.deepcopy(layout)
         physical_bytes = layout['raw_bytes'] + self.guard_bytes
-        if (len(self._owners) >= self.max_owners or
-                self._bytes + physical_bytes > self.max_pending_bytes):
-            raise RuntimeError('Timeline pending-owner budget exceeded before allocation')
+        if (len(self._owners) >= self.max_owners
+                or self._bytes + physical_bytes > self.max_pending_bytes):
+            raise RuntimeError(
+                'Timeline pending-owner budget exceeded before allocation')
         self.transport.validate_target(device=device, stream=stream)
         invocation_id = 'invocation-' + uuid.uuid4().hex
         self._owners[invocation_id] = {
-            'capture_id': self.capture_id, 'invocation_id': invocation_id,
-            'binary_id': binary_id, 'function': copy.deepcopy(function), 'device': device,
-            'stream': stream, 'plan': copy.deepcopy(plan), 'layout': layout,
-            'physical_bytes': physical_bytes, 'guard_bytes': self.guard_bytes,
-            'state': 'admitted', 'resource': None, 'raw': None,
+            'capture_id': self.capture_id,
+            'invocation_id': invocation_id,
+            'binary_id': binary_id,
+            'function': copy.deepcopy(function),
+            'device': device,
+            'stream': stream,
+            'plan': copy.deepcopy(plan),
+            'layout': layout,
+            'physical_bytes': physical_bytes,
+            'guard_bytes': self.guard_bytes,
+            'state': 'admitted',
+            'resource': None,
+            'raw': None,
             'host_admission_ns': time.monotonic_ns(),
             'host_window_clock': 'python.monotonic_ns',
-            'submission_outcome': 'not_submitted', 'error': None,
+            'submission_outcome': 'not_submitted',
+            'error': None,
         }
         self._bytes += physical_bytes
         _RETAINED_POOLS[self.capture_id] = self
@@ -194,13 +215,17 @@ class TimelineOwnerPool:
 
     def snapshot(self, invocation_id):
         owner = self._owner(invocation_id)
-        return copy.deepcopy({key: value for key, value in owner.items()
-                              if key not in ('resource', 'raw', 'readback_guard')})
+        return copy.deepcopy({
+            key: value
+            for key, value in owner.items()
+            if key not in ('resource', 'raw', 'readback_guard')
+        })
 
     def completion_ready_now(self, invocation_id):
         """Nonblocking readiness for fair finalization; never reads or frees."""
         owner = self._owner(invocation_id)
-        if owner['state'] in ('raw_ready', 'read_failed') or owner.get('completion_known'):
+        if owner['state'] in ('raw_ready',
+                              'read_failed') or owner.get('completion_known'):
             return True
         if owner['state'] != 'completion_pending':
             return False
@@ -225,7 +250,8 @@ class TimelineOwnerPool:
     def read(self, invocation_id, *, timeout=60.0):
         owner = self._owner(invocation_id)
         if type(timeout) not in (int, float) or not 0 < timeout <= 300:
-            raise ValueError('Completion polling deadline must be in (0, 300] seconds')
+            raise ValueError(
+                'Completion polling deadline must be in (0, 300] seconds')
         if owner['state'] == 'raw_ready':
             return owner['raw']
         if owner['state'] != 'completion_pending':
@@ -237,7 +263,9 @@ class TimelineOwnerPool:
                 if ready:
                     break
                 if time.monotonic() >= deadline:
-                    raise TimeoutError('Timeline writer is still pending; allocation retained')
+                    raise TimeoutError(
+                        'Timeline writer is still pending; allocation retained'
+                    )
                 time.sleep(min(0.001, max(0, deadline - time.monotonic())))
         except TimeoutError:
             # The handle is still usable for a later poll; timeout != terminal.
@@ -252,7 +280,8 @@ class TimelineOwnerPool:
             if legacy_bytes:
                 acquired = TimelineReadback(acquired)
             if not isinstance(acquired, TimelineReadback):
-                raise RuntimeError('Transport did not return acquired timeline bytes')
+                raise RuntimeError(
+                    'Transport did not return acquired timeline bytes')
         except BaseException as error:
             # Device completion was proven, but retain bytes/resource for an
             # explicit retry rather than replaying the application.
@@ -265,11 +294,15 @@ class TimelineOwnerPool:
             # Legacy transports returning bytes do not promise a guard artifact.
             # Their own guard validation is unchanged; new transports return it.
             errors.append('guard_extent_differs_from_admission')
-        owner.update(state='raw_ready', raw=acquired.raw, readback_guard=acquired.guard,
-            readback_integrity=dict(status='invalid' if errors else 'passed',
-                errors=errors, actual_raw_bytes=len(acquired.raw),
-                expected_raw_bytes=owner['layout']['raw_bytes'],
-                guard_bytes=len(acquired.guard)))
+        owner.update(state='raw_ready',
+                     raw=acquired.raw,
+                     readback_guard=acquired.guard,
+                     readback_integrity=dict(
+                         status='invalid' if errors else 'passed',
+                         errors=errors,
+                         actual_raw_bytes=len(acquired.raw),
+                         expected_raw_bytes=owner['layout']['raw_bytes'],
+                         guard_bytes=len(acquired.guard)))
         return acquired.raw
 
     def retry_read(self, invocation_id, *, timeout=60.0):
@@ -282,7 +315,8 @@ class TimelineOwnerPool:
     def release(self, invocation_id):
         owner = self._owner(invocation_id)
         if owner['state'] != 'raw_ready':
-            raise RuntimeError('Cannot release a timeline writer without completed raw data')
+            raise RuntimeError(
+                'Cannot release a timeline writer without completed raw data')
         self.transport.release(owner)
         self._remove(invocation_id)
 
@@ -296,5 +330,6 @@ class TimelineOwnerPool:
         self._check_thread()
         # No implicit wait/replay or freeing pending allocations in __del__.
         if self._owners:
-            raise RuntimeError('Timeline owners remain; explicitly drain or recover them')
+            raise RuntimeError(
+                'Timeline owners remain; explicitly drain or recover them')
         self._closed = True
