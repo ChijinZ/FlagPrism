@@ -38,6 +38,7 @@ def main():
     binding = compiler_binding()
     require(binding.TIMELINE_TIMER_VERSION == 1, 'New native timer is absent')
     require(binding.TIMELINE_RECORD_VERSION == 2, 'New native record is absent')
+    require(binding.TIMELINE_STORAGE_VERSION == 1, 'Compact native storage is absent')
     context = ir.context()
     ir.load_dialects(context)
     nvidia.load_dialects(context)
@@ -76,6 +77,10 @@ def main():
             'Required async boundaries were silently excluded')
     require(any(row.get('timeline_wait_pending') == 2 for row in async_sites),
             'Actual ordinary partial-wait coverage metadata was lost')
+    require(plan.get('timeline_storage_version') == 1 and
+            plan.get('timeline_storage_policy') == 'compact_selected_programs' and
+            plan.get('timeline_default_program_selection') == 'runtime_first_last',
+            'Compact storage capability was not exported')
     _, legacy = transform(False)
     require('timeline_timer' not in legacy,
             'Legacy source intervals silently changed their clock')
@@ -144,6 +149,34 @@ def main():
             rejected.append(name)
         else:
             raise RuntimeError('Invalid timeline lowering was accepted: ' + name)
+    for name, selection in [('empty-compact-selection', []),
+                            ('duplicate-compact-selection', [0, 0])]:
+        bad_module, _ = transform(True)
+        mode = Default(buffer_size=32768)
+        pm = ir.pass_manager(context)
+        binding.add_select_proton_programs(pm, selection)
+        binding.add_convert_proton_to_protongpu(
+            pm, mode.metric_type, mode.sampling_strategy, mode.sampling_options,
+            mode.granularity, mode.buffer_strategy, mode.buffer_type,
+            mode.buffer_size, 65536, 1, 128, True)
+        try:
+            pm.run(bad_module, 'timeline-storage-negative')
+        except RuntimeError:
+            rejected.append(name)
+        else:
+            raise RuntimeError('Invalid compact selection accepted: ' + name)
+    bad_storage, count = re.subn(
+        r'(proton\.timeline_storage_version\s*=\s*)1(\s*:\s*i32)',
+        r'\g<1>99\g<2>', str(module), count=1)
+    require(count == 1, 'Cannot construct unknown-storage negative')
+    bad_storage_file = args.output / 'unknown-storage.ttgir'
+    bad_storage_file.write_text(bad_storage)
+    try:
+        binding.get_automatic_proton_plan(parse(bad_storage_file))
+    except RuntimeError:
+        rejected.append('unknown-storage-version')
+    else:
+        raise RuntimeError('Unknown storage metadata was accepted')
     (args.output / 'timeline-plan.json').write_text(json.dumps(plan, indent=2))
     (args.output / 'legacy-plan.json').write_text(json.dumps(legacy, indent=2))
     (args.output / 'timeline.ttgir').write_text(str(module))
