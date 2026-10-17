@@ -27,11 +27,14 @@ per-capture epoch qualification is separate. Count/native modes keep their
 existing meaning.
 
 The automatic timeline compiler now also requires native
-`TIMELINE_BOUNDARY_VERSION=1`. Its plan reports
-`timeline_boundary_strategy="llvm_ssa_pending_machine_audit"`: begin timestamps
-feed bit-preserving operand anchors and end counter calls consume observed
-results. NVIDIA getter inline asm additionally declares an LLVM memory clobber,
-which constrains memory motion without emitting a GPU completion barrier.
+`TIMELINE_BOUNDARY_VERSION=2`. Its plan reports
+`timeline_boundary_strategy="outlined_device_calls_pending_region_audit"`: begin
+timestamps feed bit-preserving operand anchors, and explicit noinline device
+clock helpers consume the begin operands or observed end results. Helpers return
+64-bit timestamps and retain native site/phase markers. NVIDIA getter inline asm
+also declares an LLVM memory clobber, constraining memory motion without emitting
+a GPU completion barrier. The helper call ABI is target-specific, not a required
+backend-neutral hardware interface.
 Compiler/cache identity includes this implementation. Unsupported boundary
 versions are rejected in plan extraction and lowering; old native plugins are
 rejected before public hook activation.
@@ -49,7 +52,11 @@ absolute executable path through `FLAGTREE_NVDISASM`, finalization optionally
 binds every selected site/entry/exit marker to actual cubin PTX-debug lines and
 SASS PCs. It retains tool version/hash, original text/JSON disassembly, command
 receipts and `machine/<binary_id>/counter-map.json`; each capture refers to this
-through `machine_counter_mapping`. Tool absence or a failed mapping preserves
+through `machine_counter_mapping`. Exact function symbols also bind helpers in
+the parent code section at nonzero offsets; each map retains function ranges,
+code section, section-relative PC and function-relative PC. Actual instruction
+bodies cannot overlap or exceed executable ELF section extents. These fields
+locate reads and do not certify the caller region. Tool absence or a failed mapping preserves
 raw data with an explicit unavailable reason. No application replay or network
 download is performed. Postprocessing is bounded by the shared export deadline.
 

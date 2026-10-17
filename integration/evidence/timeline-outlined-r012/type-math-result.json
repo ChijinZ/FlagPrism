@@ -1,0 +1,73 @@
+{
+  "status": "public_type_math_and_llvm_dependencies_passed_not_machine_certified",
+  "actual_math_launches": 5,
+  "captures": 5,
+  "canonical_intervals": 320,
+  "math": [
+    {
+      "dtype": "torch.float16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "84a96b353621accc921985f2ce25a86ae1bb0451444db0cb8f54fe97c7df80f5",
+      "llir_sha256": "d703ec0ab140fc0472a0de92e1f8be009295f0b5ea9d0a9c0992cab64f3ec154"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "d8a66e511787eb44af295648e7b788895628df9e2a4178d75aef593bda5c60a8",
+      "llir_sha256": "cbced04538606be18dbbccea96143f92b577c736b2250150639c0a0aff1676ce"
+    },
+    {
+      "dtype": "torch.float32",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "4a4e38714686d3acff793c239b51c2b9283de6a4a81b2348e671bcb686e778d3",
+      "llir_sha256": "86516dc3e5e38289f0265a3fb34d2d61b23132755be806e8101420f466471450"
+    },
+    {
+      "dtype": "torch.float64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "1a41712e11a6b3f703e97d4dadae63289dafb6bf3187215761101380953f0582",
+      "llir_sha256": "26a7ba6701ad92538f387d955559e805dea3c61963ae145939cfe6123255049d"
+    },
+    {
+      "dtype": "torch.int64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "ad75cb8f52bc7da1650171267563c46b7bc504a564e5e9ddfd6d46862b5b9c97",
+      "llir_sha256": "80eb42e48067b41454bd73514985ed3238694dbdbd0c7798aa6d9831cfc8fdee"
+    }
+  ]
+}

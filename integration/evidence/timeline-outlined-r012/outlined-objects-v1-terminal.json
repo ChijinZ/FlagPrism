@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 46098,
+    "ppid": 1,
+    "pgid": 46087,
+    "startticks": 10096110
+  },
+  "worker": {
+    "pid": 46099,
+    "ppid": 46098,
+    "pgid": 46099,
+    "startticks": 10096113
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r012/object-input-v1/p01_nvidia_outlined_objects.py",
+    "--output",
+    "/workspace/chijin-timeline-r012/runs/outlined-objects-v1/output"
+  ],
+  "argv_sha256": "b1584026db04a5e2a1168e5bec5f30fa7d6df951303a531e8d48b299438964ca",
+  "script_sha256": "d505e85163b5b985a76d47449e81d868c82da97536e0ae098a560edcc96460b6",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 240,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 3070032267
+}

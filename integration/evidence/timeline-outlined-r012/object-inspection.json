@@ -1,0 +1,4184 @@
+{
+  "status": "actual_automatic_calls_and_cfg_retained_not_region_or_clock_certified",
+  "device_launches": 0,
+  "objects": [
+    {
+      "cubin_sha256": "1a41712e11a6b3f703e97d4dadae63289dafb6bf3187215761101380953f0582",
+      "cubin": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/binaries/af97126153575950e48ca864fb3c89a16f45403aabacead570b210af69abddcb/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/machine/e83e9b1084a7383114a8f70913421d339bf7a88b2a95859fbef626d5430b27fb/counter-map.json",
+      "counter_map_sha256": "74f4f68d7e8b832e0cfafaf7f8f65480d7e6b76bb81dbb9a9053f30d5a4a73d4",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "ordinary_update",
+          "pc": 464,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 736,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 960,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1168,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1360,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1600,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1840,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2048,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2272,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2512,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2832,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3056,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3248,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3456,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3648,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3872,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 470,
+          "annotation_line": 468,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 5936,
+          "section": ".text.ordinary_update",
+          "function_start": 5904,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 464,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 440,
+          "annotation_line": 438,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6032,
+          "section": ".text.ordinary_update",
+          "function_start": 6000,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 736,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 411,
+          "annotation_line": 409,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "pc": 6128,
+          "section": ".text.ordinary_update",
+          "function_start": 6096,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 960,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 382,
+          "annotation_line": 380,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6224,
+          "section": ".text.ordinary_update",
+          "function_start": 6192,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1168,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 352,
+          "annotation_line": 350,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+          "pc": 6320,
+          "section": ".text.ordinary_update",
+          "function_start": 6288,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1360,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 321,
+          "annotation_line": 319,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+          "pc": 6416,
+          "section": ".text.ordinary_update",
+          "function_start": 6384,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1600,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 293,
+          "annotation_line": 291,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+          "pc": 6512,
+          "section": ".text.ordinary_update",
+          "function_start": 6480,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1840,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 265,
+          "annotation_line": 263,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+          "pc": 6608,
+          "section": ".text.ordinary_update",
+          "function_start": 6576,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2048,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 236,
+          "annotation_line": 234,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+          "pc": 6704,
+          "section": ".text.ordinary_update",
+          "function_start": 6672,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2272,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 6800,
+          "section": ".text.ordinary_update",
+          "function_start": 6768,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2512,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 6896,
+          "section": ".text.ordinary_update",
+          "function_start": 6864,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2832,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "pc": 6992,
+          "section": ".text.ordinary_update",
+          "function_start": 6960,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3056,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 118,
+          "annotation_line": 116,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "pc": 7088,
+          "section": ".text.ordinary_update",
+          "function_start": 7056,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3248,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7184,
+          "section": ".text.ordinary_update",
+          "function_start": 7152,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3456,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 7280,
+          "section": ".text.ordinary_update",
+          "function_start": 7248,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3648,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 7376,
+          "section": ".text.ordinary_update",
+          "function_start": 7344,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3872,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "ed48a8ccf637f16db25ac1e352dc111e1e28b508c98b5c1cbeb92f99601ebdd7",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "4464a8b3901b85e97f0e491a661315473031959f4eb1345ee337d44139fe8a2d",
+      "cubin": "/workspace/chijin-timeline-r012/runs/public-outlined-v1/output/api-cold/timeline/binaries/ce76e7b78d946e9dbc7ddee6d68632450b3d07d8b5db92cc37df1da3dfa253eb/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/public-outlined-v1/output/api-cold/timeline/machine/31a5615d3cdee01ebfe43a185f173d60efcdfc2fba2ec4525fd50ad7e11435e5/counter-map.json",
+      "counter_map_sha256": "fd3266df628146fedf68b03155c1257d1a59e457304232db308013095698f688",
+      "functions": 45,
+      "nonzero_function_starts": 44,
+      "calls": [
+        {
+          "caller": "gemm",
+          "pc": 480,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 736,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 1088,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 1456,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 1648,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 1856,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 2176,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 2432,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 2624,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 2832,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 3024,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 3296,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 3488,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 3696,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 3888,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 4160,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 4352,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 4560,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 4752,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 5248,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 5520,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 5776,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 6320,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_exit_aaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 6528,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 7040,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_exit_aaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 7248,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_entry_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 7808,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_exit_aaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 8096,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_entry_aaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 8400,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_exit_aaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 8640,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 8928,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 9248,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 9584,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 9824,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 10080,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 10480,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 10784,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 11024,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 11280,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 11712,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 11968,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 12256,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 13248,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "gemm",
+          "pc": 13632,
+          "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 1819,
+          "annotation_line": 1817,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 15792,
+          "section": ".text.gemm",
+          "function_start": 15760,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 480,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 1789,
+          "annotation_line": 1787,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 15888,
+          "section": ".text.gemm",
+          "function_start": 15856,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 736,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 10,
+          "phase": "entry",
+          "ptx_line": 1122,
+          "annotation_line": 1120,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_entry_",
+          "pc": 15984,
+          "section": ".text.gemm",
+          "function_start": 15952,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 5248,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 10,
+          "phase": "exit",
+          "ptx_line": 1098,
+          "annotation_line": 1096,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_exit_",
+          "pc": 16080,
+          "section": ".text.gemm",
+          "function_start": 16048,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 5520,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_10_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 11,
+          "phase": "entry",
+          "ptx_line": 1074,
+          "annotation_line": 1072,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_entry_",
+          "pc": 16176,
+          "section": ".text.gemm",
+          "function_start": 16144,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 5776,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 11,
+          "phase": "exit",
+          "ptx_line": 1034,
+          "annotation_line": 1032,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_exit_aaaaaaaaaaaaaaaa",
+          "pc": 16272,
+          "section": ".text.gemm",
+          "function_start": 16240,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R22,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 6320,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_11_exit_aaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 12,
+          "phase": "entry",
+          "ptx_line": 977,
+          "annotation_line": 975,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_entry_",
+          "pc": 16368,
+          "section": ".text.gemm",
+          "function_start": 16336,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R22,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 6528,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 12,
+          "phase": "exit",
+          "ptx_line": 937,
+          "annotation_line": 935,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_exit_aaaaaaaaaaaaaaaa",
+          "pc": 16464,
+          "section": ".text.gemm",
+          "function_start": 16432,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R22,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 7040,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_12_exit_aaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 13,
+          "phase": "entry",
+          "ptx_line": 840,
+          "annotation_line": 838,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_entry_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "pc": 16560,
+          "section": ".text.gemm",
+          "function_start": 16528,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R22,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 7248,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_entry_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 13,
+          "phase": "exit",
+          "ptx_line": 727,
+          "annotation_line": 725,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_exit_aaaaaaaa",
+          "pc": 16656,
+          "section": ".text.gemm",
+          "function_start": 16624,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 7808,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_13_exit_aaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 14,
+          "phase": "entry",
+          "ptx_line": 670,
+          "annotation_line": 668,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_entry_aaaaaaaaaaaaaaaa",
+          "pc": 16752,
+          "section": ".text.gemm",
+          "function_start": 16720,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 8096,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_entry_aaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 14,
+          "phase": "exit",
+          "ptx_line": 605,
+          "annotation_line": 603,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_exit_aaaaaaaa",
+          "pc": 16848,
+          "section": ".text.gemm",
+          "function_start": 16816,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 8400,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_14_exit_aaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 15,
+          "phase": "entry",
+          "ptx_line": 562,
+          "annotation_line": 560,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_entry_aa",
+          "pc": 16944,
+          "section": ".text.gemm",
+          "function_start": 16912,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 8640,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 15,
+          "phase": "exit",
+          "ptx_line": 532,
+          "annotation_line": 530,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_exit_a",
+          "pc": 17040,
+          "section": ".text.gemm",
+          "function_start": 17008,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 8928,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_15_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 16,
+          "phase": "entry",
+          "ptx_line": 481,
+          "annotation_line": 479,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 17136,
+          "section": ".text.gemm",
+          "function_start": 17104,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 9248,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 16,
+          "phase": "exit",
+          "ptx_line": 423,
+          "annotation_line": 421,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_exit_",
+          "pc": 17232,
+          "section": ".text.gemm",
+          "function_start": 17200,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 9584,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_16_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 17,
+          "phase": "entry",
+          "ptx_line": 399,
+          "annotation_line": 397,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_entry_",
+          "pc": 17328,
+          "section": ".text.gemm",
+          "function_start": 17296,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 9824,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 17,
+          "phase": "exit",
+          "ptx_line": 375,
+          "annotation_line": 373,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_exit_",
+          "pc": 17424,
+          "section": ".text.gemm",
+          "function_start": 17392,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 10080,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_17_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 18,
+          "phase": "entry",
+          "ptx_line": 327,
+          "annotation_line": 325,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 17520,
+          "section": ".text.gemm",
+          "function_start": 17488,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 10480,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 18,
+          "phase": "exit",
+          "ptx_line": 269,
+          "annotation_line": 267,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_exit_",
+          "pc": 17616,
+          "section": ".text.gemm",
+          "function_start": 17584,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 10784,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_18_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 19,
+          "phase": "entry",
+          "ptx_line": 245,
+          "annotation_line": 243,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_entry_",
+          "pc": 17712,
+          "section": ".text.gemm",
+          "function_start": 17680,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 11024,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 19,
+          "phase": "exit",
+          "ptx_line": 221,
+          "annotation_line": 219,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_exit_",
+          "pc": 17808,
+          "section": ".text.gemm",
+          "function_start": 17776,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R20,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 11280,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_19_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 1738,
+          "annotation_line": 1736,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 17904,
+          "section": ".text.gemm",
+          "function_start": 17872,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 1088,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 1680,
+          "annotation_line": 1678,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_",
+          "pc": 18000,
+          "section": ".text.gemm",
+          "function_start": 17968,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 1456,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 20,
+          "phase": "entry",
+          "ptx_line": 173,
+          "annotation_line": 171,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_entry_",
+          "pc": 18096,
+          "section": ".text.gemm",
+          "function_start": 18064,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 11968,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 20,
+          "phase": "exit",
+          "ptx_line": 149,
+          "annotation_line": 147,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_exit_",
+          "pc": 18192,
+          "section": ".text.gemm",
+          "function_start": 18160,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 12256,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_20_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 21,
+          "phase": "entry",
+          "ptx_line": 101,
+          "annotation_line": 99,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 18288,
+          "section": ".text.gemm",
+          "function_start": 18256,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 13248,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 21,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_exit_",
+          "pc": 18384,
+          "section": ".text.gemm",
+          "function_start": 18352,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 13632,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_21_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 1656,
+          "annotation_line": 1654,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_",
+          "pc": 18480,
+          "section": ".text.gemm",
+          "function_start": 18448,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 1648,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 1632,
+          "annotation_line": 1630,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_",
+          "pc": 18576,
+          "section": ".text.gemm",
+          "function_start": 18544,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 1856,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 1584,
+          "annotation_line": 1582,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 18672,
+          "section": ".text.gemm",
+          "function_start": 18640,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 2176,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 1526,
+          "annotation_line": 1524,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+          "pc": 18768,
+          "section": ".text.gemm",
+          "function_start": 18736,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 2432,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 1502,
+          "annotation_line": 1500,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_",
+          "pc": 18864,
+          "section": ".text.gemm",
+          "function_start": 18832,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 2624,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 1478,
+          "annotation_line": 1476,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 18960,
+          "section": ".text.gemm",
+          "function_start": 18928,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 2832,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 1430,
+          "annotation_line": 1428,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 19056,
+          "section": ".text.gemm",
+          "function_start": 19024,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 3024,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 1372,
+          "annotation_line": 1370,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+          "pc": 19152,
+          "section": ".text.gemm",
+          "function_start": 19120,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 3296,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 1348,
+          "annotation_line": 1346,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_",
+          "pc": 19248,
+          "section": ".text.gemm",
+          "function_start": 19216,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 3488,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 1324,
+          "annotation_line": 1322,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_",
+          "pc": 19344,
+          "section": ".text.gemm",
+          "function_start": 19312,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 3696,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 1276,
+          "annotation_line": 1274,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+          "pc": 19440,
+          "section": ".text.gemm",
+          "function_start": 19408,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 3888,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_bbbbbbbbaaaaaaaaaaaaaaaa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 1218,
+          "annotation_line": 1216,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 19536,
+          "section": ".text.gemm",
+          "function_start": 19504,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 4160,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 8,
+          "phase": "entry",
+          "ptx_line": 1194,
+          "annotation_line": 1192,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_entry_",
+          "pc": 19632,
+          "section": ".text.gemm",
+          "function_start": 19600,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 4352,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 8,
+          "phase": "exit",
+          "ptx_line": 1170,
+          "annotation_line": 1168,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_exit_",
+          "pc": 19728,
+          "section": ".text.gemm",
+          "function_start": 19696,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 4560,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_8_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 9,
+          "phase": "entry",
+          "ptx_line": 1146,
+          "annotation_line": 1144,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_entry_",
+          "pc": 19824,
+          "section": ".text.gemm",
+          "function_start": 19792,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 4752,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 9,
+          "phase": "exit",
+          "ptx_line": 197,
+          "annotation_line": 195,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_exit_",
+          "pc": 19920,
+          "section": ".text.gemm",
+          "function_start": 19888,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R4,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "gemm",
+              "pc": 11712,
+              "callee": "$gemm$__flagprism_counter_v2_flagprism_timeline_v1_site_9_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "b0d95f3a8f46c05ce76215da4f08334f82868a50b76483a54e93e7a24270ed7a",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "4a4e38714686d3acff793c239b51c2b9283de6a4a81b2348e671bcb686e778d3",
+      "cubin": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/binaries/0dc131ad608f519b10a38a850b9ad8140d7dafdc74f2ac86ee4b73342bb5b628/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/machine/f893fa89f16a181aee30252f296c44d5ab95922058355b8304180a5eb5845303/counter-map.json",
+      "counter_map_sha256": "928f6cad014a08dc03938c9ed95d347c9fd18daa80584c9f72712a07261a205e",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "ordinary_update",
+          "pc": 464,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 736,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 960,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1168,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1360,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1600,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1808,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2016,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2240,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2480,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2800,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3024,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3216,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3424,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3616,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3840,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 473,
+          "annotation_line": 471,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 5904,
+          "section": ".text.ordinary_update",
+          "function_start": 5872,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 464,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 443,
+          "annotation_line": 441,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6000,
+          "section": ".text.ordinary_update",
+          "function_start": 5968,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 736,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 414,
+          "annotation_line": 412,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "pc": 6096,
+          "section": ".text.ordinary_update",
+          "function_start": 6064,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 960,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 385,
+          "annotation_line": 383,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6192,
+          "section": ".text.ordinary_update",
+          "function_start": 6160,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1168,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 355,
+          "annotation_line": 353,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "pc": 6288,
+          "section": ".text.ordinary_update",
+          "function_start": 6256,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1360,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 324,
+          "annotation_line": 322,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "pc": 6384,
+          "section": ".text.ordinary_update",
+          "function_start": 6352,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1600,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 295,
+          "annotation_line": 293,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "pc": 6480,
+          "section": ".text.ordinary_update",
+          "function_start": 6448,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1808,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 266,
+          "annotation_line": 264,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "pc": 6576,
+          "section": ".text.ordinary_update",
+          "function_start": 6544,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2016,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 236,
+          "annotation_line": 234,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "pc": 6672,
+          "section": ".text.ordinary_update",
+          "function_start": 6640,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2240,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 6768,
+          "section": ".text.ordinary_update",
+          "function_start": 6736,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2480,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 6864,
+          "section": ".text.ordinary_update",
+          "function_start": 6832,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2800,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "pc": 6960,
+          "section": ".text.ordinary_update",
+          "function_start": 6928,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3024,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 118,
+          "annotation_line": 116,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "pc": 7056,
+          "section": ".text.ordinary_update",
+          "function_start": 7024,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3216,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7152,
+          "section": ".text.ordinary_update",
+          "function_start": 7120,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3424,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 7248,
+          "section": ".text.ordinary_update",
+          "function_start": 7216,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3616,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 7344,
+          "section": ".text.ordinary_update",
+          "function_start": 7312,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3840,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "8a18d1efeeec7f63db2aa2210465d1a0f6a0b4da2aad6967cece87554a2eb835",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "84a96b353621accc921985f2ce25a86ae1bb0451444db0cb8f54fe97c7df80f5",
+      "cubin": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/binaries/5a3a4a18e7b5b342d85e0df62b212cc7298b8de423c9a22b326ed19a0c1efadc/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/machine/b846e569e16ba0b0e92eaa35996e411690dbf52c7b41cbceeda15545e51af3a0/counter-map.json",
+      "counter_map_sha256": "93abd90fd79cd9eb9716671425c55f1460ef3762ab85acc33831c303808deb97",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "ordinary_update",
+          "pc": 464,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 736,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 960,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1168,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1360,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1600,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1840,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2064,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2288,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2528,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2848,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3072,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3264,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3472,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3664,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3888,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 473,
+          "annotation_line": 471,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 5952,
+          "section": ".text.ordinary_update",
+          "function_start": 5920,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 464,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 443,
+          "annotation_line": 441,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6048,
+          "section": ".text.ordinary_update",
+          "function_start": 6016,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 736,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 414,
+          "annotation_line": 412,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "pc": 6144,
+          "section": ".text.ordinary_update",
+          "function_start": 6112,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 960,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 385,
+          "annotation_line": 383,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6240,
+          "section": ".text.ordinary_update",
+          "function_start": 6208,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1168,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 355,
+          "annotation_line": 353,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "pc": 6336,
+          "section": ".text.ordinary_update",
+          "function_start": 6304,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1360,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 324,
+          "annotation_line": 322,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "pc": 6432,
+          "section": ".text.ordinary_update",
+          "function_start": 6400,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1600,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 295,
+          "annotation_line": 293,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "pc": 6528,
+          "section": ".text.ordinary_update",
+          "function_start": 6496,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1840,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 266,
+          "annotation_line": 264,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "pc": 6624,
+          "section": ".text.ordinary_update",
+          "function_start": 6592,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2064,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 236,
+          "annotation_line": 234,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "pc": 6720,
+          "section": ".text.ordinary_update",
+          "function_start": 6688,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2288,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 6816,
+          "section": ".text.ordinary_update",
+          "function_start": 6784,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2528,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 6912,
+          "section": ".text.ordinary_update",
+          "function_start": 6880,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2848,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "pc": 7008,
+          "section": ".text.ordinary_update",
+          "function_start": 6976,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3072,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 118,
+          "annotation_line": 116,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "pc": 7104,
+          "section": ".text.ordinary_update",
+          "function_start": 7072,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3264,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7200,
+          "section": ".text.ordinary_update",
+          "function_start": 7168,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3472,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 7296,
+          "section": ".text.ordinary_update",
+          "function_start": 7264,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3664,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 7392,
+          "section": ".text.ordinary_update",
+          "function_start": 7360,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3888,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "2b2995692751f657c9df6e5a164dfddff04777f15a8c1e4154736c943c15b296",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "ad75cb8f52bc7da1650171267563c46b7bc504a564e5e9ddfd6d46862b5b9c97",
+      "cubin": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/binaries/7b6c3394f3bc2e5e79a813fcbbc3d6ced40ac66d78c1087fa87a485ed963d70e/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/machine/d246cc148f5259550c0a59104cefa329b1cf04a65ab495df4226b71e8963fb1b/counter-map.json",
+      "counter_map_sha256": "f98ee332f380533b4e4cd63a4ee55dc872dd436f59614bb831bd7d73eb37e77a",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "ordinary_update",
+          "pc": 464,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 736,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 960,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1168,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1360,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1600,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1824,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2048,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2272,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2512,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2832,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3056,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3248,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3456,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3648,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3872,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 471,
+          "annotation_line": 469,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 5936,
+          "section": ".text.ordinary_update",
+          "function_start": 5904,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 464,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 441,
+          "annotation_line": 439,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6032,
+          "section": ".text.ordinary_update",
+          "function_start": 6000,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 736,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 412,
+          "annotation_line": 410,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "pc": 6128,
+          "section": ".text.ordinary_update",
+          "function_start": 6096,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 960,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 383,
+          "annotation_line": 381,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6224,
+          "section": ".text.ordinary_update",
+          "function_start": 6192,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1168,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 353,
+          "annotation_line": 351,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+          "pc": 6320,
+          "section": ".text.ordinary_update",
+          "function_start": 6288,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1360,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_bab",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 322,
+          "annotation_line": 320,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+          "pc": 6416,
+          "section": ".text.ordinary_update",
+          "function_start": 6384,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1600,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_b",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 294,
+          "annotation_line": 292,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+          "pc": 6512,
+          "section": ".text.ordinary_update",
+          "function_start": 6480,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1824,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_bb",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 265,
+          "annotation_line": 263,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+          "pc": 6608,
+          "section": ".text.ordinary_update",
+          "function_start": 6576,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2048,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_b",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 236,
+          "annotation_line": 234,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+          "pc": 6704,
+          "section": ".text.ordinary_update",
+          "function_start": 6672,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2272,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_bba",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 6800,
+          "section": ".text.ordinary_update",
+          "function_start": 6768,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2512,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 6896,
+          "section": ".text.ordinary_update",
+          "function_start": 6864,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2832,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "pc": 6992,
+          "section": ".text.ordinary_update",
+          "function_start": 6960,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3056,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 118,
+          "annotation_line": 116,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "pc": 7088,
+          "section": ".text.ordinary_update",
+          "function_start": 7056,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3248,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7184,
+          "section": ".text.ordinary_update",
+          "function_start": 7152,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3456,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 7280,
+          "section": ".text.ordinary_update",
+          "function_start": 7248,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3648,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 7376,
+          "section": ".text.ordinary_update",
+          "function_start": 7344,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3872,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "e1d39a9cf477ced2fb7740b6d8f3d4de23347b1f0ca1e907f02ac8705d129247",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "c554957bc7f3c58ab423220f5926ca5b844e708c5b6e29d9264267eb42365c12",
+      "cubin": "/workspace/chijin-timeline-r012/runs/public-outlined-v1/output/api-cold/timeline/binaries/bd95f0ce53e93cd47c67ca4900114b27affa5a556088793a86cd9773fd4e367c/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/public-outlined-v1/output/api-cold/timeline/machine/2d1a4b2e5dec103b6667e6b2327fa03504626985663451366ead07ccf9bba6a8/counter-map.json",
+      "counter_map_sha256": "bdcac7f13e01371b71091816dc091bff83fd50e69efa45084217c8f7bedeec9d",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "recurrence",
+          "pc": 432,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 704,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 1008,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 1248,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 1440,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_b",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 1664,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 1856,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 2144,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 2400,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 2704,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 3008,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 3328,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 3696,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 3984,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 4256,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "recurrence",
+          "pc": 4544,
+          "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 460,
+          "annotation_line": 458,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 6688,
+          "section": ".text.recurrence",
+          "function_start": 6656,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 432,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 430,
+          "annotation_line": 428,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6784,
+          "section": ".text.recurrence",
+          "function_start": 6752,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 704,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 400,
+          "annotation_line": 398,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_baa",
+          "pc": 6880,
+          "section": ".text.recurrence",
+          "function_start": 6848,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 1008,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 369,
+          "annotation_line": 367,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6976,
+          "section": ".text.recurrence",
+          "function_start": 6944,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 1248,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 341,
+          "annotation_line": 339,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_b",
+          "pc": 7072,
+          "section": ".text.recurrence",
+          "function_start": 7040,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 1440,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_b",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 314,
+          "annotation_line": 312,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "pc": 7168,
+          "section": ".text.recurrence",
+          "function_start": 7136,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 1664,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 287,
+          "annotation_line": 285,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_",
+          "pc": 7264,
+          "section": ".text.recurrence",
+          "function_start": 7232,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 1856,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+          "pc": 7360,
+          "section": ".text.recurrence",
+          "function_start": 7328,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 2704,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 261,
+          "annotation_line": 259,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_aa",
+          "pc": 7456,
+          "section": ".text.recurrence",
+          "function_start": 7424,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 2144,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 232,
+          "annotation_line": 230,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_a",
+          "pc": 7552,
+          "section": ".text.recurrence",
+          "function_start": 7520,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 2400,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 7648,
+          "section": ".text.recurrence",
+          "function_start": 7616,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 3008,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+          "pc": 7744,
+          "section": ".text.recurrence",
+          "function_start": 7712,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 3328,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 120,
+          "annotation_line": 118,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_baa",
+          "pc": 7840,
+          "section": ".text.recurrence",
+          "function_start": 7808,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 3696,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7936,
+          "section": ".text.recurrence",
+          "function_start": 7904,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 3984,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 8032,
+          "section": ".text.recurrence",
+          "function_start": 8000,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 4256,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 8128,
+          "section": ".text.recurrence",
+          "function_start": 8096,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "recurrence",
+              "pc": 4544,
+              "callee": "$recurrence$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "2ad3490e714182739886297cb00687c6b03e22a20686dfceb778505c4ae889ff",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    },
+    {
+      "cubin_sha256": "d8a66e511787eb44af295648e7b788895628df9e2a4178d75aef593bda5c60a8",
+      "cubin": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/binaries/767f706c11aa98773957794ebb879d964c7cc1a3f0fbfc484998a649214a67b3/5.cubin",
+      "counter_map": "/workspace/chijin-timeline-r012/runs/boundary-math-v1/output/public/timeline/machine/fa1e767ac93218000dc89bd91bbc39e072495e03c0e69d3a17508a8891c378ff/counter-map.json",
+      "counter_map_sha256": "d423454f3e0c13c5fe6b1186f0790371b848972318b84dbb55a20b18b3e4768f",
+      "functions": 17,
+      "nonzero_function_starts": 16,
+      "calls": [
+        {
+          "caller": "ordinary_update",
+          "pc": 464,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 736,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 960,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1168,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1360,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1600,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 1840,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2064,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2288,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2528,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 2848,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3072,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3264,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3472,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3664,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "opcode": "CALL.REL.NOINC"
+        },
+        {
+          "caller": "ordinary_update",
+          "pc": 3888,
+          "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "opcode": "CALL.REL.NOINC"
+        }
+      ],
+      "counters": [
+        {
+          "site_id": 0,
+          "phase": "entry",
+          "ptx_line": 473,
+          "annotation_line": 471,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+          "pc": 5952,
+          "section": ".text.ordinary_update",
+          "function_start": 5920,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R6,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 464,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 0,
+          "phase": "exit",
+          "ptx_line": 443,
+          "annotation_line": 441,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+          "pc": 6048,
+          "section": ".text.ordinary_update",
+          "function_start": 6016,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 736,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_0_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "entry",
+          "ptx_line": 414,
+          "annotation_line": 412,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+          "pc": 6144,
+          "section": ".text.ordinary_update",
+          "function_start": 6112,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 960,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 1,
+          "phase": "exit",
+          "ptx_line": 385,
+          "annotation_line": 383,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+          "pc": 6240,
+          "section": ".text.ordinary_update",
+          "function_start": 6208,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1168,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_1_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "entry",
+          "ptx_line": 355,
+          "annotation_line": 353,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+          "pc": 6336,
+          "section": ".text.ordinary_update",
+          "function_start": 6304,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1360,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 2,
+          "phase": "exit",
+          "ptx_line": 324,
+          "annotation_line": 322,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+          "pc": 6432,
+          "section": ".text.ordinary_update",
+          "function_start": 6400,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1600,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_2_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "entry",
+          "ptx_line": 295,
+          "annotation_line": 293,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+          "pc": 6528,
+          "section": ".text.ordinary_update",
+          "function_start": 6496,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 1840,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 3,
+          "phase": "exit",
+          "ptx_line": 266,
+          "annotation_line": 264,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+          "pc": 6624,
+          "section": ".text.ordinary_update",
+          "function_start": 6592,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2064,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_3_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "entry",
+          "ptx_line": 236,
+          "annotation_line": 234,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+          "pc": 6720,
+          "section": ".text.ordinary_update",
+          "function_start": 6688,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2288,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 4,
+          "phase": "exit",
+          "ptx_line": 205,
+          "annotation_line": 203,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+          "pc": 6816,
+          "section": ".text.ordinary_update",
+          "function_start": 6784,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2528,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_4_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "entry",
+          "ptx_line": 178,
+          "annotation_line": 176,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+          "pc": 6912,
+          "section": ".text.ordinary_update",
+          "function_start": 6880,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 2848,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 5,
+          "phase": "exit",
+          "ptx_line": 147,
+          "annotation_line": 145,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+          "pc": 7008,
+          "section": ".text.ordinary_update",
+          "function_start": 6976,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3072,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_5_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "entry",
+          "ptx_line": 118,
+          "annotation_line": 116,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+          "pc": 7104,
+          "section": ".text.ordinary_update",
+          "function_start": 7072,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3264,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_entry_aa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 6,
+          "phase": "exit",
+          "ptx_line": 89,
+          "annotation_line": 87,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+          "pc": 7200,
+          "section": ".text.ordinary_update",
+          "function_start": 7168,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3472,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_6_exit_a",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "entry",
+          "ptx_line": 59,
+          "annotation_line": 57,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+          "pc": 7296,
+          "section": ".text.ordinary_update",
+          "function_start": 7264,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3664,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_entry_baa",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        },
+        {
+          "site_id": 7,
+          "phase": "exit",
+          "ptx_line": 28,
+          "annotation_line": 26,
+          "ptx_collection_predicate": "@%p1",
+          "function": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+          "pc": 7392,
+          "section": ".text.ordinary_update",
+          "function_start": 7360,
+          "relative_pc": 32,
+          "sass_predicate": null,
+          "opcode": "CS2R",
+          "operands": "R8,SR_GLOBALTIMERLO",
+          "direct_call_sites": [
+            {
+              "caller": "ordinary_update",
+              "pc": 3888,
+              "callee": "$ordinary_update$__flagprism_counter_v2_flagprism_timeline_v1_site_7_exit_",
+              "opcode": "CALL.REL.NOINC"
+            }
+          ]
+        }
+      ],
+      "membar_instructions": [],
+      "cfg_sha256": "98c02dff1a2536faadf8922bd1ba4d6c049206801f14b7a0a9d01ba94a5d76bf",
+      "region_boundaries_verified": false,
+      "clock_qualified": false
+    }
+  ],
+  "nvdisasm": "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+  "nvdisasm_sha256": "6df0054fac801e7ab7d251506cfe52a1171c207de0923d8a3d57fdd5a1f6d982",
+  "limitations": [
+    "Static calls and counter PCs do not prove dynamic source region boundaries.",
+    "No clock scale, epoch, endpoint error or hardware completion qualification."
+  ]
+}

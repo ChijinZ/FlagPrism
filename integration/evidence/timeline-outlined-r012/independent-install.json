@@ -1,0 +1,180 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r012/package-multifunction/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "b7c3aaf220dd4e97f2caa867bf5dca110b4e27fd3d3e4bf0843429c519b1f22b",
+  "venv": "/workspace/chijin-timeline-r012/runs/install-v1/output/venv",
+  "installed_members_byte_verified": 607,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv"
+      ],
+      "pid": 45241,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10073838,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r012/package-multifunction/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 45246,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10074039,
+      "returncode": 0
+    },
+    {
+      "name": "offline-nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 45250,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10074572,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r012/check-input-v1/test_nvidia_machine_map.py"
+      ],
+      "pid": 45260,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075260,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r012/check-input-v1/test_public_timeline_contract.py"
+      ],
+      "pid": 45264,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075297,
+      "returncode": 0
+    },
+    {
+      "name": "boundary-native-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r012/check-input-v1/nvidia_boundary_binding_smoke.py",
+        "--output",
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/boundary-native-contract-normal",
+        "--ir",
+        "/workspace/chijin-timeline-r001/runs/nvidia-primitives-v2/output/ordinary-gemm-stages3.ttgir"
+      ],
+      "pid": 45328,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075442,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r012/check-input-v1/test_nvidia_machine_map.py"
+      ],
+      "pid": 45329,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075470,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r012/check-input-v1/test_public_timeline_contract.py"
+      ],
+      "pid": 45333,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075515,
+      "returncode": 0
+    },
+    {
+      "name": "boundary-native-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r012/check-input-v1/nvidia_boundary_binding_smoke.py",
+        "--output",
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/boundary-native-contract-optimized",
+        "--ir",
+        "/workspace/chijin-timeline-r001/runs/nvidia-primitives-v2/output/ordinary-gemm-stages3.ttgir"
+      ],
+      "pid": 45397,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075661,
+      "returncode": 0
+    },
+    {
+      "name": "legacy-automatic-hook",
+      "argv": [
+        "/workspace/chijin-timeline-r012/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r012/check-input-v1/test_automatic_hook.py"
+      ],
+      "pid": 45398,
+      "ppid": 45240,
+      "pgid": 45240,
+      "startticks": 10075689,
+      "returncode": 0
+    }
+  ]
+}
