@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 48289,
+    "ppid": 1,
+    "pgid": 48279,
+    "startticks": 10678246
+  },
+  "worker": {
+    "pid": 48290,
+    "ppid": 48289,
+    "pgid": 48290,
+    "startticks": 10678249
+  },
+  "argv": [
+    "/workspace/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r015/check-input-v2/install-and-check-v2.py",
+    "--output",
+    "/workspace/chijin-timeline-r015/runs/install-v2/output"
+  ],
+  "argv_sha256": "f039c8f2df9d80af618639c262dc7ce50048261382d582fa27c259ee80db87a4",
+  "script_sha256": "99708288cd2e1be7363f3eecdcfdfe5b452e3e5caf968bdea47fa9a16a367755",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 19697471867
+}

@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 47971,
+    "ppid": 1,
+    "pgid": 47961,
+    "startticks": 10662106
+  },
+  "worker": {
+    "pid": 47972,
+    "ppid": 47971,
+    "pgid": 47972,
+    "startticks": 10662110
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r015/runs/install-v1/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r015/device-input-v2/p01_nvidia_finalize_recovery.py",
+    "--output",
+    "/workspace/chijin-timeline-r015/runs/fault-recovery-v2/output"
+  ],
+  "argv_sha256": "562a2cb55604ad4fb3e30ce118a66b064a7265b0161d760fb4e1d48360c0a3dc",
+  "script_sha256": "27d995ce7d1190b0276693e6a98823688f7b83b44f3c588e8e377dc5cd9671d8",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 4321748326
+}

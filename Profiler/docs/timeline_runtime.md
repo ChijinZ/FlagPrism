@@ -147,3 +147,28 @@ preserves atomic start/end fields, work-item identity, local-label provenance,
 sampling and dropped-pair counts. This is not yet a GCU default timeline hook,
 ns producer or Perfetto exporter. See [raw events](timeline_events.md) for the
 versioned contract and evidence boundary.
+
+## Finalization and recovery stages
+
+Finalization first attempts readback and durable retention for every pending
+invocation, before running any decoder or machine mapper. Each original `.raw`,
+`.input.json`, and required compiled/source artifact is persisted before its
+completed device owner is released. The second pass decodes these retained files;
+a decoder failure does not prevent other invocations from being saved or decoded.
+Owners with unresolved completion/readback/release remain explicit and retryable;
+they are never freed merely because another invocation failed.
+
+`attempts/flush-NNNN.json` preserves each attempted finalization and its failures.
+The mutable `index.json` also identifies `pending_decode` and `retained_owners`;
+its replacement is atomic, unlike the immutable per-invocation originals. The
+first failure remains the raised error even if later journal persistence fails.
+JSON slot maps are rehydrated to the physical decoder's tuple contract; raw
+identity is checked again before decoding. This conversion changes no raw fields.
+
+An in-process retry of the retained hook uses the same internal evidence directory
+and only rereads the saved inputs for owners already released. The public API may
+use an internal staging directory different from the requested bundle path; on
+failure it reports retained intermediates. This is not yet a standalone public
+cross-process recovery command. No recovery replays the application's kernels.
+Clock, source-boundary, async reuse and standard Perfetto qualification remain
+separate unfinished requirements.

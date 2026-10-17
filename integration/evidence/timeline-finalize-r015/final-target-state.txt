@@ -1,0 +1,253 @@
+[
+  {
+    "job": "package-finalize-v1",
+    "expected_returncode": 0,
+    "terminal_sha256": "390f9d62ad3d393e3bad0c77dab29d815671417c9e81ce2b5199b39300f70315",
+    "owners": [
+      {
+        "identity": {
+          "pid": 47498,
+          "ppid": 1,
+          "pgid": 47487,
+          "startticks": 10642130
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 47499,
+          "ppid": 47498,
+          "pgid": 47499,
+          "startticks": 10642156
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 47500,
+          "ppid": 47498,
+          "pgid": 47500,
+          "startticks": 10642156
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 47501,
+          "ppid": 47498,
+          "pgid": 47501,
+          "startticks": 10642157
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 47502,
+          "ppid": 47498,
+          "pgid": 47502,
+          "startticks": 10642157
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "runs/install-v1",
+    "expected_returncode": 0,
+    "terminal_sha256": "30371db556be3f4e1f422a0ec62c33809aa0431020baad8f6063c1501fca607c",
+    "owners": [
+      {
+        "identity": {
+          "pid": 47636,
+          "ppid": 1,
+          "pgid": 47626,
+          "startticks": 10651535
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 47637,
+          "ppid": 47636,
+          "pgid": 47637,
+          "startticks": 10651538
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "runs/fault-recovery-v1",
+    "expected_returncode": 1,
+    "terminal_sha256": "689a9cc2ae974a25711c10c8f0532bf650ec63a137514783fbcd2b14e4db75c8",
+    "owners": [
+      {
+        "identity": {
+          "pid": 47803,
+          "ppid": 1,
+          "pgid": 47797,
+          "startticks": 10656248
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 47804,
+          "ppid": 47803,
+          "pgid": 47804,
+          "startticks": 10656251
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "runs/fault-recovery-v2",
+    "expected_returncode": 1,
+    "terminal_sha256": "5aa4aa334cefc173523b8fb42746819739b3e40308f2d3fa2e5164ccde5816a3",
+    "owners": [
+      {
+        "identity": {
+          "pid": 47971,
+          "ppid": 1,
+          "pgid": 47961,
+          "startticks": 10662106
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 47972,
+          "ppid": 47971,
+          "pgid": 47972,
+          "startticks": 10662110
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "package-finalize-v2",
+    "expected_returncode": 0,
+    "terminal_sha256": "f25f93dde72a2c2335469bcb69ed40945d3036cf0624f25bccf01914c0526baf",
+    "owners": [
+      {
+        "identity": {
+          "pid": 48145,
+          "ppid": 1,
+          "pgid": 48135,
+          "startticks": 10670187
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 48146,
+          "ppid": 48145,
+          "pgid": 48146,
+          "startticks": 10670212
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 48147,
+          "ppid": 48145,
+          "pgid": 48147,
+          "startticks": 10670212
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 48148,
+          "ppid": 48145,
+          "pgid": 48148,
+          "startticks": 10670213
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      },
+      {
+        "identity": {
+          "pid": 48149,
+          "ppid": 48145,
+          "pgid": 48149,
+          "startticks": 10670213
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "runs/install-v2",
+    "expected_returncode": 0,
+    "terminal_sha256": "780f27ead86105756dc2cfe99b3f9c9400adcf643feaabbb2f6f82e73f886146",
+    "owners": [
+      {
+        "identity": {
+          "pid": 48289,
+          "ppid": 1,
+          "pgid": 48279,
+          "startticks": 10678246
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 48290,
+          "ppid": 48289,
+          "pgid": 48290,
+          "startticks": 10678249
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  },
+  {
+    "job": "runs/fault-recovery-v3",
+    "expected_returncode": 0,
+    "terminal_sha256": "e7da1a74161eef249820004f486f7f8594c2ead297f0a2d1af29f0757f007f04",
+    "owners": [
+      {
+        "identity": {
+          "pid": 48456,
+          "ppid": 1,
+          "pgid": 48450,
+          "startticks": 10681664
+        },
+        "current_state": "Z",
+        "same_startticks": true
+      },
+      {
+        "identity": {
+          "pid": 48457,
+          "ppid": 48456,
+          "pgid": 48457,
+          "startticks": 10681667
+        },
+        "current_state": "missing",
+        "same_startticks": false
+      }
+    ]
+  }
+]
+
+0, NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 15 MiB, 0 %

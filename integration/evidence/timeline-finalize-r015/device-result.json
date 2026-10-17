@@ -1,0 +1,117 @@
+{
+  "status": "actual_owner_salvage_and_offline_retry_passed_not_full_P01",
+  "injected_invocation": "invocation-fca796bb2388499aaa8b0daf72ccda30",
+  "original_directory": "/workspace/chijin-timeline-r015/runs/fault-recovery-v3/tmp/flagprism-session-blohbkp7/capture.timeline",
+  "explicit_workload_runs": 2,
+  "fault_capture_calls": 4,
+  "subsequent_capture_calls": 4,
+  "first_attempt_sha256": "9e5952b78a119aec9b5531c90bf076507f64edbdc1908a906acee39d1db4b164",
+  "transport_actions": [
+    {
+      "action": "read_raw",
+      "invocation_id": "invocation-fca796bb2388499aaa8b0daf72ccda30",
+      "monotonic_ns": 106820463394564
+    },
+    {
+      "action": "release",
+      "invocation_id": "invocation-fca796bb2388499aaa8b0daf72ccda30",
+      "monotonic_ns": 106820518114810
+    },
+    {
+      "action": "read_raw",
+      "invocation_id": "invocation-2d49d35ec75b4f07b4db4d06cd5954e5",
+      "monotonic_ns": 106820518843563
+    },
+    {
+      "action": "release",
+      "invocation_id": "invocation-2d49d35ec75b4f07b4db4d06cd5954e5",
+      "monotonic_ns": 106820535348196
+    },
+    {
+      "action": "read_raw",
+      "invocation_id": "invocation-4d10762c0618497ba510b25584436ce7",
+      "monotonic_ns": 106820535983599
+    },
+    {
+      "action": "release",
+      "invocation_id": "invocation-4d10762c0618497ba510b25584436ce7",
+      "monotonic_ns": 106820552516714
+    },
+    {
+      "action": "read_raw",
+      "invocation_id": "invocation-c00ca68738424d83a5b2dab33cdf6158",
+      "monotonic_ns": 106820554222402
+    },
+    {
+      "action": "release",
+      "invocation_id": "invocation-c00ca68738424d83a5b2dab33cdf6158",
+      "monotonic_ns": 106820621594814
+    }
+  ],
+  "recovery_transport_actions": 0,
+  "originals": {
+    "captures/invocation-fca796bb2388499aaa8b0daf72ccda30.input.json": "7e980a8af369a97e5fb4c4cd02570a13e7efaf429746de27fde8f5075b3ecf28",
+    "captures/invocation-2d49d35ec75b4f07b4db4d06cd5954e5.raw": "002317df4e6a3a192de7d234ce4b24a895507d53145e93bbe80f1c4f0a971e2f",
+    "captures/invocation-4d10762c0618497ba510b25584436ce7.raw": "f56ceb2a57ee757e5b92e49e33a745596411a6528987bc82d99067f92f7daeb4",
+    "captures/invocation-c00ca68738424d83a5b2dab33cdf6158.input.json": "17423dc8ff72c4bdd88e6c01b4914e9ac2ed61817f26efa8fec0792bc9016fa6",
+    "captures/invocation-fca796bb2388499aaa8b0daf72ccda30.raw": "2f9490e43dbcc03ababcf560af10deb3d997a1694ac4c0ed028c8b67d37c688f",
+    "captures/invocation-2d49d35ec75b4f07b4db4d06cd5954e5.input.json": "1d6155f2e5d2a8474eb40aa25f57647e813e052c871f1ebc7ee48a65c585ebaa",
+    "captures/invocation-c00ca68738424d83a5b2dab33cdf6158.raw": "12e41fe29a4e5e08b35deab265c6aecad911d292b9f136282caa79e016921bc2",
+    "captures/invocation-4d10762c0618497ba510b25584436ce7.input.json": "9ccbf068abd12c268d396d5fa75283e8f98b867cff9773a37068e9c79e1546d4"
+  },
+  "recovered_captures": [
+    {
+      "invocation_id": "invocation-2d49d35ec75b4f07b4db4d06cd5954e5",
+      "events": 112,
+      "records": 224,
+      "raw_sha256": "002317df4e6a3a192de7d234ce4b24a895507d53145e93bbe80f1c4f0a971e2f"
+    },
+    {
+      "invocation_id": "invocation-4d10762c0618497ba510b25584436ce7",
+      "events": 144,
+      "records": 288,
+      "raw_sha256": "f56ceb2a57ee757e5b92e49e33a745596411a6528987bc82d99067f92f7daeb4"
+    },
+    {
+      "invocation_id": "invocation-c00ca68738424d83a5b2dab33cdf6158",
+      "events": 336,
+      "records": 672,
+      "raw_sha256": "12e41fe29a4e5e08b35deab265c6aecad911d292b9f136282caa79e016921bc2"
+    },
+    {
+      "invocation_id": "invocation-fca796bb2388499aaa8b0daf72ccda30",
+      "events": 80,
+      "records": 160,
+      "raw_sha256": "2f9490e43dbcc03ababcf560af10deb3d997a1694ac4c0ed028c8b67d37c688f"
+    }
+  ],
+  "subsequent_captures": [
+    {
+      "invocation_id": "invocation-937bb881dacc43cc9e682ea3f371238f",
+      "events": 80,
+      "records": 160,
+      "raw_sha256": "3b034222291f086576bc18372df2347fde98313e51786956aa39ca57efe222dc"
+    },
+    {
+      "invocation_id": "invocation-fa13c2bd34ed4794a739f567f8adc2d5",
+      "events": 112,
+      "records": 224,
+      "raw_sha256": "9e5fcccd93a8bac5d6f73fbeee01597e2125d57304350db54ebff8cb5c8af058"
+    },
+    {
+      "invocation_id": "invocation-8a121660dd684be1b125b03469b39881",
+      "events": 144,
+      "records": 288,
+      "raw_sha256": "8ae6ca6a6924b44147026430f29607fc8b22a137d6f8180d5c5170ad27538862"
+    },
+    {
+      "invocation_id": "invocation-51b417d06e8844adb5a8247975779c38",
+      "events": 336,
+      "records": 672,
+      "raw_sha256": "4f4db443fb87273865abb29e3e0d853b7e293328ba0f535e4c5f36e8cf629925"
+    }
+  ],
+  "clock_qualified": false,
+  "region_boundaries_verified": false,
+  "perfetto_qualified": false
+}
