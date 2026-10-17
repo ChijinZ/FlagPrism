@@ -1,0 +1,150 @@
+{
+  "status": "independent_raw_byte_and_artifact_audit_passed_not_full_P01",
+  "archive_sha256": "fba43843d460ea815e529f9e29bbeda22449a0aa5c505ed61ae3ac8c23cea4e8",
+  "archive_bytes": 400503,
+  "real_explicit_calls": 10,
+  "captures": [
+    {
+      "name": "recurrence-k3",
+      "raw_bytes": 98688,
+      "raw_sha256": "207350915dda8a4c1c60eb43f3799e28101b0e1049567287498c41146fa70ac7",
+      "binary_hash": "f6f59717e7c5fa2db7cfae17504364a1dfccb032af6c8d9caf17b24ae91ad59c",
+      "records": 160,
+      "pairs": 80,
+      "all_header_buffers_bytes": 32768,
+      "ptx_string_counts_not_semantic_certificate": {
+        "%globaltimer": 18,
+        "cp.async.cg.shared.global": 0,
+        "cp.async.commit_group": 0,
+        "cp.async.wait_group": 0,
+        "mma.sync": 0,
+        "bar.sync": 0
+      }
+    },
+    {
+      "name": "recurrence-k7",
+      "raw_bytes": 98688,
+      "raw_sha256": "5b74052b3264f1e0c995b7cc25617ccfdcffa303722766d01fa88fa4c2c37d77",
+      "binary_hash": "f6f59717e7c5fa2db7cfae17504364a1dfccb032af6c8d9caf17b24ae91ad59c",
+      "records": 224,
+      "pairs": 112,
+      "all_header_buffers_bytes": 32768,
+      "ptx_string_counts_not_semantic_certificate": {
+        "%globaltimer": 18,
+        "cp.async.cg.shared.global": 0,
+        "cp.async.commit_group": 0,
+        "cp.async.wait_group": 0,
+        "mma.sync": 0,
+        "bar.sync": 0
+      }
+    },
+    {
+      "name": "recurrence-k11",
+      "raw_bytes": 98688,
+      "raw_sha256": "5aeca1c6327406c1d061e43fff4862d51669024dfe554fc3427e2de03b6b5452",
+      "binary_hash": "f6f59717e7c5fa2db7cfae17504364a1dfccb032af6c8d9caf17b24ae91ad59c",
+      "records": 288,
+      "pairs": 144,
+      "all_header_buffers_bytes": 32768,
+      "ptx_string_counts_not_semantic_certificate": {
+        "%globaltimer": 18,
+        "cp.async.cg.shared.global": 0,
+        "cp.async.commit_group": 0,
+        "cp.async.wait_group": 0,
+        "mma.sync": 0,
+        "bar.sync": 0
+      }
+    },
+    {
+      "name": "gemm-stages2",
+      "raw_bytes": 131584,
+      "raw_sha256": "28f3701ec42a8444ee62620269d7d07634be6acde1826a5e9f7a872a0374ccf2",
+      "binary_hash": "6046c569bd790c38b562c4309f16b72db5d5071cb265dfe8ae56afe515621c8e",
+      "records": 192,
+      "pairs": 96,
+      "all_header_buffers_bytes": 32768,
+      "ptx_string_counts_not_semantic_certificate": {
+        "%globaltimer": 16,
+        "cp.async.cg.shared.global": 4,
+        "cp.async.commit_group": 4,
+        "cp.async.wait_group": 2,
+        "mma.sync": 4,
+        "bar.sync": 4
+      }
+    },
+    {
+      "name": "gemm-stages3",
+      "raw_bytes": 131584,
+      "raw_sha256": "8950f069fe687b854e1fa16274a91142bcc47abbc7e8a36819796d6f0c70a16b",
+      "binary_hash": "878feb4bc6fe967d4b9570352bad3f34c37f9eb1c00772c1a824de86e7d6af26",
+      "records": 160,
+      "pairs": 80,
+      "all_header_buffers_bytes": 32768,
+      "ptx_string_counts_not_semantic_certificate": {
+        "%globaltimer": 20,
+        "cp.async.cg.shared.global": 10,
+        "cp.async.commit_group": 10,
+        "cp.async.wait_group": 4,
+        "mma.sync": 12,
+        "bar.sync": 9
+      }
+    }
+  ],
+  "normalized_records_byte_verified": 1024,
+  "pairs_raw_endpoints_byte_verified": 512,
+  "compiler_artifacts_byte_verified": 30,
+  "same_binary_runtime_loop_3_7_11_observer_sites": [
+    [
+      0,
+      0,
+      5
+    ],
+    [
+      0,
+      1,
+      5
+    ],
+    [
+      0,
+      2,
+      5
+    ],
+    [
+      0,
+      3,
+      5
+    ],
+    [
+      2,
+      0,
+      5
+    ],
+    [
+      2,
+      1,
+      5
+    ],
+    [
+      2,
+      2,
+      5
+    ],
+    [
+      2,
+      3,
+      5
+    ]
+  ],
+  "native_wheel_sha256": "088a83bd48754734849e2d803fd48d0d227493ff042251f8d690f5816a899208",
+  "installed_members_byte_verified": 599,
+  "bridge_source_commit": "78985495e41cbd70db06596979b4c497b12b21d6",
+  "post_build_changes_test_only": [
+    "tests/timeline/p01_nvidia_record_v2.py"
+  ],
+  "limits": [
+    "No public timeline API/CLI yet",
+    "No dynamic async flows or Perfetto acceptance",
+    "No cross-SM epoch or final marker-order certificate",
+    "Test collector synchronizes each explicit capture; production deferred owner remains pending"
+  ]
+}

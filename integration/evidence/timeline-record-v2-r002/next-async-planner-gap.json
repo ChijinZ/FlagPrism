@@ -1,0 +1,220 @@
+{
+  "status": "confirmed_current_collection_gap_not_P01_pass",
+  "evidence": [
+    {
+      "capture": "gemm-stages2",
+      "selected_operations": [
+        {
+          "ordinal": 0,
+          "operation": "arith.addi",
+          "scope_id": 0
+        },
+        {
+          "ordinal": 1,
+          "operation": "arith.addi",
+          "scope_id": 1
+        },
+        {
+          "ordinal": 2,
+          "operation": "arith.addi",
+          "scope_id": 2
+        },
+        {
+          "ordinal": 3,
+          "operation": "arith.addi",
+          "scope_id": 3
+        },
+        {
+          "ordinal": 18,
+          "operation": "scf.for",
+          "scope_id": 4
+        },
+        {
+          "ordinal": 23,
+          "operation": "arith.addi",
+          "scope_id": 5
+        },
+        {
+          "ordinal": 24,
+          "operation": "arith.addi",
+          "scope_id": 6
+        },
+        {
+          "ordinal": 43,
+          "operation": "tt.store",
+          "scope_id": 7
+        }
+      ],
+      "async_candidates": [
+        {
+          "ordinal": 11,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 12,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 16,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 17,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 19,
+          "operation": "ttg.async_wait",
+          "selected": false
+        },
+        {
+          "ordinal": 28,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 29,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 34,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 35,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 36,
+          "operation": "ttg.async_wait",
+          "selected": false
+        }
+      ]
+    },
+    {
+      "capture": "gemm-stages3",
+      "selected_operations": [
+        {
+          "ordinal": 0,
+          "operation": "arith.addi",
+          "scope_id": 0
+        },
+        {
+          "ordinal": 1,
+          "operation": "arith.addi",
+          "scope_id": 1
+        },
+        {
+          "ordinal": 2,
+          "operation": "arith.addi",
+          "scope_id": 2
+        },
+        {
+          "ordinal": 18,
+          "operation": "arith.addi",
+          "scope_id": 3
+        },
+        {
+          "ordinal": 19,
+          "operation": "arith.addi",
+          "scope_id": 4
+        },
+        {
+          "ordinal": 29,
+          "operation": "scf.for",
+          "scope_id": 5
+        },
+        {
+          "ordinal": 34,
+          "operation": "arith.addi",
+          "scope_id": 6
+        },
+        {
+          "ordinal": 54,
+          "operation": "tt.store",
+          "scope_id": 7
+        }
+      ],
+      "async_candidates": [
+        {
+          "ordinal": 11,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 12,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 16,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 17,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 22,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 23,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 27,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 28,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 30,
+          "operation": "ttg.async_wait",
+          "selected": false
+        },
+        {
+          "ordinal": 39,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 40,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 45,
+          "operation": "ttg.async_copy_global_to_local",
+          "selected": false
+        },
+        {
+          "ordinal": 46,
+          "operation": "ttg.async_commit_group",
+          "selected": false
+        },
+        {
+          "ordinal": 47,
+          "operation": "ttg.async_wait",
+          "selected": false
+        }
+      ]
+    }
+  ],
+  "required_next_change": "Timeline planner must preserve complete relevant submit/commit/partial-wait boundaries independently of the bounded logical-source-region budget, retain actual wait coverage attributes, then implement mechanism-backed generation/flow. Current legacy source selection misses every async candidate in both actual GEMM plans."
+}

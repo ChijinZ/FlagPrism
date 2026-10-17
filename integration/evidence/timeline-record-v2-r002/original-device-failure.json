@@ -1,0 +1,5 @@
+{
+  "raw_bytes": 705,
+  "raw_sha256": "62ed85b4a527435f5a1000ac455d24237ea81fb89f7f1dea696ad4f959cc5fa2",
+  "original_utf8_log": "Traceback (most recent call last):\n  File \"/workspace/chijin-timeline-r002/device-record-input-v1/p01_nvidia_record_v2.py\", line 256, in <module>\n    main()\n  File \"/workspace/chijin-timeline-r002/device-record-input-v1/p01_nvidia_record_v2.py\", line 212, in main\n    compiled = collect('recurrence-k' + str(k), launch, (0, 2))\n  File \"/workspace/chijin-timeline-r002/device-record-input-v1/p01_nvidia_record_v2.py\", line 157, in collect\n    require(decoded['complete'], 'Default probe overflowed or saturated')\n  File \"/workspace/chijin-timeline-r002/device-record-input-v1/p01_nvidia_record_v2.py\", line 18, in require\n    raise RuntimeError(message)\nRuntimeError: Default probe overflowed or saturated\n"
+}

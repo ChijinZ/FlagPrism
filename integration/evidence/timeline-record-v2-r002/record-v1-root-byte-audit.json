@@ -1,0 +1,111 @@
+{
+  "status": "independent_raw_byte_audit_of_real_failed_probe_and_retained_prefixes",
+  "archive_sha256": "febd44f4dcb4f0276142d6a07cbd11095ead0cdd0fbf02697161d602640114c9",
+  "archive_bytes": 193851,
+  "normalized_records_byte_verified": 384,
+  "captures": [
+    {
+      "name": "recurrence-k3",
+      "raw_bytes": 6528,
+      "raw_sha256": "3a85337938701fb01ba6dd577e50ce073ae12f64a54ae97bc93e5cc6beef1e9d",
+      "physical_headers": [
+        {
+          "program": 0,
+          "sm": 0,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            20,
+            20,
+            20,
+            20
+          ]
+        },
+        {
+          "program": 2,
+          "sm": 2,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            20,
+            20,
+            20,
+            20
+          ]
+        }
+      ],
+      "retained_records": 160,
+      "all_sequences_match": true,
+      "max_full_uint64_tick": 1792213014068212448
+    },
+    {
+      "name": "recurrence-k7",
+      "raw_bytes": 6528,
+      "raw_sha256": "0c0f0f515b907a9060a1798cc609025f8262c1d74e6cc6ff443b6b4647d63dac",
+      "physical_headers": [
+        {
+          "program": 0,
+          "sm": 0,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            28,
+            28,
+            28,
+            28
+          ]
+        },
+        {
+          "program": 2,
+          "sm": 2,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            28,
+            28,
+            28,
+            28
+          ]
+        }
+      ],
+      "retained_records": 224,
+      "all_sequences_match": true,
+      "max_full_uint64_tick": 1792213014116752992
+    },
+    {
+      "name": "recurrence-k11",
+      "raw_bytes": 6528,
+      "raw_sha256": "4aaa731580866f1851ad46581fc5028556fb7481a912f3c1df3dfd1b76d5413a",
+      "physical_headers": [
+        {
+          "program": 0,
+          "sm": 0,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            36,
+            36,
+            36,
+            36
+          ]
+        },
+        {
+          "program": 2,
+          "sm": 2,
+          "buffer_bytes": 2048,
+          "capacity_per_warp": 32,
+          "written_per_warp": [
+            36,
+            36,
+            36,
+            36
+          ]
+        }
+      ],
+      "retained_records": 256,
+      "all_sequences_match": true,
+      "max_full_uint64_tick": 1792213014123352640
+    }
+  ],
+  "diagnosis": "Explicit 32768-byte request was capped by legacy shared-memory occupancy heuristic to 2048 bytes; runtime K11 emits 36 records per warp but capacity is 32. Failure remains a product failure, not unsupported. No unit/epoch or full P01 claim."
+}
