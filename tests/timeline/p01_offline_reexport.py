@@ -30,6 +30,8 @@ def main():
     parser.add_argument('--expected-captures', type=int, default=4)
     parser.add_argument('--expected-traces', type=int, default=32)
     parser.add_argument('--forbidden-root', action='append')
+    parser.add_argument('--require-original-trace-bytes', action='store_true',
+        help='For storage-only deltas, require exact bytes from the prior UI-checked capture')
     args = parser.parse_args();args.output.mkdir(exist_ok=False)
     forbidden = [str(Path(p).resolve()).rstrip('/')+'/' for p in
                  (args.forbidden_root or ['/workspace/chijin-timeline-r017/'])]
@@ -76,6 +78,11 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
         if name != 'index.html':
             need(digest(root/name)==expected, 'Re-export modified original artifact: '+name)
     manifest=[]
+    prior_traces={}
+    for file in args.original_timeline.glob('captures/*.json'):
+        capture=json.loads(file.read_text())
+        for row in capture.get('counter_ns_exports',[]):
+            prior_traces[row['observer_id']]=row['sha256']
     for capture in first['captures']:
         need(capture['status']==('counter_unit_only' if args.expected_traces else 'raw_only'),
              'Unexpected unit-provider qualification')
@@ -86,6 +93,9 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
             if json.loads(p.read_text())['identity']==canonical['identity'])
         need(original==canonical, 'Offline decoder changed the original canonical semantics')
         for row in capture['exports']:
+            if args.require_original_trace_bytes:
+                need(prior_traces.get(row['observer_id'])==row['sha256'],
+                     'Storage-only delta changed UI-checked trace bytes')
             manifest.append(dict(view_file=str(root/row['view_file']),
                 trace_file=str(root/row['trace_file']),sha256=row['sha256'],fixture=False))
     need(len(manifest)==args.expected_traces, 'Offline export lost actual observers or invented traces')
@@ -101,6 +111,7 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
         original_artifacts_unchanged=len(originals)-int('index.html' in originals),
         original_environment_denied_in_two_processes=True,
         forbidden_environment_roots=forbidden,
+        trace_bytes_match_prior_bundle=args.require_original_trace_bytes,
         application_replayed=False,raw_originals={name:sha for name,sha in originals.items() if name.endswith('.raw')},
         proof_limits=('counter_unit_only; precision/boundary/async not qualified' if manifest
                       else 'raw_only; no validated unit, precision, source boundary or async qualification')),
