@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r001/native-check-input/nvidia_timer_binding_smoke.py", line 110, in <module>
+    main()
+  File "/workspace/chijin-timeline-r001/native-check-input/nvidia_timer_binding_smoke.py", line 58, in main
+    module, plan = transform(True)
+  File "/workspace/chijin-timeline-r001/native-check-input/nvidia_timer_binding_smoke.py", line 54, in transform
+    pm.run(module)
+TypeError: run(): incompatible function arguments. The following argument types are supported:
+    1. (self: triton._C.libtriton.ir.pass_manager, arg0: triton._C.libtriton.ir.module, arg1: str) -> None
+
+Invoked with: <triton._C.libtriton.ir.pass_manager object at 0x7e7ced7dc6f0>, <triton._C.libtriton.ir.module object at 0x7e7ced845da0>

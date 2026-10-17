@@ -1,0 +1,31 @@
+579-[532/558] Building CXX object third_party/tle/dialect/lib/Transforms/CMakeFiles/TritonTLETransforms.dir/TleScheduleTmaStoreSync.cpp.o
+580-[533/558] Building CXX object third_party/tle/dialect/lib/Transforms/CMakeFiles/TritonTLETransforms.dir/RemoveRedundantCopy.cpp.o
+581-[534/558] Building CXX object bin/CMakeFiles/triton-opt.dir/triton-opt.cpp.o
+582:FAILED: [code=1] bin/CMakeFiles/triton-opt.dir/triton-opt.cpp.o 
+583-/usr/bin/c++ -DFLAGCX_ENABLED -DGTEST_HAS_RTTI=0 -DLLVM_BUILD_STATIC -DTRITON_BACKENDS_TUPLE="(nvidia,amd,proton,debugger,tle)" -D__AMD__ -D__FLAGPRISM__=1 -D__FLAGTREE_CONCAT_DOT_OPERAND__ -D__FLAGTREE_REORDER_LOOP_LOADS__ -D__FLAGTREE_RLC_ENHANCE__ -D__FLAGTREE_SAME_WARP_LAYOUT_SHUFFLE__ -D__NVIDIA__ -D__PROTON__=1 -D__TLE__ -D__TRITON_VERSION_MAJOR__=3 -D__TRITON_VERSION_MINOR__=6 -I/workspace/chijin-timeline-r001/native-55119f1/build/bin -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/bin -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/. -I/workspace/cache/triton/.triton/llvm/llvm-f6ded0be-ubuntu-x64/include -I/workspace/chijin-timeline-r001/native-55119f1/build/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party -I/workspace/chijin-timeline-r001/native-55119f1/build/third_party -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/python/src -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/python/src -I/usr/include/python3.10 -I/workspace/venv/lib/python3.10/site-packages/pybind11/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/tle/dialect/include -I/workspace/chijin-timeline-r001/source-55119f1/FlagPrism/Profiler/Dialect/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/nvidia/tle_raw/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/tle/utils/include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/amd/lib/TritonAMDGPUTransforms/../../include -I/workspace/chijin-timeline-r001/native-55119f1/build/third_party/amd/lib/TritonAMDGPUTransforms/../../include -I/workspace/chijin-timeline-r001/native-55119f1/FlagTree/third_party/tle/include -I/workspace/chijin-timeline-r001/native-55119f1/build/third_party/tle/include -D__STDC_FORMAT_MACROS  -fPIC -std=gnu++17 -Werror -Wno-covered-switch-default -fvisibility=hidden -O2 -g -std=gnu++17  -fno-exceptions -funwind-tables -fno-rtti -fno-exceptions -funwind-tables -fno-rtti -MD -MT bin/CMakeFiles/triton-opt.dir/triton-opt.cpp.o -MF bin/CMakeFiles/triton-opt.dir/triton-opt.cpp.o.d -o bin/CMakeFiles/triton-opt.dir/triton-opt.cpp.o -c /workspace/chijin-timeline-r001/native-55119f1/FlagTree/bin/triton-opt.cpp
+584-In file included from /workspace/chijin-timeline-r001/native-55119f1/FlagTree/bin/triton-opt.cpp:26:
+585:/workspace/chijin-timeline-r001/native-55119f1/FlagTree/bin/./RegisterTritonDialects.h:34:10: fatal error: FlagPrism/Profiler/Dialect/include/Integration/Registration.h: No such file or directory
+586-   34 | #include "FlagPrism/Profiler/Dialect/include/Integration/Registration.h"
+587-      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+588-compilation terminated.
+589-[535/558] Linking CXX static library third_party/FlagPrism/Profiler/Dialect/test/libTritonTestProton.a
+590-[536/558] Building CXX object third_party/tle/dialect/lib/Transforms/CMakeFiles/TritonTLETransforms.dir/ConvertArgToMemDesc.cpp.o
+591-[537/558] Building CXX object third_party/tle/dialect/lib/Transforms/CMakeFiles/TritonTLETransforms.dir/DSLRegionInline.cpp.o
+592-[538/558] Building CXX object third_party/tle/utils/CMakeFiles/TritonTLERawUtils.dir/lib/Protocol.cpp.o
+593-[539/558] Building CXX object third_party/tle/dialect/lib/Transforms/CMakeFiles/TritonTLETransforms.dir/TleAddDistributedParams.cpp.o
+594-[540/558] Building CXX object third_party/tle/utils/CMakeFiles/TritonTLERawUtils.dir/lib/AnalyzeReturnType.cpp.o
+fatal: not a git repository (or any parent up to mount point /)
+Stopping at filesystem boundary (GIT_DISCOVERY_ACROSS_FILESYSTEM not set).
+/workspace/venv/lib/python3.10/site-packages/setuptools/_distutils/dist.py:318: UserWarning: Unknown distribution option: 'test_suite'
+  warnings.warn(msg)
+/workspace/venv/lib/python3.10/site-packages/setuptools/dist.py:765: SetuptoolsDeprecationWarning: License classifiers are deprecated.
+!!
+
+        ********************************************************************************
+        Please consider removing the following classifiers in favor of a SPDX license expression:
+
+        License :: OSI Approved :: MIT License
+
+        See https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#license for details.
+        ********************************************************************************
+

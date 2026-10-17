@@ -1,0 +1,28 @@
+{
+  "scope": "primitive discovery, not automatic timeline or P01 acceptance",
+  "source_sha256": "a2c8d4d352e8d169bbc69fd05ac33d5cb9cc7d47b2945620fe9b70b34bf596db",
+  "first_failure_preserved": true,
+  "primitive_v2_returncode": 0,
+  "clock_math_calls": 13,
+  "ordinary_gemm_calls": 2,
+  "host_bracket_constraints_verified": 24,
+  "native_artifacts_byte_verified": 18,
+  "actual_ptx_async_instruction_counts": {
+    "ordinary-gemm-stages2.ptx": {
+      "cp.async.cg.shared.global": 8,
+      "cp.async.commit_group": 8,
+      "cp.async.wait_group": 4,
+      "mma.sync": 12
+    },
+    "ordinary-gemm-stages3.ptx": {
+      "cp.async.cg.shared.global": 10,
+      "cp.async.commit_group": 10,
+      "cp.async.wait_group": 4,
+      "mma.sync": 12
+    }
+  },
+  "limits": [
+    "No native SASS disassembly or cross-SM epoch/resolution claim yet",
+    "No dynamic async logger, exporter, or P01 final verdict yet"
+  ]
+}

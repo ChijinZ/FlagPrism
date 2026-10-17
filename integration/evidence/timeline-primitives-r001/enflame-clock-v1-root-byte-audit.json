@@ -1,0 +1,54 @@
+{
+  "scope": "raw timer discovery only; not automatic timeline or P01 acceptance",
+  "status": "raw_and_calibration_bounds_verified",
+  "script_sha256": "b98225547010519a4e8a90ce46cece5c1dfa6491ccd211258fb8cb24418f8931",
+  "bundles": 6,
+  "manifest_payloads_verified": 228,
+  "physical_raw_intervals_verified": 48,
+  "calibration_pairs": 6,
+  "lower_period_ns": [
+    1745931721,
+    1786266450
+  ],
+  "upper_period_ns": [
+    1825923767,
+    1786266450
+  ],
+  "per_capture": [
+    {
+      "capture": 0,
+      "events": 8,
+      "manifest_files": 38
+    },
+    {
+      "capture": 1,
+      "events": 8,
+      "manifest_files": 38
+    },
+    {
+      "capture": 2,
+      "events": 8,
+      "manifest_files": 38
+    },
+    {
+      "capture": 3,
+      "events": 8,
+      "manifest_files": 38
+    },
+    {
+      "capture": 4,
+      "events": 8,
+      "manifest_files": 38
+    },
+    {
+      "capture": 5,
+      "events": 8,
+      "manifest_files": 38
+    }
+  ],
+  "limits": [
+    "physical frequency/epoch not certified by these arithmetic checks",
+    "source-to-final-instruction boundaries still need actual object review",
+    "no async logger or Perfetto qualification yet"
+  ]
+}

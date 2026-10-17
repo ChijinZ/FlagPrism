@@ -1,0 +1,17 @@
+{
+  "scope": "root offline source/receipt audit only; not timeline acceptance",
+  "tested_source_files_verified": [
+    "Profiler/python/flagtree_profiler/timeline_clock.py",
+    "tests/timeline/test_timeline_clock.py",
+    "tests/timeline/nvidia_timer_binding_smoke.py"
+  ],
+  "source_clock_checks_each": 27,
+  "installed_wheel_members_byte_verified": 597,
+  "native_contract_negative_checks_each": 4,
+  "wheel_sha256": "eb1f3942ae41a99ebf734eff39b306b9789ee6b19add414c37c3e403ba828ca3",
+  "limits": [
+    "No backend has passed full P01 yet",
+    "Native getter hardware path, dynamic async logger and Perfetto remain incomplete",
+    "The standalone clock source CPU test is not wheel qualification"
+  ]
+}
