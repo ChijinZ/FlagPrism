@@ -29,8 +29,12 @@ def main():
         default=Path('/workspace/chijin-timeline-r017/runs/counter-perfetto-v2/output/capture/timeline'))
     parser.add_argument('--expected-captures', type=int, default=4)
     parser.add_argument('--expected-traces', type=int, default=32)
-    parser.add_argument('--forbidden-root', default='/workspace/chijin-timeline-r017/')
+    parser.add_argument('--forbidden-root', action='append')
     args = parser.parse_args();args.output.mkdir(exist_ok=False)
+    forbidden = [str(Path(p).resolve()).rstrip('/')+'/' for p in
+                 (args.forbidden_root or ['/workspace/chijin-timeline-r017/'])]
+    need(any(args.original_timeline.resolve().is_relative_to(Path(p)) for p in forbidden),
+         'The denied environment roots must include the original timeline/cache')
     root = args.output/'retained-timeline'
     shutil.copytree(args.original_timeline, root)
     cwd = args.output/'empty-working-directory';cwd.mkdir()
@@ -51,20 +55,20 @@ def main():
     first = run('public-module',[sys.executable,'-I','-m','flagtree.profiler.timeline_reexport',str(root)])
     # Prevent dependence on the old live bundle/source/cache as well as hidden
     # subprocess-based application replay. No device is visible in these runs.
-    wrapper = '''import sys,runpy
+    wrapper = '''import sys,runpy,json
 def audit(event,args):
  if event=='subprocess.Popen':raise RuntimeError('Offline exporter attempted to start a child')
  if event=='open' and isinstance(args[0],str) and args[0].startswith(forbidden):
   raise RuntimeError('Offline exporter attempted to read the original environment: '+args[0])
  if event=='exec' and args[0].co_filename.startswith(forbidden):
   raise RuntimeError('Offline exporter attempted to execute the original workload')
-forbidden=sys.argv[2]
+forbidden=tuple(json.loads(sys.argv[2]))
 sys.addaudithook(audit)
 sys.argv=['flagtree.profiler.timeline_reexport',sys.argv[1]]
 runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
 '''
-    second = run('isolated-normal',[sys.executable,'-I','-c',wrapper,str(root),args.forbidden_root])
-    third = run('isolated-optimized',[sys.executable,'-I','-O','-c',wrapper,str(root),args.forbidden_root])
+    second = run('isolated-normal',[sys.executable,'-I','-c',wrapper,str(root),json.dumps(forbidden)])
+    third = run('isolated-optimized',[sys.executable,'-I','-O','-c',wrapper,str(root),json.dumps(forbidden)])
     need(first==second==third, 'Same original inputs changed re-export identity')
     need(first['application_replayed'] is False and len(first['captures'])==args.expected_captures,
          'Unexpected captures or application execution report')
@@ -96,6 +100,7 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
         real_captures=args.expected_captures,real_traces=len(manifest),fresh_reexport_processes=3,
         original_artifacts_unchanged=len(originals)-int('index.html' in originals),
         original_environment_denied_in_two_processes=True,
+        forbidden_environment_roots=forbidden,
         application_replayed=False,raw_originals={name:sha for name,sha in originals.items() if name.endswith('.raw')},
         proof_limits=('counter_unit_only; precision/boundary/async not qualified' if manifest
                       else 'raw_only; no validated unit, precision, source boundary or async qualification')),
