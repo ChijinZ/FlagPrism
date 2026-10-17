@@ -33,7 +33,9 @@ def main():
     profile = importlib.import_module('flagtree.profiler.profile')
     base = args.output/'fault-capture'
     session = profiler.start(str(base), detail='timeline')
-    hook = profile._active_sessions[session]['timeline_hook']
+    state = profile._active_sessions[session]
+    hook = state['timeline_hook']
+    raw_base = state['name']
     actions = []
     for name in ('read_raw', 'release'):
         original = getattr(hook.timeline_pool.transport, name)
@@ -66,7 +68,7 @@ def main():
         raise RuntimeError('Injected decoder failure was swallowed')
     need(session not in profile._active_sessions and not InstrumentationHook.active_count,
          'Native session or instrumentation remained active')
-    directory = base.with_suffix('.timeline')
+    directory = Path(raw_base).with_suffix('.timeline')
     first_index = json.loads((directory/'index.json').read_text())
     need(len(first_index['captures']) == 3 and first_index['pending_decode'] == injected,
          'Other real captures were not recovered despite first decoder failure')
@@ -78,7 +80,7 @@ def main():
     actions_before = list(actions)
     first_attempt_sha = hashlib.sha256((directory/'attempts/flush-0001.json').read_bytes()).hexdigest()
     hook._decode_timeline_original = original_decode
-    recovered = hook.flush_timeline(str(base))
+    recovered = hook.flush_timeline(raw_base)
     index = json.loads((recovered/'index.json').read_text())
     need(len(index['captures'])==4 and not index['pending_decode'] and not index['failures'],
          'Reexport lost a call or hid a pending failure')
@@ -108,12 +110,12 @@ def main():
         workload.run(args.output/'after-fault-math')
     finally:
         profiler.finalize(next_session)
-    next_directory = next_base.with_suffix('.timeline')
+    next_directory = next_base/'timeline'
     next_index = json.loads((next_directory/'index.json').read_text())
     need(len(next_index['captures'])==4, 'Next legal session failed')
     next_rows = inspect(next_directory, next_index)
     result = dict(status='actual_owner_salvage_and_offline_retry_passed_not_full_P01',
-        injected_invocation=injected[0], explicit_workload_runs=2,
+        injected_invocation=injected[0], original_directory=str(directory), explicit_workload_runs=2,
         fault_capture_calls=4, subsequent_capture_calls=4, first_attempt_sha256=first_attempt_sha,
         transport_actions=actions, recovery_transport_actions=0, originals=originals,
         recovered_captures=rows, subsequent_captures=next_rows,
