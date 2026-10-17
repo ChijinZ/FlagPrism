@@ -96,7 +96,7 @@ def main():
                  'Machine/source boundary status changed')
             canonical = validate_raw_batch(json.loads((directory/capture['events_file']).read_text()))
             need(canonical['complete'] and canonical['events'], 'Actual canonical data lost')
-            need(not canonical['clock_qualified'] and not canonical['region_boundaries_verified'],
+            need(canonical['clock_status']=='unverified' and canonical['boundary_status']=='unverified',
                  'Raw recovery falsely grants qualification')
             rows.append(dict(invocation_id=row['invocation_id'], events=len(canonical['events']),
                              records=len(canonical['records']), raw_sha256=capture['raw_sha256']))
