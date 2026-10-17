@@ -55,18 +55,39 @@ def main():
                 is_pure=False, pack=1)
         return forwarded, stamp
 
+    @triton.jit(noinline=True)
+    def read_only(value, START:tl.constexpr):
+        if START:
+            assembly = '// flagprism_call_probe_entry\nmov.u64 $0, %globaltimer;\n// value $1'
+        else:
+            assembly = '// flagprism_call_probe_exit\nmov.u64 $0, %globaltimer;\n// value $1'
+        if value.dtype == tl.float32:
+            stamp = tl.inline_asm_elementwise(assembly, constraints='=l,r',
+                args=[value.to(tl.uint32,bitcast=True)], dtype=tl.uint64,
+                is_pure=False,pack=1)
+        else:
+            stamp = tl.inline_asm_elementwise(assembly, constraints='=l,l',
+                args=[value], dtype=tl.uint64, is_pure=False,pack=1)
+        return stamp
+
     @triton.jit
-    def math(X,Y,K,T,State,INTEGER:tl.constexpr,MAX_K:tl.constexpr):
+    def math(X,Y,K,T,State,INTEGER:tl.constexpr,MAX_K:tl.constexpr,FORWARD:tl.constexpr):
         pid=tl.program_id(0)
         value=tl.load(X+pid)
         k=tl.load(K+pid)
         for r in range(k):
-            value, begin=enter(value)
+            if FORWARD:
+                value, begin=enter(value)
+            else:
+                begin=read_only(value,True)
             if INTEGER:
                 value=value*3+1
             else:
                 value=value*0.75+0.125
-            value, finish=leave(value)
+            if FORWARD:
+                value, finish=leave(value)
+            else:
+                finish=read_only(value,False)
             tl.store(T+pid*MAX_K*2+r*2,begin)
             tl.store(T+pid*MAX_K*2+r*2+1,finish)
         tl.store(Y+pid,value)
@@ -77,21 +98,22 @@ def main():
     need(torch.cuda.get_device_capability(0)==(12,0),'Wrong registered target')
     registration=dict(source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         target='cuda:120',programs=3,max_k=32,runtime_k=[[3,7,11],[11,3,7]],
-        dtypes=['float32','int64'],math_requests_per_dtype=2,
+        dtypes=['float32','int64'],modes=['forwarded','read_only'],math_requests_per_dtype_mode=2,
         float_rtol=2e-6,float_atol=2e-6,explicit_compile_only=True,
         scope='device call primitive only, no automatic profiler or clock certificate')
     save(a.output/'registration.json',registration)
     cases=[]
-    for dtype in [torch.float32,torch.int64]:
+    for forward,dtype in [(True,torch.float32),(True,torch.int64),
+                          (False,torch.float32),(False,torch.int64)]:
         integer=dtype==torch.int64
-        name='int64' if integer else 'fp32'
+        name=('forwarded-' if forward else 'read-only-')+('int64' if integer else 'fp32')
         source=torch.tensor([1,2,3],dtype=dtype) if integer else torch.tensor([0.25,0.5,0.75],dtype=dtype)
         x=source.cuda();y=torch.full((5,),-711,dtype=dtype,device='cuda')
         k=torch.tensor([3,7,11],dtype=torch.int32,device='cuda')
         state=torch.zeros(3,dtype=torch.int32,device='cuda')
         stamps=torch.full((3*32*2+4,),-1,dtype=torch.int64,device='cuda')
         inputs=(x,y,k,stamps,state)
-        compiled=math.warmup(*inputs,INTEGER=integer,MAX_K=32,grid=(3,),num_warps=4)
+        compiled=math.warmup(*inputs,INTEGER=integer,MAX_K=32,FORWARD=forward,grid=(3,),num_warps=4)
         compiled._init_handles()
         need(state.cpu().tolist()==[0,0,0],'Compile-only ran math')
         ptx=compiled.asm['ptx']
@@ -107,7 +129,7 @@ def main():
         for trial,counts in enumerate(registration['runtime_k']):
             k.copy_(torch.tensor(counts,dtype=torch.int32,device='cuda'))
             stamps.fill_(-1)
-            actual=math[(3,)](*inputs,INTEGER=integer,MAX_K=32,num_warps=4)
+            actual=math[(3,)](*inputs,INTEGER=integer,MAX_K=32,FORWARD=forward,num_warps=4)
             torch.cuda.synchronize()
             output=y.cpu();expected=source.clone()
             for pid,n in enumerate(counts):
