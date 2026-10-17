@@ -9,6 +9,7 @@ import hashlib
 import json
 
 SCHEMA_VERSION = 1
+SUPPORTED_SCHEMA_VERSIONS = (1, 2)
 SEMANTICS = frozenset({'observer_region_elapsed', 'issue_interval', 'wait_bracket',
                       'completion_checkpoint', 'native_engine_activity'})
 
@@ -77,8 +78,9 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
     _integer(max_records, 'max_records', 1)
     _integer(max_events, 'max_events', 1)
     if (type(batch) is not dict or type(batch.get('schema_version')) is not int or
-            batch['schema_version'] != SCHEMA_VERSION):
+            batch['schema_version'] not in SUPPORTED_SCHEMA_VERSIONS):
         raise ValueError('Unsupported canonical raw event schema')
+    version = batch['schema_version']
     _keys(batch, 'schema_version identity raw_artifact clock_status boundary_status sources sites observers records events complete notes backend_record_map')
     identity = batch.get('identity')
     if type(identity) is not dict:
@@ -121,7 +123,9 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
         if not _refs(refs, sources):
             raise ValueError('Site has invalid source references')
     for observer in observers.values():
-        _keys(observer, 'id kind local_id clock_domain_id epoch_id timer_bits complete overwritten_records saturated program_coordinates physical_identity attributes written_records retained_records')
+        common = 'id kind local_id clock_domain_id epoch_id timer_bits complete overwritten_records saturated program_coordinates physical_identity attributes retained_records'
+        _keys(observer, common + (' written_records' if version == 1 else
+              ' attempted_records committed_records dropped_records filtered_records record_order'))
         _attributes(observer.get('attributes', {}))
         if observer.get('physical_identity') is not None:
             _attributes(observer['physical_identity'])
@@ -130,16 +134,32 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
         _integer(observer.get('timer_bits'), 'timer_bits', 1, 64)
         if type(observer.get('complete')) is not bool:
             raise ValueError('Observer completeness must be explicit')
-        _integer(observer.get('overwritten_records'), 'overwritten_records')
-        _integer(observer.get('written_records'), 'written_records')
-        _integer(observer.get('retained_records'), 'retained_records')
-        if observer['retained_records'] > observer['written_records']:
-            raise ValueError('Observer retained count exceeds its written count')
-        if observer['complete'] and observer['retained_records'] != observer['written_records']:
-            raise ValueError('Complete observer cannot have missing written records')
+        for field in ('overwritten_records', 'retained_records'):
+            _integer(observer.get(field), field)
         if type(observer.get('saturated')) is not bool:
             raise ValueError('Observer saturation must be explicit')
-        if observer['complete'] and (observer['overwritten_records'] or observer['saturated']):
+        if version == 1:
+            _integer(observer.get('written_records'), 'written_records')
+            if observer['retained_records'] > observer['written_records']:
+                raise ValueError('Observer retained count exceeds its written count')
+            if observer['complete'] and observer['retained_records'] != observer['written_records']:
+                raise ValueError('Complete observer cannot have missing written records')
+            lost = observer['overwritten_records']
+        else:
+            for field in ('attempted_records', 'committed_records', 'dropped_records', 'filtered_records'):
+                _integer(observer.get(field), field)
+            if observer.get('record_order') not in ('endpoint_stream', 'paired_endpoints'):
+                raise ValueError('Unknown canonical endpoint ordering')
+            if (observer['committed_records'] < observer['overwritten_records'] or
+                    observer['retained_records'] != observer['committed_records']-observer['overwritten_records']):
+                raise ValueError('Retained/committed/overwritten counts disagree')
+            accounted = observer['committed_records']+observer['dropped_records']+observer['filtered_records']
+            if not observer['saturated'] and observer['attempted_records'] != accounted:
+                raise ValueError('Attempted/committed/dropped/filtered counts disagree')
+            if observer['saturated'] and observer['attempted_records'] < observer['retained_records']:
+                raise ValueError('Reported saturated attempts cannot be below retained records')
+            lost = observer['overwritten_records']+observer['dropped_records']
+        if observer['complete'] and (lost or observer['saturated']):
             raise ValueError('Lost observer cannot claim completeness')
         coordinates = observer.get('program_coordinates')
         if type(coordinates) is not list:
@@ -182,7 +202,20 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
         ordered = sorted(by_observer[observer_id], key=lambda r: r['sequence'])
         if len(ordered) != observer['retained_records']:
             raise ValueError('Canonical observer count disagrees with its records')
-        if any(a['tick'] > b['tick'] for a, b in zip(ordered, ordered[1:])):
+        pair_order = version == 2 and observer['record_order'] == 'paired_endpoints'
+        if pair_order:
+            if len(ordered) % 2 or any(
+                    left['phase'] != 'entry' or right['phase'] != 'exit' or
+                    left['sequence'] % 2 or right['sequence'] != left['sequence']+1 or
+                    left['site_id'] != right['site_id'] or left['tick'] > right['tick']
+                    for left, right in zip(ordered[::2], ordered[1::2])):
+                raise ValueError('Invalid atomic pair endpoint order')
+            # An appended pair is published after its end read. An enclosing
+            # interval may start earlier than a previously appended inner pair.
+            ends = ordered[1::2]
+            if any(a['tick'] > b['tick'] for a, b in zip(ends, ends[1:])):
+                raise ValueError('Pair completion clock regressed')
+        elif any(a['tick'] > b['tick'] for a, b in zip(ordered, ordered[1:])):
             raise ValueError('Observer raw timer regressed')
         if observer['complete'] and [r['sequence'] for r in ordered] != list(range(len(ordered))):
             raise ValueError('Complete observer has missing history')
@@ -201,7 +234,10 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
         if event.get('iteration_id') is not None:
             raise ValueError('This raw event schema does not infer loop iteration IDs')
         _integer(event.get('occurrence'), 'retained occurrence')
-        if event.get('occurrence_basis') not in ('complete_entry_order', 'complete_boundary_order', 'retained_entry_order', 'retained_boundary_order'):
+        pair_order = version == 2 and observers[observer_id]['record_order'] == 'paired_endpoints'
+        bases = (('complete_pair_order', 'retained_pair_order') if pair_order else
+                 ('complete_entry_order', 'complete_boundary_order', 'retained_entry_order', 'retained_boundary_order'))
+        if event.get('occurrence_basis') not in bases:
             raise ValueError('Unknown occurrence basis')
         refs = event.get('record_ids')
         if not refs or not _refs(refs, records):
@@ -216,6 +252,9 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
         if any(p['observer_id'] != observer_id or p['site_id'] != site_id for p in points):
             raise ValueError('Event crosses observer/site identity')
         kind = event.get('kind')
+        if pair_order and (kind != 'interval' or len(points) != 2 or
+                           points[0]['sequence'] % 2 or points[1]['sequence'] != points[0]['sequence']+1):
+            raise ValueError('Event crosses atomic pair boundaries')
         start, end = event.get('start_tick'), event.get('end_tick')
         if start is not None:
             _integer(start, 'interval start tick')
