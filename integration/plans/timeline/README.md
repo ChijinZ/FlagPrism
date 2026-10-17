@@ -10,7 +10,9 @@ document revision starts no device experiment.
 - [Initial record](record.initial.md): immutable T000 snapshot; live execution record is workspace-root `timeline_impl_record.md`, outside Git.
 - [Original design review and disposition](reviews/README.md): T001 historical inputs and resolutions.
 - [Second design review](reviews/round2/README.md): refined backend handoffs, lifecycle and evidence gates, plus limited followups.
-- [Current design review and disposition](reviews/round3/README.md): three fresh independent feasibility reviews of the minimal backend contract, compact storage and capability progression. Design reviews do not replace final implementation code reviews.
+- [Third design review and disposition](reviews/round3/README.md): three fresh independent feasibility reviews of the minimal backend contract, compact storage and capability progression. Design reviews do not replace final implementation code reviews.
+
+- [Current design feasibility review](reviews/round4/README.md): component composition, target/toolchain reuse, immutable raw and certified time views, staged acceptance, and three independent reviews.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish

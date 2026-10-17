@@ -1,0 +1,33 @@
+{
+  "scope": "Independent documentation feasibility review; no feature implementation or device experiment in this request",
+  "source_head": "dad8e7c98632ef7cbd2b4677d9c5101a517a88dc",
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "xhigh",
+  "fork_turns": "none",
+  "spawn_configuration_accepted": true,
+  "resolved_serving_model": "not exposed",
+  "agents": [
+    {
+      "name": "/root/design_feasibility_compiler",
+      "focus": "compiler and boundaries",
+      "report": "R1-compiler.md"
+    },
+    {
+      "name": "/root/design_feasibility_runtime",
+      "focus": "clock, async, record and owner",
+      "report": "R2-runtime.md"
+    },
+    {
+      "name": "/root/design_feasibility_portability",
+      "focus": "portability, consumer and acceptance",
+      "report": "R3-portability.md"
+    }
+  ],
+  "input_sha256": {
+    "Profiler/docs/timeline_design.md": "6f433840e0da7938e9201381d85c1a6bcaa785134fed9c69d382ff5d3de930f3",
+    "Profiler/docs/timeline_testing.md": "456c3cc29588cbfd61754c345b6752bd9b29a740f42752108e6809384db3fdc2",
+    "integration/plans/timeline/goal_prompt.md": "51db449f2898ad695f8557a3d83459cf476c57cec27198743ba481193e12a054",
+    "Profiler/docs/timeline_runtime.md": "316d2febcdc7439dd504f07109230b4095753f88d72ccda3b1a8f4d5e6d5d9a9",
+    "Profiler/docs/timeline_events.md": "c41f6949d41f0f5596c358e1a4d0382edda091e2de66a51a1d31184a171527ee"
+  }
+}

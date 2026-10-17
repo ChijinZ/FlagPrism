@@ -1,6 +1,6 @@
 # FlagPrism 内部时间线设计
 
-状态：**实现中的目标设计，不是完整功能声明**。已有原语与构建证据不等于完整时间线通过；当前工程边界见 §8.8。原始设计基线为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；现有计数能力和历史验收保持原语境。执行合同见 [已跟踪快照](../../integration/plans/timeline/goal_prompt.md)（执行入口为工作区根目录同字节版本），测试设计见 [timeline_testing.md](timeline_testing.md)。产品设计不是论文正文，不修改 paper/Study。
+状态：**实现中的目标设计，不是完整功能声明**。已有原语与构建证据不等于完整时间线通过；当前已实现能力及限制见 [timeline_runtime.md](timeline_runtime.md) 和 [timeline_events.md](timeline_events.md)；§8.8 仅保留历史原语检查点。原始设计基线为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；现有计数能力和历史验收保持原语境。执行合同见 [已跟踪快照](../../integration/plans/timeline/goal_prompt.md)（执行入口为工作区根目录同字节版本），测试设计见 [timeline_testing.md](timeline_testing.md)。产品设计不是论文正文，不修改 paper/Study。
 
 ## 1. 交付目标与最低界线
 
@@ -32,14 +32,14 @@
 
 ## 3. 用户入口与采集策略
 
-建议新增如下公共入口，**此命令目前尚未实现**：
+公共入口如下。NVIDIA 已实现显式 `partial_clock_unverified` 的 raw 采集路径；这不等于本设计的三后端 ns/Perfetto 交付，当前限制见 [timeline_runtime.md](timeline_runtime.md)：
 
 ```bash
 python -m flagtree.profiler.cli --detail timeline --device 0 \
   -n trace-run my_script.py
 ```
 
-API 也提供等价 `detail="timeline"`。不得改变现有无 detail 的 native 模式或 `detail="auto"` 计数模式的含义。接口名称可以经实现核定，但必须只有一个简单基本入口，最终文档只能写实际存在的命令。
+API 提供等价 `detail="timeline"`。不得改变现有无 detail 的 native 模式或 `detail="auto"` 计数模式的含义。接口名称可以经实现核定，但必须只有一个简单基本入口，最终文档只能写实际存在的命令。
 
 默认行为：
 
@@ -277,7 +277,40 @@ planned → admitted → armed → submitted → completion_observed
 
 **实施顺序**：首个后端先闭合“普通区间→安全 owner→真实时间尺度→公共导出”，并行验证异步机制；完整 P01 仍要求异步和 Trace Processor。形成实际小合同后接第二/第三后端，不要求等待所有独立资格或 UI 检查才开始复用。新后端遇到接口缺口时先给出真实不可表达的事实，再决定版本扩展；不先搭完整插件框架。本轮不适配第四芯片，也不估算其工期。
 
-当前实现对照（`34b0462` 检查点）：NVIDIA 已有 64 位 record v2、物理 decoder 及绑定调用/binary 的 cp.async 逻辑组模型；尚无完整公共 timeline 入口、紧凑 storage/owner/clock/Perfetto 链，逻辑事实不具有 verified 时间箭头资格。§8.8 是历史原语检查点，不应读成最新源码仍只有 43 位记录。后续结果仅记工程记录，避免维护重复状态表。
+历史实现对照（`34b0462`，仅表示当时状态）：NVIDIA 已有 64 位 record v2、物理 decoder 及绑定调用/binary 的 cp.async 逻辑组模型；尚无完整公共 timeline 入口、紧凑 storage/owner/clock/Perfetto 链，逻辑事实不具有 verified 时间箭头资格。§8.8 是历史原语检查点，不应读成最新源码仍只有 43 位记录。后续结果仅记工程记录，避免维护重复状态表。
+
+### 8.10 适配成本的落实：组合已有能力，保留架构事实
+
+本节是后续实现约束，不是已实现接口或第四芯片支持声明。当前 NVIDIA 已打通公开 raw 路径、安全 owner 和公共 raw schema；经过认证的 ns/Perfetto 及其它两后端时间 producer 仍待完成。当前可执行入口见 [timeline_runtime.md](timeline_runtime.md)，公共 raw schema 见 [timeline_events.md](timeline_events.md)，设备结果以工程记录及原件为准。§8.8 和 §8.9 的历史检查点不能当最新支持表。
+
+**适配单位是目标及其工具链，不是算子，也不是厂商品牌。** “新增芯片容易”的实际目标是复用公共采集流程、身份、验证和导出，且可独立替换确实变化的设备部件。不得要求每款芯片重写全链，也不能把 NVIDIA 实现改一个设备名就宣称可用。
+
+| 变化情形 | 预期复用 | 必须重新确认或实现 |
+| --- | --- | --- |
+| 同工具链、同记录/同步机制的新型号 | 原编译接入、transport、decoder、机制规则及公共层可按条件复用 | target 匹配、实际 getter/记录指令、内存可见性、时钟证据范围、资源限制及设备回归；证据明确覆盖的条件可复用，不盲目继承旧型号结论 |
+| 相近执行模型、不同工具链或厂商 | 公共合同与消费者；经真实条件核验的算法组件 | 编译接入、timer/logger、隐藏参数、transport/发布、物理 decoder、机制规则；不按“都是 GPU”复用 CUDA 事实 |
+| 不同执行模型/多类主体 | 公共身份、时间算术、完整性、源导航与标准导出 | 晚期执行映射、主体/时钟关系、记录发布、异步机制；公共模型不能表达新事实时版本化扩展，已有后端共同回归 |
+
+**采用可组合部件，不强迫整套继承。** target 注册选择一组相容的编译接入、物理 transport/decoder、clock provider 和 mechanism mapper；同一部件可以供多目标复用，但组合必须有明确的 ABI/规则版本与实际目标条件。注册分发可以识别厂商，公共 owner/validator/exporter 不得靠厂商分支补齐业务语义。先用现有对象实现实际调用，不要求预建插件管理器、通用 ISA 或新的完整 IR。
+
+这里统一的是观测合同：源关联、真实 observer、区间/端点、时钟证明、操作集合和依赖。执行 IR 与插桩位置可以不同。公共层保留 typed 的 submit/group/wait 覆盖、buffer/flag identity 与 generation；目标特有指令及其推导规则留在后端。`extensions` 只容纳说明属性；若一个新字段会改变配对、时钟、完成或依赖的判断，它必须进入版本化语义合同，不能藏进不受验证的字典。
+
+**编译与运行时事实分两次绑定。** 编译输出不含自身 SHA 的 manifest 内容摘要，实际 binary 摘要在产物完成后绑定；不能要求编译器提前知道包含该摘要的文件自身 hash。编译阶段确定合法 site、记录 ABI、选择策略及布局公式；启动阶段用真实 grid/stream/device 计算具体 slot 和字节数，先做 admission 再分配。runtime epoch/时钟资格留在本次 capture，不靠旧编译缓存获得。所有产物相互引用并保留证据，不要求把全部信息塞回设备二进制。
+
+**时间视图是派生数据，不改变 raw 合同。** raw ticks、来源和丢失信息不可变；clock provider 提供适用目标、getter、比例/误差、有效窗口和比较范围。公共层由这些证明生成独立的 ns 视图，exporter 只消费通过资格检查的视图与 edge。未验证的 raw 区间和逻辑 group 仍可保留，但不能因 exporter 能读它们就获得 ns 或时间箭头资格。clock 失效时重新验证或明确 partial，不重新运行应用来补数据。
+
+**实施和放行分段，完整门槛不降低：**
+
+```text
+A 普通数学 + timer/边界/发布原语
+  → B 公开自动区间 + owner + 有证据的本地 ns + 公共导出
+  → C 真实异步/复用关联 + 所需时钟可比性 + Trace Processor（完整 P01）
+  → D 独立数学/故障/实际 UI/代码走查（最终交付）
+```
+
+A/B 允许推进下一项开发；只有 C 达到既有 P01，D 才完成本轮。第二、第三后端可先调查 A，不必等第一个后端的全部独立资格/UI 结束。选择真实机制的开发样本时先核 ordinary 编译对象，优先用确实能观察的语义；不得为跨门槛加入额外完成屏障或把逻辑序号冒充物理复用。遇到 getter、插桩位置、发布或关联无法闭合时保留最小复现，区分工程未完成和具体 SDK/环境障碍，不靠扩大测试集合绕过。
+
+每个后端最终交付一份可复现的接入清单，至少包括：实际调用位置与组合关系、目标/工具链条件、各部件及 ABI 版本、支持与拒绝范围、构建安装命令、真实 raw→公共事件→ns→Perfetto 证据，以及加入该后端引起的公共修改和回归。清单由现有文档/证据索引承载，不新增重复状态日志。验收见测试 §8.5；没有第四设备实证时只声称已检验三后端复用边界。
 
 ## 9. Bundle 与 Perfetto 呈现
 

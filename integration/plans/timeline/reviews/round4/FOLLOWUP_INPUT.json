@@ -1,0 +1,18 @@
+{
+  "scope": "Limited independent followup of state corrections and contract references; original findings preserved",
+  "input_sha256": {
+    "Profiler/docs/timeline_design.md": "8c4014188a6033145075446e75061c52a3027e26555d0b31061f84b8e539652f",
+    "Profiler/docs/timeline_testing.md": "193b60a0c643622af39642e6792e6d3c7d6a0852b6468e8d4fd618f28a8d35c7",
+    "integration/plans/timeline/goal_prompt.md": "7f1e288720694faa702262080298f8efd9caa62d5bffc4af80095f918cff4932",
+    "Profiler/docs/timeline_runtime.md": "316d2febcdc7439dd504f07109230b4095753f88d72ccda3b1a8f4d5e6d5d9a9",
+    "Profiler/docs/timeline_events.md": "c41f6949d41f0f5596c358e1a4d0382edda091e2de66a51a1d31184a171527ee"
+  },
+  "root_contract_and_snapshot_equal": true,
+  "changes": [
+    "design opening links current runtime/events, labels 8.8 historical",
+    "goal recognizes existing NVIDIA raw entry and remaining ns/Perfetto/other backend work",
+    "goal section references now include design8.10/testing8.5",
+    "goal opening distinguishes historical design baseline from subsequent actual implementation",
+    "removed redundant blank lines; no product code or acceptance gates changed"
+  ]
+}

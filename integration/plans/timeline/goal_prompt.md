@@ -17,7 +17,7 @@
 3. `FlagPrism-method/Profiler/docs/timeline_testing.md`：真实算法、冻结矩阵、raw/clock/Perfetto/UI 门槛。
 4. `usability_goal_prompt.md`、`method_impl_record.md` 顶部及当前公开 `automatic.md`、`semantic_profiling.md`、后端 build recipes、真实源码。
 
-设计准备时正式仓库 `FlagPrism-method/` 的 `detailed-profiler` 为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；随后只会新增本设计文档提交，以实际 HEAD 为准。已安装 component Python a829；native 最后实质 changed-source build bd61；SDK/build工具基线 cb968。旧基础功能 goal 已完成，不能把这些结果冒充新 timeline 实现通过。
+设计准备时正式仓库 `FlagPrism-method/` 的 `detailed-profiler` 为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；这是初始设计阶段的历史基线；之后已有产品实现，恢复时以实际 HEAD、`timeline_impl_record.md` 及当前 runtime/events 文档为准。已安装 component Python a829；native 最后实质 changed-source build bd61；SDK/build工具基线 cb968。旧基础功能 goal 已完成，不能把这些结果冒充新 timeline 实现通过。
 
 | 后端 | 已验证容器/解释器定位，执行前再核 |
 | --- | --- |
@@ -64,7 +64,7 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 
 允许改 FlagPrism、配套 FlagTree、必要 SDK 通用 pass/接口、native ABI、隐藏 launch ABI、自动 planner、时钟 getter/correlation、事件协议、源关联、trace exporter、报告和构建集成。以实际实现而不是旧论文为边界。
 
-建议入口 `--detail timeline` / `detail="timeline"` 尚未实现，可以经设计核定；不得把候选名字写成已有功能。旧无 detail 的 native 模式、`--detail auto` 计数语义不被静默替换。
+公开入口 `--detail timeline` / `detail="timeline"` 已有 NVIDIA-only、`partial_clock_unverified` 的 raw 采集实现；认证 ns、Perfetto 和其它两后端时间 producer 尚未完成，限制见 `Profiler/docs/timeline_runtime.md` 与 `timeline_events.md`。已有 raw 入口不代表本合同完整交付。旧无 detail 的 native 模式、`--detail auto` 计数语义不被静默替换。
 
 具体工作链：
 
@@ -76,7 +76,7 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 
 ### 3.1 本轮必须落实的可扩展边界
 
-执行设计第 8.1–8.9 节和测试 P01–P10/§8.2–8.4 的最小实证：使用现有三后端形成小的真实后端接口，不新增第四芯片，不提前搭建无调用者框架。拆分公共观测意图/晚期执行 manifest、编译插桩/运行时记录、主体/clock/async 语义映射与公共验证/Perfetto；保留后端细节，不固定 warp/SM 或一对一 producer-consumer 模型。
+执行设计第 8.1–8.10 节和测试 P01–P10/§8.2–8.5 的最小实证：使用现有三后端形成小的真实后端接口，不新增第四芯片，不提前搭建无调用者框架。拆分公共观测意图/晚期执行 manifest、编译插桩/运行时记录、主体/clock/async 语义映射与公共验证/Perfetto；保留后端细节，不固定 warp/SM 或一对一 producer-consumer 模型。
 
 按实际 target/compiler/SDK/plugin 探测能力并绑定缓存；同品牌不同目标不自动继承 clock/async 能力。未验证、已知不支持和验证支持分开，profile 失败不改 unsupported。后端各有真实小纵向样本，验证 timer、两区间、动态异步与可比时钟以及 Trace Processor 后再进入最终资格；遇确实的机制/环境阻碍保留事实返回，不用降级目标填图。
 
