@@ -109,6 +109,26 @@ def main():
     finally:
         profiler.finalize(session)
     verify('api-after-failure')
+    session = profiler.start(str(args.output/'api-overflow'), detail='timeline')
+    try:
+        workload.run_overflow(args.output/'api-overflow-math')
+    finally:
+        profiler.finalize(session)
+    overflow_prefix = args.output/'api-overflow/timeline'
+    overflow_index = json.loads((overflow_prefix/'index.json').read_text())
+    require(len(overflow_index['captures'])==1, 'Overflow replayed the application')
+    overflow = json.loads((overflow_prefix/overflow_index['captures'][0]['capture_file']).read_text())
+    canonical = validate_raw_batch(json.loads((overflow_prefix/overflow['events_file']).read_text()))
+    require(overflow['capture_status']=='incomplete' and not canonical['complete'],
+            'Lost history became a complete capture')
+    require(any(o['overwritten_records']>0 for o in canonical['observers']), 'Overflow was not actually triggered')
+    require(any(e['kind']=='incomplete' for e in canonical['events']), 'Lost endpoints were hidden or synthesized')
+    overflow_facts = json.loads((overflow_prefix/overflow['async_file']).read_text())
+    require(not overflow_facts['groups'] and not overflow_facts['dependencies'],
+            'Loss produced inferred group generations')
+    phases.append(dict(name='api-overflow', captures=1,
+        canonical_intervals=sum(e['kind']=='interval' for e in canonical['events']),
+        incomplete_intervals=sum(e['kind']=='incomplete' for e in canonical['events'])))
     command = [sys.executable, '-I', '-m', 'flagtree.profiler.cli', '--detail', 'timeline',
                '--device', '0', '-n', str(args.output/'cli'), str(target),
                '--evidence', str(args.output/'cli-math')]

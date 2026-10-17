@@ -89,6 +89,27 @@ def run(evidence, *, include_zero=True):
     (evidence/'math-passed.txt').write_text('3 recurrence + 1 GEMM; original outputs/input/tail/side effects passed\n')
 
 
+def run_overflow(evidence):
+    """Actual math with more timestamps than the default bounded ring retains."""
+    evidence = Path(evidence)
+    evidence.mkdir(exist_ok=False)
+    (evidence/'host-once.txt').write_text('one explicit overflow workload\n')
+    cpu = torch.rand(256)
+    x = cpu.cuda()
+    y = torch.full((197,), -17.25, device='cuda')
+    counter = torch.zeros(3, dtype=torch.int32, device='cuda')
+    k = torch.tensor(1021, dtype=torch.int32, device='cuda')
+    reference = cpu[:189].clone()
+    for _ in range(1021):
+        reference = reference * 0.75 + 0.125
+    recurrence[(3,)](x, y, counter, k, 189, 64, num_warps=4)
+    require(torch.allclose(y[:189].cpu(), reference, rtol=2e-6, atol=2e-6), 'Overflow math')
+    require(torch.equal(y[189:].cpu(), torch.full((8,), -17.25)), 'Overflow tail')
+    require(counter.cpu().tolist() == [1,1,1], 'Overflow workload replay')
+    require(torch.equal(x.cpu(), cpu), 'Overflow input changed')
+    (evidence/'math-passed.txt').write_text('original math, tail, input and side effects passed\n')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence', required=True, type=Path)
