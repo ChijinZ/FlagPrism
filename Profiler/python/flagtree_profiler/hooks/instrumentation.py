@@ -26,6 +26,7 @@ from triton.runtime._allocation import set_profile_allocator, NullAllocator
 from triton.backends import backends
 
 from .hook import Hook, HookManager
+from .timeline import TimelineInstrumentationMixin
 from ..flags import set_instrumentation_on, set_instrumentation_off
 from .. import mode
 from ..native import compiler_binding, runtime_binding
@@ -48,7 +49,7 @@ class CudaAllocator:
             'nvidia_census_allocation_admission', default=None)
 
     def validate_launch(self, *, function, grid, scratch_size, alignment,
-                        num_ctas):
+                        num_ctas, stream=None):
         if not self.instrumentation_hook.census:
             return
         self._census_admission.set(None)
@@ -217,7 +218,7 @@ def _get_backend_name() -> str:
         raise RuntimeError(f"Unsupported backend: {backend}")
 
 
-class InstrumentationHook(Hook):
+class InstrumentationHook(TimelineInstrumentationMixin, Hook):
     priority: int = 0
     # It's important to note that only one instance of the instrumentation hook can be active at a time.
     active_count: int = 0
@@ -294,6 +295,7 @@ class InstrumentationHook(Hook):
         self.mode: mode.InstrumentationMode = _interpret_mode(mode_obj)
         self.observation_plan = observation_plan
         self.census = bool(observation_plan and observation_plan.get("census"))
+        self.timeline = bool(observation_plan and observation_plan.get('timeline'))
         self.automatic = bool(observation_plan
                               and observation_plan.get('automatic'))
         self.max_sites = observation_plan.get('max_sites',
@@ -316,6 +318,8 @@ class InstrumentationHook(Hook):
         self._run_activation = None
         self._previous_run = None
         self._installed_run = None
+        if self.timeline:
+            self._init_timeline()
 
     def activate(self):
         if InstrumentationHook.active_count > 0:
@@ -344,6 +348,10 @@ class InstrumentationHook(Hook):
             # compiling ordinary scripts. Importing it does not enable debugger
             # collection, execute a kernel or replay the application.
             importlib.import_module('flagtree.debugger')
+        if self.timeline:
+            if _get_backend_name() != 'nvidia':
+                raise RuntimeError('Timeline hook is not yet implemented on this backend')
+            self._timeline_cache_key = self._timeline_fingerprint()
 
         InstrumentationHook.active_count += 1
         self._activated = True
@@ -354,7 +362,7 @@ class InstrumentationHook(Hook):
         max_shared_mem = triton.runtime.driver.active.utils.get_device_properties(
             device)["max_shared_mem"]
         backend_name = _get_backend_name()
-        self.capture_observations = backend_name == "nvidia"
+        self.capture_observations = backend_name == "nvidia" and not self.timeline
         if self.capture_observations:
             profiler_native.set_raw_capture_enabled(True)
             profiler_native.set_observation_programs(self.selected_programs
@@ -397,6 +405,10 @@ class InstrumentationHook(Hook):
             if self.census:
                 triton_proton.add_automatic_proton_scopes(
                     pm, self.max_sites, True)
+            elif self.timeline:
+                triton_proton.add_automatic_proton_scopes(pm, self.max_sites, False, True)
+                if self.selected_programs is not None:
+                    triton_proton.add_select_proton_programs(pm, self.selected_programs)
             else:
                 triton_proton.add_automatic_proton_scopes(pm, self.max_sites)
 
@@ -427,6 +439,9 @@ class InstrumentationHook(Hook):
             # options for compiler passes/allocators that have been removed.
             if not run_activation['enabled']:
                 return original_run(jit_function, *args, **kwargs)
+            if instrumentation_hook.timeline:
+                # Reject host-thread sharing before compiler/allocator effects.
+                instrumentation_hook.timeline_pool._check_thread()
             # Own the shared scratch allocator before compilation/allocation,
             # not just after the launcher has already chosen a device buffer.
             locked = instrumentation_hook.capture_observations
@@ -450,11 +465,19 @@ class InstrumentationHook(Hook):
                 if instrumentation_hook.census:
                     kwargs[
                         'instrumentation_mode'] += ':source_census=1:partition_observers=2'
+                if instrumentation_hook.timeline:
+                    kwargs['instrumentation_mode'] += (
+                        ':timeline_timer=1:timeline_record=2:timeline_storage=1:timeline_plan=1:deps='
+                        + instrumentation_hook._timeline_cache_key)
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(
                             map(str, instrumentation_hook.selected_programs))
                 return original_run(jit_function, *args, **kwargs)
+            except BaseException as error:
+                if instrumentation_hook.timeline:
+                    instrumentation_hook._timeline_abort(error)
+                raise
             finally:
                 if locked:
                     instrumentation_hook._observation_run_lock.release()
@@ -581,10 +604,21 @@ class InstrumentationHook(Hook):
                 json.loads(Path(metadata_path).read_text())
                 if metadata_path else None,
             }
-            profiler_native.init_function_metadata(function, name,
-                                                   scope_id_names,
-                                                   scope_id_parents,
-                                                   metadata_path)
+            if self.timeline:
+                artifacts = []
+                prefix = 'binaries/' + hashlib.sha256(hash.encode()).hexdigest()
+                for index, path in enumerate(metadata_group.values()):
+                    path = Path(path)
+                    if path.is_file():
+                        artifacts.append(dict(path=str(path),
+                            sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                            retained_file=prefix+'/'+str(index)+path.suffix))
+                self.observation_metadata[function]['timeline_artifacts'] = artifacts
+            else:
+                profiler_native.init_function_metadata(function, name,
+                                                       scope_id_names,
+                                                       scope_id_parents,
+                                                       metadata_path)
         else:
             raise RuntimeError(
                 f"IR path not found in metadata for function {function}")
@@ -593,6 +627,12 @@ class InstrumentationHook(Hook):
         return 0 if self.buffer is None else self.buffer.data_ptr()
 
     def enter(self, metadata: LazyDict) -> None:
+        if self.timeline:
+            try:
+                return self._timeline_enter(metadata)
+            except BaseException as error:
+                self._timeline_abort(error)
+                raise
         func = metadata.data.get("function")
         stream = metadata.data.get("stream")
         alloc_size = 0 if self.buffer is None else self.buffer.element_size(
@@ -681,6 +721,8 @@ class InstrumentationHook(Hook):
             raise
 
     def abort_enter(self, metadata: LazyDict, error=None) -> None:
+        if self.timeline:
+            return self._timeline_abort(error)
         # A failed pre-launch hook has no completed GPU buffer to parse.
         if self._observation_entered.get():
             self._observation_stack.set(self._observation_stack.get()[:-1])
@@ -688,6 +730,8 @@ class InstrumentationHook(Hook):
             self._observation_lock.release()
 
     def exit(self, metadata: LazyDict) -> None:
+        if self.timeline:
+            return self._timeline_exit(metadata)
         func = metadata.data.get("function")
         stream = metadata.data.get("stream")
         alloc_size = 0 if self.buffer is None else self.buffer.element_size(

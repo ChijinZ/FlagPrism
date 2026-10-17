@@ -120,7 +120,7 @@ def parse_arguments():
         help="Automatic CLI export phase deadline in seconds (1..60)")
     parser.add_argument(
         "--detail",
-        choices=("auto", ),
+        choices=("auto", "timeline"),
         default=None,
         help="Automatically select source-linked internal observations")
     parser.add_argument(
@@ -233,7 +233,7 @@ def do_setup_and_execute(target_args):
 
 def run_profiling(args, target_args):
     backend = args.backend if args.backend else _select_backend()
-    if getattr(args, "detail", None) == "auto":
+    if getattr(args, "detail", None) in ("auto", "timeline"):
         backend = _automatic_backend(backend)
     # The outer launcher owns collection and exports a single capture directory.
     from ._capture import INTERNAL_ENV, run_capture
@@ -404,7 +404,7 @@ def run_profiling(args, target_args):
 
 def main():
     args, target_args = parse_arguments()
-    if getattr(args, 'detail', None) == 'auto':
+    if getattr(args, 'detail', None) in ('auto', 'timeline'):
         from ._deadline import WORKER, bind_worker, supervise, worker_command
         if os.environ.get(WORKER) != '1':
             code = supervise(worker_command(__package__ + '.cli',

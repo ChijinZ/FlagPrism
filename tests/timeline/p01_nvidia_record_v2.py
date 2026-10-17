@@ -96,7 +96,7 @@ def main():
         def __init__(self, plan, compiled):
             self.compiled_plan, self.compiled = plan, compiled
 
-        def validate_launch(self, *, function, grid, scratch_size, alignment, num_ctas):
+        def validate_launch(self, *, function, grid, scratch_size, alignment, num_ctas, stream=None):
             require(num_ctas == 1, 'This mechanism registration uses noncluster CTAs')
             require(function == self.compiled.function,
                     'Allocator plan is not bound to the actual loaded binary')

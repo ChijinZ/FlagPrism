@@ -1510,8 +1510,23 @@ def start(
     if name is None:
         name = DEFAULT_PROFILE_NAME
 
-    if detail not in (None, "auto"):
-        raise ValueError("detail must be None or 'auto'")
+    if detail not in (None, "auto", "timeline"):
+        raise ValueError("detail must be None, 'auto', or 'timeline'")
+    timeline = detail == 'timeline'
+    if ((timeline and _active_sessions) or
+            any(state.get('detail') == 'timeline' for state in _active_sessions.values())):
+        raise ValueError('Timeline sessions cannot be nested with another capture')
+    if timeline:
+        if observation_request is not None or mode is not None:
+            raise ValueError('Timeline automatic mode cannot use an explicit mode/request')
+        if hook not in (None, 'instrumentation'):
+            raise ValueError('Timeline requires the instrumentation hook')
+        backend = _automatic_backend(backend)
+        if backend != 'instrumentation':
+            raise ValueError('Timeline is not yet implemented on this backend')
+        from .mode import Default
+        mode = Default(buffer_size=32768)
+        hook = 'instrumentation'
     if detail == "auto":
         if observation_request is not None or mode is not None:
             raise ValueError(
@@ -1529,7 +1544,9 @@ def start(
     if backend is None:
         backend = _select_backend()
 
-    observation_plan = None
+    observation_plan = (dict(automatic=True, timeline=True, max_sites=8,
+                             output_selection={'programs': None})
+                        if timeline else None)
     if observation_request is not None:
         from .observations import ObservationRequest
         if isinstance(observation_request, dict):
@@ -1614,6 +1631,7 @@ def start(
                 "context": context,
                 "data": data,
                 "hook": hook,
+                "detail": detail,
                 "observation_request": request_spec
             }
             if any(
@@ -1646,6 +1664,7 @@ def start(
             "Nested IR sessions must use the same observation request")
     instrumentation_activated = use_instrumentation_hook and not instrumentation_was_active
     session = None
+    native_hook = None
     staging = None
     bundle_output = None
     bundle_created = False
@@ -1683,8 +1702,9 @@ def start(
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
+            native_hook = InstrumentationHook(mode, observation_plan=observation_plan)
             HookManager.register(
-                InstrumentationHook(mode, observation_plan=observation_plan),
+                native_hook,
                 session)
     except BaseException as error:
         # Compiler/debugger activation can fail before native start. Unwind all
@@ -1735,6 +1755,8 @@ def start(
         "context": context,
         "data": data,
         "hook": hook,
+        "detail": detail,
+        "timeline_hook": native_hook if timeline else None,
         "triton_hook": use_triton_hook,
         "instrumentation_hook": use_instrumentation_hook,
         "native_instrumentation_hook": use_native_instrumentation_hook,
@@ -1923,6 +1945,10 @@ def _finalize_impl(session: Optional[int] = None,
             attempt("native finalize",
                     lambda: profiler_native.finalize_all(output_format))
         for state in states:
+            if state.get('timeline_hook') is not None:
+                if not attempt('timeline raw export',
+                        lambda: state['timeline_hook'].flush_timeline(state['name']), state):
+                    continue
             if state.get("instrumentation_hook") and have_runs and state.get(
                     "name"):
                 attempt(

@@ -152,6 +152,10 @@ def _export_capture_impl(base, output, counters=None, context=None):
     tree = base.with_suffix(".hatchet")
     payload = sanitize_call_tree(json.loads(
         tree.read_text())) if tree.exists() else None
+    timeline = base.with_suffix('.timeline')
+    if timeline.is_dir():
+        result.setdefault('capture_notes', []).append(
+            'Internal timestamps: timeline/index.json; clock qualification is reported there.')
     _report.write_bundle(result, document, output, context, complete=False)
     raw_native = Path(output) / "raw/native"
     raw_native.mkdir(parents=True, exist_ok=False)
@@ -164,6 +168,8 @@ def _export_capture_impl(base, output, counters=None, context=None):
             shutil.copyfile(source, raw_native / ("capture" + suffix))
     from .cann_artifacts import retain_native_capture
     retain_native_capture(base, output)
+    if timeline.is_dir():
+        shutil.copytree(timeline, Path(output) / 'timeline')
     (raw_native / "README.txt").write_text(
         "Original collector artifacts. A legacy trace may contain unverified clock assumptions; "
         "use normalized ai/events.jsonl and typed ai/observations.json for analysis.\n"

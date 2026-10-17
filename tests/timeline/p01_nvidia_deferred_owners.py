@@ -82,7 +82,7 @@ def main():
             require(self.current is None, 'Previous submission still lacks completion handle')
             self.compiled, self.plan = compiled, plan
 
-        def validate_launch(self, *, function, grid, scratch_size, alignment, num_ctas):
+        def validate_launch(self, *, function, grid, scratch_size, alignment, num_ctas, stream=None):
             require(function == self.compiled.function, 'Binary/function admission mismatch')
             stream = int(torch.cuda.current_stream().cuda_stream)
             self.current = pool.prepare(self.plan, binary_id=self.compiled.hash,

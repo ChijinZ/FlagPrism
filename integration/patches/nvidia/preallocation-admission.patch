@@ -1,6 +1,15 @@
 --- a/third_party/nvidia/backend/driver.py
 +++ b/third_party/nvidia/backend/driver.py
-@@ -834,6 +834,14 @@
+@@ -787,6 +787,8 @@
+ 
+ 
+ class CudaLauncher(object):
++    profile_admission_version = 2
++
+ 
+     def __init__(self, src, metadata):
+         constants = src.constants if hasattr(src, "constants") else dict()
+@@ -834,6 +836,14 @@
          # ``launch`` so each debugger prepare/launch cycle allocates exactly
          # once and appends hidden arguments after user arguments.
          def launch(hidden_args=()):
@@ -11,7 +20,7 @@
 +                validator(function=function, grid=(gridX, gridY, gridZ),
 +                          scratch_size=self.profile_scratch_size,
 +                          alignment=self.profile_scratch_align,
-+                          num_ctas=self.num_ctas)
++                          num_ctas=self.num_ctas, stream=stream)
              global_scratch = allocate_scratch(self.global_scratch_size, self.global_scratch_align,
                                                _allocation._allocator)
              if self.launch_cooperative_grid and global_scratch is not None:
