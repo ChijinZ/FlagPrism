@@ -12,7 +12,12 @@ namespace mlir::triton::proton::gpu::NVIDIA {
 
 Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
                         bool isClock64) const {
+  return clockWithDependencies(rewriter, loc, isClock64, {});
+}
 
+Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
+                                        Location loc, bool isClock64,
+                                        ArrayRef<Value> dependencies) const {
   // One PTX read avoids combining words across rollover. Legacy modes keep
   // SM-local cycles. Timeline explicitly selects a different device timer;
   // this does not establish a join to CUPTI/host or certify its resolution.
@@ -33,8 +38,28 @@ Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
   } else {
     mov(dest, clock);
   }
+  // Opaque LLVM inputs prevent an observed result's producer from being moved
+  // after the read by LLVM. PTXAS can still schedule independently: comments
+  // are intentionally not presented as a machine-level dependency/fence.
+  for (Value dependency : dependencies) {
+    auto width = cast<IntegerType>(dependency.getType()).getWidth();
+    auto &consume = *builder.create("// timeline_llvm_end_dependency");
+    consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
+  }
   return builder.launch(rewriter, loc,
                         rewriter.getIntegerType(isClock64 ? 64 : 32), true);
+}
+
+Value TargetInfo::anchorValue(ConversionPatternRewriter &rewriter, Location loc,
+                               Value counter, Value bits) const {
+  PTXBuilder builder;
+  auto width = cast<IntegerType>(bits.getType()).getWidth();
+  auto *out = builder.newOperand(width == 64 ? "=l" : "=r");
+  auto &mov = builder.create("mov")->o(width == 64 ? "b64" : "b32");
+  mov(out, builder.newOperand(bits, width == 64 ? "l" : "r"));
+  auto &consume = *builder.create("// timeline_llvm_begin_dependency");
+  consume(builder.newOperand(counter, "l"));
+  return builder.launch(rewriter, loc, bits.getType(), true);
 }
 
 Value TargetInfo::processorId(ConversionPatternRewriter &rewriter,

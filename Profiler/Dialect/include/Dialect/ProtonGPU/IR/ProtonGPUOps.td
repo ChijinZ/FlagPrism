@@ -76,14 +76,27 @@ def PTG_ReadCounterOp : PTG_Op<"read_counter", [
   }];
 
   let arguments = (ins
-    DefaultValuedAttr<MetricTypeAttr, "MetricType::CYCLE">:$metric
+    DefaultValuedAttr<MetricTypeAttr, "MetricType::CYCLE">:$metric,
+    Variadic<AnyType>:$dependencies
   );
 
   let results = (outs AnyTypeOf<[I32, I64]>:$counter);
 
   let assemblyFormat = [{
-    attr-dict `:` type($counter)
+    (`(` $dependencies^ `)` `:` type($dependencies))? attr-dict `:` type($counter)
   }];
+}
+
+// A compiler-level SSA identity, not a hardware synchronization instruction.
+// It carries the begin timestamp to the observed operation's actual operands.
+def PTG_BoundaryAnchorOp : PTG_Op<"boundary_anchor", [
+    AllTypesMatch<["input", "result"]>,
+    MemoryEffects<[MemRead<DefaultResource>, MemWrite<DefaultResource>]>
+]> {
+  let summary = "Forward a value with an explicit compiler timestamp dependency";
+  let arguments = (ins I64:$counter, AnyType:$input);
+  let results = (outs AnyType:$result);
+  let assemblyFormat = "$counter `,` $input attr-dict `:` type($input)";
 }
 
 def PTG_FinalizeOp : PTG_Op<"finalize", [

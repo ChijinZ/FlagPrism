@@ -20,6 +20,16 @@ public:
   virtual Value clock(ConversionPatternRewriter &rewriter, Location loc,
                       bool isClock64) const = 0;
 
+  // These constrain LLVM SSA scheduling only. Final device instructions still
+  // need inspection; a backend must not advertise a hardware fence from them.
+  virtual Value clockWithDependencies(ConversionPatternRewriter &rewriter,
+                                      Location loc, bool isClock64,
+                                      ArrayRef<Value> dependencies) const {
+    return dependencies.empty() ? clock(rewriter, loc, isClock64) : Value{};
+  }
+  virtual Value anchorValue(ConversionPatternRewriter &, Location, Value,
+                             Value) const { return {}; }
+
   // A target must explicitly admit a named timeline getter. Merely carrying a
   // module attribute must never turn another backend's cycles into ns.
   virtual bool supportsTimelineTimer(StringRef) const { return false; }

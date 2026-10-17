@@ -48,6 +48,8 @@ public:
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
       module->setAttr("proton.timeline_record_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 2));
+      module->setAttr("proton.timeline_boundary_version",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
       module->setAttr("proton.timeline_storage_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
     }
@@ -387,6 +389,8 @@ public:
       std::string name = "auto/" + std::to_string(ordinal) + "/" +
                          op->getName().getStringRef().str();
       auto scopeName = builder.getStringAttr(name);
+      if (timeline)
+        op->setAttr("proton.timeline_scope", scopeName);
       builder.setInsertionPoint(op);
       auto start = builder.create<RecordOp>(op->getLoc(), true, scopeName);
       const bool primary =

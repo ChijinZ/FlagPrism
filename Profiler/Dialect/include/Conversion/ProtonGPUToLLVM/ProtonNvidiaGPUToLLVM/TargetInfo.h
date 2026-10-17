@@ -17,6 +17,12 @@ public:
   Value clock(ConversionPatternRewriter &rewriter, Location loc,
               bool isClock64) const override;
 
+  Value clockWithDependencies(ConversionPatternRewriter &rewriter, Location loc,
+                              bool isClock64,
+                              ArrayRef<Value> dependencies) const override;
+  Value anchorValue(ConversionPatternRewriter &rewriter, Location loc,
+                     Value counter, Value bits) const override;
+
   bool supportsTimelineTimer(StringRef name) const override {
     return name == "nvidia.globaltimer.ns";
   }

@@ -63,6 +63,67 @@ struct CensusStoreOpConversion
   }
 };
 
+// Normalize scalar storage bits without numerical conversion (including fp16,
+// bf16 and pointers). No arithmetic salt or application value is introduced.
+static Value boundaryBits(Value value, Location loc,
+                           ConversionPatternRewriter &rewriter) {
+  Type type = value.getType();
+  if (isa<LLVM::LLVMPointerType>(type))
+    return rewriter.create<LLVM::PtrToIntOp>(loc, i64_ty, value);
+  if (auto fp = dyn_cast<FloatType>(type)) {
+    auto integer = IntegerType::get(rewriter.getContext(), fp.getWidth());
+    value = rewriter.create<LLVM::BitcastOp>(loc, integer, value);
+    type = integer;
+  }
+  auto integer = dyn_cast<IntegerType>(type);
+  if (!integer || (integer.getWidth() > 32 && integer.getWidth() != 64))
+    return {};
+  if (integer.getWidth() < 32)
+    value = rewriter.create<LLVM::ZExtOp>(loc, i32_ty, value);
+  return value;
+}
+
+struct BoundaryAnchorOpConversion
+    : public ConvertOpToLLVMPattern<BoundaryAnchorOp> {
+  BoundaryAnchorOpConversion(LLVMTypeConverter &converter,
+                             const TargetInfoBase &targetInfo,
+                             PatternBenefit benefit)
+      : ConvertOpToLLVMPattern<BoundaryAnchorOp>(converter, benefit),
+        targetInfo(targetInfo) {}
+  LogicalResult matchAndRewrite(BoundaryAnchorOp op, OpAdaptor adaptor,
+                                  ConversionPatternRewriter &rewriter) const override {
+    auto loc = op.getLoc();
+    auto values = unpackLLElements(loc, adaptor.getInput(), rewriter);
+    for (Value &value : values) {
+      Type original = value.getType();
+      Value bits = boundaryBits(value, loc, rewriter);
+      if (!bits)
+        return op.emitError("Unsupported timeline boundary scalar storage type");
+      Value forwarded = targetInfo.anchorValue(rewriter, loc,
+                                                adaptor.getCounter(), bits);
+      if (!forwarded)
+        return op.emitError("Target does not implement compiler boundary anchors");
+      if (isa<LLVM::LLVMPointerType>(original))
+        value = rewriter.create<LLVM::IntToPtrOp>(loc, original, forwarded);
+      else {
+        unsigned width = original.getIntOrFloatBitWidth();
+        Type integer = IntegerType::get(rewriter.getContext(), width);
+        if (width < 32)
+          forwarded = rewriter.create<LLVM::TruncOp>(loc, integer, forwarded);
+        value = isa<FloatType>(original)
+                    ? rewriter.create<LLVM::BitcastOp>(loc, original, forwarded)
+                          .getResult()
+                    : forwarded;
+      }
+    }
+    Value result = packLLElements(loc, getTypeConverter(), values, rewriter,
+                                   op.getResult().getType());
+    rewriter.replaceOp(op, result);
+    return success();
+  }
+  const TargetInfoBase &targetInfo;
+};
+
 struct ReadCounterOpConversion
     : public ConvertOpToLLVMPattern<mlir::triton::proton::gpu::ReadCounterOp> {
   explicit ReadCounterOpConversion(
@@ -97,7 +158,18 @@ struct ReadCounterOpConversion
         return failure();
       }
     }
-    Value clock = targetInfo.clock(rewriter, op.getLoc(), isClock64);
+    SmallVector<Value> dependencies;
+    for (Value dependency : adaptor.getDependencies())
+      for (Value scalar : unpackLLElements(op.getLoc(), dependency, rewriter)) {
+        Value bits = boundaryBits(scalar, op.getLoc(), rewriter);
+        if (!bits)
+          return op.emitError("Unsupported timeline counter dependency type");
+        dependencies.push_back(bits);
+      }
+    Value clock = targetInfo.clockWithDependencies(
+        rewriter, op.getLoc(), isClock64, dependencies);
+    if (!clock)
+      return op.emitError("Target does not implement counter dependencies");
     rewriter.replaceOp(op, clock);
     return success();
   }
@@ -683,6 +755,7 @@ void populateProtonGPUOpPatterns(LLVMTypeConverter &typeConverter,
                                  const TargetInfoBase &targetInfo,
                                  PatternBenefit benefit) {
   patterns.add<CensusStoreOpConversion>(typeConverter, benefit);
+  patterns.add<BoundaryAnchorOpConversion>(typeConverter, targetInfo, benefit);
   patterns.add<ReadCounterOpConversion>(typeConverter, targetInfo, benefit);
   patterns.add<FinalizeOpConversion>(typeConverter, targetInfo, benefit);
   patterns.add<SegmentAllocOpConversion>(typeConverter, targetInfo, benefit);

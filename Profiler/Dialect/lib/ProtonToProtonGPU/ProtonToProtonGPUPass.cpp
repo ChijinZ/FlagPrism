@@ -79,6 +79,15 @@ void instrumentWarpSpecializeOps(FuncOp func, Value buffer, Value profileMem) {
   }
 }
 
+// Register-like values can be forwarded without changing their bits or layout.
+// Tokens/memdescs are deliberately not reinterpreted as ordinary values. Their
+// issue/wait semantics still require separate final-object/participant evidence.
+static bool supportsBoundaryValue(Type type) {
+  if (auto tensor = dyn_cast<RankedTensorType>(type))
+    type = tensor.getElementType();
+  return isa<IntegerType, FloatType, triton::PointerType>(type);
+}
+
 LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
                                     Value segment, MetricType metricType,
                                     ModuleScopeIdAllocation &scopeInfo,
@@ -86,6 +95,36 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
   mlir::IntegerType clkType =
       clockExtension ? mlir::IntegerType::get(builder.getContext(), 64)
                      : mlir::IntegerType::get(builder.getContext(), 32);
+
+  llvm::DenseMap<StringAttr, Operation *> observed;
+  auto module = func->getParentOfType<ModuleOp>();
+  if (module->hasAttr("proton.timeline_boundary_version"))
+    func.walk([&](Operation *op) {
+      if (auto name = op->getAttrOfType<StringAttr>("proton.timeline_scope"))
+        observed[name] = op;
+    });
+  auto readCounter = [&](proton::RecordOp record) -> Value {
+    SmallVector<Value> dependencies;
+    Operation *operation = observed.lookup(record.getNameAttr());
+    if (operation) {
+      ValueRange values = record.getIsStart()
+                              ? ValueRange(operation->getOperands())
+                              : ValueRange(operation->getResults());
+      for (Value value : values)
+        if (supportsBoundaryValue(value.getType()))
+          dependencies.push_back(value);
+    }
+    Value counter = builder.create<gpu::ReadCounterOp>(
+        record.getLoc(), clkType, metricType, dependencies);
+    if (operation && record.getIsStart())
+      for (OpOperand &operand : operation->getOpOperands())
+        if (supportsBoundaryValue(operand.get().getType())) {
+          Value forwarded = builder.create<gpu::BoundaryAnchorOp>(
+              record.getLoc(), operand.get().getType(), counter, operand.get());
+          operand.set(forwarded);
+        }
+    return counter;
+  };
 
   // Replace all proton::RecordOp in the worker warps.
   func->walk([&](triton::gpu::WarpSpecializePartitionsOp partitions) {
@@ -109,8 +148,7 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
         partition.walk([&](proton::RecordOp record) {
           builder.setInsertionPoint(record);
 
-          Value counter =
-              builder.create<gpu::ReadCounterOp>(loc, clkType, metricType);
+          Value counter = readCounter(record);
           int scopeId = scopeInfo.getOpScopeId(record);
           builder.create<gpu::CircularStoreOp>(loc, newSegment, counter,
                                                record.getIsStart(), scopeId);
@@ -132,8 +170,7 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
   auto loc = func.getLoc();
   func->walk([&](proton::RecordOp record) {
     builder.setInsertionPoint(record);
-    Value counter =
-        builder.create<gpu::ReadCounterOp>(loc, clkType, metricType);
+    Value counter = readCounter(record);
     int scopeId = scopeInfo.getOpScopeId(record);
     builder.create<gpu::CircularStoreOp>(loc, segment, counter,
                                          record.getIsStart(), scopeId);

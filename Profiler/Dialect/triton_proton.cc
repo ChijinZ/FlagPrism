@@ -74,6 +74,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
+  m.attr("TIMELINE_BOUNDARY_VERSION") = 1;
   m.attr("TIMELINE_STORAGE_VERSION") = 1;
   m.attr("TIMELINE_PLAN_VERSION") = 1;
 
@@ -204,6 +205,11 @@ void init_triton_proton(py::module &&m) {
       if (!version || version.getInt() != 1)
         throw std::runtime_error("Missing or unsupported timeline timer version");
       result["timeline_timer"] = timer.str();
+      if (auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
+              "proton.timeline_boundary_version")) {
+        result["timeline_boundary_version"] = boundary.getInt();
+        result["timeline_boundary_strategy"] = "llvm_ssa_pending_machine_audit";
+      }
       result["timeline_getter_bits"] = 64;
       auto recordVersion = module->getAttrOfType<mlir::IntegerAttr>(
           "proton.timeline_record_version");
