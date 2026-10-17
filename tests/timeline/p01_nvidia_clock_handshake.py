@@ -51,7 +51,9 @@ def main():
         previous = tl.full((), 0, tl.int64)
         if pid == 0:
             value = tl.load(X + lane)
-            for r in range(ROUNDS):
+            r = 0
+            failed = 0
+            while (r < ROUNDS) & (failed == 0):
                 value = value * 0.75 + 0.125
                 tl.store(Payload + lane, value)
                 # Dedicated calibration synchronization, never injected into
@@ -72,21 +74,25 @@ def main():
                 if (reply == -1) | (reply <= previous):
                     tl.store(Error + pid, 1)
                     tl.atomic_xchg(Ready, -1, sem='release', scope='gpu')
-                    break
-                finish = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
-                    constraints='=l', args=[], dtype=tl.uint64,
-                    is_pure=False, pack=1).to(tl.int64)
-                sm_finish = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
-                    constraints='=r', args=[], dtype=tl.int32,
-                    is_pure=False, pack=1)
-                tl.store(T + r * 4, begin)
-                tl.store(T + r * 4 + 3, finish)
-                tl.store(SM + r * 4, sm_begin)
-                tl.store(SM + r * 4 + 3, sm_finish)
-                previous = reply
-                completed += 1
+                    failed = 1
+                else:
+                    finish = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
+                        constraints='=l', args=[], dtype=tl.uint64,
+                        is_pure=False, pack=1).to(tl.int64)
+                    sm_finish = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
+                        constraints='=r', args=[], dtype=tl.int32,
+                        is_pure=False, pack=1)
+                    tl.store(T + r * 4, begin)
+                    tl.store(T + r * 4 + 3, finish)
+                    tl.store(SM + r * 4, sm_begin)
+                    tl.store(SM + r * 4 + 3, sm_finish)
+                    previous = reply
+                    completed += 1
+                r += 1
         else:
-            for r in range(ROUNDS):
+            r = 0
+            failed = 0
+            while (r < ROUNDS) & (failed == 0):
                 token = tl.atomic_add(Ready, 0, sem='acquire', scope='gpu')
                 spins = 0
                 while (token <= previous) & (token != -1) & (spins < MAX_SPINS):
@@ -95,36 +101,39 @@ def main():
                 if (token == -1) | (token <= previous):
                     tl.store(Error + pid, 2)
                     tl.atomic_xchg(Ack, -1, sem='release', scope='gpu')
-                    break
-                receive = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
-                    constraints='=l', args=[], dtype=tl.uint64,
-                    is_pure=False, pack=1).to(tl.int64)
-                sm_receive = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
-                    constraints='=r', args=[], dtype=tl.int32,
-                    is_pure=False, pack=1)
-                value = tl.load(Payload + lane) * 0.5 + 0.25
-                tl.store(Y + r * BLOCK + lane, value)
-                tl.debug_barrier()
-                # The result controls the end observation; actual final
-                # machine ordering is audited rather than assumed from IR.
-                if tl.sum(value, 0) > 0:
-                    respond = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
+                    failed = 1
+                else:
+                    receive = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
                         constraints='=l', args=[], dtype=tl.uint64,
                         is_pure=False, pack=1).to(tl.int64)
-                    sm_respond = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
+                    sm_receive = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
                         constraints='=r', args=[], dtype=tl.int32,
                         is_pure=False, pack=1)
-                    tl.store(T + r * 4 + 1, receive)
-                    tl.store(T + r * 4 + 2, respond)
-                    tl.store(SM + r * 4 + 1, sm_receive)
-                    tl.store(SM + r * 4 + 2, sm_respond)
-                    tl.atomic_xchg(Ack, respond, sem='release', scope='gpu')
-                else:
-                    tl.store(Error + pid, 3)
-                    tl.atomic_xchg(Ack, -1, sem='release', scope='gpu')
-                    break
-                previous = token
-                completed += 1
+                    value = tl.load(Payload + lane) * 0.5 + 0.25
+                    tl.store(Y + r * BLOCK + lane, value)
+                    tl.debug_barrier()
+                    # The result controls the end observation; actual final
+                    # machine ordering is audited rather than assumed from IR.
+                    if tl.sum(value, 0) > 0:
+                        respond = tl.inline_asm_elementwise('mov.u64 $0, %globaltimer;',
+                            constraints='=l', args=[], dtype=tl.uint64,
+                            is_pure=False, pack=1).to(tl.int64)
+                        sm_respond = tl.inline_asm_elementwise('mov.u32 $0, %smid;',
+                            constraints='=r', args=[], dtype=tl.int32,
+                            is_pure=False, pack=1)
+                        tl.store(T + r * 4 + 1, receive)
+                        tl.store(T + r * 4 + 2, respond)
+                        tl.store(SM + r * 4 + 1, sm_receive)
+                        tl.store(SM + r * 4 + 2, sm_respond)
+                        tl.atomic_xchg(Ack, respond, sem='release', scope='gpu')
+                    else:
+                        tl.store(Error + pid, 3)
+                        tl.atomic_xchg(Ack, -1, sem='release', scope='gpu')
+                        failed = 1
+                    previous = token
+                    if failed == 0:
+                        completed += 1
+                r += 1
         tl.store(State + pid, old_state + completed)
 
     torch.cuda.set_device(0)
