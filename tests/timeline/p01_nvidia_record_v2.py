@@ -6,7 +6,6 @@ waits for its completion; it does not claim concurrent runtime qualification.
 """
 import argparse
 import hashlib
-import importlib.util
 import json
 from math import prod
 from pathlib import Path
@@ -34,10 +33,10 @@ def main():
     from flagtree.profiler.hooks.instrumentation import Instrumentation
     from flagtree.profiler.mode import Default
 
-    module_path = Path(__file__).with_name('timeline_nvidia.py')
-    spec = importlib.util.spec_from_file_location('record_decoder', module_path)
-    decoder = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(decoder)
+    from flagtree.profiler import timeline_nvidia as decoder
+    module_path = Path(decoder.__file__).resolve()
+    require(module_path.is_relative_to(Path(sys.prefix).resolve()),
+            'Decoder fell back outside the actual wheel installation')
     binding = compiler_binding()
     require(binding.TIMELINE_RECORD_VERSION == 2, 'Wrong installed native ABI')
     torch.cuda.set_device(0)
