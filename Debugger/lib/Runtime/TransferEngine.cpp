@@ -1056,6 +1056,13 @@ public:
   DebugLaunchContext
   prepare(const BufferMeta &meta, const DebugBufferPlan &plan,
           const DebugRuntimeMetadata &runtimeMetadata) override {
+    // Reject incompatible driver/metadata combinations before probing an SDK
+    // or allocating any storage. This is a caller error, not an abort condition.
+    if ((options_.driverKind == TransferDriverKind::CANN && meta.backendKind != BackendKind::CANN) ||
+        (options_.driverKind == TransferDriverKind::TOPS && meta.backendKind != BackendKind::ENFLAME) ||
+        (options_.driverKind == TransferDriverKind::COREX && meta.backendKind != BackendKind::TIANSHU) ||
+        (options_.driverKind == TransferDriverKind::MUSA && meta.backendKind != BackendKind::MUSA))
+      throw std::invalid_argument("Transfer driver and BufferMeta.backendKind mismatch");
     const bool firstLast = runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
     uint64_t programCount = 0;
     if (firstLast) {

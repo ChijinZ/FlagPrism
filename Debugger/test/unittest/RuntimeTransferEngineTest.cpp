@@ -404,13 +404,10 @@ TEST(RealTransferEngineTest, GcuFirstLastRejectsInvalidGeometryBeforeAllocation)
 TEST(RealTransferEngineTest, CannDriverRejectsUnavailableOrNonCannBufferMeta) {
   auto engine = createTransferEngine(BackendKind::CANN);
 
-  EXPECT_DEATH(
-      {
-        (void)engine->prepare(makeTestBufferMeta(), makeTestBufferPlan(),
-                              makeTestRuntimeMetadata());
-      },
-      "BufferMeta\\.backendKind == CANN|transfer engine driver 'cann' is not "
-      "available");
+  EXPECT_THROW(
+      engine->prepare(makeTestBufferMeta(), makeTestBufferPlan(),
+                      makeTestRuntimeMetadata()),
+      std::invalid_argument);
 }
 
 } // namespace
