@@ -76,7 +76,7 @@ Ascend 已有 isolated fixed SDK `/tmp/chijin-r15-sdk-scalar-legality/install-fi
 
 ### 3.1 本轮必须落实的可扩展边界
 
-执行设计第 8.1–8.10 节和测试 P01–P10/§8.2–8.5 的最小实证：使用现有三后端形成小的真实后端接口，不新增第四芯片，不提前搭建无调用者框架。拆分公共观测意图/晚期执行 manifest、编译插桩/运行时记录、主体/clock/async 语义映射与公共验证/Perfetto；保留后端细节，不固定 warp/SM 或一对一 producer-consumer 模型。
+执行设计第 8.1–8.11 节和测试 P01–P10/§8.2–8.6 的最小实证：使用现有三后端形成小的真实后端接口，不新增第四芯片，不提前搭建无调用者框架。拆分公共观测意图/晚期执行 manifest、编译插桩/运行时记录、主体/clock/async 语义映射与公共验证/Perfetto；保留后端细节，不固定 warp/SM 或一对一 producer-consumer 模型。
 
 按实际 target/compiler/SDK/plugin 探测能力并绑定缓存；同品牌不同目标不自动继承 clock/async 能力。未验证、已知不支持和验证支持分开，profile 失败不改 unsupported。后端各有真实小纵向样本，验证 timer、两区间、动态异步与可比时钟以及 Trace Processor 后再进入最终资格；遇确实的机制/环境阻碍保留事实返回，不用降级目标填图。
 

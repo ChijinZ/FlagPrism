@@ -1,0 +1,28 @@
+{
+  "user_request": "更新设计/验收文档，三个独立 subagent 评审设计合理性与实际可行性",
+  "scope": "documentation design review; not final implementation code acceptance",
+  "independence": "fresh context, same frozen five documents, no prior or peer reports",
+  "reviewers": [
+    {
+      "agent": "/root/design6_compiler",
+      "role": "compiler and automatic boundaries",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    },
+    {
+      "agent": "/root/design6_runtime",
+      "role": "clock publication and owner lifecycle",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    },
+    {
+      "agent": "/root/design6_portability",
+      "role": "portability and actual Perfetto acceptance",
+      "model_request": "session default",
+      "reasoning_request": "session default",
+      "fork_turns": "none"
+    }
+  ]
+}

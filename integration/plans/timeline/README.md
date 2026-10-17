@@ -14,7 +14,9 @@ document revision starts no device experiment.
 
 - [Fourth design feasibility review](reviews/round4/README.md): component composition, target/toolchain reuse, immutable raw and certified time views, staged acceptance, and three independent reviews.
 
-- [Latest independent design review](reviews/round5/README.md): explicit component compatibility, per-conclusion proof scope, initialization-safe reclamation, and three independent reviews with limited follow-ups.
+- [Fifth independent design review](reviews/round5/README.md): explicit component compatibility, per-conclusion proof scope, initialization-safe reclamation, and three independent reviews with limited follow-ups.
+
+- [Latest independent design feasibility review](reviews/round6/README.md): concrete component handoffs, target-specific boundary strategies, causal-clock proof limits, executable acceptance cases, and three fresh-context reviews.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish

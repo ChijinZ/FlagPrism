@@ -1,29 +1,29 @@
 {
-  "scope": "Fifth independent documentation design feasibility review; component compatibility and scoped qualification; no product changes or new device execution",
+  "scope": "Sixth independent documentation feasibility review; concrete handoffs and executable checks; no product changes or new device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "design_revision_from_commit": "f5731a08dbeebff633e416233b5faf857f1fc7da",
-  "root_contract_sha256": "7f1e288720694faa702262080298f8efd9caa62d5bffc4af80095f918cff4932",
+  "design_revision_from_commit": "4f5b2bff76ec61537bcec6d98075639d7f9ef731",
+  "root_contract_sha256": "70da4b7ff287ab76446bbd3da65cb7f682e6698002c9caabe334420f11ffdbda",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 122,
+  "local_links_checked": 32,
   "review_initials_preserved": true,
   "historical_round1_followups_bound_to_commit": "2932311bd103db9b2eeea8fa8ca0574befc913b7",
   "historical_round2_followups_bound_to_commit": "d109df5",
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 52970,
-      "sha256": "d0de195519df76018b752933a79089ad2c009923ec0e4ff3f4d5f1b43cb32cdd"
+      "bytes": 56908,
+      "sha256": "7cf4205f950e1bb1cb183b38966f4db52b743d4b3df61f7d1c32cb051fab8975"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 34821,
-      "sha256": "2a4553b4c31a16a6371d87c72c71faff09ccbc64beb691aed5e7a4ce1714664b"
+      "bytes": 37838,
+      "sha256": "eea0937096889ac2cf248921df1895d2f11fd879471bbad8811096997051cd42"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 2931,
-      "sha256": "120873e7298008ae8364ebdef5102eb593899361fc0c839a6b8b37b2d8eb8c63"
+      "bytes": 3162,
+      "sha256": "c866030efffc43d92cc53c855cf7c88294b3ed4a700ec22223b85e1ad8eb3daa"
     },
     "integration/plans/timeline/goal_prompt.md": {
       "bytes": 18399,
-      "sha256": "7f1e288720694faa702262080298f8efd9caa62d5bffc4af80095f918cff4932"
+      "sha256": "70da4b7ff287ab76446bbd3da65cb7f682e6698002c9caabe334420f11ffdbda"
     },
     "integration/plans/timeline/record.initial.md": {
       "bytes": 2068,
@@ -220,9 +220,54 @@
     "integration/plans/timeline/reviews/round5/README.md": {
       "bytes": 3612,
       "sha256": "9917a68667a77eba1eba2f2b406003ec293d2bd555bce27a87ef78dcc41952e5"
+    },
+    "integration/plans/timeline/reviews/round6/FOLLOWUP_INPUT.json": {
+      "bytes": 763,
+      "sha256": "aa1458e446a2407265870607c56c771f8495f703fb9d3fe1d53fe95a8d6969d8"
+    },
+    "integration/plans/timeline/reviews/round6/README.md": {
+      "bytes": 3410,
+      "sha256": "3e82b079863d6f0e9e2778f6351072bb526ca44ccc39f3532a24ed38fef02d57"
+    },
+    "integration/plans/timeline/reviews/round6/R1-compiler.md": {
+      "bytes": 10385,
+      "sha256": "62bd6d1b2848ea6554612afd786fe636f79c947c6e0bcc54d58641c972bebbd8"
+    },
+    "integration/plans/timeline/reviews/round6/INPUT.json": {
+      "bytes": 715,
+      "sha256": "b3695d4da7d129a3a6d6e3f2af8c28d17960db4b3b66db055f567e2a0d6bbcb5"
+    },
+    "integration/plans/timeline/reviews/round6/R2-runtime.md": {
+      "bytes": 8591,
+      "sha256": "cf99bcc69d28985f3b8b7e12f321a162d7b1559fdfee28b112a130ebc5d51d76"
+    },
+    "integration/plans/timeline/reviews/round6/R1-followup.md": {
+      "bytes": 1268,
+      "sha256": "69753e67413ad84460d28ea725e4b53ae8a73f1538df1c680ec1bf8808838fa3"
+    },
+    "integration/plans/timeline/reviews/round6/R3-followup.md": {
+      "bytes": 1271,
+      "sha256": "9619310c36b33a4e41b5df5d39b29528cb5acf0bdd7a14db4685340a9a344dbd"
+    },
+    "integration/plans/timeline/reviews/round6/R3-portability.md": {
+      "bytes": 8903,
+      "sha256": "8deef73b8e8b2d97af7f97a0c72e906e1e5a2d5e813b8cf352ca5b3b204b4984"
+    },
+    "integration/plans/timeline/reviews/round6/R2-followup.md": {
+      "bytes": 1874,
+      "sha256": "e2d05a6e8be3ead4855a45ae82128f5be06087b9e7dc4338c496e69f5541cafc"
+    },
+    "integration/plans/timeline/reviews/round6/REQUEST.json": {
+      "bytes": 983,
+      "sha256": "302272ccc87bf8d1a903bd62e29590637009adafeb29e56f99fa5f2adc798443"
+    },
+    "integration/plans/timeline/reviews/round6/INITIAL_DOCS.patch": {
+      "bytes": 9753,
+      "sha256": "e1bc7b4323bda24e0801f5704d287f80b3e0986aea816260a8784efeb8121a1e"
     }
   },
   "historical_round3_followups_bound_to_commit": "dad8e7c98632ef7cbd2b4677d9c5101a517a88dc",
   "historical_round4_followups_match_their_frozen_document_sha256": true,
-  "current_round5_followups_match_final_document_sha256": true
+  "historical_round5_followups_bound_to_their_frozen_document_sha256": true,
+  "current_round6_followups_match_final_document_sha256": true
 }
