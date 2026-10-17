@@ -133,7 +133,7 @@ Schema、authorization、verifier 和完整性检查必须在普通 Python 与 `
 
 ### 8.1 适配边界与可行性验收（P01–P10）
 
-遵守设计第 8.1–8.12 节。只用现有 NVIDIA/Enflame/Ascend 完成验证，不启动第四芯片适配。下表包含真实设备正例与 CPU 合同负例，必须在证据中区分；CPU 测试仍在服务器 Docker。建议复用同一份参数化公共消费者测试，后端分别提供真实 producer/安装证据。
+遵守设计第 8.1–8.13 节。只用现有 NVIDIA/Enflame/Ascend 完成验证，不启动第四芯片适配。下表包含真实设备正例与 CPU 合同负例，必须在证据中区分；CPU 测试仍在服务器 Docker。建议复用同一份参数化公共消费者测试，后端分别提供真实 producer/安装证据。
 
 | ID | 输入/操作 | 通过条件 |
 | --- | --- | --- |
@@ -250,6 +250,26 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 | P06/P08：分层资格 | 固定同 raw/manifest，独立移除或替换 clock proof，另分别缺 boundary、scale、epoch、动态关联及给错范围 proof | 物理解码不执行设备工作，替换 proof 不改变 canonical 端点、身份或原 raw/初次报告；只改变相应派生资格。只生成满足全部前提的 ns/源区域归属/时间箭头。clock 合格不补 boundary，原件正确不补 epoch。有效 partial 子集不能缩小完整资格分母 |
 
 本节验收映射到既有 P01–P10 和 E/C 结果，不另设一套通过状态。每项记录输入/源码与安装身份、最小命令、原始产物、预期与实际、退出终态、结论范围。设计评审输出“可执行但待取证”不等于任何设备门已通过；最终三名独立代码 reviewer 仍须在实现和真实验收后另开。
+
+### 8.8 适配合同的落地检查与真实 writer 验收
+
+对应设计 §8.13，补足既有 P/E 的判定，不新增资格数学。以下都是待执行要求；不把现有 CPU 通过、旧 advanced 数据或设计 reviewer 意见当新默认路径通过。产品执行仍只在服务器已有 Docker，复用现有容器。
+
+| 对应门 | 用例与检查 | 通过条件 / 不能替代的部分 |
+| --- | --- | --- |
+| P02/P05/P10 | 对实际 producer 核 byte stride、指针元素单位、slot 数与 alignment；用一个、两个和更多 program（含 2D/tail），未选 program 执行正常数学；检查每个已选 observer 的 raw 和 guard | 地址计算与实际分配一致、无越界/跨 slot 污染；预登记必经 site 的首末 observer 各有真实已提交事件。header 坐标和记录总数不代替逐 observer 核验。检查实际 pointer lowering 的元素单位/整除、slot 地址差、各写入最大 byte end 和无溢出；stride/元素大小错误用合同负例拒绝，不设备执行危险旧版本。有限 guard 未变不能独证无大跨度越界，数学 tail canary 不能代替 timeline allocation guard；device guard 证据缺失则本项未通过 |
+| P05/E05 | 正常必经 site；合法条件跳过所有已选 site；仅 host 初始化 header 但未有 writer 到达；writer 到达但 commit 被破坏 | 必经正例各 observer 有实际记录；合法跳过可返回明确空记录且不造区间；host 初始化不能冒充执行，坏 commit 不获完整资格。后两项可用标注 fixture，不声称设备执行过注入故障 |
+| P02/P10 | 保留旧 publisher/缓存产物，升级到改变写址或发布语义的新版本；再用新编译对象与错 runtime/publisher 描述组合 | 缓存身份区别新旧代码；错误组合在其可识别阶段拒绝，不能清缓存绕过。仅 raw 可识别的问题保原件、拒绝解释。物理布局不变也不豁免 publisher 版本检查；旧正式布局 reader 回归仍通过 |
+| P01/P09 | 三后端逐一用文档公开 `detail="timeline"` 捕获普通算子；另单独跑 advanced 已支持与未知选择策略 | 默认真实首末、source、owner、预算与输出齐全；advanced 成功不能代替默认入口。未知策略明确拒绝，不静默变为全 grid；错误后下一合法请求正常。未支持的后端默认入口仍记未完成 |
+| P05/P08/E05 | 真实采集后关闭 session，从最终磁盘 bundle 重读 canonical、对应 raw bytes、manifest/invocation；核每条端点实际字段 offset。再注入 raw 篡改和字段丢失 | 最终落盘保相同 SHA/长度和身份，引用有界、与记录相符；坏 raw 或缺失必需关联不能导出合格视图。仅在中间 run 字典保 canonical 字段不算通过 |
+| P05/P10 | 正常提交多个调用后，在首个 decode/export 注入失败；实际完成条件上保存后续原件并核 owner 状态；随后同原件重试 | 已完成调用不因首错丢失原件；安全 scratch 回收与 decode 成败分离。重试不新增应用调用、raw SHA 不变。完成未知者保留资源；最终收尾列实际终态，不把 timeout 当已结束 |
+| P05/P10/E05 | 真实完成捕获的 readback 边界注入 guard 校验失败，另以明确 fixture 覆盖 extent/header/commit 不合格；与真正 D2H 未取得 bytes 对照 | 已读回 raw、实际长度及坏 guard 从最终磁盘可重读；保失败，拒绝解释。完成且原件已保存后资源可安全释放，不能永久困在重读坏 guard。仅落盘后篡改不替代 readback 交接测试，真实 D2H 失败不伪造完整 raw |
+| P05/P10/E05 | 同 session A 的完成 query 受控保持 unknown、B 有真实完成证明；另测共同预算不足 | B 在剩余预算内优先有 salvage 机会；不要求任意数据量必定落盘，不增加总 deadline。耗尽后分清完成未知、已完成未读回、已读回未落盘、已持久化，保对应资源/bytes/身份，无 all_saved 假报告；显式有界重试无应用重放。查询故障注入不冒称硬件挂死恢复 |
+| P05/P10/E05 | 初始化部分提交后异常及 D2H 已提交后异常；记录 device、host staging、native/context 和完成句柄持有情况 | 默认 transport 在首次异步访问前把完整资源交 owner；全部相关访问完成前不通过析构/旧回滚释放。CPU 延迟访问 fixture 证生命周期，真实设备正例证流上初始化/完成/读取顺序，不人为制造 SDK 硬故障 |
+| P05/P10/E02 | 分别达到单调用、live pending、owner 数及累计 session raw/bundle 预算；完成并释放前一调用后继续新调用；同原件重导 | 冻结并核每种额度、单位及 header/padding/guard；已释放不再占 pending，但累计保留仍计额度，重导不重复计原件。拒绝发生在可识别的下一调用初始化前，无隐式同步或丢原件腾额度；当前 pending 上限不能替代累计预算验证 |
+| P02/P06/P07/P09 | 三后端实际调用链列复用、替代、待证部件；固定 canonical 后替换 clock 或机制 proof，检查共同消费入口 | 更换 proof 不改原事件/原件，只改变对应派生资格；公共层不解析厂商 ISA、不依赖 warp/SM；无证据的新增型号不授资格。核 executable/context/queue 合同不需伪造 NVIDIA function/stream 值；不同架构可以保不同事件及多对多关系，无需统一物理 ABI |
+
+执行证据复用 `timeline_impl_record.md` 和既有 evidence 索引：每项给实际源码/安装版本、命令、输入、预期、真实终态、原件及未满足原因。不得再建立另一份“全部已完成”的状态表。最终代码 reviewer 额外检查默认入口与高级入口的区别、ABI/cache、guard、owner 及磁盘产物；本轮设计评审与最终代码走查分开留存。
 
 ## 9. 成功判定
 

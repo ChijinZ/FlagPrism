@@ -391,6 +391,42 @@ A/B 允许推进下一项开发；只有 C 达到既有 P01，D 才完成本轮�
 
 适配成本最终报告回答：此次新增了哪些部件、复用了哪些实际实现、为什么需要公共改动、哪些设备证据必须重做。不给新增芯片固定天数或“写一个 decoder 即可”的承诺。原三后端未通过之前，不以第四后端或模拟注册冲淡缺口。
 
+### 8.13 面向本轮实现的适配决策与失败边界
+
+本节是 §8.9–8.12 的执行索引；不增加第四后端，不要求先做插件平台。新增芯片的适配成本不能由接口数量推断：本轮只验证公共链可以复用，以及硬件差异有明确承载位置。三后端实际资格仍按测试 P01–P10 判定。
+
+**接入时先回答五个问题。** 沿公开入口找到实际调用者，然后依次判断：
+
+```text
+现有编译接入能否表达目标的 site/边界与隐藏参数？
+ → 现有 transport 能否正确处理该 context/stream 的初始化和完成？
+ → 现有 decoder 是否匹配实际布局及发布协议？
+ → clock provider 的证据是否覆盖该型号/getter/本次 epoch？
+ → mechanism mapper 能否覆盖实际生成的状态变更和动态身份？
+```
+
+每项可选择复用、补证或实现替代部件；不把其中一项变化扩大成全链重写。编译/发布/机制证据缺失是明确的接入工作，不承诺任意新芯片只写配置即可。公共消费者按事件语义和证据工作，保留实际角色、时钟域和多对多依赖；不以 CUDA stream/warp/SM 作为所有后端必需对象。
+
+| 交接处 | 现有工程落点与实施约束 | 失败时如何处理 |
+| --- | --- | --- |
+| 编译 → launch | manifest 给类型化布局参数、指针元素单位、alignment、storage/logger/publisher/launch ABI 和选择策略；实际 grid 后绑定。GCU 当前候选 `i32*` 上的地址增量须由 byte stride 正确换算，不能直接传 bytes | 静态已知不相容在初始化/启动前拒绝；cache key 纳入生成代码的版本。改变 publisher 语义即使布局未变也须明确失效旧生成代码 |
+| launch → owner | 复用 `timeline_runtime.py` 的预算和 owner 生命周期；后端 transport 负责实际流上初始化、提交、完成及读取。`hooks/timeline.py` 的 NVIDIA 实现是已有调用者，不是让其它后端继承 CUDA 行为的基类合同 | 在途初始化也属于潜在写者；异常时保留资源至可证明安全。旧 advanced 的逐 launch 同步不能作为默认 timeline 的完成实现 |
+| bytes → decoder | `timeline_events.py` 承载公共合同；如 `timeline_events_enflame.py` 的物理 adapter 只解释自己支持的布局与协议。header 初始化、writer 到达、事件提交是三个不同事实 | header 坐标不能证明实际执行。缺 writer 到达、坏 commit 或越界引用时保 raw 并拒绝对应完整性结论；到达但没有选中 site 的合法空记录须单独表达 |
+| decoder → bundle | 规范化与最终写文件均须保 canonical、manifest/invocation 和对应原 bytes；AI 视图、原件与 trace 引用同一身份 | 中间 Python 对象存在字段不算交付；落盘后重读并验证 raw SHA/长度/offset。解码失败不能阻断其它已完成调用的原件保存 |
+| canonical → 派生视图 | clock/mapper 是独立提供者；共同 validator/exporter 只用已验证的范围和真实端点 | 无尺度不填 ns，无跨域资格不画共同时间箭头，无区域边界不称源操作耗时。raw 可保留，不降低完整交付门槛 |
+
+公共复用的是预算、调用身份与潜在写者状态机，不是当前 NVIDIA 调用签名。loaded executable、execution context/queue 和布局请求可由后端类型化封装并校验；不得为满足当前正整数 function/stream 或 num_ctas 形状编造值。存在第二个实际调用者时才提取输入合同，不预建类层次。owner 在首次可能提交初始化前接管完整资源集合：device scratch、异步 H2D/D2H 所需 host staging、native/context 引用与完成依赖。完成收据覆盖全部异步访问；不能让 legacy init-first 回滚或临时 handle 析构绕过 owner 释放它们。
+
+**取得 bytes 与校验合格分开。** transport 已安全取得的实际 bytes、长度和 guard 原件，即使 guard/header/extent/commit 检查失败，也须交给留存层并标失败，不能仅抛通用 read_failed 把证据留在局部变量中。真正未取得 bytes 的 D2H 失败另记；部分取得的 bytes 不能标完整。完成已证明且原件已持久化的资源可安全回收，不依赖其可解释性；D2H 自身尚在途仍按潜在写者处理。
+
+**收尾在共同 deadline 内优先处理就绪者。** transport 有非阻塞完成查询时，先识别已完成 owner，用剩余预算取得并持久化其原件，再轮询完成未知者；不保证任意数量 ready 都落盘，不无限延长 deadline。耗尽时逐调用区分 completion_unknown、completion_observed_raw_pending、raw_ready_not_persisted 与 raw_persisted（状态含义，不强制同名 API），保恢复所需资源、已有 host bytes 与关联身份，不能报告 all_saved。超时后的显式重试另有有界 deadline、不得重放应用；完成已确认且原件与关联快照安全持久化的 scratch 可回收；后续重试不因保留已有 host bytes 而重新占用 device buffer。
+
+**公开模式必须显式选择，不能悄悄扩范围。** 默认 `detail="timeline"` 与旧 advanced 请求分别测试；一个后端不支持 `runtime_first_last` 等策略时，应在其 lowering 前明确拒绝，不能把 `programs=None` 自动解释成全 grid。旧固定 program/旧 raw reader 可以保持兼容，但不能据此宣称新默认首末采集已经可用。
+
+**真实覆盖由事件证明。** 对首末 program 均经过已选 site 的非空测试，分别核每个 observer 的实际已提交记录、原始字段、数学输出和 guard；一个末尾空 ring 不能被 host 写入的 program ID 掩盖。对控制流确实跳过全部选中 site 的合法样本，允许 writer 到达且零事件，不虚构 duration。设备写入范围须核实际 pointer lowering：byte stride 可整除元素大小，设备 slot 地址差与 host 布局一致，header/payload/commit 的最大 byte end 不超过 admitted extent，索引运算无溢出。保实际 IR/对象及布局推导；guard 是补充实证，跨大跨度越界可能跳过有限 guard，不能仅据 guard 未变证明安全。数学输出 tail canary 也不能代替 timeline allocation guard。仅有进程退出码或正 duration 不够。
+
+**实现顺序不被抽象建设阻塞。** 先修通 GCU 实际 producer 和最终落盘链，再接默认 deferred owner/transport；并推进实际 clock、边界和异步证据。第二/第三后端需要的共同修正按真实调用抽取，已有合同按版本回归；最终仍须完成三后端、Perfetto、独立数学及额外三名代码审阅。本次三名设计 reviewer 只审合理性与可行性，不授予设备或代码交付资格。
+
 ## 9. Bundle 与 Perfetto 呈现
 
 建议在原 bundle 合同上增加版本化内容，不建立互相矛盾的第二套身份：
@@ -412,6 +448,8 @@ Perfetto 自身不能自动做源码文件导航的地方，提供可复制 sour
 
 ## 10. 预算、扰动与诚实比较
 
+资格冻结时把预算按范围分别登记：单调用物理需求与上限、session live pending 字节与 owner 数、session 累计留存及 bundle 上限。初始“总 raw 8 MiB”指一次公开采集 session 累计保留的物理记录额度；每调用及在途额度不得超过它。header/padding/采集 guard 均计物理额度；原件只读重试不重复计数。当前 owner pool 的 8 MiB pending/64 owners 只是其中的在途限制，不证明累计额度已实现。host staging 及额外副本峰值另记，不用 device 字节数冒充总内存。物理 pair 容量和 canonical 端点数量分列，source/manifest 等仍计完整 bundle。预算变更须在开发阶段说明并资格前冻结，不能通过放宽预算处理资格失败。
+
 保留初始小样本工程预算：冷编译 `min(300s,max(120s,3×普通同设置冷编译))`、导出 60s、完整 bundle 64 MiB。内部 trace 初始目标 16 MiB，raw 初始 8 MiB；默认选择和协议开销必须计入总预算。超预算不删除必要原始证据后伪称通过。
 
 默认时间属于插桩程序。核对实际指令、无新完成 barrier、无全局记录锁，并比较疏/密两种观测方案是否改变阶段关系。Ascend/GCU 在可用稳定窗口记录普通与插桩参考和噪声；NVIDIA 允许真实时间线功能和时钟校验，继续不开展此前暂缓的独占吞吐、速度提升或开销比认证。不能借该限制跳过 NVIDIA 时间戳功能。
@@ -420,6 +458,6 @@ Perfetto 自身不能自动做源码文件导航的地方，提供可复制 sour
 
 ## 11. 实施次序与交付判定
 
-`现状/能力实证 → 事件协议与时钟 → 三后端自动时间采集 → 动态依赖 → Perfetto exporter → 真算子/Perfetto SQL/UI 验收 → 独立新数学 → 三名独立代码审阅 → 修复/有限复核 → Git交付`。
+实施统一采用 §8.10 的 A/B/C/D：首后端由 A 原语推进 B 公开区间/owner/本地 ns/公共导出，再到 C 真实异步/复用/所需时钟与 Trace Processor，冻结有实际调用者的小合同；第二、第三后端可先调查 A，并复用该合同完成各自 B/C。D 完成独立数学、故障、实际 UI 和三名额外代码审阅，修复并有限复核后 Git 交付。
 
-先以一个后端打通完整链再并行扩展，但三个后端均为必达，不以第一个的漂亮图替代其它后端。取得真实事件后才完善展示，不能用示意数据代替设备实现。具体通过条件、冻结规则和场景见 [测试设计](timeline_testing.md)，目标执行规则以根目录 goal 合同为准。
+三个后端均为必达；不等待铺完三后端才检查公共导出，也不以第一个后端的漂亮图替代其它后端。取得真实事件后才完善展示，不能用示意数据代替设备实现。具体通过条件、冻结规则和场景见 [测试设计](timeline_testing.md)，目标执行规则以根目录 goal 合同为准。
