@@ -185,6 +185,62 @@ class CounterMapTests(unittest.TestCase):
         a = args(); a['cubin'] = elf().replace(b'.text.kernel', b'.text.absent')
         with self.assertRaises(ValueError): machine.counter_map(**a)
 
+    def _called_helper(self):
+        a = args(); doc = copy.deepcopy(DOC)
+        helper = dict(doc[1][0], **{'function-name': '$kernel$clock', 'start': 16})
+        doc[1][0]['length'] = 48
+        doc[1][0]['sass-instructions'] = [dict(opcode='CALL.REL.NOINC', operands='$kernel$clock')]
+        doc[1].append(helper)
+        a['cubin'] = elf(text_bytes=48)
+        a['sass_json'] = json.dumps(doc).encode()
+        a['sass_lines'] = ('.section .text.kernel,"ax",@progbits\n'
+            '/*0000*/ CALL.REL.NOINC `($kernel$clock);\n'
+            '$kernel$clock:\n'+SASS.split('\n', 1)[1].replace('/*0010*/', '/*0020*/').replace('/*0000*/', '/*0010*/')).encode()
+        return a, doc
+
+    def test_actual_direct_calls_bind_all_helper_reads(self):
+        a, _ = self._called_helper(); value = machine.counter_map(**a)
+        self.assertEqual(value['static_model_version'], 1)
+        self.assertEqual(len(value['call_sites']), 1)
+        self.assertEqual(value['call_sites'][0]['callee'], '$kernel$clock')
+        self.assertEqual([len(x['direct_call_sites']) for x in value['counter_call_sites']], [1, 1])
+        self.assertFalse(value['region_boundaries_verified'])
+        self.assertFalse(value['clock_qualified'])
+
+    def test_call_target_cannot_be_changed_in_either_tool_output(self):
+        a, doc = self._called_helper()
+        for side in ['text', 'json']:
+            b = copy.deepcopy(a)
+            if side == 'text':
+                b['sass_lines'] = b['sass_lines'].replace(b'`($kernel$clock)', b'`(other)')
+            else:
+                doc[1][0]['sass-instructions'][0]['operands'] = 'other'
+                b['sass_json'] = json.dumps(doc).encode()
+            with self.assertRaises(ValueError): machine.counter_map(**b)
+
+    def test_unresolved_call_is_explicit_not_assigned_to_nearby_helper(self):
+        a, doc = self._called_helper()
+        doc[1][0]['sass-instructions'][0]['operands'] = 'external_clock'
+        a['sass_json'] = json.dumps(doc).encode()
+        a['sass_lines'] = a['sass_lines'].replace(b'`($kernel$clock)', b'`(external_clock)')
+        value = machine.counter_map(**a)
+        self.assertEqual(value['call_sites'][0]['target_status'], 'unresolved')
+        self.assertTrue(all(not x['direct_call_sites'] for x in value['counter_call_sites']))
+
+    def test_synchronization_operands_are_bound_without_claiming_dynamic_counts(self):
+        a = args(); doc = copy.deepcopy(DOC)
+        doc[1][0]['length'] = 48
+        doc[1][0]['sass-instructions'].insert(1, dict(opcode='DEPBAR.LE', operands='SB0,0x2'))
+        a['cubin'] = elf(text_bytes=48)
+        a['sass_json'] = json.dumps(doc).encode()
+        a['sass_lines'] = SASS.replace('//## File ".nv_debug_ptx_txt", line 8',
+            '/*0010*/ DEPBAR.LE SB0, 0x2;\n//## File ".nv_debug_ptx_txt", line 8').replace('/*0010*/ CS2R R4', '/*0020*/ CS2R R4').encode()
+        value = machine.counter_map(**a)
+        self.assertEqual(value['synchronization_sites'][0]['operands'], 'SB0,0x2')
+        self.assertNotIn('dynamic_count', value['synchronization_sites'][0])
+        a['sass_lines'] = a['sass_lines'].replace(b'SB0, 0x2', b'SB0, 0x0')
+        with self.assertRaises(ValueError): machine.counter_map(**a)
+
     def test_malformed_elf_and_missing_debug_section(self):
         for blob in [b'\x7fELF', elf()[:250], elf().replace(b'.nv_debug_ptx_txt', b'.nv_debug_ptx_bad')]:
             with self.assertRaises(ValueError): machine.embedded_ptx(blob)

@@ -238,6 +238,7 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
                             instruction_bytes=len(body)*16)
     function, ptx_line, pcs, seen = None, None, [], set()
     current_section, function_sections, section_bytes = None, {}, {}
+    calls, synchronization = [], []
     for line in sass_lines.decode('utf-8').splitlines():
         section = re.match(r'^\s*\.section\s+([^,\s]+)', line)
         if section:
@@ -280,7 +281,31 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
         opcode = (parts[0].split(None, 1)[0] if parts else None)
         _need(opcode == actual.get('opcode') and predicate == actual.get('predicate'),
               'Text/JSON instruction mismatch')
-        is_timer = 'SR_GLOBALTIMER' in actual.get('operands', '')
+        operands = actual.get('operands', '')
+        _need(type(operands) is str, 'Invalid JSON instruction operands')
+        without_predicate = text.split(None, 1)[1] if predicate else text
+        fields = without_predicate.split(None, 1)
+        text_operands = fields[1] if len(fields) == 2 else ''
+        position = dict(function=function, section=current_section, pc=pc,
+                        relative_pc=pc-ranges[function]['start'],
+                        opcode=opcode, predicate=predicate)
+        if opcode.startswith('CALL'):
+            # nvdisasm JSON names a direct callee without the text's `(symbol).
+            # Indirect/unknown calls are retained, not guessed from a prefix.
+            target = re.fullmatch(r'`\(([^()\s]+)\)', text_operands.strip())
+            callee = target[1] if target else None
+            if callee is not None:
+                _need(callee == operands, 'Text/JSON direct call target mismatch')
+            elif operands in instructions:
+                raise ValueError('Known direct call lacks an explicit text target')
+            calls.append(dict(position, callee=callee, operands=operands,
+                              target_status=('resolved' if callee in instructions
+                                             else 'unresolved')))
+        if opcode.startswith(('BAR.', 'MEMBAR', 'DEPBAR', 'LDGDEPBAR', 'WARPSYNC')):
+            _need(re.sub(r'\s+', '', text_operands) == re.sub(r'\s+', '', operands),
+                  'Text/JSON synchronization operands mismatch')
+            synchronization.append(dict(position, operands=operands))
+        is_timer = 'SR_GLOBALTIMER' in operands
         _need(is_timer == ('SR_GLOBALTIMER' in text), 'Text/JSON getter mismatch')
         if not is_timer:
             continue
@@ -307,12 +332,25 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
             _need(key not in occupied, 'Overlapping function instruction bodies')
             occupied.add(key)
     _need(pcs, 'No actual mapped counter PCs')
-    return dict(schema_version=1, status='counter_mapping_complete_region_unverified',
+    # Bind a read to all of its exact direct call sites. A callee can contain
+    # multiple reads and a read can have multiple callers; neither is collapsed.
+    counter_calls = []
+    for counter in pcs:
+        references = [dict(call) for call in calls
+                      if call['callee'] == counter['function'] and
+                      call['target_status'] == 'resolved']
+        counter_calls.append(dict(function=counter['function'], pc=counter['pc'],
+                                  site_id=counter['site_id'], phase=counter['phase'],
+                                  direct_call_sites=references))
+    return dict(schema_version=1, static_model_version=1,
+        status='counter_mapping_complete_region_unverified',
         binary_id=binary_id, marker_version=1, expected_sm=list(expected_sm),
         artifacts={'cubin_sha256': _sha(cubin), 'ptx_sha256': _sha(ptx),
             'embedded_ptx_sha256': _sha(raw_debug), 'sass_lines_sha256': _sha(sass_lines),
             'sass_json_sha256': _sha(sass_json)}, counter_pcs=pcs,
         ptx_debug_omissions=debug_omissions, function_ranges=list(ranges.values()),
+        call_sites=calls, counter_call_sites=counter_calls,
+        synchronization_sites=synchronization,
         region_boundaries_verified=False, clock_qualified=False,
         notes=['Static counter PCs are not exact dynamic PC attribution when code is duplicated.',
                'PTX collection predication does not prove SASS read suppression.',
