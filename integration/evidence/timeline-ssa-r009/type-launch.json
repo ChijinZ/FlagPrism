@@ -1,0 +1,27 @@
+{
+  "controller": {
+    "pid": 41473,
+    "ppid": 1,
+    "pgid": 41457,
+    "startticks": 9275497
+  },
+  "worker": {
+    "pid": 41474,
+    "ppid": 41473,
+    "pgid": 41474,
+    "startticks": 9275500
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r009/runs/install-v3/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r009/type-input-v2/p01_nvidia_boundary_math.py",
+    "--output",
+    "/workspace/chijin-timeline-r009/runs/type-math-v2/output"
+  ],
+  "argv_sha256": "45dfbc6c0759613c2552f5b8b572b44941d26cd5dca816c44242b1b59aedeacf",
+  "script_sha256": "a76849860138ff5692e8129b470dca6a7ad65e7411a3288bf252526ce75c984a",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 180,
+  "state": "running"
+}

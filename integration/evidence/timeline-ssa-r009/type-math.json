@@ -1,0 +1,73 @@
+{
+  "status": "public_type_math_and_llvm_dependencies_passed_not_machine_certified",
+  "actual_math_launches": 5,
+  "captures": 5,
+  "canonical_intervals": 320,
+  "math": [
+    {
+      "dtype": "torch.float16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "f518d0a4884e490de97bc4f373d76ec7fa91a6e72fb675f1aa8ccd16f6feb8a4",
+      "llir_sha256": "ac937e8491d6db4e8c004070e3babef6a5be5486b2e712acde8eea7f7f5ca341"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "56f26eac199470bb2dd36bc84e0e9f6d5f0bf2de6da8a5c1ee02f65c55cf2893",
+      "llir_sha256": "b1fcdd041c342c058d0f803403e51ab4dead4b5ee6b3dda51c399a9c1544768b"
+    },
+    {
+      "dtype": "torch.float32",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "51183200e06ae4223b7244e46341f5d7118108fd53a406f9394ee4aac07c91e9",
+      "llir_sha256": "54d0eaaea311aa06887e311f37958817c41c781f93f05ded8bca0ae362cd2e69"
+    },
+    {
+      "dtype": "torch.float64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "aa3a8b5a03a0a610b85b80d0eee37a02c31026e960af818422ccc8581db7d90b",
+      "llir_sha256": "980ed6f15f883be2e777965740339e7feb5ceaec93e0b2397337c396b09a8962"
+    },
+    {
+      "dtype": "torch.int64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "88a34e5d0781fd3c05d80f7a5abc6a7a35c7fe8c9f451538c85da3052d46af35",
+      "llir_sha256": "fddfbb00484321a92cbea66350ff6695a965039ff627246b243f350e8a7e4e8f"
+    }
+  ]
+}

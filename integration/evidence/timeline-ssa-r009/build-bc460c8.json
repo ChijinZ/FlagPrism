@@ -1,0 +1,112 @@
+{
+  "state": "build_passed_not_device_qualified",
+  "controller": {
+    "pid": 39521,
+    "ppid": 1,
+    "pgid": 39509,
+    "startticks": 9151991
+  },
+  "component_commit": "bc460c8eb6f5aaf9d00b1e0c3aedfe2c6b07c09a",
+  "component": "/workspace/chijin-timeline-r003/source-work/FlagPrism",
+  "parent_input": "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+  "controller_sha256": "1190cc652aa114879d36d2c3b4f3af53686cf3f5e34e47077304b011cc83b510",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "parent-patch-proof-0",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r003/source-work/FlagPrism/integration/patches/nvidia/flagtree-source.patch"
+      ],
+      "argv_sha256": "cbe6530c7fefc6e1999f60bd5258f7730a22ea7dc410f3f93f79c8f6de6508b4",
+      "timeout_s": 30,
+      "cwd": "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+      "state": "terminal",
+      "worker": {
+        "pid": 39522,
+        "ppid": 39521,
+        "pgid": 39522,
+        "startticks": 9152014
+      },
+      "returncode": 0,
+      "wall_ns": 1099329
+    },
+    {
+      "name": "parent-patch-proof-1",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r003/source-work/FlagPrism/integration/patches/nvidia/automatic-scopes.patch"
+      ],
+      "argv_sha256": "4a24109ef902f30e02f06e563e047d3465a3eb5b333ef3ae7c29e8974e480d72",
+      "timeout_s": 30,
+      "cwd": "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+      "state": "terminal",
+      "worker": {
+        "pid": 39523,
+        "ppid": 39521,
+        "pgid": 39523,
+        "startticks": 9152014
+      },
+      "returncode": 0,
+      "wall_ns": 3147230
+    },
+    {
+      "name": "parent-patch-proof-2",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r003/source-work/FlagPrism/integration/patches/nvidia/preallocation-admission.patch"
+      ],
+      "argv_sha256": "9b1fb397e3b01d24442c88f29dec60d4b66f6506af0671c08a43ea319d2e283a",
+      "timeout_s": 30,
+      "cwd": "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+      "state": "terminal",
+      "worker": {
+        "pid": 39524,
+        "ppid": 39521,
+        "pgid": 39524,
+        "startticks": 9152015
+      },
+      "returncode": 0,
+      "wall_ns": 3146670
+    },
+    {
+      "name": "native-wheel-build",
+      "argv": [
+        "bash",
+        "/workspace/chijin-timeline-r003/source-work/FlagPrism/integration/patches/nvidia/build_automatic_wheel.sh",
+        "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+        "/workspace/chijin-timeline-r003/source-work/FlagPrism",
+        "/workspace/chijin-timeline-r001/native-55119f1/build",
+        "/workspace/chijin-timeline-r009/native-bc460c8/wheelhouse"
+      ],
+      "argv_sha256": "ad239cdeeba04a612920061effbfc49ac127388d54328936ad1d2763f5b1fae3",
+      "timeout_s": 3600,
+      "cwd": "/workspace/chijin-timeline-r001/native-55119f1/FlagTree",
+      "state": "terminal",
+      "worker": {
+        "pid": 39525,
+        "ppid": 39521,
+        "pgid": 39525,
+        "startticks": 9152015
+      },
+      "returncode": 0,
+      "wall_ns": 110086536455
+    }
+  ],
+  "wheel": "/workspace/chijin-timeline-r009/native-bc460c8/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_bytes": 390887634,
+  "wheel_sha256": "7345f7bcbeeb170349f9d2eb1706bb14850b5a761b8c28ae4927058d7efbb1d3"
+}

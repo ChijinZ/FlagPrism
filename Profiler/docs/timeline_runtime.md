@@ -26,6 +26,23 @@ runtime file fingerprints enter timeline JIT cache identity before lookup;
 per-capture epoch qualification is separate. Count/native modes keep their
 existing meaning.
 
+The automatic timeline compiler now also requires native
+`TIMELINE_BOUNDARY_VERSION=1`. Its plan reports
+`timeline_boundary_strategy="llvm_ssa_pending_machine_audit"`: begin timestamps
+feed bit-preserving operand anchors and end counter calls consume observed
+results. NVIDIA getter inline asm additionally declares an LLVM memory clobber,
+which constrains memory motion without emitting a GPU completion barrier.
+Compiler/cache identity includes this implementation. Unsupported boundary
+versions are rejected in plan extraction and lowering; old native plugins are
+rejected before public hook activation.
+
+These are compiler constraints, not certified machine boundaries. PTXAS may
+schedule beyond LLVM dependencies, and issue/wait/native engine semantics still
+need their own evidence. Tokens and memory descriptors are not reinterpreted as
+ordinary register values. Legacy interval/count paths do not acquire the new
+operand forwarding. Raw `boundary_status` stays `unverified`; no ns or hardware
+completion claim follows from the version flag or the memory clobber.
+
 `timeline_runtime.TimelineOwnerPool` owns one independent record allocation per
 invocation. `timeline_cuda_runtime.CudaTimelineTransport` supplies the actual
 CUDA allocation, stream-local initialization, completion event and readback.

@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r009/check-input-v1/nvidia_boundary_binding_smoke.py", line 96, in <module>
+    main()
+  File "/workspace/chijin-timeline-r009/check-input-v1/nvidia_boundary_binding_smoke.py", line 87, in main
+    raise RuntimeError('Unknown boundary ABI accepted: ' + label + '-' + name)
+RuntimeError: Unknown boundary ABI accepted: unknown-plan
