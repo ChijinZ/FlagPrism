@@ -261,6 +261,19 @@ class TimelineInstrumentationMixin:
             self._timeline_machine[key] = inspect_capture_binary(directory,
                 metadata=metadata, plan=owner['plan'], deadline=deadline)
         capture['machine_counter_mapping'] = self._timeline_machine[key]
+        if owner['submission_outcome'] == 'returned':
+            from ..timeline_unit_nvidia import load_counter_unit_proofs
+            from ..timeline_views import derive_counter_ns_views
+            from ..timeline_perfetto import write_counter_exports
+            try:
+                proofs = load_counter_unit_proofs(directory, capture, canonical)
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                capture['counter_ns_status'] = dict(status='unavailable', reason=str(error))
+            else:
+                views = derive_counter_ns_views(canonical, proofs)
+                capture['counter_ns_exports'] = write_counter_exports(directory, prefix, views, canonical)
+                capture['counter_ns_status'] = dict(status='counter_unit_only',
+                    read_precision_status='unverified', time_arrows_verified=False)
         _persist(directory / prefix.with_suffix('.json'),
                  (json.dumps(capture, indent=2)+'\n').encode())
         self._timeline_rows.append(dict(invocation_id=identity,
@@ -343,6 +356,8 @@ class TimelineInstrumentationMixin:
         try:
             _persist(directory/'index.json', (json.dumps(index, indent=2)+'\n').encode(),
                      replace=True)
+            from ..timeline_perfetto import write_trace_index
+            write_trace_index(directory, self._timeline_rows)
         except Exception as error:
             failed(None, 'persist_index', error)
         if errors:

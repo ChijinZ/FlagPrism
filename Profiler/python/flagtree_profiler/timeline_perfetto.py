@@ -7,6 +7,8 @@ generated protobuf reader and the actual Trace Processor independently.
 import hashlib
 import heapq
 import json
+import html
+from pathlib import Path
 
 from .timeline_events import _integer
 from .timeline_views import CounterUnitProof, derive_counter_ns_views
@@ -173,3 +175,46 @@ def encode_counter_trace(view, canonical, *, max_bytes=16*1024*1024):
     for timestamp, _, _, payload in sorted(pending):
         packet(payload, timestamp)
     return bytes(output)
+
+
+def write_counter_exports(directory, prefix, views, canonical):
+    """Retain derived inputs and standard traces; raw/canonical never change."""
+    from .hooks.timeline import _persist
+    directory, prefix = Path(directory), Path(prefix)
+    rows, total = [], 0
+    for view in views:
+        base = prefix.with_suffix('.counter-ns')/view['observer']['id']
+        view_file, trace_file = base.with_suffix('.json'), base.with_suffix('.pftrace')
+        data = encode_counter_trace(view, canonical, max_bytes=16*1024*1024-total)
+        total += len(data)
+        _persist(directory/view_file, (json.dumps(view, indent=2)+'\n').encode())
+        _persist(directory/trace_file, data)
+        rows.append(dict(observer_id=view['observer']['id'],
+            program_coordinates=view['observer']['program_coordinates'],
+            view_file=str(view_file), trace_file=str(trace_file), bytes=len(data),
+            sha256=hashlib.sha256(data).hexdigest(), clock_status='counter_unit_only',
+            read_precision_status='unverified', time_arrows_verified=False))
+    return rows
+
+
+def write_trace_index(directory, capture_rows):
+    """Local file index, linking standard traces rather than drawing a viewer."""
+    from .hooks.timeline import _persist
+    directory = Path(directory)
+    links = []
+    for row in capture_rows:
+        capture = json.loads((directory/row['capture_file']).read_text())
+        exports = capture.get('counter_ns_exports', [])
+        for item in exports:
+            label = row['invocation_id']+' / program '+str(item['program_coordinates'])+' / '+item['observer_id']
+            links.append('<li><a href="'+html.escape(item['trace_file'], quote=True)+'">'+html.escape(label)+'</a></li>')
+    body = ('<!doctype html><html><head><meta charset="utf-8"><title>Internal timeline files</title></head>'
+        '<body><h1>Internal timeline files</h1><p>Each trace has an isolated observer-relative ns axis. '
+        'Read precision and source-region boundaries remain unverified. These are counter brackets, '
+        'not certified source costs or engine busy. Do not compare origins across files.</p>'
+        '<p>Open a downloaded .pftrace in the standard <a href="https://ui.perfetto.dev/">Perfetto UI</a>. '
+        'No data is uploaded by this index.</p><ul>'+''.join(links)+'</ul>'
+        '<p><a href="index.json">Raw capture index and qualification status</a></p></body></html>')
+    if not links:
+        body = body.replace('<ul></ul>', '<p>Raw observations are retained; no ns trace is available.</p>')
+    _persist(directory/'index.html', body.encode(), replace=True)
