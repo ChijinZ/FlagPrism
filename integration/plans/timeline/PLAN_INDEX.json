@@ -1,29 +1,30 @@
 {
-  "scope": "second documentation-only design review round; no new implementation or device execution",
+  "scope": "Third independent documentation design feasibility review; no new product or device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "design_revision_from_commit": "b3e4a7fcb06a4bbf59ee5312c5c4401c11243d5e",
-  "root_contract_sha256": "08b854213cd214105932e94ff8f2c328ba7ab9b5d4f6a4c46b9f0c80b042ba40",
+  "design_revision_from_commit": "34b04624098b99b2004f9b0e9cf1c602db5509cf",
+  "root_contract_sha256": "51db449f2898ad695f8557a3d83459cf476c57cec27198743ba481193e12a054",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 85,
+  "local_links_checked": 96,
   "review_initials_preserved": true,
   "historical_round1_followups_bound_to_commit": "2932311bd103db9b2eeea8fa8ca0574befc913b7",
-  "current_round2_followups_match_final_document_sha256": true,
+  "historical_round2_followups_bound_to_commit": "d109df5",
+  "current_round3_followups_match_final_document_sha256": true,
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 36736,
-      "sha256": "9a5b9574840ff7724728b50dff22072b10e906fdb74ff8446694076617b8a9bd"
+      "bytes": 41643,
+      "sha256": "dc26b5fb008bea5e608bb13b19ee08da1037b7fa02a38a4dcef041bb8e3c79f1"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 26014,
-      "sha256": "83cd97042587c055a58fbcedf006fa4dcdf8316a23f633320e880a753c355603"
+      "bytes": 29321,
+      "sha256": "a55fe77d2ede2671414c7f3127f521d388a29347a1a502251ecc350178400678"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 2369,
-      "sha256": "356d5d59386c444501ad1b0ad4cf4d21d9041e7ae21c357aa65e8db312f2aa42"
+      "bytes": 2516,
+      "sha256": "76e09e54cb978a95beeb393b02f9287b65729a6d557f665bb394ade7d661b7be"
     },
     "integration/plans/timeline/goal_prompt.md": {
-      "bytes": 18114,
-      "sha256": "08b854213cd214105932e94ff8f2c328ba7ab9b5d4f6a4c46b9f0c80b042ba40"
+      "bytes": 18120,
+      "sha256": "51db449f2898ad695f8557a3d83459cf476c57cec27198743ba481193e12a054"
     },
     "integration/plans/timeline/record.initial.md": {
       "bytes": 2068,
@@ -58,8 +59,8 @@
       "sha256": "871cb9936abe5b6b445c693b97300eaa8020d48a99dfe9b4fc8d4cca61efebfa"
     },
     "integration/plans/timeline/reviews/README.md": {
-      "bytes": 5299,
-      "sha256": "0858c1e95d6b10755d27e36838e3814f1dc419a3cd55abded943297052ca7442"
+      "bytes": 5374,
+      "sha256": "f84b41098d3600bacf856e7659cf29d5a62005456fc61c9ea9bdb56ada6c4838"
     },
     "integration/plans/timeline/reviews/REQUEST.json": {
       "bytes": 1250,
@@ -104,6 +105,46 @@
     "integration/plans/timeline/reviews/round2/REQUEST.json": {
       "bytes": 1298,
       "sha256": "97985a24a66601ae436d1842dcac8d2c5a753f691bc688932413676899fbb68b"
+    },
+    "integration/plans/timeline/reviews/round3/FOLLOWUP_INPUT.json": {
+      "bytes": 589,
+      "sha256": "a8a24ec3799ddbbe432422e472d45367083ede7876688d2afa18b3219fc83a21"
+    },
+    "integration/plans/timeline/reviews/round3/INPUT.json": {
+      "bytes": 518,
+      "sha256": "0449fe8f3627081e45926e281def82de47ca3d9c73201cbb9981fbe3f6f0b0a7"
+    },
+    "integration/plans/timeline/reviews/round3/R1-compiler.md": {
+      "bytes": 12715,
+      "sha256": "55fbac52fd008a27a4a1c4af843d24550853ce1ecbb6b695a890c70e67dee39b"
+    },
+    "integration/plans/timeline/reviews/round3/R1-followup.md": {
+      "bytes": 2968,
+      "sha256": "52884b1ca99148ded04257bab5c4005ceabaa0a08d8f955be6a0c3e82ecd3234"
+    },
+    "integration/plans/timeline/reviews/round3/R2-followup.md": {
+      "bytes": 2072,
+      "sha256": "c2fcc059a3178d6c765c2d1f7b1753ad91cfc0f8184302c4296a61556e6dd675"
+    },
+    "integration/plans/timeline/reviews/round3/R2-runtime.md": {
+      "bytes": 11911,
+      "sha256": "33dc94f6f50c97d2ca452f7ee9351f30bb6a485df11b8340ac0e0f7e8615446d"
+    },
+    "integration/plans/timeline/reviews/round3/R3-followup.md": {
+      "bytes": 2596,
+      "sha256": "008a278e4d1b9ea8f45dc7b6407c57795700447730dd803814de5a11e3833a85"
+    },
+    "integration/plans/timeline/reviews/round3/R3-portability.md": {
+      "bytes": 12873,
+      "sha256": "1d9219e3db5628ab45cb6d9f67f43df56c66f986d10531673c735d352b6dea53"
+    },
+    "integration/plans/timeline/reviews/round3/README.md": {
+      "bytes": 2903,
+      "sha256": "66176966bbb5dc1910c9195a43880928144d03de1f389babe87b6c3c545c0765"
+    },
+    "integration/plans/timeline/reviews/round3/REQUEST.json": {
+      "bytes": 793,
+      "sha256": "edb22df30fb1d3a286f374451e28b7143bad9f4d3b3a52ab86bfbecb1d5d0073"
     }
   }
 }

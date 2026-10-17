@@ -9,7 +9,8 @@ document revision starts no device experiment.
 - [Real-operator and Perfetto test plan](../../../Profiler/docs/timeline_testing.md).
 - [Initial record](record.initial.md): immutable T000 snapshot; live execution record is workspace-root `timeline_impl_record.md`, outside Git.
 - [Original design review and disposition](reviews/README.md): T001 historical inputs and resolutions.
-- [Current design review and disposition](reviews/round2/README.md): three independent reviews of the refined backend handoffs, lifecycle and evidence gates, plus limited followups. Neither round replaces final implementation code reviews.
+- [Second design review](reviews/round2/README.md): refined backend handoffs, lifecycle and evidence gates, plus limited followups.
+- [Current design review and disposition](reviews/round3/README.md): three fresh independent feasibility reviews of the minimal backend contract, compact storage and capability progression. Design reviews do not replace final implementation code reviews.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish

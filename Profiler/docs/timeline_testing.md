@@ -143,7 +143,7 @@ Schema、authorization、verifier 和完整性检查必须在普通 Python 与 `
 | P04 | 三后端真实主体、缺失物理身份负例、额外角色 fixture | 公共 consumers 不强制 warp/SM 树，program/observer/operation/resource 分开；未知身份不补造；命名空间扩展可显示且不覆写核心字段 |
 | P05 | 已有真实 raw 及合法不同 layout 的合同 fixture | 后端解码器承担物理格式，公共配对/时钟/导出消费同一合同；校验 raw offset/version/commit/loss。保 Ascend padding 和旧 ABI 回归；fixture 不代替真实发布可见性测试 |
 | P06 | 同一套时钟负例参数化到三后端输出 | 错 target/epoch/frequency、精度不足、回绕歧义等均明确拒绝或标无比较资格；整数大 tick 换算正确。未知/未对齐域不因 backend label 获得共享时间轴 |
-| P07 | 每后端真实异步样本至少两轮 buffer/flag 复用；批量/部分 wait/多消费者合同 fixtures | 真实机制覆盖的 operation/group 集合与记录一致，generation 不串；同一公共依赖校验器生成 edge；部分 wait 不完成未覆盖组、多消费者不丢第二条边、丢 commit 不平移后续 generation，只有明确锚点才恢复；不要求三后端都具有每种机制。合成 case 只补合同覆盖，不能称该设备支持该机制 |
+| P07 | 每后端真实异步样本至少两轮 buffer/flag 复用（完整资格必需；只有逻辑 group、unknown physical buffer 的结果不能单独满足此门）；批量/部分 wait/多消费者合同 fixtures | 真实机制覆盖的 operation/group 集合与记录一致，generation 不串；同一公共依赖校验器生成 edge；部分 wait 不完成未覆盖组、多消费者不丢第二条边、丢 commit 不平移后续 generation，只有明确锚点才恢复；不要求三后端都具有每种机制。合成 case 只补合同覆盖，不能称该设备支持该机制 |
 | P08 | 实际后端数据通过公共 exporter/报告，扩展属性和新角色 fixture | 三后端用同一个 exporter 与 SQL 语义检查；展示无需厂商专用业务分支；扩展字段保留且 core schema/未知字段策略固定，不因 permissive dictionary 绕过验证 |
 | P09 | 第一实现→第二/第三实现的 Git diff 与公开安装 | 有逐后端适配清单、公共变动理由和回归证据；注册/编译 hook 入口明确，不依赖私有热补丁；公共修正同步验证已有后端。无修改行数硬指标，不把新概念藏进厂商判断 |
 | P10 | target/compiler/plugin/timer/rule/ABI 切换和 capability 失败后恢复 | 缓存/安装身份包含真实依赖，模式不串；早拒绝后下一合法请求可用，无隐式重放/额外完成 barrier；旧 count/native 和数据读取不退化 |
@@ -181,6 +181,22 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 生命周期故障注入只作用于本次拥有的测试作业/缓冲区；不得改系统 driver/daemon 或干预其它用户进程。逐后端在资格前冻结 two-stream、host-thread、graph 支持表与正/负例对应关系。两 stream 不新增为每后端无条件必达项：声明支持的后端必须真实通过两 stream 正例；声明不支持的组合必须核启动前早拒绝、无该调用设备副作用及安全恢复，不能以 CPU 正例冒称并发可用。不事后改标 unsupported，不以拒绝项声称保留跨 stream 行为。
 
 阶段报告按“原语 / P01 / 最终资格 / UI / 最终代码审阅”分别给出结果；已通过时钟算术、手工 clock 原语或 native 构建不得自动填其它列为通过。设计合理性评审也不能填这些列。
+
+### 8.4 最小接入合同的针对性验收
+
+对应设计 §8.9；以下复用 P/E 的既有开发和回归样本，不增加独立六数学的数量，不把合成协议测试当作真实设备通过。每项记录“实现位置→输入身份→实际输出→负例→证据路径”，未跑保持未验证。
+
+| 对应项 | 具体检查与通过条件 |
+| --- | --- |
+| P02/P09/P10：接入动作 | 三后端各定位 probe/plan/prepare/finish/decode/mechanism 的实际调用点及复用来源。公共消费者只消费合同；注册可有厂商分发，公共验证/导出不能自行解析厂商指令补语义。没有调用者的空接口不算完成 |
+| P02/P06/P08：能力递进 | 构造本地域可用但跨域未知、逻辑关联可用但时钟不可比等组合；保留合法区间与事实，缺失部分 explicit partial/拒绝，无伪 flow/engine busy。partial 不计 P01/完整资格；某增强能力缺失不能使已验证的其它能力谎报失败或成功 |
+| E02/P05/P10：紧凑存储 | 实际设备运行同 binary 的不同合法 grid（1D/2D/单 program/tail），核首末坐标、slot 映射、raw 字节上界及 allocation canary。存在未选 program 的 grid 检查其不写选中 slot；插桩后数值/副作用次数仍正确。静态/动态 grid 维度变化造成新 binary 时如实记，不伪称缓存命中 |
+| E02/E07/P10：存储资格 | 旧 full-grid binary/错误 storage 版本与新紧凑 allocator 组合启动前拒绝；cluster/多 CTA 不支持时早拒绝，支持时实测映射。维度/乘法溢出在分配前拒绝；合法零 grid 无设备记录和伪 duration；错误后下一合法请求可用 |
+| P03/P07：机制闭合 | 对每后端选定的真实异步机制核 manifest→最终编译对象全部状态变更及规则来源。用受控 opaque/缺边界/外部状态变更负例检查关联降级或拒绝，不能把未匹配指令默认为无影响。编译器拒绝该语法时记录不适用，并另用 manifest 完整性故障注入验证合同；不宣称该设备执行过负例 |
+| P07/P08：身份与证据层次 | 逻辑 group 无物理 buffer 信息时可保留 group 关联，详情标 unknown buffer/iteration；禁止伪造 generation。完整异步资格仍须满足 §5/P07 的每后端两轮真实 buffer/flag 复用与代际证据；group-only 结果不能豁免该门。当前样本无法提供时，另取有来源的真实复用样本或保持该门未通过，不填造 buffer 身份。只有动态关联与相应时钟/边界证据满足时才生成时间箭头；未证共享 epoch 不跨域连时间线 |
+| P01/P09：阶段放行 | 允许基础区间/owner/export 链先实现，以及其它后端原语调查；完整 P01 的两区间、异步、时间和 Trace Processor 门不变。逐后端结果分别记录，不以接口设计评审、局部构建或 CPU 合同通过替代设备可行性 |
+
+适配成本审计解释哪些代码被复用、哪些目标条件/后端语义仍需实现，列实际新增/修改文件与公共版本变化。它只验证现有三后端的边界，不能由“类的数量/代码行数/假后端注册成功”推出新增芯片容易或已有设备支持。
 
 ## 9. 成功判定
 

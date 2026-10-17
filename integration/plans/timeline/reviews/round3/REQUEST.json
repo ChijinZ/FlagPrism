@@ -1,0 +1,16 @@
+{
+  "scope": "Three fresh-context independent design feasibility reviews; not final implementation code reviews",
+  "requested_model": "inherited default; no model override requested for this review round",
+  "resolved_serving_model": "not exposed",
+  "agents": {
+    "R1": "/root/timeline_round3_compiler",
+    "R2": "/root/timeline_round3_runtime",
+    "R3": "/root/timeline_round3_portability"
+  },
+  "independence": "Same INPUT.json document hashes; no peer reports; read-only code permitted; no product execution or remote access",
+  "focus": {
+    "R1": "Compiler boundaries, compact storage ABI, end-to-end feasibility",
+    "R2": "Clock, async closure, owner lifecycle, end-to-end feasibility",
+    "R3": "Portability, delivery and executable acceptance, end-to-end feasibility"
+  }
+}

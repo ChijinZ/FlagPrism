@@ -109,7 +109,7 @@ Perfetto 支持 clock domain/snapshot，前提是生产者真实提供同步关�
 
 ## 7. 动态依赖与真正的流水
 
-flow 的键至少包括 capture/invocation/program、producer/consumer、实际 operation/group、buffer slot 与 generation。flag/group 复用必须分代；同地址不代表同一次数据。
+flow 的身份至少包括 capture/invocation/program、机制实例、producer/consumer 与实际 operation/group。buffer slot 与 generation 在声明物理缓冲复用关系时必需；仅证明逻辑 commit-group 的边必须明确标为逻辑组关系，不要求编造不可观测的 buffer。flag/group 复用必须分代；同地址不代表同一次数据。
 
 - NVIDIA：研究实际 async copy/TMA、commit/wait group、mbarrier 与 warp specialization lowering。记录实际提交组/完成观察者，不把所有 warp 映射成硬件 copy engine。
 - Ascend：从真实 AIC/AIV、MTE/compute/set/wait 结构恢复关系；静态 set/wait 类型只能提供候选，动态 token/generation/控制路径给出本次 edge。
@@ -253,6 +253,31 @@ planned → admitted → armed → submitted → completion_observed
 | 公共时钟 | 整数/有理数及误差算术 CPU 正负例 | 算术正确不证明物理频率/epoch；新模块尚不能代表完整安装或三后端集成通过 |
 
 放行顺序区分三层：**原语可继续开发 → 完整 P01 可进入该后端最终资格 → 全验收可交付**。允许在第一个后端做成完整纵向链时，预先调查其它后端原语；这不等于在公共合同冻结前宣称第二、第三后端已接入完成。当前没有任何后端整体 P01 通过。
+
+### 8.9 面向后续芯片的最小接入合同与实施顺序
+
+本节细化 §8.1–8.7 的实施接口，不声明下面的接口已经存在。本轮先服务三个实际后端；接口采用现有 hook/pass 的真实调用点，不要求独立插件包或统一设备内存布局。
+
+| 接入动作（概念名） | 后端输入与输出 | 公共层的责任 |
+| --- | --- | --- |
+| `probe_target` | 实际 target、compiler/SDK/plugin → 依赖指纹、逐项能力和证据适用范围 | 在缓存查询前校验编译依赖；运行时设备/epoch 证据另行绑定，不要求运行时事实提前进入 JIT key |
+| `plan_capture` | 请求、源身份及优化后结构 → manifest、所需记录布局、合法选择策略和机制规则版本 | 校验 source/binary 引用与预算公式；输出计划时区分静态需求和 launch 才确定的值 |
+| `prepare_launch` | manifest、实际 grid/device/stream → 本次 owner、紧凑 slot→program 表、物理字节数、完成句柄 | 核当前安装具有匹配 storage/logger ABI，预算 admission 后分配；没有紧凑写址保证的旧 binary 不能配紧凑 buffer |
+| `finish_capture` | 已提交 owner → completion 证明、不可变 raw、发布/loss 状态 | 跟踪安全回收；完成等待和 D2H 可由后端实现，共同约束是不能在设备仍写入时复用内存 |
+| `decode_capture` | raw、manifest、owner 快照 → 带完整 raw 引用的 typed batch、clock proof 和机制事实 | 验证字段/引用/完整性、调用隔离和 clock 资格；不重新识别厂商 ISA |
+| `describe_mechanism` | 声明的机制规则版本及实际记录 → submit/group/wait 覆盖事实与缺失理由 | 检查集合/身份/代际完整性，决定逻辑关联、可比较时间箭头及完成包络的展示资格 |
+
+这些动作可由现有对象组合完成。后端只提供事实与描述；通用验证器和 exporter 不以厂商名选择语义。物理 decoder、目标指令识别、发布协议和机制规则属于后端，并允许复用同执行模型的已验证实现。注册匹配必须检查实际型号/工具链条件；同品牌或相近执行模型不能继承未经验证的 clock/同步证据。
+
+**能力按项递进**：`source_mapping`、`region_intervals`、`clock_scale`、`cross_observer_epoch`、`async_association`、`native_engine_activity` 和并发支持分别声明条件、证据及状态。它们不是单一等级开关：本地域区间可以先开发/导出；逻辑 group 关系在未证跨域时可以查看，但不能成为时间箭头；原生 engine activity 可独立接入。未达到完整目标的有效数据允许明确 partial 留存，不能把 partial 计为 P01 或最终资格通过。异步关联缺失不阻止修复普通区间，却仍阻止本轮完整交付。
+
+**机制闭合**：每种已支持机制列出哪些 lowering/指令会改变其状态（例如 cp.async 的 submit/commit/wait）。manifest 与实际编译对象须说明这些状态变更均被覆盖，或明确排除范围；opaque asm、外部调用或优化生成的隐藏状态变更不能默认为不存在。无法证明闭合的实例保留原始区间并标关联不完整，不生成 verified edge。已知逻辑 group ordinal 不自动等于 loop iteration、物理 buffer generation 或精确完成时刻。
+
+**紧凑选择**：预算要覆盖实际物理布局。若只选两个 program，设备写址使用紧凑 slot、header 仍写真实 program，未选 program 不得触及这些 slot；不能先按全 grid 分配再过滤。实际 grid 的溢出、cluster/多 CTA 映射和零 grid 由 launch 接入明确处理：合法零 grid 不产生伪调用事件；尚不支持的非空映射在设备副作用前拒绝。旧 full-grid ABI 可继续读取，但不能冒充新紧凑存储能力。
+
+**实施顺序**：首个后端先闭合“普通区间→安全 owner→真实时间尺度→公共导出”，并行验证异步机制；完整 P01 仍要求异步和 Trace Processor。形成实际小合同后接第二/第三后端，不要求等待所有独立资格或 UI 检查才开始复用。新后端遇到接口缺口时先给出真实不可表达的事实，再决定版本扩展；不先搭完整插件框架。本轮不适配第四芯片，也不估算其工期。
+
+当前实现对照（`34b0462` 检查点）：NVIDIA 已有 64 位 record v2、物理 decoder 及绑定调用/binary 的 cp.async 逻辑组模型；尚无完整公共 timeline 入口、紧凑 storage/owner/clock/Perfetto 链，逻辑事实不具有 verified 时间箭头资格。§8.8 是历史原语检查点，不应读成最新源码仍只有 43 位记录。后续结果仅记工程记录，避免维护重复状态表。
 
 ## 9. Bundle 与 Perfetto 呈现
 
