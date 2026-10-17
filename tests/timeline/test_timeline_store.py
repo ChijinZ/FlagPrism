@@ -31,6 +31,33 @@ def publish(root, batch, proof):
 
 
 class TimelineStoreTests(unittest.TestCase):
+    def test_provider_enumeration_order_does_not_change_revision_or_receipt(self):
+        batch, proof = fixture()
+        second = copy.deepcopy(batch['observers'][0])
+        second['id'] += '-second';second['local_id'] = 'second'
+        second['program_coordinates'] = [1, 0, 0]
+        second['clock_domain_id'] += '-second';second['epoch_id'] += '-second'
+        extra_records = []
+        for record in batch['records']:
+            row = dict(record, id=record['id']+'-second', observer_id=second['id'],
+                       offset=record['offset']+batch['raw_artifact']['bytes'])
+            extra_records.append(row)
+        extra_events = [dict(event, id=event['id']+'-second', observer_id=second['id'],
+            record_ids=[key+'-second' for key in event['record_ids']]) for event in batch['events']]
+        batch['raw_artifact']['bytes'] *= 2
+        batch['observers'].append(second)
+        batch['records'].extend(extra_records);batch['events'].extend(extra_events)
+        args = asdict(proof);args['observer_id'] = second['id']
+        proofs = [proof, CounterUnitProof(**args)]
+        views = derive_counter_ns_views(batch, proofs)
+        with tempfile.TemporaryDirectory() as directory:
+            first = perfetto.write_counter_exports(directory, Path('capture'), views,
+                batch, proofs=proofs)
+            second = perfetto.write_counter_exports(directory, Path('capture'), views[::-1],
+                batch, proofs=proofs[::-1])
+            self.assertEqual(first, second)
+            self.assertEqual(len(store.committed_exports(directory)), 2)
+
     def test_idempotent_and_new_proof_preserves_first_revision(self):
         batch, proof = fixture()
         before = copy.deepcopy(batch)

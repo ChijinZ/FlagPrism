@@ -197,7 +197,11 @@ def write_counter_exports(directory, prefix, views, canonical, *, proofs):
         by_observer[proof.observer_id] = proof
     files, rows, total = {'canonical.json': timeline_store.json_bytes(canonical)}, [], 0
     seen = set()
-    for view in views:
+    # Provider enumeration order is not semantic. Keep receipts deterministic
+    # for the same observer/proof set, including independent concurrent callers.
+    for view in sorted(views, key=lambda item: (
+            tuple(item['observer']['program_coordinates']),
+            item['observer']['kind'], item['observer']['local_id'], item['observer']['id'])):
         observer = view['observer']['id']
         if observer in seen or observer not in by_observer:
             raise ValueError('Duplicate view or missing independently provided proof')
