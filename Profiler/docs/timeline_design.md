@@ -1,6 +1,6 @@
 # FlagPrism 内部时间线设计
 
-状态：**待实现的设计，不是现有功能声明**。设计基线为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；现有计数能力和历史验收保持原语境。执行合同见 [已跟踪快照](../../integration/plans/timeline/goal_prompt.md)（执行入口为工作区根目录同字节版本），测试设计见 [timeline_testing.md](timeline_testing.md)。产品设计不是论文正文，不修改 paper/Study。
+状态：**实现中的目标设计，不是完整功能声明**。已有原语与构建证据不等于完整时间线通过；当前工程边界见 §8.8。原始设计基线为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；现有计数能力和历史验收保持原语境。执行合同见 [已跟踪快照](../../integration/plans/timeline/goal_prompt.md)（执行入口为工作区根目录同字节版本），测试设计见 [timeline_testing.md](timeline_testing.md)。产品设计不是论文正文，不修改 paper/Study。
 
 ## 1. 交付目标与最低界线
 
@@ -209,7 +209,50 @@ UI 用明确名称区分“observed dependency”“static candidate”“ambigu
 
 普通输入、事件和源导航分别绑定源 snapshot/hash 与实际编译映射；能打开某行不等于精确执行归属。错 snapshot、悬空 region/group/edge、错 binary、丢 anchor、错误扩展类型都需要明确校验结果。
 
-设计阶段的静态风险清单：NVIDIA 已有自动 scope，但 interval 对 worker partition 的选择、旧 32/43-bit SM clock 与新 timer/ABI 的衔接仍待证；GCU 已有真实 SDK timer，但早期 TTIR 插桩后的实际边界、单位与 async 路径仍待证；Ascend 晚期 observer 仍在 scalar optimization 前，普通操作目前为 checkpoint，动态时间 v1 也不是已修复的 census v3 布局。三者均不能仅换 exporter 就宣称完成。P01/相关 P、E 测试闭合这些风险，当前没有新设备验证结果。
+设计阶段的静态风险清单：NVIDIA 已有自动 scope，但 interval 对 worker partition 的选择、旧 32/43-bit SM clock 与新 timer/ABI 的衔接仍待证；GCU 已有真实 SDK timer，但早期 TTIR 插桩后的实际边界、单位与 async 路径仍待证；Ascend 晚期 observer 仍在 scalar optimization 前，普通操作目前为 checkpoint，动态时间 v1 也不是已修复的 census v3 布局。三者均不能仅换 exporter 就宣称完成。P01/相关 P、E 测试闭合这些风险；最新已取得的有限原语证据与剩余缺口见 §8.8。
+
+### 8.7 可实施的后端交接与采集生命周期
+
+下表规定最小职责交接，不强制新建同名类、独立进程或单一物理 ABI。先复用现有 hook/pass/decoder，再在真实调用边界落实类型检查；公共层不能重新解析厂商指令字符串以补足后端遗漏的语义。
+
+| 交接 | 输入 → 输出 | 责任与失败处理 |
+| --- | --- | --- |
+| 能力解析 | target 与已安装依赖 → 带条件的能力证据/依赖指纹 | 后端识别型号、SDK、getter 和机制；公共层校验版本及证据范围。缓存查询前确定编译依赖，capture 时另核 epoch |
+| 编译计划 | observation intent + ordinary eligibility + 实际优化结构 → execution manifest + 物理记录需求 | 后端给合法 anchors、主体映射、异步机制描述和字节预算；公共层 admission 后才能为捕获分配设备 scratch。编译器产生的静态计划不冒称 runtime 动态身份 |
+| 启动准备 | manifest + 本次实际 grid/stream/device → invocation owner | 后端绑定隐藏参数、所选 program 与完成依赖；公共层分配唯一调用身份、核实际 grid 的容量，不能仅凭缓存 specialization 决定首末 program |
+| 捕获完成 | invocation owner → 不再被设备修改的 raw bytes + 完整性状态 | 后端完成原 stream 上的安全发布/拷贝；公共层维护 owner 生命周期和超时。异步异常不能仅因 Python 返回就释放设备缓冲 |
+| 解码与机制映射 | raw + manifest + 本次 clock proof → typed events + operation/group/wait 事实 | 后端处理位宽、padding、commit、原机制覆盖集合；公共层核引用、配对、generation、loss 和可比较时钟，决定哪些 edge 获得 verified |
+| 导出 | 通过验证的 canonical 数据 → pftrace/索引/状态 | 一个公共 exporter；新 observer 角色使用描述字段，不按厂商复制绘图逻辑。未知必需语义拒绝或显式 partial，不放宽验证 |
+
+异步映射规则属于后端，动态状态不属于全局单例：每次调用、每个机制实例维护自己的 group/slot/generation 状态。后端输出有类型的提交集合、wait 覆盖及来源，公共层独立核完整性；不能仅信后端写出的 `verified=true`。共享验证能发现悬空引用或串代，但机制规则是否符合真实 ISA/SDK 仍由设备证据核验。
+
+生命周期的最小状态机：
+
+```text
+planned → admitted → armed → submitted → completion_observed
+        → raw_ready → decoded → exported → released
+```
+
+这是每 invocation 的逻辑状态，不要求调用者同步等待每条箭头。`armed` 已持有本次 buffer、manifest 快照、device/stream/context、selection、clock/规则版本及 completion owner；实际提交后不可因下一次 launch 覆写。并发 owner 的数量和全部 pending buffer 字节也受 session 总预算限制，不能只限制单调用。预算不足在 launch 前明确失败；禁止通过逐 launch 强同步偷偷满足容量并改变声称支持的跨 stream 行为。
+
+若后端能在原 stream 记录轻量完成 event，host 可继续提交，最终化仅等待本次 owner 的完成并读取记录；若只能借助 SDK 的等价完成条件，必须说明其范围与并发限制。最终化允许等待记录已完成，但不得注入新的设备完成屏障改变被测内部流水。普通编译、launch、设备完成、D2H、解码和导出是不同失败阶段：分别记录错误与已取得数据。超时不等于设备已停；确认本次写者结束前保留或隔离 owner，不能释放/复用，也不能杀其它用户任务。无法安全回收时本 session 明确失败并报告保留资源，不能声称已释放。
+
+已完成且 raw 持久化后，导出失败可以在同一原件上重试；不得为重导图重跑用户算子。未提交的 owner 可直接回收；已提交 owner 只有完成证明后才能回收。多 stream、异常退出和嵌套 capture 的具体支持范围在资格冻结前明示。两 stream 不新增为每后端无条件必达项：按既有 E03/执行合同，逐后端冻结 two-stream、host-thread、graph 等支持表；声明支持的两 stream 路径必须真实测试交错提交与 owner 隔离，不支持的路径必须在产生本次设备副作用前明确拒绝并验证恢复。不得冻结后缩小范围掩盖失败；不支持路径不能声称已保留跨 stream 行为。
+
+**未来新增芯片的预期工作**：已有执行模型且 SDK 可复用时，主要补 target 匹配、编译接入、timer/logger、物理 decoder 与机制映射，并跑同一套合同和设备验收。新执行模型或 SDK 不开放必要机制时，可能需要新晚期 pass、隐藏参数 ABI、同步模型或 clock correlation；这些是真实工程成本，抽象不能消除。只有发现现有公共模型无法表达的新事实，才版本化扩展公共合同；不能预先承诺仅实现一个 adapter 就能移植。新芯片无需逐算子配置；普通可运行输入因通用编译结构不被支持而失败时，应修通用结构或明确产品限制，不新增按算子名/shape 的修补表。
+
+### 8.8 当前证据与阶段放行
+
+以下为 `b3e4a7f` 工程检查点的事实边界，不是新增验收结果；原件索引见 [原语检查点](../../integration/evidence/timeline-primitives-r001/README.md)。后续证据写工程记录，不把本节维护成重复实验日志。
+
+| 项目 | 已有有限证据 | 仍不支持的结论 / 下一检查 |
+| --- | --- | --- |
+| NVIDIA timer 与普通异步结构 | 真实数学手工 timer 原语；普通 GEMM 的 PTX 含 copy/commit/部分 wait；新 native 构建、独立安装及 pass 合同检查 | 不是自动 timeline；未证明跨 SM epoch、最终插桩顺序、动态 group 关联及 Perfetto。实际 getter 为 64 位，但现有 packed record 仍为 43 位，不能当成全 64 位记录 |
+| Enflame timer | 旧 advanced 自动 interval 的真实 raw 与整数校准边界；约 0.9774–1.0223 ns/tick 的独立界限 | 不是精确 1 ns 或共享 epoch 证明；实际边界、合法发布和异步解释待闭合 |
+| Ascend | 现有 SDK/observer、连接及目标已核 | 本轮新 timeline logger、时间区间、actor epoch、动态关联尚无设备通过证据；旧 census 通过不能继承 |
+| 公共时钟 | 整数/有理数及误差算术 CPU 正负例 | 算术正确不证明物理频率/epoch；新模块尚不能代表完整安装或三后端集成通过 |
+
+放行顺序区分三层：**原语可继续开发 → 完整 P01 可进入该后端最终资格 → 全验收可交付**。允许在第一个后端做成完整纵向链时，预先调查其它后端原语；这不等于在公共合同冻结前宣称第二、第三后端已接入完成。当前没有任何后端整体 P01 通过。
 
 ## 9. Bundle 与 Perfetto 呈现
 

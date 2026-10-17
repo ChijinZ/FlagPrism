@@ -1,24 +1,25 @@
 {
-  "scope": "design-only update and three independent design reviews; no implementation or device execution",
+  "scope": "second documentation-only design review round; no new implementation or device execution",
   "source_baseline": "e6aa804b203d3147925611423c2fcd20cf96bea2",
-  "design_revision_from_commit": "775f7b44c879b515a71d2eb48f1196321d75786b",
+  "design_revision_from_commit": "b3e4a7fcb06a4bbf59ee5312c5c4401c11243d5e",
   "root_contract_sha256": "08b854213cd214105932e94ff8f2c328ba7ab9b5d4f6a4c46b9f0c80b042ba40",
   "root_contract_and_tracked_snapshot_equal": true,
-  "local_links_checked": 73,
+  "local_links_checked": 85,
   "review_initials_preserved": true,
-  "review_followups_match_final_document_sha256": true,
+  "historical_round1_followups_bound_to_commit": "2932311bd103db9b2eeea8fa8ca0574befc913b7",
+  "current_round2_followups_match_final_document_sha256": true,
   "files": {
     "Profiler/docs/timeline_design.md": {
-      "bytes": 29743,
-      "sha256": "0b119149db183388c58da6119f7079f13602170eb75d8951019eddced97ae7d0"
+      "bytes": 36736,
+      "sha256": "9a5b9574840ff7724728b50dff22072b10e906fdb74ff8446694076617b8a9bd"
     },
     "Profiler/docs/timeline_testing.md": {
-      "bytes": 22471,
-      "sha256": "3f2785b024c6430188c39af749462b20af4a67fa93f956d1fbbc0c7a5532946e"
+      "bytes": 26014,
+      "sha256": "83cd97042587c055a58fbcedf006fa4dcdf8316a23f633320e880a753c355603"
     },
     "integration/plans/timeline/README.md": {
-      "bytes": 2144,
-      "sha256": "c0149007ad14d6bfb7960cb1044f65c5c17502fd8db98e1607424002f7f9f423"
+      "bytes": 2369,
+      "sha256": "356d5d59386c444501ad1b0ad4cf4d21d9041e7ae21c357aa65e8db312f2aa42"
     },
     "integration/plans/timeline/goal_prompt.md": {
       "bytes": 18114,
@@ -57,12 +58,52 @@
       "sha256": "871cb9936abe5b6b445c693b97300eaa8020d48a99dfe9b4fc8d4cca61efebfa"
     },
     "integration/plans/timeline/reviews/README.md": {
-      "bytes": 5091,
-      "sha256": "f5ede058f90c3708f342172741d042f750780cdba57197963daab613cbcbfaff"
+      "bytes": 5299,
+      "sha256": "0858c1e95d6b10755d27e36838e3814f1dc419a3cd55abded943297052ca7442"
     },
     "integration/plans/timeline/reviews/REQUEST.json": {
       "bytes": 1250,
       "sha256": "dd4cdf6ee37cc73ab03802e08e742f1e48af8aefc9a0dca34a8a3a84daf93889"
+    },
+    "integration/plans/timeline/reviews/round2/FOLLOWUP_INPUT.json": {
+      "bytes": 625,
+      "sha256": "a2b7a09fb20c4cfbc7b2ea22e5b38fab0f408a3a509def906fc3e78815e64f33"
+    },
+    "integration/plans/timeline/reviews/round2/INPUT.json": {
+      "bytes": 676,
+      "sha256": "8086f5b3ee654312ae2f6eb42f03cab3c724c89969da67d36382b1edd3a47d52"
+    },
+    "integration/plans/timeline/reviews/round2/R1-compiler.md": {
+      "bytes": 10268,
+      "sha256": "b24bdbac7f8af86f672e77d63b457bbacc956fd9dec80f0d7e75924f7b4f1244"
+    },
+    "integration/plans/timeline/reviews/round2/R1-followup.md": {
+      "bytes": 3701,
+      "sha256": "de2694667cead489cffbbbdbe6f2b1d224dc80c5b05690046ab166a614aebde5"
+    },
+    "integration/plans/timeline/reviews/round2/R2-followup.md": {
+      "bytes": 3848,
+      "sha256": "a65a15d32a32107bdd8797bb53270096d1c9c10f8d1b8ccddc05e5dfe3fb99b6"
+    },
+    "integration/plans/timeline/reviews/round2/R2-runtime.md": {
+      "bytes": 10220,
+      "sha256": "5dcad9b6e54c4afb23e72bff6812abdcc339826bc65aa3c4060e4a5abe274dd8"
+    },
+    "integration/plans/timeline/reviews/round2/R3-followup.md": {
+      "bytes": 2903,
+      "sha256": "8b9dd46320657d0ea9ac8b8280eee25eb49ec362bb0eb9c7e9d3d324f11c1ace"
+    },
+    "integration/plans/timeline/reviews/round2/R3-portability.md": {
+      "bytes": 8503,
+      "sha256": "25d4bff23034dba11ce3519e8f4194e4416e4a847836d18eb4b5b820a53aefb3"
+    },
+    "integration/plans/timeline/reviews/round2/README.md": {
+      "bytes": 3638,
+      "sha256": "aa9c3edd4bf9ed37e3b9a6369afc32bc6987a06b0b2553f2d380f5fc12c57bca"
+    },
+    "integration/plans/timeline/reviews/round2/REQUEST.json": {
+      "bytes": 1298,
+      "sha256": "97985a24a66601ae436d1842dcac8d2c5a753f691bc688932413676899fbb68b"
     }
   }
 }

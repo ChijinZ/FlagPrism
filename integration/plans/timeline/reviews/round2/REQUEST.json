@@ -1,0 +1,31 @@
+{
+  "scope": "three fresh-context independent design reviews explicitly requested by user; not final code review",
+  "fork_turns": "none",
+  "model_override": null,
+  "reasoning_effort_override": null,
+  "resolved_serving_model": "not exposed",
+  "baseline_commit": "b3e4a7fcb06a4bbf59ee5312c5c4401c11243d5e",
+  "initial_input": "INPUT.json",
+  "followup_input": "FOLLOWUP_INPUT.json",
+  "agents": [
+    {
+      "name": "/root/timeline_design_round2_compiler",
+      "focus": "compiler and final execution mapping",
+      "report": "R1-compiler.md",
+      "followup": "R1-followup.md"
+    },
+    {
+      "name": "/root/timeline_design_round2_runtime",
+      "focus": "runtime, clocks, dynamic dependency, Perfetto",
+      "report": "R2-runtime.md",
+      "followup": "R2-followup.md"
+    },
+    {
+      "name": "/root/timeline_design_round2_portability",
+      "focus": "backend boundaries and executable acceptance",
+      "report": "R3-portability.md",
+      "followup": "R3-followup.md"
+    }
+  ],
+  "independence": "Each initial reviewer read the same frozen inputs; no peer or old report reading; no product execution. Followups reuse each independent reviewer only for the stated delta. These agents do not satisfy the later three additional GPT-6.1-Sol/xhigh implementation code reviews."
+}

@@ -1,13 +1,15 @@
 # Internal timeline implementation plan
 
-These files describe a **future implementation**, not a completed timeline feature.
-No device experiment is started by committing the plan.
+These files describe the **target design under implementation**, not a completed
+timeline feature. Limited primitive/build evidence is tracked separately; this
+document revision starts no device experiment.
 
 - [Execution contract](goal_prompt.md): tracked same-byte snapshot of workspace-root `timeline_goal_prompt.md`.
 - [Technical design](../../../Profiler/docs/timeline_design.md).
 - [Real-operator and Perfetto test plan](../../../Profiler/docs/timeline_testing.md).
 - [Initial record](record.initial.md): immutable T000 snapshot; live execution record is workspace-root `timeline_impl_record.md`, outside Git.
-- [Design review and disposition](reviews/README.md): three independent design reviews, document hashes and subsequent resolutions. These are not the final implementation code reviews.
+- [Original design review and disposition](reviews/README.md): T001 historical inputs and resolutions.
+- [Current design review and disposition](reviews/round2/README.md): three independent reviews of the refined backend handoffs, lifecycle and evidence gates, plus limited followups. Neither round replaces final implementation code reviews.
 
 When the user explicitly invokes `/goal` with the root contract, the agent must
 implement, build, test and qualify the feature on all three backends and finish
