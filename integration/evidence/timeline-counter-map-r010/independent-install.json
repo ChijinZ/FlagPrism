@@ -1,0 +1,142 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r010/package-debug-lines/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "d41bd2c0f2da1625feeb538415d00878359a2f6e43fd360beef9ac957455faf4",
+  "venv": "/workspace/chijin-timeline-r010/runs/install-v3/output/venv",
+  "installed_members_byte_verified": 607,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv"
+      ],
+      "pid": 43019,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9583109,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r010/package-debug-lines/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 43024,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9583306,
+      "returncode": 0
+    },
+    {
+      "name": "offline-nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 43028,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9583839,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r010/check-input-v3/test_nvidia_machine_map.py"
+      ],
+      "pid": 43038,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9584525,
+      "returncode": 0
+    },
+    {
+      "name": "machine-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r010/check-input-v3/test_nvidia_machine_map.py"
+      ],
+      "pid": 43042,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9584561,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r010/check-input-v3/test_public_timeline_contract.py"
+      ],
+      "pid": 43046,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9584604,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r010/check-input-v3/test_public_timeline_contract.py"
+      ],
+      "pid": 43110,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9584749,
+      "returncode": 0
+    },
+    {
+      "name": "public-cli-help",
+      "argv": [
+        "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "flagtree.profiler.cli",
+        "--help"
+      ],
+      "pid": 43182,
+      "ppid": 43018,
+      "pgid": 43018,
+      "startticks": 9584895,
+      "returncode": 0
+    }
+  ]
+}

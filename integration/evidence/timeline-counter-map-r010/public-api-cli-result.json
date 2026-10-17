@@ -1,0 +1,128 @@
+{
+  "status": "public_collection_raw_stage_passed_not_full_P01",
+  "phases": [
+    {
+      "name": "api-cold",
+      "captures": 4,
+      "records": 1344,
+      "canonical_intervals": 672,
+      "logical_groups": 80,
+      "binaries": [
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "1814e52dd43f78df2c610220b110c8ea23cf6ffbfc972d49f577e62178d3e183"
+      ],
+      "invocations": [
+        "invocation-ad4cc85ea15d499c93c413a353faa85f",
+        "invocation-6bb8ffc78f99496aa10e95e766e768bf",
+        "invocation-c5df6ce0dc0a48c7ac6d5b820a4a6771",
+        "invocation-db718617250045e7ae34a1004b1c8806"
+      ]
+    },
+    {
+      "name": "api-warm",
+      "captures": 4,
+      "records": 1344,
+      "canonical_intervals": 672,
+      "logical_groups": 80,
+      "binaries": [
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "1814e52dd43f78df2c610220b110c8ea23cf6ffbfc972d49f577e62178d3e183"
+      ],
+      "invocations": [
+        "invocation-f13a0007b5fb41d395a9fa4b47b69a20",
+        "invocation-77f3bde490f3401b95d31a1b32529213",
+        "invocation-9cdba64747404b04832d05a4a6a17091",
+        "invocation-54d7a0e58a6140cc8965d0dda39c7d37"
+      ]
+    },
+    {
+      "name": "api-export-failure-recovered",
+      "captures": 4,
+      "raw_directory": "/workspace/chijin-timeline-r010/runs/device-public-v2/output/recovered-raw.timeline"
+    },
+    {
+      "name": "api-after-failure",
+      "captures": 4,
+      "records": 1344,
+      "canonical_intervals": 672,
+      "logical_groups": 80,
+      "binaries": [
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "1814e52dd43f78df2c610220b110c8ea23cf6ffbfc972d49f577e62178d3e183"
+      ],
+      "invocations": [
+        "invocation-650b5d18ac8b4cafadd6b90f68a70112",
+        "invocation-1e299fb240094ec386320cf57d036bf2",
+        "invocation-7b4379e3d23149ed9b296e9b76fd5bac",
+        "invocation-0036ee53f2964ef68716093b1b94ca58"
+      ]
+    },
+    {
+      "name": "api-overflow",
+      "captures": 1,
+      "canonical_intervals": 2040,
+      "incomplete_intervals": 16
+    },
+    {
+      "name": "cli",
+      "captures": 4,
+      "records": 1344,
+      "canonical_intervals": 672,
+      "logical_groups": 80,
+      "binaries": [
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+        "1814e52dd43f78df2c610220b110c8ea23cf6ffbfc972d49f577e62178d3e183"
+      ],
+      "invocations": [
+        "invocation-5672978cd69c49d3801bce5d1e5ec461",
+        "invocation-87c60eac9bd54b16ba7918ad43d09b0e",
+        "invocation-8a71adf73a7143cc92c354422f942df6",
+        "invocation-ddec82d307c349199ada7fd0e1c894c2"
+      ]
+    }
+  ],
+  "cli_argv": [
+    "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+    "-I",
+    "-m",
+    "flagtree.profiler.cli",
+    "--detail",
+    "timeline",
+    "--device",
+    "0",
+    "-n",
+    "/workspace/chijin-timeline-r010/runs/device-public-v2/output/cli",
+    "/workspace/chijin-timeline-r010/device-input-v1/ordinary_timeline_workload.py",
+    "--evidence",
+    "/workspace/chijin-timeline-r010/runs/device-public-v2/output/cli-math"
+  ],
+  "legacy_argv": [
+    "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/bin/python",
+    "-I",
+    "-m",
+    "flagtree.profiler.cli",
+    "--detail",
+    "auto",
+    "--device",
+    "0",
+    "-n",
+    "/workspace/chijin-timeline-r010/runs/device-public-v2/output/legacy-auto",
+    "/workspace/chijin-timeline-r010/device-input-v1/ordinary_timeline_workload.py",
+    "--evidence",
+    "/workspace/chijin-timeline-r010/runs/device-public-v2/output/legacy-auto-math",
+    "--skip-zero"
+  ],
+  "legacy_count_captures": 4,
+  "limitations": [
+    "Raw stage only; no physical clock/epoch proof",
+    "No final marker-order or Perfetto/independent qualification"
+  ]
+}

@@ -46,7 +46,7 @@ persisted before decoding/canonicalization, so a later failure does not trigger
 application replay or erase originals. Input journals explicitly say
 `raw_persisted_pending_decode`; only the final capture describes decoded loss.
 
-`test_timeline_events.py` supplies 15 CPU contract tests, including a nonwarp
+`test_timeline_events.py` supplies 16 CPU contract tests, including a nonwarp
 role fixture; that fixture does not prove an extra chip port. The actual public
 API/CLI test covers ordinary recurrence/GEMM, cached handles, two streams,
 zero grid, export recovery and legacy count, plus a K=1021 recurrence that

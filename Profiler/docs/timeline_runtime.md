@@ -43,6 +43,24 @@ ordinary register values. Legacy interval/count paths do not acquire the new
 operand forwarding. Raw `boundary_status` stays `unverified`; no ns or hardware
 completion claim follows from the version flag or the memory clobber.
 
+The compiler also requires `TIMELINE_MARKER_VERSION=1`. With a compatible
+`nvdisasm` installed in the current product prefix, on `PATH`, or supplied as an
+absolute executable path through `FLAGTREE_NVDISASM`, finalization optionally
+binds every selected site/entry/exit marker to actual cubin PTX-debug lines and
+SASS PCs. It retains tool version/hash, original text/JSON disassembly, command
+receipts and `machine/<binary_id>/counter-map.json`; each capture refers to this
+through `machine_counter_mapping`. Tool absence or a failed mapping preserves
+raw data with an explicit unavailable reason. No application replay or network
+download is performed. Postprocessing is bounded by the shared export deadline.
+
+`counter_mapping_complete_region_unverified` means the static counter PCs are
+located, not that the observed operation stayed inside their machine boundaries.
+Line matching permits only erased `.loc`/`.file` and typed DWARF data in explicit
+debug sections; executable tokens, line positions and actual text/JSON getters
+must agree. Duplicated static PCs remain candidates, not exact per-occurrence PC
+attribution. Read suppression, source-region ordering, completion and clock
+qualification still require separate proof; raw event status stays unverified.
+
 `timeline_runtime.TimelineOwnerPool` owns one independent record allocation per
 invocation. `timeline_cuda_runtime.CudaTimelineTransport` supplies the actual
 CUDA allocation, stream-local initialization, completion event and readback.

@@ -1,0 +1,73 @@
+{
+  "status": "public_type_math_and_llvm_dependencies_passed_not_machine_certified",
+  "actual_math_launches": 5,
+  "captures": 5,
+  "canonical_intervals": 320,
+  "math": [
+    {
+      "dtype": "torch.float16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "8ee85e98ca83ccc29488457a0cd48e5d4e57c14530b3bcfa49eb1493deb60138",
+      "llir_sha256": "6aa29b02f05ee8ba3775ce7af0b70f597867f4deb254976cb1b2a7162c400814"
+    },
+    {
+      "dtype": "torch.bfloat16",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "7dc602b41c4b81874447c8f662aff77a9c06770ce3bf76e313fa6a0cf0d82444",
+      "llir_sha256": "6dc100f1d7f08414562b1d9a6d95639fff49f7dfe7555d62fe222575618e5d22"
+    },
+    {
+      "dtype": "torch.float32",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "5188a40bb4aeb9fdeb90b90f3389ab89b4de2c7b0b051d9904c38667f921de74",
+      "llir_sha256": "026cc67c9fb7c0debefa92364524f200c8922db5fbbaf1df1a07a3bb905ba02c"
+    },
+    {
+      "dtype": "torch.float64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "3d708561bb3b42f65da0b32780121b3627a99a3e403b524d4586f158203deda8",
+      "llir_sha256": "b1846b27aaee3c5d9a0c4ee567cdd74bbd2b1778a499ecce7461d6f7524cc2b2"
+    },
+    {
+      "dtype": "torch.int64",
+      "programs": 3,
+      "requested_math_launches": 1,
+      "state": [
+        1,
+        1,
+        1
+      ],
+      "exact_cpu_math": true,
+      "cubin_sha256": "2cc62641f94c4b493e095c6569686410d8485b223007140ca34d9982063d6108",
+      "llir_sha256": "47fd5b92b8e0a64d1a99c9525bc24e961798d29058221793df13a569a5fd6bfa"
+    }
+  ]
+}

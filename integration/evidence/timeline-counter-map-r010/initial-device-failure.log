@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r010/type-input-v1/p01_nvidia_boundary_math.py", line 110, in <module>
+    main()
+  File "/workspace/chijin-timeline-r010/type-input-v1/p01_nvidia_boundary_math.py", line 89, in main
+    require(machine['status']=='counter_mapping_complete_region_unverified',
+  File "/workspace/chijin-timeline-r010/type-input-v1/p01_nvidia_boundary_math.py", line 14, in require
+    raise RuntimeError(message)
+RuntimeError: Actual type machine mapping failed: {'status': 'counter_mapping_unavailable', 'binary_id': '18d266e1d942e10ea290b88458bd8f4c3ce65c328fe32c2c29ef3749a7bd22f4', 'region_boundaries_verified': False, 'reason': 'PTX tokens/line numbers differ from cubin debug text', 'exception': 'ValueError'}

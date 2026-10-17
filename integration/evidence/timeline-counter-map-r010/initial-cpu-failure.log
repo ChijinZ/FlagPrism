@@ -1,0 +1,13 @@
+F..............
+======================================================================
+FAIL: test_actual_json_predicate_and_pc_must_match_text (__main__.CounterMapTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r010/check-input-v1/test_nvidia_machine_map.py", line 97, in test_actual_json_predicate_and_pc_must_match_text
+    with self.assertRaises(ValueError): machine.counter_map(**a)
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.214s
+
+FAILED (failures=1)

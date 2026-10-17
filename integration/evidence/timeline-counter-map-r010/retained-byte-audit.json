@@ -1,0 +1,104 @@
+{
+  "status": "actual_counter_pc_mapping_and_raw_bytes_audited_not_full_P01",
+  "captures": 26,
+  "physical_records": 11456,
+  "paired_intervals": 5720,
+  "incomplete_endpoints": 16,
+  "logical_groups": 400,
+  "overwritten_records": 12352,
+  "counter_mapped_captures": 26,
+  "unique_mapped_cubins": 7,
+  "unique_static_counter_pcs": 140,
+  "actual_machine_commands": 48,
+  "counter_mapping_tool_references": 78,
+  "objects": [
+    {
+      "cubin_sha256": "c3aa9d727b6a3994d59922106de5e014cd5b06b618f462a2767fd0194507774b",
+      "binary_id": "34105ad8ff7c3059e06167e064ba7ac0e9a416de7f9118c83614bd73ee53b110",
+      "functions": [
+        "recurrence"
+      ],
+      "instructions": 392,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 162
+    },
+    {
+      "cubin_sha256": "5cee8d1330315287da1b1e01d8ca2e27bf4fb11ab85369e69fd3ba1416fb950e",
+      "binary_id": "1814e52dd43f78df2c610220b110c8ea23cf6ffbfc972d49f577e62178d3e183",
+      "functions": [
+        "gemm"
+      ],
+      "instructions": 920,
+      "counter_pcs": 44,
+      "site_phases": 44,
+      "debug_omissions": 244
+    },
+    {
+      "cubin_sha256": "8ee85e98ca83ccc29488457a0cd48e5d4e57c14530b3bcfa49eb1493deb60138",
+      "binary_id": "4e38ebaf747ca127d7797dac03f7635a5b600df0d161b43618fe6432e2a91b26",
+      "functions": [
+        "ordinary_update"
+      ],
+      "instructions": 344,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 153
+    },
+    {
+      "cubin_sha256": "7dc602b41c4b81874447c8f662aff77a9c06770ce3bf76e313fa6a0cf0d82444",
+      "binary_id": "c3ef27ac22d3d18d3448b898742634d3e864b6af93007b9c3cbf6699c901a527",
+      "functions": [
+        "ordinary_update"
+      ],
+      "instructions": 344,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 153
+    },
+    {
+      "cubin_sha256": "5188a40bb4aeb9fdeb90b90f3389ab89b4de2c7b0b051d9904c38667f921de74",
+      "binary_id": "a04384d2322f2a8ef6184002a76a1d984f81fc6a11a29303ee6ef9effb663321",
+      "functions": [
+        "ordinary_update"
+      ],
+      "instructions": 344,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 153
+    },
+    {
+      "cubin_sha256": "3d708561bb3b42f65da0b32780121b3627a99a3e403b524d4586f158203deda8",
+      "binary_id": "09e45989c8a8c6fef71efbe1d7272f133cc01760b636c450d647b21dd9c2c3fb",
+      "functions": [
+        "ordinary_update"
+      ],
+      "instructions": 344,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 153
+    },
+    {
+      "cubin_sha256": "2cc62641f94c4b493e095c6569686410d8485b223007140ca34d9982063d6108",
+      "binary_id": "e0d4e2708a2e5f2e66e90b837e332dc9fb03bf65e852d6af65307eb5dbadd266",
+      "functions": [
+        "ordinary_update"
+      ],
+      "instructions": 344,
+      "counter_pcs": 16,
+      "site_phases": 16,
+      "debug_omissions": 153
+    }
+  ],
+  "machine_cpu_methods_each_mode": 17,
+  "canonical_cpu_methods_each_mode": 16,
+  "native_abi_negative_methods_each_mode": 10,
+  "type_math_calls": 5,
+  "archive_bytes": 6125781,
+  "archive_sha256": "7b84ed777b229752ac29a79402199a9fd7fefcf247308fb7e5570ade505b7f86",
+  "limits": [
+    "Counter PCs do not prove source-region machine boundaries",
+    "Clock scale/endpoint error/epoch unqualified; no ns or time arrows",
+    "Physical buffer reuse, other backend producers, Perfetto and independent qualification incomplete"
+  ]
+}
