@@ -16,7 +16,7 @@ class Transport:
         self.fail_read = set()
 
     def plan_storage(self, plan, **kwargs):
-        return dict(raw_bytes=16, scratch_size=16, slots=[0], grid=[1, 1, 1])
+        return dict(raw_bytes=16, scratch_size=16, slots=((0, 0),), grid=[1, 1, 1])
 
     def validate_target(self, **kwargs):
         pass
@@ -76,7 +76,12 @@ def collector(monkeypatch):
     mapper = importlib.import_module('flagtree.profiler.timeline_nvidia_async')
     adapter = importlib.import_module('flagtree.profiler.timeline_events_nvidia')
     machine = importlib.import_module('flagtree.profiler.timeline_nvidia_machine')
-    monkeypatch.setattr(decoder, 'decode_timeline_ring', lambda *a, **kw: {'complete':True})
+    def decode(*args, **kwargs):
+        slots = kwargs['slots']
+        if type(slots) is not tuple or not slots or any(type(row) is not tuple or len(row)!=2 for row in slots):
+            raise ValueError('Physical decoder requires tuple slot pairs after JSON rehydration')
+        return {'complete':True}
+    monkeypatch.setattr(decoder, 'decode_timeline_ring', decode)
     monkeypatch.setattr(mapper, 'derive_cp_async_facts', lambda *a, **kw: {})
     monkeypatch.setattr(adapter, 'canonicalize_nvidia_capture', lambda *a, **kw: {})
     monkeypatch.setattr(machine, 'inspect_capture_binary', lambda *a, **kw: {'status':'fixture'})
@@ -209,3 +214,28 @@ def test_persistence_keeps_original_immutable_and_atomically_updates_journal(tmp
         raise RuntimeError('Persistence mutated evidence or failed journal update')
     if list(tmp_path.glob('.timeline-*')):
         raise RuntimeError('Temporary persistence files leaked')
+
+
+def test_journal_error_does_not_mask_original_decoder_error(collector, tmp_path, monkeypatch):
+    hook, _, ids = collector
+    module = importlib.import_module('flagtree.profiler.hooks.timeline')
+    original_persist = module._persist
+    original_decode = hook._decode_timeline_original
+    failure = ValueError('first decoder error survives journal failure')
+    def persist(path, payload, **kwargs):
+        if path.parent.name == 'attempts':
+            raise OSError('injected attempt journal failure')
+        return original_persist(path, payload, **kwargs)
+    def decode(identity, directory, deadline):
+        if identity == ids[0]:
+            raise failure
+        return original_decode(identity, directory, deadline)
+    monkeypatch.setattr(module, '_persist', persist)
+    monkeypatch.setattr(hook, '_decode_timeline_original', decode)
+    with pytest.raises(ValueError) as error:
+        hook.flush_timeline(tmp_path/'capture')
+    if error.value is not failure or hook.timeline_pool.invocation_ids:
+        raise RuntimeError('Journal failure masked first error or retained safe resources')
+    index = read_index(tmp_path/'capture')
+    if [e['stage'] for e in index['failures']] != ['decode_export','persist_attempt']:
+        raise RuntimeError('Journal failure not reported alongside original error')

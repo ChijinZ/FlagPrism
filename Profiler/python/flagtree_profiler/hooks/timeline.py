@@ -221,7 +221,8 @@ class TimelineInstrumentationMixin:
             warps = metadata['compiler_metadata']['num_warps']
             decoded = decode_timeline_ring(raw,
                 scratch_size=owner['layout']['scratch_size'], total_warps=warps,
-                selected_warps=tuple(range(warps)), slots=owner['layout']['slots'],
+                selected_warps=tuple(range(warps)),
+                slots=tuple(tuple(slot) for slot in owner['layout']['slots']),
                 scope_ids=frozenset(int(k) for k, _ in metadata['scope_id_names']))
             capture['capture_status'] = 'raw_complete' if decoded['complete'] else 'incomplete'
             capture['decoded_file'] = str(prefix.with_suffix('.decoded.json'))
@@ -283,8 +284,11 @@ class TimelineInstrumentationMixin:
         attempt = dict(schema_version=1, attempt=self._timeline_flush_attempt,
             failures=failures, pending_decode=list(self._timeline_pending),
             retained_owners=list(self.timeline_pool.invocation_ids))
-        _persist(directory / 'attempts' / f'flush-{self._timeline_flush_attempt:04d}.json',
-                 (json.dumps(attempt, indent=2)+'\n').encode())
+        try:
+            _persist(directory / 'attempts' / f'flush-{self._timeline_flush_attempt:04d}.json',
+                     (json.dumps(attempt, indent=2)+'\n').encode())
+        except Exception as error:
+            failed(None, 'persist_attempt', error)
         index = dict(schema_version=1, status='partial_clock_unverified',
             captures=self._timeline_rows, clock_status='unverified',
             failures=failures, pending_decode=list(self._timeline_pending),
@@ -292,12 +296,15 @@ class TimelineInstrumentationMixin:
             notes=['Raw ticks are not certified ns or a shared epoch.',
                    'Logical async facts are not verified time arrows.',
                    'Public collection alone does not satisfy full timeline acceptance.'])
-        _persist(directory/'index.json', (json.dumps(index, indent=2)+'\n').encode(),
-                 replace=True)
+        try:
+            _persist(directory/'index.json', (json.dumps(index, indent=2)+'\n').encode(),
+                     replace=True)
+        except Exception as error:
+            failed(None, 'persist_index', error)
         if errors:
             first = errors[0]
             if hasattr(first, 'add_note'):
-                first.add_note('Timeline attempt retained at '+str(directory / 'attempts' /
-                    f'flush-{self._timeline_flush_attempt:04d}.json'))
+                first.add_note('Timeline finalization failures: '+repr(failures))
+                first.add_note('Timeline originals retained at '+str(directory))
             raise first
         return directory
