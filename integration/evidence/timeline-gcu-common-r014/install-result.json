@@ -1,0 +1,243 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r014/package-gcu-events-v2/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "7deb63383bfe57de40103f17b0e3f1911bbe11b891e8bd6e23c9186914c653f0",
+  "venv": "/workspace/chijin-timeline-r014/runs/install-v1/output/venv",
+  "installed_members_byte_verified": 608,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv"
+      ],
+      "pid": 47297,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10449113,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r014/package-gcu-events-v2/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 47302,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10449310,
+      "returncode": 0
+    },
+    {
+      "name": "offline-nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 47306,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10449845,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_timeline_events.py"
+      ],
+      "pid": 47310,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450531,
+      "returncode": 0
+    },
+    {
+      "name": "test_enflame_timeline_events.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_enflame_timeline_events.py"
+      ],
+      "pid": 47311,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450545,
+      "returncode": 0
+    },
+    {
+      "name": "test_nvidia_machine_map.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_nvidia_machine_map.py"
+      ],
+      "pid": 47312,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450558,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_public_timeline_contract.py"
+      ],
+      "pid": 47316,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450595,
+      "returncode": 0
+    },
+    {
+      "name": "p01_enflame_canonical_reinspection.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r014/check-input-v1/p01_enflame_canonical_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/p01_enflame_canonical_reinspection.py-normal"
+      ],
+      "pid": 47380,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450740,
+      "returncode": 0
+    },
+    {
+      "name": "p01_canonical_v1_reinspection.py-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r014/check-input-v1/p01_canonical_v1_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/p01_canonical_v1_reinspection.py-normal"
+      ],
+      "pid": 47381,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450776,
+      "returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_timeline_events.py"
+      ],
+      "pid": 47382,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450847,
+      "returncode": 0
+    },
+    {
+      "name": "test_enflame_timeline_events.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_enflame_timeline_events.py"
+      ],
+      "pid": 47383,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450869,
+      "returncode": 0
+    },
+    {
+      "name": "test_nvidia_machine_map.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_nvidia_machine_map.py"
+      ],
+      "pid": 47384,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450882,
+      "returncode": 0
+    },
+    {
+      "name": "public-contract-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-p",
+        "no:cacheprovider",
+        "/workspace/chijin-timeline-r014/check-input-v1/test_public_timeline_contract.py"
+      ],
+      "pid": 47388,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10450919,
+      "returncode": 0
+    },
+    {
+      "name": "p01_enflame_canonical_reinspection.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r014/check-input-v1/p01_enflame_canonical_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/p01_enflame_canonical_reinspection.py-optimized"
+      ],
+      "pid": 47452,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10451064,
+      "returncode": 0
+    },
+    {
+      "name": "p01_canonical_v1_reinspection.py-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r014/check-input-v1/p01_canonical_v1_reinspection.py",
+        "--output",
+        "/workspace/chijin-timeline-r014/runs/install-v1/output/p01_canonical_v1_reinspection.py-optimized"
+      ],
+      "pid": 47453,
+      "ppid": 47296,
+      "pgid": 47296,
+      "startticks": 10451101,
+      "returncode": 0
+    }
+  ]
+}

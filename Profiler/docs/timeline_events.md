@@ -1,7 +1,8 @@
 # Canonical raw time events
 
 Public timeline captures now retain `captures/<invocation>.events.json` alongside
-the original raw/decoded/async files. This is raw schema 1, validated by
+the original raw/decoded/async files. NVIDIA continues to emit raw schema 1.
+The common reader accepts versions 1 and 2, validated by
 `timeline_events.validate_raw_batch`. NVIDIA's physical decoding and source/
 mechanism mapping live in `timeline_events_nvidia`; the common validator has no
 warp/SM hierarchy or vendor instruction parser.
@@ -41,8 +42,8 @@ The future certified clock/export layer must derive a new view using proof,
 integer scale/origin arithmetic and uncertainty, preserving this original.
 
 Defaults bound validation to 65536 records, 32768 events and a 16 MiB canonical
-document. The owned raw bytes and `*.input.json` identity/source snapshot are
-persisted before decoding/canonicalization, so a later failure does not trigger
+document. In the NVIDIA public collector, owned raw bytes and `*.input.json` identity/source
+snapshot are persisted before decoding/canonicalization, so a later failure does not trigger
 application replay or erase originals. Input journals explicitly say
 `raw_persisted_pending_decode`; only the final capture describes decoded loss.
 
@@ -53,3 +54,57 @@ zero grid, export recovery and legacy count, plus a K=1021 recurrence that
 overwrites the bounded ring and retains missing-endpoint evidence. These
 development checks do not replace P01, physical clock/marker proof, independent
 math or actual Perfetto SQL/UI acceptance.
+
+## Version 2: complete-pair producers and explicit loss accounting
+
+The GCU adapter `timeline_events_enflame.canonicalize_enflame_capture` consumes
+the existing `selected_dynamic_timeline_v1` native append protocol (Debugger
+protocol 2, 64-byte records). This is a pure installed raw adapter; GCU's default
+`detail="timeline"` path and certified time/export integration are still pending.
+The caller supplies the owning capture namespace, the actual compiler metadata
+and a retained capture document. It must retain the originals; the adapter does
+not launch, replay, write a trace or claim ownership of device resources.
+
+The adapter validates the raw SHA/header, actual launch/compiler association,
+selection/grid, source/record plan, sample ordinals, commit tags and 46-bit
+start/end/duration fields. Native invocation/session labels remain in provenance;
+canonical identity also includes the owning capture namespace, because local
+export labels such as `ir-capture-0`/`launch-1` can repeat across exports.
+
+Each pair produces two canonical endpoint references to the actual 8-byte
+start/end fields, not two fictitious physical records. Observer attributes retain
+the physical 64-byte pair representation. Version-2 counts always count canonical
+endpoint references; GCU physical-pair counts remain separately described.
+
+| Observer field | Version-2 meaning |
+| --- | --- |
+| `record_order=endpoint_stream` | Sequence orders actual endpoint reads; regressing ticks fail as in v1 |
+| `record_order=paired_endpoints` | Consecutive entry/exit references come from one atomic pair; append order is pair completion order, not a timestamp sort |
+| `attempted_records` | Reported endpoint-reference attempts before sampling/capacity decisions |
+| `committed_records` | Reported endpoint references actually committed, including any subsequently overwritten |
+| `retained_records` | Endpoint references still in the retained artifact |
+| `dropped_records` | Endpoint references rejected for capacity; distinct from overwriting |
+| `filtered_records` | Endpoint references omitted by declared sampling; distinct from lost history |
+| `overwritten_records` | Committed endpoint references removed by reuse of storage |
+
+Without saturation, attempted = committed + dropped + filtered, and retained =
+committed − overwritten. Saturated counters remain reported lower bounds and
+can never yield a complete stream. Dropped/overwritten references also preclude
+completeness. Sampling alone does not make the selected retained stream lossy.
+Version 1 keeps its original `written_records` interpretation and validation.
+
+For paired endpoints, an enclosing interval can start earlier than a previously
+appended inner interval. The validator preserves that order and requires each
+pair's own entry≤exit and nonregressing completion reads; it never sorts timestamps
+to fabricate physical log order. Pair references cannot cross atomic records.
+Occurrence is `complete_pair_order`/`retained_pair_order`, never an inferred source
+iteration. A dropped complete pair creates loss metadata, not a synthesized
+single endpoint or an invented duration. Unknown versions/orderings fail closed.
+
+Eleven protocol tests cover nested pairs, strict endpoint streams, export-local
+identity collisions, overwrite-versus-drop semantics, sampling, corrupt payloads
+and type/source/header failures. These are synthetic contracts, not GPU coverage.
+The installed reader separately consumed all 42 actual GCU intervals (84 exact
+raw-field references) and all 26 original NVIDIA v1 batches unchanged, normal and
+`-O`. This validates the shared raw consumer; it does not complete new GCU default
+collection, async/clock qualification, Perfetto or independent-math acceptance.

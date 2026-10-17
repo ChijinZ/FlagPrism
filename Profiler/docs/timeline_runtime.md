@@ -140,3 +140,10 @@ training/held-out checks are [development evidence](../../integration/evidence/t
 They do not qualify all SMs, absolute endpoint error, source-region boundaries
 or public timeline/Perfetto. Raw event ABI/status and existing count behavior
 are unchanged.
+
+The installed common raw reader also supports schema 2 and the GCU
+`timeline_events_enflame` adapter for existing advanced append captures. It
+preserves atomic start/end fields, work-item identity, local-label provenance,
+sampling and dropped-pair counts. This is not yet a GCU default timeline hook,
+ns producer or Perfetto exporter. See [raw events](timeline_events.md) for the
+versioned contract and evidence boundary.
