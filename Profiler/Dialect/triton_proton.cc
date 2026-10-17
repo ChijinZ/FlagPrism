@@ -74,7 +74,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
-  m.attr("TIMELINE_BOUNDARY_VERSION") = 1;
+  m.attr("TIMELINE_BOUNDARY_VERSION") = 2;
   m.attr("TIMELINE_MARKER_VERSION") = 1;
   m.attr("TIMELINE_STORAGE_VERSION") = 1;
   m.attr("TIMELINE_PLAN_VERSION") = 1;
@@ -203,7 +203,7 @@ void init_triton_proton(py::module &&m) {
       auto marker = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_marker_version");
       auto boundary = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_boundary_version");
       if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
-          !boundary || boundary.getInt() != 1)
+          !boundary || boundary.getInt() != 2)
         throw std::runtime_error("Unsupported timeline marker version or missing boundary ABI");
       result["timeline_marker_version"] = 1;
     }
@@ -212,7 +212,7 @@ void init_triton_proton(py::module &&m) {
           "proton.timeline_boundary_version");
       auto timer = module->getAttrOfType<mlir::StringAttr>(
           "proton.timeline_timer");
-      if (!boundary || boundary.getInt() != 1 || !timer ||
+      if (!boundary || boundary.getInt() != 2 || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns")
         throw std::runtime_error("Unsupported timeline compiler boundary version");
     }
@@ -226,7 +226,7 @@ void init_triton_proton(py::module &&m) {
       if (auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
               "proton.timeline_boundary_version")) {
         result["timeline_boundary_version"] = boundary.getInt();
-        result["timeline_boundary_strategy"] = "llvm_ssa_pending_machine_audit";
+        result["timeline_boundary_strategy"] = "outlined_device_calls_pending_region_audit";
       }
       result["timeline_getter_bits"] = 64;
       auto recordVersion = module->getAttrOfType<mlir::IntegerAttr>(

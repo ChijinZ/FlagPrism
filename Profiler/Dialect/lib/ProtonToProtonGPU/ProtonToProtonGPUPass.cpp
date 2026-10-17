@@ -481,7 +481,7 @@ public:
       auto marker = m->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
       auto boundary = m->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
       if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
-          !boundary || boundary.getInt() != 1) {
+          !boundary || boundary.getInt() != 2) {
         m.emitError("Unsupported timeline marker version or missing boundary ABI");
         return signalPassFailure();
       }
@@ -491,7 +491,7 @@ public:
       auto boundary = m->getAttrOfType<IntegerAttr>(
           "proton.timeline_boundary_version");
       auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
-      if (!boundary || boundary.getInt() != 1 || !timer ||
+      if (!boundary || boundary.getInt() != 2 || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension) {
         m.emitError("Unsupported timeline compiler boundary version or getter");
         return signalPassFailure();

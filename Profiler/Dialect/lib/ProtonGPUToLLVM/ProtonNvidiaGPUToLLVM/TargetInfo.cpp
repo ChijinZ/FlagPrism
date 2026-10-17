@@ -4,6 +4,7 @@
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMTypes.h"
 #include "mlir/Dialect/LLVMIR/NVVMDialect.h"
+#include "mlir/IR/SymbolTable.h"
 #include "third_party/nvidia/include/TritonNVIDIAGPUToLLVM/PTXAsmFormat.h"
 #include "third_party/nvidia/lib/TritonNVIDIAGPUToLLVM/Utility.h" // TODO(fywkevin): move Utility.h to include/
 #include "llvm/Support/MathExtras.h"
@@ -25,46 +26,105 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
   auto mod =
       rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
   bool timeline = mod->hasAttr("proton.timeline_timer");
-  PTXBuilder builder;
-  // Retained PTX comments identify compiler counters; actual SASS association
-  // still comes from the cubin's PTX debug-line table, not comment proximity.
-  std::string markerText = "// " + marker.str();
-  if (!marker.empty()) {
-    auto &tag = *builder.create(markerText);
-    tag(llvm::ArrayRef<PTXBuilder::Operand *>{});
+  bool selected = mod->hasAttr("proton.selected_programs") ||
+                  mod->hasAttr("proton.timeline_storage_version");
+  Value predicate;
+  if (selected)
+    predicate = getProgramCollectionPredicate(mod, loc, rewriter);
+
+  auto emitRead = [&](ArrayRef<Value> inputs, Value collect) -> Value {
+    PTXBuilder builder;
+    std::string markerText = "// " + marker.str();
+    if (!marker.empty()) {
+      auto &tag = *builder.create(markerText);
+      tag(llvm::ArrayRef<PTXBuilder::Operand *>{});
+    }
+    auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
+    auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
+    auto *clock = builder.newConstantOperand(
+        timeline ? "%globaltimer" : isClock64 ? "%clock64" : "%clock");
+    if (collect) {
+      builder.create("mov")->o(isClock64 ? "u64" : "u32")(
+          dest, builder.newConstantOperand(0));
+      mov(dest, clock).predicate(collect);
+    } else {
+      mov(dest, clock);
+    }
+    // These are real LLVM inputs, not a claim that PTX comments consume
+    // machine registers. The outlined call and final object are separate facts.
+    for (Value dependency : inputs) {
+      auto width = cast<IntegerType>(dependency.getType()).getWidth();
+      auto &consume = *builder.create("// timeline_llvm_counter_dependency");
+      consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
+    }
+    Value result = builder.launch(rewriter, loc,
+        rewriter.getIntegerType(isClock64 ? 64 : 32), true);
+    if (timeline && mod->hasAttr("proton.timeline_boundary_version")) {
+      auto assembly = cast<LLVM::InlineAsmOp>(result.getDefiningOp());
+      assembly->setAttr("constraints", rewriter.getStringAttr(
+          assembly.getConstraints().str() + ",~{memory}"));
+    }
+    return result;
+  };
+
+  auto boundary = mod->getAttrOfType<IntegerAttr>(
+      "proton.timeline_boundary_version");
+  if (!timeline || !boundary || boundary.getInt() != 2)
+    return emitRead(dependencies, predicate);
+  if (!isClock64 || marker.empty()) {
+    emitError(loc, "Outlined timeline counter requires a marked 64-bit read");
+    return {};
   }
-  auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
-  auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
-  auto *clock = builder.newConstantOperand(
-      timeline ? "%globaltimer" : isClock64 ? "%clock64" : "%clock");
-  if (mod->hasAttr("proton.selected_programs") ||
-      mod->hasAttr("proton.timeline_storage_version")) {
-    builder.create("mov")->o(isClock64 ? "u64" : "u32")(
-        dest, builder.newConstantOperand(0));
-    mov(dest, clock)
-        .predicate(getProgramCollectionPredicate(mod, loc, rewriter));
-  } else {
-    mov(dest, clock);
-  }
-  // Opaque LLVM inputs prevent an observed result's producer from being moved
-  // after the read by LLVM. PTXAS can still schedule independently: comments
-  // are intentionally not presented as a machine-level dependency/fence.
+
+  // Materialize a real device-call boundary. No logger state, hardware fence,
+  // shared memory or hidden launch argument is added to this leaf function.
+  SmallVector<Type> parameters{rewriter.getI1Type()};
+  std::string name = "__flagprism_counter_v2_" + marker.str() + "_";
   for (Value dependency : dependencies) {
-    auto width = cast<IntegerType>(dependency.getType()).getWidth();
-    auto &consume = *builder.create("// timeline_llvm_counter_dependency");
-    consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
+    Type type = dependency.getType();
+    if (!type.isInteger(32) && !type.isInteger(64)) {
+      emitError(loc, "Unsupported outlined timeline argument type");
+      return {};
+    }
+    parameters.push_back(type);
+    name += type.isInteger(32) ? 'a' : 'b';
   }
-  Value result = builder.launch(rewriter, loc,
-                                 rewriter.getIntegerType(isClock64 ? 64 : 32), true);
-  if (timeline && mod->hasAttr("proton.timeline_boundary_version")) {
-    // SSA inputs/forwarding constrain values; the clobber also constrains LLVM
-    // memory motion (notably stores with no result). It emits no GPU barrier
-    // and is not a certificate of final PTXAS scheduling or hardware completion.
-    auto assembly = cast<LLVM::InlineAsmOp>(result.getDefiningOp());
-    assembly->setAttr("constraints", rewriter.getStringAttr(
-        assembly.getConstraints().str() + ",~{memory}"));
+  auto resultType = rewriter.getI64Type();
+  auto functionType = LLVM::LLVMFunctionType::get(resultType, parameters, false);
+  auto helper = mod.lookupSymbol<LLVM::LLVMFuncOp>(name);
+  if (Operation *existing = SymbolTable::lookupSymbolIn(mod, rewriter.getStringAttr(name))) {
+    if (!helper || helper.getFunctionType() != functionType ||
+        !helper->hasAttr("proton.timeline_clock_helper")) {
+      emitError(loc, "Conflicting outlined timeline helper symbol");
+      return {};
+    }
+  } else {
+    OpBuilder::InsertionGuard guard(rewriter);
+    rewriter.setInsertionPointToStart(mod.getBody());
+    helper = rewriter.create<LLVM::LLVMFuncOp>(
+        loc, name, functionType, LLVM::Linkage::Internal);
+    helper->setAttr("proton.timeline_clock_helper", rewriter.getUnitAttr());
+    SmallVector<Attribute> attributes{
+        rewriter.getStringAttr("noinline"), rewriter.getStringAttr("nounwind"),
+        rewriter.getStringAttr("convergent")};
+    helper->setAttr("passthrough", rewriter.getArrayAttr(attributes));
+    Block *entry = helper.addEntryBlock(rewriter);
+    rewriter.setInsertionPointToStart(entry);
+    SmallVector<Value> inputs;
+    for (BlockArgument argument : entry->getArguments().drop_front())
+      inputs.push_back(argument);
+    Value stamp = emitRead(inputs, entry->getArgument(0));
+    rewriter.create<LLVM::ReturnOp>(loc, ValueRange{stamp});
   }
-  return result;
+  SmallVector<Value> arguments;
+  if (!predicate) {
+    auto b = TritonLLVMOpBuilder(loc, rewriter);
+    predicate = b.i1_val(true);
+  }
+  arguments.push_back(predicate);
+  arguments.append(dependencies.begin(), dependencies.end());
+  auto call = rewriter.create<LLVM::CallOp>(loc, helper, arguments);
+  return call->getResult(0);
 }
 
 Value TargetInfo::anchorValue(ConversionPatternRewriter &rewriter, Location loc,

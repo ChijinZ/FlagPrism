@@ -91,8 +91,8 @@ def main():
         proof = json.loads((prefix/machine['counter_map_file']).read_text())
         require(not proof['region_boundaries_verified'] and not proof['clock_qualified'] and
                 proof['counter_pcs'], 'Machine mapping incorrectly certified time or boundaries')
-        require(plan.get('timeline_boundary_version') == 1 and
-                plan.get('timeline_boundary_strategy') == 'llvm_ssa_pending_machine_audit',
+        require(plan.get('timeline_boundary_version') == 2 and
+                plan.get('timeline_boundary_strategy') == 'outlined_device_calls_pending_region_audit',
                 'Actual binary plan lost the boundary strategy')
         canonical = validate_raw_batch(json.loads((prefix/capture['events_file']).read_text()))
         require(canonical['complete'] and all(e['kind']=='interval' for e in canonical['events']),

@@ -24,7 +24,7 @@ def main():
     from flagtree.profiler.native import compiler_binding
     from flagtree.profiler.mode import Default
     b = compiler_binding()
-    require(b.TIMELINE_BOUNDARY_VERSION == 1 and b.TIMELINE_MARKER_VERSION == 1,
+    require(b.TIMELINE_BOUNDARY_VERSION == 2 and b.TIMELINE_MARKER_VERSION == 1,
             'Wrong installed boundary/marker compiler')
     context = ir.context()
     ir.load_dialects(context)
@@ -55,8 +55,8 @@ def main():
     m = prepare(True)
     plan = b.get_automatic_proton_plan(m)
     require(plan.get('timeline_marker_version') == 1 and
-            plan.get('timeline_boundary_version') == 1 and
-            plan.get('timeline_boundary_strategy') == 'llvm_ssa_pending_machine_audit',
+            plan.get('timeline_boundary_version') == 2 and
+            plan.get('timeline_boundary_strategy') == 'outlined_device_calls_pending_region_audit',
             'Plan incorrectly describes compiler-only boundary strength')
     (a.output / 'plan.json').write_text(json.dumps(plan, indent=2) + '\n')
     original = str(m)
@@ -72,8 +72,8 @@ def main():
     require('proton_gpu.boundary_anchor' not in str(legacy),
             'Legacy interval path silently acquired timeline value forwarding')
     rejected = []
-    for label, replacement in [('unknown', '99 : i32'), ('wrong-type', '"1"')]:
-        bad_text, count = re.subn(r'proton\.timeline_boundary_version\s*=\s*1\s*:\s*i32',
+    for label, replacement in [('old-compiler', '1 : i32'), ('unknown', '99 : i32'), ('wrong-type', '"1"')]:
+        bad_text, count = re.subn(r'proton\.timeline_boundary_version\s*=\s*2\s*:\s*i32',
                                  'proton.timeline_boundary_version = ' + replacement,
                                  original, count=1)
         require(count == 1, 'Cannot construct boundary version negative')

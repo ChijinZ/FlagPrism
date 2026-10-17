@@ -20,8 +20,9 @@ public:
   virtual Value clock(ConversionPatternRewriter &rewriter, Location loc,
                       bool isClock64) const = 0;
 
-  // These constrain LLVM SSA scheduling only. Final device instructions still
-  // need inspection; a backend must not advertise a hardware fence from them.
+  // Backends implement value constraints and optional explicit device calls.
+  // Final device ordering still needs inspection; these are not automatically
+  // hardware completion fences or clock qualification.
   virtual Value clockWithDependencies(ConversionPatternRewriter &rewriter,
                                       Location loc, bool isClock64,
                                       ArrayRef<Value> dependencies,

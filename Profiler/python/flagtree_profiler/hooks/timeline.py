@@ -108,7 +108,7 @@ class TimelineInstrumentationMixin:
         binding = compiler_binding()
         if (getattr(binding, 'TIMELINE_RECORD_VERSION', None) != 2 or
                 getattr(binding, 'TIMELINE_STORAGE_VERSION', None) != 1 or
-                getattr(binding, 'TIMELINE_BOUNDARY_VERSION', None) != 1 or
+                getattr(binding, 'TIMELINE_BOUNDARY_VERSION', None) != 2 or
                 getattr(binding, 'TIMELINE_MARKER_VERSION', None) != 1):
             raise RuntimeError('Timeline requires its matching native compiler ABI')
         driver = importlib.import_module('triton.backends.nvidia.driver')
