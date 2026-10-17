@@ -13,6 +13,7 @@ from unittest.mock import patch
 
 from flagtree.profiler import timeline_store as store
 from flagtree.profiler import timeline_perfetto as perfetto
+from flagtree.profiler.timeline_events import stable_id
 from flagtree.profiler.timeline_views import CounterUnitProof, derive_counter_ns_views
 
 
@@ -33,17 +34,27 @@ def publish(root, batch, proof):
 class TimelineStoreTests(unittest.TestCase):
     def test_provider_enumeration_order_does_not_change_revision_or_receipt(self):
         batch, proof = fixture()
+        namespace = tuple(batch['identity'][key] for key in
+                          ('capture_id', 'invocation_id', 'binary_id'))
         second = copy.deepcopy(batch['observers'][0])
-        second['id'] += '-second';second['local_id'] = 'second'
+        second['local_id'] = 'second'
         second['program_coordinates'] = [1, 0, 0]
+        second['id'] = stable_id(namespace, 'observer', second['kind'],
+                                 second['local_id'], second['program_coordinates'])
         second['clock_domain_id'] += '-second';second['epoch_id'] += '-second'
         extra_records = []
+        mapped_records = {}
         for record in batch['records']:
-            row = dict(record, id=record['id']+'-second', observer_id=second['id'],
+            rid = stable_id(namespace, 'record', second['id'], record['sequence'])
+            mapped_records[record['id']] = rid
+            row = dict(record, id=rid, observer_id=second['id'],
                        offset=record['offset']+batch['raw_artifact']['bytes'])
             extra_records.append(row)
-        extra_events = [dict(event, id=event['id']+'-second', observer_id=second['id'],
-            record_ids=[key+'-second' for key in event['record_ids']]) for event in batch['events']]
+        extra_events = []
+        for event in batch['events']:
+            refs = [mapped_records[key] for key in event['record_ids']]
+            extra_events.append(dict(event, id=stable_id(namespace, 'event', *refs),
+                                     observer_id=second['id'], record_ids=refs))
         batch['raw_artifact']['bytes'] *= 2
         batch['observers'].append(second)
         batch['records'].extend(extra_records);batch['events'].extend(extra_events)
