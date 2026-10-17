@@ -757,6 +757,7 @@ public:
       if (firstLast) {
         if (getStringOr(metadata, "debug_dynamic_program_policy", "") != "runtime_first_last" ||
             getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 2 ||
+            getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) != 2 ||
             getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) != bufferBytes ||
             !compileRequest.options.recordCapacity || compileRequest.options.recordCapacity > 16384 ||
             launchGridProduct(runtimeMetadata) == 0 || launchGridProduct(runtimeMetadata) > signedLimit)
@@ -916,6 +917,7 @@ void init_flagtree_debugger_runtime(py::module &&m) {
       .def("release", &PreparedLaunchHandle::release);
 
   m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
+  m.attr("GCU_TIMELINE_PUBLISHER_VERSION") = 2;
   m.def("allocate_timeline_launch",
       [](py::dict metadata, uint64_t streamHandle, py::object runtimeMetadata) {
         if (getStringOr(metadata, "debug_record_layout", "") != "gcu_first_last_timeline_v2")

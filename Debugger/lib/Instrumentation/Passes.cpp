@@ -1246,7 +1246,7 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     Value notFirst = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::ne,
         logicalInstanceId, createI32Constant(builder, loc, 0));
     Value offset = builder.create<arith::SelectOp>(loc, notFirst,
-        createI32Constant(builder, loc, dynamicOption(module, kAttrTimelineSlotBytes, 0)),
+        createI32Constant(builder, loc, dynamicOption(module, kAttrTimelineSlotBytes, 0) / 4),
         createI32Constant(builder, loc, 0));
     ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr.getType(), ctrlBytePtr, offset);
   }
@@ -1318,6 +1318,19 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     ctx.selectedActor = dynamicOption(module, kAttrSelectedActor, 0);
     ctx.sampleEvery = dynamicOption(module, kAttrSampleEvery, 1);
     ctx.selectedWriter = selectedWriter;
+    if (isFirstLastTimeline(module)) {
+      // The hidden argument is !tt.ptr<i32>: pointer offsets are WORDS.
+      // A distinct arrival flag makes an initialized-but-never-written ring
+      // distinguishable from an observed program with zero selected events.
+      auto arrived = builder.create<scf::IfOp>(loc, selectedWriter, false);
+      OpBuilder::InsertionGuard arrivalGuard(builder);
+      builder.setInsertionPointToStart(arrived.thenBlock());
+      Value flags = loadDynamicHeaderI32(builder, loc, ctrlBytePtr, kHeaderFlagsOffset);
+      flags = builder.create<arith::OrIOp>(loc, flags, createI32Constant(builder, loc, 32));
+      storeI32Value(builder, loc, ctrlBytePtr, createI32Constant(builder, loc, 0),
+          kHeaderFlagsOffset, flags, builder.create<arith::ConstantIntOp>(loc, 1, 1));
+    }
+
     builder.getContext()->getOrLoadDialect<memref::MemRefDialect>();
     ctx.dynamicCursor = builder.create<memref::AllocaOp>(
         loc, MemRefType::get({2}, builder.getI32Type()));

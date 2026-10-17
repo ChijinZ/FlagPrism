@@ -59,6 +59,7 @@ def _canonicalize_slot(capture, *, compiler_metadata, capture_id, slot_index=0):
     if first_last:
         _need(type(metadata.get('debug_dynamic_storage_version')) is int and
               metadata['debug_dynamic_storage_version'] == 2 and
+              type(metadata.get('debug_dynamic_publisher_version')) is int and metadata['debug_dynamic_publisher_version'] == 2 and
               type(metadata.get('debug_dynamic_index_bits')) is int and metadata['debug_dynamic_index_bits'] == 32 and
               metadata.get('debug_dynamic_program_policy') == 'runtime_first_last' and
               'debug_dynamic_selected_program' not in metadata, 'Unknown GCU first/last storage policy')
@@ -84,9 +85,11 @@ def _canonicalize_slot(capture, *, compiler_metadata, capture_id, slot_index=0):
         raw = raw[raw_base:raw_base+slot_bytes]
     written, capacity, dropped, flags, stride, payload, attempted, reserved = struct.unpack_from('<8I', raw)
     _need(capacity > 0 and stride == 64 and payload == len(raw) == 32+capacity*64 and
-          reserved == (program if first_last else 0) and not flags & ~0x13 and dropped == max(0, written-capacity) and
+          reserved == (program if first_last else 0) and not flags & ~(0x33 if first_last else 0x13) and dropped == max(0, written-capacity) and
           bool(flags & 1) == bool(dropped) and attempted >= written,
           'Invalid GCU append header')
+    if first_last:
+        _need(flags & 32, 'Selected GCU program did not publish its writer arrival')
     _need(type(metadata.get('debug_record_capacity')) is int and metadata['debug_record_capacity'] == capacity,
           'Compiler/runtime capacity mismatch')
     retained = min(written, capacity)

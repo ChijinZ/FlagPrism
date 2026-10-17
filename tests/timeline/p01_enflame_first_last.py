@@ -33,7 +33,9 @@ def main():
     from flagtree.profiler.hooks.timeline import _persist
     from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
     need(runtime_binding().GCU_TIMELINE_STORAGE_VERSION==2 and
-         compiler_binding().GCU_TIMELINE_STORAGE_VERSION==2, 'Wrong native storage ABI')
+         compiler_binding().GCU_TIMELINE_STORAGE_VERSION==2 and
+         runtime_binding().GCU_TIMELINE_PUBLISHER_VERSION==2 and
+         compiler_binding().GCU_TIMELINE_PUBLISHER_VERSION==2, 'Wrong native storage/publisher ABI')
     torch.gcu.set_device(0)
 
     @triton.jit(do_not_specialize=['steps'])
@@ -90,6 +92,10 @@ def main():
             run['runtime_metadata']=runtime_actual
             published=attach_enflame_timeline_export(run,actual,capture_id='producer-probe-'+uuid.uuid4().hex)
             canonical=published['canonical_timeline']
+            need(all(sum(e['observer_id']==observer['id'] for e in canonical['events']) >= 2
+                     for observer in canonical['observers']),
+                 'A selected observer has no actual internal intervals; headers alone are not coverage')
+
             # The development transport publishes the same real export as the
             # product default path; no synthetic/native record reconstruction.
             api._exported_runs.append(published)
@@ -98,7 +104,7 @@ def main():
                 canonical_file=str(prefix.with_suffix('.events.json')),raw_file=str(prefix.with_suffix('.raw')),
                 binary_id=actual['hash'],grid=list(grid),actual_programs=[
                     o['program_coordinates'] for o in canonical['observers']],
-                events=len(canonical['events']),complete=canonical['complete'],
+                events=len(canonical['events']),events_per_observer=[sum(e['observer_id']==o['id'] for e in canonical['events']) for o in canonical['observers']],complete=canonical['complete'],
                 dropped_endpoint_references=sum(o['dropped_records'] for o in canonical['observers'])))
         return debugger.PreparedKernelLaunch(kernel_args=(int(handle.hidden_arg_value),),finalize=finish)
 

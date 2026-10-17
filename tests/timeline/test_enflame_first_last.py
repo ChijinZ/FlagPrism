@@ -14,7 +14,7 @@ def fixture(grid=(3,2,1)):
     rings=[]
     for index,program in enumerate(programs):
         ring=bytearray(160)
-        struct.pack_into('<8I',ring,0,2,2,0,0,64,160,2,program)
+        struct.pack_into('<8I',ring,0,2,2,0,32,64,160,2,program)
         for ordinal,(site,begin,end) in enumerate([(7,20,30),(8,10,40)]):
             begin+=index*100;end+=index*100
             struct.pack_into('<HHIQQQQIIQQ',ring,32+ordinal*64,
@@ -31,7 +31,7 @@ def fixture(grid=(3,2,1)):
     metadata=dict(hash='a'*64,debug_protocol_version=2,debug_record_layout='gcu_first_last_timeline_v2',
         debug_clock_bits=46,debug_clock_domain='enflame.sdk.global_timer',debug_record_capacity=2,
         debug_dynamic_selected_actor=0,debug_dynamic_sample_every=1,debug_dynamic_storage_version=2,
-        debug_dynamic_index_bits=32,debug_dynamic_program_policy='runtime_first_last',debug_dynamic_slot_bytes=160,
+        debug_dynamic_index_bits=32,debug_dynamic_publisher_version=2,debug_dynamic_program_policy='runtime_first_last',debug_dynamic_slot_bytes=160,
         debug_automatic_plan=dict(selected_sites=[7,8]),debug_tracked_table=[
             dict(opId=i,scopeId=2,mlirOpName='test.op',sourceLoc=f'loc("kernel.py":{i}:1)') for i in (7,8)])
     return capture,metadata
@@ -72,9 +72,20 @@ class FirstLastTests(unittest.TestCase):
             mutate_raw(capture,lambda b:struct.pack_into(fmt,b,offset,value))
             with self.assertRaises(ValueError):convert(capture,metadata)
 
+    def test_initialized_empty_ring_is_not_mistaken_for_observed_program(self):
+        capture,metadata=fixture()
+        mutate_raw(capture,lambda b:struct.pack_into('<8I',b,160,0,2,0,0,64,160,0,5))
+        with self.assertRaisesRegex(ValueError,'writer arrival'):
+            convert(capture,metadata)
+        # An actual entry marker with no selected region executions is distinct.
+        mutate_raw(capture,lambda b:struct.pack_into('<I',b,160+12,32))
+        value=convert(capture,metadata)
+        self.assertEqual(value['observers'][1]['retained_records'],0)
+        self.assertTrue(value['complete'])
+
     def test_loss_is_checked_for_every_selected_slot(self):
         capture,metadata=fixture()
-        mutate_raw(capture,lambda b:struct.pack_into('<8I',b,0,3,2,1,1,64,160,3,0))
+        mutate_raw(capture,lambda b:struct.pack_into('<8I',b,0,3,2,1,33,64,160,3,0))
         result=convert(capture,metadata)
         self.assertFalse(result['complete'])
         self.assertEqual([o['complete'] for o in result['observers']],[False,True])
@@ -84,7 +95,7 @@ class FirstLastTests(unittest.TestCase):
 
     def test_layout_versions_types_and_extent_fail_closed(self):
         for field,value in [('debug_dynamic_storage_version',True),('debug_dynamic_storage_version',1),
-            ('debug_dynamic_index_bits',64),('debug_dynamic_slot_bytes',161),
+            ('debug_dynamic_publisher_version',1),('debug_dynamic_publisher_version',True),('debug_dynamic_index_bits',64),('debug_dynamic_slot_bytes',161),
             ('debug_dynamic_program_policy','fixed'),('debug_dynamic_selected_program',0)]:
             capture,metadata=fixture();metadata[field]=value
             with self.assertRaises(ValueError):convert(capture,metadata)

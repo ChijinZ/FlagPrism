@@ -10,7 +10,7 @@ from .native import compiler_binding
 
 _instrumentation_mode = ""
 # Compiler lowering changes must invalidate both automatic and advanced caches.
-GCU_DYNAMIC_LOWERING_REVISION = 4
+GCU_DYNAMIC_LOWERING_REVISION = 5
 GCU_CENSUS_VERSION = 1
 _DISABLED_BUILD_MESSAGE = (
     "FlagPrism debugger compiler support is unavailable. Reinstall FlagTree "
@@ -499,11 +499,13 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             metadata["debug_clock_carrier"] = "llvm_i64_words"
             if first_last:
                 if (getattr(fd, 'GCU_TIMELINE_STORAGE_VERSION', None) != 2 or
+                        getattr(fd, 'GCU_TIMELINE_PUBLISHER_VERSION', None) != 2 or
                         programs is not None or not request.get('automatic')):
                     raise ValueError('GCU first/last requires matching storage v2 compiler and automatic selection')
                 capacity = request['max_events_per_instance']
                 fd.set_debug_dynamic_timeline_first_last_options(mod, 0, request['sample_every'], capacity)
                 metadata['debug_dynamic_storage_version'] = 2
+                metadata['debug_dynamic_publisher_version'] = 2
                 metadata['debug_dynamic_program_policy'] = 'runtime_first_last'
                 metadata['debug_dynamic_slot_bytes'] = 32+capacity*64
             else:
