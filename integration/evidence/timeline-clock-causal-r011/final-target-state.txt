@@ -1,0 +1,317 @@
+{
+  "jobs": [
+    {
+      "job": "package-causal",
+      "terminal_state": "build_passed_not_device_qualified",
+      "returncode": null,
+      "owned": [
+        {
+          "pid": 44125,
+          "ppid": 1,
+          "pgid": 44115,
+          "startticks": 9707857,
+          "state": "Z"
+        },
+        {
+          "pid": 44126,
+          "ppid": 44125,
+          "pgid": 44126,
+          "startticks": 9707881,
+          "state": "missing"
+        },
+        {
+          "pid": 44127,
+          "ppid": 44125,
+          "pgid": 44127,
+          "startticks": 9707882,
+          "state": "missing"
+        },
+        {
+          "pid": 44128,
+          "ppid": 44125,
+          "pgid": 44128,
+          "startticks": 9707882,
+          "state": "missing"
+        },
+        {
+          "pid": 44129,
+          "ppid": 44125,
+          "pgid": 44129,
+          "startticks": 9707882,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/install-v1",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 44274,
+          "ppid": 1,
+          "pgid": 44263,
+          "startticks": 9717582,
+          "state": "Z"
+        },
+        {
+          "pid": 44275,
+          "ppid": 44274,
+          "pgid": 44275,
+          "startticks": 9717585,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-v1",
+      "terminal_state": "terminal",
+      "returncode": 1,
+      "owned": [
+        {
+          "pid": 43899,
+          "ppid": 1,
+          "pgid": 43883,
+          "startticks": 9679887,
+          "state": "Z"
+        },
+        {
+          "pid": 43900,
+          "ppid": 43899,
+          "pgid": 43900,
+          "startticks": 9679889,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-v2",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 43998,
+          "ppid": 1,
+          "pgid": 43982,
+          "startticks": 9688594,
+          "state": "Z"
+        },
+        {
+          "pid": 43999,
+          "ppid": 43998,
+          "pgid": 43999,
+          "startticks": 9688597,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-v3",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 44321,
+          "ppid": 1,
+          "pgid": 44305,
+          "startticks": 9730327,
+          "state": "Z"
+        },
+        {
+          "pid": 44322,
+          "ppid": 44321,
+          "pgid": 44322,
+          "startticks": 9730330,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-object-v1",
+      "terminal_state": "terminal",
+      "returncode": 1,
+      "owned": [
+        {
+          "pid": 44098,
+          "ppid": 1,
+          "pgid": 44087,
+          "startticks": 9693498,
+          "state": "Z"
+        },
+        {
+          "pid": 44099,
+          "ppid": 44098,
+          "pgid": 44099,
+          "startticks": 9693500,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-object-v2",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 44251,
+          "ppid": 1,
+          "pgid": 44240,
+          "startticks": 9713954,
+          "state": "Z"
+        },
+        {
+          "pid": 44252,
+          "ppid": 44251,
+          "pgid": 44252,
+          "startticks": 9713957,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/clock-causal-object-v3",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 44421,
+          "ppid": 1,
+          "pgid": 44410,
+          "startticks": 9738024,
+          "state": "Z"
+        },
+        {
+          "pid": 44422,
+          "ppid": 44421,
+          "pgid": 44422,
+          "startticks": 9738027,
+          "state": "missing"
+        }
+      ]
+    },
+    {
+      "job": "runs/perfetto-tp-check-v1",
+      "terminal_state": "terminal",
+      "returncode": 0,
+      "owned": [
+        {
+          "pid": 44454,
+          "ppid": 1,
+          "pgid": 44443,
+          "startticks": 9777363,
+          "state": "Z"
+        },
+        {
+          "pid": 44455,
+          "ppid": 44454,
+          "pgid": 44455,
+          "startticks": 9777366,
+          "state": "missing"
+        }
+      ]
+    }
+  ],
+  "tool_commands": [
+    {
+      "file": "runs/perfetto-tp-check-v1/output/commands.json",
+      "name": "--version",
+      "pid": 44456,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/perfetto-tp-check-v1/output/commands.json",
+      "name": "--help",
+      "pid": 44457,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v2/output/commands.json",
+      "name": "version",
+      "pid": 44253,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v2/output/commands.json",
+      "name": "lines",
+      "pid": 44254,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v2/output/commands.json",
+      "name": "json",
+      "pid": 44255,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v2/output/commands.json",
+      "name": "cfg",
+      "pid": 44256,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v3/output/commands.json",
+      "name": "version",
+      "pid": 44423,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v3/output/commands.json",
+      "name": "lines",
+      "pid": 44424,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v3/output/commands.json",
+      "name": "json",
+      "pid": 44425,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v3/output/commands.json",
+      "name": "cfg",
+      "pid": 44426,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v1/output/commands.json",
+      "name": "version",
+      "pid": 44100,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v1/output/commands.json",
+      "name": "lines",
+      "pid": 44101,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v1/output/commands.json",
+      "name": "json",
+      "pid": 44102,
+      "state": "missing",
+      "returncode": 0
+    },
+    {
+      "file": "runs/clock-causal-object-v1/output/commands.json",
+      "name": "cfg",
+      "pid": 44103,
+      "state": "missing",
+      "returncode": 1
+    }
+  ]
+}
+0, NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 15 MiB, 0 %
+
+

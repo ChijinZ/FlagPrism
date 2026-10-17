@@ -1,0 +1,125 @@
+{
+  "status": "independent_install_and_runtime_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r011/package-causal/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "70a799263734b2e4fbe79c037366a4c8576f9e9c8d7d83175ff79618671713aa",
+  "venv": "/workspace/chijin-timeline-r011/runs/install-v1/output/venv",
+  "installed_members_byte_verified": 607,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv"
+      ],
+      "pid": 44276,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9717629,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r011/package-causal/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 44281,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9717828,
+      "returncode": 0
+    },
+    {
+      "name": "offline-nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 44285,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9718362,
+      "returncode": 0
+    },
+    {
+      "name": "causal-clock-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r011/check-input-v1/test_causal_clock_bounds.py"
+      ],
+      "pid": 44289,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9719047,
+      "returncode": 0
+    },
+    {
+      "name": "clock-arithmetic-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r011/check-input-v1/test_timeline_clock.py",
+        "--module",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/flagtree/profiler/timeline_clock.py",
+        "--output",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/clock-arithmetic-normal.json"
+      ],
+      "pid": 44290,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9719060,
+      "returncode": 0
+    },
+    {
+      "name": "causal-clock-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r011/check-input-v1/test_causal_clock_bounds.py"
+      ],
+      "pid": 44297,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9719063,
+      "returncode": 0
+    },
+    {
+      "name": "clock-arithmetic-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r011/check-input-v1/test_timeline_clock.py",
+        "--module",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/flagtree/profiler/timeline_clock.py",
+        "--output",
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/clock-arithmetic-optimized.json"
+      ],
+      "pid": 44298,
+      "ppid": 44275,
+      "pgid": 44275,
+      "startticks": 9719084,
+      "returncode": 0
+    }
+  ]
+}

@@ -108,3 +108,20 @@ recovery. It checks numerical outputs, original side-effect counts, separate
 in-flight allocations, canaries and decoded raw identity. This development test
 does not certify physical clock/epoch, final machine timing boundaries,
 hardware overlap, public profiler integration or complete P01.
+
+## Clock arithmetic and current calibration boundary
+
+`timeline_clock.bound_causal_offset` intersects four-read causal constraints
+(A publish, B receive, B respond, A receive) without assuming symmetric delays.
+It accepts explicit endpoint uncertainty, rejects inconsistent or locally reversed
+observations, and keeps exact integer arithmetic. Inputs must already share a
+fixed unit and coordinate origins; callers separately bind domain/epoch, prove
+ordering and exclude reset/wrap. A raw-tick offset interval is not ns or a clock
+certificate.
+
+The dedicated two-CTA producer/consumer probe exercises this shared function
+with real math and retained binaries; its current SMID-pair constraints and
+training/held-out checks are [development evidence](../../integration/evidence/timeline-clock-causal-r011/README.md).
+They do not qualify all SMs, absolute endpoint error, source-region boundaries
+or public timeline/Perfetto. Raw event ABI/status and existing count behavior
+are unchanged.

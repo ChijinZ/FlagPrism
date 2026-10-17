@@ -1,0 +1,105 @@
+{
+  "status": "actual_causal_clock_object_disassembled_not_order_certified",
+  "cubin": "/workspace/chijin-timeline-r011/runs/clock-causal-v3/output/exchange.cubin",
+  "cubin_sha256": "d2910a9710137047ac7c8c86a889de817e1ae6a861db8ca79ba53f1cb15665b4",
+  "tool_path": "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+  "tool_sha256": "6df0054fac801e7ab7d251506cfe52a1171c207de0923d8a3d57fdd5a1f6d982",
+  "instructions": 280,
+  "getter_instructions": [
+    {
+      "instruction": {
+        "opcode": "CS2R",
+        "operands": "R16,SR_GLOBALTIMERLO"
+      },
+      "function": "exchange",
+      "pc": 1152
+    },
+    {
+      "instruction": {
+        "opcode": "CS2R",
+        "operands": "R20,SR_GLOBALTIMERLO"
+      },
+      "function": "exchange",
+      "pc": 1712
+    },
+    {
+      "instruction": {
+        "opcode": "CS2R",
+        "operands": "R12,SR_GLOBALTIMERLO"
+      },
+      "function": "exchange",
+      "pc": 2864
+    },
+    {
+      "instruction": {
+        "opcode": "CS2R",
+        "operands": "R8,SR_GLOBALTIMERLO"
+      },
+      "function": "exchange",
+      "pc": 3600
+    }
+  ],
+  "commands": [
+    {
+      "name": "version",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--version"
+      ],
+      "pid": 44423,
+      "pgid": 44423,
+      "startticks": 9738038,
+      "timeout_seconds": 20.0,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 21181387
+    },
+    {
+      "name": "lines",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--print-code",
+        "--print-line-info-ptx",
+        "/workspace/chijin-timeline-r011/runs/clock-causal-v3/output/exchange.cubin"
+      ],
+      "pid": 44424,
+      "pgid": 44424,
+      "startticks": 9738040,
+      "timeout_seconds": 20.0,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 402971066
+    },
+    {
+      "name": "json",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--emit-json",
+        "/workspace/chijin-timeline-r011/runs/clock-causal-v3/output/exchange.cubin"
+      ],
+      "pid": 44425,
+      "pgid": 44425,
+      "startticks": 9738080,
+      "timeout_seconds": 20.0,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 383631580
+    },
+    {
+      "name": "cfg",
+      "argv": [
+        "/workspace/chijin-timeline-r011/runs/install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--output-control-flow-graph",
+        "--print-instr-offsets-cfg",
+        "/workspace/chijin-timeline-r011/runs/clock-causal-v3/output/exchange.cubin"
+      ],
+      "pid": 44426,
+      "pgid": 44426,
+      "startticks": 9738119,
+      "timeout_seconds": 20.0,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 383589839
+    }
+  ]
+}

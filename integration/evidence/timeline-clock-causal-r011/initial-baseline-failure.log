@@ -1,0 +1,32 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r011/causal-input-v1/p01_nvidia_clock_handshake.py", line 232, in <module>
+    main()
+  File "/workspace/chijin-timeline-r011/causal-input-v1/p01_nvidia_clock_handshake.py", line 149, in main
+    compiled = exchange.warmup(*inputs, **config, grid=(2,))
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/runtime/jit.py", line 389, in warmup
+    return self.run(grid=grid, warmup=True, *map(MockTensor.wrap_dtype, args), **kwargs)
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/runtime/jit.py", line 766, in run
+    kernel = self._do_compile(key, signature, device, constexprs, options, attrs, warmup)
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/runtime/jit.py", line 910, in _do_compile
+    kernel = self.compile(src, target=target, options=options.__dict__)
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/compiler/compiler.py", line 337, in compile
+    module = backend.make_ir(src, options, codegen_fns, module_map, context)
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/backends/compiler.py", line 90, in make_ir
+    return src.make_ir(self.target, options, codegen_fns, module_map, context)
+  File "/workspace/chijin-timeline-r010/runs/install-v3/output/venv/lib/python3.10/site-packages/triton/compiler/compiler.py", line 103, in make_ir
+    return ast_to_ttir(self.fn, self, context=context, options=options, codegen_fns=codegen_fns,
+triton.compiler.errors.UnsupportedLanguageConstruct: at 32:16:
+                constraints='=r', args=[], dtype=tl.int32,
+                is_pure=False, pack=1)
+            tl.atomic_xchg(Ready, begin, sem='release', scope='gpu')
+            reply = tl.atomic_add(Ack, 0, sem='acquire', scope='gpu')
+            spins = 0
+            while (reply <= previous) & (reply != -1) & (spins < MAX_SPINS):
+                reply = tl.atomic_add(Ack, 0, sem='acquire', scope='gpu')
+                spins += 1
+            if (reply == -1) | (reply <= previous):
+                tl.store(Error + pid, 1)
+                tl.atomic_xchg(Ready, -1, sem='release', scope='gpu')
+                break
+                ^
+unsupported AST node type: Break

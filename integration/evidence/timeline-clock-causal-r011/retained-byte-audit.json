@@ -1,0 +1,207 @@
+{
+  "status": "causal_constraints_and_exact_objects_audited_not_clock_certificate",
+  "source_freeze": "880706b2cee327e71100b8fb99222666523d121d",
+  "actual_math_launches": 6,
+  "actual_math_launches_final_version": 3,
+  "exchanges_final_version": 192,
+  "train_and_heldout_each_trial": 32,
+  "common_clock_cpu_methods_each_mode": 9,
+  "existing_clock_arithmetic_each_mode": 27,
+  "trial_constraints": [
+    {
+      "version": 2,
+      "trial": 0,
+      "offset_tick_interval": [
+        -480,
+        416
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        64,
+        64
+      ]
+    },
+    {
+      "version": 2,
+      "trial": 1,
+      "offset_tick_interval": [
+        -480,
+        448
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        128,
+        128
+      ]
+    },
+    {
+      "version": 2,
+      "trial": 2,
+      "offset_tick_interval": [
+        -480,
+        416
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        192,
+        192
+      ]
+    },
+    {
+      "version": 3,
+      "trial": 0,
+      "offset_tick_interval": [
+        -480,
+        416
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        64,
+        64
+      ]
+    },
+    {
+      "version": 3,
+      "trial": 1,
+      "offset_tick_interval": [
+        -480,
+        416
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        128,
+        128
+      ]
+    },
+    {
+      "version": 3,
+      "trial": 2,
+      "offset_tick_interval": [
+        -480,
+        416
+      ],
+      "observed_pairs": [
+        [
+          0,
+          1
+        ]
+      ],
+      "state": [
+        192,
+        192
+      ]
+    }
+  ],
+  "actual_counter_sites": [
+    {
+      "version": 2,
+      "pc": 1152,
+      "ptx_line": 152,
+      "ptx_result_register": "%rd22",
+      "release_publications": []
+    },
+    {
+      "version": 2,
+      "pc": 1712,
+      "ptx_line": 241,
+      "ptx_result_register": "%rd31",
+      "release_publications": [
+        [
+          280,
+          "@%p16 atom.global.gpu.release.exch.b64 %rd35, [ %rd12 + 0 ], %rd31;"
+        ]
+      ]
+    },
+    {
+      "version": 2,
+      "pc": 2864,
+      "ptx_line": 322,
+      "ptx_result_register": "%rd45",
+      "release_publications": [
+        [
+          331,
+          "@%p16 atom.global.gpu.release.exch.b64 %rd46, [ %rd11 + 0 ], %rd45;"
+        ]
+      ]
+    },
+    {
+      "version": 2,
+      "pc": 3600,
+      "ptx_line": 397,
+      "ptx_result_register": "%rd50",
+      "release_publications": []
+    },
+    {
+      "version": 3,
+      "pc": 1152,
+      "ptx_line": 152,
+      "ptx_result_register": "%rd22",
+      "release_publications": []
+    },
+    {
+      "version": 3,
+      "pc": 1712,
+      "ptx_line": 241,
+      "ptx_result_register": "%rd31",
+      "release_publications": [
+        [
+          280,
+          "@%p16 atom.global.gpu.release.exch.b64 %rd35, [ %rd12 + 0 ], %rd31;"
+        ]
+      ]
+    },
+    {
+      "version": 3,
+      "pc": 2864,
+      "ptx_line": 322,
+      "ptx_result_register": "%rd45",
+      "release_publications": [
+        [
+          331,
+          "@%p16 atom.global.gpu.release.exch.b64 %rd46, [ %rd11 + 0 ], %rd45;"
+        ]
+      ]
+    },
+    {
+      "version": 3,
+      "pc": 3600,
+      "ptx_line": 397,
+      "ptx_result_register": "%rd50",
+      "release_publications": []
+    }
+  ],
+  "same_gpu_text_across_caller_integration": true,
+  "archive_bytes": 138922,
+  "archive_sha256": "8f209f27953bdd1e202b5aca6b965550f01cb6b1f8c4781eaab7025743a23920",
+  "limits": [
+    "Observed CUDA SMID pair only, not all physical SM/epoch coverage",
+    "Causal bounds use ticks; scale/endpoint/quantization qualification remains separate",
+    "Actual clock reads and release inputs verified; full consumer control/epoch evidence remains to integrate",
+    "Dedicated calibration is not ordinary timeline/Perfetto/independent qualification"
+  ]
+}
