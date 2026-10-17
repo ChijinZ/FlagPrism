@@ -91,7 +91,7 @@ class CounterMapTests(unittest.TestCase):
         with self.assertRaises(ValueError): machine.counter_map(**a)
 
     def test_actual_json_predicate_and_pc_must_match_text(self):
-        for key, value in [('predicate', '@P1'), ('opcode', 'S2R')]:
+        for key, value in [('predicate', '@P1'), ('opcode', 'S2R'), ('operands', 'R8,SR_GLOBALTIMERLO')]:
             a = args(); doc = copy.deepcopy(DOC); doc[1][0]['sass-instructions'][0][key] = value
             a['sass_json'] = json.dumps(doc).encode()
             with self.assertRaises(ValueError): machine.counter_map(**a)

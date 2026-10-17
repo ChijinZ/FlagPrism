@@ -216,8 +216,14 @@ def counter_map(*, cubin, ptx, sass_lines, sass_json, binary_id, scope_ids,
         opcode = (parts[0].split(None, 1)[0] if parts else None)
         _need(opcode == actual.get('opcode') and predicate == actual.get('predicate'),
               'Text/JSON instruction mismatch')
-        if 'SR_GLOBALTIMER' not in actual.get('operands', ''):
+        is_timer = 'SR_GLOBALTIMER' in actual.get('operands', '')
+        _need(is_timer == ('SR_GLOBALTIMER' in text), 'Text/JSON getter mismatch')
+        if not is_timer:
             continue
+        without_predicate = text.split(None, 1)[1] if predicate else text
+        operands = without_predicate.split(None, 1)[1]
+        _need(re.sub(r'\s+', '', operands) == re.sub(r'\s+', '', actual['operands']),
+              'Text/JSON getter operands mismatch')
         _need(opcode == 'CS2R' and 'SR_GLOBALTIMERLO' in actual.get('operands', '') and
               ptx_line in by_line, 'Unmapped actual globaltimer read')
         pcs.append(dict(by_line[ptx_line], function=function, pc=pc,

@@ -85,6 +85,12 @@ def main():
     for row in index['captures']:
         capture = json.loads((prefix/row['capture_file']).read_text())
         plan = capture['owner']['plan']
+        machine = capture['machine_counter_mapping']
+        require(machine['status']=='counter_mapping_complete_region_unverified',
+                'Actual type machine mapping failed: '+str(machine))
+        proof = json.loads((prefix/machine['counter_map_file']).read_text())
+        require(not proof['region_boundaries_verified'] and not proof['clock_qualified'] and
+                proof['counter_pcs'], 'Machine mapping incorrectly certified time or boundaries')
         require(plan.get('timeline_boundary_version') == 1 and
                 plan.get('timeline_boundary_strategy') == 'llvm_ssa_pending_machine_audit',
                 'Actual binary plan lost the boundary strategy')

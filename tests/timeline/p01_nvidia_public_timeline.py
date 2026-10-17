@@ -43,6 +43,15 @@ def main():
         groups = 0
         canonical_intervals = 0
         for capture in captures:
+            machine = capture['machine_counter_mapping']
+            require(machine['status']=='counter_mapping_complete_region_unverified',
+                    'Actual machine mapping failed: '+str(machine))
+            proof = json.loads((output/'timeline'/machine['counter_map_file']).read_text())
+            expected = {(int(site), phase) for site, _ in capture['metadata']['scope_id_names']
+                        for phase in ('entry', 'exit')}
+            require({(p['site_id'], p['phase']) for p in proof['counter_pcs']}==expected and
+                    not proof['region_boundaries_verified'] and not proof['clock_qualified'],
+                    'Counter mapping lost a phase or claimed an unproved certificate')
             original_input = json.loads((output/'timeline'/
                 Path(capture['raw_file']).with_suffix('.input.json')).read_text())
             require(original_input['capture_status']=='raw_persisted_pending_decode',
