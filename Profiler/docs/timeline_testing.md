@@ -2,6 +2,24 @@
 
 状态：**完整验收计划，尚未通过**。有限原语/CPU/构建检查已有独立记录，不等于下列设备资格或 Perfetto 验收通过。配套 [技术设计](timeline_design.md) 与根目录 `timeline_goal_prompt.md`。本文件所有算子/干预是待运行场景，不是已有性能结果；不预填时间、重叠率或加速比。
 
+## 0. 本轮执行与适配边界的验收入口
+
+本节把设计 §0 映射到既有 P/E/C 测试；详细判定仍见后文，不新增另一套通过状态或算子数量。功能正例在三台服务器的已有 Docker 内运行，合同故障 fixture 同样在 Docker；本轮不新增芯片。所有结果标明实际设备、受控注入或合成数据来源。
+
+| 检查 | 最小动作及可复现输入 | 判定与证据 |
+| --- | --- | --- |
+| 公开路径与真实 writer（P01/P03/P05） | 普通 runtime-K 递推和一个普通异步样本；同 binary 改 K，grid=1、2D/tail；不写 scope/site/scratch 参数 | 数学/input/canary 正确；预登记必经 site 的已选 program/observer 有实际 commit；raw guard/offset/循环 occurrence/实际对象与源码相符。普通可运行但 profile 失败仍是失败 |
+| 部件交接（P02/P09/P10） | 对三后端各画一条实际调用链，列 compiler/transport/decoder/clock/mapper 的代码位置、输入输出/版本/复用条件；逐次注入一个可识别错配 | 编译/ABI/布局等静态错配在首次设备副作用前拒绝；不能伪造 CUDA 句柄；执行后才知的坏 raw 留存。恢复合法组合可重新采集；注入用 fixture，不执行危险写址 |
+| 公共消费与资格（P04/P06/P07/P08） | 三后端真实 canonical 经同一 validator/exporter/SQL；对固定原件分别去掉单位、边界、epoch、动态关联，另测错范围 proof | 只失效相应资格，raw/首次结果不变；无单位不填 ns，无边界不称源区域耗时，无可比 epoch 不跨主体时间比较，无动态关联不画时间 flow。负例不能补充尚无的设备正例 |
+| 编译边界与扰动（P03/C1/C2） | 核 ordinary / 稀疏 / 默认观测的实际最终对象；记录区域、loop、提交/等待/消费关系及读钟位置 | memory clobber、noinline、总指令数、正 duration 均不能单独放行；未保留 ordinary 关键阶段关系则修通用插桩，不能把插桩改变的流水解释成原流水 |
+| owner 与恢复（P05/P10/E03/E05） | 真实多调用和支持的两流；受控 readback/decode/export/留存失败，原 session 结束后新进程从同 bundle 重导 | 未确认完成不释放；完整原件先保留；其它已完成调用可保存；重导无应用重放，无原 owner/cache 依赖。正常设备路径与故障 fixture 分别给证据 |
+| 异步完整闭环（P01/P07） | 每后端 ordinary 对象先确认机制，实际运行至少两代 buffer/flag 复用；核 operation/group/wait 覆盖和可比端点 | 不猜 generation，不把 issue 当 busy，不新增完成 barrier；每后端均须真实例和对应时钟资格。逻辑组正确但物理复用未知仅作局部证据 |
+| 成本与回归（P09/P10） | 从实际 Git diff 分类共享/替换/新增部件与公共合同修改；运行已有后端受影响回归及旧 count/native/raw reader | 每项公共修改有不可表达事实/兼容理由；公共 exporter 不解析厂商 raw/ISA。无第四设备不宣称第四设备支持，不设零公共改动或固定 LOC 指标 |
+
+执行顺序是设计 A/B → 完整 P01(C) → 独立资格(D)。首条真实数据链尽早接 SQL；完整 UI 仍按 §8 每后端至少六 trace。当前 NV counter-unit-only UI 和两后端离线重导可以复用其原件/限定证据，不能据此填满源边界、异步或第三后端状态。设计评审只判断方案，不给实现通过票。
+
+每个结果引用同一 `timeline_impl_record.md` / Git evidence：输入与安装身份、命令、预期、实际结果、原始对象/raw/SQL/UI、进程终态、未满足项及下一动作。已有细化要求见 §8.1–§8.9，不另开平行进度表。
+
 ## 1. 分开验证五件事
 
 1. 算子与应用没有被破坏：数值、输入、tail/canary、请求调用次数、side effect。

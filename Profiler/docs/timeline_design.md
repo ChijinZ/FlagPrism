@@ -2,11 +2,54 @@
 
 状态：**实现中的目标设计，不是完整功能声明**。已有原语与构建证据不等于完整时间线通过；当前已实现能力及限制见 [timeline_runtime.md](timeline_runtime.md) 和 [timeline_events.md](timeline_events.md)；§8.8 仅保留历史原语检查点。原始设计基线为 `e6aa804b203d3147925611423c2fcd20cf96bea2`；现有计数能力和历史验收保持原语境。执行合同见 [已跟踪快照](../../integration/plans/timeline/goal_prompt.md)（执行入口为工作区根目录同字节版本），测试设计见 [timeline_testing.md](timeline_testing.md)。产品设计不是论文正文，不修改 paper/Study。
 
-## 0. 实施入口：公共链复用，目标事实由适配部件提供
+## 0. 本轮实施入口与后续芯片接入
 
-新增芯片应依次判断编译接入、transport、物理解码、clock provider、mechanism mapper 五个部件是否相容；不是按芯片复制完整 profiler。职责见 §8.1–8.3，输入输出见 §8.12，生命周期见 §8.13；本轮可直接执行的版本/派生规则见 §8.14。历史补充节是这些合同的依据，不要求依次建立同名类或多套接口。
+本节是实施顺序与职责的导航；细节沿用 §4–§10，尤其 §8.12–§8.14，不要求逐节创建新接口。**先推进三个实际后端的功能，随真实调用形成抽取公共实现；本轮不接第四芯片。** 适配单位是 target + 工具链 + runtime 的组合，不是算子，也不是品牌。公开入口保持普通 kernel / 启动脚本，无需用户手写观测标记。
 
-本轮只实现 NVIDIA / Enflame / Ascend。可复用的是请求、预算、身份/配对检查、整数时间换算、依赖检查和 Perfetto 消费链；无法由公共层替代的是目标上的合法插桩位置、发布协议、timer 证据和真实异步语义。当前实现中的 `CounterUnitProof` 和 `counter_unit_only` 只支持局部计数器坐标，不是完整的源区域时间或跨主体流水资格。新增型号的实际成本由这五个部件的变化决定，当前不能承诺固定工期。
+### 0.1 组件边界与替换条件
+
+```text
+普通 kernel + observation intent
+  → compiler hook：实际 source ↔ 执行 site、合法边界、记录需求
+  → 公共 admission / invocation owner ↔ 后端 launch transport
+  → 不可变 raw + manifest + invocation + 实际编译证据
+  → physical decoder → canonical events
+  → clock provider / mechanism mapper 提供各自事实
+  → 公共资格验证 → 时间视图 / 依赖 → 一个 Perfetto exporter
+```
+
+| 可独立替换的部件 | 必须承担的目标工作 | 不应重复实现的公共工作 |
+| --- | --- | --- |
+| compiler hook | 工具链接入、实际边界/主体映射、隐藏参数和 logger lowering；说明后续优化及最终对象检查 | 请求解析、调用 ID、通用预算、Perfetto |
+| launch transport | 实际 executable/context/queue、布局分配与初始化、提交完成、readback、安全释放 | 公共 owner 状态机和 session 额度；不能强制所有芯片提供 CUDA 句柄 |
+| physical decoder | 物理 ABI、padding、commit/guard、端点 raw 引用、损失单位 | 不启动设备、不探测频率、不授予源边界资格 |
+| clock provider | 真实 getter、位宽/比例/误差、有效窗口、epoch 与适用目标 | 整数换算、共同资格规则、trace 编码 |
+| mechanism mapper | 实际 submit/group/wait 覆盖、动态身份和复用代际、缺失状态 | 跨引用和完整性校验、共同 edge/flow 导出 |
+
+这里有五类替换部件；编译 manifest、canonical schema 和公共 owner 是交接合同，不是第六套后端框架。transport 与 decoder 即使暂时同文件也可独立变化。允许同一目标组合多个机制 mapper。只有真实共享行为才抽取实现；不能为接口数量或零公共 diff 牺牲正确性。
+
+新增芯片先逐项选择“证据范围内复用 / 重新取证 / 替换实现”。同 runtime 不保证同布局，同 getter 名称不保证相同比例/epoch，同执行模型不保证相同同步语义。注册入口可以按 target 分发；公共 owner、validator 和 exporter 按合同工作，不新增厂商业务分支。若出现现有模型无法表达的新事实，允许显式扩展 schema 并回归已有后端。
+
+### 0.2 交接、错配与资格
+
+一次捕获绑定编译 manifest、实际 binary、launch 快照、raw 格式/发布协议及各规则实现指纹。编译时确定 site 和布局公式，launch 时用真实 grid/queue 计算 slot 与字节数；admission 在首次初始化或提交副作用前完成。公开安装中的部件若静态已知不相容，必须在这一点前拒绝，恢复合法组合后可继续使用。只有运行后才可识别的问题保 raw/guard 和失败阶段，不伪造完整结果。
+
+**资格是独立事实，不是统一的“支持 timeline”开关。** 单位成立可给隔离的 counter-ns；源区域耗时还需实际边界；跨主体时间比较还需 epoch/端点误差；时间 flow 还需完整动态关联。新 proof 只改变相应派生资格，不能更改 raw 或把未证资格补齐。原件、canonical revision、派生视图和成功收据遵守 §8.14；离线升级不重跑应用。
+
+### 0.3 本轮先做什么，何时扩量
+
+| 步骤 | 实际产物与放行条件 | 不满足时的下一动作 |
+| --- | --- | --- |
+| A 最小 producer | 普通有依赖 runtime-K 数学循环；真实 raw、source/site、首末 program、actor、guard、owner 终态 | 核实际 lowering/写址/发布；不扩独立数学矩阵 |
+| B 本地时间 | 最终对象读钟及区域边界证据、单位/误差、公共 SQL；按资格可先导出明确 partial | 修 compiler 或 clock 部件；正 duration 与能打开 trace 不代替边界 |
+| C 异步闭环，即完整 P01 | ordinary 对象确有异步；实际提交/等待/完成、两代 buffer/flag 复用、所需时钟比较及公共导入 | 区分实现缺失、尚未取证、已实证 SDK 限制；保最小复现，不注入完成 barrier |
+| D 产品资格 | 独立数学/故障/预算/安装回归、三后端实际 UI 和额外三名最终代码审阅 | 按受影响范围修复、重建与复核，原失败保留 |
+
+A/B 是开发里程碑；允许并行调查其它后端，不是完整 P01 或交付通过。步骤 B 内部可以先取得时钟尺度再补边界，不要求按表格文字机械排序。第二、第三后端依真实调用检验共享合同，遇缺口作有理由的共同修改。
+
+**当前落点（r018 事实边界）**：NV/GCU 已有默认 raw 入口及共享 owner/事件消费；NV 有隔离 counter-ns 的真实 SQL/UI，跨进程重导也有两后端证据。NV 源边界和 ordinary 流水保持、GCU 单位/guard/异步、Ascend 新时间 producer、三后端真实异步与完整资格仍未完成。当前未跟踪的 Ascend logger 草稿不构成已构建或已验证实现。最新工程事实仍查 `timeline_impl_record.md` 和 runtime/events 文档。
+
+后续芯片适配的验收是“哪些部件真正复用、为何替换、设备证据补齐后共用消费链”，不能用行数、一个 adapter 类或模拟第四设备证明成本低。对应具体测试见 [验收 §0](timeline_testing.md#0-本轮执行与适配边界的验收入口)、P01–P10；这些要求不增加独立数学数量、不降低原交付门槛。
 
 ## 1. 交付目标与最低界线
 

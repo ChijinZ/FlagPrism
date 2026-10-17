@@ -35,3 +35,9 @@ Copy into Codex when ready to start (this is not a shell command):
 ```
 
 - [Seventh independent design review](reviews/round7/README.md): independently replaceable backend components, canonical pair ordering/loss units, public capture integration, and executable acceptance. Documentation review only; no new device qualification.
+
+- [Current design entry and tenth independent review](../../evidence/timeline-design-adaptation-r10/README.md): five replaceable backend components, concrete handoffs, staged feasibility and acceptance navigation. This review is documentation only; hardware gates and final code reviews remain separate.
+
+`PLAN_INDEX.json` preserves the historical seventh-round input hashes; it is not
+a current-document verification receipt. Current review input/final hashes are
+kept with each review's evidence directory.
