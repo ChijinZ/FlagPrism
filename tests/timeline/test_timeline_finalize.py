@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 from flagtree.profiler.hooks.timeline import TimelineInstrumentationMixin, _persist
-from flagtree.profiler.timeline_runtime import TimelineOwnerPool
+from flagtree.profiler.timeline_runtime import TimelineOwnerPool, TimelineReadback
 
 
 class Transport:
@@ -14,6 +14,8 @@ class Transport:
         self.actions = []
         self.fail_release = set()
         self.fail_read = set()
+        self.blocked = set()
+        self.readbacks = {}
 
     def plan_storage(self, plan, **kwargs):
         return dict(raw_bytes=16, scratch_size=16, slots=((0, 0),), grid=[1, 1, 1])
@@ -34,14 +36,14 @@ class Transport:
         pass
 
     def completion_ready(self, owner):
-        return True
+        return owner['invocation_id'] not in self.blocked
 
     def read_raw(self, owner):
         identity = owner['invocation_id']
         self.actions.append(('read', identity))
         if identity in self.fail_read:
             raise OSError('injected read failure')
-        return bytes(16)
+        return self.readbacks.get(identity, bytes(16))
 
     def release(self, owner):
         identity = owner['invocation_id']
@@ -89,6 +91,7 @@ def collector(monkeypatch):
     # Cleanup only the fake transport, never releases unknown actual writers.
     transport.fail_read.clear()
     transport.fail_release.clear()
+    transport.blocked.clear()
     for identity in hook.timeline_pool.invocation_ids:
         if hook.timeline_pool.snapshot(identity)['state'] == 'read_failed':
             hook.timeline_pool.retry_read(identity)
@@ -239,3 +242,84 @@ def test_journal_error_does_not_mask_original_decoder_error(collector, tmp_path,
     index = read_index(tmp_path/'capture')
     if [e['stage'] for e in index['failures']] != ['decode_export','persist_attempt']:
         raise RuntimeError('Journal failure not reported alongside original error')
+
+
+def test_invalid_readback_keeps_original_and_guard_then_releases(collector, tmp_path):
+    hook, transport, ids = collector
+    raw = bytes(range(16))
+    guard = b'corrupted-allocation-guard'
+    transport.readbacks[ids[0]] = TimelineReadback(raw, guard, ('allocation_guard_changed',))
+    base = tmp_path/'capture'
+    with pytest.raises(ValueError, match='readback integrity failed'):
+        hook.flush_timeline(base)
+    directory = base.with_suffix('.timeline')
+    if hook.timeline_pool.invocation_ids:
+        raise RuntimeError('Safe persisted corrupt capture left device resources owned')
+    if (directory/'captures'/f'{ids[0]}.raw').read_bytes() != raw:
+        raise RuntimeError('Integrity failure discarded acquired payload')
+    if (directory/'captures'/f'{ids[0]}.guard.raw').read_bytes() != guard:
+        raise RuntimeError('Integrity failure discarded guard evidence')
+    original = (directory/'captures'/f'{ids[0]}.input.json').read_bytes()
+    actions = list(transport.actions)
+    with pytest.raises(ValueError, match='readback integrity failed'):
+        hook.flush_timeline(base)
+    if actions != transport.actions or original != (directory/'captures'/f'{ids[0]}.input.json').read_bytes():
+        raise RuntimeError('Invalid original replayed application/transport or changed evidence')
+    if [c['invocation_id'] for c in read_index(base)['captures']] != [ids[1]]:
+        raise RuntimeError('Invalid capture blocked an independent valid capture')
+
+
+def test_acquired_wrong_extent_is_retained_as_invalid_not_read_failure(collector, tmp_path):
+    hook, transport, ids = collector
+    transport.readbacks[ids[0]] = b'actually-acquired-wrong-extent'
+    with pytest.raises(ValueError, match='raw_extent_differs_from_admission'):
+        hook.flush_timeline(tmp_path/'capture')
+    raw = tmp_path/'capture.timeline'/'captures'/f'{ids[0]}.raw'
+    if raw.read_bytes() != transport.readbacks[ids[0]] or hook.timeline_pool.invocation_ids:
+        raise RuntimeError('Acquired wrong-size bytes were discarded or owner leaked')
+
+
+def test_unknown_first_owner_cannot_starve_ready_owner(collector, tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    hook, transport, ids = collector
+    module = importlib.import_module('flagtree.profiler.hooks.timeline')
+    real_time = module.time
+    ticks = [0.0]
+    def monotonic():
+        ticks[0] += 1
+        return ticks[0]
+    monkeypatch.setattr(module, 'time', SimpleNamespace(monotonic=monotonic, sleep=lambda _: None))
+    transport.blocked.add(ids[0])
+    base = tmp_path/'capture'
+    with pytest.raises(TimeoutError, match='budget exhausted'):
+        hook.flush_timeline(base)
+    index = read_index(base)
+    if index['retained_owners'] != [ids[0]] or [c['invocation_id'] for c in index['captures']] != [ids[1]]:
+        raise RuntimeError('Unknown owner starved a ready original')
+    if index['retained_owner_states'][ids[0]]['state'] != 'completion_pending':
+        raise RuntimeError('Deadline exhaustion pretended writer completion')
+    if ('read', ids[0]) in transport.actions:
+        raise RuntimeError('Unknown completion authorized readback')
+    transport.blocked.clear()
+    monkeypatch.setattr(module, 'time', real_time)
+    hook.flush_timeline(base)
+    if len(read_index(base)['captures']) != 2 or hook.timeline_pool.invocation_ids:
+        raise RuntimeError('Bounded retry lost an owner or failed to recover')
+
+
+def test_cuda_transport_returns_bad_guard_evidence_instead_of_throwing():
+    from contextlib import nullcontext
+    from types import SimpleNamespace
+    from flagtree.profiler.timeline_cuda_runtime import CudaTimelineTransport
+    transport = object.__new__(CudaTimelineTransport)
+    transport.torch = SimpleNamespace(cuda=SimpleNamespace(
+        device=lambda _: nullcontext(), stream=lambda _: nullcontext()))
+    acquired = bytes(range(16))+b'BAD!'
+    allocation = SimpleNamespace(cpu=lambda: SimpleNamespace(
+        numpy=lambda: SimpleNamespace(tobytes=lambda: acquired)))
+    result = transport.read_raw(dict(device=0, resource=dict(allocation=allocation, stream=0),
+        layout=dict(raw_bytes=16), guard_bytes=4))
+    if not isinstance(result, TimelineReadback) or result.raw != acquired[:16] or result.guard != b'BAD!':
+        raise RuntimeError('CUDA readback failed to return acquired evidence')
+    if result.validation_errors != ('allocation_guard_changed',):
+        raise RuntimeError('CUDA transport silently qualified corrupt guard')

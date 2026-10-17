@@ -56,13 +56,15 @@ class CudaTimelineTransport:
             return owner['resource']['event'].query()
 
     def read_raw(self, owner):
+        from .timeline_runtime import TimelineReadback
         resource = owner['resource']
         with self.torch.cuda.device(owner['device']), self.torch.cuda.stream(resource['stream']):
             result = resource['allocation'].cpu().numpy().tobytes()
         size = owner['layout']['raw_bytes']
-        if result[size:] != bytes([165]) * owner['guard_bytes']:
-            raise RuntimeError('Timeline allocation canary changed')
-        return result[:size]
+        guard = result[size:]
+        errors = (() if guard == bytes([165]) * owner['guard_bytes'] else
+                  ('allocation_guard_changed',))
+        return TimelineReadback(result[:size], guard, errors)
 
     def release(self, owner):
         owner['resource'] = None

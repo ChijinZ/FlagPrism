@@ -186,11 +186,19 @@ class TimelineInstrumentationMixin:
         metadata = descriptor['metadata']
         prefix = Path('captures') / identity
         _persist(directory / prefix.with_suffix('.raw'), raw)
+        guard = self.timeline_pool.readback_guard(identity)
+        guard_file = None
+        if guard:
+            guard_file = str(prefix.with_suffix('.guard.raw'))
+            _persist(directory / guard_file, guard)
         capture = dict(owner=owner, launch=descriptor['launch'], metadata=metadata,
             raw_file=str(prefix.with_suffix('.raw')),
             raw_sha256=hashlib.sha256(raw).hexdigest(), clock_status='unverified',
             time_arrow_verified=False,
             capture_status='raw_persisted_pending_decode')
+        if guard_file is not None:
+            capture['readback_guard'] = dict(file=guard_file, bytes=len(guard),
+                sha256=hashlib.sha256(guard).hexdigest())
         _persist(directory / prefix.with_suffix('.input.json'),
                  (json.dumps(capture, indent=2)+'\n').encode())
         # Retain compiler/source objects before giving up the device owner.
@@ -215,6 +223,14 @@ class TimelineInstrumentationMixin:
         raw = (directory / capture['raw_file']).read_bytes()
         if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
             raise RuntimeError('Retained timeline raw changed before decoding')
+        guard = capture.get('readback_guard')
+        if guard is not None:
+            payload = (directory / guard['file']).read_bytes()
+            if len(payload) != guard['bytes'] or hashlib.sha256(payload).hexdigest() != guard['sha256']:
+                raise RuntimeError('Retained timeline guard changed before decoding')
+        integrity = owner.get('readback_integrity', {})
+        if integrity.get('status') == 'invalid':
+            raise ValueError('Timeline readback integrity failed: '+repr(integrity['errors']))
         prefix = Path('captures') / identity
         capture['capture_status'] = 'aborted'
         if owner['submission_outcome'] == 'returned':
@@ -268,11 +284,34 @@ class TimelineInstrumentationMixin:
 
         # No decoder/formatter can stop this pass. Failed reads remain owned;
         # safely saved captures no longer consume device-owner admission budget.
-        for identity in self.timeline_pool.invocation_ids:
-            try:
-                self._retain_timeline_original(identity, directory, deadline)
-            except Exception as error:
-                failed(identity, 'retain_original', error)
+        waiting = list(self.timeline_pool.invocation_ids)
+        while waiting and time.monotonic() < deadline:
+            progressed = False
+            for identity in tuple(waiting):
+                if time.monotonic() >= deadline:
+                    break
+                try:
+                    owner = self.timeline_pool.snapshot(identity)
+                    if owner['state'] in ('armed', 'submitting', 'quarantined', 'admitted'):
+                        self.timeline_pool.abort(identity)
+                        if identity not in self.timeline_pool.invocation_ids:
+                            self._timeline_descriptors.pop(identity, None)
+                            waiting.remove(identity)
+                            progressed = True
+                            continue
+                    if not self.timeline_pool.completion_ready_now(identity):
+                        continue
+                    self._retain_timeline_original(identity, directory, deadline)
+                    waiting.remove(identity)
+                    progressed = True
+                except Exception as error:
+                    failed(identity, 'retain_original', error)
+                    waiting.remove(identity)
+            if waiting and not progressed:
+                time.sleep(min(0.001, max(0, deadline-time.monotonic())))
+        for identity in waiting:
+            failed(identity, 'retain_original', TimeoutError(
+                'Timeline finalization budget exhausted; owner and acquired bytes retained'))
         for identity in tuple(self._timeline_pending):
             # A failed resource release remains retryable in the owner pool.
             if identity in self.timeline_pool.invocation_ids:
@@ -293,6 +332,8 @@ class TimelineInstrumentationMixin:
             captures=self._timeline_rows, clock_status='unverified',
             failures=failures, pending_decode=list(self._timeline_pending),
             retained_owners=list(self.timeline_pool.invocation_ids),
+            retained_owner_states={identity: self.timeline_pool.snapshot(identity)
+                                   for identity in self.timeline_pool.invocation_ids},
             notes=['Raw ticks are not certified ns or a shared epoch.',
                    'Logical async facts are not verified time arrows.',
                    'Public collection alone does not satisfy full timeline acceptance.'])

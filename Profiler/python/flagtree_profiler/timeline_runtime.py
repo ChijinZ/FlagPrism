@@ -9,11 +9,32 @@ import threading
 import time
 import uuid
 from collections.abc import Mapping
+from dataclasses import dataclass
 
 # Keep active owners alive even if a caller drops a failed session. Removing a
 # Python reference is not evidence that device writers stopped. Recovery remains
 # explicit; these entries are observable instead of silently freeing resources.
 _RETAINED_POOLS = {}
+
+
+@dataclass(frozen=True)
+class TimelineReadback:
+    """Acquired bytes, even when their integrity checks fail.
+
+    A transport failure that acquired no bytes still raises. Integrity failures
+    travel with the bytes so the owner can persist the evidence before rejecting
+    interpretation. ``guard`` contains only the allocation's guard, not a second
+    copy of its entire payload.
+    """
+    raw: bytes
+    guard: bytes = b''
+    validation_errors: tuple = ()
+
+    def __post_init__(self):
+        if (type(self.raw) is not bytes or type(self.guard) is not bytes or
+                type(self.validation_errors) is not tuple or
+                any(type(item) is not str or not item for item in self.validation_errors)):
+            raise ValueError('Invalid timeline readback result')
 
 
 def retained_owner_statuses():
@@ -169,7 +190,31 @@ class TimelineOwnerPool:
     def snapshot(self, invocation_id):
         owner = self._owner(invocation_id)
         return copy.deepcopy({key: value for key, value in owner.items()
-                              if key not in ('resource', 'raw')})
+                              if key not in ('resource', 'raw', 'readback_guard')})
+
+    def completion_ready_now(self, invocation_id):
+        """Nonblocking readiness for fair finalization; never reads or frees."""
+        owner = self._owner(invocation_id)
+        if owner['state'] in ('raw_ready', 'read_failed') or owner.get('completion_known'):
+            return True
+        if owner['state'] != 'completion_pending':
+            return False
+        try:
+            ready = self.transport.completion_ready(owner)
+            if type(ready) is not bool:
+                raise RuntimeError('Transport completion query is not boolean')
+        except BaseException as error:
+            owner.update(state='quarantined', error=repr(error))
+            raise
+        if ready:
+            owner['completion_known'] = True
+        return ready
+
+    def readback_guard(self, invocation_id):
+        owner = self._owner(invocation_id)
+        if owner['state'] != 'raw_ready':
+            raise RuntimeError('Readback evidence is not available')
+        return owner.get('readback_guard', b'')
 
     def read(self, invocation_id, *, timeout=60.0):
         owner = self._owner(invocation_id)
@@ -182,9 +227,7 @@ class TimelineOwnerPool:
         deadline = time.monotonic() + timeout
         try:
             while True:
-                ready = self.transport.completion_ready(owner)
-                if type(ready) is not bool:
-                    raise RuntimeError('Transport completion query is not boolean')
+                ready = self.completion_ready_now(invocation_id)
                 if ready:
                     break
                 if time.monotonic() >= deadline:
@@ -198,16 +241,30 @@ class TimelineOwnerPool:
             raise
         owner['state'] = 'completion_observed'
         try:
-            raw = self.transport.read_raw(owner)
-            if type(raw) is not bytes or len(raw) != owner['layout']['raw_bytes']:
-                raise RuntimeError('Timeline readback contradicts admitted physical size')
+            acquired = self.transport.read_raw(owner)
+            legacy_bytes = type(acquired) is bytes
+            if legacy_bytes:
+                acquired = TimelineReadback(acquired)
+            if not isinstance(acquired, TimelineReadback):
+                raise RuntimeError('Transport did not return acquired timeline bytes')
         except BaseException as error:
             # Device completion was proven, but retain bytes/resource for an
             # explicit retry rather than replaying the application.
             owner.update(state='read_failed', error=repr(error))
             raise
-        owner.update(state='raw_ready', raw=raw)
-        return raw
+        errors = list(acquired.validation_errors)
+        if len(acquired.raw) != owner['layout']['raw_bytes']:
+            errors.append('raw_extent_differs_from_admission')
+        if not legacy_bytes and len(acquired.guard) != owner['guard_bytes']:
+            # Legacy transports returning bytes do not promise a guard artifact.
+            # Their own guard validation is unchanged; new transports return it.
+            errors.append('guard_extent_differs_from_admission')
+        owner.update(state='raw_ready', raw=acquired.raw, readback_guard=acquired.guard,
+            readback_integrity=dict(status='invalid' if errors else 'passed',
+                errors=errors, actual_raw_bytes=len(acquired.raw),
+                expected_raw_bytes=owner['layout']['raw_bytes'],
+                guard_bytes=len(acquired.guard)))
+        return acquired.raw
 
     def retry_read(self, invocation_id, *, timeout=60.0):
         owner = self._owner(invocation_id)
