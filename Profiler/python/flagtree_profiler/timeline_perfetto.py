@@ -56,30 +56,31 @@ def _annotation(name, value):
     return _bytes(4, _text(10, name)+payload)
 
 
-def validate_counter_view(view, canonical):
-    """Recompute the projection so altered ns/qualifications are not accepted."""
+def validate_counter_view(view, canonical, proof):
+    """Recompute from the provider's proof, never from untrusted view JSON.
+
+    The caller must obtain that proof through its backend's evidence validator.
+    This codec validates projection fidelity, not the hardware evidence itself.
+    """
     if (type(view) is not dict or type(view.get('schema_version')) is not int or
             view['schema_version'] != 1):
         raise ValueError('Unknown counter ns view')
-    info = view['unit_proof']
-    proof = CounterUnitProof(**view['identity'], raw_sha256=view['raw_artifact']['sha256'],
-        observer_id=view['observer']['id'], period_numerator_ns=info['period_numerator_ns'],
-        period_denominator=info['period_denominator'], max_elapsed_ns=info['max_elapsed_ns'],
-        provider=info['provider'], evidence_ids=tuple(info['evidence_ids']))
+    if not isinstance(proof, CounterUnitProof):
+        raise TypeError('Obtain unit evidence from the provider before rendering')
     expected = derive_counter_ns_views(canonical, [proof])
     if len(expected) != 1 or view != expected[0]:
         raise ValueError('Counter ns view differs from its canonical/proof projection')
     return expected[0]
 
 
-def encode_counter_trace(view, canonical, *, max_bytes=16*1024*1024):
+def encode_counter_trace(view, canonical, *, proof, max_bytes=16*1024*1024):
     """Encode one observer; no clocks are aligned and no flows are invented.
 
     Same-site overlapping intervals occupy independent lanes, preserving every
     endpoint without violating Perfetto's begin/end stack. Raw append order is
     untouched; this is a separate chronological export projection.
     """
-    view = validate_counter_view(view, canonical)
+    view = validate_counter_view(view, canonical, proof)
     _integer(max_bytes, 'Perfetto byte budget', 1, 64*1024*1024)
     output = bytearray()
     first = True
@@ -179,15 +180,21 @@ def encode_counter_trace(view, canonical, *, max_bytes=16*1024*1024):
     return bytes(output)
 
 
-def write_counter_exports(directory, prefix, views, canonical):
+def write_counter_exports(directory, prefix, views, canonical, *, proofs):
     """Retain derived inputs and standard traces; raw/canonical never change."""
     from .hooks.timeline import _persist
     directory, prefix = Path(directory), Path(prefix)
+    by_observer = {}
+    for proof in proofs:
+        if not isinstance(proof, CounterUnitProof) or proof.observer_id in by_observer:
+            raise ValueError('Invalid or duplicate provider proof')
+        by_observer[proof.observer_id] = proof
     rows, total = [], 0
     for view in views:
         base = prefix.with_suffix('.counter-ns')/view['observer']['id']
         view_file, trace_file = base.with_suffix('.json'), base.with_suffix('.pftrace')
-        data = encode_counter_trace(view, canonical, max_bytes=16*1024*1024-total)
+        data = encode_counter_trace(view, canonical, proof=by_observer[view['observer']['id']],
+                                    max_bytes=16*1024*1024-total)
         total += len(data)
         _persist(directory/view_file, (json.dumps(view, indent=2)+'\n').encode())
         _persist(directory/trace_file, data)

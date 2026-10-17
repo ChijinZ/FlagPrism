@@ -57,7 +57,7 @@ class CounterPerfettoTests(unittest.TestCase):
         batch = batch_fixture()
         view = derive_counter_ns_views(batch, [proof_for(batch, period_denominator=100)])[0]
         self.assertTrue(all(e['start_ns']==e['end_ns']==0 for e in view['events']))
-        self.assertTrue(encode_counter_trace(view, batch))
+        self.assertTrue(encode_counter_trace(view, batch, proof=proof_for(batch, period_denominator=100)))
 
     def test_proof_binding_duplicates_and_missing_proofs(self):
         batch = batch_fixture()
@@ -84,17 +84,18 @@ class CounterPerfettoTests(unittest.TestCase):
                        lambda v: v.update(time_arrows_verified=True),
                        lambda v: v.update(source_boundary_status='verified'),
                        lambda v: v.update(canonical_sha256='c'*64),
+                       lambda v: v['unit_proof'].update(period_numerator_ns=2),
                        lambda v: v.update(schema_version=True)]:
             view = copy.deepcopy(original);mutate(view)
             with self.assertRaises(ValueError):
-                validate_counter_view(view, batch)
+                validate_counter_view(view, batch, proof_for(batch))
 
     def test_pair_append_order_is_not_rewritten_for_export(self):
         batch = batch_fixture(pair=True)
         before = copy.deepcopy(batch)
         view = derive_counter_ns_views(batch, [proof_for(batch)])[0]
         self.assertEqual([r['tick'] for r in view['records']], [20, 30, 10, 40])
-        self.assertTrue(encode_counter_trace(view, batch))
+        self.assertTrue(encode_counter_trace(view, batch, proof=proof_for(batch)))
         self.assertEqual(batch, before)
 
     def test_budget_rejection_preserves_input(self):
@@ -102,7 +103,7 @@ class CounterPerfettoTests(unittest.TestCase):
         view = derive_counter_ns_views(batch, [proof_for(batch)])[0]
         before = copy.deepcopy(view)
         with self.assertRaises(ValueError):
-            encode_counter_trace(view, batch, max_bytes=64)
+            encode_counter_trace(view, batch, proof=proof_for(batch), max_bytes=64)
         self.assertEqual(view, before)
 
     def test_nvidia_unit_provider_restricts_actual_target_and_getter(self):

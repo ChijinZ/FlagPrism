@@ -271,7 +271,7 @@ class TimelineInstrumentationMixin:
                 capture['counter_ns_status'] = dict(status='unavailable', reason=str(error))
             else:
                 views = derive_counter_ns_views(canonical, proofs)
-                capture['counter_ns_exports'] = write_counter_exports(directory, prefix, views, canonical)
+                capture['counter_ns_exports'] = write_counter_exports(directory, prefix, views, canonical, proofs=proofs)
                 capture['counter_ns_status'] = dict(status='counter_unit_only',
                     read_precision_status='unverified', time_arrows_verified=False)
         _persist(directory / prefix.with_suffix('.json'),

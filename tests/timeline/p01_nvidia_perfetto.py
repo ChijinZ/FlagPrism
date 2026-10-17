@@ -29,6 +29,7 @@ def main():
     from flagtree.profiler.timeline_events import validate_raw_batch
     from flagtree.profiler.timeline_views import CounterUnitProof, derive_counter_ns_views, document_sha256
     from flagtree.profiler.timeline_perfetto import write_counter_exports, validate_counter_view
+    from flagtree.profiler.timeline_unit_nvidia import load_counter_unit_proofs
     torch.cuda.set_device(0)
     need(torch.cuda.get_device_capability()==(12,0), 'Wrong functional target')
     workload = module('ordinary_timeline_workload')
@@ -54,10 +55,11 @@ def main():
         need(hashlib.sha256(raw).hexdigest()==batch['raw_artifact']['sha256'], 'Raw association mismatch')
         endpoints += len(batch['records'])
         need(capture['counter_ns_exports'], 'No actual standard trace produced')
+        proofs = {p.observer_id:p for p in load_counter_unit_proofs(root, capture, batch)}
         for export in capture['counter_ns_exports']:
             view_file = root/export['view_file'];trace_file = root/export['trace_file']
             view = json.loads(view_file.read_text())
-            validate_counter_view(view, batch)
+            validate_counter_view(view, batch, proofs[view['observer']['id']])
             need(view['unit_proof']['provider']=='nvidia.sm120.globaltimer_counter_unit.v1', 'Not actual getter unit provider')
             need(view['read_precision_status']=='unverified' and not view['time_arrows_verified'],
                  'Unit evidence became timing/flow qualification')
@@ -72,7 +74,7 @@ def main():
         period_denominator=1, max_elapsed_ns=1000, provider='test.fixture_only',
         evidence_ids=('synthetic_nested_pairs_not_device_evidence',))
     views = derive_counter_ns_views(fixture,[proof])
-    fixture_rows = write_counter_exports(args.output, Path('fixture'), views, fixture)
+    fixture_rows = write_counter_exports(args.output, Path('fixture'), views, fixture, proofs=[proof])
     for export in fixture_rows:
         manifest.append(dict(view_file=str(args.output/export['view_file']),
             trace_file=str(args.output/export['trace_file']),sha256=export['sha256'],fixture=True))
