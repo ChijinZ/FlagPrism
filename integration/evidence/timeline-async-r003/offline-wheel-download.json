@@ -1,0 +1,78 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 374496,
+      "ppid": 1,
+      "pgid": 374484,
+      "startticks": 1003262566
+    },
+    "worker": {
+      "pid": 374497,
+      "ppid": 374496,
+      "pgid": 374497,
+      "startticks": 1003262570
+    },
+    "argv": [
+      "/workspace/chijin-r15-python-alignment/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-tools-r003/input/download-perfetto-wheels.py",
+      "--output",
+      "/tmp/chijin-timeline-tools-r003/download-v1/output"
+    ],
+    "argv_sha256": "8f8b0b9ae2b46c45f1122f66d9c41c777cc0e73f73c89f594cff21d974035c1b",
+    "script_sha256": "3867b9733ea01f87191aa4420cd123914d1d9befd20f8339d709b5fff1dbc935",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 39320628843
+  },
+  "download": {
+    "status": "downloaded_public_wheels_for_offline_NVIDIA_Docker_install",
+    "target_python": "3.10",
+    "files": {
+      "perfetto-0.58.2-py3-none-any.whl": {
+        "bytes": 344338,
+        "sha256": "024d37db3e1938a0247311337daf419c7204af757fb303cdc1dca46fa8d83cfe"
+      },
+      "protobuf-7.36.2-cp310-abi3-manylinux2014_x86_64.whl": {
+        "bytes": 343223,
+        "sha256": "89f23aa53c24553a2416fd4fd1ec06f74fa42b14b546d8883128813f775bbfd2"
+      }
+    },
+    "argv": [
+      "/workspace/chijin-r15-python-alignment/venv/bin/python",
+      "-I",
+      "-m",
+      "pip",
+      "download",
+      "--disable-pip-version-check",
+      "--index-url",
+      "https://pypi.org/simple",
+      "--retries",
+      "1",
+      "--timeout",
+      "15",
+      "--only-binary=:all:",
+      "--python-version",
+      "3.10",
+      "--implementation",
+      "cp",
+      "--abi",
+      "cp310",
+      "--abi",
+      "abi3",
+      "--abi",
+      "none",
+      "--platform",
+      "manylinux_2_28_x86_64",
+      "--platform",
+      "manylinux2014_x86_64",
+      "--dest",
+      "/tmp/chijin-timeline-tools-r003/download-v1/output/wheels",
+      "perfetto==0.58.2"
+    ]
+  },
+  "scope": "public wheels fetched in existing GCU Docker; offline installed in NVIDIA Docker"
+}

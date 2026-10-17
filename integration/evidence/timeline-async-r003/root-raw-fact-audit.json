@@ -1,0 +1,86 @@
+{
+  "status": "independent_raw_and_mechanism_fact_audit_not_full_P01",
+  "archive_bytes": 727945,
+  "archive_sha256": "ec7e4c1150e0d492545684f93d063173a932154392e05d86ad573e76b31cc13f",
+  "total_records_byte_verified": 1952,
+  "logical_groups_checked": 144,
+  "logical_first_guarantee_edges_checked": 144,
+  "captures": [
+    {
+      "capture": "recurrence-k3",
+      "records": 160,
+      "selected_sites": 8,
+      "required_async_sites": 0,
+      "logical_groups": 0,
+      "logical_waits": 0,
+      "first_guarantee_edges": 0,
+      "recorded_submit_attempts": 0,
+      "wait_pending_values": [],
+      "fact_record_references_byte_verified": 0,
+      "clock_time_arrows_verified": false
+    },
+    {
+      "capture": "recurrence-k7",
+      "records": 224,
+      "selected_sites": 8,
+      "required_async_sites": 0,
+      "logical_groups": 0,
+      "logical_waits": 0,
+      "first_guarantee_edges": 0,
+      "recorded_submit_attempts": 0,
+      "wait_pending_values": [],
+      "fact_record_references_byte_verified": 0,
+      "clock_time_arrows_verified": false
+    },
+    {
+      "capture": "recurrence-k11",
+      "records": 288,
+      "selected_sites": 8,
+      "required_async_sites": 0,
+      "logical_groups": 0,
+      "logical_waits": 0,
+      "first_guarantee_edges": 0,
+      "recorded_submit_attempts": 0,
+      "wait_pending_values": [],
+      "fact_record_references_byte_verified": 0,
+      "clock_time_arrows_verified": false
+    },
+    {
+      "capture": "gemm-stages2",
+      "records": 608,
+      "selected_sites": 18,
+      "required_async_sites": 10,
+      "logical_groups": 64,
+      "logical_waits": 32,
+      "first_guarantee_edges": 64,
+      "recorded_submit_attempts": 64,
+      "wait_pending_values": [
+        0
+      ],
+      "fact_record_references_byte_verified": 320,
+      "clock_time_arrows_verified": false
+    },
+    {
+      "capture": "gemm-stages3",
+      "records": 672,
+      "selected_sites": 22,
+      "required_async_sites": 14,
+      "logical_groups": 80,
+      "logical_waits": 32,
+      "first_guarantee_edges": 80,
+      "recorded_submit_attempts": 80,
+      "wait_pending_values": [
+        0,
+        2
+      ],
+      "fact_record_references_byte_verified": 384,
+      "clock_time_arrows_verified": false
+    }
+  ],
+  "limits": [
+    "No public timeline API/CLI yet",
+    "Logical cp.async group facts are not verified time arrows or Perfetto acceptance",
+    "No cross-SM epoch or final marker-order certificate",
+    "Test collector synchronizes each explicit capture; production deferred owner remains pending"
+  ]
+}

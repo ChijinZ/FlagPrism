@@ -1,0 +1,32 @@
+{
+  "status": "installed_native_contract_passed_not_device_qualified",
+  "optimized_python": true,
+  "module_paths": {
+    "triton": "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/lib/python3.10/site-packages/triton/__init__.py",
+    "profiler": "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/lib/python3.10/site-packages/flagtree/profiler/__init__.py",
+    "compiler": "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/lib/python3.10/site-packages/triton/_C/libtriton.so",
+    "runtime": "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/lib/python3.10/site-packages/flagtree/profiler/_native.cpython-310-x86_64-linux-gnu.so"
+  },
+  "module_sha256": {
+    "triton": "df3092178f70be89b50d22905cedae5bac414cc38677053616fc56802c91af30",
+    "profiler": "06c2df89ca9d7ada60e4641de71c47c3c70c84a8d13d77911a587d996be77d67",
+    "compiler": "611b4e5b596428d940db0c413dac292fe5a4ed134f8cab0bd83dfb7b7d43d566",
+    "runtime": "aa176e4b56453421dce74cf36ef163bc535b5595179c323149d5b5179d780a8a"
+  },
+  "input_ttgir_sha256": "14aa44f32bae383f02b6348fed012b069595d4ecdba00bd048fe20ac32a8bddc",
+  "rejected": [
+    "census-is-not-time",
+    "zero-site-budget",
+    "excessive-site-budget",
+    "unknown-timer-version",
+    "unknown-record-version",
+    "unknown-plan-version",
+    "explicit-capacity-exceeds-shared",
+    "timeline-cannot-use-clock32"
+  ],
+  "device_work": false,
+  "limits": [
+    "No final LLVM/ISA getter-order verification yet",
+    "No new automatic timeline/Perfetto/P01 qualification yet"
+  ]
+}

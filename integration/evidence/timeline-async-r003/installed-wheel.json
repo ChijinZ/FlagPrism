@@ -1,0 +1,78 @@
+{
+  "status": "independent_install_and_native_contract_passed_not_device_qualified",
+  "wheel": "/workspace/chijin-timeline-r003/package-1c22840/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+  "wheel_sha256": "7128dc09a1feae71cba11466de82c19ba00bbdae00c2111550f7ff78d8c6c2b9",
+  "venv": "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv",
+  "installed_members_byte_verified": 600,
+  "dependency_path": "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages",
+  "device_work": false,
+  "steps": [
+    {
+      "name": "create-venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv"
+      ],
+      "pid": 34419,
+      "ppid": 34418,
+      "pgid": 34418,
+      "startticks": 8070191,
+      "returncode": 0
+    },
+    {
+      "name": "install-wheel",
+      "argv": [
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r003/package-1c22840/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 34424,
+      "ppid": 34418,
+      "pgid": 34418,
+      "startticks": 8070393,
+      "returncode": 0
+    },
+    {
+      "name": "binding-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r003/check-input-v1/nvidia_timer_binding_smoke.py",
+        "--output",
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/binding-normal",
+        "--ir",
+        "/workspace/chijin-timeline-r001/runs/nvidia-primitives-v2/output/ordinary-gemm-stages3.ttgir"
+      ],
+      "pid": 34428,
+      "ppid": 34418,
+      "pgid": 34418,
+      "startticks": 8071578,
+      "returncode": 0
+    },
+    {
+      "name": "binding-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r003/check-input-v1/nvidia_timer_binding_smoke.py",
+        "--output",
+        "/workspace/chijin-timeline-r003/runs/package-install-v1/output/binding-optimized",
+        "--ir",
+        "/workspace/chijin-timeline-r001/runs/nvidia-primitives-v2/output/ordinary-gemm-stages3.ttgir"
+      ],
+      "pid": 34429,
+      "ppid": 34418,
+      "pgid": 34418,
+      "startticks": 8071700,
+      "returncode": 0
+    }
+  ]
+}

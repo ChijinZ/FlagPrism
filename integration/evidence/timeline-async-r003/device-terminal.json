@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 34453,
+    "ppid": 1,
+    "pgid": 34439,
+    "startticks": 8074043
+  },
+  "worker": {
+    "pid": 34454,
+    "ppid": 34453,
+    "pgid": 34454,
+    "startticks": 8074046
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r003/runs/package-install-v1/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r003/device-input-v1/p01_nvidia_record_v2.py",
+    "--output",
+    "/workspace/chijin-timeline-r003/runs/device-async-v1/output"
+  ],
+  "argv_sha256": "eac453790fe186f73318bdc758777db9d309110feb65fad5e28a255315df2257",
+  "script_sha256": "edf18e5821585b9ec5ad39ea5549aa295a115ca63a971ffe4d996c0621375450",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 240,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 3570268746
+}
