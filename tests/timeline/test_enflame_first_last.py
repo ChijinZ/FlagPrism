@@ -128,6 +128,20 @@ class FirstLastTests(unittest.TestCase):
         self.assertNotIn('capture_id',source['runtime_metadata'])
         self.assertEqual(result['canonical_timeline']['raw_artifact']['sha256'],capture['raw_sha256'])
 
+    def test_canonical_capture_document_is_bound_to_retained_raw_bytes(self):
+        from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
+        from flagtree.profiler.profile import _validated_timeline_capture
+        capture,metadata=fixture()
+        run=dict(raw_buffer=base64.b64decode(capture['raw_base64']),
+                 runtime_metadata=capture['runtime_metadata'])
+        attached=attach_enflame_timeline_export(run,metadata,capture_id='actual-owner')
+        normalized=dict(canonical_timeline=attached['canonical_timeline'],
+                        raw_base64=capture['raw_base64'],raw_sha256=capture['raw_sha256'])
+        self.assertEqual(_validated_timeline_capture(normalized),attached['canonical_timeline'])
+        mutate_raw(normalized,lambda b:b.__setitem__(32,1))
+        with self.assertRaisesRegex(ValueError,'contradicts retained raw'):
+            _validated_timeline_capture(normalized)
+
     def test_first_last_request_is_explicit_and_bounded(self):
         request=ObservationRequest(programs=None,program_policy='runtime_first_last',automatic=True,
                                    max_events_per_instance=4096)

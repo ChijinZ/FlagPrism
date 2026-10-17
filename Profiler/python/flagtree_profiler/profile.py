@@ -157,7 +157,8 @@ def _take_instrumentation_runs() -> list[dict]:
             "source_census":
             run.get("source_census"),
             "raw_encoding":
-            ("base64_source_census_v1" if runtime_metadata.get("record_layout")
+            ("base64_gcu_first_last_timeline_v2" if runtime_metadata.get("record_layout")
+             == "gcu_first_last_timeline_v2" else "base64_source_census_v1" if runtime_metadata.get("record_layout")
              == "gcu_site_census_v1" else "base64_ascend_source_census_v3" if
              runtime_metadata.get("record_layout") == "ascend_source_census_v3"
              else "base64_ascend_source_census_v2" if runtime_metadata.get(
@@ -882,6 +883,20 @@ def _augment_ir_vendor(path: Path, runs: list[dict],
     path.write_text(json.dumps(vendor, indent=4, default=str) + "\n")
 
 
+def _validated_timeline_capture(run):
+    """Keep the canonical model bound to the actual retained raw, not a label."""
+    from .timeline_events import validate_raw_batch
+    batch = validate_raw_batch(run['canonical_timeline'])
+    encoded = run.get('raw_base64')
+    if type(encoded) is not str:
+        raise ValueError('Canonical timeline capture requires its raw bytes')
+    raw = base64.b64decode(encoded, validate=True)
+    if (batch['raw_artifact'] != dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw)) or
+            run.get('raw_sha256') != batch['raw_artifact']['sha256']):
+        raise ValueError('Canonical timeline capture contradicts retained raw bytes')
+    return batch
+
+
 def _augment_instrumentation_artifacts(
     name: str,
     runs: Optional[list[dict]] = None,
@@ -926,6 +941,8 @@ def _augment_instrumentation_artifacts(
                     run.get('raw_base64'),
                     'raw_sha256':
                     run.get('raw_sha256'),
+                    **({'canonical_timeline': _validated_timeline_capture(run)}
+                       if run.get('canonical_timeline') is not None else {}),
                     'source_census':
                     ir_source_census_metadata(
                         run,
