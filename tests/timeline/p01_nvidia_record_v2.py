@@ -126,10 +126,10 @@ def main():
 
     def regions(pm):
         binding.add_automatic_proton_scopes(pm, 8, False, True)
-
-    def lower(pm):
         if selected is not None:
             binding.add_select_proton_programs(pm, list(selected))
+
+    def lower(pm):
         binding.add_convert_proton_to_protongpu(
             pm, mode.metric_type, mode.sampling_strategy, mode.sampling_options,
             mode.granularity, mode.buffer_strategy, mode.buffer_type,
