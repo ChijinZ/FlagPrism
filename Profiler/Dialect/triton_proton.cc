@@ -74,6 +74,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
+  m.attr("TIMELINE_PLAN_VERSION") = 1;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -213,6 +214,19 @@ void init_triton_proton(py::module &&m) {
       result["timeline_record_bytes"] = recordVersion ? 16 : 8;
       result["timeline_record_clock_bits"] = recordVersion ? 64 : 43;
       result["timeline_timer_version"] = version.getInt();
+      if (auto planVersion = module->getAttrOfType<mlir::IntegerAttr>(
+              "proton.timeline_plan_version")) {
+        if (planVersion.getInt() != 1)
+          throw std::runtime_error("Unsupported timeline plan version");
+        result["timeline_plan_version"] = 1;
+        result["timeline_selection_policy"] =
+            "bounded_logical_regions_plus_complete_cp_async_boundaries";
+        auto count = module->getAttrOfType<mlir::IntegerAttr>(
+            "proton.timeline_async_boundary_count");
+        if (!count || count.getInt() < 0 || count.getInt() > 128)
+          throw std::runtime_error("Missing timeline async boundary count");
+        result["timeline_async_boundary_count"] = count.getInt();
+      }
     }
     for (auto name :
          {"proton.automatic_candidates", "proton.automatic_selected"})
@@ -281,6 +295,12 @@ void init_triton_proton(py::module &&m) {
                 "Automatic candidate scope is missing from saved compiler IR");
           row["scope_id"] = allocated->second;
         }
+        for (auto key : {"timeline_semantic", "timeline_mechanism"})
+          if (auto value = candidate.getAs<mlir::StringAttr>(key))
+            row[py::str(key)] = value.str();
+        if (auto pending = candidate.getAs<mlir::IntegerAttr>(
+                "timeline_wait_pending"))
+          row["timeline_wait_pending"] = pending.getInt();
         if (auto text = candidate.getAs<mlir::StringAttr>("source_statement"))
           row["source_statement"] = text.str();
         candidates.append(row);

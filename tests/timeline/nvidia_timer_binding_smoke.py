@@ -66,6 +66,16 @@ def main():
             'Timeline v2 did not preserve the complete 64-bit timer')
     require(plan['timeline_timer_version'] == 1 and plan['inventory'],
             'Compiler failed to retain its versioned actual inventory')
+    require(binding.TIMELINE_PLAN_VERSION == 1 and
+            plan['timeline_plan_version'] == 1,
+            'Native timeline planner version missing')
+    async_sites = [row for row in plan['inventory']
+                   if row.get('timeline_mechanism')]
+    require(len(async_sites) == plan['timeline_async_boundary_count'] and
+            all(row['selected'] for row in async_sites),
+            'Required async boundaries were silently excluded')
+    require(any(row.get('timeline_wait_pending') == 2 for row in async_sites),
+            'Actual ordinary partial-wait coverage metadata was lost')
     _, legacy = transform(False)
     require('timeline_timer' not in legacy,
             'Legacy source intervals silently changed their clock')
@@ -105,6 +115,18 @@ def main():
         rejected.append('unknown-record-version')
     else:
         raise RuntimeError('Unknown record version was accepted')
+    unknown_plan, count = re.subn(
+        r'(proton\.timeline_plan_version\s*=\s*)1(\s*:\s*i32)',
+        r'\g<1>99\g<2>', str(module), count=1)
+    require(count == 1, 'Cannot construct unknown-plan negative')
+    unknown_plan_file = args.output / 'unknown-plan.ttgir'
+    unknown_plan_file.write_text(unknown_plan)
+    try:
+        binding.get_automatic_proton_plan(parse(unknown_plan_file))
+    except RuntimeError:
+        rejected.append('unknown-plan-version')
+    else:
+        raise RuntimeError('Unknown timeline plan version was accepted')
     from flagtree.profiler.mode import Default
     for name, max_shared, clock64 in [
             ('explicit-capacity-exceeds-shared', 1024, True),

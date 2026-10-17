@@ -52,7 +52,9 @@ def main():
         for _ in range(k):
             value = value * 0.75 + 0.125
         tl.store(Y + ix, value, ix < N)
-        tl.store(State + pid + tl.arange(0, BLOCK), 1, tl.arange(0, BLOCK) == 0)
+        lane = tl.arange(0, BLOCK)
+        prior = tl.load(State + pid + lane, lane == 0, 0)
+        tl.store(State + pid + lane, prior + 1, lane == 0)
 
     @triton.jit
     def gemm(A, B, C, M: tl.constexpr, N: tl.constexpr, K: tl.constexpr,
@@ -147,6 +149,15 @@ def main():
         module = ir.parse_mlir_module(str(a.output / (name + '.ttgir')), context)
         module.context = context
         plan = binding.get_automatic_proton_plan(module)
+        require(plan['timeline_plan_version'] == 1, 'Wrong timeline planner')
+        mechanisms = [r for r in plan['inventory'] if r.get('timeline_mechanism')]
+        require(len(mechanisms) == plan['timeline_async_boundary_count'] and
+                all(r['selected'] for r in mechanisms),
+                'Incomplete compiler async boundary set')
+        if name.startswith('gemm'):
+            require({r['timeline_mechanism'] for r in mechanisms} == {
+                'nvidia.cp_async.submit', 'nvidia.cp_async.commit', 'nvidia.cp_async.wait'},
+                'Real ordinary GEMM lost its supported async mechanism')
         scopes = dict(binding.get_scope_id_names(module))
         decoded = decoder.decode_timeline_ring(
             raw, scratch_size=owner['stride'], total_warps=4,

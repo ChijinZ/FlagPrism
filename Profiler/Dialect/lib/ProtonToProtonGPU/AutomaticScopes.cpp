@@ -228,8 +228,64 @@ public:
                                     : i * (remaining.size() - 1) / (count - 1)],
                reason);
     };
+    if (timeline) {
+      // Logical source detail remains bounded. Prefer actual data operations
+      // over pointer/mask helpers; required async boundaries are added below
+      // under their own finite compiler budget, never silently downsampled.
+      SmallVector<size_t> dataOperations;
+      for (size_t i = 0; i < candidates.size(); ++i) {
+        auto name = candidates[i]->getName().getStringRef();
+        if (name == "tt.dot" || name == "tt.load" || name == "tt.store" ||
+            name == "tt.reduce" || name == "tt.scan" ||
+            name == "ttg.local_load" || name == "ttg.local_store" ||
+            candidates[i]->getName().getDialectNamespace() == "math")
+          dataOperations.push_back(i);
+      }
+      choose(dataOperations, "timeline_data_operation");
+    }
     choose(statements, "source_statement_priority");
     choose(helpers, "evenly_spaced_internal_operation");
+    auto mechanism = [](Operation *op) -> StringRef {
+      auto name = op->getName().getStringRef();
+      if (name == "ttg.async_copy_global_to_local")
+        return "nvidia.cp_async.submit";
+      if (name == "ttg.async_commit_group")
+        return "nvidia.cp_async.commit";
+      if (name == "ttg.async_wait")
+        return "nvidia.cp_async.wait";
+      return "";
+    };
+    size_t requiredAsync = 0;
+    if (timeline) {
+      for (size_t i = 0; i < candidates.size(); ++i) {
+        auto role = mechanism(candidates[i]);
+        if (role.empty())
+          continue;
+        if (++requiredAsync > 128) {
+          module.emitError("Timeline async boundary set exceeds 128 static sites; "
+                           "refusing incomplete mechanism collection");
+          return signalPassFailure();
+        }
+        if (role == "nvidia.cp_async.wait") {
+          auto pending = candidates[i]->getAttrOfType<IntegerAttr>("num");
+          if (!pending || pending.getInt() < 0 || pending.getInt() > 7) {
+            module.emitError("Unsupported cp.async wait coverage attribute");
+            return signalPassFailure();
+          }
+        }
+        if (!llvm::is_contained(ordinals, i))
+          ordinals.push_back(i);
+        reasons[i] = "required_timeline_async_boundary";
+      }
+      module->setAttr("proton.timeline_plan_version",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
+      module->setAttr("proton.timeline_async_boundary_count",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32),
+                                       requiredAsync));
+      module->setAttr("proton.automatic_selected",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 64),
+                                       ordinals.size()));
+    }
     llvm::sort(ordinals);
     OpBuilder builder(&getContext());
     SmallVector<Attribute> inventory;
@@ -254,6 +310,21 @@ public:
                                                    : "internal_operation")),
           builder.getNamedAttr("selection_reason",
                                builder.getStringAttr(reasons[ordinal]))};
+      if (timeline) {
+        auto role = mechanism(op);
+        fields.push_back(builder.getNamedAttr(
+            "timeline_semantic", builder.getStringAttr(
+                role == "nvidia.cp_async.wait" ? "wait_bracket"
+                : !role.empty()                 ? "issue_interval"
+                                                : "observer_region_elapsed")));
+        if (!role.empty()) {
+          fields.push_back(builder.getNamedAttr("timeline_mechanism",
+                                                builder.getStringAttr(role)));
+          if (role == "nvidia.cp_async.wait")
+            fields.push_back(builder.getNamedAttr(
+                "timeline_wait_pending", op->getAttr("num")));
+        }
+      }
       if (chosen)
         fields.push_back(builder.getNamedAttr(
             "selected_scope_name",
