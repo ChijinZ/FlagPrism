@@ -1248,7 +1248,7 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
     Value offset = builder.create<arith::SelectOp>(loc, notFirst,
         createI32Constant(builder, loc, dynamicOption(module, kAttrTimelineSlotBytes, 0)),
         createI32Constant(builder, loc, 0));
-    ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr, offset);
+    ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr.getType(), ctrlBytePtr, offset);
   }
   Value selectedWriter;
   Value capacity;
