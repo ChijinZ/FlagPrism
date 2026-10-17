@@ -154,6 +154,10 @@ def main():
             selected_warps=(0, 1, 2, 3),
             slots=tuple((program, program) for program in selected),
             scope_ids=frozenset(scopes))
+        save(name + '.decoded.json', decoded)
+        require(all(row['capacity_records'] == mode.buffer_size // (4 * 16)
+                    for row in decoded['observers']),
+                'Compiler silently changed the explicitly requested capacity')
         require(decoded['complete'], 'Default probe overflowed or saturated')
         require({r['program'] for r in decoded['records']} == set(selected),
                 'Actual sampled programs differ from request')

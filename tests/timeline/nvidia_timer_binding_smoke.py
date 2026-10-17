@@ -105,6 +105,23 @@ def main():
         rejected.append('unknown-record-version')
     else:
         raise RuntimeError('Unknown record version was accepted')
+    from flagtree.profiler.mode import Default
+    for name, max_shared, clock64 in [
+            ('explicit-capacity-exceeds-shared', 1024, True),
+            ('timeline-cannot-use-clock32', 65536, False)]:
+        bad_module, _ = transform(True)
+        mode = Default(buffer_size=32768)
+        pm = ir.pass_manager(context)
+        binding.add_convert_proton_to_protongpu(
+            pm, mode.metric_type, mode.sampling_strategy, mode.sampling_options,
+            mode.granularity, mode.buffer_strategy, mode.buffer_type,
+            mode.buffer_size, max_shared, 1, 128, clock64)
+        try:
+            pm.run(bad_module, 'timeline-capacity-negative')
+        except RuntimeError:
+            rejected.append(name)
+        else:
+            raise RuntimeError('Invalid timeline lowering was accepted: ' + name)
     (args.output / 'timeline-plan.json').write_text(json.dumps(plan, indent=2))
     (args.output / 'legacy-plan.json').write_text(json.dumps(legacy, indent=2))
     (args.output / 'timeline.ttgir').write_text(str(module))

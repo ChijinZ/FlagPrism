@@ -241,10 +241,21 @@ public:
 
     int allocBufferSize;
     if (bufferType == gpu::BufferType::SHARED) {
-      if (bufferSize > 0)
+      if (mod->hasAttr("proton.timeline_record_version") && bufferSize > 0) {
+        // The timeline planner admits an explicit capacity. Legacy occupancy
+        // heuristics must not silently shrink that capacity and lose events.
+        int alignedShared = llvm::alignTo(sharedMemUsed, bytesPerEntry);
+        if (alignedShared >= maxSharedMemSize ||
+            bufferSize > maxSharedMemSize - alignedShared) {
+          mlir::emitError(loc, "explicit timeline buffer exceeds target shared memory");
+          return failure();
+        }
+        allocBufferSize = bufferSize;
+      } else if (bufferSize > 0) {
         allocBufferSize = std::min(allocSharedMemSize, bufferSize.getValue());
-      else
+      } else {
         allocBufferSize = allocSharedMemSize;
+      }
     } else if (bufferType == gpu::BufferType::GLOBAL) {
       allocBufferSize = bufferSize;
     } else {
