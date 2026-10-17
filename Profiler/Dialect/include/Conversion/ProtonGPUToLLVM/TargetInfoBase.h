@@ -20,6 +20,10 @@ public:
   virtual Value clock(ConversionPatternRewriter &rewriter, Location loc,
                       bool isClock64) const = 0;
 
+  // A target must explicitly admit a named timeline getter. Merely carrying a
+  // module attribute must never turn another backend's cycles into ns.
+  virtual bool supportsTimelineTimer(StringRef) const { return false; }
+
   virtual Value processorId(ConversionPatternRewriter &rewriter,
                             Location loc) const = 0;
 

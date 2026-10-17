@@ -72,6 +72,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("AUTOMATIC_SELECTION_POLICY_VERSION") = 2;
   m.attr("SOURCE_CENSUS_VERSION") = 1;
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
+  m.attr("TIMELINE_TIMER_VERSION") = 1;
 
   // Proton enums
   py::enum_<proton::MetricType>(m, "METRIC_TYPE", py::module_local())
@@ -179,16 +180,33 @@ void init_triton_proton(py::module &&m) {
 
   m.def(
       "add_automatic_proton_scopes",
-      [](mlir::PassManager &pm, unsigned maxSites, bool census) {
+      [](mlir::PassManager &pm, unsigned maxSites, bool census, bool timeline) {
         if (maxSites < 1 || maxSites > 128)
           throw std::invalid_argument(
               "Automatic site budget must be between 1 and 128");
-        pm.addPass(proton::createAutomaticScopesPass(maxSites, census));
+        if (census && timeline)
+          throw std::invalid_argument(
+              "Timeline timestamps cannot use the count-only census ABI");
+        pm.addPass(proton::createAutomaticScopesPass(maxSites, census, timeline));
       },
-      py::arg("pm"), py::arg("max_sites") = 8, py::arg("census") = false);
+      py::arg("pm"), py::arg("max_sites") = 8, py::arg("census") = false,
+      py::arg("timeline") = false);
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
+    if (auto timer = module->getAttrOfType<mlir::StringAttr>(
+            "proton.timeline_timer")) {
+      auto version = module->getAttrOfType<mlir::IntegerAttr>(
+          "proton.timeline_timer_version");
+      if (!version || version.getInt() != 1)
+        throw std::runtime_error("Missing or unsupported timeline timer version");
+      result["timeline_timer"] = timer.str();
+      result["timeline_getter_bits"] = 64;
+      // The inherited ring explicitly retains only the low 43 timer bits.
+      // A consumer needs an independently bounded capture/wrap window.
+      result["timeline_record_clock_bits"] = 43;
+      result["timeline_timer_version"] = version.getInt();
+    }
     for (auto name :
          {"proton.automatic_candidates", "proton.automatic_selected"})
       if (auto value = module->getAttrOfType<mlir::IntegerAttr>(name))

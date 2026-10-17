@@ -17,12 +17,15 @@ class AutomaticScopesPass
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(AutomaticScopesPass)
   AutomaticScopesPass() = default;
-  explicit AutomaticScopesPass(unsigned limit, bool census = false)
-      : siteLimit(limit), census(census) {}
+  explicit AutomaticScopesPass(unsigned limit, bool census = false,
+                               bool timeline = false)
+      : siteLimit(limit), census(census), timeline(timeline) {}
   AutomaticScopesPass(const AutomaticScopesPass &other)
-      : PassWrapper(other), siteLimit(other.siteLimit), census(other.census) {}
+      : PassWrapper(other), siteLimit(other.siteLimit), census(other.census),
+        timeline(other.timeline) {}
   unsigned siteLimit = 8;
   bool census = false;
+  bool timeline = false;
   StringRef getArgument() const final { return "proton-automatic-scopes"; }
   StringRef getDescription() const final {
     return "Insert bounded source-linked internal operation intervals";
@@ -32,6 +35,18 @@ public:
   }
   void runOnOperation() override {
     auto module = getOperation();
+    if (timeline && census) {
+      module.emitError("Timeline timestamps and source census are distinct modes");
+      return signalPassFailure();
+    }
+    if (timeline) {
+      // This is an explicit getter/encoding choice, not a certificate of epoch
+      // alignment. The producer must retain the final object and clock proof.
+      module->setAttr("proton.timeline_timer",
+                      StringAttr::get(&getContext(), "nvidia.globaltimer.ns"));
+      module->setAttr("proton.timeline_timer_version",
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
+    }
     if (census)
       module->setAttr("proton.source_census", UnitAttr::get(&getContext()));
     // Idempotence also keeps advanced manually annotated kernels unchanged.
@@ -343,7 +358,7 @@ public:
   }
 };
 std::unique_ptr<OperationPass<ModuleOp>>
-createAutomaticScopesPass(unsigned maxSites, bool census) {
-  return std::make_unique<AutomaticScopesPass>(maxSites, census);
+createAutomaticScopesPass(unsigned maxSites, bool census, bool timeline) {
+  return std::make_unique<AutomaticScopesPass>(maxSites, census, timeline);
 }
 } // namespace mlir::triton::proton

@@ -13,14 +13,17 @@ namespace mlir::triton::proton::gpu::NVIDIA {
 Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
                         bool isClock64) const {
 
-  // One PTX read avoids combining a low word from before rollover with a
-  // high word from afterwards. These are SM-local cycle ticks, not CUPTI ns.
+  // One PTX read avoids combining words across rollover. Legacy modes keep
+  // SM-local cycles. Timeline explicitly selects a different device timer;
+  // this does not establish a join to CUPTI/host or certify its resolution.
+  auto mod =
+      rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  bool timeline = mod->hasAttr("proton.timeline_timer");
   PTXBuilder builder;
   auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
   auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
-  auto *clock = builder.newConstantOperand(isClock64 ? "%clock64" : "%clock");
-  auto mod =
-      rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  auto *clock = builder.newConstantOperand(
+      timeline ? "%globaltimer" : isClock64 ? "%clock64" : "%clock");
   if (mod->hasAttr("proton.selected_programs")) {
     builder.create("mov")->o(isClock64 ? "u64" : "u32")(
         dest, builder.newConstantOperand(0));

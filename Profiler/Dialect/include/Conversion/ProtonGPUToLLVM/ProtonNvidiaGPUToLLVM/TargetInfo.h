@@ -17,6 +17,10 @@ public:
   Value clock(ConversionPatternRewriter &rewriter, Location loc,
               bool isClock64) const override;
 
+  bool supportsTimelineTimer(StringRef name) const override {
+    return name == "nvidia.globaltimer.ns";
+  }
+
   Value processorId(ConversionPatternRewriter &rewriter,
                     Location loc) const override;
 

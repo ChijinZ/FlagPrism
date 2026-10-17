@@ -79,6 +79,17 @@ struct ReadCounterOpConversion
     bool isClock64 = false;
     auto intType = mlir::cast<IntegerType>(op.getResult().getType());
     isClock64 = intType.getWidth() == 64;
+    auto module = op->getParentOfType<ModuleOp>();
+    if (auto attr = module->getAttr("proton.timeline_timer")) {
+      auto timer = dyn_cast<StringAttr>(attr);
+      auto version = module->getAttrOfType<IntegerAttr>(
+          "proton.timeline_timer_version");
+      if (!timer || !version || version.getInt() != 1 || !isClock64 ||
+          !targetInfo.supportsTimelineTimer(timer.getValue())) {
+        op.emitError("Unsupported timeline getter/version or non-64-bit read");
+        return failure();
+      }
+    }
     Value clock = targetInfo.clock(rewriter, op.getLoc(), isClock64);
     rewriter.replaceOp(op, clock);
     return success();

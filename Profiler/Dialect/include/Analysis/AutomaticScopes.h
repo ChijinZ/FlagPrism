@@ -4,6 +4,7 @@
 #include "mlir/Pass/Pass.h"
 namespace mlir::triton::proton {
 std::unique_ptr<OperationPass<ModuleOp>>
-createAutomaticScopesPass(unsigned maxSites, bool census = false);
+createAutomaticScopesPass(unsigned maxSites, bool census = false,
+                          bool timeline = false);
 }
 #endif
