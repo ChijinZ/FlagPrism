@@ -58,9 +58,9 @@ def main():
     @triton.jit(noinline=True)
     def read_only(value, START:tl.constexpr):
         if START:
-            assembly = '// flagprism_call_probe_entry\nmov.u64 $0, %globaltimer;\n// value $1'
+            assembly:tl.constexpr = '// flagprism_call_probe_entry\nmov.u64 $0, %globaltimer;\n// value $1'
         else:
-            assembly = '// flagprism_call_probe_exit\nmov.u64 $0, %globaltimer;\n// value $1'
+            assembly:tl.constexpr = '// flagprism_call_probe_exit\nmov.u64 $0, %globaltimer;\n// value $1'
         if value.dtype == tl.float32:
             stamp = tl.inline_asm_elementwise(assembly, constraints='=l,r',
                 args=[value.to(tl.uint32,bitcast=True)], dtype=tl.uint64,
