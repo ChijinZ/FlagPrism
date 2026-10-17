@@ -470,6 +470,17 @@ public:
     ModuleOp m = getOperation();
     Location loc = m->getLoc();
 
+    if (m->hasAttr("proton.timeline_boundary_version")) {
+      auto boundary = m->getAttrOfType<IntegerAttr>(
+          "proton.timeline_boundary_version");
+      auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
+      if (!boundary || boundary.getInt() != 1 || !timer ||
+          timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension) {
+        m.emitError("Unsupported timeline compiler boundary version or getter");
+        return signalPassFailure();
+      }
+    }
+
     if (m->hasAttr("proton.timeline_storage_version")) {
       auto storage = m->getAttrOfType<IntegerAttr>(
           "proton.timeline_storage_version");

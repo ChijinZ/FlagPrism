@@ -198,6 +198,15 @@ void init_triton_proton(py::module &&m) {
 
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
+    if (module->hasAttr("proton.timeline_boundary_version")) {
+      auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
+          "proton.timeline_boundary_version");
+      auto timer = module->getAttrOfType<mlir::StringAttr>(
+          "proton.timeline_timer");
+      if (!boundary || boundary.getInt() != 1 || !timer ||
+          timer.getValue() != "nvidia.globaltimer.ns")
+        throw std::runtime_error("Unsupported timeline compiler boundary version");
+    }
     if (auto timer = module->getAttrOfType<mlir::StringAttr>(
             "proton.timeline_timer")) {
       auto version = module->getAttrOfType<mlir::IntegerAttr>(

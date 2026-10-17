@@ -35,3 +35,17 @@ def test_old_launcher_rejected_before_hook_activation(monkeypatch):
         hook.activate()
     if instrumentation.InstrumentationHook.active_count or get_instrumentation_on():
         raise RuntimeError('Old launcher rejection left instrumentation active')
+
+
+def test_old_boundary_compiler_rejected_before_hook_activation(monkeypatch):
+    from flagtree.profiler.hooks import instrumentation
+    from flagtree.profiler.flags import get_instrumentation_on
+    from flagtree.profiler.native import compiler_binding
+    hook = instrumentation.InstrumentationHook(None, observation_plan=dict(
+        automatic=True, timeline=True, output_selection={'programs': None}))
+    monkeypatch.setattr(instrumentation, '_get_backend_name', lambda: 'nvidia')
+    monkeypatch.setattr(compiler_binding(), 'TIMELINE_BOUNDARY_VERSION', 0)
+    with pytest.raises(RuntimeError, match='matching native compiler ABI'):
+        hook.activate()
+    if instrumentation.InstrumentationHook.active_count or get_instrumentation_on():
+        raise RuntimeError('Boundary ABI rejection left instrumentation active')
