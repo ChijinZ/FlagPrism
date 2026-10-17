@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 382325,
+    "ppid": 1,
+    "pgid": 382314,
+    "startticks": 1007015106
+  },
+  "worker": {
+    "pid": 382326,
+    "ppid": 382325,
+    "pgid": 382326,
+    "startticks": 1007015109
+  },
+  "argv": [
+    "/usr/bin/python3.12",
+    "-I",
+    "/workspace/chijin-timeline-r018/install-input-v2/gcu-package-install-v2.py",
+    "--output",
+    "/workspace/chijin-timeline-r018/runs/install-v2/output"
+  ],
+  "argv_sha256": "2ec0e99aaecd94b8300cfc53b017d6bf76cad17cf06053cfff48d6de49d2dd0b",
+  "script_sha256": "60c0e3d620b8d37f2141e360eb1156d4884e30ebff46dba454bbd802a16ed14d",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 300,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 60350907797
+}

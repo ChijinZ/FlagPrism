@@ -1,0 +1,44 @@
+{
+  "status": "SDK_clock_property_investigation_not_unit_certificate",
+  "properties": {
+    "error": 0,
+    "clock_instruction_khz": 1000,
+    "processor_clock_khz": 1416000
+  },
+  "sdk_bc_sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec",
+  "sdk_reader_returncode": 0,
+  "functions": [
+    {
+      "symbol": "_ZN4tops15krt_clock_startEv",
+      "body_sha256": "c92dda4512bb5ee127fbd4ba62c55c283cf723f4500195ddf94d9cade449193a",
+      "lines": 13
+    },
+    {
+      "symbol": "_ZN4tops14krt_clock_stopEv",
+      "body_sha256": "3f89935f875d96ec6b1be91a1618a1ae185979cfbf1dab5a985937b7e0d2cebe",
+      "lines": 13
+    },
+    {
+      "symbol": "_ZN4tops9krt_clockEv",
+      "body_sha256": "14a0fd0531e39c067611c7ff0cb7120802a86d90780a8fa57b21d480ee71c273",
+      "lines": 6
+    },
+    {
+      "symbol": "_ZN4tops15krt_reset_clockEv",
+      "body_sha256": "2bae9fd6235b6d86b0614da70595df09796f896436fae06d1fc1100e133a52e6",
+      "lines": 13
+    },
+    {
+      "symbol": "_ZN4tops15krt_close_clockEv",
+      "body_sha256": "61c039b91c79ea88ce962cd4d37e5724d1b224a5a33a61c3f8ad14d6633ff0fc",
+      "lines": 13
+    },
+    {
+      "symbol": "_ZN4tops12global_timerEv",
+      "body_sha256": "2f573b6304d58b9f7a75d7095cf7a8c45d13ffde5f46eefac828f7f89b5d4e59",
+      "lines": 22
+    }
+  ],
+  "qualification": false,
+  "note": "clockInstructionRate applies to clock* per SDK header; matching it to the observed global_timer requires actual getter evidence"
+}

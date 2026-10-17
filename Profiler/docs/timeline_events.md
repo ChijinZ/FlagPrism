@@ -120,3 +120,24 @@ the physical layout. Each selected ring retains its real program ID, actual
 writer-arrival flag and per-ring commit/loss state. Host-initialized headers do
 not prove that a selected program executed. Per-observer clock domains remain
 unverified, never implicitly aligned by the SDK timer name.
+
+## Counter-unit views are separate derivatives
+
+`timeline_views.CounterUnitProof` binds capture/invocation/binary/raw/observer,
+a positive rational tick period, an independent elapsed window, provider/evidence
+identities and an optional provider implementation digest. The current NVIDIA
+provider supplies that digest and revalidates actual sm_120 machine inputs. A
+codec receiving a typed proof checks projection fidelity; it is not itself a
+hardware evidence authority.
+
+`derive_counter_ns_views` preserves raw/canonical ordering and integer ticks,
+subtracts the origin before rational conversion and keeps unknown endpoint
+error/precision explicit. Each observer has its own file-relative coordinate.
+No cross-observer epoch, certified source cost or temporal flow is granted.
+The standard exporter receives the independently validated proof object;
+recomputing a forged view with its own changed period does not validate it.
+
+Raw schemas are unchanged. Canonical reader upgrades and proof/exporter changes
+produce separate immutable revisions, while the original `.events.json` remains
+intact. See [runtime and offline re-export](timeline_runtime.md#offline-decoding-and-versioned-counter-traces)
+for the implemented command, retention scope and limitations.

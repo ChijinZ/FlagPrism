@@ -1,0 +1,134 @@
+{
+  "status": "actual_GCU_raw_and_offline_revision_bytes_audited_not_full_P01",
+  "archive_sha256": "ecc5964714f647a785bd22da155e35f6d692405ee21d4164e3f971580b2535ad",
+  "archive_bytes": 6859319,
+  "archive_members": 228,
+  "real_captures": 6,
+  "physical_endpoint_references": 264,
+  "real_intervals": 132,
+  "positive_intervals": 132,
+  "installed_members_verified": 455,
+  "wheel_sha256": "7345a6e01cb485e3ca07afbd463327ed8b0671d4ea62d6b091a3ed4fc069be7c",
+  "offline_capture_reexports": 3,
+  "offline_fresh_processes": 3,
+  "captures": [
+    {
+      "phase": "api-cold",
+      "invocation_id": "enflame-invocation-9d516e3f25e7c4ab70ae26ce38be8a73cb7109374fd1d26e0279f7700bff5157",
+      "raw_sha256": "c4ec4799385f2fb73c83e478be3a89e5ea2e096a5d0e21362cb5ec795aca8e5f",
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "endpoints": 40,
+      "intervals": 20,
+      "positive_intervals": 20
+    },
+    {
+      "phase": "api-cold",
+      "invocation_id": "enflame-invocation-b8ef2aa99154aa8e43e8a94310259b51419672b59c85dc0c9c1bee2f41587e54",
+      "raw_sha256": "cfe7b248683e5c8b5d67a27348a41c4dd67356bc039f4893ef60d7ba964326a2",
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "endpoints": 56,
+      "intervals": 28,
+      "positive_intervals": 28
+    },
+    {
+      "phase": "api-cold",
+      "invocation_id": "enflame-invocation-b55e54bdc41e8f54258a483c1b14160b7fff095f64a20f4878e6f18cd833be5f",
+      "raw_sha256": "a7705a77de3e7ffb0a6ff82d01d98e4f82b09fca38f6ce0f840a4f4304b99f62",
+      "events_per_observer": [
+        18
+      ],
+      "endpoints": 36,
+      "intervals": 18,
+      "positive_intervals": 18
+    },
+    {
+      "phase": "api-warm",
+      "invocation_id": "enflame-invocation-e1b3ba0a34965f4cd537458cb2ab89b3c1d4c037837dd1ecdf63ae9700010027",
+      "raw_sha256": "065e74194314d48181b3ca974a01745517ca1f4918ae136f619e843d6398fbb9",
+      "events_per_observer": [
+        10,
+        10
+      ],
+      "endpoints": 40,
+      "intervals": 20,
+      "positive_intervals": 20
+    },
+    {
+      "phase": "api-warm",
+      "invocation_id": "enflame-invocation-0c4aa855f8cb2aadfa12cb60a612b5d5036ab38f3cd01c3606268646f01df521",
+      "raw_sha256": "fa30e2f9787bcee2cc4f06646ad5a9ac30dc79646f38bb23b0217d307e59a212",
+      "events_per_observer": [
+        14,
+        14
+      ],
+      "endpoints": 56,
+      "intervals": 28,
+      "positive_intervals": 28
+    },
+    {
+      "phase": "api-warm",
+      "invocation_id": "enflame-invocation-05b3036ddbc306c40205388997e03721332f94d09a2a31fa244d5a0ce7cc53d4",
+      "raw_sha256": "6897f59116a092a55ff0cce1178da3fa350ed3f6e9cf88a7068ca2ef0d31327b",
+      "events_per_observer": [
+        18
+      ],
+      "endpoints": 36,
+      "intervals": 18,
+      "positive_intervals": 18
+    }
+  ],
+  "SDK_clock_investigation": {
+    "status": "SDK_clock_property_investigation_not_unit_certificate",
+    "properties": {
+      "error": 0,
+      "clock_instruction_khz": 1000,
+      "processor_clock_khz": 1416000
+    },
+    "sdk_bc_sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec",
+    "sdk_reader_returncode": 0,
+    "functions": [
+      {
+        "symbol": "_ZN4tops15krt_clock_startEv",
+        "body_sha256": "c92dda4512bb5ee127fbd4ba62c55c283cf723f4500195ddf94d9cade449193a",
+        "lines": 13
+      },
+      {
+        "symbol": "_ZN4tops14krt_clock_stopEv",
+        "body_sha256": "3f89935f875d96ec6b1be91a1618a1ae185979cfbf1dab5a985937b7e0d2cebe",
+        "lines": 13
+      },
+      {
+        "symbol": "_ZN4tops9krt_clockEv",
+        "body_sha256": "14a0fd0531e39c067611c7ff0cb7120802a86d90780a8fa57b21d480ee71c273",
+        "lines": 6
+      },
+      {
+        "symbol": "_ZN4tops15krt_reset_clockEv",
+        "body_sha256": "2bae9fd6235b6d86b0614da70595df09796f896436fae06d1fc1100e133a52e6",
+        "lines": 13
+      },
+      {
+        "symbol": "_ZN4tops15krt_close_clockEv",
+        "body_sha256": "61c039b91c79ea88ce962cd4d37e5724d1b224a5a33a61c3f8ad14d6633ff0fc",
+        "lines": 13
+      },
+      {
+        "symbol": "_ZN4tops12global_timerEv",
+        "body_sha256": "2f573b6304d58b9f7a75d7095cf7a8c45d13ffde5f46eefac828f7f89b5d4e59",
+        "lines": 22
+      }
+    ],
+    "qualification": false,
+    "note": "clockInstructionRate applies to clock* per SDK header; matching it to the observed global_timer requires actual getter evidence"
+  },
+  "limitations": [
+    "Stdlib audit only; no product import or math replay on workstation",
+    "No clock-unit/source-boundary/allocation-guard/async/Perfetto/independent-math qualification"
+  ]
+}

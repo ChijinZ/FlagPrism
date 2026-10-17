@@ -1,0 +1,206 @@
+{
+  "status": "matching_installed_v2_cpu_and_expected_old_regression_passed_not_device_qualification",
+  "backend": "gcu",
+  "installed_members_byte_verified": 455,
+  "wheel_sha256": "0467670b1c5e10204cef794609091226253ffebf6a2dbd7e09aadf3d9519aa6b",
+  "product_commit": "2b86fd25d48c99ca839764eccd8b7607628e233b",
+  "test_commit": "6a238c28ca90752f7806821515b38ab27d6bcb98",
+  "steps": [
+    {
+      "name": "old-version-order-regression",
+      "pid": 382441,
+      "startticks": 1007036052,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/gcu-cpu-recheck-input/tests/test_timeline_store.py",
+        "TimelineStoreTests.test_provider_enumeration_order_does_not_change_revision_or_receipt"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1
+    },
+    {
+      "name": "test_enflame_timeline_events.py-normal",
+      "pid": 382442,
+      "startticks": 1007036075,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_first_last.py-normal",
+      "pid": 382443,
+      "startticks": 1007036091,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_first_last.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-normal",
+      "pid": 382444,
+      "startticks": 1007036108,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_perfetto.py-normal",
+      "pid": 382445,
+      "startticks": 1007036125,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_perfetto.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_deferred.py-normal",
+      "pid": 382446,
+      "startticks": 1007036143,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_deferred.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_store.py-normal",
+      "pid": 382510,
+      "startticks": 1007036834,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/gcu-cpu-recheck-input/tests/test_timeline_store.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "owner-finalize-normal",
+      "pid": 382514,
+      "startticks": 1007036915,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_runtime.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_finalize.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_timeline_events.py-optimized",
+      "pid": 382516,
+      "startticks": 1007036987,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_first_last.py-optimized",
+      "pid": 382517,
+      "startticks": 1007037018,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_first_last.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-optimized",
+      "pid": 382518,
+      "startticks": 1007037036,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_perfetto.py-optimized",
+      "pid": 382519,
+      "startticks": 1007037053,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_perfetto.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_deferred.py-optimized",
+      "pid": 382520,
+      "startticks": 1007037072,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_deferred.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_store.py-optimized",
+      "pid": 382584,
+      "startticks": 1007037799,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/gcu-cpu-recheck-input/tests/test_timeline_store.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "owner-finalize-optimized",
+      "pid": 382588,
+      "startticks": 1007037882,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_runtime.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_finalize.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,185 @@
+{
+  "status": "matching_installed_v2_cpu_and_expected_old_regression_passed_not_device_qualification",
+  "backend": "nvidia",
+  "installed_members_byte_verified": 599,
+  "wheel_sha256": "74f7633ed64c0ca9f6bab1f5e1515e69b2ea595f04735a44100eb1ec98eb460b",
+  "product_commit": "2b86fd25d48c99ca839764eccd8b7607628e233b",
+  "test_commit": "6a238c28ca90752f7806821515b38ab27d6bcb98",
+  "steps": [
+    {
+      "name": "old-version-order-regression",
+      "pid": 52275,
+      "startticks": 11901986,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/nvidia-cpu-recheck-input/tests/test_timeline_store.py",
+        "TimelineStoreTests.test_provider_enumeration_order_does_not_change_revision_or_receipt"
+      ],
+      "returncode": 1,
+      "expected_returncode": 1
+    },
+    {
+      "name": "test_enflame_timeline_events.py-normal",
+      "pid": 52276,
+      "startticks": 11902009,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_first_last.py-normal",
+      "pid": 52277,
+      "startticks": 11902022,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_first_last.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-normal",
+      "pid": 52278,
+      "startticks": 11902035,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_perfetto.py-normal",
+      "pid": 52279,
+      "startticks": 11902049,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_perfetto.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_store.py-normal",
+      "pid": 52280,
+      "startticks": 11902063,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r018/nvidia-cpu-recheck-input/tests/test_timeline_store.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "owner-finalize-normal",
+      "pid": 52284,
+      "startticks": 11902189,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_runtime.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_finalize.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_public_timeline_contract.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_nvidia_machine_map.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_timeline_events.py-optimized",
+      "pid": 52352,
+      "startticks": 11902456,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_enflame_first_last.py-optimized",
+      "pid": 52353,
+      "startticks": 11902478,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_enflame_first_last.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_events.py-optimized",
+      "pid": 52354,
+      "startticks": 11902492,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_events.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_perfetto.py-optimized",
+      "pid": 52355,
+      "startticks": 11902506,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_perfetto.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "test_timeline_store.py-optimized",
+      "pid": 52356,
+      "startticks": 11902521,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r018/nvidia-cpu-recheck-input/tests/test_timeline_store.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    },
+    {
+      "name": "owner-finalize-optimized",
+      "pid": 52360,
+      "startticks": 11902640,
+      "argv": [
+        "/workspace/chijin-timeline-r018/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_runtime.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_timeline_finalize.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_public_timeline_contract.py",
+        "/workspace/chijin-timeline-r018/package-source-v2/tests/timeline/test_nvidia_machine_map.py"
+      ],
+      "returncode": 0,
+      "expected_returncode": 0
+    }
+  ]
+}

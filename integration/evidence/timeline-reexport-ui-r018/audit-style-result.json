@@ -1,0 +1,84 @@
+{
+  "status": "pinned_yapf_ruff_and_AST_preservation_passed_not_product_test",
+  "files": [
+    {
+      "file": "audit_final.py",
+      "before_sha256": "436f998cfac536b5ca1daf3cad0c368279c1d0ed45b8272a2f4eea5f8fc8ce5a",
+      "after_sha256": "992cb561a0de0cff74ac981c1c579a279651e843e0d56d2ec92612b22f2280de",
+      "AST_unchanged": true
+    }
+  ],
+  "steps": [
+    {
+      "name": "versions",
+      "pid": 53035,
+      "startticks": 12050834,
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-c",
+        "import importlib.metadata as m; print(m.version(\"ruff\"),m.version(\"yapf\"))"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "yapf",
+      "pid": 53036,
+      "startticks": 12050838,
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "yapf",
+        "--style=pep8",
+        "-i",
+        "audit_final.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "yapf-second-pass",
+      "pid": 53037,
+      "startticks": 12050848,
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "yapf",
+        "--style=pep8",
+        "-i",
+        "audit_final.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "yapf-check",
+      "pid": 53038,
+      "startticks": 12050858,
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "yapf",
+        "--style=pep8",
+        "--diff",
+        "audit_final.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "ruff",
+      "pid": 53039,
+      "startticks": 12050868,
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "ruff",
+        "check",
+        "--output-format=json"
+      ],
+      "returncode": 0
+    }
+  ]
+}

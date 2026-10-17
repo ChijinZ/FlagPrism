@@ -1,0 +1,80 @@
+{
+  "controllers": [
+    {
+      "record": "chijin-timeline-r018/runs/cpu-recheck-v2/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 52272,
+        "ppid": 1,
+        "pgid": 52251,
+        "startticks": 11901460
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11901460
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/cpu-recheck-v2/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 52273,
+        "ppid": 52272,
+        "pgid": 52273,
+        "startticks": 11901463
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r018/runs/offline-v2/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 52449,
+        "ppid": 1,
+        "pgid": 52434,
+        "startticks": 11914088
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11914088
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/offline-v2/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 52450,
+        "ppid": 52449,
+        "pgid": 52450,
+        "startticks": 11914091
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r018/runs/install-v2/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 52150,
+        "ppid": 1,
+        "pgid": 52139,
+        "startticks": 11880601
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11880601
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/install-v2/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 52151,
+        "ppid": 52150,
+        "pgid": 52151,
+        "startticks": 11880604
+      },
+      "observed": null
+    }
+  ],
+  "live_matching_processes": []
+}

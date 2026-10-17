@@ -1,0 +1,84 @@
+{
+  "status": "gcu_public_default_raw_stage_passed_not_full_P01",
+  "phases": [
+    {
+      "name": "api-cold",
+      "math_calls": 3,
+      "binaries": [
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702",
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702",
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702"
+      ],
+      "events_per_observer": [
+        [
+          10,
+          10
+        ],
+        [
+          14,
+          14
+        ],
+        [
+          18
+        ]
+      ],
+      "raw_endpoint_references": 132,
+      "deferred_submission_actions": [
+        [
+          "record_completion",
+          "invocation-6619d2ca5f464086b50e69c5a8f2487d"
+        ],
+        [
+          "record_completion",
+          "invocation-1ba08609e25244c4b20b22dda7e8c12b"
+        ],
+        [
+          "record_completion",
+          "invocation-52537e71a1b64375a272161007356c32"
+        ]
+      ]
+    },
+    {
+      "name": "api-warm",
+      "math_calls": 3,
+      "binaries": [
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702",
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702",
+        "10f0b4119b0d4d69fc2556a8556b7b8e932ccab7f753a1dbe13563244d54f702"
+      ],
+      "events_per_observer": [
+        [
+          10,
+          10
+        ],
+        [
+          14,
+          14
+        ],
+        [
+          18
+        ]
+      ],
+      "raw_endpoint_references": 132,
+      "deferred_submission_actions": [
+        [
+          "record_completion",
+          "invocation-29928efe1cbc4e5dbf37e4b554731a0c"
+        ],
+        [
+          "record_completion",
+          "invocation-b0045c8b34ae4946b9a91c6c8857c95b"
+        ],
+        [
+          "record_completion",
+          "invocation-837cfc245daa4055a6a456278bdd5b19"
+        ]
+      ]
+    }
+  ],
+  "clock_qualified": false,
+  "boundary_qualified": false,
+  "allocation_guard_qualified": false,
+  "async_mechanism_qualified": false,
+  "perfetto_qualified": false
+}

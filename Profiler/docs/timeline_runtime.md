@@ -1,9 +1,11 @@
 # Timeline invocation ownership
 
 The public hook/API/CLI now collect source-linked raw internal timestamps using
-these ownership components. Clock certification, canonical ns events and
-Perfetto qualification remain incomplete. The current output is explicitly
-`partial_clock_unverified`, not a certified time axis or full P01 result.
+these ownership components. Raw captures remain explicitly
+`partial_clock_unverified`. On the inspected NVIDIA sm_120 target, validated
+counter-unit evidence also produces isolated observer-relative ns `.pftrace`
+files. Read precision, source boundaries and cross-observer alignment remain
+unverified; these files do not complete P01 or the full three-backend timeline.
 
 ```bash
 python -m flagtree.profiler.cli --detail timeline --device 0 -n trace-run my_script.py
@@ -13,8 +15,11 @@ The equivalent API is `start("trace-run", detail="timeline")`, followed by the
 ordinary workload and `finalize(session)`. Open `trace-run/timeline/index.json`
 to locate original raw records, decoded timestamps, logical async facts,
 source/compiled artifacts and per-invocation metadata. No kernel scope or site
-annotation is required. There is no certified `.pftrace` yet; raw ticks must not
-be interpreted as ns or used for cross-observer overlap without clock proof.
+annotation is required. When target-specific counter-unit evidence is available,
+`trace-run/timeline/index.html` links the standard `.pftrace` files. They contain
+counter brackets, not certified source-operation costs or engine busy. Raw ticks
+without unit evidence remain raw; separate observers must not be compared as a
+shared epoch. The index does not upload data.
 The current public raw paths support NVIDIA and Enflame GCU, eager and one host
 thread per session. Both have real multiple-stream ownership tests. Nested
 sessions are explicitly rejected. Ascend still needs its new timeline producer.
@@ -196,7 +201,58 @@ identity is checked again before decoding. This conversion changes no raw fields
 An in-process retry of the retained hook uses the same internal evidence directory
 and only rereads the saved inputs for owners already released. The public API may
 use an internal staging directory different from the requested bundle path; on
-failure it reports retained intermediates. This is not yet a standalone public
-cross-process recovery command. No recovery replays the application's kernels.
-Clock, source-boundary, async reuse and standard Perfetto qualification remain
-separate unfinished requirements.
+failure it reports retained intermediates. This retry still handles ownership
+inside that process. The separate offline command below consumes fully retained
+inputs without relying on that hook or owning a device buffer. It cannot recover
+bytes that were never read back or release a still-active device owner.
+
+## Offline decoding and versioned counter traces
+
+Use the Python from the matching installed FlagTree/FlagPrism wheel:
+
+```bash
+python -m flagtree.profiler.timeline_reexport trace-run/timeline
+# Optionally select one retained invocation:
+python -m flagtree.profiler.timeline_reexport trace-run/timeline --invocation-id INVOCATION_ID
+```
+
+The directory must contain `captures/*.input.json`, matching raw bytes and
+required source/compiler artifacts. The command verifies sizes/digests, decodes
+raw again and writes an immutable `derived/canonical/<revision>/events.json`.
+It does not trust a previously written events/view document as evidence. NVIDIA
+counter-ns re-export additionally requires the retained cubin/PTX, machine-map
+status and text/JSON disassembly: the target-specific provider re-parses those
+inputs and binds its result to this binary/raw/observer and recorded host window.
+Missing or inconsistent required machine evidence is an explicit error; the
+canonical revision and original capture remain. GCU currently returns `raw_only`
+with the missing-unit reason and does not invent a trace. Ascend's new timeline
+producer and offline adapter remain unfinished.
+
+`derived/counter-ns/<revision>/` contains a canonical snapshot, inputs, views,
+traces and `complete.json`. Revision identity includes canonical/raw identity,
+proof contents, actual provider/rule implementation fingerprints and the pinned
+Perfetto schema. The same complete inputs are idempotent; legitimate proof/rule
+changes create another revision and preserve old files. These mechanics do not
+authorize arbitrary caller-supplied proof JSON: the offline NVIDIA path obtains
+proofs from the actual retained-target validator.
+
+A bounded OS file lock serializes cooperating exporters. Files are synced and
+immutable; the completion receipt is the commit point. The atomic HTML index
+only discovers content-checked complete receipts, so a trace written before a
+failure is not advertised as complete. Retrying can finish that same revision,
+and can rediscover a receipt committed before an index-write failure. Changed
+committed bytes are rejected, not silently repaired. Retained counter traces are
+bounded to 16 MiB across these revisions; the derivative tree has a separate
+64 MiB cap. This does not certify the separate whole-bundle/session budgets.
+
+Real server-Docker checks exercised the public module and fresh normal/`-O`
+processes on retained NVIDIA and GCU captures. NVIDIA re-export ran with no GPU
+visible, an empty working directory/cache, and two audited processes denying
+Python reads/execution in the original environment and child-process launches;
+these are audit-hook checks, not an OS sandbox. The new
+NVIDIA capture also produced 32 actual traces checked by generated protobuf and
+real Trace Processor; six were opened, expanded, selected and focused in standard
+Perfetto UI, with the bundle unchanged. These checks cover counter-unit-only
+export plumbing, not fine timing precision, final source boundaries, physical
+async reuse, time flows, independent-math qualification or full UI acceptance.
+See [r018 evidence](../../integration/evidence/timeline-reexport-ui-r018/README.md).

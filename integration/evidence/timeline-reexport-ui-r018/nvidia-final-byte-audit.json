@@ -1,0 +1,37 @@
+{
+  "status": "final_formatted_install_and_offline_bytes_audited_not_full_P01",
+  "backend": "nvidia",
+  "archive_sha256": "87f9b6853794a066099fcf4873ae37cb82aa0b3fae3591e244b31e638c1d854f",
+  "archive_bytes": 2248926,
+  "archive_members": 347,
+  "cpu_checks_per_mode": {
+    "normal": 113,
+    "optimized": 113
+  },
+  "installed_members": 599,
+  "wheel_sha256": "4fe70c734706bcc2acd102fc832db861004c70aacae1dd3366555b22b517aa18",
+  "source_commit": "4b00244f5668502452591b5b285532e15518604f",
+  "native_commit": "6e7a7aa2b2501bce525d973975e9f4c33fee1c5a",
+  "offline": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 4,
+    "real_traces": 32,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 135,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r018/runs/counter-perfetto-v1/",
+      "/workspace/chijin-timeline-r018/package-source-v1/"
+    ],
+    "trace_bytes_match_prior_bundle": true,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-302f56017bb24059be68572f080540b5.raw": "295281d5edc0dd6fd59e443f5caa0564f5cdd3d819db01ba13fc01070dd6d3fe",
+      "captures/invocation-f33092844ea24cc181aef7404811cb3c.raw": "687481e3743d6b7941879e39d37b4ee105229797c1b90259787878a6a7ebe1d8",
+      "captures/invocation-e40e0a777ef34fedbc3a2362655266db.raw": "f8395d82982da623c1efee1df56970a573e79effe4bfc94a97a1e2dd198e5299",
+      "captures/invocation-3552c058242f4c9c9868a62087703252.raw": "fc176ed8df2125759a60229b53086035d74c8bae5a0352bd177ef08a6de84691"
+    },
+    "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+  },
+  "live_matching_processes": []
+}

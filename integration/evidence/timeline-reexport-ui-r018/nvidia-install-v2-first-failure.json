@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 52150,
+    "ppid": 1,
+    "pgid": 52139,
+    "startticks": 11880601
+  },
+  "worker": {
+    "pid": 52151,
+    "ppid": 52150,
+    "pgid": 52151,
+    "startticks": 11880604
+  },
+  "argv": [
+    "/workspace/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r018/install-input-v2/package-install-v2.py",
+    "--output",
+    "/workspace/chijin-timeline-r018/runs/install-v2/output"
+  ],
+  "argv_sha256": "c29684e31955d5f49b1c844ea0417a2a29c7a2984810e588c082aad8a8e9f7d1",
+  "script_sha256": "624fbad6b5f456c31d630ff0281996542ca2188f8272e527a4604534417cb214",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 300,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 64778906448
+}

@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 53033,
+    "ppid": 1,
+    "pgid": 53022,
+    "startticks": 12050828
+  },
+  "worker": {
+    "pid": 53034,
+    "ppid": 53033,
+    "pgid": 53034,
+    "startticks": 12050831
+  },
+  "argv": [
+    "/workspace/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r018/audit-format-input/format-delivery-source-v2.py",
+    "--output",
+    "/workspace/chijin-timeline-r018/runs/audit-style-v1/output"
+  ],
+  "argv_sha256": "9529160c402ec1e47b3e72bbba5d433ea95b530d7bec1f2f092f46e6c0d9305b",
+  "script_sha256": "050505eb2f55972566dea65219a6c460dcb3155494fbabeffb9b7c8eb147ddc1",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 120,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 465448496
+}

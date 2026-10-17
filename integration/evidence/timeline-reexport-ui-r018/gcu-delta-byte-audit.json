@@ -1,0 +1,38 @@
+{
+  "status": "installed_delta_CPU_and_offline_artifact_bytes_audited_not_full_P01",
+  "backend": "gcu",
+  "archive_sha256": "e14b273240b8775bcbdeeb38faa73b4f75954e17b8a656f5efe38387454a4b80",
+  "archive_bytes": 1762155,
+  "archive_members": 395,
+  "cpu_checks_per_mode": {
+    "normal": 89,
+    "optimized": 89
+  },
+  "expected_old_failure_retained": true,
+  "initial_fixture_failure_retained": true,
+  "independent_install_members": 455,
+  "wheel_sha256": "0467670b1c5e10204cef794609091226253ffebf6a2dbd7e09aadf3d9519aa6b",
+  "offline": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 3,
+    "real_traces": 0,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 15,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r018/runs/public-timeline-v1/",
+      "/workspace/chijin-timeline-r018/package-source-v1/"
+    ],
+    "trace_bytes_match_prior_bundle": false,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-6619d2ca5f464086b50e69c5a8f2487d.raw": "c4ec4799385f2fb73c83e478be3a89e5ea2e096a5d0e21362cb5ec795aca8e5f",
+      "captures/invocation-1ba08609e25244c4b20b22dda7e8c12b.raw": "cfe7b248683e5c8b5d67a27348a41c4dd67356bc039f4893ef60d7ba964326a2",
+      "captures/invocation-52537e71a1b64375a272161007356c32.raw": "a7705a77de3e7ffb0a6ff82d01d98e4f82b09fca38f6ce0f840a4f4304b99f62"
+    },
+    "proof_limits": "raw_only; no validated unit, precision, source boundary or async qualification"
+  },
+  "live_matching_processes": [],
+  "product_commit": "2b86fd25d48c99ca839764eccd8b7607628e233b",
+  "test_commit": "6a238c28ca90752f7806821515b38ab27d6bcb98"
+}

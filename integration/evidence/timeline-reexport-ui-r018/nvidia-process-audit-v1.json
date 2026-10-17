@@ -1,0 +1,255 @@
+{
+  "controllers": [
+    {
+      "record": "chijin-timeline-r018/runs/offline-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 51389,
+        "ppid": 1,
+        "pgid": 51376,
+        "startticks": 11780291
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11780291
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/offline-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 51390,
+        "ppid": 51389,
+        "pgid": 51390,
+        "startticks": 11780294
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r018/runs/counter-perfetto-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 51441,
+        "ppid": 1,
+        "pgid": 51433,
+        "startticks": 11786538
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11786538
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/counter-perfetto-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 51442,
+        "ppid": 51441,
+        "pgid": 51442,
+        "startticks": 11786541
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r018/runs/browser-six-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 51652,
+        "ppid": 1,
+        "pgid": 51639,
+        "startticks": 11805637
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11805637
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/browser-six-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 51653,
+        "ppid": 51652,
+        "pgid": 51653,
+        "startticks": 11805640
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r018/runs/install-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50807,
+        "ppid": 1,
+        "pgid": 50795,
+        "startticks": 11761179
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11761179
+      }
+    },
+    {
+      "record": "chijin-timeline-r018/runs/install-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50808,
+        "ppid": 50807,
+        "pgid": 50808,
+        "startticks": 11761182
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/browser-tools-v3/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50181,
+        "ppid": 1,
+        "pgid": 50171,
+        "startticks": 11563307
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11563307
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/browser-tools-v3/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50182,
+        "ppid": 50181,
+        "pgid": 50182,
+        "startticks": 11563310
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/browser-libs-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50335,
+        "ppid": 1,
+        "pgid": 50324,
+        "startticks": 11707703
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11707703
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/browser-libs-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50336,
+        "ppid": 50335,
+        "pgid": 50336,
+        "startticks": 11707706
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v1/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50278,
+        "ppid": 1,
+        "pgid": 50268,
+        "startticks": 11624470
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11624470
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v1/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50279,
+        "ppid": 50278,
+        "pgid": 50279,
+        "startticks": 11624473
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v2/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50515,
+        "ppid": 1,
+        "pgid": 50504,
+        "startticks": 11734905
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11734905
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v2/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50516,
+        "ppid": 50515,
+        "pgid": 50516,
+        "startticks": 11734908
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v3/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 50823,
+        "ppid": 1,
+        "pgid": 50811,
+        "startticks": 11764386
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11764386
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v3/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 50824,
+        "ppid": 50823,
+        "pgid": 50824,
+        "startticks": 11764389
+      },
+      "observed": null
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v4/terminal.json",
+      "role": "controller",
+      "expected": {
+        "pid": 51084,
+        "ppid": 1,
+        "pgid": 51073,
+        "startticks": 11767805
+      },
+      "observed": {
+        "state": "Z",
+        "startticks": 11767805
+      }
+    },
+    {
+      "record": "chijin-timeline-r017/runs/ui-offline-v4/terminal.json",
+      "role": "worker",
+      "expected": {
+        "pid": 51085,
+        "ppid": 51084,
+        "pgid": 51085,
+        "startticks": 11767808
+      },
+      "observed": null
+    }
+  ],
+  "live_matching_processes": []
+}
