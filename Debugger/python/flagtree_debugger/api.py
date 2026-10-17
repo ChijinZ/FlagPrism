@@ -21,6 +21,9 @@ from typing import Any, Callable, Mapping, Optional, Sequence
 class PreparedKernelLaunch:
     kernel_args: tuple[int, ...] = ()
     finalize: Optional[Callable[[Optional[BaseException]], None]] = None
+    # Legacy advanced exporters need their historical launch completion wait.
+    # A deferred collector owns its own completion proof and must opt out.
+    synchronize: bool = True
 
 
 @dataclass(frozen=True)
@@ -1867,9 +1870,12 @@ def prepare_kernel_launch(
             "debugger launch prepare hook returned None for a debug-enabled "
             "kernel")
     if isinstance(prepared, PreparedKernelLaunch):
+        if type(prepared.synchronize) is not bool:
+            raise TypeError('Prepared launch synchronize must be boolean')
         return PreparedKernelLaunch(
             kernel_args=_normalize_kernel_args(prepared.kernel_args),
             finalize=prepared.finalize,
+            synchronize=prepared.synchronize,
         )
     return PreparedKernelLaunch(kernel_args=_normalize_kernel_args(prepared))
 
@@ -1920,7 +1926,7 @@ def launch_context(
                 f"instrumented {backend} kernel requires {expected} debugger hidden "
                 f"argument(s), but the debugger prepared {len(hidden_args)}")
         yield hidden_args
-        if has_hidden_arg:
+        if has_hidden_arg and (prepared is None or prepared.synchronize):
             if backend in {"ascend", "cann", "npu"}:
                 import torch_npu
 

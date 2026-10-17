@@ -97,7 +97,10 @@ class TimelineOwnerPool:
                 type(binary_id) is not str or not binary_id or
                 plan.get('binary_id') != binary_id):
             raise ValueError('Timeline plan is not bound to the loaded binary')
-        if type(function) is not int or function <= 0:
+        validate_executable = getattr(self.transport, 'validate_executable', None)
+        if validate_executable is not None:
+            validate_executable(function, binary_id=binary_id)
+        elif type(function) is not int or function <= 0:
             raise ValueError('An actual loaded function handle is required')
         if type(device) is not int or device < 0:
             raise ValueError('An actual device ordinal is required')
@@ -122,7 +125,7 @@ class TimelineOwnerPool:
         invocation_id = 'invocation-' + uuid.uuid4().hex
         self._owners[invocation_id] = {
             'capture_id': self.capture_id, 'invocation_id': invocation_id,
-            'binary_id': binary_id, 'function': function, 'device': device,
+            'binary_id': binary_id, 'function': copy.deepcopy(function), 'device': device,
             'stream': stream, 'plan': copy.deepcopy(plan), 'layout': layout,
             'physical_bytes': physical_bytes, 'guard_bytes': self.guard_bytes,
             'state': 'admitted', 'resource': None, 'raw': None,

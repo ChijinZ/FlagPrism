@@ -91,9 +91,13 @@ class TimelineAllocator:
 
 class TimelineInstrumentationMixin:
     def _init_timeline(self):
-        from ..timeline_runtime import TimelineOwnerPool
         from ..timeline_cuda_runtime import CudaTimelineTransport
-        self.timeline_pool = TimelineOwnerPool(CudaTimelineTransport())
+        self._init_timeline_state(CudaTimelineTransport())
+        self.allocator = TimelineAllocator(self)
+
+    def _init_timeline_state(self, transport):
+        from ..timeline_runtime import TimelineOwnerPool
+        self.timeline_pool = TimelineOwnerPool(transport)
         self._timeline_current = ContextVar('timeline_current_owner', default=None)
         self._timeline_zero = ContextVar('timeline_zero_grid', default=False)
         self._timeline_descriptors = {}
@@ -102,7 +106,6 @@ class TimelineInstrumentationMixin:
         self._timeline_pending = {}
         self._timeline_directory = None
         self._timeline_flush_attempt = 0
-        self.allocator = TimelineAllocator(self)
 
     def _timeline_fingerprint(self):
         from ..native import compiler_binding

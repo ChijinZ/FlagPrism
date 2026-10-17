@@ -1532,6 +1532,7 @@ def start(
     if detail not in (None, "auto", "timeline"):
         raise ValueError("detail must be None, 'auto', or 'timeline'")
     timeline = detail == 'timeline'
+    timeline_collector = None
     if ((timeline and _active_sessions) or
             any(state.get('detail') == 'timeline' for state in _active_sessions.values())):
         raise ValueError('Timeline sessions cannot be nested with another capture')
@@ -1541,10 +1542,18 @@ def start(
         if hook not in (None, 'instrumentation'):
             raise ValueError('Timeline requires the instrumentation hook')
         backend = _automatic_backend(backend)
-        if backend != 'instrumentation':
+        if backend == 'instrumentation':
+            from .mode import Default
+            mode = Default(buffer_size=32768)
+        elif _is_enflame_backend(backend):
+            from .timeline_enflame import EnflameTimelineCollector
+            from .observations import ObservationRequest
+            timeline_collector = EnflameTimelineCollector()
+            observation_request = ObservationRequest(programs=None,
+                program_policy='runtime_first_last', automatic=True,
+                max_sites=8, max_events_per_instance=4096)
+        else:
             raise ValueError('Timeline is not yet implemented on this backend')
-        from .mode import Default
-        mode = Default(buffer_size=32768)
         hook = 'instrumentation'
     if detail == "auto":
         if observation_request is not None or mode is not None:
@@ -1692,6 +1701,8 @@ def start(
             _activate_instrumentation(backend,
                                       observation_request,
                                       clear_runs=not ir_session_exists)
+            if timeline_collector is not None:
+                timeline_collector.activate()
         if not internal:
             bundle_output = Path(name).expanduser().resolve()
             existing = next((state for state in _active_sessions.values()
@@ -1725,6 +1736,8 @@ def start(
             HookManager.register(
                 native_hook,
                 session)
+        elif timeline_collector is not None:
+            native_hook = timeline_collector
     except BaseException as error:
         # Compiler/debugger activation can fail before native start. Unwind all
         # owned resources without replacing the application's original error.
@@ -1968,6 +1981,10 @@ def _finalize_impl(session: Optional[int] = None,
             if state.get('timeline_hook') is not None:
                 timeline_ok = attempt('timeline raw export',
                     lambda: state['timeline_hook'].flush_timeline(state['name']), state)
+                if state.get('instrumentation_hook'):
+                    # Deferred non-NVIDIA collectors publish only after their
+                    # completed raw captures have been durably retained.
+                    have_runs = attempt('timeline instrumentation snapshot', take_runs, state) and have_runs
             if state.get("instrumentation_hook") and have_runs and state.get(
                     "name"):
                 attempt(
