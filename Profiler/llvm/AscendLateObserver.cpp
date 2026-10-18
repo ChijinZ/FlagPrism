@@ -169,15 +169,20 @@ static json::Object describeOperation(Instruction &instruction,
 }
 static unsigned censusVersion() {
   const auto mode = environment("FLAGPRISM_ASCEND_TRACE_MODE");
-  return mode == "source_census_v3" ? 3 : mode == "source_census_v2" ? 2 : mode == "source_census_v1" ? 1 : 0;
+  return mode == "source_census_v3"   ? 3
+         : mode == "source_census_v2" ? 2
+         : mode == "source_census_v1" ? 1
+                                      : 0;
 }
 static bool sourceTimeline() {
   return environment("FLAGPRISM_ASCEND_TRACE_MODE") == "source_timeline_v1";
 }
 static uint64_t selectedSemantics() {
   if (sourceTimeline()) {
-    if (environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS") != "source_control_interval")
-      report_fatal_error("Ascend source timeline requires source_control_interval");
+    if (environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS") !=
+        "source_control_interval")
+      report_fatal_error(
+          "Ascend source timeline requires source_control_interval");
     return 0;
   }
   if (censusVersion() != 0) {
@@ -547,30 +552,44 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     runtimeActorBinding["frontend_carrier"] = "source_census_site.v3";
     runtimeActorBinding["header_bytes"] = 64;
     runtimeActorBinding["record_bytes"] = 64;
-    runtimeActorBinding["segment_words"] = static_cast<int64_t>(8 + capacity * 8);
+    runtimeActorBinding["segment_words"] =
+        static_cast<int64_t>(8 + capacity * 8);
     runtimeActorBinding["max_program_slots"] = 2;
     runtimeActorBinding["selection"] = "runtime_first_last";
-    runtimeActorBinding["value_use"] = "same_source_tuple_for_selection_and_pair_identity";
-    runtimeActorBinding["source_program_binding"] = json::Object{
-        {"basis", "actual_selected_source_site_marker_operands"},
-        {"linear_expression", "x + grid_x * (y + grid_y * z)"},
-        {"anchors", std::move(anchorManifest)}};
+    runtimeActorBinding["value_use"] =
+        "same_source_tuple_for_selection_and_pair_identity";
+    runtimeActorBinding["source_program_binding"] =
+        json::Object{{"basis", "actual_selected_source_site_marker_operands"},
+                     {"linear_expression", "x + grid_x * (y + grid_y * z)"},
+                     {"anchors", std::move(anchorManifest)}};
     for (const auto &fragment : fragments) {
       const auto &marker = fragment.marker;
       IRBuilder<> b(marker.call);
-      Value *logicalProgram = b.CreateAdd(marker.call->getArgOperand(0),
+      Value *logicalProgram = b.CreateAdd(
+          marker.call->getArgOperand(0),
           b.CreateMul(marker.call->getArgOperand(3),
-            b.CreateAdd(marker.call->getArgOperand(1),
-              b.CreateMul(marker.call->getArgOperand(4), marker.call->getArgOperand(2)))));
-      Value *last = b.CreateSub(b.CreateMul(marker.call->getArgOperand(3),
-          b.CreateMul(marker.call->getArgOperand(4), marker.call->getArgOperand(5))),
-          b.getInt64(1));
+                      b.CreateAdd(marker.call->getArgOperand(1),
+                                  b.CreateMul(marker.call->getArgOperand(4),
+                                              marker.call->getArgOperand(2)))));
+      Value *last =
+          b.CreateSub(b.CreateMul(marker.call->getArgOperand(3),
+                                  b.CreateMul(marker.call->getArgOperand(4),
+                                              marker.call->getArgOperand(5))),
+                      b.getInt64(1));
       const uint64_t id = sites.size() + 1;
+      if (id > UINT32_C(0x7fffffff))
+        report_fatal_error(
+            "Ascend timeline site exceeds clock marker encoding");
+      const DebugLoc entryClock =
+          flagprism_ascend::timelineClockLocation(*marker.call, id, false);
+      const DebugLoc exitClock =
+          flagprism_ascend::timelineClockLocation(*marker.call, id, true);
       Value *start = flagprism_ascend::beginTimeline(
           marker.call, function.getArg(argumentIndex), logicalProgram, last,
-          actor, program, capacity);
-      flagprism_ascend::endTimeline(fragment.end, function.getArg(argumentIndex),
-          logicalProgram, last, actor, program, start, capacity, id, 1);
+          actor, program, capacity, entryClock);
+      flagprism_ascend::endTimeline(
+          fragment.end, function.getArg(argumentIndex), logicalProgram, last,
+          actor, program, start, capacity, id, 1, exitClock);
       json::Object site{
           {"site_id", static_cast<int64_t>(id)},
           {"source_op_id", static_cast<int64_t>(marker.sourceId)},
@@ -579,16 +598,28 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
           {"semantic_code", 1},
           {"operation_class", "lowered_source_fragment"},
           {"boundary_status", "unverified"},
-          {"scope", "same_original_llvm_basic_block_until_next_marker_or_terminator"},
+          {"scope",
+           "same_original_llvm_basic_block_until_next_marker_or_terminator"},
           {"original_block", fragment.block},
-          {"original_instruction_count", static_cast<int64_t>(fragment.instructions)},
+          {"original_instruction_count",
+           static_cast<int64_t>(fragment.instructions)},
           {"original_instructions_sha256", digest(fragment.body)},
           {"original_instructions", fragment.body}};
+      site["clock_marker"] = json::Object{
+          {"version", 1},
+          {"file", flagprism_ascend::kTimelineClockFile},
+          {"entry_line",
+           entryClock ? static_cast<int64_t>(entryClock.getLine()) : 0},
+          {"exit_line",
+           exitClock ? static_cast<int64_t>(exitClock.getLine()) : 0},
+          {"status", entryClock && exitClock ? "debug_locations_emitted"
+                                             : "missing_debug_scope"}};
       attachSourceOrigin(site, *marker.call);
       site["source_op_id"] = static_cast<int64_t>(marker.sourceId);
       sites.push_back(std::move(site));
     }
-    operationPlan["policy"] = "actual_frontend_carrier_nonempty_lowered_block_fragments";
+    operationPlan["policy"] =
+        "actual_frontend_carrier_nonempty_lowered_block_fragments";
     operationPlan["selected_count"] = static_cast<int64_t>(fragments.size());
     operationPlan["skipped_fragments"] = std::move(skipped);
     controlPlan["selected_count"] = 0;
@@ -596,12 +627,15 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     return true;
   }
   if (census) {
-    runtimeActorBinding["layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
+    runtimeActorBinding["layout"] =
+        "ascend_source_census_v" + std::to_string(censusVersion());
     runtimeActorBinding.erase("record_actor_word");
     runtimeActorBinding.erase("segment_words");
     runtimeActorBinding["value_use"] =
         "same_emitted_actor_for_exclusive_count_segment";
-    const uint64_t actorStride = censusVersion() == 3 ? ((8 * censusColumns + 63) / 64) * 64 : 8 * censusColumns;
+    const uint64_t actorStride = censusVersion() == 3
+                                     ? ((8 * censusColumns + 63) / 64) * 64
+                                     : 8 * censusColumns;
     runtimeActorBinding["header_bytes"] = censusVersion() == 3 ? 64 : 32;
     runtimeActorBinding["reserved_columns_per_actor"] =
         static_cast<int64_t>(censusColumns);
@@ -629,9 +663,9 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                   marker.call->getArgOperand(1),
                   builder.CreateMul(marker.call->getArgOperand(4),
                                     marker.call->getArgOperand(2)))));
-      flagprism_ascend::appendCensus(marker.call,
-                                     function.getArg(argumentIndex), program,
-                                     actor, marker.column, censusColumns, censusVersion());
+      flagprism_ascend::appendCensus(
+          marker.call, function.getArg(argumentIndex), program, actor,
+          marker.column, censusColumns, censusVersion());
       json::Object site{
           {"site_id", static_cast<int64_t>(siteNumber++)},
           {"source_op_id", static_cast<int64_t>(marker.sourceId)},
@@ -1124,10 +1158,14 @@ public:
       manifest["boundary_status"] = "unverified";
       manifest["frontend_marker_carrier"] = "source_census_site.v3";
       manifest["record_ordering"] = "paired_endpoints";
+      auto *clock = manifest.getObject("dynamic_clock");
+      (*clock)["marker_version"] = 1;
+      (*clock)["marker_file"] = flagprism_ascend::kTimelineClockFile;
     }
     if (censusVersion() != 0) {
       manifest["dynamic_clock"] = nullptr;
-      manifest["dynamic_record_layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
+      manifest["dynamic_record_layout"] =
+          "ascend_source_census_v" + std::to_string(censusVersion());
       manifest["effective_semantics"] = json::Array{"counter"};
       manifest["observation_plan_version"] = 3;
       manifest["count_semantics"] = "source_control_visit_count";
