@@ -71,6 +71,28 @@ explain why this particular model cannot be used. This is not a hardware busy
 or source-cost measurement. Final acceptance still requires the full clock,
 dynamic time-flow, source-boundary and three-backend evidence in the goal.
 
+The byte lifecycle model `nvidia.late.shared_byte_lifecycle.v2` retains each
+program-local generation's producer ordinals, commit ordinal, first covering
+wait return, first publication barrier and consumer ordinals. Its shared ranges
+are exact `[offset_from_actual_shared_base, length_bytes]` pairs; gaps are not
+filled. Each submission retains its own ranges separately from the complete
+generation ranges (`generation_shared_ranges` in event coverage). Reuse ranges describe current byte ownership when the new producer
+writes, rather than the previous generation's historical footprint. A commit
+group may span several ranges; it is not an assumed fixed hardware buffer slot.
+
+Selected canonical events carry these conditional roles under
+`coverage["nvidia.dynamic_dependencies"]`, alongside the actual native ordinal,
+payload offsets and raw endpoint references. Standard Perfetto slice details
+therefore identify the generation and physical byte ranges of the observed
+submission, commit, completion observation, publication, consumer or reuse.
+Completion observation means a recorded native wait/barrier return, not an
+engine's physical completion instant. Roles are derived from the full captured
+CTA before view selection; an incomplete or ineligible collective model adds
+none. They do not create duration spans, align observers or authorize flows.
+Offline upgrades derive a new canonical revision without replacing historical
+canonical events or traces; newly enriched trace bytes intentionally differ
+from earlier revisions. Legacy raw protocols remain readable.
+
 `compiler-attempts/index.json` in the final timeline directory identifies retained
 ordinary/instrumented LLVM, manifests, stdout/stderr and actual compiler process
 receipts. Raw owner salvage precedes this retention, so a derived/copy failure

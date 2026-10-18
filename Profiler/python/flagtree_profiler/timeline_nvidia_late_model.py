@@ -1,6 +1,6 @@
-"""Development-only byte model for the isolated late NVPTX recording probe.
+"""Collective shared-byte lifecycles over actual late NVPTX observations.
 
-This is not a public capture ABI, machine-placement proof or time-flow grant.
+This is not a physical recording ABI, machine-placement proof or time-flow grant.
 The model consumes all actors of a uniform CTA path. It preserves native absolute
 shared addresses; each program supplies its actual dynamic-shared symbol base.
 """
@@ -131,6 +131,18 @@ def decode_probe(manifest, metadata, allocation):
                 raw_sha256=hashlib.sha256(allocation).hexdigest())
 
 
+def _ranges(footprint, base):
+    """Compact exact physical bytes as offset/length pairs, without gap filling."""
+    result = []
+    for byte in sorted(footprint):
+        offset = byte - base
+        if result and result[-1][0] + result[-1][1] == offset:
+            result[-1][1] += 1
+        else:
+            result.append([offset, 1])
+    return result
+
+
 def analyze_probe(decoded):
     """Check byte producers, local commit/wait order and CTA publication cuts.
 
@@ -156,13 +168,20 @@ def analyze_probe(decoded):
                         completed=False,
                         visible=False,
                         bytes=set(),
+                        submit_sequences=[],
+                        submissions=[],
+                        commit_sequence=None,
+                        completion_observed_sequence=None,
+                        completion_observation_kind=None,
+                        publication_barrier_sequence=None,
+                        consumer_sequences=[],
                         last_read=-1)
             generations[identity] = item
             return item
 
         def write(footprint, generation, sequence):
-            prior = {memory[b] for b in footprint if b in memory}
-            for identity in prior:
+            prior = Counter(memory[b] for b in footprint if b in memory)
+            for identity in sorted(prior):
                 old = generations[identity]
                 if old is generation:
                     continue
@@ -173,14 +192,25 @@ def analyze_probe(decoded):
                 _need(old['last_read'] < last_barrier or old['last_read'] < 0,
                       'Shared bytes reused without a CTA cut after consumers')
                 reuse.append(
-                    dict(previous=identity,
-                         next=generation['identity'],
-                         sequence=sequence,
-                         overlapping_bytes=len(old['bytes'] & footprint),
-                         barrier_sequence=last_barrier))
+                    dict(
+                        previous=identity,
+                        next=generation['identity'],
+                        sequence=sequence,
+                        overlapping_bytes=prior[identity],
+                        overlapping_shared_ranges=_ranges(
+                            {
+                                b
+                                for b in footprint if memory.get(b) == identity
+                            }, base),
+                        barrier_sequence=last_barrier))
             for byte in footprint:
                 memory[byte] = generation['identity']
             generation['bytes'].update(footprint)
+            generation['submit_sequences'].append(sequence)
+            generation['submissions'].append(
+                dict(sequence=sequence,
+                     bytes=len(footprint),
+                     shared_ranges=_ranges(footprint, base)))
 
         for sequence in range(len(actors[0])):
             first = actors[0][sequence]
@@ -232,17 +262,26 @@ def analyze_probe(decoded):
                             generation['completed'] and generation['visible'],
                             'Consumer precedes native completion/publication')
                         generation['last_read'] = sequence
+                        generation['consumer_sequences'].append(sequence)
                         edges.append(
                             dict(producer=identity,
                                  consumer_sequence=sequence,
                                  consumer_site=site['site_id'],
                                  consumer_kind=kind,
                                  bytes=count,
-                                 publication_barrier=last_barrier))
+                                 shared_ranges=_ranges(
+                                     {
+                                         b
+                                         for b in footprint
+                                         if memory[b] == identity
+                                     }, base),
+                                 publication_barrier=generation[
+                                     'publication_barrier_sequence']))
             elif kind == 'commit_after':
                 if pending is None:
                     pending = new_generation(
                         'async-' + str(len(committed) + 1), 'async')
+                pending['commit_sequence'] = sequence
                 committed.append(pending['identity'])
                 pending = None
             elif kind == 'wait_bracket':
@@ -252,17 +291,27 @@ def analyze_probe(decoded):
                     'Invalid or mixed native wait operand')
                 limit = next(iter(values))
                 for identity in committed[:max(0, len(committed) - limit)]:
-                    generations[identity]['completed'] = True
+                    generation = generations[identity]
+                    if not generation['completed']:
+                        generation['completion_observed_sequence'] = sequence
+                        generation[
+                            'completion_observation_kind'] = 'native_wait_return'
+                    generation['completed'] = True
             elif kind == 'cta_barrier_after':
                 _need({r['payload']
                        for r in rows} == {0},
                       'Only actual all-CTA barrier zero is modeled')
                 last_barrier, barriers = sequence, barriers + 1
                 for generation in generations.values():
-                    if generation['kind'] == 'sync':
+                    if generation[
+                            'kind'] == 'sync' and not generation['completed']:
                         generation['completed'] = True
-                    if generation['completed']:
+                        generation['completion_observed_sequence'] = sequence
+                        generation[
+                            'completion_observation_kind'] = 'native_cta_barrier_return'
+                    if generation['completed'] and not generation['visible']:
                         generation['visible'] = True
+                        generation['publication_barrier_sequence'] = sequence
             elif kind not in ('matrix_issue_bracket', 'compute_issue_bracket',
                               'global_load_issue_bracket',
                               'global_store_issue_bracket',
@@ -281,16 +330,30 @@ def analyze_probe(decoded):
                  generations=[
                      dict(identity=g['identity'],
                           kind=g['kind'],
-                          footprint_bytes=len(g['bytes']))
+                          footprint_bytes=len(g['bytes']),
+                          shared_ranges=_ranges(g['bytes'], base),
+                          submit_sequences=g['submit_sequences'],
+                          submissions=g['submissions'],
+                          commit_sequence=g['commit_sequence'],
+                          completion_observed_sequence=g[
+                              'completion_observed_sequence'],
+                          completion_observation_kind=g[
+                              'completion_observation_kind'],
+                          publication_barrier_sequence=g[
+                              'publication_barrier_sequence'],
+                          consumer_sequences=g['consumer_sequences'])
                      for g in generations.values()
                  ],
                  consumer_edges=edges,
                  reuse=reuse))
-    return dict(status='prototype_dynamic_byte_model_consistent',
-                raw_sha256=decoded['raw_sha256'],
-                programs=reports,
-                machine_site_binding_verified=False,
-                clock_comparison_qualified=False,
-                time_flows_qualified=False,
-                source_cost_qualified=False,
-                hardware_busy_qualified=False)
+    return dict(
+        model='nvidia.late.shared_byte_lifecycle.v2',
+        shared_range_encoding='offset_from_actual_shared_base,length_bytes',
+        status='prototype_dynamic_byte_model_consistent',
+        raw_sha256=decoded['raw_sha256'],
+        programs=reports,
+        machine_site_binding_verified=False,
+        clock_comparison_qualified=False,
+        time_flows_qualified=False,
+        source_cost_qualified=False,
+        hardware_busy_qualified=False)

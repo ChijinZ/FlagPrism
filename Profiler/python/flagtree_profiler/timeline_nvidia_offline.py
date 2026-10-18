@@ -39,9 +39,10 @@ def decode_capture(capture, raw):
 def decoder_rules(capture):
     from . import timeline_nvidia_offline
     if _late(capture):
-        from . import timeline_events_nvidia_late, timeline_nvidia_late_raw, timeline_nvidia_late_storage
+        from . import timeline_events_nvidia_late, timeline_nvidia_late_raw, timeline_nvidia_late_storage, timeline_nvidia_late_async, timeline_nvidia_late_model
         return (timeline_nvidia_offline, timeline_events_nvidia_late,
-                timeline_nvidia_late_raw, timeline_nvidia_late_storage)
+                timeline_nvidia_late_raw, timeline_nvidia_late_storage,
+                timeline_nvidia_late_async, timeline_nvidia_late_model)
     from . import timeline_events_nvidia, timeline_nvidia, timeline_nvidia_async
     return (timeline_nvidia_offline, timeline_events_nvidia, timeline_nvidia,
             timeline_nvidia_async)

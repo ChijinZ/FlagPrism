@@ -76,3 +76,71 @@ def derive_late_async(decoded, manifest, *, shared_bytes):
                     **limitations)
     report['status'] = 'dynamic_byte_model_consistent'
     return report
+
+
+def lifecycle_roles(report):
+    """Program-local native-ordinal associations, never temporal flow grants.
+
+    Called only with a freshly derived collective model, not a cached report.
+    The caller binds each role to this invocation/program's actual raw ordinal.
+    Completion means a recorded return from a native wait/barrier, not the
+    unknown physical completion instant of an asynchronous operation.
+    """
+    if report.get('status') != 'dynamic_byte_model_consistent':
+        return {}
+    if report.get('model') != 'nvidia.late.shared_byte_lifecycle.v2':
+        raise ValueError('Unknown shared-byte lifecycle model')
+    roles = {}
+    for program in report['programs']:
+
+        def add(sequence, role):
+            if sequence is not None:
+                roles.setdefault((program['program'], sequence),
+                                 []).append(role)
+
+        for generation in program['generations']:
+            base = dict(generation_id=generation['identity'],
+                        generation_kind=generation['kind'],
+                        shared_base=program['shared_base'],
+                        generation_shared_ranges=generation['shared_ranges'],
+                        shared_range_encoding=report['shared_range_encoding'],
+                        qualification='conditional_byte_model_not_time_flow')
+            for submission in generation['submissions']:
+                add(
+                    submission['sequence'],
+                    dict(base,
+                         role='producer_submission',
+                         bytes=submission['bytes'],
+                         shared_ranges=submission['shared_ranges']))
+            add(generation['commit_sequence'], dict(base, role='group_commit'))
+            add(
+                generation['completion_observed_sequence'],
+                dict(base,
+                     role='completion_observed',
+                     observation=generation['completion_observation_kind']))
+            add(generation['publication_barrier_sequence'],
+                dict(base, role='publication_observed'))
+        for edge in program['consumer_edges']:
+            add(
+                edge['consumer_sequence'],
+                dict(role='shared_consumer',
+                     generation_id=edge['producer'],
+                     bytes=edge['bytes'],
+                     shared_base=program['shared_base'],
+                     shared_ranges=edge['shared_ranges'],
+                     shared_range_encoding=report['shared_range_encoding'],
+                     publication_barrier_sequence=edge['publication_barrier'],
+                     qualification='conditional_byte_model_not_time_flow'))
+        for edge in program['reuse']:
+            add(
+                edge['sequence'],
+                dict(role='physical_bytes_reused',
+                     previous_generation=edge['previous'],
+                     next_generation=edge['next'],
+                     bytes=edge['overlapping_bytes'],
+                     shared_base=program['shared_base'],
+                     shared_ranges=edge['overlapping_shared_ranges'],
+                     shared_range_encoding=report['shared_range_encoding'],
+                     barrier_sequence=edge['barrier_sequence'],
+                     qualification='conditional_byte_model_not_time_flow'))
+    return roles

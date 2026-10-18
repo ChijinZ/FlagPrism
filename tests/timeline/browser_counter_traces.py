@@ -31,6 +31,7 @@ def main():
     p.add_argument('--ui', type=Path, required=True)
     p.add_argument('--browser', type=Path, required=True)
     p.add_argument('--library-path', required=True)
+    p.add_argument('--require-coverage-key')
     args = p.parse_args()
     args.output.mkdir(exist_ok=False)
     os.environ['LD_LIBRARY_PATH'] = args.library_path
@@ -140,11 +141,30 @@ def main():
                         page.locator('.pf-track__title').filter(
                             has_text=title).first.locator('..').locator(
                                 '.pf-track__collapse-button').click()
-                        event = max((e for e in view['events']
-                                     if e['end_ns'] is not None),
+                        candidates = [
+                            e for e in view['events']
+                            if e['end_ns'] is not None and (
+                                not args.require_coverage_key
+                                or args.require_coverage_key in e['coverage'])
+                        ]
+                        need(candidates,
+                             'No interval with requested actual coverage')
+                        event = max(candidates,
                                     key=lambda e: e['end_ns'] - e['start_ns'])
-                        need(event['end_ns'] > event['start_ns'],
-                             'No positive real interval to select')
+                        need(
+                            any(e['end_ns'] is not None
+                                and e['end_ns'] > e['start_ns']
+                                for e in view['events']),
+                            'Actual trace contains no positive internal interval'
+                        )
+                        # A requested lifecycle may be shorter than one timer
+                        # update. Select its real zero-width slice unchanged;
+                        # the trace itself must still have positive intervals.
+                        need(
+                            event['end_ns'] >= event['start_ns']
+                            and (args.require_coverage_key
+                                 or event['end_ns'] > event['start_ns']),
+                            'No valid actual interval to select')
                         site = next(s for s in view['sites']
                                     if s['id'] == event['site_id'])
                         track_name = site.get('attributes',
@@ -157,6 +177,11 @@ def main():
                         tracks = page.locator('.pf-track__title').filter(
                             has_text=event['semantic'] + ' / ' + track_name +
                             ' / lane ')
+                        (folder / 'track-dom.json').write_text(
+                            json.dumps(page.locator(
+                                '.pf-track__title').all_text_contents(),
+                                       indent=2))
+                        tracks.first.wait_for(state='attached', timeout=10000)
                         need(tracks.count() > 0,
                              'No rendered semantic-group track')
                         end = max(r['relative_ns'] for r in view['records'])
@@ -203,6 +228,11 @@ def main():
                                 'counter_unit_only_precision_unverified'
                         ]:
                             need(field in body, 'Slice details lost ' + field)
+                        if args.require_coverage_key:
+                            need(
+                                args.require_coverage_key in body,
+                                'Requested coverage missing from actual slice details'
+                            )
                         page.screenshot(path=str(folder / 'details.png'))
                         (folder / 'details.txt').write_text(body)
                         page.keyboard.press('f')
@@ -229,6 +259,8 @@ def main():
                             dict(trace_file=row['trace_file'],
                                  trace_sha256=row['sha256'],
                                  event_id=event['id'],
+                                 required_coverage_key=args.
+                                 require_coverage_key,
                                  invocation_id=invocation,
                                  program_coordinates=observer[
                                      'program_coordinates'],

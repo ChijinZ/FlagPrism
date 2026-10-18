@@ -51,6 +51,11 @@ def canonicalize_late_capture(raw, *, owner, metadata, actor_indices=None):
         raise ValueError(
             'Late view program slots contradict actual launch geometry')
     decoded = decode_late_raw(plan, raw, slots=layout['slots'])
+    from .timeline_nvidia_late_async import derive_late_async, lifecycle_roles
+    dependencies = derive_late_async(decoded,
+                                     plan,
+                                     shared_bytes=compiled.get('shared'))
+    dynamic_roles = lifecycle_roles(dependencies)
     actors = plan['actors']
     if actor_indices is None:
         actor_indices = tuple(range(min(4, actors)))
@@ -186,6 +191,19 @@ def canonicalize_late_capture(raw, *, owner, metadata, actor_indices=None):
                     sequence += 1
                 occurrence = occurrences[site['id']]
                 occurrences[site['id']] += 1
+                coverage = {
+                    'nvidia.raw_ordinal':
+                    row['occurrence'],
+                    'nvidia.payload':
+                    row['payload'],
+                    'nvidia.raw_tag_offset_bytes':
+                    row['raw_tag_offset_bytes'],
+                    'nvidia.raw_payload_offset_bytes':
+                    row['raw_payload_offset_bytes']
+                }
+                role = dynamic_roles.get((logical, row['occurrence']))
+                if role:
+                    coverage['nvidia.dynamic_dependencies'] = role
                 events.append(
                     dict(id=stable_id(namespace, 'event', *refs),
                          observer_id=observer_id,
@@ -201,16 +219,7 @@ def canonicalize_late_capture(raw, *, owner, metadata, actor_indices=None):
                          iteration_id=None,
                          record_ids=refs,
                          missing_reason=None,
-                         coverage={
-                             'nvidia.raw_ordinal':
-                             row['occurrence'],
-                             'nvidia.payload':
-                             row['payload'],
-                             'nvidia.raw_tag_offset_bytes':
-                             row['raw_tag_offset_bytes'],
-                             'nvidia.raw_payload_offset_bytes':
-                             row['raw_payload_offset_bytes']
-                         }))
+                         coverage=coverage))
             observers.append(
                 dict(id=observer_id,
                      kind=kind,
