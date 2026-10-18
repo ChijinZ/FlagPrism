@@ -1,0 +1,13 @@
+# T042 昇腾读钟来源与 SDK 最终指令导出调查
+
+- 上轮对设计偏移的回答是状态分析，按 no-progress 处理；本轮恢复已授权工程，目标不缩减。起始 canonical detailed-profiler HEAD212786a clean；不修改 paper/旧 Study，不启动最终 reviewers。
+- 实际 SSH 恢复，复用 chijin_v3.5.x；r020 installed Python 与已留存 actor.o 均存在。实际 installed c220 GetSystemCycleImpl 读取 MOV SYS_CNT（CPU_DEBUG 分支另用 host clock，不能混用），header SHA0a889a0604d0383b38045c8c0ee38361ab6ce42277507f4ecb0d0e53d524b948。旧 actor 为 ELF64 hiipu REL，machine0x1029/flags0x930000；与旧 EXEC 区分，不把对象类型当时钟证明。只读报告在 artifacts/timeline/run-028/preflight/inspect.json。
+- 先复核 r020 所有 machine-v1..v6 已有失败：objdump不解码、-S拒绝、save-temps只留.o、print-after拒绝；没有无变化重跑这些原命令。本轮 SDK 目录发现 msobjdump，但实际 help/source显示它只解包/显示 ELF metadata，不是 ISA 反汇编器；不因名称把它作为读钟证明。
+- 新 owned frontend-v1 controller3243148/start331336451、worker3243182/start331336456 terminal0/0.116s；对实际编译输入的 -### 返回0但stderr明确unsupported option ###，没有frontend命令。不能用rc0宣称支持。实际原件/输入命令和控制器记录均在新独立 /tmp/chijin-timeline-r028/runs/frontend-v1。
+- 新 owned options-v1 controller（实际身份见launch.json，不据推测填PID）、worker3244390/start331346398 已terminal1：直接-print-after-all unknown，-mllvm -print-after-isel被过滤为unsupported -print-after，-via-file-asm同样被过滤为设备侧-S。harness汇总误引用删除后的front变量，NameError在三次实际工具调用之后发生；保留原失败，不将此当产品失败或重跑编译。后续只恢复工具receipt，不重新执行这些调用。
+- 本轮没有新增用户数学/设备launch/native build，也没有改变clock资格。当前重点仍为昇腾/GCU时间尺度和公共消费纵向；SDK最终指令来源待解决，不以LLVM或generic HWTS/PMU频率冒充完整机器资格。完整三后端P01、异步代际、独立新数学、SQL/UI与最后额外三代码review保持必达。
+
+- 本轮继续落实实际代码：ascend_compiler.finish 对新 timeline 编译把 receipt 中实际 actor object 封成 compiled_object/base64/bytes/SHA，沿用原 portable-file 机制；每对象 bounded read32MiB，哈希/长度不符显式拒绝，缺对象明确 missing，不给时钟/边界资格。旧 count/非timeline与旧captures不强制新字段；不新增框架/ABI/native改动。cache_key已有capture_sources含ascend_compiler.py，故新编译身份随实现变化。
+- GCU仅缓存full precommit格式，391332/start1014100064、worker391333/start1014100068 terminal0；两轮固定点/AST同一，最终实际对应这两个身份均missing。首个owner脚本误复用旧r027硬编码身份，旧报告保留但不作为本轮清理凭据；最终format-owners-v2.json按实际terminal动态读取身份。
+- Asc source测试第一次launch网关返回no available gateway；独立核test-input/run目录都不存在，扫描仅匹配本次docker检查父进程，没有启动测试owner，因此才重试原任务。重试controller3247833/start331388372已terminal0/1.317s；normal/-O各28 pytest通过（含4个新保留/篡改/缺失/预算测试），旧driver tests一并通过。测试明确用current source namespace，不冒称新installed wheel。实际旧AIV object21432B/SHA72a4b0fc58229c48354d2418bacb1f1dfdcb63766a6040a247c585978dbe1abc经新bounded portable封存逐byte/哈希核对；未重放用户数学/编译。
+- 最终source-test/格式/对象/控制器原件见artifacts/timeline/run-028/preflight/ascend-retention-evidence-v2.tgz及integration/evidence/timeline-ascend-sdk-r028/retention-verification.json。collector v1沿用调查阶段source_changed=false字段，保留但不据此描述改动；v2只修collection scope，无产品重测/编译。当前是source改动与其测试通过，不是新独立安装/public fresh device capture通过。下一实际动作是Asc独立安装并以正常公开入口新编译/留存，验证compiled_object脱离scratch后可消费，随后接时间/公共导出；SDK最终指令来源限制及其余三后端完整门不被豁免。

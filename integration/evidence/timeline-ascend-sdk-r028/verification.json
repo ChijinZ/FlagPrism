@@ -1,0 +1,225 @@
+{
+  "scope": "actual SDK capability investigation; not unit/source/boundary qualification",
+  "archive": {
+    "file": "artifacts/timeline/run-028/preflight/ascend-capability-evidence-v1.tgz",
+    "bytes": 24755,
+    "members": 24,
+    "sha256": "017930851b7c12f9f80375b03466112d94072f832f6fa10e0e29d08f7d7bfd2c"
+  },
+  "collection": {
+    "status": "capability_investigation_not_clock_qualification",
+    "jobs": [
+      {
+        "run": "frontend-v1",
+        "terminal": {
+          "controller": {
+            "pid": 3243148,
+            "ppid": 2511431,
+            "pgid": 3243148,
+            "startticks": 331336451
+          },
+          "worker": {
+            "pid": 3243182,
+            "ppid": 3243148,
+            "pgid": 3243182,
+            "startticks": 331336456
+          },
+          "argv": [
+            "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+            "-I",
+            "/tmp/chijin-timeline-r028/input-v1/probe.py",
+            "--output",
+            "/tmp/chijin-timeline-r028/runs/frontend-v1/output"
+          ],
+          "argv_sha256": "120575d2d21a9385c871ba8a196cde43f9e1acb232e5d14af30a7a1b5a328edd",
+          "script_sha256": "dd9fe50701b8522434cc9fe0c63cdb2ab9149ad5f590015250582494ec243e58",
+          "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+          "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+          "timeout_seconds": 150,
+          "state": "terminal",
+          "returncode": 0,
+          "wall_ns": 115925113
+        },
+        "identities": [
+          {
+            "role": "controller",
+            "identity": {
+              "pid": 3243148,
+              "ppid": 2511431,
+              "pgid": 3243148,
+              "startticks": 331336451
+            },
+            "status": "missing"
+          },
+          {
+            "role": "worker",
+            "identity": {
+              "pid": 3243182,
+              "ppid": 3243148,
+              "pgid": 3243182,
+              "startticks": 331336456
+            },
+            "status": "missing"
+          }
+        ]
+      },
+      {
+        "run": "options-v1",
+        "terminal": {
+          "controller": {
+            "pid": 3244356,
+            "ppid": 2511431,
+            "pgid": 3244356,
+            "startticks": 331346392
+          },
+          "worker": {
+            "pid": 3244390,
+            "ppid": 3244356,
+            "pgid": 3244390,
+            "startticks": 331346398
+          },
+          "argv": [
+            "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+            "-I",
+            "/tmp/chijin-timeline-r028/input-v2/probe.py",
+            "--output",
+            "/tmp/chijin-timeline-r028/runs/options-v1/output"
+          ],
+          "argv_sha256": "842a867efbca06140df3be303b6dcdb4a591755f701a49adb06fe26e7baf2954",
+          "script_sha256": "5af61bec358550ed645d292d00e302bd4cb4744aa1ab861eaa691f3db93caa86",
+          "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+          "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+          "timeout_seconds": 200,
+          "state": "terminal",
+          "returncode": 1,
+          "wall_ns": 165696032
+        },
+        "identities": [
+          {
+            "role": "controller",
+            "identity": {
+              "pid": 3244356,
+              "ppid": 2511431,
+              "pgid": 3244356,
+              "startticks": 331346392
+            },
+            "status": "missing"
+          },
+          {
+            "role": "worker",
+            "identity": {
+              "pid": 3244390,
+              "ppid": 3244356,
+              "pgid": 3244390,
+              "startticks": 331346398
+            },
+            "status": "missing"
+          }
+        ]
+      }
+    ],
+    "device_launches": 0,
+    "source_changed": false
+  },
+  "files": {
+    "collection.json": {
+      "bytes": 3385,
+      "sha256": "fabb27126828c424e4b045c20419307aea3dcf171cf87d54012c9bb2cf361595"
+    },
+    "frontend-v1.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "input-v1/probe.py": {
+      "bytes": 2050,
+      "sha256": "dd9fe50701b8522434cc9fe0c63cdb2ab9149ad5f590015250582494ec243e58"
+    },
+    "input-v2/probe.py": {
+      "bytes": 1845,
+      "sha256": "5af61bec358550ed645d292d00e302bd4cb4744aa1ab861eaa691f3db93caa86"
+    },
+    "options-v1.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/frontend-v1/launch.json": {
+      "bytes": 845,
+      "sha256": "d457782e1b412234d450b26cb9e9e0a313a3b038699f837913f597d9a9a629b4"
+    },
+    "runs/frontend-v1/output/actual-adapted.ll": {
+      "bytes": 74591,
+      "sha256": "e201ed9ed3739f36ee6a19c35bb776395dc1ca775c459c210f4ad6a82350caa8"
+    },
+    "runs/frontend-v1/output/driver.stderr": {
+      "bytes": 240,
+      "sha256": "8a59e22eb2a5de7e45299ad44526ddc26330097d82a879d4b7f0a42e89840976"
+    },
+    "runs/frontend-v1/output/driver.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/frontend-v1/output/result.json": {
+      "bytes": 1474,
+      "sha256": "d3312e9b6f71fcbecf6253fd740a4e91c9f39f541419c3ffaa491afe74732aa5"
+    },
+    "runs/frontend-v1/stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/frontend-v1/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/frontend-v1/terminal.json": {
+      "bytes": 889,
+      "sha256": "af8e5f2cea1269411d135546f9c53a4f8ca1738b050a321fa29cc003ff39ff76"
+    },
+    "runs/options-v1/launch.json": {
+      "bytes": 844,
+      "sha256": "b49ffe65b618becc286353c181401bac5854b6e42191980effb23b39e27abedd"
+    },
+    "runs/options-v1/output/actual-adapted.ll": {
+      "bytes": 74591,
+      "sha256": "e201ed9ed3739f36ee6a19c35bb776395dc1ca775c459c210f4ad6a82350caa8"
+    },
+    "runs/options-v1/output/direct-print.stderr": {
+      "bytes": 53,
+      "sha256": "78a984f057bfb9455ce31b8131f427e44a063bdfd24a9c700e6451367853a905"
+    },
+    "runs/options-v1/output/direct-print.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/options-v1/output/selected-machine.stderr": {
+      "bytes": 41,
+      "sha256": "9f1a647ab30fd1d42d38ab7e098ddb5c50311492ca3b44361ca5ab28c51cb149"
+    },
+    "runs/options-v1/output/selected-machine.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/options-v1/output/via-asm.stderr": {
+      "bytes": 46,
+      "sha256": "10f87b58df22b66f3db049aee0a02447826da7efda009a7af886dbb052b58a7d"
+    },
+    "runs/options-v1/output/via-asm.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/options-v1/stderr.log": {
+      "bytes": 506,
+      "sha256": "592513b27ed9cb0409c541d236e80ba3819a04f883121e0e1ca3daef2a12a84c"
+    },
+    "runs/options-v1/stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "runs/options-v1/terminal.json": {
+      "bytes": 888,
+      "sha256": "a31b94a7897729972925beff79587382a8dcfd3aaadfaee06051e84069ee956c"
+    }
+  },
+  "source_changed": false,
+  "new_device_math": false,
+  "new_product_tests": false
+}

@@ -45,6 +45,12 @@ a completion event; it does not insert a per-launch global synchronization.
 Readback happens during finalization, after the event reports completion.
 
 Ascend selects first/last logical programs and reserves AIC/AIV actor segments.
+New timeline compilations also seal each available actor object into the
+compiler handoff as `compiled_object`, checking its receipt hash/length and a
+32 MiB per-object bound. This survives compiler scratch cleanup and permits
+later offline inspection. A missing object is explicit; old captures remain
+readable. Retaining object bytes grants no counter-unit, source-boundary or
+shared-clock qualification.
 An unwritten admissible segment remains explicitly unobserved; it is not proof
 of execution or non-execution. Current real recurrence and Softmax probes use
 `enable_auto_blockify=False`; broader lowering, multi-function and exclusive

@@ -287,6 +287,52 @@ def test_successful_enclosing_sdk_output_association(sdk_producer_fixture):
     assert association['codegen_job_count'] == 1
 
 
+@pytest.mark.parametrize('changed', [False, True])
+def test_timeline_seals_actor_object_before_scratch_cleanup(
+        sdk_producer_fixture, changed):
+    """Retention fixtures are not final-machine clock qualification."""
+    import base64
+    import hashlib
+    event, job, root, sdk, receipt = sdk_producer_fixture
+    event.metadata['debug_record_layout'] = 'ascend_source_timeline_v1'
+    data = b'\x7fELF actor object fixture\x00\xff\r\n'
+    retained = job / 'output.bin'
+    retained.write_bytes(data + b'changed' if changed else data)
+    receipt['object'] = dict(path='/gone/kernel.o',
+                             retained_path=str(retained),
+                             sha256=hashlib.sha256(data).hexdigest(),
+                             bytes=len(data))
+    (job / 'receipt.json').write_text(json.dumps(receipt))
+    if changed:
+        with pytest.raises(RuntimeError, match='artifact changed'):
+            m.finish(event, returncode=0)
+        return
+    m.finish(event, returncode=0)
+    retained.unlink()
+    artifact, = event.metadata['flagprism_ascend_handoff']['artifacts']
+    assert artifact['compiled_object_status'] == 'retained'
+    obj = artifact['compiled_object']
+    assert base64.b64decode(obj['data'], validate=True) == data
+    assert obj['sha256'] == receipt['object']['sha256']
+    assert obj['bytes'] == len(data)
+
+
+def test_timeline_missing_actor_object_is_explicit(sdk_producer_fixture):
+    event, job, root, sdk, receipt = sdk_producer_fixture
+    event.metadata['debug_record_layout'] = 'ascend_source_timeline_v1'
+    m.finish(event, returncode=0)
+    artifact, = event.metadata['flagprism_ascend_handoff']['artifacts']
+    assert artifact['compiled_object_status'] == 'missing'
+    assert 'compiled_object' not in artifact
+
+
+def test_actor_object_retention_is_bounded(tmp_path):
+    path = tmp_path / 'oversized.bin'
+    path.write_bytes(b'oversized')
+    with pytest.raises(RuntimeError, match='exceeds byte budget'):
+        m._portable_file(dict(path=str(path)), max_bytes=4)
+
+
 @pytest.mark.parametrize(
     'mutation', ['group', 'compile', 'failed-job', 'binary', 'failed-sdk'])
 def test_missing_producer_relation_fails_closed(sdk_producer_fixture,
@@ -332,31 +378,47 @@ def test_driver_receipt_preserves_bound_compiler_identity(
     assert handoff['ascend_compiler_identity'] == identity
 
 
-def test_source_timeline_reuses_coordinates_but_not_census_storage(tmp_path, monkeypatch):
+def test_source_timeline_reuses_coordinates_but_not_census_storage(
+        tmp_path, monkeypatch):
     plugin = tmp_path / 'plugin.so'
     plugin.write_bytes(b'explicit-test-plugin')
     monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
-    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE', str(tmp_path / 'captures'))
-    monkeypatch.setattr(m.shutil, 'which', lambda name, **kw: '/sdk/bisheng' if name == 'bisheng' else '/llvm/opt-15')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE',
+                       str(tmp_path / 'captures'))
+    monkeypatch.setattr(
+        m.shutil, 'which', lambda name, **kw: '/sdk/bisheng'
+        if name == 'bisheng' else '/llvm/opt-15')
     source = tmp_path / 'input.mlir'
-    source.write_text('func.func @entry(%lock: memref<?xi8>, %work: memref<?xi8>, %x: memref<?xf32>, %y: memref<?xf32>, %trace: memref<?xi64>) attributes {SyncBlockLockArgIdx = 0 : i64, WorkspaceArgIdx = 1 : i64, global_kernel = "local"} { return }')
+    source.write_text(
+        'func.func @entry(%lock: memref<?xi8>, %work: memref<?xi8>, %x: memref<?xf32>, %y: memref<?xf32>, %trace: memref<?xi64>) attributes {SyncBlockLockArgIdx = 0 : i64, WorkspaceArgIdx = 1 : i64, global_kernel = "local"} { return }'
+    )
     (tmp_path / 'driver.py').write_bytes(b'explicit CPU driver fixture')
     backend = types.ModuleType('triton.backends.ascend')
     backend.utils = SimpleNamespace(__file__=str(tmp_path / 'utils.py'),
-        get_ascend_arch_from_env=lambda: 'c220',
-        is_ffts_supported=lambda arch: True, force_disable_ffts=lambda: False)
+                                    get_ascend_arch_from_env=lambda: 'c220',
+                                    is_ffts_supported=lambda arch: True,
+                                    force_disable_ffts=lambda: False)
     monkeypatch.setitem(sys.modules, 'triton.backends.ascend', backend)
     metadata = dict(flagprism_ascend_observation_request=dict(
-        program_policy='runtime_first_last', semantics=['source_control_interval']),
-        flagprism_ascend_trace_capacity=128,
-        flagprism_ascend_trace_source_argument_index=2,
-        flagprism_ascend_source_timeline_version=1,
-        debug_frontend_marker_abi=dict(version=3, site_count=2, record_layout='ascend_source_census_v3'),
-        debug_census_columns=2, debug_record_layout='ascend_source_timeline_v1')
-    event = SimpleNamespace(backend='ascend', metadata=metadata,
-                            command=['bishengir-compile', str(source)], environment={'PATH':'/sdk'})
+        program_policy='runtime_first_last',
+        semantics=['source_control_interval']),
+                    flagprism_ascend_trace_capacity=128,
+                    flagprism_ascend_trace_source_argument_index=2,
+                    flagprism_ascend_source_timeline_version=1,
+                    debug_frontend_marker_abi=dict(
+                        version=3,
+                        site_count=2,
+                        record_layout='ascend_source_census_v3'),
+                    debug_census_columns=2,
+                    debug_record_layout='ascend_source_timeline_v1')
+    event = SimpleNamespace(backend='ascend',
+                            metadata=metadata,
+                            command=['bishengir-compile',
+                                     str(source)],
+                            environment={'PATH': '/sdk'})
     m.prepare(event)
-    assert event.environment['FLAGPRISM_ASCEND_TRACE_MODE'] == 'source_timeline_v1'
+    assert event.environment[
+        'FLAGPRISM_ASCEND_TRACE_MODE'] == 'source_timeline_v1'
     assert event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] == '128'
     assert event.environment['FLAGPRISM_ASCEND_CENSUS_COLUMNS'] == '2'
     assert 'FLAGPRISM_ASCEND_TRACE_PROGRAM' not in event.environment
@@ -369,21 +431,31 @@ def test_source_timeline_reuses_coordinates_but_not_census_storage(tmp_path, mon
     ('debug_record_layout', 'ascend_source_census_v3'),
     ('flagprism_ascend_trace_capacity', 16385),
 ])
-def test_timeline_handoff_rejects_inconsistent_frontend_before_driver(tmp_path, monkeypatch, field, value):
+def test_timeline_handoff_rejects_inconsistent_frontend_before_driver(
+        tmp_path, monkeypatch, field, value):
     plugin = tmp_path / 'plugin.so'
     plugin.write_bytes(b'explicit-test-plugin')
     monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
-    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE', str(tmp_path / 'captures'))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_COMPILER_CAPTURE',
+                       str(tmp_path / 'captures'))
     metadata = dict(flagprism_ascend_observation_request=dict(
-        program_policy='runtime_first_last', semantics=['source_control_interval']),
-        flagprism_ascend_trace_capacity=128,
-        flagprism_ascend_trace_source_argument_index=2,
-        flagprism_ascend_source_timeline_version=1,
-        debug_frontend_marker_abi=dict(version=3, site_count=2, record_layout='ascend_source_census_v3'),
-        debug_census_columns=2, debug_record_layout='ascend_source_timeline_v1')
+        program_policy='runtime_first_last',
+        semantics=['source_control_interval']),
+                    flagprism_ascend_trace_capacity=128,
+                    flagprism_ascend_trace_source_argument_index=2,
+                    flagprism_ascend_source_timeline_version=1,
+                    debug_frontend_marker_abi=dict(
+                        version=3,
+                        site_count=2,
+                        record_layout='ascend_source_census_v3'),
+                    debug_census_columns=2,
+                    debug_record_layout='ascend_source_timeline_v1')
     metadata[field] = value
-    event = SimpleNamespace(backend='ascend', metadata=metadata,
-                            command=['bishengir-compile', 'missing-fixture.mlir'], environment={'PATH':'/sdk'})
+    event = SimpleNamespace(
+        backend='ascend',
+        metadata=metadata,
+        command=['bishengir-compile', 'missing-fixture.mlir'],
+        environment={'PATH': '/sdk'})
     with pytest.raises(ValueError):
         m.prepare(event)
     assert not (tmp_path / 'captures').exists()

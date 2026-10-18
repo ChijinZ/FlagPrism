@@ -44,14 +44,16 @@ def prepare(event):
         destination = tempfile.mkdtemp(prefix='flagprism-ascend-compiler-')
     census = bool(requested
                   and requested.get('program_policy') == 'all_grid_census')
-    timeline = bool(requested and requested.get('program_policy') == 'runtime_first_last')
+    timeline = bool(
+        requested and requested.get('program_policy') == 'runtime_first_last')
     if requested:
         fields = (('flagprism_ascend_trace_capacity', 1,
                    1_000_000), ('flagprism_ascend_trace_program', 0, None),
                   ('flagprism_ascend_trace_source_argument_index', 0, None))
         if timeline:
             fields = (('flagprism_ascend_trace_capacity', 1, 16384),
-                      ('flagprism_ascend_trace_source_argument_index', 0, None))
+                      ('flagprism_ascend_trace_source_argument_index', 0,
+                       None))
         if census:
             fields = (('flagprism_ascend_trace_source_argument_index', 0,
                        None), )
@@ -77,10 +79,11 @@ def prepare(event):
         raise FileNotFoundError(plugin)
     if requested:
         semantics = requested.get('semantics')
-        allowed = {'source_control_interval'} if timeline else {'counter'} if census else {
-            'issue', 'wait_bracket', 'control_checkpoint',
-            'operation_checkpoint'
-        }
+        allowed = {'source_control_interval'
+                   } if timeline else {'counter'} if census else {
+                       'issue', 'wait_bracket', 'control_checkpoint',
+                       'operation_checkpoint'
+                   }
         if (not isinstance(semantics, (list, tuple)) or not semantics
                 or any(value not in allowed for value in semantics)
                 or len(set(semantics)) != len(semantics)):
@@ -97,17 +100,25 @@ def prepare(event):
         if timeline:
             abi = event.metadata.get('debug_frontend_marker_abi') or {}
             columns = event.metadata.get('debug_census_columns')
-            if (type(event.metadata.get('flagprism_ascend_source_timeline_version')) is not int
-                    or event.metadata['flagprism_ascend_source_timeline_version'] != 1
-                    or abi.get('version') != 3
-                    or type(columns) is not int or not 1 <= columns <= 128
+            if (type(
+                    event.metadata.get(
+                        'flagprism_ascend_source_timeline_version')) is not int
+                    or
+                    event.metadata['flagprism_ascend_source_timeline_version']
+                    != 1 or abi.get('version') != 3 or type(columns) is not int
+                    or not 1 <= columns <= 128
                     or abi.get('site_count') != columns
                     or abi.get('record_layout') != 'ascend_source_census_v3'
-                    or event.metadata.get('debug_record_layout') != 'ascend_source_timeline_v1'):
-                raise ValueError('Ascend timeline requires actual v3 frontend coordinates and v1 late storage')
+                    or event.metadata.get('debug_record_layout')
+                    != 'ascend_source_timeline_v1'):
+                raise ValueError(
+                    'Ascend timeline requires actual v3 frontend coordinates and v1 late storage'
+                )
             event.environment['FLAGPRISM_ASCEND_CENSUS_COLUMNS'] = str(columns)
-            event.environment['FLAGPRISM_ASCEND_TRACE_MODE'] = 'source_timeline_v1'
-            event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] = str(event.metadata['flagprism_ascend_trace_capacity'])
+            event.environment[
+                'FLAGPRISM_ASCEND_TRACE_MODE'] = 'source_timeline_v1'
+            event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] = str(
+                event.metadata['flagprism_ascend_trace_capacity'])
         elif census:
             version = event.metadata.get(
                 'flagprism_ascend_source_census_version')
@@ -251,10 +262,19 @@ def prepare(event):
     event.metadata['flagprism_ascend_handoff'] = provenance
 
 
-def _portable_file(info):
+def _portable_file(info, *, max_bytes=None):
     """Seal exact retained producer bytes, without canonical text conversion."""
     retained = Path(info.get('retained_path') or info['path'])
-    data = retained.read_bytes()
+    if max_bytes is None:
+        data = retained.read_bytes()
+    else:
+        if type(max_bytes) is not int or max_bytes < 1:
+            raise ValueError('Compiler artifact byte budget must be positive')
+        with retained.open('rb') as source:
+            data = source.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            raise RuntimeError(
+                'Retained compiler artifact exceeds byte budget')
     digest = hashlib.sha256(data).hexdigest()
     if digest != info['sha256'] or len(data) != info.get('bytes', len(data)):
         raise RuntimeError('Retained compiler artifact changed: ' +
@@ -312,6 +332,17 @@ def finish(event, *, returncode):
         if receipt_path.exists():
             receipt = json.loads(receipt_path.read_text())
             artifact['driver_job'] = receipt
+            if (not returncode and event.metadata.get('debug_record_layout')
+                    == 'ascend_source_timeline_v1'):
+                # A driver pathname disappears with its compilation scratch.
+                # Seal the real actor object while it still exists so offline
+                # inspection never needs to rerun the compiler/application.
+                # This retains inputs; it grants no clock/boundary proof.
+                artifact['compiled_object_status'] = 'missing'
+                if receipt.get('object') is not None:
+                    artifact['compiled_object'] = _portable_file(
+                        receipt['object'], max_bytes=32 * 1024 * 1024)
+                    artifact['compiled_object_status'] = 'retained'
             for item in receipt.get('inputs', []):
                 if item.get('path') == metadata.get('module_identifier'):
                     artifact['original_input_sha256'] = item['sha256']
