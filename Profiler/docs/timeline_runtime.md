@@ -509,3 +509,21 @@ Perfetto UI, with the bundle unchanged. These checks cover counter-unit-only
 export plumbing, not fine timing precision, final source boundaries, physical
 async reuse, time flows, independent-math qualification or full UI acceptance.
 See [r018 evidence](../../integration/evidence/timeline-reexport-ui-r018/README.md).
+
+### Late NVIDIA native boundary diagnostics
+
+For inspected SM120 late captures, `native_boundary_control_file` names the
+retained `late-native-boundaries.json` diagnostic. The public offline exporter
+also derives this report under its versioned control report's
+`native_boundaries` field without replaying the application. Original PTX
+instruction lines are bound to actual LDGSTS, LDGDEPBAR, BAR.SYNC and LDSM
+instructions through the retained object and both disassemblies. Per-site
+`native_boundary_control_order_checked` means a conditional forward control
+order relative to the inline reader, with external entry rejected. Unknown,
+predicated or ambiguous forms remain explicitly unverified.
+
+This diagnostic does not establish the timer-to-record register/store value
+flow, all-participant execution, source-region cost, engine busy intervals or
+physical completion times. It does not enable dependency arrows. Each report
+retains implementation digests so a future offline rule can derive a new
+report while preserving the initial raw capture and diagnostics.

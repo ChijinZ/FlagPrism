@@ -275,8 +275,9 @@ class LateTimelineHook(InstrumentationHook):
                 from ..timeline_nvidia_late_control import inspect_late_wait_control
                 from ..timeline_store import read_artifact
                 machine_base = Path('machine') / owner['binary_id']
+                actual_machine = load_late_machine_map(directory, capture)
                 control = inspect_late_wait_control(
-                    machine_map=load_late_machine_map(directory, capture),
+                    machine_map=actual_machine,
                     sass_lines=read_artifact(
                         directory, str(machine_base / 'lines.stdout')),
                     sass_json=read_artifact(directory,
@@ -286,6 +287,18 @@ class LateTimelineHook(InstrumentationHook):
                     machine_base / 'late-wait-control.json')
                 _persist(directory / capture['native_wait_control_file'],
                          (json.dumps(control, indent=2) + '\n').encode())
+                from ..timeline_nvidia_late_boundaries import load_native_boundary_report
+                try:
+                    boundaries = load_native_boundary_report(
+                        directory, capture, actual_machine)
+                except (ValueError, OSError, KeyError, TypeError) as error:
+                    boundaries = dict(status='native_boundaries_unavailable',
+                                      reason=str(error),
+                                      time_flows_qualified=False)
+                capture['native_boundary_control_file'] = str(
+                    machine_base / 'late-native-boundaries.json')
+                _persist(directory / capture['native_boundary_control_file'],
+                         (json.dumps(boundaries, indent=2) + '\n').encode())
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))

@@ -64,15 +64,24 @@ def load_counter_unit_proofs(directory, capture, batch):
     return legacy(directory, capture, batch)
 
 
-def control_evidence(capture, machine_map, *, sass_lines, sass_json):
+def control_evidence(capture,
+                     machine_map,
+                     *,
+                     sass_lines,
+                     sass_json,
+                     directory=None):
     if _late(capture):
         from . import timeline_nvidia_late_control
-        return (timeline_nvidia_late_control.inspect_late_wait_control(
+        report = timeline_nvidia_late_control.inspect_late_wait_control(
             machine_map=machine_map,
             sass_lines=sass_lines,
             sass_json=sass_json,
-            plan=capture['owner']['plan']),
-                Path(timeline_nvidia_late_control.__file__))
+            plan=capture['owner']['plan'])
+        if directory is not None:
+            from .timeline_nvidia_late_boundaries import load_native_boundary_report
+            report['native_boundaries'] = load_native_boundary_report(
+                directory, capture, machine_map)
+        return report, Path(timeline_nvidia_late_control.__file__)
     from . import timeline_nvidia_control
     return (timeline_nvidia_control.inspect_wait_control_brackets(
         machine_map=machine_map,

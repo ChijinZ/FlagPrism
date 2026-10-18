@@ -188,7 +188,8 @@ def reexport_capture(directory, original_file):
             actual_map,
             sass_lines=read_artifact(directory,
                                      machine_base + '/lines.stdout'),
-            sass_json=read_artifact(directory, machine_base + '/json.stdout'))
+            sass_json=read_artifact(directory, machine_base + '/json.stdout'),
+            directory=directory)
         control_inputs = dict(schema_version=1,
                               machine_revision=machine_revision,
                               plan_sha256=sha256(json_bytes(owner['plan'])),

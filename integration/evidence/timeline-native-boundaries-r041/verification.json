@@ -1,0 +1,219 @@
+{
+  "base_commit": "de4e968eda43f66908105cd70597daf32d2b6914",
+  "archive": {
+    "path": "artifacts/timeline/run-041/preflight/native-boundaries-evidence-v1.tgz",
+    "bytes": 31748559,
+    "sha256": "f80be478b872b0143c5f53a8ff5100407ab48bb956dd37f5c2ce4167bb3c6cd0",
+    "members": 3368,
+    "sha_verified_files": 3365
+  },
+  "installation": {
+    "status": "installed_default_native_boundaries_normal_O_offline_TP_passed_not_valueflow_or_time_arrows",
+    "wheel_sha256": "bef5a3dfbf4715209af7b456bf237eb7ae748ca33563b0b749c4d9dbd60bab8f",
+    "installed_members": 618,
+    "default_actual": [
+      {
+        "invocation_id": "invocation-7250ba9c7f6048b4a4e3e131ba137b16",
+        "sites": 15,
+        "report_sha256": "bce545db2b8331711d2578f2dbdadf32f736772d35c494434d8f8fc23654f131"
+      },
+      {
+        "invocation_id": "invocation-cc23f631db474f52ba836b46dc959a5a",
+        "sites": 15,
+        "report_sha256": "bce545db2b8331711d2578f2dbdadf32f736772d35c494434d8f8fc23654f131"
+      }
+    ],
+    "offline_reports": [
+      "/workspace/chijin-timeline-r041/runs/followup-installed-v1/output/offline/retained-timeline/derived/control/ae0bd5cfad0b081587f0348938a944d673a6059298f46faa21f0e7dc6ce010e4/wait-control.json",
+      "/workspace/chijin-timeline-r041/runs/followup-installed-v1/output/offline/retained-timeline/derived/control/6c23ef7b187d9c586107f7ed06d4dabc87786602b353607bb6c8dd35a4a5120f/wait-control.json"
+    ],
+    "python": "/workspace/chijin-timeline-r041/runs/install-public-v1/output/venv/bin/python"
+  },
+  "product_source_sha256": {
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_boundaries.py": "82f1489c4b78e99f76ae70f2b929ae4e108b5fec43c5bcf7aabea3714ca23852",
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "30deed67533b32c0b71fa16797fb3bf75d9c4e1307d066c7d46be1ae5621c4d7",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_offline.py": "4c6d562c54085f13e184ee41cfc4ce35bd95a38b732daa85176ca6cbb7aa294b",
+    "Profiler/python/flagtree_profiler/timeline_reexport.py": "91122b13cf6f48d5beb32d18ec3db3159d0b7ca23c34403704690302468ca8e1",
+    "tests/timeline/p01_nvidia_native_boundaries.py": "5de714c5f0fa5199387069045f33ca46d2faff8a7dbd0e3e7f7f1440b31755cf",
+    "Profiler/docs/timeline_runtime.md": "23ea170837c218873fddfce648f2f9c05f738d5056bca9cb605a4c25c1902f59"
+  },
+  "actual_tests": {
+    "normal": 170,
+    "optimized": 170,
+    "default_mathematical_calls": 23,
+    "pipeline_mathematical_calls": 4,
+    "offline": {
+      "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+      "real_captures": 2,
+      "real_traces": 16,
+      "fresh_reexport_processes": 3,
+      "original_artifacts_unchanged": 102,
+      "original_environment_denied_in_two_processes": true,
+      "forbidden_environment_roots": [
+        "/workspace/chijin-timeline-r041/runs/install-public-v1/output/pipeline-device/",
+        "/workspace/chijin-timeline-r041/install-public-input-v1/source/",
+        "/workspace/chijin-timeline-r041/runs/install-public-v1/cache/",
+        "/workspace/chijin-timeline-r041/runs/install-public-v1/tmp/"
+      ],
+      "trace_bytes_match_prior_bundle": true,
+      "application_replayed": false,
+      "raw_originals": {
+        "captures/invocation-7250ba9c7f6048b4a4e3e131ba137b16.raw": "824c3ae998fcba2d91d8a7f64f2de2cfa0b0874a058048b8839aa5bb84ee1f92",
+        "captures/invocation-cc23f631db474f52ba836b46dc959a5a.raw": "94f9a440e9ddfe4f6d402d006d2be99bab7c7ea5a52c420b1acdec292e706774",
+        "captures/invocation-cc23f631db474f52ba836b46dc959a5a.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+        "captures/invocation-7250ba9c7f6048b4a4e3e131ba137b16.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad"
+      },
+      "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+    }
+  },
+  "controllers": {
+    "source-boundaries-v1": {
+      "controller": {
+        "pid": 80481,
+        "ppid": 1,
+        "pgid": 80481,
+        "startticks": 22270443
+      },
+      "worker": {
+        "pid": 80482,
+        "ppid": 80481,
+        "pgid": 80482,
+        "startticks": 22270446
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r041/source-boundaries-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r041/runs/source-boundaries-v1/output"
+      ],
+      "argv_sha256": "de2c5dec991522a4dca6c90bcf011f5c673c355d19df382edbd29b5893e4498d",
+      "script_sha256": "d23f6adf9c45bcc6638d5fb6cd7bd130e1bf8e00158a1563364874af68d73464",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 365235462
+    },
+    "install-public-v1": {
+      "controller": {
+        "pid": 80495,
+        "ppid": 1,
+        "pgid": 80495,
+        "startticks": 22281078
+      },
+      "worker": {
+        "pid": 80496,
+        "ppid": 80495,
+        "pgid": 80496,
+        "startticks": 22281081
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r041/install-public-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r041/runs/install-public-v1/output"
+      ],
+      "argv_sha256": "1f76f41ec0e7f0b50b11b9cc1d3782313edc7640293805b65f0a185572f7768e",
+      "script_sha256": "19db42b69ad60b69f35fb4ee243debe6a72bdb48512dfed3e99074e35b5c9d92",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 300,
+      "state": "terminal",
+      "returncode": 1,
+      "wall_ns": 102390163100
+    },
+    "followup-installed-v1": {
+      "controller": {
+        "pid": 80963,
+        "ppid": 1,
+        "pgid": 80963,
+        "startticks": 22298644
+      },
+      "worker": {
+        "pid": 80964,
+        "ppid": 80963,
+        "pgid": 80964,
+        "startticks": 22298647
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r041/followup-installed-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r041/runs/followup-installed-v1/output"
+      ],
+      "argv_sha256": "5db4f5cb5d3b76aaf931d1ef782615c797d2b08e41831d1e1373e964a829c582",
+      "script_sha256": "4d03102225031b939681a457fc2f8a6b47b8401aabb3d1c4fe13ab57959a2704",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 300,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 41887549837
+    }
+  },
+  "identities": {
+    "distinct_recorded_nv": 65,
+    "all_inactive": true,
+    "gcu_format": [
+      {
+        "run": "format-v1",
+        "identity": {
+          "pid": 420394,
+          "ppid": 1,
+          "pgid": 420394,
+          "startticks": 1017412408
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v1",
+        "identity": {
+          "pid": 420395,
+          "ppid": 420394,
+          "pgid": 420395,
+          "startticks": 1017412412
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v2",
+        "identity": {
+          "pid": 421802,
+          "ppid": 1,
+          "pgid": 421802,
+          "startticks": 1017428654
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v2",
+        "identity": {
+          "pid": 421803,
+          "ppid": 421802,
+          "pgid": 421803,
+          "startticks": 1017428658
+        },
+        "active": false,
+        "state": "missing"
+      }
+    ]
+  },
+  "native_build": "core r024 and standalone r036 exact unchanged source/executable reused; no new native build",
+  "evidence_limits": [
+    "conditional native instruction order only",
+    "raw timer/payload value provenance remains unverified",
+    "collective participation not granted by boundary report",
+    "read precision / physical overlap / engine busy / source cost / time flows not granted",
+    "no new UI run; renderer and canonical unchanged from r040",
+    "Ascend/GCU full timeline, independent qualification and final three reviewers outstanding"
+  ],
+  "r040_originals_exact_unchanged": true,
+  "test_only_correction": "Initial installed test imported source-only flagtree_profiler; corrected to installed flagtree.profiler. Same actual wheel and raw reused; failure retained."
+}
