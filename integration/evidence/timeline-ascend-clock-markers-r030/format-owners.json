@@ -1,0 +1,54 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 392096,
+      "ppid": 1,
+      "pgid": 392096,
+      "startticks": 1014318006
+    },
+    "worker": {
+      "pid": 392097,
+      "ppid": 392096,
+      "pgid": 392097,
+      "startticks": 1014318009
+    },
+    "argv": [
+      "/workspace/chijin-r6-gcu-final-v2/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r030-format/input-v1/format.py",
+      "--output",
+      "/workspace/chijin-timeline-r030-format/runs/format-v1/output"
+    ],
+    "argv_sha256": "2601c11422c058583e1a661daf613b323deb2269ef5c82a46cfe0fd8123aaf66",
+    "script_sha256": "adf8f8261689d65c170c2a3bab5b30cc921d9c504445dd5d4b4f06c749d5d212",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 220,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 1567119493
+  },
+  "identities": [
+    {
+      "role": "controller",
+      "expected": {
+        "pid": 392096,
+        "ppid": 1,
+        "pgid": 392096,
+        "startticks": 1014318006
+      },
+      "actual": null
+    },
+    {
+      "role": "worker",
+      "expected": {
+        "pid": 392097,
+        "ppid": 392096,
+        "pgid": 392097,
+        "startticks": 1014318009
+      },
+      "actual": null
+    }
+  ],
+  "active_owned_jobs": []
+}

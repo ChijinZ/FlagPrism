@@ -1,0 +1,260 @@
+{
+  "scope": "new installed native clock markers and actual machine addresses; no time-unit/source/async qualification",
+  "archive": {
+    "file": "artifacts/timeline/run-030/preflight/ascend-clock-marker-evidence-v1.tgz",
+    "bytes": 7438468,
+    "members": 1304,
+    "sha256": "d9efe10eec1b2fbd2add97b1d2b5a1707defcf5c6e7dc01afd2e11b894fe3a52"
+  },
+  "matching_source_files": 664,
+  "matching_installed_python": 88,
+  "native_plugin_sha256": "986dec30a0e598c3ecd62bb6965815d125fb85061e31c32beea51ef35cde1143",
+  "install_controller_returncode": 1,
+  "install_failure_stage": "summary_variable_shadowing",
+  "all_recorded_install_steps_passed": true,
+  "real_captures": 3,
+  "raw_intervals": 50,
+  "raw_endpoint_references": 100,
+  "inspection": {
+    "status": "actual_marked_counter_locations_checked_not_units_or_regions",
+    "plugin_sha256": "986dec30a0e598c3ecd62bb6965815d125fb85061e31c32beea51ef35cde1143",
+    "install_controller_returncode": 1,
+    "install_failure_stage": "summary_variable_shadowing",
+    "all_recorded_install_steps_passed": true,
+    "math_replayed": false,
+    "device_launches": 0,
+    "reports": [
+      {
+        "kind": "recurrence",
+        "binary_id": "67b2a235ec2dc516da993812a2c905f415708935b46c774ab18246a060b2a997",
+        "binary_sha256": "703a17ea8893f965f669714ed4da10e0434fc8b10df8edf122b958f548a8f748",
+        "dwarf_sha256": "cf03b6f559ecd18e00e0b3a59882864670e570ab7757f41113a590ef6476e7ff",
+        "planned_phases": 12,
+        "actual_marker_rows": 12,
+        "clock_rows": [
+          {
+            "site_id": 1,
+            "phase": "entry",
+            "line": 1,
+            "pc": 396,
+            "section": ".text",
+            "register": 14,
+            "instruction_word": "0x29c8880"
+          },
+          {
+            "site_id": 1,
+            "phase": "exit",
+            "line": 2,
+            "pc": 400,
+            "section": ".text",
+            "register": 15,
+            "instruction_word": "0x29e8880"
+          },
+          {
+            "site_id": 2,
+            "phase": "entry",
+            "line": 3,
+            "pc": 872,
+            "section": ".text",
+            "register": 12,
+            "instruction_word": "0x2988880"
+          },
+          {
+            "site_id": 2,
+            "phase": "exit",
+            "line": 4,
+            "pc": 964,
+            "section": ".text",
+            "register": 14,
+            "instruction_word": "0x29c8880"
+          },
+          {
+            "site_id": 3,
+            "phase": "entry",
+            "line": 5,
+            "pc": 1724,
+            "section": ".text",
+            "register": 4,
+            "instruction_word": "0x2888880"
+          },
+          {
+            "site_id": 3,
+            "phase": "exit",
+            "line": 6,
+            "pc": 1808,
+            "section": ".text",
+            "register": 12,
+            "instruction_word": "0x2988880"
+          },
+          {
+            "site_id": 4,
+            "phase": "entry",
+            "line": 7,
+            "pc": 2584,
+            "section": ".text",
+            "register": 17,
+            "instruction_word": "0x2a28880"
+          },
+          {
+            "site_id": 4,
+            "phase": "exit",
+            "line": 8,
+            "pc": 2680,
+            "section": ".text",
+            "register": 14,
+            "instruction_word": "0x29c8880"
+          },
+          {
+            "site_id": 5,
+            "phase": "entry",
+            "line": 9,
+            "pc": 3176,
+            "section": ".text",
+            "register": 4,
+            "instruction_word": "0x2888880"
+          },
+          {
+            "site_id": 5,
+            "phase": "exit",
+            "line": 10,
+            "pc": 3300,
+            "section": ".text",
+            "register": 12,
+            "instruction_word": "0x2988880"
+          },
+          {
+            "site_id": 6,
+            "phase": "entry",
+            "line": 11,
+            "pc": 4092,
+            "section": ".text",
+            "register": 3,
+            "instruction_word": "0x2868880"
+          },
+          {
+            "site_id": 6,
+            "phase": "exit",
+            "line": 12,
+            "pc": 4188,
+            "section": ".text",
+            "register": 5,
+            "instruction_word": "0x28a8880"
+          }
+        ],
+        "executable_sections_equal_to_prior": true,
+        "source_boundaries_verified": false,
+        "clock_unit_verified": false,
+        "clock_epoch_verified": false
+      },
+      {
+        "kind": "softmax",
+        "binary_id": "7bb859f21f0693355e29db876bdb3490d408a54689055abfcadfde7be39f47c3",
+        "binary_sha256": "36ca4f495ea2a9be2909de709249c81c1a597f7a0a1bd966e41756a9b945e518",
+        "dwarf_sha256": "841c9a7b0dc1260f9ba7a1986e9e5ecf4c8298b4c307512f9088ca6361c28fb1",
+        "planned_phases": 10,
+        "actual_marker_rows": 10,
+        "clock_rows": [
+          {
+            "site_id": 1,
+            "phase": "entry",
+            "line": 1,
+            "pc": 400,
+            "section": ".text",
+            "register": 0,
+            "instruction_word": "0x2808880"
+          },
+          {
+            "site_id": 1,
+            "phase": "exit",
+            "line": 2,
+            "pc": 404,
+            "section": ".text",
+            "register": 1,
+            "instruction_word": "0x2828880"
+          },
+          {
+            "site_id": 2,
+            "phase": "entry",
+            "line": 3,
+            "pc": 880,
+            "section": ".text",
+            "register": 20,
+            "instruction_word": "0x2a88880"
+          },
+          {
+            "site_id": 2,
+            "phase": "exit",
+            "line": 4,
+            "pc": 1092,
+            "section": ".text",
+            "register": 0,
+            "instruction_word": "0x2808880"
+          },
+          {
+            "site_id": 3,
+            "phase": "entry",
+            "line": 5,
+            "pc": 1564,
+            "section": ".text",
+            "register": 19,
+            "instruction_word": "0x2a68880"
+          },
+          {
+            "site_id": 3,
+            "phase": "exit",
+            "line": 6,
+            "pc": 1912,
+            "section": ".text",
+            "register": 0,
+            "instruction_word": "0x2808880"
+          },
+          {
+            "site_id": 4,
+            "phase": "entry",
+            "line": 7,
+            "pc": 2380,
+            "section": ".text",
+            "register": 7,
+            "instruction_word": "0x28e8880"
+          },
+          {
+            "site_id": 4,
+            "phase": "exit",
+            "line": 8,
+            "pc": 3284,
+            "section": ".text",
+            "register": 0,
+            "instruction_word": "0x2808880"
+          },
+          {
+            "site_id": 5,
+            "phase": "entry",
+            "line": 9,
+            "pc": 3892,
+            "section": ".text",
+            "register": 15,
+            "instruction_word": "0x29e8880"
+          },
+          {
+            "site_id": 5,
+            "phase": "exit",
+            "line": 10,
+            "pc": 3988,
+            "section": ".text",
+            "register": 0,
+            "instruction_word": "0x2808880"
+          }
+        ],
+        "executable_sections_equal_to_prior": true,
+        "source_boundaries_verified": false,
+        "clock_unit_verified": false,
+        "clock_epoch_verified": false
+      }
+    ]
+  },
+  "owned_identities_checked": 28,
+  "clock_unit_verified": false,
+  "region_boundaries_verified": false,
+  "async_qualified": false,
+  "full_P01": false
+}
