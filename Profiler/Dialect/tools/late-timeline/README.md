@@ -31,8 +31,9 @@ thread records for physical byte-footprint analysis. The optional compact mode
 records first/last logical programs in at most two physical slots. Logical
 identities are retained; sampling does not renumber the application's programs.
 Matrix grouping preserves all native/source members in the execution manifest.
-Reads remain at their native sites; publication is batched at original basic
-block exits. The pass adds no completion barriers.
+Reads are inserted at selected optimized LLVM operations; final instruction
+placement remains unqualified. Publication is batched at original basic block
+exits. The pass adds no completion barriers.
 
 ## Private experimental record layout
 

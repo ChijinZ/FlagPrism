@@ -1,0 +1,782 @@
+{
+  "archive_sha256": "53f3d4ee64e5ba9936797c2444634161df975ae58865b5f9437af04208134da5",
+  "archive_bytes": 9332338,
+  "archive_files": 666,
+  "sources": {
+    "Profiler/Dialect/tools/late-timeline/late-timeline.cpp": "ada79b1c119a2dc1a059c00bfdec3fbeccabcf14c31190a2e0369428a99e675c",
+    "integration/patches/nvidia/build_late_timeline_tool.py": "0c35280d2c8051c362b2a90eb98557bba3354059e6d51c42c6a21f39e82283c4",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_model.py": "642d3a44c4127f15cf4b22fe393a9c037bfb5522b0e92935098bd7fe88b4887c",
+    "tests/timeline/p01_nvidia_late_model.py": "fcc9444ba11254cc0b0c292ae6ae3f84a5d667cf08b6aebdb61e6bf00feec478"
+  },
+  "stages": {
+    "build-late-v9": {
+      "controller": {
+        "pid": 71631,
+        "ppid": 1,
+        "pgid": 71631,
+        "startticks": 20651438
+      },
+      "worker": {
+        "pid": 71632,
+        "ppid": 71631,
+        "pgid": 71632,
+        "startticks": 20651440
+      },
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r034/build-late-input-v9/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r034/runs/build-late-v9/output"
+      ],
+      "argv_sha256": "d667a2ef6c0b2ef9386fbed33a368e864b0b13037edb4da6a38d3841a6660fee",
+      "script_sha256": "4231c124c50cd916637520ddacf4c67124c679d6caf81f5c0b1f8ceee0721cd5",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 3620925759
+    },
+    "math-late-v9": {
+      "controller": {
+        "pid": 71447,
+        "ppid": 1,
+        "pgid": 71447,
+        "startticks": 20589552
+      },
+      "worker": {
+        "pid": 71448,
+        "ppid": 71447,
+        "pgid": 71448,
+        "startticks": 20589555
+      },
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r034/math-late-input-v9/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r034/runs/math-late-v9/output"
+      ],
+      "argv_sha256": "7e8494f7b0e5273106271cf3c7f6a732938550cc371c1f31d6496d9d67a6eef7",
+      "script_sha256": "b80fc770b89343f27da6af5c29ded2f0936cbfafcf701265ffd7f8e65def4cc6",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 5473940365
+    },
+    "analyze-late-v3": {
+      "controller": {
+        "pid": 71656,
+        "ppid": 1,
+        "pgid": 71656,
+        "startticks": 20658069
+      },
+      "worker": {
+        "pid": 71657,
+        "ppid": 71656,
+        "pgid": 71657,
+        "startticks": 20658072
+      },
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r034/analyze-late-input-v3/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r034/runs/analyze-late-v3/output"
+      ],
+      "argv_sha256": "4e9b442560bb7a463ff6d7eaf68648d854ee3ae20db1ecab301afd87bdd57ec8",
+      "script_sha256": "9fa67b9282c4bdbc7d05943a573ed0bafc1e09ecd5ca8f59f10615830d199199",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 2719342390
+    }
+  },
+  "native_receipt": {
+    "source": "/workspace/chijin-timeline-r034/build-late-input-v9/late-timeline.cpp",
+    "source_sha256": "ada79b1c119a2dc1a059c00bfdec3fbeccabcf14c31190a2e0369428a99e675c",
+    "llvm_config": "/workspace/cache/triton/.triton/llvm/llvm-f6ded0be-ubuntu-x64/bin/llvm-config",
+    "llvm_config_sha256": "c308211474e29d747076013bf4db2e3abe8af0bf2661ca7a1abf4564f587e8a0",
+    "argv": [
+      "/usr/bin/g++",
+      "-O1",
+      "-g0",
+      "/workspace/chijin-timeline-r034/build-late-input-v9/late-timeline.cpp",
+      "-o",
+      "/workspace/chijin-timeline-r034/runs/build-late-v9/output/native/late-timeline",
+      "-I/workspace/cache/triton/.triton/llvm/llvm-f6ded0be-ubuntu-x64/include",
+      "-std=c++17",
+      "-fno-exceptions",
+      "-funwind-tables",
+      "-fno-rtti",
+      "-D_GNU_SOURCE",
+      "-D_DEBUG",
+      "-D_GLIBCXX_ASSERTIONS",
+      "-D_GLIBCXX_USE_CXX11_ABI=1",
+      "-D__STDC_CONSTANT_MACROS",
+      "-D__STDC_FORMAT_MACROS",
+      "-D__STDC_LIMIT_MACROS",
+      "-L/workspace/cache/triton/.triton/llvm/llvm-f6ded0be-ubuntu-x64/lib",
+      "-lLLVMTransformUtils",
+      "-lLLVMAnalysis",
+      "-lLLVMProfileData",
+      "-lLLVMSymbolize",
+      "-lLLVMDebugInfoBTF",
+      "-lLLVMDebugInfoPDB",
+      "-lLLVMDebugInfoMSF",
+      "-lLLVMDebugInfoCodeView",
+      "-lLLVMDebugInfoGSYM",
+      "-lLLVMDebugInfoDWARF",
+      "-lLLVMDebugInfoDWARFLowLevel",
+      "-lLLVMObject",
+      "-lLLVMTextAPI",
+      "-lLLVMMCParser",
+      "-lLLVMMC",
+      "-lLLVMFrontendHLSL",
+      "-lLLVMIRReader",
+      "-lLLVMBitReader",
+      "-lLLVMAsmParser",
+      "-lLLVMCore",
+      "-lLLVMRemarks",
+      "-lLLVMBitstreamReader",
+      "-lLLVMBinaryFormat",
+      "-lLLVMTargetParser",
+      "-lLLVMSupport",
+      "-lLLVMDemangle",
+      "-lrt",
+      "-ldl",
+      "-lm",
+      "-lz",
+      "-lxml2"
+    ],
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "state": "terminal",
+    "pid": 71635,
+    "startticks": 20651446,
+    "pgid": 71635,
+    "returncode": 0,
+    "wall_ns": 3419230246,
+    "executable": "/workspace/chijin-timeline-r034/runs/build-late-v9/output/native/late-timeline",
+    "executable_sha256": "731bf4d546a5459909493befadedf16e79cb6ac9894821001c9558c44d0102bb"
+  },
+  "math_result": {
+    "status": "late_recording_real_math_raw_guards_and_order_passed_not_public_P01",
+    "records": [
+      {
+        "case": "runtime",
+        "tiles": 3,
+        "explicit_math_launches": 1,
+        "ordinary_shared_bytes": 6144,
+        "ordinary_cubin_sha256": "e21074a25e7d046e8c35bc9a272aa9709956e5ec0b625d85dd5fb0c17cc92884",
+        "late_cubin_sha256": "8e26bc64a7f0f49b6a23cab1dd84d550b079a77cfbc419899bcc8e9f30f6048f",
+        "math": true,
+        "input": true,
+        "output_guard": true,
+        "record_guard": true,
+        "host_window": [
+          205898817979870,
+          205898818014663
+        ],
+        "events": 13056,
+        "positive_brackets": 6048,
+        "all_programs": 4,
+        "captured_programs": 2,
+        "actors_per_program": 128,
+        "source_active_bytes": [
+          0,
+          16
+        ],
+        "actual_shared_bases": [
+          1024
+        ],
+        "source_cost_qualified": false,
+        "hardware_overlap_qualified": false
+      },
+      {
+        "case": "runtime",
+        "tiles": 7,
+        "explicit_math_launches": 1,
+        "ordinary_shared_bytes": 6144,
+        "ordinary_cubin_sha256": "e21074a25e7d046e8c35bc9a272aa9709956e5ec0b625d85dd5fb0c17cc92884",
+        "late_cubin_sha256": "8e26bc64a7f0f49b6a23cab1dd84d550b079a77cfbc419899bcc8e9f30f6048f",
+        "math": true,
+        "input": true,
+        "output_guard": true,
+        "record_guard": true,
+        "host_window": [
+          205899024218076,
+          205899024263364
+        ],
+        "events": 24320,
+        "positive_brackets": 11712,
+        "all_programs": 4,
+        "captured_programs": 2,
+        "actors_per_program": 128,
+        "source_active_bytes": [
+          0,
+          16
+        ],
+        "actual_shared_bases": [
+          1024
+        ],
+        "source_cost_qualified": false,
+        "hardware_overlap_qualified": false
+      },
+      {
+        "case": "constant",
+        "tiles": 3,
+        "explicit_math_launches": 1,
+        "ordinary_shared_bytes": 8192,
+        "ordinary_cubin_sha256": "a273a2b9acc1df1e904d9067ff5ac0cca61188a3898a287d5d07672586ab3f89",
+        "late_cubin_sha256": "8f9b024e2091f286cc7a3ea4891e6f29bc453575a0993dffea760890109bae48",
+        "math": true,
+        "input": true,
+        "output_guard": true,
+        "record_guard": true,
+        "host_window": [
+          205900411385218,
+          205900411415283
+        ],
+        "events": 14848,
+        "positive_brackets": 6016,
+        "all_programs": 4,
+        "captured_programs": 2,
+        "actors_per_program": 128,
+        "source_active_bytes": [
+          0,
+          16
+        ],
+        "actual_shared_bases": [
+          1024
+        ],
+        "source_cost_qualified": false,
+        "hardware_overlap_qualified": false
+      }
+    ],
+    "commands": [
+      {
+        "name": "json",
+        "argv": [
+          "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--emit-json",
+          "/workspace/chijin-timeline-r034/runs/math-late-v9/output/runtime/late.cubin"
+        ],
+        "pid": 71524,
+        "pgid": 71524,
+        "startticks": 20589710,
+        "timeout_seconds": 20.0,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 423353925
+      },
+      {
+        "name": "lines",
+        "argv": [
+          "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--print-code",
+          "--print-line-info-ptx",
+          "/workspace/chijin-timeline-r034/runs/math-late-v9/output/runtime/late.cubin"
+        ],
+        "pid": 71525,
+        "pgid": 71525,
+        "startticks": 20589752,
+        "timeout_seconds": 20.0,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 424011070
+      },
+      {
+        "name": "json",
+        "argv": [
+          "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--emit-json",
+          "/workspace/chijin-timeline-r034/runs/math-late-v9/output/constant/late.cubin"
+        ],
+        "pid": 71592,
+        "pgid": 71592,
+        "startticks": 20589941,
+        "timeout_seconds": 20.0,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 422947024
+      },
+      {
+        "name": "lines",
+        "argv": [
+          "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+          "--print-code",
+          "--print-line-info-ptx",
+          "/workspace/chijin-timeline-r034/runs/math-late-v9/output/constant/late.cubin"
+        ],
+        "pid": 71593,
+        "pgid": 71593,
+        "startticks": 20589983,
+        "timeout_seconds": 20.0,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 423958762
+      }
+    ]
+  },
+  "normal_optimized_analysis": [
+    {
+      "dataset": "math-late-v8",
+      "mode": "normal",
+      "result": {
+        "status": "actual_retained_byte_model_and_corruption_rejections_passed",
+        "cases": [
+          {
+            "case": "runtime",
+            "tiles": 3,
+            "programs": 4,
+            "commit_groups": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "consumer_edges": 144,
+            "reuse_edges": 52,
+            "raw_sha256": "fc36d0de9face57677dacc5a26a4e981860a12049c8c678ea9b02bbf914568a2"
+          },
+          {
+            "case": "runtime",
+            "tiles": 7,
+            "programs": 4,
+            "commit_groups": [
+              9,
+              9,
+              9,
+              9
+            ],
+            "consumer_edges": 208,
+            "reuse_edges": 84,
+            "raw_sha256": "7b725cf8ecb8fe9594ee950f36fe2e8fa750a2af6e3b42c414f2c7a0cf24517c"
+          },
+          {
+            "case": "constant",
+            "tiles": 3,
+            "programs": 4,
+            "commit_groups": [
+              10,
+              10,
+              10,
+              10
+            ],
+            "consumer_edges": 144,
+            "reuse_edges": 56,
+            "raw_sha256": "29dd41f59415633664a1717588a70e4b4cda559c125e9d4ef6fab867f0171848"
+          }
+        ],
+        "original_files_unchanged": 35,
+        "source_overlay": true,
+        "machine_site_binding_verified": false,
+        "time_flows_qualified": false
+      },
+      "rejections": [
+        {
+          "case": "missing_actor",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "mixed_actor_identity",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "invalid_native_wait",
+          "reason": "Invalid or mixed native wait operand"
+        },
+        {
+          "case": "missing_completion_observation",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "missing_publication_cut",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "copy_outside_actual_allocation",
+          "reason": "Native footprint outside actual shared allocation"
+        },
+        {
+          "case": "copy_source_bytes_exceed_destination",
+          "reason": "Invalid native copy source-valid byte count"
+        },
+        {
+          "case": "missing_consumer_retirement_cut",
+          "reason": "Shared bytes reused without a CTA cut after consumers"
+        }
+      ]
+    },
+    {
+      "dataset": "math-late-v8",
+      "mode": "optimized",
+      "result": {
+        "status": "actual_retained_byte_model_and_corruption_rejections_passed",
+        "cases": [
+          {
+            "case": "runtime",
+            "tiles": 3,
+            "programs": 4,
+            "commit_groups": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "consumer_edges": 144,
+            "reuse_edges": 52,
+            "raw_sha256": "fc36d0de9face57677dacc5a26a4e981860a12049c8c678ea9b02bbf914568a2"
+          },
+          {
+            "case": "runtime",
+            "tiles": 7,
+            "programs": 4,
+            "commit_groups": [
+              9,
+              9,
+              9,
+              9
+            ],
+            "consumer_edges": 208,
+            "reuse_edges": 84,
+            "raw_sha256": "7b725cf8ecb8fe9594ee950f36fe2e8fa750a2af6e3b42c414f2c7a0cf24517c"
+          },
+          {
+            "case": "constant",
+            "tiles": 3,
+            "programs": 4,
+            "commit_groups": [
+              10,
+              10,
+              10,
+              10
+            ],
+            "consumer_edges": 144,
+            "reuse_edges": 56,
+            "raw_sha256": "29dd41f59415633664a1717588a70e4b4cda559c125e9d4ef6fab867f0171848"
+          }
+        ],
+        "original_files_unchanged": 35,
+        "source_overlay": true,
+        "machine_site_binding_verified": false,
+        "time_flows_qualified": false
+      },
+      "rejections": [
+        {
+          "case": "missing_actor",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "mixed_actor_identity",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "invalid_native_wait",
+          "reason": "Invalid or mixed native wait operand"
+        },
+        {
+          "case": "missing_completion_observation",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "missing_publication_cut",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "copy_outside_actual_allocation",
+          "reason": "Native footprint outside actual shared allocation"
+        },
+        {
+          "case": "copy_source_bytes_exceed_destination",
+          "reason": "Invalid native copy source-valid byte count"
+        },
+        {
+          "case": "missing_consumer_retirement_cut",
+          "reason": "Shared bytes reused without a CTA cut after consumers"
+        }
+      ]
+    },
+    {
+      "dataset": "math-late-v9",
+      "mode": "normal",
+      "result": {
+        "status": "actual_retained_byte_model_and_corruption_rejections_passed",
+        "cases": [
+          {
+            "case": "runtime",
+            "tiles": 3,
+            "programs": 2,
+            "commit_groups": [
+              5,
+              5
+            ],
+            "consumer_edges": 72,
+            "reuse_edges": 26,
+            "raw_sha256": "a8bf64842cb58f6cb10fc43c376368150a96f486b66e65323a31214ec4674e28"
+          },
+          {
+            "case": "runtime",
+            "tiles": 7,
+            "programs": 2,
+            "commit_groups": [
+              9,
+              9
+            ],
+            "consumer_edges": 104,
+            "reuse_edges": 42,
+            "raw_sha256": "37c421d6d701f73637c594760c77c624a849195f59aa1689027368d21ae39eaa"
+          },
+          {
+            "case": "constant",
+            "tiles": 3,
+            "programs": 2,
+            "commit_groups": [
+              10,
+              10
+            ],
+            "consumer_edges": 72,
+            "reuse_edges": 28,
+            "raw_sha256": "c2b1765150a9354e2db3e06a56597fb0834960bfc6017e9b4e6eb5e10a3dbd5d"
+          }
+        ],
+        "original_files_unchanged": 35,
+        "source_overlay": true,
+        "machine_site_binding_verified": false,
+        "time_flows_qualified": false
+      },
+      "rejections": [
+        {
+          "case": "missing_actor",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "mixed_actor_identity",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "invalid_native_wait",
+          "reason": "Invalid or mixed native wait operand"
+        },
+        {
+          "case": "missing_completion_observation",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "missing_publication_cut",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "copy_outside_actual_allocation",
+          "reason": "Native footprint outside actual shared allocation"
+        },
+        {
+          "case": "copy_source_bytes_exceed_destination",
+          "reason": "Invalid native copy source-valid byte count"
+        },
+        {
+          "case": "missing_consumer_retirement_cut",
+          "reason": "Shared bytes reused without a CTA cut after consumers"
+        },
+        {
+          "case": "forged_consumer_geometry",
+          "reason": "Unmodeled native ldmatrix operand geometry"
+        }
+      ]
+    },
+    {
+      "dataset": "math-late-v9",
+      "mode": "optimized",
+      "result": {
+        "status": "actual_retained_byte_model_and_corruption_rejections_passed",
+        "cases": [
+          {
+            "case": "runtime",
+            "tiles": 3,
+            "programs": 2,
+            "commit_groups": [
+              5,
+              5
+            ],
+            "consumer_edges": 72,
+            "reuse_edges": 26,
+            "raw_sha256": "a8bf64842cb58f6cb10fc43c376368150a96f486b66e65323a31214ec4674e28"
+          },
+          {
+            "case": "runtime",
+            "tiles": 7,
+            "programs": 2,
+            "commit_groups": [
+              9,
+              9
+            ],
+            "consumer_edges": 104,
+            "reuse_edges": 42,
+            "raw_sha256": "37c421d6d701f73637c594760c77c624a849195f59aa1689027368d21ae39eaa"
+          },
+          {
+            "case": "constant",
+            "tiles": 3,
+            "programs": 2,
+            "commit_groups": [
+              10,
+              10
+            ],
+            "consumer_edges": 72,
+            "reuse_edges": 28,
+            "raw_sha256": "c2b1765150a9354e2db3e06a56597fb0834960bfc6017e9b4e6eb5e10a3dbd5d"
+          }
+        ],
+        "original_files_unchanged": 35,
+        "source_overlay": true,
+        "machine_site_binding_verified": false,
+        "time_flows_qualified": false
+      },
+      "rejections": [
+        {
+          "case": "missing_actor",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "mixed_actor_identity",
+          "reason": "Incomplete/mixed actor publication"
+        },
+        {
+          "case": "invalid_native_wait",
+          "reason": "Invalid or mixed native wait operand"
+        },
+        {
+          "case": "missing_completion_observation",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "missing_publication_cut",
+          "reason": "Consumer precedes native completion/publication"
+        },
+        {
+          "case": "copy_outside_actual_allocation",
+          "reason": "Native footprint outside actual shared allocation"
+        },
+        {
+          "case": "copy_source_bytes_exceed_destination",
+          "reason": "Invalid native copy source-valid byte count"
+        },
+        {
+          "case": "missing_consumer_retirement_cut",
+          "reason": "Shared bytes reused without a CTA cut after consumers"
+        },
+        {
+          "case": "forged_consumer_geometry",
+          "reason": "Unmodeled native ldmatrix operand geometry"
+        }
+      ]
+    }
+  ],
+  "machine_counts": {
+    "runtime": {
+      "instructions": 1736,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128.ZFILL": 3,
+        "LDGDEPBAR": 3,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "backward_branches_spanning_mma": [
+        {
+          "start": 8400,
+          "end": 17600
+        },
+        {
+          "start": 8400,
+          "end": 17744
+        }
+      ]
+    },
+    "constant": {
+      "instructions": 2168,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128.ZFILL": 10,
+        "LDGDEPBAR": 10,
+        "BAR.SYNC.DEFER_BLOCKING": 9,
+        "DEPBAR.LE": 4,
+        "LDSM.16.M88.4": 6,
+        "LDSM.16.MT88.4": 6,
+        "HMMA.16816.F32": 12
+      },
+      "backward_branches_spanning_mma": []
+    }
+  },
+  "owners_inactive": 160,
+  "scope": "Experimental late native recorder and conditional byte model only; default API/clock/machine/Perfetto/three backend qualification incomplete",
+  "source_commit": "d0f91f4dbe237087080b1b3a129d312de06e7805",
+  "formatting_owners_inactive": [
+    {
+      "job": "format-v1",
+      "expected": {
+        "pid": 398798,
+        "ppid": 1,
+        "pgid": 398798,
+        "startticks": 1015694238
+      },
+      "actual": null
+    },
+    {
+      "job": "format-v1",
+      "expected": {
+        "pid": 398799,
+        "ppid": 398798,
+        "pgid": 398799,
+        "startticks": 1015694242
+      },
+      "actual": null
+    },
+    {
+      "job": "format-v2",
+      "expected": {
+        "pid": 399438,
+        "ppid": 1,
+        "pgid": 399438,
+        "startticks": 1015705737
+      },
+      "actual": null
+    },
+    {
+      "job": "format-v2",
+      "expected": {
+        "pid": 399439,
+        "ppid": 399438,
+        "pgid": 399439,
+        "startticks": 1015705740
+      },
+      "actual": null
+    },
+    {
+      "job": "format-v3",
+      "expected": {
+        "pid": 400702,
+        "ppid": 1,
+        "pgid": 400702,
+        "startticks": 1015775179
+      },
+      "actual": null
+    },
+    {
+      "job": "format-v3",
+      "expected": {
+        "pid": 400703,
+        "ppid": 400702,
+        "pgid": 400703,
+        "startticks": 1015775182
+      },
+      "actual": null
+    }
+  ]
+}
