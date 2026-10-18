@@ -1,0 +1,184 @@
+[
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 3307277,
+      "ppid": 2511431,
+      "pgid": 3307277,
+      "startticks": 332039060
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 3307311,
+      "ppid": 3307277,
+      "pgid": 3307311,
+      "startticks": 332039066
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:wheel",
+      "pid": 3307543,
+      "startticks": 332039425
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:venv",
+      "pid": 3307893,
+      "startticks": 332042035
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:install",
+      "pid": 3307894,
+      "startticks": 332042041
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:import-abi",
+      "pid": 3308041,
+      "startticks": 332042796
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:cpu-normal",
+      "pid": 3308113,
+      "startticks": 332043597
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:cpu-optimized",
+      "pid": 3308501,
+      "startticks": 332044800
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:default-device",
+      "pid": 3308722,
+      "startticks": 332045956
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "child:offline-after-scratch-denial",
+      "pid": 3310746,
+      "startticks": 332051838
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 3297160,
+      "ppid": 2511431,
+      "pgid": 3297160,
+      "startticks": 331930119
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 3297194,
+      "ppid": 3297160,
+      "pgid": 3297194,
+      "startticks": 331930124
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v2",
+    "expected": {
+      "role": "controller",
+      "pid": 3300652,
+      "ppid": 2511431,
+      "pgid": 3300652,
+      "startticks": 331977890
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v2",
+    "expected": {
+      "role": "worker",
+      "pid": 3300686,
+      "ppid": 3300652,
+      "pgid": 3300686,
+      "startticks": 331977896
+    },
+    "actual": null
+  },
+  {
+    "run": "checks-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 3312241,
+      "ppid": 2511431,
+      "pgid": 3312241,
+      "startticks": 332063558
+    },
+    "actual": null
+  },
+  {
+    "run": "checks-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 3312275,
+      "ppid": 3312241,
+      "pgid": 3312275,
+      "startticks": 332063564
+    },
+    "actual": null
+  },
+  {
+    "run": "checks-v2",
+    "expected": {
+      "role": "controller",
+      "pid": 3312821,
+      "ppid": 2511431,
+      "pgid": 3312821,
+      "startticks": 332068910
+    },
+    "actual": null
+  },
+  {
+    "run": "checks-v2",
+    "expected": {
+      "role": "worker",
+      "pid": 3312855,
+      "ppid": 3312821,
+      "pgid": 3312855,
+      "startticks": 332068916
+    },
+    "actual": null
+  }
+]

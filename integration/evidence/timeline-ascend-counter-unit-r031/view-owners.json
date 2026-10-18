@@ -1,0 +1,52 @@
+[
+  {
+    "run": "browser-v1",
+    "role": "controller",
+    "expected": {
+      "pid": 64080,
+      "ppid": 1,
+      "pgid": 64080,
+      "startticks": 19648120
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19648120
+    }
+  },
+  {
+    "run": "browser-v1",
+    "role": "worker",
+    "expected": {
+      "pid": 64081,
+      "ppid": 64080,
+      "pgid": 64081,
+      "startticks": 19648123
+    },
+    "actual": null
+  },
+  {
+    "run": "browser-v2",
+    "role": "controller",
+    "expected": {
+      "pid": 64100,
+      "ppid": 1,
+      "pgid": 64100,
+      "startticks": 19656477
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19656477
+    }
+  },
+  {
+    "run": "browser-v2",
+    "role": "worker",
+    "expected": {
+      "pid": 64101,
+      "ppid": 64100,
+      "pgid": 64101,
+      "startticks": 19656480
+    },
+    "actual": null
+  }
+]

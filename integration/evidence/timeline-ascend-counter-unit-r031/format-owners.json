@@ -1,0 +1,122 @@
+[
+  {
+    "run": "format-v1",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 392334,
+      "ppid": 1,
+      "pgid": 392334,
+      "startticks": 1014639153
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v1",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 392335,
+      "ppid": 392334,
+      "pgid": 392335,
+      "startticks": 1014639156
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v2",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393046,
+      "ppid": 1,
+      "pgid": 393046,
+      "startticks": 1014688727
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v2",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393047,
+      "ppid": 393046,
+      "pgid": 393047,
+      "startticks": 1014688730
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v3",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393758,
+      "ppid": 1,
+      "pgid": 393758,
+      "startticks": 1014768736
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v3",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393759,
+      "ppid": 393758,
+      "pgid": 393759,
+      "startticks": 1014768739
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v4",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393848,
+      "ppid": 1,
+      "pgid": 393848,
+      "startticks": 1014816910
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v4",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 393849,
+      "ppid": 393848,
+      "pgid": 393849,
+      "startticks": 1014816913
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v5",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 394660,
+      "ppid": 1,
+      "pgid": 394660,
+      "startticks": 1014841266
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v5",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 394661,
+      "ppid": 394660,
+      "pgid": 394661,
+      "startticks": 1014841270
+    },
+    "actual": null
+  }
+]

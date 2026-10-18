@@ -1,0 +1,178 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 3316414,
+      "ppid": 2511431,
+      "pgid": 3316414,
+      "startticks": 332104724
+    },
+    "worker": {
+      "pid": 3316449,
+      "ppid": 3316414,
+      "pgid": 3316449,
+      "startticks": 332104730
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r031/offline-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r031/runs/offline-v2/output"
+    ],
+    "argv_sha256": "d479e0be646688e46f3aa2476cdd1a249e9e0616915b85d4ed54d004ad261b16",
+    "script_sha256": "01cc4000c4b39e5abd0dafbfd7da299e4b63eb6f4a252a1aaa09232e7951a90a",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 200,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 49194767614
+  },
+  "reports": {
+    "recurrence": {
+      "status": "real_offline_public_normal_optimized_passed",
+      "original_files": 36,
+      "captures": 2,
+      "application_replayed": false,
+      "limits": "Python audit hook and configured visibility environment; no device initialization; not an OS sandbox or proof that hardware is inaccessible",
+      "denied_original_roots": [
+        "/tmp/chijin-timeline-r031/install-input-v1",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/cache",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/tmp",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe"
+      ],
+      "steps": [
+        {
+          "mode": "public",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "flagtree.profiler.timeline_reexport",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/portable/timeline"
+          ]
+        },
+        {
+          "mode": "normal",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/audited.py",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/portable/timeline",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/normal.json",
+            "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/installed-v1/cache\", \"/tmp/chijin-timeline-r031/runs/installed-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+          ]
+        },
+        {
+          "mode": "optimized",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "-O",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/audited.py",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/portable/timeline",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/recurrence/optimized.json",
+            "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/installed-v1/cache\", \"/tmp/chijin-timeline-r031/runs/installed-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+          ]
+        }
+      ]
+    },
+    "softmax": {
+      "status": "real_offline_public_normal_optimized_passed",
+      "original_files": 24,
+      "captures": 1,
+      "application_replayed": false,
+      "limits": "Python audit hook and configured visibility environment; no device initialization; not an OS sandbox or proof that hardware is inaccessible",
+      "denied_original_roots": [
+        "/tmp/chijin-timeline-r031/install-input-v1",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/cache",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/tmp",
+        "/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe"
+      ],
+      "steps": [
+        {
+          "mode": "public",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "flagtree.profiler.timeline_reexport",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/portable/timeline"
+          ]
+        },
+        {
+          "mode": "normal",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/audited.py",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/portable/timeline",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/normal.json",
+            "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/installed-v1/cache\", \"/tmp/chijin-timeline-r031/runs/installed-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+          ]
+        },
+        {
+          "mode": "optimized",
+          "returncode": 0,
+          "argv": [
+            "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+            "-I",
+            "-O",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/audited.py",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/portable/timeline",
+            "/tmp/chijin-timeline-r031/runs/offline-v2/output/softmax/optimized.json",
+            "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/installed-v1/cache\", \"/tmp/chijin-timeline-r031/runs/installed-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+          ]
+        }
+      ]
+    }
+  },
+  "archive": {
+    "file": "ascend-offline-evidence-v2.tgz",
+    "bytes": 6545,
+    "sha256": "cab5977932d26155c543719745bc3bd52daee1fbb8ee35b9d9977802af551068"
+  },
+  "owners": [
+    {
+      "expected": {
+        "role": "controller",
+        "pid": 3316414,
+        "ppid": 2511431,
+        "pgid": 3316414,
+        "startticks": 332104724
+      },
+      "actual": null
+    },
+    {
+      "expected": {
+        "role": "worker",
+        "pid": 3316449,
+        "ppid": 3316414,
+        "pgid": 3316449,
+        "startticks": 332104730
+      },
+      "actual": null
+    },
+    {
+      "expected": {
+        "role": "recurrence",
+        "pid": 3316450,
+        "startticks": 332104735
+      },
+      "actual": null
+    },
+    {
+      "expected": {
+        "role": "softmax",
+        "pid": 3316921,
+        "startticks": 332107210
+      },
+      "actual": null
+    }
+  ]
+}

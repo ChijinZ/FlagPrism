@@ -1,0 +1,145 @@
+{
+  "status": "saved_byte_audit_passed_not_full_P01",
+  "components": {
+    "Profiler/python/flagtree_profiler/timeline_ascend.py": "202d999469afdef535d74744647dc65aeda9d5e905e0ee9f2a7c748f66b23862",
+    "Profiler/python/flagtree_profiler/timeline_ascend_machine.py": "70a164bd1ea8af892c3384258fbd72ba79305cec4c79d1d1dd651d64c1d5c4e5",
+    "Profiler/python/flagtree_profiler/timeline_unit_ascend.py": "09994073169143005a8d4b522b160c13ce5ff08293a07128e9d66e4535ea9295",
+    "Profiler/python/flagtree_profiler/timeline_reexport.py": "4bc2dcd8f54349b1990929a7b6488e1514b4b5534389bf62a2172af16085839b"
+  },
+  "captures": [
+    {
+      "invocation_id": "invocation-0c138bc56b4b404c956be1470e40f312",
+      "binary_id": "edd3e274d975ba7bcd62273183dec00b5786d3633ca48241b5977b3592100c7e",
+      "intervals": 16,
+      "endpoints": 32
+    },
+    {
+      "invocation_id": "invocation-f2b1d8d5e37a4a7d9f3c6140fb06a568",
+      "binary_id": "edd3e274d975ba7bcd62273183dec00b5786d3633ca48241b5977b3592100c7e",
+      "intervals": 24,
+      "endpoints": 48
+    },
+    {
+      "invocation_id": "invocation-e1665a9a64e24c99840ec43de0dad1b3",
+      "binary_id": "340214a013f7bb7e5a0464857ed0972c88b95718e243f1173a2c151ac544cc68",
+      "intervals": 10,
+      "endpoints": 20
+    }
+  ],
+  "traces": 6,
+  "endpoints": 100,
+  "intervals": 50,
+  "runtime_model": "Ascend910B4-1",
+  "device": 4,
+  "installed": {
+    "status": "new_python_and_plugin_installed_not_device_qualified",
+    "wheel_sha256": "64cbc0a6cd9589e93e22aee77dd9a9748dda71b9725dba71859b537e27af731a",
+    "installed_members": 402,
+    "plugin_sha256": "986dec30a0e598c3ecd62bb6965815d125fb85061e31c32beea51ef35cde1143",
+    "native_reuse": "existing version3 frontend core; new clock-marker plugin actually rebuilt",
+    "python": "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+    "checks": "installed_default_math_counter_unit_exports_offline_passed_not_full_P01",
+    "actual_object_witnesses": [
+      {
+        "invocation_id": "invocation-0c138bc56b4b404c956be1470e40f312",
+        "binary_id": "edd3e274d975ba7bcd62273183dec00b5786d3633ca48241b5977b3592100c7e",
+        "actor": "AIV",
+        "target": "dav-c220-vec",
+        "sha256": "dbb3133d427ba730d9a6045c58df139adc0569e73cd0a42bbeab3b6bcf90255b",
+        "bytes": 23112,
+        "status": "sealed_input_not_clock_certificate"
+      },
+      {
+        "invocation_id": "invocation-f2b1d8d5e37a4a7d9f3c6140fb06a568",
+        "binary_id": "edd3e274d975ba7bcd62273183dec00b5786d3633ca48241b5977b3592100c7e",
+        "actor": "AIV",
+        "target": "dav-c220-vec",
+        "sha256": "dbb3133d427ba730d9a6045c58df139adc0569e73cd0a42bbeab3b6bcf90255b",
+        "bytes": 23112,
+        "status": "sealed_input_not_clock_certificate"
+      },
+      {
+        "invocation_id": "invocation-e1665a9a64e24c99840ec43de0dad1b3",
+        "binary_id": "340214a013f7bb7e5a0464857ed0972c88b95718e243f1173a2c151ac544cc68",
+        "actor": "AIV",
+        "target": "dav-c220-vec",
+        "sha256": "59b0141af9438101c287cb1b4ecaf512ad782ebc543f6d0ecb9b826e8aa20ab8",
+        "bytes": 21184,
+        "status": "sealed_input_not_clock_certificate"
+      }
+    ],
+    "clock_status": "unverified",
+    "source_boundary_status": "unverified",
+    "application_replayed_by_offline": false,
+    "actual_new_plugin_sha256": "986dec30a0e598c3ecd62bb6965815d125fb85061e31c32beea51ef35cde1143",
+    "counter_trace_count": 6
+  },
+  "offline": {
+    "status": "real_offline_public_normal_optimized_passed",
+    "original_files": 36,
+    "captures": 2,
+    "application_replayed": false,
+    "limits": "Python audit hook and configured visibility environment; no device initialization; not an OS sandbox or proof that hardware is inaccessible",
+    "denied_original_roots": [
+      "/tmp/chijin-timeline-r031/install-input-v1",
+      "/tmp/chijin-timeline-r031/runs/install-v1/cache",
+      "/tmp/chijin-timeline-r031/runs/install-v1/tmp",
+      "/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe"
+    ],
+    "steps": [
+      {
+        "mode": "public",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+          "-I",
+          "-m",
+          "flagtree.profiler.timeline_reexport",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/portable/timeline"
+        ]
+      },
+      {
+        "mode": "normal",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/audited.py",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/portable/timeline",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/normal.json",
+          "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/install-v1/cache\", \"/tmp/chijin-timeline-r031/runs/install-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+        ]
+      },
+      {
+        "mode": "optimized",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/venv/bin/python",
+          "-I",
+          "-O",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/audited.py",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/portable/timeline",
+          "/tmp/chijin-timeline-r031/runs/installed-v1/output/offline/optimized.json",
+          "[\"/tmp/chijin-timeline-r031/install-input-v1\", \"/tmp/chijin-timeline-r031/runs/install-v1/cache\", \"/tmp/chijin-timeline-r031/runs/install-v1/tmp\", \"/tmp/chijin-timeline-r031/runs/installed-v1/output/device-probe\"]"
+        ]
+      }
+    ]
+  },
+  "unit_only": true,
+  "source_boundaries_qualified": false,
+  "async_qualified": false,
+  "archives": {
+    "ascend-installed-evidence-v1.tgz": {
+      "bytes": 5090775,
+      "sha256": "678070a02335e3655f77e6c7eb5ee570e59cd553ed52af9132d995c187d35d14"
+    },
+    "ascend-TP-UI-evidence-v1.tgz": {
+      "bytes": 2560086,
+      "sha256": "4c3aff47c6f8848617d0d1a1fa585210f0ae79dcd253ed7504a57c75f7145fa8"
+    },
+    "ascend-checks-evidence-v1.tgz": {
+      "bytes": 8947,
+      "sha256": "be62052fb820d5afa7d16be7e63adfbee38e4be7b26b73b2a781830fecb9f517"
+    }
+  }
+}
