@@ -1,0 +1,164 @@
+{
+  "scope": "installed object retention and real raw/offline math, not clock/source/async qualification",
+  "archive": {
+    "file": "artifacts/timeline/run-029/preflight/ascend-installed-retention-evidence-v1.tgz",
+    "bytes": 8492068,
+    "members": 1830,
+    "sha256": "6aa50fb4dc0cbdf1841f613838391c02918d52cb9441653f3e77d5ec660c3070"
+  },
+  "source_commit": "96bf6f2121dbd361b98c83cd631ee0f55ddda7e6",
+  "matching_source_files": 663,
+  "matching_installed_python_files": 88,
+  "wheel_sha256": "8d5f4ae557d0d4f4b0bfd09d395b89c34b1924ffd2638eb4c0d211e55cb99b67",
+  "installed_members": 400,
+  "captures": [
+    {
+      "invocation_id": "invocation-372cde64dd6247d2b388fc4d14d9928e",
+      "binary_id": "acdab83934ece2baf3c2a8f4bc911acd1e0cf3ffab8d2ad130c99809b02d27eb",
+      "intervals": 10,
+      "endpoint_records": 20,
+      "objects": [
+        {
+          "bytes": 19592,
+          "sha256": "4113f349f6e6f99e3c2a9f63cb23a74991c3ddecb6fab3486a095da21c6bcf50"
+        }
+      ]
+    },
+    {
+      "invocation_id": "invocation-4f619b16912c4e3697cae6d76ccc49b5",
+      "binary_id": "7fdeb3b94217f2bd12e37955328b77a6baa09dd7d523f4859e2e27f199875853",
+      "intervals": 24,
+      "endpoint_records": 48,
+      "objects": [
+        {
+          "bytes": 21432,
+          "sha256": "cf8494c2f471e9825317fdd2a08256a067c37c4a592ac14a697a7dd591afa5a4"
+        }
+      ]
+    },
+    {
+      "invocation_id": "invocation-f75d70ee49504071a4eb6e320697a58b",
+      "binary_id": "7fdeb3b94217f2bd12e37955328b77a6baa09dd7d523f4859e2e27f199875853",
+      "intervals": 16,
+      "endpoint_records": 32,
+      "objects": [
+        {
+          "bytes": 21432,
+          "sha256": "cf8494c2f471e9825317fdd2a08256a067c37c4a592ac14a697a7dd591afa5a4"
+        }
+      ]
+    }
+  ],
+  "offline": {
+    "status": "real_offline_public_normal_optimized_passed",
+    "original_files": 14,
+    "captures": 2,
+    "application_replayed": false,
+    "limits": "Python audit hook and configured visibility environment; no device initialization; not an OS sandbox or proof that hardware is inaccessible",
+    "denied_original_roots": [
+      "/tmp/chijin-timeline-r029/input-v2",
+      "/tmp/chijin-timeline-r029/runs/install-v2/cache",
+      "/tmp/chijin-timeline-r029/runs/install-v2/tmp",
+      "/tmp/chijin-timeline-r029/runs/install-v2/output/device-probe"
+    ],
+    "steps": [
+      {
+        "mode": "public",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/venv/bin/python",
+          "-I",
+          "-m",
+          "flagtree.profiler.timeline_reexport",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/portable/timeline"
+        ]
+      },
+      {
+        "mode": "normal",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/audited.py",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/portable/timeline",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/normal.json",
+          "[\"/tmp/chijin-timeline-r029/input-v2\", \"/tmp/chijin-timeline-r029/runs/install-v2/cache\", \"/tmp/chijin-timeline-r029/runs/install-v2/tmp\", \"/tmp/chijin-timeline-r029/runs/install-v2/output/device-probe\"]"
+        ]
+      },
+      {
+        "mode": "optimized",
+        "returncode": 0,
+        "argv": [
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/venv/bin/python",
+          "-I",
+          "-O",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/audited.py",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/portable/timeline",
+          "/tmp/chijin-timeline-r029/runs/install-v2/output/offline/optimized.json",
+          "[\"/tmp/chijin-timeline-r029/input-v2\", \"/tmp/chijin-timeline-r029/runs/install-v2/cache\", \"/tmp/chijin-timeline-r029/runs/install-v2/tmp\", \"/tmp/chijin-timeline-r029/runs/install-v2/output/device-probe\"]"
+        ]
+      }
+    ]
+  },
+  "reference_instructions": [
+    {
+      "name": "generic",
+      "code_sections": [
+        {
+          "name": ".text",
+          "size": 8,
+          "sha256": "6b04b30a8632b7a197a5e0c754fd4290db9aa4a21014e82bba126996ebaabf09",
+          "hex": "8088800200f06140"
+        }
+      ]
+    },
+    {
+      "name": "x0",
+      "code_sections": [
+        {
+          "name": ".text",
+          "size": 8,
+          "sha256": "6b04b30a8632b7a197a5e0c754fd4290db9aa4a21014e82bba126996ebaabf09",
+          "hex": "8088800200f06140"
+        }
+      ]
+    },
+    {
+      "name": "x1",
+      "code_sections": [
+        {
+          "name": ".text",
+          "size": 8,
+          "sha256": "29e2c6f8f0cf48a5baecd5b29a97df93b91b42c9e058d6ba263aed78db38f58f",
+          "hex": "8088820200f06140"
+        }
+      ]
+    },
+    {
+      "name": "x31",
+      "code_sections": [
+        {
+          "name": ".text",
+          "size": 8,
+          "sha256": "3df65cc792d96ab151fbc08ce1d6b7a4fce76de645a033e13437fb1a1a31c8ab",
+          "hex": "8088be0200f06140"
+        }
+      ]
+    },
+    {
+      "name": "zero",
+      "code_sections": [
+        {
+          "name": ".text",
+          "size": 8,
+          "sha256": "164f1e2b6fe3b396db53532ac9fb27fe0b2a8595166afe73bd7cbc8f94671915",
+          "hex": "0000000700f06140"
+        }
+      ]
+    }
+  ],
+  "owned_identity_count": 20,
+  "source_boundary_status": "unverified",
+  "clock_status": "unverified",
+  "full_P01": false
+}
