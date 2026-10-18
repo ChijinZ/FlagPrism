@@ -22,7 +22,11 @@ without unit evidence remain raw; separate observers must not be compared as a
 shared epoch. The index does not upload data.
 The current public raw paths support NVIDIA and Enflame GCU, eager and one host
 thread per session. Both have real multiple-stream ownership tests. Nested
-sessions are explicitly rejected. Ascend still needs its new timeline producer.
+sessions are explicitly rejected. Ascend now has a source-coordinate paired
+producer with real runtime-K device development evidence; it is not connected
+to the public timeline collector yet. The legacy debugger allocator explicitly
+rejects that new compact protocol. Its device clocks, final region boundaries,
+async association and shared canonical/Perfetto path remain unqualified.
 
 For GCU, use the same API with `backend="enflame"` (or allow backend detection),
 or the CLI with `--backend enflame --device 0`. The normal

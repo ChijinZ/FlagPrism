@@ -592,7 +592,8 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     operationPlan["selected_count"] = static_cast<int64_t>(fragments.size());
     operationPlan["skipped_fragments"] = std::move(skipped);
     controlPlan["selected_count"] = 0;
-    return !fragments.empty();
+    // Coordinate calls were inserted even when every carrier fragment is empty.
+    return true;
   }
   if (census) {
     runtimeActorBinding["layout"] = "ascend_source_census_v" + std::to_string(censusVersion());

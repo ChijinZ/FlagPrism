@@ -1,0 +1,101 @@
+......................                                                   [100%]
+=============================== warnings summary ===============================
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310
+  /usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)
+  
+    self._warn_about_missing_assertion(mode)
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/utils/_error_code.py:103
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/utils/_error_code.py:103: DeprecationWarning: invalid escape sequence '\['
+    self.npu_exception = "\[ERROR\] [0-9\-\:]* \(PID:\d*, Device:\-?\d*, RankID:\-?\d*\) ERR\d{5}"
+
+../../package-v3/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py:377
+  /tmp/chijin-timeline-r019/runs/package-v3/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py:377: DeprecationWarning: invalid escape sequence '\['
+    for m in re.finditer('\[aicore\]', code):
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/optim/npu_fused_rmsprop.py:12
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/optim/npu_fused_rmsprop.py:12: DeprecationWarning: invalid escape sequence '\s'
+    """Implements NpuFusedRMSprop algorithm.
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/profiler/analysis/prof_view/prof_db_parse/_basic_db_parser.py:46
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/profiler/analysis/prof_view/prof_db_parse/_basic_db_parser.py:46: DeprecationWarning: invalid escape sequence '\d'
+    db_patten = '^msprof_\d+\.db$'
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:128
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:128: DeprecationWarning: invalid escape sequence '\e'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:1624
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:1624: DeprecationWarning: invalid escape sequence '\_'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:1838
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:1838: DeprecationWarning: invalid escape sequence '\_'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:3410
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:3410: DeprecationWarning: invalid escape sequence '\e'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:4143
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:4143: DeprecationWarning: invalid escape sequence '\('
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:4257
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:4257: DeprecationWarning: invalid escape sequence '\o'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:6415
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:6415: DeprecationWarning: invalid escape sequence '\s'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:6484
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:6484: DeprecationWarning: invalid escape sequence '\s'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:7349
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:7349: DeprecationWarning: invalid escape sequence '\s'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:7741
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:7741: DeprecationWarning: invalid escape sequence '\_'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:8265
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:8265: DeprecationWarning: invalid escape sequence '\_'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:10284
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:10284: DeprecationWarning: invalid escape sequence '\s'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11222
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11222: DeprecationWarning: invalid escape sequence '\>'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11586
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11586: DeprecationWarning: invalid escape sequence '\['
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11685
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:11685: DeprecationWarning: invalid escape sequence '\['
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:12847
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:12847: DeprecationWarning: invalid escape sequence '\~'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:13523
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:13523: DeprecationWarning: invalid escape sequence '\_'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:14514
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:14514: DeprecationWarning: invalid escape sequence '\q'
+    """
+
+../../../../../usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:14645
+  /usr/local/python3.11.15/lib/python3.11/site-packages/torch_npu/_op_plugin_docs.py:14645: DeprecationWarning: invalid escape sequence '\m'
+    """
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+22 passed, 24 warnings in 17.24s

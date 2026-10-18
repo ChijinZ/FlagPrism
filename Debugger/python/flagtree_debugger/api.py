@@ -1433,6 +1433,12 @@ def _default_launch_prepare_hook(
         metadata: Any, stream: int, launch_metadata: Any,
         kernel_args: Sequence[Any]) -> PreparedKernelLaunch:
     metadata_dict = _build_launch_metadata_dict(metadata)
+    if metadata_dict.get("debug_record_layout") == "ascend_source_timeline_v1":
+        # This protocol has compact program slots and independent actor headers.
+        # Never allocate it with the historical full-grid debugger layout.
+        raise RuntimeError(
+            "Ascend source timeline requires its dedicated collector; "
+            "the legacy debugger allocator cannot launch this protocol")
     backend = metadata_dict.get("debug_backend_name",
                                 metadata_dict.get("backend_name"))
     if metadata_dict.get("debug_record_layout") in {

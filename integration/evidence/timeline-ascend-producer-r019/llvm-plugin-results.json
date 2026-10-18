@@ -1,0 +1,29 @@
+[
+  {
+    "actor": "AIC",
+    "sites": 2,
+    "skipped": 1,
+    "output_sha256": "7d17fd657131b1e64541f6c296feda706cf3925444f3dbd534a0811750aba637"
+  },
+  {
+    "actor": "AIV",
+    "sites": 2,
+    "skipped": 1,
+    "output_sha256": "0c44fde8af0b8f685ee18f827101e463ab4a3ed308af5b5b17e65c79cd00432b"
+  },
+  {
+    "case": "legacy-census",
+    "returncode": 0,
+    "expected_success": true
+  },
+  {
+    "case": "wrong-columns",
+    "returncode": -6,
+    "expected_success": false
+  },
+  {
+    "case": "wrong-semantic",
+    "returncode": -6,
+    "expected_success": false
+  }
+]

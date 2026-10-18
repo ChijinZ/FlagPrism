@@ -97,7 +97,8 @@ def prepare(event):
         if timeline:
             abi = event.metadata.get('debug_frontend_marker_abi') or {}
             columns = event.metadata.get('debug_census_columns')
-            if (event.metadata.get('flagprism_ascend_source_timeline_version') != 1
+            if (type(event.metadata.get('flagprism_ascend_source_timeline_version')) is not int
+                    or event.metadata['flagprism_ascend_source_timeline_version'] != 1
                     or abi.get('version') != 3
                     or type(columns) is not int or not 1 <= columns <= 128
                     or abi.get('site_count') != columns

@@ -141,3 +141,48 @@ Raw schemas are unchanged. Canonical reader upgrades and proof/exporter changes
 produce separate immutable revisions, while the original `.events.json` remains
 intact. See [runtime and offline re-export](timeline_runtime.md#offline-decoding-and-versioned-counter-traces)
 for the implemented command, retention scope and limitations.
+
+
+## Ascend paired producer development checkpoint
+
+`ascend_source_timeline_v1` is a real device **development** producer, separate
+from the public canonical adapters above. Its default collector, canonical
+adapter, clock provider and Perfetto integration are not delivered yet. The
+legacy debugger allocator rejects this compact protocol before initialization.
+The development probe supplies a generic collector and explicitly synchronizes;
+it does not qualify deferred ownership or concurrent capture.
+
+The frontend reuses `source_census_site.v3` only to transport the actual selected
+source identity and six program/grid coordinates through the SDK. The late pass
+records non-empty lowered basic-block fragments up to the next carrier or block
+terminator. A fragment is source-linked; it is not a certified source-operation
+cost. Empty fragments are listed as skipped, not fabricated as durations.
+
+Physical storage selects logical program zero and the actual last program, using
+one compact slot for a one-program grid and two otherwise. Each slot reserves
+three actor segments: AIC=0 and AIV=`GET.SUBBLOCKID+1`. Every segment consists of
+one 64-byte header followed by `capacity` 64-byte pair records. Source-program
+selection uses the real carrier coordinates; `GET.BLOCK.IDX` is retained as a
+separate physical identity. This layout's exclusive-writer conditions still need
+qualification for the broader ordinary-kernel matrix.
+
+- Header u64 words: magic, committed pairs, attempted pairs, dropped pairs,
+  logical program, actor, physical block, flags. Flags are arrival=1,
+  count saturation=2, overflow=4. Counts saturate at `2^63-1`.
+- Pair u64 words: descriptor (low32 site/high32 semantic), attempt sequence,
+  start tick, end tick, logical program, actor, physical block, commit tag.
+  The tag binds descriptor/sequence/program/actor/block; it is not a checksum of
+  every payload byte. Actual completion and memory visibility remain necessary.
+- Headers are zero-initialized; a zero segment does not prove that an actor
+  executed. Each published pair retains its real two tick fields. Physical
+  counts are pairs; a future canonical adapter must count their two endpoint
+  references explicitly. Neither append order nor site occurrence is a loop ID.
+
+On 910B, the ordinary runtime-K recurrence probe retained six static fragment
+sites and actual first/last-program records: K=3/7 yielded 8/12 pairs per observed
+actor, with the loop site visited 3/7 times in one profiled binary. Math, input,
+side effects, tails and allocation guards passed. LLVM15 construction/JIT,
+AIC/AIV transformation, old census transformation and device census regression
+have separate evidence. Raw values remain SYS_CNT ticks; source boundaries,
+unit/precision, cross-observer epoch and async associations are unverified.
+See the workspace `timeline_impl_record.md` T031 for exact versions and artifacts.
