@@ -124,6 +124,13 @@ def parse_arguments():
         default=None,
         help="Automatically select source-linked internal observations")
     parser.add_argument(
+        "--timeline-max-sites",
+        type=int,
+        default=None,
+        help=
+        "Timeline logical site budget (1..128, default 8); required async sites are additional"
+    )
+    parser.add_argument(
         "--observation-request",
         help="JSON file describing a typed detailed observation request")
     parser.add_argument("--replay-mode",
@@ -232,6 +239,9 @@ def do_setup_and_execute(target_args):
 
 
 def run_profiling(args, target_args):
+    from .profile import _timeline_site_budget
+    _timeline_site_budget(getattr(args, 'detail', None),
+                          getattr(args, 'timeline_max_sites', None))
     backend = args.backend if args.backend else _select_backend()
     if getattr(args, "detail", None) in ("auto", "timeline"):
         backend = _automatic_backend(backend)
@@ -379,6 +389,7 @@ def run_profiling(args, target_args):
         mode=args.mode,
         hook=args.hook,
         detail=getattr(args, "detail", None),
+        timeline_max_sites=getattr(args, "timeline_max_sites", None),
         observation_request=(json.loads(
             Path(args.observation_request).read_text()) if getattr(
                 args, "observation_request", None) else None),

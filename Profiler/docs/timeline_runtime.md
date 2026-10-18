@@ -20,6 +20,15 @@ annotation is required. When target-specific counter-unit evidence is available,
 counter brackets, not certified source-operation costs or engine busy. Raw ticks
 without unit evidence remain raw; separate observers must not be compared as a
 shared epoch. The index does not upload data.
+Automatic timeline selection defaults to eight logical sites plus required
+asynchronous mechanism sites. To compare observation density without changing
+kernel code, use `start("trace-run", detail="timeline", timeline_max_sites=4)`
+or CLI `--detail timeline --timeline-max-sites 4`. The integer budget is 1..128;
+it is rejected outside timeline mode. It is not a total event/site cap: mandatory
+async boundaries remain selected. A smaller budget can omit source/consumer
+detail, so inspect the actual compiler inventory and capture coverage. Changing
+density does not certify schedule preservation or low overhead.
+
 The current public raw paths support NVIDIA, Enflame GCU and Ascend CANN,
 eager and one host thread per session. All three have actual multiple-stream
 ownership evidence; nested sessions are explicitly rejected. Ascend now uses

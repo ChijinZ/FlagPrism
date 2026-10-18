@@ -1470,6 +1470,17 @@ def _automatic_mode(backend, *, device=None):
     return None
 
 
+def _timeline_site_budget(detail, value):
+    """Validate density before runtime discovery or capture side effects."""
+    if value is None:
+        return 8
+    if detail != 'timeline':
+        raise ValueError('timeline_max_sites requires detail="timeline"')
+    if type(value) is not int or not 1 <= value <= 128:
+        raise ValueError('timeline_max_sites must be an integer in 1..128')
+    return value
+
+
 def start(
     name: Optional[str] = None,
     *,
@@ -1481,6 +1492,7 @@ def start(
     metadata: Optional[dict] = None,
     observation_request=None,
     detail=None,
+    timeline_max_sites=None,
 ):
     """
     Start profiling with the given name and backend.
@@ -1522,6 +1534,10 @@ def start(
         hook (str, optional): The hook to use for profiling.
                               Available options are [None, "triton", "instrumentation"].
                               Defaults to None.
+        timeline_max_sites (int, optional): Automatic logical site budget
+            (1..128) for detail="timeline"; default 8. Required asynchronous
+            mechanism sites are additionally retained. Reducing density changes
+            coverage and does not qualify instruction placement or overhead.
         observation_request (ObservationRequest or dict, optional): Explicit
             semantic/instance/site/capacity selection. Requires
             hook="instrumentation" and a supported backend lowering; unsupported
@@ -1538,6 +1554,7 @@ def start(
 
     if detail not in (None, "auto", "timeline"):
         raise ValueError("detail must be None, 'auto', or 'timeline'")
+    timeline_sites = _timeline_site_budget(detail, timeline_max_sites)
     timeline = detail == 'timeline'
     timeline_collector = None
     if ((timeline and _active_sessions) or any(
@@ -1563,7 +1580,7 @@ def start(
                 programs=None,
                 program_policy='runtime_first_last',
                 automatic=True,
-                max_sites=8,
+                max_sites=timeline_sites,
                 max_events_per_instance=2048)
         elif _is_enflame_backend(backend):
             from .timeline_enflame import EnflameTimelineCollector
@@ -1573,7 +1590,7 @@ def start(
                 programs=None,
                 program_policy='runtime_first_last',
                 automatic=True,
-                max_sites=8,
+                max_sites=timeline_sites,
                 max_events_per_instance=4096)
         else:
             raise ValueError('Timeline is not yet implemented on this backend')
@@ -1597,7 +1614,7 @@ def start(
 
     observation_plan = (dict(automatic=True,
                              timeline=True,
-                             max_sites=8,
+                             max_sites=timeline_sites,
                              output_selection={'programs': None})
                         if timeline else None)
     if observation_request is not None:
