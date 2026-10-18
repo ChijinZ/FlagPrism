@@ -33,6 +33,7 @@ def main():
     parser.add_argument('--timeline', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--deny', action='append', default=[])
+    parser.add_argument('--expect-counter-unit', action='store_true')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     timeline = args.output / 'portable' / 'timeline'
@@ -89,8 +90,11 @@ def main():
                 'application_replayed') is not False or not report['captures']:
             raise RuntimeError('Offline result has no retained captures')
         for row in report['captures']:
-            if row['backend'] != 'ascend' or row['status'] != 'raw_only':
+            expected = 'counter_unit_only' if args.expect_counter_unit else 'raw_only'
+            if row['backend'] != 'ascend' or row['status'] != expected:
                 raise RuntimeError('Unvalidated units were manufactured')
+            if args.expect_counter_unit and not row['exports']:
+                raise RuntimeError('Expected actual counter-unit exports')
         reports.append(report)
     if not all(r == reports[0] for r in reports):
         raise RuntimeError(

@@ -162,7 +162,7 @@ def reexport_capture(directory, original_file):
             persist(directory, name, payload)
         persist(directory, canonical_base + '/complete.json',
                 json_bytes(receipt))
-    rows, reason, control_file = [], None, None
+    rows, reason, control_file, machine_file = [], None, None, None
     if backend == 'nvidia':
         from .timeline_unit_nvidia import load_counter_unit_proofs, load_counter_machine_map
         from .timeline_perfetto import write_counter_exports
@@ -226,16 +226,54 @@ def reexport_capture(directory, original_file):
                                      views,
                                      batch,
                                      proofs=proofs)
+    elif backend == 'ascend':
+        from . import timeline_ascend_machine
+        binary = owner['binary_id']
+        machine_base = 'machine/' + binary
+        try:
+            for name in ('loaded.elf', 'dwarf.stdout'):
+                retain(machine_base + '/' + name)
+            actual_map = timeline_ascend_machine.load_counter_machine_map(
+                directory, capture)
+            machine_inputs = dict(
+                schema_version=1,
+                original_inputs=dict(sorted(sources.items())),
+                machine_map_sha256=sha256(json_bytes(actual_map)),
+                rules_sha256=sha256(
+                    Path(timeline_ascend_machine.__file__).read_bytes()))
+            derived = 'derived/machine/' + sha256(json_bytes(machine_inputs))
+            with export_lock(directory):
+                persist(directory, derived + '/inputs.json',
+                        json_bytes(machine_inputs))
+                persist(directory, derived + '/counter-map.json',
+                        json_bytes(actual_map))
+            machine_file = derived + '/counter-map.json'
+            from .timeline_unit_ascend import load_counter_unit_proofs
+            from .timeline_perfetto import write_counter_exports
+            proofs = load_counter_unit_proofs(directory, capture, batch)
+            views = derive_counter_ns_views(batch, proofs)
+            rows = write_counter_exports(directory,
+                                         Path('captures') /
+                                         owner['invocation_id'],
+                                         views,
+                                         batch,
+                                         proofs=proofs)
+        except (ValueError, OSError, KeyError, TypeError,
+                UnicodeError) as error:
+            reason = 'Ascend counter mapping unavailable: ' + str(error)
     else:
         reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
-    return dict(invocation_id=owner['invocation_id'],
-                backend=backend,
-                canonical_file=canonical_base + '/events.json',
-                canonical_revision=canonical_revision,
-                wait_control_file=control_file,
-                exports=rows,
-                status='counter_unit_only' if rows else 'raw_only',
-                reason=reason)
+    result = dict(invocation_id=owner['invocation_id'],
+                  backend=backend,
+                  canonical_file=canonical_base + '/events.json',
+                  canonical_revision=canonical_revision,
+                  wait_control_file=control_file,
+                  exports=rows,
+                  status='counter_unit_only' if rows else 'raw_only',
+                  reason=reason)
+    if backend == 'ascend':
+        result['machine_counter_map_file'] = machine_file
+    return result
 
 
 def reexport_bundle(directory, *, invocation_id=None):

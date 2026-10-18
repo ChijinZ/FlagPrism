@@ -217,7 +217,12 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
             self._timeline_descriptors[identity] = dict(
                 launch=None,
                 metadata=dict(compiler_metadata=actual,
-                              compiled_snapshot=snapshot))
+                              compiled_snapshot=snapshot,
+                              runtime_device=dict(
+                                  device=int(
+                                      transport.torch.npu.current_device()),
+                                  name=transport.torch.npu.get_device_name(
+                                      transport.torch.npu.current_device()))))
             pointer = self.timeline_pool.allocate(identity)
             self.timeline_pool.mark_submitting(identity)
         except BaseException as error:
@@ -278,6 +283,25 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
                            if batch['complete'] else 'incomplete')
             _persist(directory / capture['events_file'],
                      (json.dumps(batch, indent=2) + '\n').encode())
+            from .timeline_ascend_machine import inspect_capture_binary
+            capture['machine_counter_mapping'] = inspect_capture_binary(
+                directory, metadata=capture['metadata'], deadline=deadline)
+            try:
+                from .timeline_unit_ascend import load_counter_unit_proofs
+                from .timeline_views import derive_counter_ns_views
+                from .timeline_perfetto import write_counter_exports
+                proofs = load_counter_unit_proofs(directory, capture, batch)
+                views = derive_counter_ns_views(batch, proofs)
+                capture['counter_ns_exports'] = write_counter_exports(
+                    directory, prefix, views, batch, proofs=proofs)
+                capture['counter_ns_status'] = dict(
+                    status='counter_unit_only',
+                    read_precision_status='unverified',
+                    time_arrows_verified=False)
+            except (ValueError, OSError, KeyError, TypeError,
+                    UnicodeError) as error:
+                capture['counter_ns_status'] = dict(status='unavailable',
+                                                    reason=str(error))
             from flagtree.debugger import api
             api._exported_runs.append(exported)
         _persist(directory / prefix.with_suffix('.json'),

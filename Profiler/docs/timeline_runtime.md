@@ -2,9 +2,9 @@
 
 The public hook/API/CLI now collect source-linked raw internal timestamps using
 these ownership components. Raw captures remain explicitly
-`partial_clock_unverified`. On the inspected NVIDIA sm_120 target, validated
-counter-unit evidence also produces isolated observer-relative ns `.pftrace`
-files. Read precision, source boundaries and cross-observer alignment remain
+`partial_clock_unverified`. On the inspected NVIDIA sm_120 and Ascend
+910B c220-vector targets, validated counter-unit evidence also produces isolated
+observer-relative ns `.pftrace` files. Read precision, source boundaries and cross-observer alignment remain
 unverified; these files do not complete P01 or the full three-backend timeline.
 
 ```bash
@@ -24,8 +24,9 @@ The current public raw paths support NVIDIA, Enflame GCU and Ascend CANN,
 eager and one host thread per session. All three have actual multiple-stream
 ownership evidence; nested sessions are explicitly rejected. Ascend now uses
 its own stream/event transport with the shared owner and canonical schema 2.
-Its unit/precision, final source-region boundaries, async association and
-Perfetto path remain unqualified. Raw success is not full P01 acceptance.
+Its full source-region, read-precision, cross-observer and async qualification
+remain incomplete. Ascend counter-unit exports are described below; raw success
+or unit-only Perfetto files are not full P01 acceptance.
 
 For Ascend, select the runtime device before the API session and use
 `backend="cann"`, or run:
@@ -51,6 +52,29 @@ compiler handoff as `compiled_object`, checking its receipt hash/length and a
 later offline inspection. A missing object is explicit; old captures remain
 readable. Retaining object bytes grants no counter-unit, source-boundary or
 shared-clock qualification.
+
+On the inspected Ascend910B c220-vector installation, default finalization uses
+`llvm-dwarfdump-15` (or `llvm-dwarfdump`) to retain exact private clock-marker
+rows from the actual loaded ELF. `FLAGPRISM_ASCEND_DWARFDUMP` can select an
+absolute executable. Missing tools or an unsupported machine mapping leave raw
+captures available with an explicit diagnostic. The matching new LLVM plugin
+must emit clock-marker version 1; old captures remain readable.
+
+The Ascend unit provider binds the actual runtime model/device, loaded binary,
+SYS_CNT instruction locations, original raw records and a bounded host window.
+For the documented A2 counter, one tick is 20 ns. This does not apply to other
+Ascend generations. New real recurrence and Softmax captures generated six
+standard observer-relative traces; fresh public/normal/optimized re-export
+preserved originals without application replay or NPU initialization. Offline
+re-export rechecks retained ELF/DWARF without running a compiler or tool. No
+runtime model is reconstructed for old captures that lack its snapshot.
+
+These files show **counter brackets** with unknown read precision and source
+boundaries. SYS_CNT reads do not insert pipeline completion barriers; a bracket
+must not be interpreted as another engine's activity. Separate observers have
+separate files and no verified time flows. Full pipeline qualification remains
+pending. See [Ascend counter-unit evidence](../../integration/evidence/timeline-ascend-counter-unit-r031/README.md).
+
 An unwritten admissible segment remains explicitly unobserved; it is not proof
 of execution or non-execution. Current real recurrence and Softmax probes use
 `enable_auto_blockify=False`; broader lowering, multi-function and exclusive
