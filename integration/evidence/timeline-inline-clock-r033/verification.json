@@ -1,0 +1,1146 @@
+{
+  "archive_sha256": "8e8dd0e7957fa0c2c75b3bf213960c9ca995d0c7623f80d98c969dba7c52910f",
+  "archive_bytes": 7057253,
+  "archive_members": 1402,
+  "candidate_commit": "115d5e5f4d6f0e50d51cb218a06db1bf7f89c351",
+  "candidate_source_files_matched": 668,
+  "native_wheel_sha256": "9f895d8db232ce4ff850d728dcfe6b621d4b8d48ea8ec5f7178a066a91fe1164",
+  "installation_terminal": {
+    "controller": {
+      "pid": 69251,
+      "ppid": 1,
+      "pgid": 69251,
+      "startticks": 20247426
+    },
+    "worker": {
+      "pid": 69252,
+      "ppid": 69251,
+      "pgid": 69252,
+      "startticks": 20247429
+    },
+    "argv": [
+      "/workspace/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r033/install-native-input-v2/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r033/runs/installed-native-v2/output"
+    ],
+    "argv_sha256": "257e4407a61137c702cdeddf4f977a2330df12567eb462f2aa4f91b7da2078d2",
+    "script_sha256": "829c0d40d41d7ac0f968148788158b977d760938f697bdf3f1bbea95821b5105",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 47143569636
+  },
+  "steps": [
+    {
+      "name": "venv",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv"
+      ],
+      "pid": 69253,
+      "startticks": 20247479,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r033/native-resume-v2/wheelhouse/flagtree-0.7.0+git5609de54-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 69254,
+      "startticks": 20247485,
+      "returncode": 0
+    },
+    {
+      "name": "nvdisasm-install",
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 69258,
+      "startticks": 20248083,
+      "returncode": 0
+    },
+    {
+      "name": "abi",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.profiler.native import compiler_binding; c=compiler_binding(); print(c.TIMELINE_BOUNDARY_VERSION); exec('if c.TIMELINE_BOUNDARY_VERSION != 4 or c.TIMELINE_RECORD_VERSION != 3: raise RuntimeError(\"wrong native\")')"
+      ],
+      "pid": 69262,
+      "startticks": 20248742,
+      "returncode": 0
+    },
+    {
+      "name": "binding-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/nvidia_boundary_binding_smoke.py",
+        "--ir",
+        "/workspace/chijin-timeline-r032/runs/installed-v5/output/fresh-default/ordinary-3/ttgir",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/binding-normal"
+      ],
+      "pid": 69263,
+      "startticks": 20248765,
+      "returncode": 0
+    },
+    {
+      "name": "public-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "cache_dir=/workspace/chijin-timeline-r033/runs/installed-native-v2/output/pytest-normal",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/test_public_timeline_contract.py"
+      ],
+      "pid": 69264,
+      "startticks": 20248799,
+      "returncode": 0
+    },
+    {
+      "name": "binding-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/nvidia_boundary_binding_smoke.py",
+        "--ir",
+        "/workspace/chijin-timeline-r032/runs/installed-v5/output/fresh-default/ordinary-3/ttgir",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/binding-optimized"
+      ],
+      "pid": 69328,
+      "startticks": 20249065,
+      "returncode": 0
+    },
+    {
+      "name": "public-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "cache_dir=/workspace/chijin-timeline-r033/runs/installed-native-v2/output/pytest-optimized",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/test_public_timeline_contract.py"
+      ],
+      "pid": 69329,
+      "startticks": 20249107,
+      "returncode": 0
+    },
+    {
+      "name": "boundary-math",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r033/install-native-input-v2/p01_nvidia_boundary_math_v4.py",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/boundary-math"
+      ],
+      "pid": 69393,
+      "startticks": 20249264,
+      "returncode": 0
+    },
+    {
+      "name": "constant-gemm",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r033/install-native-input-v2/constant-gemm-v4.py",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/constant-gemm"
+      ],
+      "pid": 69500,
+      "startticks": 20250353,
+      "returncode": 0
+    },
+    {
+      "name": "dynamic-1",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/p01_nvidia_dynamic_pipeline.py",
+        "--site-budget",
+        "1",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/dynamic-1"
+      ],
+      "pid": 69644,
+      "startticks": 20250921,
+      "returncode": 0
+    },
+    {
+      "name": "dynamic-8",
+      "argv": [
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r033/native-build-v1/component/tests/timeline/p01_nvidia_dynamic_pipeline.py",
+        "--site-budget",
+        "8",
+        "--output",
+        "/workspace/chijin-timeline-r033/runs/installed-native-v2/output/dynamic-8"
+      ],
+      "pid": 69788,
+      "startticks": 20251549,
+      "returncode": 0
+    }
+  ],
+  "machine_summary": [
+    {
+      "case": "ordinary",
+      "instructions": 280,
+      "math_loop_count": 1,
+      "counter_helper_present": false,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 3,
+        "LDGDEPBAR": 3,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "math_loops": [
+        {
+          "start": 1824,
+          "end": 3152,
+          "events": [
+            {
+              "pc": 2624,
+              "opcode": "DEPBAR.LE",
+              "predicate": null,
+              "operands": "SB0,0x1"
+            },
+            {
+              "pc": 2640,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 2656,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R20[R27+UR12+0x1000]"
+            },
+            {
+              "pc": 2672,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R4[R25+UR11]"
+            },
+            {
+              "pc": 2688,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R8[R8+UR11]"
+            },
+            {
+              "pc": 2704,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R12,R20,R4,R12"
+            },
+            {
+              "pc": 2736,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R16,R20,R8,R16"
+            },
+            {
+              "pc": 2752,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R20[R26+UR12+0x1000]"
+            },
+            {
+              "pc": 2800,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 2944,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R12,R20,R6,R12"
+            },
+            {
+              "pc": 3056,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R7],desc[UR20][R4.64],P1"
+            },
+            {
+              "pc": 3072,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R16,R20,R10,R16"
+            },
+            {
+              "pc": 3088,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "inline-sparse",
+      "instructions": 912,
+      "math_loop_count": 1,
+      "counter_helper_present": false,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 3,
+        "LDGDEPBAR": 3,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "math_loops": [
+        {
+          "start": 4800,
+          "end": 9632,
+          "events": [
+            {
+              "pc": 5024,
+              "opcode": "CS2R",
+              "predicate": "@!P2",
+              "operands": "R10,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 5680,
+              "opcode": "CS2R",
+              "predicate": "@!P2",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 7152,
+              "opcode": "DEPBAR.LE",
+              "predicate": null,
+              "operands": "SB0,0x1"
+            },
+            {
+              "pc": 7184,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 7552,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R16[R3+UR21+0x1000]"
+            },
+            {
+              "pc": 7568,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R20[R20+UR31]"
+            },
+            {
+              "pc": 7584,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R8[R2+UR31]"
+            },
+            {
+              "pc": 7600,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R12[R6+UR21+0x1000]"
+            },
+            {
+              "pc": 7616,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R24,R16,R20,R24"
+            },
+            {
+              "pc": 7648,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R28,R16,R8,R28"
+            },
+            {
+              "pc": 7712,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R24,R12,R22,R24"
+            },
+            {
+              "pc": 7824,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R28,R12,R10,R28"
+            },
+            {
+              "pc": 8144,
+              "opcode": "CS2R",
+              "predicate": "@!P2",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 8336,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R14,SRZ"
+            },
+            {
+              "pc": 8512,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 8640,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R19],desc[UR18][R16.64],P2"
+            },
+            {
+              "pc": 8832,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R14,SRZ"
+            },
+            {
+              "pc": 9296,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "inline-default",
+      "instructions": 1256,
+      "math_loop_count": 1,
+      "counter_helper_present": false,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 3,
+        "LDGDEPBAR": 3,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "math_loops": [
+        {
+          "start": 6640,
+          "end": 13696,
+          "events": [
+            {
+              "pc": 6896,
+              "opcode": "CS2R",
+              "predicate": "@!P3",
+              "operands": "R10,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 7504,
+              "opcode": "CS2R",
+              "predicate": "@!P3",
+              "operands": "R8,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 8736,
+              "opcode": "CS2R",
+              "predicate": "@!P6",
+              "operands": "R38,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10064,
+              "opcode": "CS2R",
+              "predicate": "@!P3",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10400,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R10,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10672,
+              "opcode": "DEPBAR.LE",
+              "predicate": null,
+              "operands": "SB0,0x1"
+            },
+            {
+              "pc": 10688,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 10704,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10976,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R24[R45+UR5+0x1000]"
+            },
+            {
+              "pc": 10992,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R20[R44+UR5+0x1000]"
+            },
+            {
+              "pc": 11008,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R8,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 11072,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 11216,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R8[R12+UR12]"
+            },
+            {
+              "pc": 11232,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R28[R28+UR12]"
+            },
+            {
+              "pc": 11440,
+              "opcode": "CS2R",
+              "predicate": "@!P3",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 11456,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R40,R24,R8,R40"
+            },
+            {
+              "pc": 11536,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 11616,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R32,R24,R28,R32"
+            },
+            {
+              "pc": 11744,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R40,R20,R10,R40"
+            },
+            {
+              "pc": 11920,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R32,R20,R30,R32"
+            },
+            {
+              "pc": 12400,
+              "opcode": "CS2R",
+              "predicate": "@!P3",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 12448,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R22,SRZ"
+            },
+            {
+              "pc": 12752,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 12912,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R19],desc[UR10][R24.64],P3"
+            },
+            {
+              "pc": 12928,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R22,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 13024,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R22,SRZ"
+            },
+            {
+              "pc": 13184,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 13424,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            },
+            {
+              "pc": 13440,
+              "opcode": "CS2R",
+              "predicate": "@P2",
+              "operands": "R10,SR_GLOBALTIMERLO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "old-outlined",
+      "instructions": 1395,
+      "math_loop_count": 1,
+      "counter_helper_present": true,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 3,
+        "LDGDEPBAR": 3,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "math_loops": [
+        {
+          "start": 7536,
+          "end": 15600,
+          "events": [
+            {
+              "pc": 7680,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_8_entry"
+            },
+            {
+              "pc": 8480,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_8_exit"
+            },
+            {
+              "pc": 9808,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_9_entry"
+            },
+            {
+              "pc": 11360,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_9_exit"
+            },
+            {
+              "pc": 11760,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_10_entry"
+            },
+            {
+              "pc": 11984,
+              "opcode": "DEPBAR.LE",
+              "predicate": null,
+              "operands": "SB0,0x1"
+            },
+            {
+              "pc": 12064,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 12112,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_10_exit"
+            },
+            {
+              "pc": 12352,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R24[R40+UR14+0x1000]"
+            },
+            {
+              "pc": 12384,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R20[R0+UR14+0x1000]"
+            },
+            {
+              "pc": 12448,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_11_entry"
+            },
+            {
+              "pc": 12560,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R14,SRZ"
+            },
+            {
+              "pc": 12720,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R8[R5+UR25]"
+            },
+            {
+              "pc": 12752,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R28[R2+UR25]"
+            },
+            {
+              "pc": 12960,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_11_exit"
+            },
+            {
+              "pc": 13008,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R36,R24,R8,R36"
+            },
+            {
+              "pc": 13232,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R32,R24,R28,R32"
+            },
+            {
+              "pc": 13392,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R36,R20,R10,R36"
+            },
+            {
+              "pc": 13456,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R32,R20,R30,R32"
+            },
+            {
+              "pc": 13728,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R14,SRZ"
+            },
+            {
+              "pc": 14016,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_12_entry"
+            },
+            {
+              "pc": 14272,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R22,SRZ"
+            },
+            {
+              "pc": 14528,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 14624,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R11],desc[UR20][R18.64],P2"
+            },
+            {
+              "pc": 14672,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_12_exit"
+            },
+            {
+              "pc": 14784,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R14,SRZ"
+            },
+            {
+              "pc": 15008,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_13_entry"
+            },
+            {
+              "pc": 15232,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            },
+            {
+              "pc": 15312,
+              "opcode": "CALL.REL.NOINC",
+              "predicate": null,
+              "operands": "$runtime_gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_13_exit"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "constant-ordinary",
+      "instructions": 200,
+      "math_loop_count": 0,
+      "counter_helper_present": false,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 10,
+        "LDGDEPBAR": 10,
+        "BAR.SYNC.DEFER_BLOCKING": 9,
+        "DEPBAR.LE": 4,
+        "LDSM.16.M88.4": 6,
+        "LDSM.16.MT88.4": 6,
+        "HMMA.16816.F32": 12
+      },
+      "math_loops": []
+    },
+    {
+      "case": "constant-inline",
+      "instructions": 1488,
+      "math_loop_count": 1,
+      "counter_helper_present": false,
+      "mechanism_counts": {
+        "LDGSTS.E.BYPASS.128": 6,
+        "LDGDEPBAR": 6,
+        "BAR.SYNC.DEFER_BLOCKING": 5,
+        "DEPBAR.LE": 2,
+        "LDSM.16.M88.4": 2,
+        "LDSM.16.MT88.4": 2,
+        "HMMA.16816.F32": 4
+      },
+      "math_loops": [
+        {
+          "start": 7456,
+          "end": 17696,
+          "events": [
+            {
+              "pc": 7552,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 7824,
+              "opcode": "DEPBAR.LE",
+              "predicate": null,
+              "operands": "SB0,0x2"
+            },
+            {
+              "pc": 7840,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 7856,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R20,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 8096,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 8144,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 8304,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R24[R9+UR7]"
+            },
+            {
+              "pc": 8320,
+              "opcode": "LDSM.16.M88.4",
+              "predicate": null,
+              "operands": "R20[R52+UR7]"
+            },
+            {
+              "pc": 8880,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 8992,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 9152,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 9200,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 9408,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R24[R13+UR7+0x1000]"
+            },
+            {
+              "pc": 9424,
+              "opcode": "LDSM.16.MT88.4",
+              "predicate": null,
+              "operands": "R28[R10+UR7+0x1000]"
+            },
+            {
+              "pc": 9952,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10128,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R18,SRZ"
+            },
+            {
+              "pc": 10400,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R74,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 10816,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R20,R24,R16,R20"
+            },
+            {
+              "pc": 10992,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R24,R24,R30,R16"
+            },
+            {
+              "pc": 11312,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R20,R16,R28,R20"
+            },
+            {
+              "pc": 11392,
+              "opcode": "HMMA.16816.F32",
+              "predicate": null,
+              "operands": "R24,R16,R28,R24"
+            },
+            {
+              "pc": 11968,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R30,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 12240,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R28,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 12864,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 13216,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 13552,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R34,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 14832,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 14864,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R34,SRZ"
+            },
+            {
+              "pc": 15200,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "predicate": null,
+              "operands": "0x0"
+            },
+            {
+              "pc": 15280,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R56],desc[UR8][R18.64],P4"
+            },
+            {
+              "pc": 15296,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 15360,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R34,SRZ"
+            },
+            {
+              "pc": 15552,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R30,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 15792,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            },
+            {
+              "pc": 15808,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 16480,
+              "opcode": "CS2R",
+              "predicate": "@!P4",
+              "operands": "R16,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 16512,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R34,SRZ"
+            },
+            {
+              "pc": 16896,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "predicate": null,
+              "operands": "[R56+0x1000],desc[UR8][R18.64],P4"
+            },
+            {
+              "pc": 16912,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 16976,
+              "opcode": "CS2R",
+              "predicate": null,
+              "operands": "R34,SRZ"
+            },
+            {
+              "pc": 17168,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R30,SR_GLOBALTIMERLO"
+            },
+            {
+              "pc": 17408,
+              "opcode": "LDGDEPBAR",
+              "predicate": null,
+              "operands": ""
+            },
+            {
+              "pc": 17424,
+              "opcode": "CS2R",
+              "predicate": "@P0",
+              "operands": "R18,SR_GLOBALTIMERLO"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "qualification": "Numerical/API/compiler regression passed; restoring ordinary issue interleaving and constant-K unrolling did not pass; candidate not promoted; no full P01/async/clock qualification"
+}
