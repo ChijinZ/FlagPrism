@@ -73,7 +73,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_VERSION") = 1;
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
-  m.attr("TIMELINE_RECORD_VERSION") = 2;
+  m.attr("TIMELINE_RECORD_VERSION") = 3;
   m.attr("TIMELINE_BOUNDARY_VERSION") = 3;
   m.attr("TIMELINE_MARKER_VERSION") = 1;
   m.attr("TIMELINE_STORAGE_VERSION") = 1;
@@ -247,10 +247,13 @@ void init_triton_proton(py::module &&m) {
           "proton.timeline_record_version");
       // Timer-only prototype metadata remains explicitly distinguishable.
       if (module->hasAttr("proton.timeline_record_version") &&
-          (!recordVersion || recordVersion.getInt() != 2))
+          (!recordVersion || !recordVersion.getType().isInteger(32) ||
+           (recordVersion.getInt() != 2 && recordVersion.getInt() != 3)))
         throw std::runtime_error("Unsupported timeline record version");
-      result["timeline_record_version"] = recordVersion ? 2 : 1;
-      result["timeline_record_bytes"] = recordVersion ? 16 : 8;
+      result["timeline_record_version"] =
+          recordVersion ? recordVersion.getInt() : 1;
+      result["timeline_record_bytes"] =
+          recordVersion ? (recordVersion.getInt() == 3 ? 32 : 16) : 8;
       result["timeline_record_clock_bits"] = recordVersion ? 64 : 43;
       result["timeline_timer_version"] = version.getInt();
       if (module->hasAttr("proton.timeline_storage_version")) {

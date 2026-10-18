@@ -50,7 +50,8 @@ struct CircularStoreDataPack {
 
 CircularStoreDataPack
 lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
-                           ConversionPatternRewriter &rewriter);
+                           ConversionPatternRewriter &rewriter,
+                           Value sharedViewOrigin = {});
 
 } // namespace proton::gpu
 } // namespace triton

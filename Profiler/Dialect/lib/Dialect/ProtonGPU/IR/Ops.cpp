@@ -36,6 +36,16 @@ LogicalResult CircularStoreOp::verify() {
   if (scopeId < 0 || scopeId > 255)
     return emitOpError("scope id must be in [0, 255]");
 
+  if (auto association = getAssociation()) {
+    auto version =
+        mod->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+    auto type = cast<triton::gpu::MemDescType>(association.getType());
+    if (!version || version.getInt() != 3 ||
+        !isa<triton::gpu::SharedMemorySpaceAttr>(type.getMemorySpace()))
+      return emitOpError("shared-view association requires timeline record v3 "
+                         "and shared memory");
+  }
+
   return success();
 }
 

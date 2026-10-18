@@ -19,6 +19,7 @@ def need(value, message):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--shared-views', action='store_true')
     args = parser.parse_args()
     args.output.mkdir(exist_ok=False)
     import torch
@@ -35,8 +36,9 @@ def main():
     state = torch.zeros(3, dtype=torch.int32, device='cuda')
     k_device = torch.tensor(3, dtype=torch.int32, device='cuda')
     torch.manual_seed(9217)
-    ac = torch.randn(48, 96, dtype=torch.float16)
-    bc = torch.randn(96, 56, dtype=torch.float16)
+    reduction_size = 192 if args.shared_views else 96
+    ac = torch.randn(48, reduction_size, dtype=torch.float16)
+    bc = torch.randn(reduction_size, 56, dtype=torch.float16)
     av, bv = ac.cuda(), bc.cuda()
     cv = torch.full((48, 56), -17.25, dtype=torch.float32, device='cuda')
     controls = dict(recurrence=workload.recurrence.warmup(x,
@@ -52,7 +54,7 @@ def main():
                                               cv,
                                               48,
                                               56,
-                                              96,
+                                              reduction_size,
                                               32,
                                               32,
                                               32,
@@ -113,7 +115,7 @@ def main():
                                          cv,
                                          48,
                                          56,
-                                         96,
+                                         reduction_size,
                                          32,
                                          32,
                                          32,
@@ -151,6 +153,31 @@ def main():
         need(batch['complete'] and batch['events'],
              'Capture lost actual records')
         captures.append((capture, batch))
+    if args.shared_views:
+        capture = captures[-1][0]
+        decoded = json.loads((prefix / capture['decoded_file']).read_text())
+        facts = json.loads((prefix / capture['async_file']).read_text())
+        need(
+            decoded['record_version'] == 3
+            and all(r['raw_byte_length'] == 32 for r in decoded['records']),
+            'Actual device records do not carry the shared-view ABI')
+        need(facts['shared_view_generations'] and facts['shared_view_loads'],
+             'Actual GEMM has no dynamic shared-view history')
+        need(
+            all(v['status'] == 'same_origin_prior_group_wait_covered'
+                for v in facts['shared_view_loads']),
+            'A GEMM load lacks a recorded same-origin wait-covered generation')
+        need(
+            any(v['generation'] >= 2
+                for v in facts['shared_view_generations']),
+            'No repeated actual shared-view generation was recorded')
+        (args.output / 'shared-views.json').write_text(
+            json.dumps(dict(
+                status=
+                'real_runtime_shared_origins_and_logical_wait_associations_not_clock_or_boundary_qualification',
+                generations=facts['shared_view_generations'],
+                loads=facts['shared_view_loads']),
+                       indent=2))
     tool = find_nvdisasm()
     need(tool is not None, 'Actual machine inspector unavailable')
     comparisons = []

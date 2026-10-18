@@ -93,6 +93,23 @@ def main():
     lower(old_module)
     require('proton_gpu.boundary_anchor' in str(old_module),
             'Explicit version-2 IR lost its legacy operand anchors')
+    old_record, changed = re.subn(
+        r'proton\.timeline_record_version\s*=\s*3\s*:\s*i32',
+        'proton.timeline_record_version = 2 : i32',
+        original,
+        count=1)
+    require(changed == 1, 'Cannot construct explicit previous record IR')
+    old_record_path = a.output / 'explicit-record-version-2.ttgir'
+    old_record_path.write_text(old_record)
+    old_record_module = parse(old_record_path)
+    old_record_plan = b.get_automatic_proton_plan(old_record_module)
+    require(
+        old_record_plan['timeline_record_bytes'] == 16
+        and old_record_plan['timeline_record_version'] == 2,
+        'Previous record IR was silently upgraded')
+    lower(old_record_module)
+    require(' association ' not in str(old_record_module),
+            'Previous record IR acquired a new payload')
     rejected = []
     for label, replacement in [('old-compiler', '1 : i32'),
                                ('unknown', '99 : i32'), ('wrong-type', '"1"'),

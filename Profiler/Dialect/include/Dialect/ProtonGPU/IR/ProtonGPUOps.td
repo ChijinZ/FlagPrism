@@ -55,7 +55,8 @@ def PTG_CircularStoreOp : PTG_Op<"circular_store", [
     PTG_SegmentType:$segment,
     AnyTypeOf<[I32, I64]>:$counter,
     UnitAttr:$isStart,
-    I32Attr:$scopeId
+    I32Attr:$scopeId,
+    Optional<TTG_MemDescType>:$association
   );
 
   let hasVerifier = 1;
@@ -63,6 +64,7 @@ def PTG_CircularStoreOp : PTG_Op<"circular_store", [
   let assemblyFormat = [{
     (`start` $isStart^):(`end`)? $segment `,` $counter attr-dict `:`
     qualified(type($segment)) `,` type($counter)
+    (`association` $association^ `:` qualified(type($association)))?
   }];
 }
 

@@ -67,7 +67,7 @@ struct CensusStoreOpConversion
 // Normalize scalar storage bits without numerical conversion (including fp16,
 // bf16 and pointers). No arithmetic salt or application value is introduced.
 static Value boundaryBits(Value value, Location loc,
-                           ConversionPatternRewriter &rewriter) {
+                          ConversionPatternRewriter &rewriter) {
   Type type = value.getType();
   if (isa<LLVM::LLVMPointerType>(type))
     return rewriter.create<LLVM::PtrToIntOp>(loc, i64_ty, value);
@@ -91,19 +91,22 @@ struct BoundaryAnchorOpConversion
                              PatternBenefit benefit)
       : ConvertOpToLLVMPattern<BoundaryAnchorOp>(converter, benefit),
         targetInfo(targetInfo) {}
-  LogicalResult matchAndRewrite(BoundaryAnchorOp op, OpAdaptor adaptor,
-                                  ConversionPatternRewriter &rewriter) const override {
+  LogicalResult
+  matchAndRewrite(BoundaryAnchorOp op, OpAdaptor adaptor,
+                  ConversionPatternRewriter &rewriter) const override {
     auto loc = op.getLoc();
     auto values = unpackLLElements(loc, adaptor.getInput(), rewriter);
     for (Value &value : values) {
       Type original = value.getType();
       Value bits = boundaryBits(value, loc, rewriter);
       if (!bits)
-        return op.emitError("Unsupported timeline boundary scalar storage type");
-      Value forwarded = targetInfo.anchorValue(rewriter, loc,
-                                                adaptor.getCounter(), bits);
+        return op.emitError(
+            "Unsupported timeline boundary scalar storage type");
+      Value forwarded =
+          targetInfo.anchorValue(rewriter, loc, adaptor.getCounter(), bits);
       if (!forwarded)
-        return op.emitError("Target does not implement compiler boundary anchors");
+        return op.emitError(
+            "Target does not implement compiler boundary anchors");
       if (isa<LLVM::LLVMPointerType>(original))
         value = rewriter.create<LLVM::IntToPtrOp>(loc, original, forwarded);
       else {
@@ -118,7 +121,7 @@ struct BoundaryAnchorOpConversion
       }
     }
     Value result = packLLElements(loc, getTypeConverter(), values, rewriter,
-                                   op.getResult().getType());
+                                  op.getResult().getType());
     rewriter.replaceOp(op, result);
     return success();
   }
@@ -144,12 +147,13 @@ struct ReadCounterOpConversion
     auto module = op->getParentOfType<ModuleOp>();
     if (auto attr = module->getAttr("proton.timeline_timer")) {
       auto timer = dyn_cast<StringAttr>(attr);
-      auto version = module->getAttrOfType<IntegerAttr>(
-          "proton.timeline_timer_version");
-      auto recordVersion = module->getAttrOfType<IntegerAttr>(
-          "proton.timeline_record_version");
+      auto version =
+          module->getAttrOfType<IntegerAttr>("proton.timeline_timer_version");
+      auto recordVersion =
+          module->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
       if (module->hasAttr("proton.timeline_record_version") &&
-          (!recordVersion || recordVersion.getInt() != 2)) {
+          (!recordVersion || !recordVersion.getType().isInteger(32) ||
+           (recordVersion.getInt() != 2 && recordVersion.getInt() != 3))) {
         op.emitError("Unsupported timeline record version");
         return failure();
       }
@@ -169,13 +173,15 @@ struct ReadCounterOpConversion
       }
     std::string marker;
     if (module->hasAttr("proton.timeline_marker_version")) {
-      auto version = module->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
+      auto version =
+          module->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
       auto site = op->getAttrOfType<IntegerAttr>("proton.timeline_site_id");
       auto start = op->getAttrOfType<BoolAttr>("proton.timeline_is_start");
-      if (!version || !version.getType().isInteger(32) || version.getInt() != 1 ||
-          !site || !site.getType().isInteger(32) || site.getInt() < 0 ||
-          site.getInt() > 0x7fffffff || !start)
-        return op.emitError("Missing or invalid timeline counter marker identity");
+      if (!version || !version.getType().isInteger(32) ||
+          version.getInt() != 1 || !site || !site.getType().isInteger(32) ||
+          site.getInt() < 0 || site.getInt() > 0x7fffffff || !start)
+        return op.emitError(
+            "Missing or invalid timeline counter marker identity");
       marker = "flagprism_timeline_v1_site_" + std::to_string(site.getInt()) +
                (start.getValue() ? "_entry" : "_exit");
     }
@@ -248,13 +254,14 @@ struct FinalizeOpConversion
     Value gmemWarpIndexPtr =
         b.gep(scratchPtrTy, i32_ty, scratchPtr, warpIndexOffset);
     Value index = b.load(i32_ty, segmentObj.indexPtr);
-    if (bytesPerEntry == 16) {
+    if (bytesPerEntry == 16 || bytesPerEntry == 32) {
       // A single lane publishes each observer counter. Other lanes have private
       // counters and must not race this global metadata store.
-      Value lane = b.urem(threadId, b.i32_val(
-          triton::gpu::TritonGPUDialect::getThreadsPerWarp(mod)));
+      Value lane = b.urem(
+          threadId,
+          b.i32_val(triton::gpu::TritonGPUDialect::getThreadsPerWarp(mod)));
       Value publish = b.and_(b.icmp_eq(lane, b.i32_val(0)),
-                            getProgramCollectionPredicate(mod, loc, rewriter));
+                             getProgramCollectionPredicate(mod, loc, rewriter));
       Block *before = op->getBlock();
       Block *after = rewriter.splitBlock(before, op->getIterator());
       Block *write = rewriter.createBlock(after);
@@ -265,7 +272,7 @@ struct FinalizeOpConversion
       rewriter.create<cf::BranchOp>(loc, after);
       rewriter.setInsertionPoint(op);
       isFirstThread = b.and_(isFirstThread,
-                            getProgramCollectionPredicate(mod, loc, rewriter));
+                             getProgramCollectionPredicate(mod, loc, rewriter));
     } else {
       b.store(index, gmemWarpIndexPtr);
     }
@@ -293,7 +300,9 @@ struct FinalizeOpConversion
       b.store(load, gmemPtr);
     };
     // Write back 'preamble'.
-    Value preamble = b.i32_val(bytesPerEntry == 16 ? 0x46505432 : 0xdeadbeef);
+    Value preamble = b.i32_val(bytesPerEntry == 32   ? 0x46505433
+                               : bytesPerEntry == 16 ? 0x46505432
+                                                     : 0xdeadbeef);
     Value gmemPreambleOffset = b.i32_val(0);
     Value gmemPreamblePtr =
         b.gep(scratchPtrTy, i32_ty, scratchPtr, gmemPreambleOffset);
@@ -349,9 +358,9 @@ struct FinalizeOpConversion
     shouldCopy = b.and_(shouldCopy, b.icmp_ugt(retainedWords, b.i32_val(0)));
     if (warpSpecialized)
       shouldCopy = isFirstThread;
-    if (bytesPerEntry == 16)
-      shouldCopy = b.and_(shouldCopy,
-                         getProgramCollectionPredicate(mod, loc, rewriter));
+    if (bytesPerEntry == 16 || bytesPerEntry == 32)
+      shouldCopy =
+          b.and_(shouldCopy, getProgramCollectionPredicate(mod, loc, rewriter));
 
     Block *copyDispatch = rewriter.createBlock(op->getParentRegion(),
                                                Region::iterator(thenBlock));
@@ -573,8 +582,8 @@ struct InitCtxOpConversion
     Value threadId = getThreadId(rewriter, loc);
     Value isFirstThread = b.icmp_eq(threadId, b.i32_val(0));
     if (mod->hasAttr("proton.timeline_storage_version"))
-      isFirstThread = b.and_(
-          isFirstThread, getProgramCollectionPredicate(mod, loc, rewriter));
+      isFirstThread = b.and_(isFirstThread,
+                             getProgramCollectionPredicate(mod, loc, rewriter));
     const int circularHeaderWordSize = proton::gpu::getCircularHeaderSize() / 4;
 
     Block *prevBlock = op->getBlock();
@@ -653,7 +662,7 @@ struct RestoreCtxOpConversion
       selectedBlock = rewriter.createBlock(continuation);
       rewriter.setInsertionPointToEnd(before);
       rewriter.create<cf::CondBranchOp>(loc, enabled, selectedBlock,
-                                      continuation);
+                                        continuation);
       rewriter.setInsertionPointToStart(selectedBlock);
     }
     Value index = b.load(i32_ty, gmemWarpIndexPtr);
@@ -704,8 +713,8 @@ struct SaveCtxOpConversion
     Value laneId = b.urem(threadId, warpSize);
     Value isWarpMaster = b.icmp_eq(laneId, b.i32_val(0));
     if (mod->hasAttr("proton.timeline_storage_version"))
-      isWarpMaster = b.and_(
-          isWarpMaster, getProgramCollectionPredicate(mod, loc, rewriter));
+      isWarpMaster = b.and_(isWarpMaster,
+                            getProgramCollectionPredicate(mod, loc, rewriter));
     const int circularHeaderWordSize = proton::gpu::getCircularHeaderSize() / 4;
 
     Block *prevBlock = op->getBlock();

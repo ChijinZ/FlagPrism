@@ -133,6 +133,21 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
         }
     return counter;
   };
+  auto association = [&](proton::RecordOp record) -> Value {
+    auto version =
+        module->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+    if (!version || version.getInt() != 3)
+      return {};
+    auto *operation = observed.lookup(record.getNameAttr());
+    if (!operation)
+      return {};
+    auto name = operation->getName().getStringRef();
+    if (name == "ttg.async_copy_global_to_local")
+      return operation->getOperand(1);
+    if (name == "ttg.local_load")
+      return operation->getOperand(0);
+    return {};
+  };
 
   // Replace all proton::RecordOp in the worker warps.
   func->walk([&](triton::gpu::WarpSpecializePartitionsOp partitions) {
@@ -159,7 +174,8 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
           Value counter = readCounter(record);
           int scopeId = scopeInfo.getOpScopeId(record);
           builder.create<gpu::CircularStoreOp>(loc, newSegment, counter,
-                                               record.getIsStart(), scopeId);
+                                               record.getIsStart(), scopeId,
+                                               association(record));
           record.erase();
         });
 
@@ -181,7 +197,8 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
     Value counter = readCounter(record);
     int scopeId = scopeInfo.getOpScopeId(record);
     builder.create<gpu::CircularStoreOp>(loc, segment, counter,
-                                         record.getIsStart(), scopeId);
+                                         record.getIsStart(), scopeId,
+                                         association(record));
     record.erase();
   });
 
@@ -512,9 +529,10 @@ public:
       auto record =
           m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
       if (!storage || storage.getInt() != 1 || !record ||
-          record.getInt() != 2) {
+          !record.getType().isInteger(32) ||
+          (record.getInt() != 2 && record.getInt() != 3)) {
         m.emitError(
-            "Compact timeline storage requires storage v1 and record v2");
+            "Compact timeline storage requires storage v1 and record v2/v3");
         return signalPassFailure();
       }
       if (auto programs =
@@ -537,11 +555,12 @@ public:
       auto version =
           m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
       auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
-      if (!version || version.getInt() != 2 || !timer ||
+      if (!version || !version.getType().isInteger(32) ||
+          (version.getInt() != 2 && version.getInt() != 3) || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension ||
           m->hasAttr("proton.source_census")) {
-        m.emitError(
-            "Timeline v2 requires its matching 64-bit timer and interval mode");
+        m.emitError("Timeline records require their matching 64-bit timer and "
+                    "interval mode");
         return signalPassFailure();
       }
     }

@@ -142,7 +142,7 @@ class TimelineInstrumentationMixin:
         from .. import timeline_runtime, timeline_cuda_runtime
         from .. import timeline_events, timeline_events_nvidia, timeline_nvidia_machine
         binding = compiler_binding()
-        if (getattr(binding, 'TIMELINE_RECORD_VERSION', None) != 2
+        if (getattr(binding, 'TIMELINE_RECORD_VERSION', None) != 3
                 or getattr(binding, 'TIMELINE_STORAGE_VERSION', None) != 1
                 or getattr(binding, 'TIMELINE_BOUNDARY_VERSION', None) != 3
                 or getattr(binding, 'TIMELINE_MARKER_VERSION', None) != 1):
@@ -297,7 +297,8 @@ class TimelineInstrumentationMixin:
                 selected_warps=tuple(range(warps)),
                 slots=tuple(tuple(slot) for slot in owner['layout']['slots']),
                 scope_ids=frozenset(
-                    int(k) for k, _ in metadata['scope_id_names']))
+                    int(k) for k, _ in metadata['scope_id_names']),
+                record_version=owner['plan']['timeline_record_version'])
             capture['capture_status'] = 'raw_complete' if decoded[
                 'complete'] else 'incomplete'
             capture['decoded_file'] = str(prefix.with_suffix('.decoded.json'))

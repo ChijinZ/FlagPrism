@@ -118,8 +118,8 @@ Value getProgramCollectionSlot(ModuleOp mod, Location loc,
           mod->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs")) {
     Value slot = b.i32_val(0);
     for (auto [index, program] : llvm::enumerate(programs.asArrayRef()))
-      slot = b.select(b.icmp_eq(pid, b.i32_val(program)),
-                      b.i32_val(index), slot);
+      slot =
+          b.select(b.icmp_eq(pid, b.i32_val(program)), b.i32_val(index), slot);
     return slot;
   }
   // Unselected CTAs may compute this pointer, but must never dereference it.
@@ -142,8 +142,8 @@ Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
     Value valid = b.and_(b.icmp_ugt(volume, b.i64_val(0)),
                          b.icmp_ule(volume, b.i64_val(0xffffffffu)));
     Value last = b.trunc(i32_ty, b.sub(volume, b.i64_val(1)));
-    return b.and_(valid, b.or_(b.icmp_eq(pid, b.i32_val(0)),
-                               b.icmp_eq(pid, last)));
+    return b.and_(valid,
+                  b.or_(b.icmp_eq(pid, b.i32_val(0)), b.icmp_eq(pid, last)));
   }
   Value enabled = b.false_val();
   for (int32_t program : programs.asArrayRef())
@@ -153,7 +153,8 @@ Value getProgramCollectionPredicate(ModuleOp mod, Location loc,
 
 CircularStoreDataPack
 lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
-                           ConversionPatternRewriter &rewriter) {
+                           ConversionPatternRewriter &rewriter,
+                           Value sharedViewOrigin) {
   auto loc = op.getLoc();
   auto mod = op.getOperation()->getParentOfType<ModuleOp>();
   auto b = TritonLLVMOpBuilder(loc, rewriter);
@@ -169,7 +170,7 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   // Update the index (could be register promoted).
   Value curIdx = b.load(i32_ty, indexPtr);
   Value enabled = getProgramCollectionPredicate(mod, loc, rewriter);
-  const bool timeline = bytesPerEntry == 16;
+  const bool timeline = bytesPerEntry == 16 || bytesPerEntry == 32;
   Value writable = b.true_val();
   Value newIdx = b.add(curIdx, b.i32_val(wordsPerEntry));
   if (timeline) {
@@ -217,12 +218,18 @@ lowerCircularStoreOpHelper(CircularStoreOp op, Value segmentStruct,
   Value valsVec;
   if (timeline) {
     auto clkVec = b.bitcast(clock, vec_ty(i32_ty, 2));
-    Value timelineTag = b.i32_val(
-        (op.getIsStart() ? 0u : 0x80000000u) | uint32_t(op.getScopeId()));
-    valsVec = packLLVector(
-        loc, {timelineTag, b.extract_element(i32_ty, clkVec, b.i32_val(0)),
-              b.extract_element(i32_ty, clkVec, b.i32_val(1)),
-              b.udiv(curIdx, b.i32_val(wordsPerEntry))}, rewriter);
+    Value timelineTag = b.i32_val((op.getIsStart() ? 0u : 0x80000000u) |
+                                  uint32_t(op.getScopeId()));
+    SmallVector<Value> fields{timelineTag,
+                              b.extract_element(i32_ty, clkVec, b.i32_val(0)),
+                              b.extract_element(i32_ty, clkVec, b.i32_val(1)),
+                              b.udiv(curIdx, b.i32_val(wordsPerEntry))};
+    if (bytesPerEntry == 32) {
+      fields.append({b.i32_val(sharedViewOrigin ? 1 : 0),
+                     sharedViewOrigin ? sharedViewOrigin : b.i32_val(0),
+                     b.i32_val(0), b.i32_val(0)});
+    }
+    valsVec = packLLVector(loc, fields, rewriter);
   } else if (clkTy.getWidth() == 64) {
     auto clkVecTy = vec_ty(i32_ty, 2);
     auto clkVec = b.bitcast(clock, clkVecTy);

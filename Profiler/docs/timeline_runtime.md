@@ -87,6 +87,19 @@ existing meaning.
 The automatic timeline compiler now also requires native
 `TIMELINE_BOUNDARY_VERSION=3`. Its plan reports
 `timeline_boundary_strategy="runtime_zero_gated_calls_pending_region_audit"`.
+
+The shared-view candidate additionally requires `TIMELINE_RECORD_VERSION=3`;
+it is under device qualification and is not a full timeline acceptance result.
+Its 32-byte records preserve the complete timestamp/sequence and carry the
+runtime shared-memory view origin for automatically selected asynchronous copy
+destinations and local-load sources. The origin includes the converted stage
+base, affine slice offset and layout padding; it is not inferred from site IDs
+or occurrence counts. Complete histories can associate committed attempts and
+wait-covered same-origin loads. Masks may suppress byte movement, equal origins
+do not establish equal footprints or safe reuse, and no clock/boundary or engine
+activity certificate follows. Existing 16-byte v2 originals remain readable;
+their missing shared-view information is never reconstructed from ordinals.
+
 A reserved mutable module global is initialized to zero and loaded once per
 function with a volatile device read. Begin timestamps feed bit-preserving
 XOR anchors masked by that runtime value; end dependencies control a branch to

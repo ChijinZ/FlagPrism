@@ -34,6 +34,35 @@ physical buffer generation. Schema 1 conservatively rejects regressing raw
 ticks; wrap/reset and clock qualification require separate explicit evidence,
 not a reinterpretation of a decreasing counter as a duration.
 
+### NVIDIA physical records and shared-view payloads
+
+The physical record version is distinct from the common event schema. Readers
+select it from the binary-bound compiler plan, never by guessing from bytes.
+
+| Physical version | Header magic | Record bytes | Contents |
+| --- | --- | --- | --- |
+| 2 | `0x46505432` | 16 | site/phase, timer low/high, absolute sequence |
+| 3 | `0x46505433` | 32 | v2 fields followed by payload kind, runtime shared-view byte origin, two zero reserved words |
+
+Version 3 kind 0 has no association and all remaining words zero. Kind 1
+describes a shared-memory view origin in address space 3; address zero is valid.
+The decoder retains the payload's exact 16-byte span within its 32-byte record.
+The NVIDIA adapter requires kind 1 on selected copy destinations/local-load
+sources and rejects it on other operations, mismatched entry/exit addresses,
+unknown kinds, nonzero reserved words and wrong-version headers.
+
+`*.async.json` retains shared-view generations per invocation, program and
+recording warp. One generation represents the submits to one observed origin
+within one committed group; repeated commits to that origin create subsequent
+generations. A local load is associated only with a recorded same-origin
+generation covered by a preceding wait and with no intervening uncommitted
+same-origin submit. Missing history produces no generation assignments.
+These are committed **attempts**: masks can suppress byte movement. Equal
+origins alone do not establish matching footprints, absence of aliasing,
+completion visibility across actors or safe reuse. The data is a mechanism
+input, not a source-boundary, clock or hardware-busy certificate, and does not
+authorize a verified Perfetto flow.
+
 `complete` means raw history/pair coverage, **not timing certification**.
 `clock_status` and `boundary_status` remain `unverified`. No ns, exact source
 latency, engine busy, cross-observer ordering or time arrow follows from these

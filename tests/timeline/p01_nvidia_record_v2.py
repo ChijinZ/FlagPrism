@@ -41,11 +41,14 @@ def main():
     from flagtree.profiler.timeline_nvidia_async import derive_cp_async_facts
     capture_namespace = uuid.uuid4().hex
     binding = compiler_binding()
-    require(binding.TIMELINE_RECORD_VERSION == 2 and binding.TIMELINE_STORAGE_VERSION == 1,
-            'Wrong installed native record/storage ABI')
+    require(
+        binding.TIMELINE_RECORD_VERSION in (2, 3)
+        and binding.TIMELINE_STORAGE_VERSION == 1,
+        'Wrong installed native record/storage ABI')
     from flagtree.profiler.timeline_storage import plan_compact_storage
     torch.cuda.set_device(0)
-    require(torch.cuda.get_device_capability() == (12, 0), 'Wrong booked device')
+    require(torch.cuda.get_device_capability() == (12, 0),
+            'Wrong booked device')
     torch.manual_seed(9217)
 
     @triton.jit
@@ -93,36 +96,62 @@ def main():
     allocations = []
 
     class Allocator:
+
         def __init__(self, plan, compiled):
             self.compiled_plan, self.compiled = plan, compiled
 
-        def validate_launch(self, *, function, grid, scratch_size, alignment, num_ctas, stream=None):
-            require(num_ctas == 1, 'This mechanism registration uses noncluster CTAs')
+        def validate_launch(self,
+                            *,
+                            function,
+                            grid,
+                            scratch_size,
+                            alignment,
+                            num_ctas,
+                            stream=None):
+            require(num_ctas == 1,
+                    'This mechanism registration uses noncluster CTAs')
             require(function == self.compiled.function,
                     'Allocator plan is not bound to the actual loaded binary')
-            layout = plan_compact_storage(self.compiled_plan, grid=grid,
-                scratch_size=scratch_size, alignment=alignment, num_ctas=num_ctas)
-            self.plan = dict(function=function, grid=list(grid), stride=scratch_size,
-                             alignment=alignment, size=prod(grid) * scratch_size,
+            layout = plan_compact_storage(self.compiled_plan,
+                                          grid=grid,
+                                          scratch_size=scratch_size,
+                                          alignment=alignment,
+                                          num_ctas=num_ctas)
+            self.plan = dict(function=function,
+                             grid=list(grid),
+                             stride=scratch_size,
+                             alignment=alignment,
+                             size=prod(grid) * scratch_size,
                              layout=layout)
 
         def __call__(self, size, alignment, stream):
-            require(size == self.plan['size'] and alignment == self.plan['alignment'],
-                    'Actual allocation contradicts the prelaunch ABI')
+            require(
+                size == self.plan['size']
+                and alignment == self.plan['alignment'],
+                'Actual allocation contradicts the prelaunch ABI')
             raw_bytes = self.plan['layout']['raw_bytes']
-            require(0 < raw_bytes <= 8388608, 'Mechanism scratch exceeded raw budget')
-            target_stream = torch.cuda.current_stream() if stream is None else torch.cuda.ExternalStream(stream)
+            require(0 < raw_bytes <= 8388608,
+                    'Mechanism scratch exceeded raw budget')
+            target_stream = torch.cuda.current_stream(
+            ) if stream is None else torch.cuda.ExternalStream(stream)
             with torch.cuda.stream(target_stream):
-                allocation = torch.full((raw_bytes + 256,), 165, dtype=torch.uint8, device='cuda')
+                allocation = torch.full((raw_bytes + 256, ),
+                                        165,
+                                        dtype=torch.uint8,
+                                        device='cuda')
                 buffer = allocation[:raw_bytes]
                 buffer.zero_()
-            allocations.append(dict(self.plan, buffer=buffer, allocation=allocation,
-                                    stream=target_stream))
+            allocations.append(
+                dict(self.plan,
+                     buffer=buffer,
+                     allocation=allocation,
+                     stream=target_stream))
             return buffer
 
     mode = Default(buffer_size=32768)
-    max_shared = triton.runtime.driver.active.utils.get_device_properties(0)['max_shared_mem']
-    selected = (0,)
+    max_shared = triton.runtime.driver.active.utils.get_device_properties(
+        0)['max_shared_mem']
+    selected = (0, )
 
     def regions(pm):
         binding.add_automatic_proton_scopes(pm, 8, False, True)
@@ -131,9 +160,9 @@ def main():
 
     def lower(pm):
         binding.add_convert_proton_to_protongpu(
-            pm, mode.metric_type, mode.sampling_strategy, mode.sampling_options,
-            mode.granularity, mode.buffer_strategy, mode.buffer_type,
-            mode.buffer_size, max_shared, 1, 128, True)
+            pm, mode.metric_type, mode.sampling_strategy,
+            mode.sampling_options, mode.granularity, mode.buffer_strategy,
+            mode.buffer_type, mode.buffer_size, max_shared, 1, 128, True)
         passes.common.add_cse(pm)
         binding.add_allocate_proton_shared_memory(pm)
 
@@ -143,8 +172,11 @@ def main():
 
     backend = backends['nvidia'].compiler
     previous = backend.instrumentation
-    collector = Instrumentation({'ttgpuir_complete': regions,
-                                 'ttgpuir_to_llvmir': lower, 'llvmir_to_llvm': llvm})
+    collector = Instrumentation({
+        'ttgpuir_complete': regions,
+        'ttgpuir_to_llvmir': lower,
+        'llvmir_to_llvm': llvm
+    })
     rows = []
     calls = []
 
@@ -156,11 +188,16 @@ def main():
         selected = programs
         backend.instrumentation = collector
         count = len(allocations)
-        selection_key = 'runtime_first_last' if selected is None else ','.join(map(str, selected))
-        token = str(mode) + ':timeline_timer=1:timeline_record=2:storage=1:selected=' + selection_key
+        selection_key = 'runtime_first_last' if selected is None else ','.join(
+            map(str, selected))
+        token = str(
+            mode
+        ) + ':timeline_timer=1:timeline_record=2:storage=1:selected=' + selection_key
         # Compile-only discovery is not an extra application/device invocation.
         compiled = launch(token, warmup=True)
-        require(len(allocations) == count, 'Compile-only discovery allocated device records')
+        require(
+            len(allocations) == count,
+            'Compile-only discovery allocated device records')
         context = ir.context()
         ir.load_dialects(context)
         nvidia.load_dialects(context)
@@ -170,20 +207,28 @@ def main():
         module = ir.parse_mlir_module(str(prelaunch_ir), context)
         module.context = context
         compiled_plan = binding.get_automatic_proton_plan(module)
-        require(compiled_plan.get('timeline_storage_version') == 1,
-                'Actual compiled binary lacks compact storage capability')
+        require(
+            compiled_plan.get('timeline_storage_version') == 1,
+            'Actual compiled binary lacks compact storage capability')
         set_profile_allocator(Allocator(compiled_plan, compiled))
         actual = launch(token)
-        require(actual.hash == compiled.hash, 'Launch binary differs from admitted plan')
-        calls.append({'name': name, 'kind': 'explicit_automatic_record_capture'})
-        require(len(allocations) == count + 1, 'Not one allocation per requested launch')
+        require(actual.hash == compiled.hash,
+                'Launch binary differs from admitted plan')
+        calls.append({
+            'name': name,
+            'kind': 'explicit_automatic_record_capture'
+        })
+        require(
+            len(allocations) == count + 1,
+            'Not one allocation per requested launch')
         owner = allocations[-1]
         completion = torch.cuda.Event()
         completion.record(owner['stream'])
         completion.synchronize()
         raw = owner['buffer'].cpu().numpy().tobytes()
         canary = owner['allocation'][len(raw):].cpu().numpy().tobytes()
-        require(canary == bytes([165]) * 256, 'Compact allocation canary changed')
+        require(canary == bytes([165]) * 256,
+                'Compact allocation canary changed')
         (a.output / (name + '.canary')).write_bytes(canary)
         (a.output / (name + '.raw')).write_bytes(raw)
         context = ir.context()
@@ -193,47 +238,69 @@ def main():
         artifacts = {}
         for suffix, value in compiled.asm.items():
             path = a.output / (name + '.' + suffix)
-            path.write_bytes(value if isinstance(value, bytes) else str(value).encode())
-            artifacts[suffix] = {'file': path.name, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()}
-        module = ir.parse_mlir_module(str(a.output / (name + '.ttgir')), context)
+            path.write_bytes(
+                value if isinstance(value, bytes) else str(value).encode())
+            artifacts[suffix] = {
+                'file': path.name,
+                'sha256': hashlib.sha256(path.read_bytes()).hexdigest()
+            }
+        module = ir.parse_mlir_module(str(a.output / (name + '.ttgir')),
+                                      context)
         module.context = context
         plan = binding.get_automatic_proton_plan(module)
         require(plan['timeline_plan_version'] == 1, 'Wrong timeline planner')
-        mechanisms = [r for r in plan['inventory'] if r.get('timeline_mechanism')]
-        require(len(mechanisms) == plan['timeline_async_boundary_count'] and
-                all(r['selected'] for r in mechanisms),
-                'Incomplete compiler async boundary set')
+        mechanisms = [
+            r for r in plan['inventory'] if r.get('timeline_mechanism')
+        ]
+        require(
+            len(mechanisms) == plan['timeline_async_boundary_count']
+            and all(r['selected'] for r in mechanisms),
+            'Incomplete compiler async boundary set')
         if name.startswith('gemm'):
-            require({r['timeline_mechanism'] for r in mechanisms} == {
-                'nvidia.cp_async.submit', 'nvidia.cp_async.commit', 'nvidia.cp_async.wait'},
-                'Real ordinary GEMM lost its supported async mechanism')
+            require({r['timeline_mechanism']
+                     for r in mechanisms} == {
+                         'nvidia.cp_async.submit', 'nvidia.cp_async.commit',
+                         'nvidia.cp_async.wait'
+                     },
+                    'Real ordinary GEMM lost its supported async mechanism')
         scopes = dict(binding.get_scope_id_names(module))
         decoded = decoder.decode_timeline_ring(
-            raw, scratch_size=owner['stride'], total_warps=4,
+            raw,
+            scratch_size=owner['stride'],
+            total_warps=4,
             selected_warps=(0, 1, 2, 3),
             slots=owner['layout']['slots'],
-            scope_ids=frozenset(scopes))
+            scope_ids=frozenset(scopes),
+            record_version=plan['timeline_record_version'])
         save(name + '.decoded.json', decoded)
-        require(all(row['capacity_records'] == mode.buffer_size // (4 * 16)
-                    for row in decoded['observers']),
-                'Compiler silently changed the explicitly requested capacity')
+        require(
+            all(row['capacity_records'] == mode.buffer_size //
+                (4 * plan['timeline_record_bytes'])
+                for row in decoded['observers']),
+            'Compiler silently changed the explicitly requested capacity')
         require(decoded['complete'], 'Default probe overflowed or saturated')
         facts = derive_cp_async_facts(
-            decoded, dict(plan, binary_id=compiled.hash),
+            decoded,
+            dict(plan, binary_id=compiled.hash),
             capture_id='probe-' + capture_namespace + '-' + str(len(rows)),
             invocation_id='launch-' + capture_namespace + '-' + str(len(rows)),
             binary_id=compiled.hash)
         save(name + '.async-facts.json', facts)
         if name.startswith('gemm'):
-            require(facts['groups'] and facts['waits'] and facts['dependencies'],
-                    'Real GEMM has no reconstructed group/wait coverage')
-            require(all(not row['groups_not_covered_by_observed_wait']
-                        for row in facts['observers']),
-                    'Real GEMM final drain did not cover every recorded group')
-        require({r['program'] for r in decoded['records']} == set(owner['layout']['programs']),
+            require(
+                facts['groups'] and facts['waits'] and facts['dependencies'],
+                'Real GEMM has no reconstructed group/wait coverage')
+            require(
+                all(not row['groups_not_covered_by_observed_wait']
+                    for row in facts['observers']),
+                'Real GEMM final drain did not cover every recorded group')
+        require({r['program']
+                 for r in decoded['records']
+                 } == set(owner['layout']['programs']),
                 'Actual sampled programs differ from request')
-        require(len(raw) == len(owner['layout']['slots']) * owner['stride'],
-                'Capture allocated full-grid instead of compact scratch')
+        require(
+            len(raw) == len(owner['layout']['slots']) * owner['stride'],
+            'Capture allocated full-grid instead of compact scratch')
         pending, pairs = {}, []
         for event in decoded['records']:
             key = (event['program'], event['warp'], event['site'])
@@ -243,27 +310,50 @@ def main():
             else:
                 require(key in pending, 'Exit without retained entry')
                 begin = pending.pop(key)
-                pairs.append({'program': event['program'], 'warp': event['warp'],
-                              'site': event['site'], 'begin_sequence': begin['sequence'],
-                              'end_sequence': event['sequence'], 'begin_tick': begin['tick'],
-                              'end_tick': event['tick'],
-                              'raw_offsets': [begin['raw_byte_offset'], event['raw_byte_offset']]})
+                pairs.append({
+                    'program':
+                    event['program'],
+                    'warp':
+                    event['warp'],
+                    'site':
+                    event['site'],
+                    'begin_sequence':
+                    begin['sequence'],
+                    'end_sequence':
+                    event['sequence'],
+                    'begin_tick':
+                    begin['tick'],
+                    'end_tick':
+                    event['tick'],
+                    'raw_offsets':
+                    [begin['raw_byte_offset'], event['raw_byte_offset']]
+                })
         require(not pending, 'Unclosed region')
-        require(len({r['site'] for r in pairs if r['end_tick'] > r['begin_tick']}) >= 2,
-                'No two positive actual internal regions')
+        require(
+            len({r['site']
+                 for r in pairs if r['end_tick'] > r['begin_tick']}) >= 2,
+            'No two positive actual internal regions')
         save(name + '.decoded.json', decoded)
         save(name + '.pairs.json', pairs)
         save(name + '.plan.json', plan)
-        rows.append(dict(name=name, binary_hash=compiled.hash, raw_bytes=len(raw),
-                         raw_sha256=hashlib.sha256(raw).hexdigest(), records=len(decoded['records']),
-                         pairs=len(pairs), plan=plan, artifacts=artifacts,
-                         async_groups=len(facts['groups']),
-                         async_waits=len(facts['waits']),
-                         async_dependencies=len(facts['dependencies']),
-                         max_tick=max(r['tick'] for r in decoded['records']),
-                         grid=owner['grid'], scratch_size=owner['stride'],
-                         selected_programs=list(owner['layout']['programs']),
-                         layout=owner['layout'], canary_intact=True))
+        rows.append(
+            dict(name=name,
+                 binary_hash=compiled.hash,
+                 raw_bytes=len(raw),
+                 raw_sha256=hashlib.sha256(raw).hexdigest(),
+                 records=len(decoded['records']),
+                 pairs=len(pairs),
+                 plan=plan,
+                 artifacts=artifacts,
+                 async_groups=len(facts['groups']),
+                 async_waits=len(facts['waits']),
+                 async_dependencies=len(facts['dependencies']),
+                 max_tick=max(r['tick'] for r in decoded['records']),
+                 grid=owner['grid'],
+                 scratch_size=owner['stride'],
+                 selected_programs=list(owner['layout']['programs']),
+                 layout=owner['layout'],
+                 canary_intact=True))
         save('captures.json', rows)
         backend.instrumentation = previous
         set_profile_allocator(NullAllocator())
@@ -272,7 +362,7 @@ def main():
     try:
         x_cpu = torch.rand(129, dtype=torch.float32)
         x = x_cpu.cuda()
-        y = torch.full((137,), -17.25, dtype=torch.float32, device='cuda')
+        y = torch.full((137, ), -17.25, dtype=torch.float32, device='cuda')
         k_device = torch.empty((), dtype=torch.int32, device='cuda')
         state = torch.zeros(3, dtype=torch.int32, device='cuda')
         hashes = []
@@ -284,19 +374,40 @@ def main():
             for detailed in (False, True):
                 y.fill_(-17.25)
                 state.zero_()
-                launch = lambda token, warmup=False: recurrence.run(x, y, k_device, state, 129, 64, grid=(3,),
-                                                        num_warps=4, instrumentation_mode=token, warmup=warmup)
+                launch = lambda token, warmup=False: recurrence.run(
+                    x,
+                    y,
+                    k_device,
+                    state,
+                    129,
+                    64,
+                    grid=(3, ),
+                    num_warps=4,
+                    instrumentation_mode=token,
+                    warmup=warmup)
                 if detailed:
                     compiled = collect('recurrence-k' + str(k), launch, (0, 2))
                     hashes.append(compiled.hash)
                 else:
                     launch('')
-                    calls.append({'name': 'recurrence-k' + str(k), 'kind': 'ordinary'})
-                require(torch.allclose(y[:129].cpu(), expected, rtol=2e-6, atol=2e-6), 'Recurrence math changed')
-                require(torch.equal(y[129:].cpu(), torch.full((8,), -17.25)), 'Tail canary changed')
-                require(state.cpu().tolist() == [1, 1, 1], 'Program side-effect missing')
-                require(torch.equal(x.cpu(), x_cpu), 'Recurrence input changed')
-        require(len(set(hashes)) == 1, 'Runtime K recompiled the instrumented binary')
+                    calls.append({
+                        'name': 'recurrence-k' + str(k),
+                        'kind': 'ordinary'
+                    })
+                require(
+                    torch.allclose(y[:129].cpu(),
+                                   expected,
+                                   rtol=2e-6,
+                                   atol=2e-6), 'Recurrence math changed')
+                require(torch.equal(y[129:].cpu(), torch.full((8, ), -17.25)),
+                        'Tail canary changed')
+                require(state.cpu().tolist() == [1, 1, 1],
+                        'Program side-effect missing')
+                require(torch.equal(x.cpu(), x_cpu),
+                        'Recurrence input changed')
+        require(
+            len(set(hashes)) == 1,
+            'Runtime K recompiled the instrumented binary')
         left_cpu = torch.randn(48, 96, dtype=torch.float16)
         right_cpu = torch.randn(96, 56, dtype=torch.float16)
         left, right = left_cpu.cuda(), right_cpu.cuda()
@@ -304,29 +415,60 @@ def main():
         reference = left_cpu.double() @ right_cpu.double()
         for stages in (2, 3):
             for detailed in (False, True):
-                launch = lambda token, warmup=False: gemm.run(left, right, result, 48, 56, 96, 32, 32, 32, grid=(2, 2),
-                                                    num_warps=4, num_stages=stages, instrumentation_mode=token, warmup=warmup)
+                launch = lambda token, warmup=False: gemm.run(
+                    left,
+                    right,
+                    result,
+                    48,
+                    56,
+                    96,
+                    32,
+                    32,
+                    32,
+                    grid=(2, 2),
+                    num_warps=4,
+                    num_stages=stages,
+                    instrumentation_mode=token,
+                    warmup=warmup)
                 if detailed:
                     collect('gemm-stages' + str(stages), launch, None)
                 else:
                     launch('')
-                    calls.append({'name': 'gemm-stages' + str(stages), 'kind': 'ordinary'})
-                require(torch.allclose(result.cpu().double(), reference, rtol=1e-2, atol=1e-2), 'GEMM math changed')
-                require(torch.equal(left.cpu(), left_cpu) and torch.equal(right.cpu(), right_cpu), 'GEMM input changed')
+                    calls.append({
+                        'name': 'gemm-stages' + str(stages),
+                        'kind': 'ordinary'
+                    })
+                require(
+                    torch.allclose(result.cpu().double(),
+                                   reference,
+                                   rtol=1e-2,
+                                   atol=1e-2), 'GEMM math changed')
+                require(
+                    torch.equal(left.cpu(), left_cpu)
+                    and torch.equal(right.cpu(), right_cpu),
+                    'GEMM input changed')
         grid_input_cpu = torch.rand(960, dtype=torch.float32)
         grid_input = grid_input_cpu.cuda()
         grid_output = torch.empty(968, dtype=torch.float32, device='cuda')
         grid_state = torch.empty(15, dtype=torch.int32, device='cuda')
         grid_hashes = []
-        for index, geometry in enumerate(((1, 1, 1), (7, 1, 1), (3, 5, 1), (1, 1, 1))):
+        for index, geometry in enumerate(
+            ((1, 1, 1), (7, 1, 1), (3, 5, 1), (1, 1, 1))):
             count = prod(geometry)
             n = count * 64 - 3
             for detailed in (False, True):
                 grid_output.fill_(-17.25)
                 grid_state.zero_()
                 launch = lambda token, warmup=False: grid_map.run(
-                    grid_input, grid_output, grid_state, n, 64, grid=geometry, num_warps=4,
-                    instrumentation_mode=token, warmup=warmup)
+                    grid_input,
+                    grid_output,
+                    grid_state,
+                    n,
+                    64,
+                    grid=geometry,
+                    num_warps=4,
+                    instrumentation_mode=token,
+                    warmup=warmup)
                 name = 'grid-map-' + str(index)
                 if detailed:
                     compiled = collect(name, launch, None)
@@ -334,15 +476,25 @@ def main():
                 else:
                     launch('')
                     calls.append({'name': name, 'kind': 'ordinary'})
-                require(torch.allclose(grid_output[:n].cpu(),
-                    grid_input_cpu[:n] * 0.625 + 0.25, rtol=2e-6, atol=2e-6),
-                    'Grid-map math changed')
-                require(torch.equal(grid_output[n:].cpu(), torch.full((968-n,), -17.25)),
-                        'Grid-map tail canary changed')
-                require(grid_state.cpu().tolist() == [1] * count + [0] * (15-count),
-                        'Grid-map ordinary invocation was replayed or program mapping changed')
-                require(torch.equal(grid_input.cpu(), grid_input_cpu), 'Grid-map input changed')
-        require(len(set(grid_hashes)) == 1, 'Runtime grid facts leaked into the binary cache key')
+                require(
+                    torch.allclose(grid_output[:n].cpu(),
+                                   grid_input_cpu[:n] * 0.625 + 0.25,
+                                   rtol=2e-6,
+                                   atol=2e-6), 'Grid-map math changed')
+                require(
+                    torch.equal(grid_output[n:].cpu(),
+                                torch.full((968 - n, ), -17.25)),
+                    'Grid-map tail canary changed')
+                require(
+                    grid_state.cpu().tolist() == [1] * count + [0] *
+                    (15 - count),
+                    'Grid-map ordinary invocation was replayed or program mapping changed'
+                )
+                require(torch.equal(grid_input.cpu(), grid_input_cpu),
+                        'Grid-map input changed')
+        require(
+            len(set(grid_hashes)) == 1,
+            'Runtime grid facts leaked into the binary cache key')
         # Explicit advanced selection has its own binary-bound slot order;
         # it must not accidentally use program IDs as physical slot offsets.
         geometry, count, n = (3, 5, 1), 15, 957
@@ -350,28 +502,56 @@ def main():
             grid_output.fill_(-17.25)
             grid_state.zero_()
             launch = lambda token, warmup=False: grid_map.run(
-                grid_input, grid_output, grid_state, n, 64, grid=geometry,
-                num_warps=4, instrumentation_mode=token, warmup=warmup)
+                grid_input,
+                grid_output,
+                grid_state,
+                n,
+                64,
+                grid=geometry,
+                num_warps=4,
+                instrumentation_mode=token,
+                warmup=warmup)
             if detailed:
                 collect('grid-map-fixed-reordered', launch, (14, 0, 7))
             else:
                 launch('')
-                calls.append({'name': 'grid-map-fixed-reordered', 'kind': 'ordinary'})
-            require(torch.allclose(grid_output[:n].cpu(),
-                grid_input_cpu[:n] * 0.625 + 0.25, rtol=2e-6, atol=2e-6),
+                calls.append({
+                    'name': 'grid-map-fixed-reordered',
+                    'kind': 'ordinary'
+                })
+            require(
+                torch.allclose(grid_output[:n].cpu(),
+                               grid_input_cpu[:n] * 0.625 + 0.25,
+                               rtol=2e-6,
+                               atol=2e-6),
                 'Fixed selection changed original math')
             require(grid_state.cpu().tolist() == [1] * count,
                     'Fixed selection changed ordinary program execution')
-            require(torch.equal(grid_output[n:].cpu(), torch.full((968-n,), -17.25)),
-                    'Fixed selection tail canary changed')
-        save('result.json', {'status': 'real_record_v2_math_passed_not_full_P01',
-                            'source_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-                            'decoder_sha256': hashlib.sha256(module_path.read_bytes()).hexdigest(),
-                            'python': sys.executable, 'calls': calls, 'captures': len(rows),
-                            'limitations': ['No public timeline API/CLI yet',
-                                           'Logical cp.async group facts are not verified time arrows or Perfetto acceptance',
-                                           'No cross-SM epoch or final marker-order certificate',
-                                           'Test collector synchronizes each explicit capture; production deferred owner remains pending']})
+            require(
+                torch.equal(grid_output[n:].cpu(),
+                            torch.full((968 - n, ), -17.25)),
+                'Fixed selection tail canary changed')
+        save(
+            'result.json', {
+                'status':
+                'real_record_v2_math_passed_not_full_P01',
+                'source_sha256':
+                hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+                'decoder_sha256':
+                hashlib.sha256(module_path.read_bytes()).hexdigest(),
+                'python':
+                sys.executable,
+                'calls':
+                calls,
+                'captures':
+                len(rows),
+                'limitations': [
+                    'No public timeline API/CLI yet',
+                    'Logical cp.async group facts are not verified time arrows or Perfetto acceptance',
+                    'No cross-SM epoch or final marker-order certificate',
+                    'Test collector synchronizes each explicit capture; production deferred owner remains pending'
+                ]
+            })
     finally:
         backend.instrumentation = previous
         set_profile_allocator(NullAllocator())

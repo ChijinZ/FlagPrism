@@ -31,7 +31,8 @@ def _nvidia(capture, raw):
         total_warps=warps,
         selected_warps=tuple(range(warps)),
         slots=tuple(tuple(slot) for slot in layout['slots']),
-        scope_ids=frozenset(int(key) for key, _ in metadata['scope_id_names']))
+        scope_ids=frozenset(int(key) for key, _ in metadata['scope_id_names']),
+        record_version=owner['plan']['timeline_record_version'])
     return canonicalize_nvidia_capture(decoded,
                                        owner=owner,
                                        metadata=metadata,
@@ -104,7 +105,7 @@ def _original(directory, name):
 
 def reexport_capture(directory, original_file):
     """Decode actual bytes anew; cached canonical/view JSON cannot grant proof."""
-    from . import timeline_events_nvidia, timeline_events_enflame, timeline_nvidia, timeline_events_ascend
+    from . import timeline_events_nvidia, timeline_events_enflame, timeline_nvidia, timeline_events_ascend, timeline_nvidia_async
     directory = Path(directory).resolve()
     capture, raw, sources, retain = _original(directory, original_file)
     owner, metadata = capture['owner'], capture['metadata']
@@ -113,7 +114,8 @@ def reexport_capture(directory, original_file):
         target = {}
     if target.get('backend') == 'cuda':
         backend, decoder = 'nvidia', _nvidia
-        rules = (timeline_events_nvidia, timeline_nvidia)
+        rules = (timeline_events_nvidia, timeline_nvidia,
+                 timeline_nvidia_async)
     elif metadata['compiler_metadata'].get(
             'debug_record_layout') == 'ascend_source_timeline_v1':
         backend, decoder, rules = 'ascend', _ascend, (timeline_events_ascend, )

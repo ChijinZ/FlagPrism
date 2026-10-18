@@ -48,7 +48,7 @@ public:
       module->setAttr("proton.timeline_timer_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
       module->setAttr("proton.timeline_record_version",
-                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 2));
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 3));
       module->setAttr("proton.timeline_boundary_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 3));
       module->setAttr("proton.timeline_marker_version",
