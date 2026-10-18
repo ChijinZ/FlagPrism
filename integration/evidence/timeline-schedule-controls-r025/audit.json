@@ -1,0 +1,3627 @@
+{
+  "status": "compile_controls_byte_audited_not_boundary_or_overlap_qualification",
+  "archive": {
+    "sha256": "bb3d18c7380fff3cf6a689823721d19b69f9592ecd151a67596a48747c0c3b9d",
+    "bytes": 743175,
+    "members": 164
+  },
+  "frozen_control": {
+    "m": 48,
+    "n": 56,
+    "k": 192,
+    "block_k": 32,
+    "num_stages": 3,
+    "diagnostic_trip_count": 6,
+    "actual_math_launches": 0
+  },
+  "controls": {
+    "sparse-v1": {
+      "ordinary": {
+        "cubin_sha256": "a100ead3a843eac74312bdd79ea9592886a6aabacca0096ed192e5c4283d8b3b",
+        "static_instruction_counts": {
+          "LDC": 1,
+          "S2R": 3,
+          "S2UR": 1,
+          "LDCU.64": 4,
+          "UMOV": 1,
+          "ULEA": 1,
+          "SHF.R.U32.HI": 3,
+          "IMAD.SHL.U32": 12,
+          "LOP3.LUT": 32,
+          "SGXT.U32": 2,
+          "IMAD": 9,
+          "IADD3": 4,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI.U32": 2,
+          "ISETP.GE.U32.AND": 2,
+          "IADD.64": 14,
+          "IMAD.HI": 3,
+          "IMAD.WIDE.U32": 6,
+          "LDS": 24,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "IMAD.WIDE": 1,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 18,
+          "SHF.R.S32.HI": 1,
+          "SGXT": 1,
+          "SEL": 1,
+          "ISETP.LT.AND": 2,
+          "STS.64": 4,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "EXIT": 2,
+          "BRA": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 1344,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1408,
+              "committed_groups": 5,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 1488,
+              "committed_groups": 5,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 1536,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1632,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1664,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1824,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1856,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1952,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1984,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2144,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2192,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2288,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2320,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2496,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2528,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2736,
+              "committed_groups": 13,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 2784,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2832,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2864,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3024,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3104,
+              "committed_groups": 16,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3232,
+              "committed_groups": 16,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3376,
+              "committed_groups": 16,
+              "wait_guaranteed_prefix": 16,
+              "completion_not_established_groups": 0
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 0,
+          "wait_to_wait_windows": [
+            {
+              "pc": 1168,
+              "operations": [
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1552,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1872,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2208,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2544,
+              "operations": [
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2800,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            }
+          ]
+        }
+      },
+      "sparse-1": {
+        "cubin_sha256": "f07ccc6f14f52e4991f269bab3b1354c58ae91d05036e728a700583bc46e0de1",
+        "static_instruction_counts": {
+          "LDC": 1,
+          "LDCU.64": 6,
+          "LDC.64": 2,
+          "S2R": 3,
+          "S2UR": 4,
+          "LDG.E.STRONG.SYS": 1,
+          "LDCU": 3,
+          "BSSY.RECONVERGENT": 8,
+          "USHF.L.U32": 4,
+          "SHF.R.U32.HI": 5,
+          "LOP3.LUT": 132,
+          "SGXT.U32": 2,
+          "IMAD.SHL.U32": 29,
+          "UIMAD": 3,
+          "IMAD.HI.U32": 6,
+          "UIMAD.WIDE.U32": 2,
+          "ISETP.GE.AND": 1,
+          "IMAD": 8,
+          "SEL": 14,
+          "IMAD.HI": 11,
+          "IADD.64": 67,
+          "UISETP.NE.U32.AND": 1,
+          "UIADD3": 35,
+          "UISETP.EQ.U32.OR": 1,
+          "UMOV": 12,
+          "R2UR": 2,
+          "UMOV.64": 5,
+          "UISETP.LT.U64.AND": 1,
+          "USEL": 31,
+          "MOV.64": 26,
+          "PLOP3.LUT": 17,
+          "BRA": 13,
+          "MOV": 295,
+          "CALL.REL.NOINC": 30,
+          "BSYNC.RECONVERGENT": 8,
+          "CS2R": 20,
+          "ULEA": 32,
+          "IADD3": 26,
+          "STS.128": 60,
+          "LDS": 82,
+          "LDGSTS.E.BYPASS.128": 6,
+          "BRA.U": 23,
+          "USHF.R.U32.HI": 29,
+          "ULOP3.LUT": 24,
+          "LDGDEPBAR": 6,
+          "LEA": 2,
+          "LEA.HI.X": 2,
+          "ISETP.GE.U32.AND": 2,
+          "BAR.SYNC.DEFER_BLOCKING": 5,
+          "USEL.64": 1,
+          "IMAD.WIDE.U32": 3,
+          "UISETP.GT.AND": 2,
+          "ISETP.LT.U32.AND": 13,
+          "DEPBAR.LE": 2,
+          "UVIMNMX.U32": 15,
+          "LDSM.16.M88.4": 2,
+          "LDSM.16.MT88.4": 2,
+          "HMMA.16816.F32": 4,
+          "UISETP.GE.U64.AND": 1,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.LT.AND": 10,
+          "UIADD3.64": 5,
+          "UISETP.NE.U64.AND": 1,
+          "UISETP.LT.U32.AND": 2,
+          "SHF.R.S32.HI": 1,
+          "ISETP.NE.U32.AND": 2,
+          "SGXT": 1,
+          "STS.64": 4,
+          "ISETP.NE.U32.OR": 1,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "STG.E": 69,
+          "EXIT": 3,
+          "UIMAD.WIDE": 1,
+          "ISETP.GT.U64.AND": 3,
+          "ISETP.LE.U64.OR": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1,
+          "CS2UR": 26,
+          "RET.REL.NODEC": 30,
+          "NOP": 13
+        },
+        "critical_projection": {
+          "math_loops_expanded": 1,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 8832,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8832,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8832,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8832,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8832,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8832,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8864,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8896,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8304,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "default-8": {
+        "cubin_sha256": "0d43cedf51e19c2d3955ba7fce9086e8e5d060b6c8fdc4dba92b19e68ddb445b",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "LDCU.64": 7,
+          "LDC.64": 1,
+          "LDG.E.STRONG.SYS": 1,
+          "LDCU": 1,
+          "BSSY.RECONVERGENT": 17,
+          "S2R": 4,
+          "S2UR": 3,
+          "IMAD.WIDE.U32": 4,
+          "IMAD": 53,
+          "USHF.L.U32": 1,
+          "SHF.R.U32.HI": 65,
+          "LOP3.LUT": 314,
+          "MOV": 381,
+          "SGXT.U32": 3,
+          "ISETP.NE.U32.AND": 3,
+          "IADD3": 76,
+          "MOV.64": 50,
+          "ISETP.EQ.U32.OR": 1,
+          "ISETP.LT.U64.AND": 1,
+          "IMAD.SHL.U32": 33,
+          "SEL": 59,
+          "R2UR": 1,
+          "PLOP3.LUT": 28,
+          "BRA": 49,
+          "CALL.REL.NOINC": 44,
+          "BSYNC.RECONVERGENT": 17,
+          "UMOV": 5,
+          "ULEA": 3,
+          "LEA": 2,
+          "STS.128": 88,
+          "IMAD.HI": 13,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI.U32": 4,
+          "IADD.64": 72,
+          "CS2R": 16,
+          "LDS": 82,
+          "LDGSTS.E.BYPASS.128": 6,
+          "LDGDEPBAR": 6,
+          "ISETP.GE.U32.AND": 2,
+          "SHF.L.U64.HI": 1,
+          "UIADD3": 10,
+          "BAR.SYNC.DEFER_BLOCKING": 5,
+          "SEL.64": 1,
+          "UISETP.GT.AND": 2,
+          "ISETP.LT.U32.AND": 27,
+          "USEL": 2,
+          "VIMNMX.U32": 26,
+          "DEPBAR.LE": 2,
+          "LDSM.16.M88.4": 2,
+          "LDSM.16.MT88.4": 2,
+          "PRMT": 16,
+          "HMMA.16816.F32": 4,
+          "UISETP.GE.U32.AND": 1,
+          "ISETP.LT.AND": 11,
+          "LEA.HI.X": 1,
+          "UISETP.NE.U32.AND": 1,
+          "BRA.U": 1,
+          "SHF.R.S32.HI": 1,
+          "SGXT": 1,
+          "STS.64": 4,
+          "LDS.64": 4,
+          "STG.E": 77,
+          "ISETP.NE.U32.OR": 1,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "UMOV.64": 2,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1,
+          "CS2UR": 44,
+          "RET.REL.NODEC": 44,
+          "NOP": 15
+        },
+        "critical_projection": {
+          "math_loops_expanded": 1,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 12048,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12048,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12048,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12048,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12048,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12048,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12224,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12528,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12640,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "inline-v1": {
+      "sparse-inline-1": {
+        "cubin_sha256": "b86a4b0f0dd13fb126091110624922ec49ffe56faa2a8574bfae9772d0634e76",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 5,
+          "LDCU": 1,
+          "LDCU.64": 5,
+          "S2UR": 2,
+          "IMAD.WIDE.U32": 8,
+          "IMAD.SHL.U32": 16,
+          "IMAD": 27,
+          "SHF.R.U32.HI": 34,
+          "IADD3": 55,
+          "SGXT.U32": 2,
+          "ISETP.NE.U32.AND": 5,
+          "MOV": 97,
+          "MOV.64": 1,
+          "ISETP.EQ.U32.OR": 1,
+          "LOP3.LUT": 48,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "IADD.64": 23,
+          "IMAD.HI.U32": 3,
+          "ISETP.GE.U32.AND": 2,
+          "SEL": 34,
+          "CS2R": 34,
+          "UMOV": 3,
+          "SEL.64": 31,
+          "PLOP3.LUT": 7,
+          "ULEA": 2,
+          "LEA": 1,
+          "STS.128": 30,
+          "LDS": 50,
+          "LDGSTS.E.BYPASS.128": 6,
+          "LDGDEPBAR": 6,
+          "BAR.SYNC.DEFER_BLOCKING": 5,
+          "IMAD.WIDE": 1,
+          "UMOV.64": 3,
+          "UIADD3": 2,
+          "UISETP.GT.AND": 2,
+          "USEL": 3,
+          "ISETP.LT.U32.AND": 14,
+          "VIMNMX.U32": 15,
+          "DEPBAR.LE": 2,
+          "LDSM.16.MT88.4": 2,
+          "LDSM.16.M88.4": 2,
+          "HMMA.16816.F32": 4,
+          "NOP": 12,
+          "UISETP.GE.U64.AND": 1,
+          "UIADD3.64": 3,
+          "UISETP.NE.U64.AND": 1,
+          "BRA.U": 1,
+          "SHF.R.S32.HI": 1,
+          "SGXT": 1,
+          "ISETP.NE.U32.OR": 1,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 1,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.MT88.4": 12,
+            "LDSM.16.M88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 4928,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4928,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4928,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4928,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4928,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4928,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4960,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4608,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "default-inline-8": {
+        "cubin_sha256": "9f2c7d74d2fd17afbbb2b1bdc7f70248305b91c49829f81dce1411a16f655cbd",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 5,
+          "LDCU": 1,
+          "S2UR": 2,
+          "IMAD.WIDE.U32": 8,
+          "IMAD.SHL.U32": 16,
+          "IMAD": 38,
+          "ISETP.NE.U32.AND": 5,
+          "IADD3": 72,
+          "MOV.64": 1,
+          "MOV": 139,
+          "ISETP.EQ.U32.OR": 1,
+          "SHF.R.U32.HI": 48,
+          "ISETP.LT.U64.AND": 1,
+          "LOP3.LUT": 59,
+          "SGXT.U32": 2,
+          "SEL": 48,
+          "CS2R": 48,
+          "UMOV": 3,
+          "SEL.64": 45,
+          "PLOP3.LUT": 10,
+          "ULEA": 2,
+          "LEA": 1,
+          "STS.128": 44,
+          "LDCU.64": 5,
+          "IMAD.HI.U32": 3,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "ISETP.GE.U32.AND": 2,
+          "IADD.64": 23,
+          "LDS": 50,
+          "LDGSTS.E.BYPASS.128": 6,
+          "LDGDEPBAR": 6,
+          "BAR.SYNC.DEFER_BLOCKING": 5,
+          "IMAD.WIDE": 1,
+          "UMOV.64": 3,
+          "UIADD3": 2,
+          "UISETP.GT.AND": 2,
+          "USEL": 3,
+          "ISETP.LT.U32.AND": 25,
+          "VIMNMX.U32": 26,
+          "DEPBAR.LE": 2,
+          "LDSM.16.M88.4": 2,
+          "LDSM.16.MT88.4": 2,
+          "HMMA.16816.F32": 4,
+          "NOP": 12,
+          "UISETP.GE.U64.AND": 1,
+          "UIADD3.64": 3,
+          "UISETP.NE.U64.AND": 1,
+          "BRA.U": 1,
+          "SHF.R.S32.HI": 1,
+          "SGXT": 1,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "ISETP.NE.U32.OR": 1,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 1,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 6256,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6256,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6256,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6256,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6256,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6256,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6304,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6352,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6384,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "expanded-v2": {
+      "ordinary-expanded-6": {
+        "cubin_sha256": "7f751c2db1dd12846f7ed6337b79173558fbac570f59e81303ab51c521691078",
+        "static_instruction_counts": {
+          "LDC": 1,
+          "S2R": 2,
+          "S2UR": 2,
+          "LDCU.64": 4,
+          "UMOV": 1,
+          "USHF.L.U32": 1,
+          "SHF.R.U32.HI": 3,
+          "IMAD.SHL.U32": 10,
+          "LOP3.LUT": 30,
+          "SGXT.U32": 2,
+          "IMAD": 9,
+          "ULEA": 1,
+          "IADD3": 4,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 3,
+          "ISETP.GE.U32.AND": 2,
+          "IMAD.HI.U32": 3,
+          "IADD.64": 12,
+          "IMAD.WIDE.U32": 4,
+          "LDS": 24,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 23,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "LEA.HI": 1,
+          "ISETP.LT.AND": 2,
+          "STS.64": 4,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "EXIT": 2,
+          "BRA": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 1168,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1200,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1328,
+              "committed_groups": 5,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 1392,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1488,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1520,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1696,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1728,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 1824,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1856,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2032,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2064,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2160,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2192,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2384,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2416,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2512,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2544,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2704,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2736,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2928,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3024,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3136,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3296,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 1088,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1408,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1744,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2080,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2432,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2752,
+              "operations": [
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "sparse-expanded-inline-1": {
+        "cubin_sha256": "74b11d5b484b9fce2abf54405b1692eb4441effbcf7dffa344566da4521a00d2",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 5,
+          "LDCU": 1,
+          "MOV.64": 1,
+          "LDCU.64": 6,
+          "S2UR": 3,
+          "IMAD.WIDE.U32": 6,
+          "IMAD": 12,
+          "USHF.L.U32": 1,
+          "IMAD.SHL.U32": 17,
+          "SHF.R.U32.HI": 84,
+          "LOP3.LUT": 36,
+          "SGXT.U32": 2,
+          "ISETP.NE.U32.AND": 1,
+          "SEL.64": 81,
+          "IADD3": 172,
+          "MOV": 245,
+          "ISETP.EQ.U32.OR": 1,
+          "IMAD.HI.U32": 4,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.GE.AND": 1,
+          "SEL": 81,
+          "IMAD.HI": 4,
+          "ISETP.GE.U32.AND": 2,
+          "IADD.64": 23,
+          "CS2R": 80,
+          "UMOV": 1,
+          "PLOP3.LUT": 5,
+          "ULEA": 1,
+          "LEA": 1,
+          "STS.128": 80,
+          "LDS": 80,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 23,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "LEA.HI": 1,
+          "ISETP.NE.U32.OR": 1,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "STG.E": 37,
+          "EXIT": 3,
+          "UMOV.64": 2,
+          "ISETP.GT.U64.AND": 3,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 4944,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4976,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5024,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5056,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6944,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6976,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7008,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7040,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8928,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8960,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8992,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9024,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10928,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10960,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10992,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 11024,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12896,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12928,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12960,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12992,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 14992,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15024,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15056,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15168,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 4112,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 6720,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8704,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 10704,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 12672,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 14704,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "default-expanded-inline-8": {
+        "cubin_sha256": "95662d3faaa670d5f9a083a3844c446cd2bfb0e79484991a98a1ebf68c9611ec",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 4,
+          "LDCU": 1,
+          "MOV.64": 1,
+          "LDCU.64": 5,
+          "S2UR": 3,
+          "IMAD.WIDE.U32": 6,
+          "IMAD": 13,
+          "USHF.L.U32": 1,
+          "IMAD.SHL.U32": 20,
+          "LOP3.LUT": 59,
+          "SHF.R.U32.HI": 101,
+          "SGXT.U32": 2,
+          "ISETP.NE.U32.AND": 1,
+          "SEL.64": 95,
+          "IADD3": 201,
+          "MOV": 288,
+          "ISETP.EQ.U32.OR": 1,
+          "IMAD.HI.U32": 4,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.GE.U32.AND": 2,
+          "SEL": 95,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "IADD.64": 23,
+          "CS2R": 94,
+          "UMOV": 1,
+          "PLOP3.LUT": 5,
+          "ULEA": 1,
+          "LEA": 2,
+          "STS.128": 94,
+          "LDS": 80,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 20,
+          "LEA.HI": 1,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "ISETP.NE.U32.OR": 1,
+          "STG.E": 37,
+          "EXIT": 3,
+          "UMOV.64": 2,
+          "ISETP.GT.U64.AND": 3,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 4928,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4976,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5040,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5088,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7408,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7440,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7504,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7584,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9904,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9936,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9984,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10016,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12400,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12432,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12480,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 12512,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15024,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15056,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15088,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 15120,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 17360,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 17392,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 17424,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 17456,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 4112,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 7136,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 9472,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 11856,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 14464,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 16768,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "nostore-v1": {
+      "sparse-expanded-inline-nostore-1": {
+        "cubin_sha256": "42426faf0e4b47d4b9eb62439e61b440fa8a7b8367051e14a84d232902775b5c",
+        "static_instruction_counts": {
+          "LDC": 2,
+          "S2R": 4,
+          "S2UR": 3,
+          "UMOV": 1,
+          "LDCU.64": 5,
+          "ULEA": 1,
+          "SHF.R.U32.HI": 6,
+          "USHF.L.U32": 1,
+          "LOP3.LUT": 42,
+          "IMAD.SHL.U32": 17,
+          "SGXT.U32": 3,
+          "IMAD": 14,
+          "IADD3": 11,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "ISETP.GE.U32.AND": 2,
+          "IADD.64": 24,
+          "IMAD.HI.U32": 5,
+          "IMAD.WIDE.U32": 7,
+          "LDS": 56,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "LDCU": 2,
+          "UMOV.64": 3,
+          "ISETP.NE.U32.AND": 1,
+          "ISETP.EQ.U32.OR": 1,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.NE.U32.OR": 1,
+          "NOP": 13,
+          "PLOP3.LUT": 5,
+          "LEA.HI": 1,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "MOV": 3,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "SEL": 2,
+          "LDS.64": 4,
+          "SEL.64": 1,
+          "STG.E.128": 2,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "LEA": 1,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 1232,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1312,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1456,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1952,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2080,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2112,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2272,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2320,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2416,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2448,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2608,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2640,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2736,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2768,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2944,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2976,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3184,
+              "committed_groups": 13,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3232,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3280,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3312,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3472,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3504,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3616,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3792,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 1136,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1984,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2336,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2656,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2992,
+              "operations": [
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 3248,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "default-expanded-inline-nostore-8": {
+        "cubin_sha256": "1db299d52bda6c3ac279cc46f50be143611e7440313c56295cef222ede4e8e59",
+        "static_instruction_counts": {
+          "LDC": 2,
+          "S2R": 4,
+          "S2UR": 3,
+          "UMOV": 1,
+          "LDCU.64": 5,
+          "ULEA": 1,
+          "SHF.R.U32.HI": 6,
+          "USHF.L.U32": 1,
+          "LOP3.LUT": 42,
+          "IMAD.SHL.U32": 17,
+          "SGXT.U32": 3,
+          "IMAD": 14,
+          "IADD3": 11,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "ISETP.GE.U32.AND": 2,
+          "IADD.64": 24,
+          "IMAD.HI.U32": 5,
+          "IMAD.WIDE.U32": 7,
+          "LDS": 56,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "LDCU": 2,
+          "UMOV.64": 3,
+          "ISETP.NE.U32.AND": 1,
+          "ISETP.EQ.U32.OR": 1,
+          "ISETP.LT.U64.AND": 1,
+          "ISETP.NE.U32.OR": 1,
+          "NOP": 13,
+          "PLOP3.LUT": 5,
+          "LEA.HI": 1,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "MOV": 3,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "SEL": 2,
+          "LDS.64": 4,
+          "SEL.64": 1,
+          "STG.E.128": 2,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "LEA": 1,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 1232,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1312,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1456,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 1952,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2080,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2112,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2272,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2320,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2416,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2448,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2608,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2640,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2736,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2768,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2944,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 2976,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3184,
+              "committed_groups": 13,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3232,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 4
+            },
+            {
+              "pc": 3280,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3312,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3472,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3504,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3616,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            },
+            {
+              "pc": 3792,
+              "committed_groups": 15,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 3
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 1136,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 1984,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2336,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2656,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 2992,
+              "operations": [
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32"
+              ]
+            },
+            {
+              "pc": 3248,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "deferred-v1": {
+      "sparse-expanded-inline-deferred-1": {
+        "cubin_sha256": "75777998f5d6e680276c211d0524ab4d8faadb965e742fc454af02e180c1081f",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 9,
+          "LDCU": 1,
+          "IADD3": 172,
+          "LDCU.64": 7,
+          "S2UR": 4,
+          "IMAD.WIDE.U32": 6,
+          "IMAD": 12,
+          "USHF.L.U32": 1,
+          "IMAD.SHL.U32": 19,
+          "SHF.R.U32.HI": 85,
+          "LOP3.LUT": 43,
+          "SGXT.U32": 2,
+          "ISETP.NE.U32.AND": 1,
+          "MOV": 293,
+          "MOV.64": 1,
+          "ISETP.EQ.U32.OR": 1,
+          "IMAD.HI.U32": 4,
+          "ISETP.LT.U64.AND": 1,
+          "STL": 35,
+          "ISETP.GE.U32.AND": 2,
+          "SEL": 81,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "IADD.64": 23,
+          "SEL.64": 81,
+          "CS2R": 80,
+          "UMOV": 2,
+          "PLOP3.LUT": 5,
+          "ULEA": 2,
+          "LEA": 1,
+          "LDS": 56,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 23,
+          "LEA.HI": 1,
+          "LDL.LU": 35,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "STS.64": 4,
+          "ISETP.LT.AND": 2,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "STS.128": 80,
+          "ISETP.NE.U32.OR": 1,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "UMOV.64": 2,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 2912,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2944,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 2976,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3008,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4000,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4032,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4064,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4096,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5136,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5168,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5200,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5232,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6784,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 6928,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7072,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7232,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8272,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8304,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8336,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 8368,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9216,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9264,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9296,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9328,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 2368,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 3808,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4944,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 6080,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 8080,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 9056,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      },
+      "default-expanded-inline-deferred-8": {
+        "cubin_sha256": "1d01cc9a95ae6c28ac849112b04dbf2a57f622fa447c7c7c7c891e326b268cfe",
+        "static_instruction_counts": {
+          "LDC": 3,
+          "S2R": 5,
+          "LDCU": 1,
+          "IADD3": 200,
+          "LDCU.64": 7,
+          "S2UR": 4,
+          "IMAD.WIDE.U32": 6,
+          "IMAD": 12,
+          "USHF.L.U32": 1,
+          "IMAD.SHL.U32": 18,
+          "SHF.R.U32.HI": 99,
+          "LOP3.LUT": 43,
+          "SGXT.U32": 2,
+          "ISETP.NE.U32.AND": 1,
+          "MOV.64": 9,
+          "MOV": 355,
+          "ISETP.EQ.U32.OR": 1,
+          "ISETP.LT.U64.AND": 1,
+          "IMAD.HI.U32": 4,
+          "SEL": 95,
+          "ISETP.GE.U32.AND": 2,
+          "STL": 71,
+          "ISETP.GE.AND": 1,
+          "IMAD.HI": 4,
+          "IADD.64": 23,
+          "SEL.64": 95,
+          "CS2R": 94,
+          "UMOV": 2,
+          "PLOP3.LUT": 5,
+          "ULEA": 2,
+          "LEA": 1,
+          "LDS": 56,
+          "LDGSTS.E.BYPASS.128": 16,
+          "LDGDEPBAR": 16,
+          "BAR.SYNC.DEFER_BLOCKING": 15,
+          "DEPBAR.LE": 7,
+          "LDSM.16.M88.4": 12,
+          "LDSM.16.MT88.4": 12,
+          "HMMA.16816.F32": 24,
+          "NOP": 22,
+          "STL.64": 7,
+          "SHF.R.S32.HI": 2,
+          "SGXT": 2,
+          "LEA.HI": 1,
+          "ISETP.LT.AND": 2,
+          "STS.64": 4,
+          "LDS.64": 4,
+          "STG.E.128": 2,
+          "LDL.LU": 71,
+          "LDL.LU.64": 7,
+          "STS.128": 94,
+          "ISETP.NE.U32.OR": 1,
+          "STG.E": 37,
+          "EXIT": 3,
+          "ISETP.GT.U64.AND": 3,
+          "UMOV.64": 2,
+          "BRA": 5,
+          "ISETP.LE.U64.OR": 2,
+          "UIADD3.64": 2,
+          "ISETP.LE.U64.AND": 1,
+          "ISETP.GT.U64.OR": 1
+        },
+        "critical_projection": {
+          "math_loops_expanded": 0,
+          "projected_critical_counts": {
+            "LDGSTS.E.BYPASS.128": 16,
+            "LDGDEPBAR": 16,
+            "BAR.SYNC.DEFER_BLOCKING": 15,
+            "DEPBAR.LE": 7,
+            "LDSM.16.M88.4": 12,
+            "LDSM.16.MT88.4": 12,
+            "HMMA.16816.F32": 24
+          },
+          "projected_wait_limits": [
+            2,
+            2,
+            2,
+            2,
+            2,
+            2,
+            0
+          ],
+          "matrix_instructions": [
+            {
+              "pc": 2992,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3072,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3104,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 3136,
+              "committed_groups": 4,
+              "wait_guaranteed_prefix": 2,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4288,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4368,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4400,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 4432,
+              "committed_groups": 6,
+              "wait_guaranteed_prefix": 4,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5760,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5840,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5872,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 5904,
+              "committed_groups": 8,
+              "wait_guaranteed_prefix": 6,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7072,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7328,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7584,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 7824,
+              "committed_groups": 10,
+              "wait_guaranteed_prefix": 8,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9616,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9648,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9680,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 9712,
+              "committed_groups": 12,
+              "wait_guaranteed_prefix": 10,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10896,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10928,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 10960,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            },
+            {
+              "pc": 11024,
+              "committed_groups": 14,
+              "wait_guaranteed_prefix": 12,
+              "completion_not_established_groups": 2
+            }
+          ],
+          "minimum_completion_not_established_groups_at_math": 2,
+          "wait_to_wait_windows": [
+            {
+              "pc": 2432,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 4064,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 5456,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 6752,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 9248,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            },
+            {
+              "pc": 10560,
+              "operations": [
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "HMMA.16816.F32",
+                "LDGSTS.E.BYPASS.128",
+                "LDGSTS.E.BYPASS.128"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "limits": [
+    "Diagnostic unrolling and LLVM store edits are not product policies.",
+    "Inline controls intentionally lack source-boundary qualification.",
+    "No-store controls also lose timer instructions; not a storage-only causal proof.",
+    "Critical projection is not a full CFG, participation or endpoint proof.",
+    "Groups lacking wait guarantees may already be complete; no measured hardware overlap.",
+    "No same-throughput, numerical device, P01, or three-backend acceptance claim."
+  ]
+}
