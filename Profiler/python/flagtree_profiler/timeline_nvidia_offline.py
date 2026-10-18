@@ -65,12 +65,13 @@ def load_counter_unit_proofs(directory, capture, batch):
 
 def control_evidence(capture, machine_map, *, sass_lines, sass_json):
     if _late(capture):
-        return (dict(
-            status='not_evaluated_for_late_inline_brackets',
-            reason=
-            'Legacy helper-call control proof does not apply to late inline readers',
-            region_boundaries_verified=False,
-            time_flows_qualified=False), Path(__file__))
+        from . import timeline_nvidia_late_control
+        return (timeline_nvidia_late_control.inspect_late_wait_control(
+            machine_map=machine_map,
+            sass_lines=sass_lines,
+            sass_json=sass_json,
+            plan=capture['owner']['plan']),
+                Path(timeline_nvidia_late_control.__file__))
     from . import timeline_nvidia_control
     return (timeline_nvidia_control.inspect_wait_control_brackets(
         machine_map=machine_map,

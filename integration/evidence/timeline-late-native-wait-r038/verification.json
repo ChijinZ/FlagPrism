@@ -1,0 +1,345 @@
+{
+  "archive": {
+    "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-038/preflight/late-wait-control-evidence-v1.tgz",
+    "bytes": 25576006,
+    "sha256": "1fa5ed73cef7ae5e0937386c8c795f3b87790a7fa32319bf2e92206391df04e2",
+    "members": 3212,
+    "retained_file_hashes_verified": 3210
+  },
+  "current_product_and_tests_match_installed_input": {
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "a2275ff960b760c5f342a716d0e9724f2efe7f1483b06b90db7175c10ddbb0bc",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_offline.py": "6ab89f0c4c526e5ee500a433aa59d4f840e2298db209bcb35f55d9925aa9565e",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_control.py": "d09633538e413da2403e39b510012f6ab76d2dc971b2a54c50152ec4a25366ff",
+    "tests/timeline/p01_nvidia_late_wait_control.py": "e5b810ef28a5ceb876ade97b4dc8fcef41f1e8855c28cd9fc2703f22536dbd94"
+  },
+  "installed": {
+    "status": "installed_default_native_late_wait_control_dynamic_operands_recovery_offline_passed_not_shared_clock_or_flows",
+    "wheel_sha256": "4f633eb2bf90b46f67c1e8eb3a08b01328445acd685b4a0ec0ef03e77b40f31f",
+    "installed_members": 615,
+    "python": "/workspace/chijin-timeline-r038/runs/install-public-v1/output/venv/bin/python",
+    "native_core_reused": true,
+    "standalone_tool_reused_exact_source": true
+  },
+  "installed_terminal": {
+    "controller": {
+      "pid": 76047,
+      "ppid": 1,
+      "pgid": 76047,
+      "startticks": 21771298
+    },
+    "worker": {
+      "pid": 76048,
+      "ppid": 76047,
+      "pgid": 76048,
+      "startticks": 21771301
+    },
+    "argv": [
+      "/workspace/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r038/install-public-input-v1/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r038/runs/install-public-v1/output"
+    ],
+    "argv_sha256": "df1926cf56c10b4fface09d344a4808574a2ce64cc0d62a958b93f4ea7228ff6",
+    "script_sha256": "2e801912860136bfcb25b75701c7173e71d7d8f8e3dfb6135ac0fb4157b2c797",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 124328521945
+  },
+  "wait_control_normal": {
+    "status": "actual_final_object_wait_control_and_dynamic_operands_passed_not_clock_or_time_flows",
+    "reports": [
+      {
+        "invocation": "invocation-98f760e71aba4ff2867150850f658e5c",
+        "dynamic_wait_occurrences": 1024,
+        "control": {
+          "model": "nvidia.cp_async.late_wait_control.v1",
+          "binary_id": "39625b9ac1dac222dcd6fee7a360d604d215af644c1ff994a9d686895b8aefbd",
+          "sites": [
+            {
+              "site_id": 17,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 4288,
+              "end_reader_pc": 4320,
+              "wait_pc": 4304,
+              "pending_group_limit": 1,
+              "checked_control_states": 2
+            },
+            {
+              "site_id": 27,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 7472,
+              "end_reader_pc": 7504,
+              "wait_pc": 7488,
+              "pending_group_limit": 0,
+              "checked_control_states": 2
+            }
+          ],
+          "helper_rules_sha256": "b84bcef70f1be5efdca7571737277201999e5be11b01683122d8183ec1a6593f",
+          "proof_scope": "native_wait_control_order_between_late_inline_readers",
+          "source_region_qualified": false,
+          "record_value_provenance_verified": false,
+          "participation_verified": false,
+          "clock_qualified": false,
+          "hardware_overlap_verified": false,
+          "time_flows_qualified": false
+        }
+      },
+      {
+        "invocation": "invocation-e091d90f07454690a48f06dbc64847cd",
+        "dynamic_wait_occurrences": 2048,
+        "control": {
+          "model": "nvidia.cp_async.late_wait_control.v1",
+          "binary_id": "39625b9ac1dac222dcd6fee7a360d604d215af644c1ff994a9d686895b8aefbd",
+          "sites": [
+            {
+              "site_id": 17,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 4288,
+              "end_reader_pc": 4320,
+              "wait_pc": 4304,
+              "pending_group_limit": 1,
+              "checked_control_states": 2
+            },
+            {
+              "site_id": 27,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 7472,
+              "end_reader_pc": 7504,
+              "wait_pc": 7488,
+              "pending_group_limit": 0,
+              "checked_control_states": 2
+            }
+          ],
+          "helper_rules_sha256": "b84bcef70f1be5efdca7571737277201999e5be11b01683122d8183ec1a6593f",
+          "proof_scope": "native_wait_control_order_between_late_inline_readers",
+          "source_region_qualified": false,
+          "record_value_provenance_verified": false,
+          "participation_verified": false,
+          "clock_qualified": false,
+          "hardware_overlap_verified": false,
+          "time_flows_qualified": false
+        }
+      }
+    ],
+    "cpu_control_fixtures_rejected": [
+      {
+        "case": "wait_bypass",
+        "reason": "Native wait can be bypassed between counter calls"
+      },
+      {
+        "case": "wrong_wait_operand",
+        "reason": "Missing or ambiguous native wait operand"
+      },
+      {
+        "case": "predicated_wait",
+        "reason": "Conditional native wait"
+      },
+      {
+        "case": "missing_wait",
+        "reason": "Missing or ambiguous native wait operand"
+      },
+      {
+        "case": "external_entry_after_wait",
+        "reason": "External control edge enters after the inline entry reader"
+      }
+    ],
+    "originals_unchanged": 88,
+    "device_replayed": false
+  },
+  "wait_control_optimized": {
+    "status": "actual_final_object_wait_control_and_dynamic_operands_passed_not_clock_or_time_flows",
+    "reports": [
+      {
+        "invocation": "invocation-98f760e71aba4ff2867150850f658e5c",
+        "dynamic_wait_occurrences": 1024,
+        "control": {
+          "model": "nvidia.cp_async.late_wait_control.v1",
+          "binary_id": "39625b9ac1dac222dcd6fee7a360d604d215af644c1ff994a9d686895b8aefbd",
+          "sites": [
+            {
+              "site_id": 17,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 4288,
+              "end_reader_pc": 4320,
+              "wait_pc": 4304,
+              "pending_group_limit": 1,
+              "checked_control_states": 2
+            },
+            {
+              "site_id": 27,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 7472,
+              "end_reader_pc": 7504,
+              "wait_pc": 7488,
+              "pending_group_limit": 0,
+              "checked_control_states": 2
+            }
+          ],
+          "helper_rules_sha256": "b84bcef70f1be5efdca7571737277201999e5be11b01683122d8183ec1a6593f",
+          "proof_scope": "native_wait_control_order_between_late_inline_readers",
+          "source_region_qualified": false,
+          "record_value_provenance_verified": false,
+          "participation_verified": false,
+          "clock_qualified": false,
+          "hardware_overlap_verified": false,
+          "time_flows_qualified": false
+        }
+      },
+      {
+        "invocation": "invocation-e091d90f07454690a48f06dbc64847cd",
+        "dynamic_wait_occurrences": 2048,
+        "control": {
+          "model": "nvidia.cp_async.late_wait_control.v1",
+          "binary_id": "39625b9ac1dac222dcd6fee7a360d604d215af644c1ff994a9d686895b8aefbd",
+          "sites": [
+            {
+              "site_id": 17,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 4288,
+              "end_reader_pc": 4320,
+              "wait_pc": 4304,
+              "pending_group_limit": 1,
+              "checked_control_states": 2
+            },
+            {
+              "site_id": 27,
+              "status": "late_wait_control_order_checked",
+              "source_region_qualified": false,
+              "record_value_provenance_verified": false,
+              "clock_qualified": false,
+              "participation_verified": false,
+              "function": "runtime_gemm",
+              "begin_reader_pc": 7472,
+              "end_reader_pc": 7504,
+              "wait_pc": 7488,
+              "pending_group_limit": 0,
+              "checked_control_states": 2
+            }
+          ],
+          "helper_rules_sha256": "b84bcef70f1be5efdca7571737277201999e5be11b01683122d8183ec1a6593f",
+          "proof_scope": "native_wait_control_order_between_late_inline_readers",
+          "source_region_qualified": false,
+          "record_value_provenance_verified": false,
+          "participation_verified": false,
+          "clock_qualified": false,
+          "hardware_overlap_verified": false,
+          "time_flows_qualified": false
+        }
+      }
+    ],
+    "cpu_control_fixtures_rejected": [
+      {
+        "case": "wait_bypass",
+        "reason": "Native wait can be bypassed between counter calls"
+      },
+      {
+        "case": "wrong_wait_operand",
+        "reason": "Missing or ambiguous native wait operand"
+      },
+      {
+        "case": "predicated_wait",
+        "reason": "Conditional native wait"
+      },
+      {
+        "case": "missing_wait",
+        "reason": "Missing or ambiguous native wait operand"
+      },
+      {
+        "case": "external_entry_after_wait",
+        "reason": "External control edge enters after the inline entry reader"
+      }
+    ],
+    "originals_unchanged": 88,
+    "device_replayed": false
+  },
+  "receipt_recovery": {
+    "status": "actual_default_math_compile_derive_copy_faults_and_durable_receipt_recovery_passed_not_full_pipeline",
+    "compiler_failure": "Native LLVM recorder failed (exit 1)",
+    "derived_failure": "Profiling finalization failed: session 0 timeline raw export: RuntimeError: controlled late derived-output failure. Capture intermediates retained at: ['/workspace/chijin-timeline-r038/runs/install-public-v1/tmp/flagprism-session-ho1zrt69']",
+    "copy_failure": "controlled compiler-receipt copy failure",
+    "successful_kernel_launches": 2,
+    "failed_compile_kernel_launches": 0,
+    "original_calls_unchanged_after_recovery": true,
+    "recovery_path": "documented retained-hook flush then durable bundle copy; finalized session IDs are no-ops",
+    "retained_compiler_receipts": 5,
+    "retained_compiler_artifacts": 28,
+    "traces": 16
+  },
+  "offline": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 2,
+    "real_traces": 16,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 87,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r038/runs/install-public-v1/output/pipeline-device/",
+      "/workspace/chijin-timeline-r038/install-public-input-v1/source/",
+      "/workspace/chijin-timeline-r038/runs/install-public-v1/cache/",
+      "/workspace/chijin-timeline-r038/runs/install-public-v1/tmp/"
+    ],
+    "trace_bytes_match_prior_bundle": true,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-98f760e71aba4ff2867150850f658e5c.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+      "captures/invocation-e091d90f07454690a48f06dbc64847cd.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+      "captures/invocation-98f760e71aba4ff2867150850f658e5c.raw": "3d7d1b8245ec74a64f3d4089761e88305b3e42f0b464ca0bc429443ccf663322",
+      "captures/invocation-e091d90f07454690a48f06dbc64847cd.raw": "65d939b31b1568e6d77e513c5a934e2aa53adb887eb8870bee986e609119fa4a"
+    },
+    "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+  },
+  "recorded_process_identities": 61,
+  "recorded_active_identities": 0,
+  "qualification": {
+    "default_installed_late_wait_control": true,
+    "actual_dynamic_wait_operand_binding": true,
+    "source_region_cost": false,
+    "record_value_provenance": false,
+    "participation": false,
+    "clock_precision": false,
+    "shared_epoch": false,
+    "time_flows": false,
+    "full_three_backend": false,
+    "independent_six_math": false,
+    "final_three_reviewers": false
+  }
+}

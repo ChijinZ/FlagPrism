@@ -238,6 +238,19 @@ Tool absence or a failed mapping preserves
 raw data with an explicit unavailable reason. No application replay or network
 download is performed. Postprocessing is bounded by the shared export deadline.
 
+For late inline readers on the inspected SM120 target, finalization writes
+`machine/<binary_id>/late-wait-control.json`, referenced by each capture's
+`native_wait_control_file`. Model `nvidia.cp_async.late_wait_control.v1`
+revalidates the two disassemblies and checks that each matching inline reader
+pair encloses one native wait with its actual pending-group limit. External
+branches/reconvergence cannot enter after the entry reader; paths between the
+readers must execute the unpredicated wait. Missing or duplicated reader PCs,
+unknown control and ambiguous waits retain an explicit unverified diagnostic.
+The public offline reexport derives the same report under a new control revision.
+Its shared helper-rule digest is included. These are native control-order facts;
+raw-value provenance, participation, precision, shared epochs and time flows
+remain separate. No device instructions or barriers are added by this check.
+
 On the inspected sm_120 leaf-call pattern, finalization also writes
 `machine/<binary_id>/wait-control.json`. This separately binds branch labels,
 predicates, helper bodies and native wait operands across the two disassemblies,

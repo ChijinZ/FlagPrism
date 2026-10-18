@@ -56,12 +56,14 @@ class LateTimelineHook(InstrumentationHook):
         from .. import timeline_nvidia_late_storage, timeline_storage
         from .. import timeline_nvidia_late_async, timeline_nvidia_late_model
         from .. import timeline_events_nvidia_late, timeline_unit_nvidia_late
+        from .. import timeline_nvidia_late_control, timeline_nvidia_control
         modules = [
             importlib.import_module(CUDABackend.__module__),
             timeline_nvidia_late_compile, timeline_nvidia_late_raw,
             timeline_nvidia_late_storage, timeline_storage,
             timeline_nvidia_late_async, timeline_nvidia_late_model,
-            timeline_events_nvidia_late, timeline_unit_nvidia_late
+            timeline_events_nvidia_late, timeline_unit_nvidia_late,
+            timeline_nvidia_late_control, timeline_nvidia_control
         ]
         hashes = [
             hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()
@@ -269,6 +271,21 @@ class LateTimelineHook(InstrumentationHook):
             try:
                 proofs = load_late_counter_unit_proofs(directory, capture,
                                                        canonical)
+                from ..timeline_unit_nvidia_late import load_late_machine_map
+                from ..timeline_nvidia_late_control import inspect_late_wait_control
+                from ..timeline_store import read_artifact
+                machine_base = Path('machine') / owner['binary_id']
+                control = inspect_late_wait_control(
+                    machine_map=load_late_machine_map(directory, capture),
+                    sass_lines=read_artifact(
+                        directory, str(machine_base / 'lines.stdout')),
+                    sass_json=read_artifact(directory,
+                                            str(machine_base / 'json.stdout')),
+                    plan=owner['plan'])
+                capture['native_wait_control_file'] = str(
+                    machine_base / 'late-wait-control.json')
+                _persist(directory / capture['native_wait_control_file'],
+                         (json.dumps(control, indent=2) + '\n').encode())
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))
