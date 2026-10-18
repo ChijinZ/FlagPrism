@@ -162,7 +162,7 @@ def reexport_capture(directory, original_file):
             persist(directory, name, payload)
         persist(directory, canonical_base + '/complete.json',
                 json_bytes(receipt))
-    rows, reason = [], None
+    rows, reason, control_file = [], None, None
     if backend == 'nvidia':
         from .timeline_unit_nvidia import load_counter_unit_proofs, load_counter_machine_map
         from .timeline_perfetto import write_counter_exports
@@ -199,6 +199,26 @@ def reexport_capture(directory, original_file):
                     json_bytes(machine_inputs))
             persist(directory, machine_derived + '/counter-map.json',
                     json_bytes(actual_map))
+        from . import timeline_nvidia_control
+        control = timeline_nvidia_control.inspect_wait_control_brackets(
+            machine_map=actual_map,
+            sass_lines=read_artifact(directory,
+                                     machine_base + '/lines.stdout'),
+            sass_json=read_artifact(directory, machine_base + '/json.stdout'),
+            plan=owner['plan'])
+        control_inputs = dict(
+            schema_version=1,
+            machine_revision=machine_revision,
+            plan_sha256=sha256(json_bytes(owner['plan'])),
+            report_sha256=sha256(json_bytes(control)),
+            implementation_sha256=sha256(
+                Path(timeline_nvidia_control.__file__).read_bytes()))
+        control_base = 'derived/control/' + sha256(json_bytes(control_inputs))
+        control_file = control_base + '/wait-control.json'
+        with export_lock(directory):
+            persist(directory, control_base + '/inputs.json',
+                    json_bytes(control_inputs))
+            persist(directory, control_file, json_bytes(control))
         proofs = load_counter_unit_proofs(directory, capture, batch)
         views = derive_counter_ns_views(batch, proofs)
         rows = write_counter_exports(directory,
@@ -212,6 +232,7 @@ def reexport_capture(directory, original_file):
                 backend=backend,
                 canonical_file=canonical_base + '/events.json',
                 canonical_revision=canonical_revision,
+                wait_control_file=control_file,
                 exports=rows,
                 status='counter_unit_only' if rows else 'raw_only',
                 reason=reason)

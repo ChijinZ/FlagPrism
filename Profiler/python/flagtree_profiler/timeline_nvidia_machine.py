@@ -651,8 +651,16 @@ def inspect_capture_binary(directory, *, metadata, plan, deadline=None):
                      tool_version_sha256=_sha(output['version']))
         (target /
          'counter-map.json').write_text(json.dumps(proof, indent=2) + '\n')
+        from .timeline_nvidia_control import inspect_wait_control_brackets
+        control = inspect_wait_control_brackets(machine_map=proof,
+                                                sass_lines=output['lines'],
+                                                sass_json=output['json'],
+                                                plan=plan)
+        (target /
+         'wait-control.json').write_text(json.dumps(control, indent=2) + '\n')
         status.update(status=proof['status'],
-                      counter_map_file=str(prefix / 'counter-map.json'))
+                      counter_map_file=str(prefix / 'counter-map.json'),
+                      wait_control_file=str(prefix / 'wait-control.json'))
     except (ValueError, OSError, KeyError, TypeError, UnicodeError,
             subprocess.SubprocessError) as error:
         status.update(reason=str(error), exception=type(error).__name__)

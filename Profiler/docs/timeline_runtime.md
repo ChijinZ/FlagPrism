@@ -145,6 +145,15 @@ Tool absence or a failed mapping preserves
 raw data with an explicit unavailable reason. No application replay or network
 download is performed. Postprocessing is bounded by the shared export deadline.
 
+On the inspected sm_120 leaf-call pattern, finalization also writes
+`machine/<binary_id>/wait-control.json`. This separately binds branch labels,
+predicates, helper bodies and native wait operands across the two disassemblies,
+then checks bounded forward paths between the matching counter calls. A
+`wait_control_order_checked` site establishes only native wait control order.
+Record-value provenance, source-region timing, participation, clock precision
+and hardware overlap remain unqualified. Unknown paths retain a specific reason.
+This analysis adds no device instruction or synchronization.
+
 `counter_mapping_complete_region_unverified` means the static counter PCs are
 located, not that the observed operation stayed inside their machine boundaries.
 Line matching permits only erased `.loc`/`.file` and typed DWARF data in explicit
@@ -296,6 +305,11 @@ A historical `counter_mapping_unavailable` diagnostic can be revalidated by
 new rules if its complete original object and text/JSON inputs remain. The
 command does not rerun tools or the application, or overwrite that first status;
 it saves the newly derived map and input digests under `derived/machine/<revision>/`.
+The same command derives `derived/control/<revision>/wait-control.json` and
+returns its path as `wait_control_file`; rules and plan digests bind the report.
+Old bundles can acquire these facts without replay or changing their originals.
+An unavailable control analysis is explicit and does not suppress otherwise
+valid counter-unit exports.
 A prior successful map must still match the fresh parse. Missing or inconsistent
 required machine evidence is an explicit error; the canonical revision and
 original capture remain. GCU currently returns `raw_only`
