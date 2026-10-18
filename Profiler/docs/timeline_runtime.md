@@ -566,3 +566,38 @@ allocation/program/ordinal address expression or variable shared-memory address
 and valid-size payloads. Those qualifications and dependency flows remain
 unverified. A mismatch is retained as an explicit diagnostic and does not grant
 or remove an unrelated counter unit. No engine-busy interval is inferred.
+
+### Native shared payload values and coalesced operations
+
+SM120 late `native_boundary_control_file` additionally contains
+`shared_payload_values`. The epoch-local native expression checker compares
+both recorded payload words with the actual shared-memory operation's address
+and width/source-valid predicate. Mutable loop registers get distinct header
+inputs; loop-invariant aliases may be reconstructed only through acyclic
+preheader definitions. An uncut loop or inconsistent reaching definitions
+remains unverified. Expression hashes describe scoped symbolic values; they are
+not physical address IDs shared between invocations or threads.
+
+Adjacent scalar PTX loads may map to one native LDS.64. The report keeps every
+source origin and byte subrange, checks their complete union when available,
+and identifies the first source bracket that actually contains the native
+operation. A later source observation with no separate native load is marked
+explicitly; it is not presented as a second hardware operation or engine cost.
+Matrix collective geometry remains distinct from scalar byte widths.
+
+Default captures retain `native_shared_payload_file` per invocation. Its compact
+`columns`/`rows` table binds actual program/actor/native ordinal, payload byte
+offset/value, static native operation group and first ordinal of that dynamic
+group. Raw byte domains, allocation bounds, source-valid byte sets and merged
+source subranges are checked; the full collective byte model is recomputed.
+Public retained-only reexport adds this as `native_shared_payloads` to its
+versioned control report. No application replay is required.
+
+These checks establish native payload-word relationships and decoded-domain
+agreement. Absolute raw allocation/program/ordinal store-address binding still
+remains separate, and full raw provenance, physical overlap, source cost,
+engine activity and temporal flows are not granted by these reports. Kernels
+without applicable shared operations produce an empty applicability result.
+The separate real ALU test exercises the native LUT/64-bit selector families;
+it is mechanism validation, not independent mathematical qualification. LUT
+truth-table reference: [NVIDIA PTX ISA](https://docs.nvidia.com/cuda/parallel-thread-execution/#logic-and-shift-instructions-lop3).

@@ -240,4 +240,6 @@ def load_native_boundary_report(directory, capture, machine_map):
     report['timer_store_values'] = inspect_timer_store_values(**inputs)
     from .timeline_nvidia_late_records import inspect_record_fields
     report['relative_record_fields'] = inspect_record_fields(**inputs)
+    from .timeline_nvidia_late_payloads import inspect_shared_payloads
+    report['shared_payload_values'] = inspect_shared_payloads(**inputs)
     return report

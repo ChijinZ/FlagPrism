@@ -314,6 +314,21 @@ class LateTimelineHook(InstrumentationHook):
                 _persist(directory / capture['native_control_payload_file'],
                          (json.dumps(agreement, separators=(',', ':')) +
                           '\n').encode())
+                from ..timeline_nvidia_late_payloads import load_shared_payload_bindings
+                try:
+                    binding = load_shared_payload_bindings(
+                        directory, capture,
+                        boundaries['shared_payload_values'])
+                except (ValueError, OSError, KeyError, TypeError) as error:
+                    binding = dict(
+                        status='native_shared_payload_bindings_unverified',
+                        reason=str(error),
+                        time_flows_qualified=False)
+                capture['native_shared_payload_file'] = str(
+                    prefix.with_suffix('.native-shared-payloads.json'))
+                _persist(directory / capture['native_shared_payload_file'],
+                         (json.dumps(binding, separators=(',', ':')) +
+                          '\n').encode())
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))
