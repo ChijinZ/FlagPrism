@@ -1,0 +1,32 @@
+{
+  "purpose": "Independent design feasibility review; not implementation acceptance",
+  "reviewers": [
+    {
+      "task": "timeline_design_r11_compiler",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "fork_turns": "none"
+    },
+    {
+      "task": "timeline_design_r11_runtime",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "fork_turns": "none"
+    },
+    {
+      "task": "timeline_design_r11_portability",
+      "requested_model": "gpt-6.1-sol",
+      "requested_reasoning_effort": "xhigh",
+      "fork_turns": "none"
+    }
+  ],
+  "inputs": {
+    "Profiler/docs/timeline_design.md": "b5bed8c36a9a7e89470fd422826bba5e91e34e1abe1ce8f590396d23891d7773",
+    "Profiler/docs/timeline_testing.md": "2aee7dca7b0660dd4284e6f339f3345888f4405bc5ce7054d106d861694d35a0"
+  },
+  "restrictions": [
+    "Independent first review; no peer reports",
+    "Read-only product inspection; no device jobs or product tests",
+    "Separate from final additional three code reviewers"
+  ]
+}
