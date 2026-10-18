@@ -1,0 +1,565 @@
+[
+  {
+    "run": "dynamic-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 64614,
+      "ppid": 1,
+      "pgid": 64614,
+      "startticks": 19732928
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19732928
+    }
+  },
+  {
+    "run": "dynamic-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 64615,
+      "ppid": 64614,
+      "pgid": 64615,
+      "startticks": 19732931
+    },
+    "actual": null
+  },
+  {
+    "run": "inspect-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 64782,
+      "ppid": 1,
+      "pgid": 64782,
+      "startticks": 19746955
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19746955
+    }
+  },
+  {
+    "run": "inspect-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 64783,
+      "ppid": 64782,
+      "pgid": 64783,
+      "startticks": 19746958
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 64800,
+      "ppid": 1,
+      "pgid": 64800,
+      "startticks": 19773967
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19773967
+    }
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 64801,
+      "ppid": 64800,
+      "pgid": 64801,
+      "startticks": 19773970
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v1",
+    "expected": {
+      "role": "assemble",
+      "pid": 64802,
+      "startticks": 19774047
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "controller",
+      "pid": 64835,
+      "ppid": 1,
+      "pgid": 64835,
+      "startticks": 19791539
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19791539
+    }
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "worker",
+      "pid": 64836,
+      "ppid": 64835,
+      "pgid": 64836,
+      "startticks": 19791542
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "assemble",
+      "pid": 64837,
+      "startticks": 19791619
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "venv",
+      "pid": 64839,
+      "startticks": 19796373
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "install",
+      "pid": 64840,
+      "startticks": 19796380
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "nvdisasm-install",
+      "pid": 64844,
+      "startticks": 19796937
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "abi",
+      "pid": 64854,
+      "startticks": 19797565
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "public-contract-normal",
+      "pid": 64855,
+      "startticks": 19797581
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "public-contract-optimized",
+      "pid": 64919,
+      "startticks": 19797733
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "density-1",
+      "pid": 64983,
+      "startticks": 19797895
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v3",
+    "expected": {
+      "role": "density-8",
+      "pid": 65132,
+      "startticks": 19798417
+    },
+    "actual": null
+  },
+  {
+    "run": "followup-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 65282,
+      "ppid": 1,
+      "pgid": 65282,
+      "startticks": 19806317
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19806317
+    }
+  },
+  {
+    "run": "followup-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 65283,
+      "ppid": 65282,
+      "pgid": 65283,
+      "startticks": 19806319
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "controller",
+      "pid": 65482,
+      "ppid": 1,
+      "pgid": 65482,
+      "startticks": 19857996
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19857996
+    }
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "worker",
+      "pid": 65483,
+      "ppid": 65482,
+      "pgid": 65483,
+      "startticks": 19857999
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "assemble",
+      "pid": 65484,
+      "startticks": 19858078
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "venv",
+      "pid": 65486,
+      "startticks": 19862888
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "install",
+      "pid": 65487,
+      "startticks": 19862895
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "nvdisasm-install",
+      "pid": 65491,
+      "startticks": 19863447
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "abi",
+      "pid": 65495,
+      "startticks": 19864055
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "contracts-normal",
+      "pid": 65496,
+      "startticks": 19864072
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "contracts-optimized",
+      "pid": 65563,
+      "startticks": 19864253
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "offline-density-1",
+      "pid": 65636,
+      "startticks": 19864450
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v4",
+    "expected": {
+      "role": "offline-density-8",
+      "pid": 65657,
+      "startticks": 19866443
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "controller",
+      "pid": 65716,
+      "ppid": 1,
+      "pgid": 65716,
+      "startticks": 19913330
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19913330
+    }
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "worker",
+      "pid": 65717,
+      "ppid": 65716,
+      "pgid": 65717,
+      "startticks": 19913332
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "assemble",
+      "pid": 65718,
+      "startticks": 19913413
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "venv",
+      "pid": 65720,
+      "startticks": 19918158
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "install",
+      "pid": 65721,
+      "startticks": 19918165
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "nvdisasm-install",
+      "pid": 65731,
+      "startticks": 19918717
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "abi",
+      "pid": 65735,
+      "startticks": 19919334
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "contracts-normal",
+      "pid": 65736,
+      "startticks": 19919346
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "contracts-optimized",
+      "pid": 65803,
+      "startticks": 19919532
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "offline-density-1",
+      "pid": 65870,
+      "startticks": 19919729
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "offline-density-8",
+      "pid": 65891,
+      "startticks": 19921713
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "old-v3-compatibility",
+      "pid": 65912,
+      "startticks": 19924074
+    },
+    "actual": null
+  },
+  {
+    "run": "installed-v5",
+    "expected": {
+      "role": "fresh-default-device",
+      "pid": 65941,
+      "startticks": 19927126
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 65677,
+      "ppid": 1,
+      "pgid": 65677,
+      "startticks": 19901496
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19901496
+    }
+  },
+  {
+    "run": "source-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 65678,
+      "ppid": 65677,
+      "pgid": 65678,
+      "startticks": 19901501
+    },
+    "actual": null
+  },
+  {
+    "run": "source-v2",
+    "expected": {
+      "role": "controller",
+      "pid": 65696,
+      "ppid": 1,
+      "pgid": 65696,
+      "startticks": 19907511
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19907511
+    }
+  },
+  {
+    "run": "source-v2",
+    "expected": {
+      "role": "worker",
+      "pid": 65697,
+      "ppid": 65696,
+      "pgid": 65697,
+      "startticks": 19907514
+    },
+    "actual": null
+  },
+  {
+    "run": "views-v1",
+    "expected": {
+      "role": "controller",
+      "pid": 65468,
+      "ppid": 1,
+      "pgid": 65468,
+      "startticks": 19825404
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19825404
+    }
+  },
+  {
+    "run": "views-v1",
+    "expected": {
+      "role": "worker",
+      "pid": 65469,
+      "ppid": 65468,
+      "pgid": 65469,
+      "startticks": 19825407
+    },
+    "actual": null
+  },
+  {
+    "run": "views-v2",
+    "expected": {
+      "role": "controller",
+      "pid": 66102,
+      "ppid": 1,
+      "pgid": 66102,
+      "startticks": 19931872
+    },
+    "actual": {
+      "state": "Z",
+      "startticks": 19931872
+    }
+  },
+  {
+    "run": "views-v2",
+    "expected": {
+      "role": "worker",
+      "pid": 66103,
+      "ppid": 66102,
+      "pgid": 66103,
+      "startticks": 19931875
+    },
+    "actual": null
+  },
+  {
+    "run": "views-v2",
+    "expected": {
+      "role": "TP",
+      "pid": 66104,
+      "startticks": 19931881
+    },
+    "actual": null
+  },
+  {
+    "run": "views-v2",
+    "expected": {
+      "role": "UI",
+      "pid": 66121,
+      "startticks": 19933575
+    },
+    "actual": null
+  }
+]

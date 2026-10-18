@@ -1,0 +1,678 @@
+{
+  "bodies": {
+    "ordinary": {
+      "cubin_sha256": "5036f2ef12127f2b1e983a85158b87b5150294b153fd38a0a0340446525e7a49",
+      "instructions": 280,
+      "events": [
+        {
+          "pc": 912,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R32],desc[UR20][R8.64],P0",
+          "predicate": null
+        },
+        {
+          "pc": 928,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 944,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 1008,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R32+0x800],desc[UR20][R10.64],P1",
+          "predicate": null
+        },
+        {
+          "pc": 1024,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 2624,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x1",
+          "predicate": null
+        },
+        {
+          "pc": 2640,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 2656,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R20[R27+UR12+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 2672,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R4[R25+UR11]",
+          "predicate": null
+        },
+        {
+          "pc": 2688,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R8[R8+UR11]",
+          "predicate": null
+        },
+        {
+          "pc": 2704,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R12,R20,R4,R12",
+          "predicate": null
+        },
+        {
+          "pc": 2736,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R16,R20,R8,R16",
+          "predicate": null
+        },
+        {
+          "pc": 2752,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R20[R26+UR12+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 2800,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 2944,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R12,R20,R6,R12",
+          "predicate": null
+        },
+        {
+          "pc": 3056,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R7],desc[UR20][R4.64],P1",
+          "predicate": null
+        },
+        {
+          "pc": 3072,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R16,R20,R10,R16",
+          "predicate": null
+        },
+        {
+          "pc": 3088,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 3184,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x0",
+          "predicate": null
+        },
+        {
+          "pc": 3584,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 3792,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        }
+      ],
+      "math_loops": [
+        {
+          "start": 1824,
+          "end": 3152,
+          "events": [
+            {
+              "pc": 2624,
+              "opcode": "DEPBAR.LE",
+              "operands": "SB0,0x1",
+              "predicate": null
+            },
+            {
+              "pc": 2640,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 2656,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R20[R27+UR12+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 2672,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R4[R25+UR11]",
+              "predicate": null
+            },
+            {
+              "pc": 2688,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R8[R8+UR11]",
+              "predicate": null
+            },
+            {
+              "pc": 2704,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R12,R20,R4,R12",
+              "predicate": null
+            },
+            {
+              "pc": 2736,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R16,R20,R8,R16",
+              "predicate": null
+            },
+            {
+              "pc": 2752,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R20[R26+UR12+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 2800,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 2944,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R12,R20,R6,R12",
+              "predicate": null
+            },
+            {
+              "pc": 3056,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "operands": "[R7],desc[UR20][R4.64],P1",
+              "predicate": null
+            },
+            {
+              "pc": 3072,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R16,R20,R10,R16",
+              "predicate": null
+            },
+            {
+              "pc": 3088,
+              "opcode": "LDGDEPBAR",
+              "operands": "",
+              "predicate": null
+            }
+          ]
+        }
+      ]
+    },
+    "density-1": {
+      "cubin_sha256": "c2030e2696060735cc6edb4151082fc4eee7de3aa92dfb9834e0032933bafc3f",
+      "instructions": 923,
+      "events": [
+        {
+          "pc": 1776,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R17],desc[UR22][R24.64],P2",
+          "predicate": null
+        },
+        {
+          "pc": 2320,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 3536,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 3616,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R17+0x800],desc[UR22][R10.64],P2",
+          "predicate": null
+        },
+        {
+          "pc": 4112,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 7376,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x1",
+          "predicate": null
+        },
+        {
+          "pc": 7488,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 7760,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R16[R7+UR15+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 7776,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R8[R2+UR20]",
+          "predicate": null
+        },
+        {
+          "pc": 7792,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R20[R5+UR20]",
+          "predicate": null
+        },
+        {
+          "pc": 7840,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R12[R6+UR15+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 7936,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R28,R16,R8,R28",
+          "predicate": null
+        },
+        {
+          "pc": 7984,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R24,R16,R20,R24",
+          "predicate": null
+        },
+        {
+          "pc": 8064,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R28,R12,R10,R28",
+          "predicate": null
+        },
+        {
+          "pc": 8128,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R24,R12,R22,R24",
+          "predicate": null
+        },
+        {
+          "pc": 8848,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 8976,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R19],desc[UR22][R16.64],P2",
+          "predicate": null
+        },
+        {
+          "pc": 9616,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 10416,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x0",
+          "predicate": null
+        },
+        {
+          "pc": 10480,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 11376,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        }
+      ],
+      "math_loops": [
+        {
+          "start": 5056,
+          "end": 9984,
+          "events": [
+            {
+              "pc": 7376,
+              "opcode": "DEPBAR.LE",
+              "operands": "SB0,0x1",
+              "predicate": null
+            },
+            {
+              "pc": 7488,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 7760,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R16[R7+UR15+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 7776,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R8[R2+UR20]",
+              "predicate": null
+            },
+            {
+              "pc": 7792,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R20[R5+UR20]",
+              "predicate": null
+            },
+            {
+              "pc": 7840,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R12[R6+UR15+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 7936,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R28,R16,R8,R28",
+              "predicate": null
+            },
+            {
+              "pc": 7984,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R24,R16,R20,R24",
+              "predicate": null
+            },
+            {
+              "pc": 8064,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R28,R12,R10,R28",
+              "predicate": null
+            },
+            {
+              "pc": 8128,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R24,R12,R22,R24",
+              "predicate": null
+            },
+            {
+              "pc": 8848,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 8976,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "operands": "[R19],desc[UR22][R16.64],P2",
+              "predicate": null
+            },
+            {
+              "pc": 9616,
+              "opcode": "LDGDEPBAR",
+              "operands": "",
+              "predicate": null
+            }
+          ]
+        }
+      ]
+    },
+    "density-8": {
+      "cubin_sha256": "7bac7a5b515ce3c2955123b481bc04e5ebea8cc05ee0eeef330946d8837fa59d",
+      "instructions": 1395,
+      "events": [
+        {
+          "pc": 4112,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R2],desc[UR20][R18.64],P0",
+          "predicate": null
+        },
+        {
+          "pc": 4656,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 5840,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 5920,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R2+0x800],desc[UR20][R24.64],P0",
+          "predicate": null
+        },
+        {
+          "pc": 6448,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 11984,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x1",
+          "predicate": null
+        },
+        {
+          "pc": 12064,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 12352,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R24[R40+UR14+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 12384,
+          "opcode": "LDSM.16.M88.4",
+          "operands": "R20[R0+UR14+0x1000]",
+          "predicate": null
+        },
+        {
+          "pc": 12720,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R8[R5+UR25]",
+          "predicate": null
+        },
+        {
+          "pc": 12752,
+          "opcode": "LDSM.16.MT88.4",
+          "operands": "R28[R2+UR25]",
+          "predicate": null
+        },
+        {
+          "pc": 13008,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R36,R24,R8,R36",
+          "predicate": null
+        },
+        {
+          "pc": 13232,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R32,R24,R28,R32",
+          "predicate": null
+        },
+        {
+          "pc": 13392,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R36,R20,R10,R36",
+          "predicate": null
+        },
+        {
+          "pc": 13456,
+          "opcode": "HMMA.16816.F32",
+          "operands": "R32,R20,R30,R32",
+          "predicate": null
+        },
+        {
+          "pc": 14528,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 14624,
+          "opcode": "LDGSTS.E.BYPASS.128",
+          "operands": "[R11],desc[UR20][R18.64],P2",
+          "predicate": null
+        },
+        {
+          "pc": 15232,
+          "opcode": "LDGDEPBAR",
+          "operands": "",
+          "predicate": null
+        },
+        {
+          "pc": 16368,
+          "opcode": "DEPBAR.LE",
+          "operands": "SB0,0x0",
+          "predicate": null
+        },
+        {
+          "pc": 16432,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        },
+        {
+          "pc": 17312,
+          "opcode": "BAR.SYNC.DEFER_BLOCKING",
+          "operands": "0x0",
+          "predicate": null
+        }
+      ],
+      "math_loops": [
+        {
+          "start": 7536,
+          "end": 15600,
+          "events": [
+            {
+              "pc": 11984,
+              "opcode": "DEPBAR.LE",
+              "operands": "SB0,0x1",
+              "predicate": null
+            },
+            {
+              "pc": 12064,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 12352,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R24[R40+UR14+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 12384,
+              "opcode": "LDSM.16.M88.4",
+              "operands": "R20[R0+UR14+0x1000]",
+              "predicate": null
+            },
+            {
+              "pc": 12720,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R8[R5+UR25]",
+              "predicate": null
+            },
+            {
+              "pc": 12752,
+              "opcode": "LDSM.16.MT88.4",
+              "operands": "R28[R2+UR25]",
+              "predicate": null
+            },
+            {
+              "pc": 13008,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R36,R24,R8,R36",
+              "predicate": null
+            },
+            {
+              "pc": 13232,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R32,R24,R28,R32",
+              "predicate": null
+            },
+            {
+              "pc": 13392,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R36,R20,R10,R36",
+              "predicate": null
+            },
+            {
+              "pc": 13456,
+              "opcode": "HMMA.16816.F32",
+              "operands": "R32,R20,R30,R32",
+              "predicate": null
+            },
+            {
+              "pc": 14528,
+              "opcode": "BAR.SYNC.DEFER_BLOCKING",
+              "operands": "0x0",
+              "predicate": null
+            },
+            {
+              "pc": 14624,
+              "opcode": "LDGSTS.E.BYPASS.128",
+              "operands": "[R11],desc[UR20][R18.64],P2",
+              "predicate": null
+            },
+            {
+              "pc": 15232,
+              "opcode": "LDGDEPBAR",
+              "operands": "",
+              "predicate": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "commands": [
+    {
+      "name": "json",
+      "argv": [
+        "/workspace/chijin-timeline-r032/runs/installed-v3/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--emit-json",
+        "/workspace/chijin-timeline-r032/runs/installed-v3/output/density-1/ordinary-3/cubin"
+      ],
+      "pid": 65442,
+      "pgid": 65442,
+      "startticks": 19807133,
+      "timeout_seconds": 19.99945511299302,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 403296383
+    }
+  ],
+  "tool": "/workspace/chijin-timeline-r032/runs/installed-v3/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+  "tool_sha256": "6df0054fac801e7ab7d251506cfe52a1171c207de0923d8a3d57fdd5a1f6d982",
+  "qualification": "instruction extraction only; no schedule or hardware-overlap certificate"
+}

@@ -1,0 +1,53 @@
+{
+  "status": "saved_byte_audit_passed_not_full_P01",
+  "archive": {
+    "bytes": 16383816,
+    "sha256": "46717809a5c9ae51be1ac9675d39971979e108e39eb239fb03b35448d6966a4b"
+  },
+  "product_source_sha256": {
+    "Profiler/python/flagtree_profiler/profile.py": "452fbeadde9dbd3564c68ac8683ecd464f2e2bceb08acf099ca8989096f39925",
+    "Profiler/python/flagtree_profiler/cli.py": "163e6b292463f071b0ee8b4336c5da893b5f2595b1b948d963c72b82f702dffd",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_machine.py": "5951ffd887ec5b901f91389a1547ccd3433c7e570964a3a0cc626b796077c6ab",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_control.py": "b84bcef70f1be5efdca7571737277201999e5be11b01683122d8183ec1a6593f"
+  },
+  "fresh_captures": [
+    {
+      "invocation_id": "invocation-6520f91c8d5246d1bf2377269c53b6c7",
+      "binary_id": "5c1f219a6c7357a684ede0e06e7ee13eb94a77fa12e8a4363465fa795c1243e8",
+      "intervals": 224,
+      "traces": 8
+    },
+    {
+      "invocation_id": "invocation-16266852fab2475d9b377ffeed84a947",
+      "binary_id": "5c1f219a6c7357a684ede0e06e7ee13eb94a77fa12e8a4363465fa795c1243e8",
+      "intervals": 416,
+      "traces": 8
+    }
+  ],
+  "recovered_traces": 32,
+  "old_compatible_traces": 24,
+  "TP_traces": 72,
+  "UI_traces": 6,
+  "actual_native_relationships": {
+    "ordinary": {
+      "instructions": 280,
+      "copy_between_math_issues": true
+    },
+    "density-1": {
+      "instructions": 923,
+      "copy_between_math_issues": false
+    },
+    "density-8": {
+      "instructions": 1395,
+      "copy_between_math_issues": false
+    }
+  },
+  "installation": {
+    "wheel": "/workspace/chijin-timeline-r032/runs/installed-v5/output/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+    "wheel_sha256": "7708ff5f3ecd620ff379c5546f0f70f5c39fff49d8530665dac2deeb3d4a23df",
+    "installed_members_byte_verified": 604,
+    "python": "/workspace/chijin-timeline-r032/runs/installed-v5/output/venv/bin/python"
+  },
+  "source_boundaries_qualified": false,
+  "async_time_arrows_qualified": false
+}

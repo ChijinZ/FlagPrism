@@ -1,0 +1,98 @@
+[
+  {
+    "run": "format-v1",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 394744,
+      "ppid": 1,
+      "pgid": 394744,
+      "startticks": 1014902617
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v1",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 394745,
+      "ppid": 394744,
+      "pgid": 394745,
+      "startticks": 1014902621
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v2",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 395432,
+      "ppid": 1,
+      "pgid": 395432,
+      "startticks": 1014985686
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v2",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 395433,
+      "ppid": 395432,
+      "pgid": 395433,
+      "startticks": 1014985689
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v3",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 396146,
+      "ppid": 1,
+      "pgid": 396146,
+      "startticks": 1015027947
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v3",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 396147,
+      "ppid": 396146,
+      "pgid": 396147,
+      "startticks": 1015027951
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v4",
+    "role": "controller",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 396780,
+      "ppid": 1,
+      "pgid": 396780,
+      "startticks": 1015109263
+    },
+    "actual": null
+  },
+  {
+    "run": "format-v4",
+    "role": "worker",
+    "terminal_returncode": 0,
+    "expected": {
+      "pid": 396781,
+      "ppid": 396780,
+      "pgid": 396781,
+      "startticks": 1015109266
+    },
+    "actual": null
+  }
+]
