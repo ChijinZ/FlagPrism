@@ -157,13 +157,17 @@ def _take_instrumentation_runs() -> list[dict]:
             "source_census":
             run.get("source_census"),
             "raw_encoding":
-            ("base64_gcu_first_last_timeline_v2" if runtime_metadata.get("record_layout")
-             == "gcu_first_last_timeline_v2" else "base64_source_census_v1" if runtime_metadata.get("record_layout")
-             == "gcu_site_census_v1" else "base64_ascend_source_census_v3" if
-             runtime_metadata.get("record_layout") == "ascend_source_census_v3"
-             else "base64_ascend_source_census_v2" if runtime_metadata.get(
-                 "record_layout") == "ascend_source_census_v2" else
-             "base64_ascend_source_census_v1" if runtime_metadata.
+            ("base64_gcu_first_last_timeline_v2"
+             if runtime_metadata.get("record_layout")
+             == "gcu_first_last_timeline_v2" else
+             "base64_source_census_v1" if runtime_metadata.get("record_layout")
+             == "gcu_site_census_v1" else "base64_ascend_source_timeline_v1"
+             if runtime_metadata.get("record_layout") ==
+             "ascend_source_timeline_v1" else "base64_ascend_source_census_v3"
+             if runtime_metadata.get("record_layout") ==
+             "ascend_source_census_v3" else "base64_ascend_source_census_v2" if
+             runtime_metadata.get("record_layout") == "ascend_source_census_v2"
+             else "base64_ascend_source_census_v1" if runtime_metadata.
              get("record_layout") == "ascend_source_census_v1" else
              "base64_ascend_actor_dynamic_v1" if runtime_metadata.
              get("record_layout") ==
@@ -891,9 +895,11 @@ def _validated_timeline_capture(run):
     if type(encoded) is not str:
         raise ValueError('Canonical timeline capture requires its raw bytes')
     raw = base64.b64decode(encoded, validate=True)
-    if (batch['raw_artifact'] != dict(sha256=hashlib.sha256(raw).hexdigest(), bytes=len(raw)) or
-            run.get('raw_sha256') != batch['raw_artifact']['sha256']):
-        raise ValueError('Canonical timeline capture contradicts retained raw bytes')
+    if (batch['raw_artifact'] != dict(sha256=hashlib.sha256(raw).hexdigest(),
+                                      bytes=len(raw))
+            or run.get('raw_sha256') != batch['raw_artifact']['sha256']):
+        raise ValueError(
+            'Canonical timeline capture contradicts retained raw bytes')
     return batch
 
 
@@ -941,8 +947,9 @@ def _augment_instrumentation_artifacts(
                     run.get('raw_base64'),
                     'raw_sha256':
                     run.get('raw_sha256'),
-                    **({'canonical_timeline': _validated_timeline_capture(run)}
-                       if run.get('canonical_timeline') is not None else {}),
+                    **({
+                        'canonical_timeline': _validated_timeline_capture(run)
+                    } if run.get('canonical_timeline') is not None else {}),
                     'source_census':
                     ir_source_census_metadata(
                         run,
@@ -1533,25 +1540,41 @@ def start(
         raise ValueError("detail must be None, 'auto', or 'timeline'")
     timeline = detail == 'timeline'
     timeline_collector = None
-    if ((timeline and _active_sessions) or
-            any(state.get('detail') == 'timeline' for state in _active_sessions.values())):
-        raise ValueError('Timeline sessions cannot be nested with another capture')
+    if ((timeline and _active_sessions) or any(
+            state.get('detail') == 'timeline'
+            for state in _active_sessions.values())):
+        raise ValueError(
+            'Timeline sessions cannot be nested with another capture')
     if timeline:
         if observation_request is not None or mode is not None:
-            raise ValueError('Timeline automatic mode cannot use an explicit mode/request')
+            raise ValueError(
+                'Timeline automatic mode cannot use an explicit mode/request')
         if hook not in (None, 'instrumentation'):
             raise ValueError('Timeline requires the instrumentation hook')
         backend = _automatic_backend(backend)
         if backend == 'instrumentation':
             from .mode import Default
             mode = Default(buffer_size=32768)
+        elif _is_cann_backend(backend):
+            from .timeline_ascend import AscendTimelineCollector
+            from .observations import ObservationRequest
+            timeline_collector = AscendTimelineCollector()
+            observation_request = ObservationRequest(
+                programs=None,
+                program_policy='runtime_first_last',
+                automatic=True,
+                max_sites=8,
+                max_events_per_instance=2048)
         elif _is_enflame_backend(backend):
             from .timeline_enflame import EnflameTimelineCollector
             from .observations import ObservationRequest
             timeline_collector = EnflameTimelineCollector()
-            observation_request = ObservationRequest(programs=None,
-                program_policy='runtime_first_last', automatic=True,
-                max_sites=8, max_events_per_instance=4096)
+            observation_request = ObservationRequest(
+                programs=None,
+                program_policy='runtime_first_last',
+                automatic=True,
+                max_sites=8,
+                max_events_per_instance=4096)
         else:
             raise ValueError('Timeline is not yet implemented on this backend')
         hook = 'instrumentation'
@@ -1572,7 +1595,9 @@ def start(
     if backend is None:
         backend = _select_backend()
 
-    observation_plan = (dict(automatic=True, timeline=True, max_sites=8,
+    observation_plan = (dict(automatic=True,
+                             timeline=True,
+                             max_sites=8,
                              output_selection={'programs': None})
                         if timeline else None)
     if observation_request is not None:
@@ -1732,10 +1757,9 @@ def start(
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
-            native_hook = InstrumentationHook(mode, observation_plan=observation_plan)
-            HookManager.register(
-                native_hook,
-                session)
+            native_hook = InstrumentationHook(
+                mode, observation_plan=observation_plan)
+            HookManager.register(native_hook, session)
         elif timeline_collector is not None:
             native_hook = timeline_collector
     except BaseException as error:
@@ -1979,12 +2003,14 @@ def _finalize_impl(session: Optional[int] = None,
         for state in states:
             timeline_ok = True
             if state.get('timeline_hook') is not None:
-                timeline_ok = attempt('timeline raw export',
-                    lambda: state['timeline_hook'].flush_timeline(state['name']), state)
+                timeline_ok = attempt(
+                    'timeline raw export', lambda: state['timeline_hook'].
+                    flush_timeline(state['name']), state)
                 if state.get('instrumentation_hook'):
                     # Deferred non-NVIDIA collectors publish only after their
                     # completed raw captures have been durably retained.
-                    have_runs = attempt('timeline instrumentation snapshot', take_runs, state) and have_runs
+                    have_runs = attempt('timeline instrumentation snapshot',
+                                        take_runs, state) and have_runs
             if state.get("instrumentation_hook") and have_runs and state.get(
                     "name"):
                 attempt(
@@ -2000,7 +2026,8 @@ def _finalize_impl(session: Optional[int] = None,
             receipts_ok = attempt(
                 "CANN worker receipts",
                 lambda: _snapshot_cann_launch_receipts(state), state)
-            if not (timeline_ok and native_ok and snapshot_ok and stopped and receipts_ok and
+            if not (timeline_ok and native_ok and snapshot_ok and stopped
+                    and receipts_ok and
                     (have_runs or not state.get("instrumentation_hook"))):
                 attempt("native observation recovery",
                         lambda: _export_native_observations(state), state)

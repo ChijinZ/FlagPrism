@@ -122,9 +122,10 @@ class TimelineInstrumentationMixin:
         self._init_timeline_state(CudaTimelineTransport())
         self.allocator = TimelineAllocator(self)
 
-    def _init_timeline_state(self, transport):
+    def _init_timeline_state(self, transport, *, guard_bytes=0):
         from ..timeline_runtime import TimelineOwnerPool
-        self.timeline_pool = TimelineOwnerPool(transport)
+        self.timeline_pool = TimelineOwnerPool(transport,
+                                               guard_bytes=guard_bytes)
         self._timeline_current = ContextVar('timeline_current_owner',
                                             default=None)
         self._timeline_zero = ContextVar('timeline_zero_grid', default=False)

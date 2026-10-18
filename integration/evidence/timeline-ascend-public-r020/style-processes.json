@@ -1,0 +1,109 @@
+{
+  "status": "no_live_owned_format_jobs",
+  "processes": [
+    {
+      "run": "style-v1",
+      "kind": "controller",
+      "identity": {
+        "pid": 53206,
+        "ppid": 1,
+        "pgid": 53206,
+        "startticks": 16701911
+      },
+      "state": "Z",
+      "same_startticks": true,
+      "returncode": 1
+    },
+    {
+      "run": "style-v1",
+      "kind": "worker",
+      "identity": {
+        "pid": 53207,
+        "ppid": 53206,
+        "pgid": 53207,
+        "startticks": 16701914
+      },
+      "state": "missing",
+      "same_startticks": false,
+      "returncode": 1
+    },
+    {
+      "run": "style-v2",
+      "kind": "controller",
+      "identity": {
+        "pid": 53220,
+        "ppid": 1,
+        "pgid": 53220,
+        "startticks": 16712398
+      },
+      "state": "Z",
+      "same_startticks": true,
+      "returncode": 0
+    },
+    {
+      "run": "style-v2",
+      "kind": "worker",
+      "identity": {
+        "pid": 53221,
+        "ppid": 53220,
+        "pgid": 53221,
+        "startticks": 16712401
+      },
+      "state": "missing",
+      "same_startticks": false,
+      "returncode": 0
+    },
+    {
+      "run": "style-v3",
+      "kind": "controller",
+      "identity": {
+        "pid": 53379,
+        "ppid": 1,
+        "pgid": 53379,
+        "startticks": 16841854
+      },
+      "state": "Z",
+      "same_startticks": true,
+      "returncode": 0
+    },
+    {
+      "run": "style-v3",
+      "kind": "worker",
+      "identity": {
+        "pid": 53380,
+        "ppid": 53379,
+        "pgid": 53380,
+        "startticks": 16841858
+      },
+      "state": "missing",
+      "same_startticks": false,
+      "returncode": 0
+    },
+    {
+      "run": "style-v4",
+      "kind": "controller",
+      "identity": {
+        "pid": 53538,
+        "ppid": 1,
+        "pgid": 53538,
+        "startticks": 16884512
+      },
+      "state": "Z",
+      "same_startticks": true,
+      "returncode": 0
+    },
+    {
+      "run": "style-v4",
+      "kind": "worker",
+      "identity": {
+        "pid": 53539,
+        "ppid": 53538,
+        "pgid": 53539,
+        "startticks": 16884515
+      },
+      "state": "missing",
+      "same_startticks": false,
+      "returncode": 0
+    }
+  ]
+}

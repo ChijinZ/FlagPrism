@@ -20,13 +20,45 @@ annotation is required. When target-specific counter-unit evidence is available,
 counter brackets, not certified source-operation costs or engine busy. Raw ticks
 without unit evidence remain raw; separate observers must not be compared as a
 shared epoch. The index does not upload data.
-The current public raw paths support NVIDIA and Enflame GCU, eager and one host
-thread per session. Both have real multiple-stream ownership tests. Nested
-sessions are explicitly rejected. Ascend now has a source-coordinate paired
-producer with real runtime-K device development evidence; it is not connected
-to the public timeline collector yet. The legacy debugger allocator explicitly
-rejects that new compact protocol. Its device clocks, final region boundaries,
-async association and shared canonical/Perfetto path remain unqualified.
+The current public raw paths support NVIDIA, Enflame GCU and Ascend CANN,
+eager and one host thread per session. All three have actual multiple-stream
+ownership evidence; nested sessions are explicitly rejected. Ascend now uses
+its own stream/event transport with the shared owner and canonical schema 2.
+Its unit/precision, final source-region boundaries, async association and
+Perfetto path remain unqualified. Raw success is not full P01 acceptance.
+
+For Ascend, select the runtime device before the API session and use
+`backend="cann"`, or run:
+
+```bash
+python -m flagtree.profiler.cli --backend cann --detail timeline --device 4 \
+  -n trace-run my_script.py
+```
+
+Use the matching [Ascend build](../../integration/patches/ascend/README.md),
+including the version 3 source-coordinate carrier and the new LLVM15 paired
+producer. `TRITON_ASCEND_COMPILER` must name a compatible SDK; the actual
+installation receipt identifies the tested replacement. The collector binds the
+real loaded binary, actual logical grid and original NPU stream. It initializes
+compact storage with two 64-byte allocation guards on that stream and records
+a completion event; it does not insert a per-launch global synchronization.
+Readback happens during finalization, after the event reports completion.
+
+Ascend selects first/last logical programs and reserves AIC/AIV actor segments.
+An unwritten admissible segment remains explicitly unobserved; it is not proof
+of execution or non-execution. Current real recurrence and Softmax probes use
+`enable_auto_blockify=False`; broader lowering, multi-function and exclusive
+writer coverage still require qualification. Do not infer general matrix
+support from these examples. The legacy debugger allocator rejects the new
+layout; the dedicated timeline collector handles it explicitly.
+
+The r020 checkpoint covers actual API and CLI math, two-stream collection,
+exact raw endpoint offsets and retained guards, fresh-process public/normal/
+optimized offline re-export, and controlled host decode/guard faults. On a
+failed API finalization, intermediates remain in the reported session staging
+directory; use its actual `capture.timeline` path for recovery rather than
+assuming the requested output bundle was completed. See
+[Ascend public raw evidence](../../integration/evidence/timeline-ascend-public-r020/README.md).
 
 For GCU, use the same API with `backend="enflame"` (or allow backend detection),
 or the CLI with `--backend enflame --device 0`. The normal

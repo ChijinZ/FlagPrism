@@ -47,7 +47,7 @@
 
 A/B 是开发里程碑；允许并行调查其它后端，不是完整 P01 或交付通过。步骤 B 内部可以先取得时钟尺度再补边界，不要求按表格文字机械排序。第二、第三后端依真实调用检验共享合同，遇缺口作有理由的共同修改。
 
-**当前落点（区分已提交与在研）**：已提交的 r018/r019 证据包括 NV/GCU 默认 raw 入口、NV 隔离 counter-ns 的 SQL/UI、两后端离线重导，以及 Ascend 新 paired producer 的真实 runtime-K 数学与 raw/guard。Ascend 默认 deferred collector、schema 2 解码和公开入口当前有未提交工程及初轮真实调用结果，尚未完成该版本的回归和交付，不能当作已发布能力。NV 源边界与 ordinary 流水保持、GCU 单位/guard/异步、Ascend 时间尺度/边界/异步、三后端完整资格仍未完成。工程状态以 `timeline_impl_record.md` 和对应安装/原件收据为准；本文规定目标，不逐次复制实验进度。
+**当前落点（区分已提交与在研）**：已提交的 r018/r019 证据包括 NV/GCU 默认 raw 入口、NV 隔离 counter-ns 的 SQL/UI、两后端离线重导，以及 Ascend 新 paired producer 的真实 runtime-K 数学与 raw/guard。r020 的 Ascend 默认 deferred collector、schema 2 解码和公开 API/CLI 已取得真实数学、双流、原件重导与受控 host 故障恢复证据；这只推进 raw 能力，不授完整时间资格。NV 源边界与 ordinary 流水保持、GCU 单位/guard/异步、Ascend 时间尺度/边界/异步、三后端完整资格仍未完成。工程状态以 `timeline_impl_record.md` 和对应安装/原件收据为准；本文规定目标，不逐次复制实验进度。
 
 后续芯片适配的验收是“哪些部件真正复用、为何替换、设备证据补齐后共用消费链”，不能用行数、一个 adapter 类或模拟第四设备证明成本低。对应具体测试见 [验收 §0](timeline_testing.md#0-本轮执行与适配边界的验收入口)、P01–P10；这些要求不增加独立数学数量、不降低原交付门槛。
 

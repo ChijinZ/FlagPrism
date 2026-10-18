@@ -56,6 +56,15 @@ def _enflame(capture, raw):
         capture_id=owner['capture_id'])
 
 
+def _ascend(capture, raw):
+    from .timeline_events_ascend import canonicalize_ascend_capture
+    return canonicalize_ascend_capture(
+        raw,
+        owner=capture['owner'],
+        metadata=capture['metadata']['compiler_metadata'],
+        association=capture['launch'])
+
+
 def _original(directory, name):
     capture = _json(directory, name)
     owner = capture['owner']
@@ -95,14 +104,19 @@ def _original(directory, name):
 
 def reexport_capture(directory, original_file):
     """Decode actual bytes anew; cached canonical/view JSON cannot grant proof."""
-    from . import timeline_events_nvidia, timeline_events_enflame, timeline_nvidia
+    from . import timeline_events_nvidia, timeline_events_enflame, timeline_nvidia, timeline_events_ascend
     directory = Path(directory).resolve()
     capture, raw, sources, retain = _original(directory, original_file)
     owner, metadata = capture['owner'], capture['metadata']
     target = metadata['compiler_metadata'].get('target') or {}
+    if type(target) is not dict:
+        target = {}
     if target.get('backend') == 'cuda':
         backend, decoder = 'nvidia', _nvidia
         rules = (timeline_events_nvidia, timeline_nvidia)
+    elif metadata['compiler_metadata'].get(
+            'debug_record_layout') == 'ascend_source_timeline_v1':
+        backend, decoder, rules = 'ascend', _ascend, (timeline_events_ascend, )
     elif 'native_export_metadata' in owner:
         backend, decoder, rules = 'enflame', _enflame, (
             timeline_events_enflame, )

@@ -1,0 +1,14 @@
+## T034 Ascend 默认链回归、CLI 与离线/故障实证
+
+- 上轮T033为progress：设计/验收及三名独立设计评审已提交486ccef；没有设备资格新增。本轮恢复完整goal，保留在研Ascend工程并核r020实际旧任务终态。只做工具，不改论文或旧Study。
+- 启动NV容器内CPU-only style-v3，固定YAPF0.43/Ruff0.9.1、两次格式化/固定点/AST同一性，覆盖本轮10个Python文件；随后构建Ascend新隔离安装并运行更新校验/普通数学/CLI/实际bundle离线重导与受控host故障恢复。所有新输出独立版本，不重写v1结果。style launch/receipt位于artifacts/timeline/run-020/preflight/。
+
+- style-v3 固定YAPF/Ruff、10文件AST同一性 terminal0；后续仅修recovery测试路径，style-v4对应单文件也terminal0。Ascend install-v2 controller3081022/start329258093、worker3081055/start329258099，terminal0/158.213s，当前missing；wheelSHA3c8f4cd06550f4536fcb5fd12750d5e6d0773433dec6c05ab37a5333beac37c5，399安装成员逐byte核，新Python匹配稳定旧native v3 ABI与r019实际新plugin（没有宣称全native当前source重编）。95normal/95-O通过，新的两流runtime-K+Softmax默认采集含禁止逐launch全局synchronize的检查通过。
+- public-checks-v1 controller3086152/start329280853、worker3086186/start329280859 terminal1/92.845s，CLI与public/normal/-O离线重导已通过；最后recovery harness错误地把失败session原件目录当requested-output.timeline。只读forensic核实际staging/capture.timeline包含两个input原件、首调用预期decode故障、第二调用成功解码且owner为空；不存在错误测试路径。保全部首失败，不将其删掉或声称初次全过。
+- 仅修测试目录为collector实际_timeline_directory；产品wheel未变。recovery-v2 controller3090573/start329302735、worker3090607/start329302742 terminal0/45.571s，当前missing；4个真实用户kernel执行次数/数学/input/tail通过，受控第一次decode失败保两调用原件并可公开重导，readback后host guard变异原样留存/拒绝解释，下一正常session恢复。此为host故障注入，不冒称硬件故障恢复。
+- 后续机器对象调查为独立有界CPU工具probe，不使用源码/ASM示意替换设备时间。vendor llvm-objdump对最终实际ELF默认、CPU、aicore等选项均可能仅给<not available>，即使exit0也不授getter/边界证据；正在核最终编译诊断是否有可验证的后端产物。官方当前GetSystemCycle文档核A2按50MHz换算且属于PIPE_S，不能据此自动授每对象source边界、跨actor epoch或把vector耗时当标量读钟区间。未实现新的unit资格。
+
+- legacy-v1 controller3093893/start329321239、worker3093950/start329321245 terminal0/35.458s，当前missing；同r020 v2安装旧detail=auto vector-loop数学/1024唯一side effects通过，不冒称旧资格全量重跑。machine-v1..v6全部有真实terminal；测试过的反汇编只给占位或文件头，-S/-print-after被SDK明确拒绝，save-temps未产生所需汇编，debug-pass=Structure仅给pipeline信息。只证明这些工具路线未取得最终指令，不能断言全部方法或硬件不可能；后续仍有其它后端/通用插桩与取证工作可做，不构成整体blocked。
+- 最终原件artifacts/timeline/run-020/preflight/ascend-final-v1-evidence.tgz：16,608,487B/1,600files/SHA a35e268f6a55c7c4f4778850ba01d1a8e6dc453f4c7eccda99a4f2971d149222。包含初次/修复安装、真实默认bundle、CLI/offline、首失败staging与成功恢复、旧census、全部机器工具尝试。22个Ascend controller/worker身份全部missing/Z/不同startticks；NV四轮style共8个身份也无matching live。无遗留本轮设备/browser任务。
+- stdlib-only原件audit通过：逐byte核inventory/raw字段offset/guard/最终binary、50interval/100ref、K=3/7同binary与实际循环次数、unobserved actors保持complete=false、95normal/95-O与实际终态及首失败未擦除。代码/小报告在integration/evidence/timeline-ascend-public-r020/。此外最终producer/compiler/测试源码快照与工作树逐byte一致、399个installed成员与wheel逐byte核。audit本身不import产品、不执行数学、不授硬件资格。
+- 更新runtime/events和设计当前事实、根/tracked goal同字节状态说明，不修改原交付门槛或论文。新代码仍仅达到Ascend公开raw/owner/canonical/recovery里程碑，三后端完整P01、源边界/时间/真实异步/两代物理复用、完整TP/UI、独立数学、成本故障/完整source-build及额外三名最终代码review仍未完成。下一步继续最小时间/边界/机制实证，不以累计台账或更多raw样本代替。

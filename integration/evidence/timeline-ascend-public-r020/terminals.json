@@ -1,0 +1,321 @@
+{
+  "runs/install-v1/terminal.json": {
+    "controller": {
+      "pid": 3061979,
+      "ppid": 2511431,
+      "pgid": 3061979,
+      "startticks": 329038838
+    },
+    "worker": {
+      "pid": 3062013,
+      "ppid": 3061979,
+      "pgid": 3062013,
+      "startticks": 329038844
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/input/install.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/install-v1/output"
+    ],
+    "argv_sha256": "54a0866009ddfe3c4c32abeac953909a864d5c0280e6672b8afebaa393e055d2",
+    "script_sha256": "8d07486f0a5ace37c98ec41f70c1bd5f5e96daa214efcf0847e84574e3f85f43",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 158822758278
+  },
+  "runs/install-v2/terminal.json": {
+    "controller": {
+      "pid": 3081022,
+      "ppid": 2511431,
+      "pgid": 3081022,
+      "startticks": 329258093
+    },
+    "worker": {
+      "pid": 3081055,
+      "ppid": 3081022,
+      "pgid": 3081055,
+      "startticks": 329258099
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/input-v2/install.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/install-v2/output"
+    ],
+    "argv_sha256": "2210f3d84e1a51f098c6bee79927331b2dc648ef7ed4b0dbd0daf2d7284c2b11",
+    "script_sha256": "0043d8026ad38129efb37d4db472ca01edfe85eb568daba4ba24d3432542d0ab",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 158212853510
+  },
+  "runs/legacy-v1/terminal.json": {
+    "controller": {
+      "pid": 3093893,
+      "ppid": 2511431,
+      "pgid": 3093893,
+      "startticks": 329321239
+    },
+    "worker": {
+      "pid": 3093950,
+      "ppid": 3093893,
+      "pgid": 3093950,
+      "startticks": 329321245
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/input-v2/component/tests/ascend_census_vector_loop_probe.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/legacy-v1/output"
+    ],
+    "argv_sha256": "f8dc21fa73d134bc2d43af754cb36067040f27b20f41e4ddf3284310771b7f56",
+    "script_sha256": "b1f088ee067e95c2f967f4100e6130060f616c533a1f86a96f5365ec8cb2b809",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 140,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 35458104185
+  },
+  "runs/machine-v1/terminal.json": {
+    "controller": {
+      "pid": 3083823,
+      "ppid": 2511431,
+      "pgid": 3083823,
+      "startticks": 329270792
+    },
+    "worker": {
+      "pid": 3083857,
+      "ppid": 3083823,
+      "pgid": 3083857,
+      "startticks": 329270798
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v1/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v1/output"
+    ],
+    "argv_sha256": "be5470a34cefabaa99eb8a0ad14575c4745c44bc3c246f2a5c577aacd42c53dd",
+    "script_sha256": "0a12b8a3a23cb75dbc80ee8e4780cb044d8cd62c41c8414ffdafd8fef440965e",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 100,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 115782549
+  },
+  "runs/machine-v2/terminal.json": {
+    "controller": {
+      "pid": 3087562,
+      "ppid": 2511431,
+      "pgid": 3087562,
+      "startticks": 329285714
+    },
+    "worker": {
+      "pid": 3087596,
+      "ppid": 3087562,
+      "pgid": 3087596,
+      "startticks": 329285720
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v2/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v2/output"
+    ],
+    "argv_sha256": "2da6fc5dd3e714aff94a1b180fcc3db0300f01170bdd8f2c156064da12fbda6f",
+    "script_sha256": "8ba2e6ec8766059c1aa0ef9eb0702f0f51b111cd54471f00794a5b7258fb4c85",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 150,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 116045692
+  },
+  "runs/machine-v3/terminal.json": {
+    "controller": {
+      "pid": 3089466,
+      "ppid": 2511431,
+      "pgid": 3089466,
+      "startticks": 329292084
+    },
+    "worker": {
+      "pid": 3089500,
+      "ppid": 3089466,
+      "pgid": 3089500,
+      "startticks": 329292090
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v3/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v3/output"
+    ],
+    "argv_sha256": "4253b13af1748c2f9eefff99c83fc053f7f50fad1e539d2679b32d63e323606b",
+    "script_sha256": "54457905ce2c06516c878c8c9f56e9869862a57c16beec1ab8879caeaa6525c9",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 150,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 115662487
+  },
+  "runs/machine-v4/terminal.json": {
+    "controller": {
+      "pid": 3091183,
+      "ppid": 2511431,
+      "pgid": 3091183,
+      "startticks": 329304882
+    },
+    "worker": {
+      "pid": 3091218,
+      "ppid": 3091183,
+      "pgid": 3091218,
+      "startticks": 329304889
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v4/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v4/output"
+    ],
+    "argv_sha256": "28a2c8929f34f41197edea2ba53ed333b3d4c01e3425907e26d33ad4a04f7b3b",
+    "script_sha256": "5e42ab00bc1c18274915a4ade5a270ff712370a8a073d1c8c818a8087227e38d",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 150,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 115708029
+  },
+  "runs/machine-v5/terminal.json": {
+    "controller": {
+      "pid": 3092856,
+      "ppid": 2511431,
+      "pgid": 3092856,
+      "startticks": 329312568
+    },
+    "worker": {
+      "pid": 3092890,
+      "ppid": 3092856,
+      "pgid": 3092890,
+      "startticks": 329312574
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v5/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v5/output"
+    ],
+    "argv_sha256": "ab69bd8438314366d7002a3af1b213f53fc2773f59346278fd64490889f4fa56",
+    "script_sha256": "b8ae00fa4a9060c0311a52710e0a30047d4a9b9035bf5821170edd4659da3ee4",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 150,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 2219414515
+  },
+  "runs/machine-v6/terminal.json": {
+    "controller": {
+      "pid": 3093900,
+      "ppid": 2511431,
+      "pgid": 3093900,
+      "startticks": 329321240
+    },
+    "worker": {
+      "pid": 3093962,
+      "ppid": 3093900,
+      "pgid": 3093962,
+      "startticks": 329321246
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/machine-input-v6/inspect.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/machine-v6/output"
+    ],
+    "argv_sha256": "cc2507facf4a97692383625d2ea31712eab396f6a89cb0ac8d68600c5099209e",
+    "script_sha256": "a9efa1e60c2e3e7baea57c0aa06959d356c259cc361f84008ba09a0e0ede3d57",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 150,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 2168960740
+  },
+  "runs/public-checks-v1/terminal.json": {
+    "controller": {
+      "pid": 3086152,
+      "ppid": 2511431,
+      "pgid": 3086152,
+      "startticks": 329280853
+    },
+    "worker": {
+      "pid": 3086186,
+      "ppid": 3086152,
+      "pgid": 3086186,
+      "startticks": 329280859
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/public-checks-input-v1/checks.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/public-checks-v1/output"
+    ],
+    "argv_sha256": "ddb1ffd71eef8094f77a9cc43b654b836e54e5dd19dd6b2670505eb8bb49bd1c",
+    "script_sha256": "059145a7c6ed585481c88be7561295ffbb809cf196f542a60d2a8de313103693",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 92844529671
+  },
+  "runs/recovery-v2/terminal.json": {
+    "controller": {
+      "pid": 3090573,
+      "ppid": 2511431,
+      "pgid": 3090573,
+      "startticks": 329302735
+    },
+    "worker": {
+      "pid": 3090607,
+      "ppid": 3090573,
+      "pgid": 3090607,
+      "startticks": 329302742
+    },
+    "argv": [
+      "/tmp/chijin-r15-compiler-identity-install-v2/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r020/validation-input-v2/checks.py",
+      "--output",
+      "/tmp/chijin-timeline-r020/runs/recovery-v2/output"
+    ],
+    "argv_sha256": "e37c11af3ad542424503fb37060f32933b88b76d2940cca26d33452c309f607b",
+    "script_sha256": "56ca51a84104ed52100e2b7c8d398a92c885079778c262b9b4aa07aeb18d5aab",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 190,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 45570932874
+  }
+}

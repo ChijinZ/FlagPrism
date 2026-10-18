@@ -143,14 +143,25 @@ intact. See [runtime and offline re-export](timeline_runtime.md#offline-decoding
 for the implemented command, retention scope and limitations.
 
 
-## Ascend paired producer development checkpoint
+## Ascend paired producer and public canonical adapter
 
-`ascend_source_timeline_v1` is a real device **development** producer, separate
-from the public canonical adapters above. Its default collector, canonical
-adapter, clock provider and Perfetto integration are not delivered yet. The
-legacy debugger allocator rejects this compact protocol before initialization.
-The development probe supplies a generic collector and explicitly synchronizes;
-it does not qualify deferred ownership or concurrent capture.
+`ascend_source_timeline_v1` is a real paired device producer connected to the
+public CANN timeline collector and shared canonical schema 2. Its physical
+layout is separate from both census and NVIDIA/GCU storage. The dedicated
+transport uses real NPU stream completion and deferred readback with retained
+allocation guards; the legacy debugger allocator rejects the new compact
+protocol. The earlier explicitly synchronized development probe remains
+historical producer evidence, not the default collection path.
+
+The pure adapter in `timeline_events_ascend.py` validates the retained
+source/carrier/actor manifests and exact layout before interpreting bytes.
+It preserves both endpoint field offsets (start at pair+16, end at pair+24),
+actual logical coordinates, separate physical block identity, source navigation
+and unobserved actor slots. No device access or compiler-cache files are needed
+to decode a saved complete input. The public offline re-export creates a new
+canonical revision without modifying originals or replaying the application.
+Clock-unit, final boundary, comparable epoch and async proofs remain absent;
+these captures do not yet export a qualified Perfetto timeline.
 
 The frontend reuses `source_census_site.v3` only to transport the actual selected
 source identity and six program/grid coordinates through the SDK. The late pass
@@ -175,7 +186,7 @@ qualification for the broader ordinary-kernel matrix.
   every payload byte. Actual completion and memory visibility remain necessary.
 - Headers are zero-initialized; a zero segment does not prove that an actor
   executed. Each published pair retains its real two tick fields. Physical
-  counts are pairs; a future canonical adapter must count their two endpoint
+  counts are pairs; the canonical adapter counts their two endpoint
   references explicitly. Neither append order nor site occurrence is a loop ID.
 
 On 910B, the ordinary runtime-K recurrence probe retained six static fragment
@@ -185,4 +196,6 @@ side effects, tails and allocation guards passed. LLVM15 construction/JIT,
 AIC/AIV transformation, old census transformation and device census regression
 have separate evidence. Raw values remain SYS_CNT ticks; source boundaries,
 unit/precision, cross-observer epoch and async associations are unverified.
-See the workspace `timeline_impl_record.md` T031 for exact versions and artifacts.
+See the workspace `timeline_impl_record.md` T031–T034 and
+[public raw evidence](../../integration/evidence/timeline-ascend-public-r020/README.md)
+for exact versions, first failures and actual API/CLI/offline/recovery results.

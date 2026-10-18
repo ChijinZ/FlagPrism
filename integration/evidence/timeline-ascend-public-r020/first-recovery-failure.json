@@ -1,0 +1,6 @@
+{
+  "original_file": "runs/public-checks-v1/output/recovery.stderr",
+  "bytes": 734,
+  "sha256": "dfeef4e3a969b47a688e5075389d55719d218dca43c10449972eb283baca0fe0",
+  "text": "can not use command: npu-smi info\n/tmp/chijin-timeline-r020/input-v2/component/tests/timeline/p01_ascend_recovery.py:42: UserWarning: Cannot create tensor with interal format while allow_internel_format=False, tensor will be created with base format. (Triggered internally at ../torch_npu/csrc/aten/common/TensorFactories.cpp:340.)\n  out = torch.full_like(x, -1234)\nTraceback (most recent call last):\n  File \"/tmp/chijin-timeline-r020/input-v2/component/tests/timeline/p01_ascend_recovery.py\", line 153, in <module>\n    main()\n  File \"/tmp/chijin-timeline-r020/input-v2/component/tests/timeline/p01_ascend_recovery.py\", line 73, in main\n    raise RuntimeError(\nRuntimeError: Decode failure lost later raw or retained completed owners\n"
+}

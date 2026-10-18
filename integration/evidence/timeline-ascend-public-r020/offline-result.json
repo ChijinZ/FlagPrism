@@ -1,0 +1,51 @@
+{
+  "status": "real_offline_public_normal_optimized_passed",
+  "original_files": 14,
+  "captures": 2,
+  "application_replayed": false,
+  "limits": "Python audit hook and configured visibility environment; no device initialization; not an OS sandbox or proof that hardware is inaccessible",
+  "denied_original_roots": [
+    "/tmp/chijin-timeline-r020/input-v2",
+    "/tmp/chijin-timeline-r020/runs/install-v2/cache",
+    "/tmp/chijin-timeline-r020/runs/install-v2/tmp",
+    "/tmp/chijin-timeline-r020/runs/install-v2/output/device-probe"
+  ],
+  "steps": [
+    {
+      "mode": "public",
+      "returncode": 0,
+      "argv": [
+        "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "flagtree.profiler.timeline_reexport",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/portable/timeline"
+      ]
+    },
+    {
+      "mode": "normal",
+      "returncode": 0,
+      "argv": [
+        "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/audited.py",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/portable/timeline",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/normal.json",
+        "[\"/tmp/chijin-timeline-r020/input-v2\", \"/tmp/chijin-timeline-r020/runs/install-v2/cache\", \"/tmp/chijin-timeline-r020/runs/install-v2/tmp\", \"/tmp/chijin-timeline-r020/runs/install-v2/output/device-probe\"]"
+      ]
+    },
+    {
+      "mode": "optimized",
+      "returncode": 0,
+      "argv": [
+        "/tmp/chijin-timeline-r020/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/audited.py",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/portable/timeline",
+        "/tmp/chijin-timeline-r020/runs/public-checks-v1/output/offline/optimized.json",
+        "[\"/tmp/chijin-timeline-r020/input-v2\", \"/tmp/chijin-timeline-r020/runs/install-v2/cache\", \"/tmp/chijin-timeline-r020/runs/install-v2/tmp\", \"/tmp/chijin-timeline-r020/runs/install-v2/output/device-probe\"]"
+      ]
+    }
+  ]
+}
