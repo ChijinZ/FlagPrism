@@ -9,6 +9,7 @@ from flagtree.profiler.timeline_storage import plan_compact_storage
 
 
 class Transport:
+
     def __init__(self):
         self.actions = []
         self.ready = False
@@ -55,13 +56,56 @@ class Transport:
 
 
 class OwnerTests(unittest.TestCase):
+
+    def test_cumulative_budget_survives_completed_owner_release(self):
+        backend = Transport()
+        backend.ready = True
+        pool = TimelineOwnerPool(backend,
+                                 max_pending_bytes=2048,
+                                 max_cumulative_raw_bytes=512)
+        plan = dict(binary_id='binary-A',
+                    timeline_storage_version=1,
+                    timeline_record_version=2,
+                    timeline_storage_policy='compact_selected_programs',
+                    timeline_default_program_selection='runtime_first_last')
+        args = dict(binary_id='binary-A',
+                    function=123,
+                    grid=(2, 1, 1),
+                    scratch_size=128,
+                    alignment=128,
+                    num_ctas=1,
+                    device=0,
+                    stream=0)
+        for _ in range(2):
+            identity = pool.prepare(plan, **args)
+            pool.allocate(identity)
+            pool.mark_submitting(identity)
+            pool.finish_submission(identity)
+            pool.read(identity)
+            pool.release(identity)
+        self.assertEqual(pool.pending_bytes, 0)
+        self.assertEqual(pool.cumulative_admitted_raw_bytes, 512)
+        allocations = sum(action[0] == 'allocate'
+                          for action in backend.actions)
+        with self.assertRaisesRegex(RuntimeError, 'cumulative'):
+            pool.prepare(plan, **args)
+        self.assertEqual(
+            sum(action[0] == 'allocate' for action in backend.actions),
+            allocations)
+        self.assertEqual(pool.invocation_ids, ())
+        pool.close()
+
     def setUp(self):
         self.backend = Transport()
-        self.pool = TimelineOwnerPool(self.backend, max_pending_bytes=2048, guard_bytes=32)
-        self.plan = dict(binary_id='binary-A', timeline_storage_version=1,
-                         timeline_record_version=2,
-                         timeline_storage_policy='compact_selected_programs',
-                         timeline_default_program_selection='runtime_first_last')
+        self.pool = TimelineOwnerPool(self.backend,
+                                      max_pending_bytes=2048,
+                                      guard_bytes=32)
+        self.plan = dict(
+            binary_id='binary-A',
+            timeline_storage_version=1,
+            timeline_record_version=2,
+            timeline_storage_policy='compact_selected_programs',
+            timeline_default_program_selection='runtime_first_last')
 
     def tearDown(self):
         self.backend.fail, self.backend.ready = None, True
@@ -80,8 +124,14 @@ class OwnerTests(unittest.TestCase):
         self.pool.close()
 
     def prepare(self, **overrides):
-        args = dict(binary_id='binary-A', function=42, grid=(7, 1, 1),
-                    scratch_size=128, alignment=128, num_ctas=1, device=0, stream=12)
+        args = dict(binary_id='binary-A',
+                    function=42,
+                    grid=(7, 1, 1),
+                    scratch_size=128,
+                    alignment=128,
+                    num_ctas=1,
+                    device=0,
+                    stream=12)
         args.update(overrides)
         return self.pool.prepare(self.plan, **args)
 
@@ -96,7 +146,8 @@ class OwnerTests(unittest.TestCase):
         self.submit(b)
         self.assertNotEqual(a, b)
         self.assertEqual(self.pool.pending_bytes, 576)
-        self.assertFalse(any(a[0] in ('query', 'read') for a in self.backend.actions))
+        self.assertFalse(
+            any(a[0] in ('query', 'read') for a in self.backend.actions))
         self.backend.ready = True
         self.assertEqual(len(self.pool.read(a)), 256)
         self.pool.release(a)
@@ -108,7 +159,8 @@ class OwnerTests(unittest.TestCase):
         snapshot = self.pool.snapshot(a)
         snapshot['layout']['grid'] = (1, 1, 1)
         snapshot['plan']['binary_id'] = 'forged'
-        self.assertEqual(self.pool.snapshot(a)['plan']['binary_id'], 'binary-A')
+        self.assertEqual(
+            self.pool.snapshot(a)['plan']['binary_id'], 'binary-A')
         self.assertEqual(self.pool.snapshot(a)['layout']['grid'], (7, 1, 1))
 
     def test_wrong_binary_no_allocation(self):
@@ -121,15 +173,16 @@ class OwnerTests(unittest.TestCase):
         self.submit(a)
         with self.assertRaises(RuntimeError):
             self.prepare(scratch_size=1024)
-        self.assertEqual(self.pool.invocation_ids, (a,))
-        self.assertEqual(len([a for a in self.backend.actions if a[0] == 'allocate']), 1)
+        self.assertEqual(self.pool.invocation_ids, (a, ))
+        self.assertEqual(
+            len([a for a in self.backend.actions if a[0] == 'allocate']), 1)
 
     def test_owner_count_budget(self):
         self.pool.max_owners = 1
         a = self.prepare()
         with self.assertRaises(RuntimeError):
             self.prepare()
-        self.assertEqual(self.pool.invocation_ids, (a,))
+        self.assertEqual(self.pool.invocation_ids, (a, ))
 
     def test_no_early_release(self):
         a = self.prepare()
@@ -154,13 +207,15 @@ class OwnerTests(unittest.TestCase):
         a = self.prepare()
         self.pool.abort(a)
         self.assertEqual(self.pool.pending_bytes, 0)
-        self.assertFalse(any(a[0] in ('allocate', 'record') for a in self.backend.actions))
+        self.assertFalse(
+            any(a[0] in ('allocate', 'record') for a in self.backend.actions))
 
     def test_cancel_armed_waits_for_initializer(self):
         a = self.prepare()
         self.pool.allocate(a)
         self.pool.abort(a)
-        self.assertEqual(self.pool.snapshot(a)['submission_outcome'], 'aborted')
+        self.assertEqual(
+            self.pool.snapshot(a)['submission_outcome'], 'aborted')
         with self.assertRaises(RuntimeError):
             self.pool.release(a)
 
@@ -190,15 +245,18 @@ class OwnerTests(unittest.TestCase):
         self.assertEqual(self.pool.snapshot(a)['state'], 'read_failed')
         self.backend.fail = None
         self.assertEqual(len(self.pool.retry_read(a)), 256)
-        self.assertEqual(len([a for a in self.backend.actions if a[0] == 'allocate']), 1)
+        self.assertEqual(
+            len([a for a in self.backend.actions if a[0] == 'allocate']), 1)
 
     def test_host_thread_rejected_before_allocation(self):
         errors = []
+
         def worker():
             try:
                 self.prepare()
             except BaseException as error:
                 errors.append(error)
+
         t = threading.Thread(target=worker)
         t.start()
         t.join()
@@ -226,7 +284,8 @@ class OwnerTests(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             self.pool.read(a)
         self.assertEqual(self.pool.snapshot(a)['state'], 'quarantined')
-        self.assertFalse(any(action[0] == 'read' for action in self.backend.actions))
+        self.assertFalse(
+            any(action[0] == 'read' for action in self.backend.actions))
 
 
 if __name__ == '__main__':

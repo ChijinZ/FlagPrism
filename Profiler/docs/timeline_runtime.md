@@ -1,11 +1,16 @@
 # Timeline invocation ownership
 
-The public hook/API/CLI now collect source-linked raw internal timestamps using
-these ownership components. Raw captures remain explicitly
-`partial_clock_unverified`. On the inspected NVIDIA sm_120 and Ascend
-910B c220-vector targets, validated counter-unit evidence also produces isolated
-observer-relative ns `.pftrace` files. Read precision, source boundaries and cross-observer alignment remain
-unverified; these files do not complete P01 or the full three-backend timeline.
+The public hook/API/CLI collect source-linked raw internal timestamps. Captures
+remain explicitly `partial_clock_unverified`. NVIDIA automatic timeline now uses
+late instrumentation after ordinary LLVM O3, with a separately packaged matching
+LLVM recorder and `optimized-llvm.patch`. The new late layout currently retains
+raw observer issue brackets/checkpoints and conditional byte-dependency facts;
+its final-machine counter mapping and Perfetto export are still pending.
+
+Previously qualified NVIDIA early-recorder captures retain their isolated
+observer-relative ns exports through the legacy reader. Ascend 910B c220-vector
+captures also have counter-unit-only exports. Neither these legacy exports nor
+the new raw default complete P01 or the full three-backend timeline.
 
 ```bash
 python -m flagtree.profiler.cli --detail timeline --device 0 -n trace-run my_script.py
@@ -28,6 +33,32 @@ it is rejected outside timeline mode. It is not a total event/site cap: mandator
 async boundaries remain selected. A smaller budget can omit source/consumer
 detail, so inspect the actual compiler inventory and capture coverage. Changing
 density does not certify schedule preservation or low overhead.
+
+NVIDIA's late layout is `nvidia-late-1`, not the historical Proton raw3
+layout. Default selection uses the actual first/last logical programs and the
+first four actual threads for ordinary non-async/matrix code. Native asynchronous
+copy or matrix operations retain the complete actual CTA participant footprint;
+partial coverage never acquires collective dependency eligibility. Each actor
+has bounded records and explicit arrival/overflow. Arrived-empty and divergent
+streams remain valid raw outcomes even when a dependency model cannot use them.
+
+The existing CUDA stream/event transport retains a 128-byte allocation guard.
+Completed owners can be read back and durably retained before later admissions;
+no device-wide synchronization or application replay is inserted. Pending bytes
+and cumulative admitted raw bytes have separate 8MiB limits. Original optimized
+LLVM is carried through the compiler cache, so a warm binary does not depend on
+a prior capture's temporary directory. The hook reconstructs the producer layout
+with the bound native executable before authorizing allocation, rather than
+trusting cached scratch dimensions alone. Raw, guard, compiler/source artifacts
+and per-invocation identity are saved before releasing completed device storage.
+
+Late captures contain `.late-decoded.json` and `.late-async.json`. A consistent
+byte model reports observed submit/commit/wait/publication/consumer and reused
+buffer generations, with no verified time arrows. Opaque side effects or
+incomplete/divergent collective participation leave raw data available and
+explain why this particular model cannot be used. This is not a hardware busy
+or source-cost measurement. New late captures do not yet provide the standard
+Perfetto views required for final acceptance.
 
 The current public raw paths support NVIDIA, Enflame GCU and Ascend CANN,
 eager and one host thread per session. All three have actual multiple-stream
@@ -123,7 +154,9 @@ runtime file fingerprints enter timeline JIT cache identity before lookup;
 per-capture epoch qualification is separate. Count/native modes keep their
 existing meaning.
 
-The automatic timeline compiler now also requires native
+### Legacy early NVIDIA recorder and retained captures
+
+The earlier automatic timeline compiler requires native
 `TIMELINE_BOUNDARY_VERSION=3`. Its plan reports
 `timeline_boundary_strategy="runtime_zero_gated_calls_pending_region_audit"`.
 

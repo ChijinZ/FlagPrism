@@ -263,7 +263,10 @@ def analyze_probe(decoded):
                         generation['completed'] = True
                     if generation['completed']:
                         generation['visible'] = True
-            elif kind != 'matrix_issue_bracket':
+            elif kind not in ('matrix_issue_bracket', 'compute_issue_bracket',
+                              'global_load_issue_bracket',
+                              'global_store_issue_bracket',
+                              'global_atomic_issue_bracket'):
                 raise LateModelError('Unhandled native observation')
         _need(
             pending is None

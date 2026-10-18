@@ -487,9 +487,10 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
                     kwargs[
                         'instrumentation_mode'] += ':source_census=1:partition_observers=2'
                 if instrumentation_hook.timeline:
-                    kwargs['instrumentation_mode'] += (
-                        ':timeline_timer=1:timeline_record=3:timeline_storage=1:timeline_plan=1:timeline_boundary=3:timeline_marker=1:deps='
-                        + instrumentation_hook._timeline_cache_key)
+                    kwargs['instrumentation_mode'] += (getattr(
+                        instrumentation_hook, 'timeline_cache_options',
+                        ':timeline_timer=1:timeline_record=3:timeline_storage=1:timeline_plan=1:timeline_boundary=3:timeline_marker=1'
+                    ) + ':deps=' + instrumentation_hook._timeline_cache_key)
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
                         "instrumentation_mode"] += ':selected_programs=' + ','.join(

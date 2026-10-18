@@ -1774,8 +1774,13 @@ def start(
         if use_triton_hook:
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
-            native_hook = InstrumentationHook(
-                mode, observation_plan=observation_plan)
+            if timeline:
+                from .hooks.timeline_late import LateTimelineHook
+                native_hook = LateTimelineHook(
+                    mode, observation_plan=observation_plan, staging_base=name)
+            else:
+                native_hook = InstrumentationHook(
+                    mode, observation_plan=observation_plan)
             HookManager.register(native_hook, session)
         elif timeline_collector is not None:
             native_hook = timeline_collector

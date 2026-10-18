@@ -108,8 +108,14 @@ static std::string classify(Instruction &instruction) {
   if (isa<BinaryOperator>(instruction) &&
       (instruction.getType()->isFPOrFPVectorTy() || hasDataUse(&instruction)))
     return "compute_issue_bracket";
-  if (isa<AtomicRMWInst, AtomicCmpXchgInst>(instruction))
-    return "global_atomic_issue_bracket";
+  if (auto *atomic = dyn_cast<AtomicRMWInst>(&instruction))
+    return atomic->getPointerAddressSpace() == 1
+               ? "global_atomic_issue_bracket"
+               : "opaque_native_issue_bracket";
+  if (auto *atomic = dyn_cast<AtomicCmpXchgInst>(&instruction))
+    return atomic->getPointerAddressSpace() == 1
+               ? "global_atomic_issue_bracket"
+               : "opaque_native_issue_bracket";
   auto *operation = dyn_cast<CallBase>(&instruction);
   if (!operation)
     return {};
@@ -132,6 +138,9 @@ static std::string classify(Instruction &instruction) {
         name.starts_with("llvm.assume") || name.starts_with("llvm.lifetime.") ||
         name.starts_with("llvm.dbg."))
       return {};
+    if (!function->isIntrinsic() || call.mayReadOrWriteMemory() ||
+        call.mayHaveSideEffects())
+      return "opaque_native_issue_bracket";
     if (call.getType()->isFPOrFPVectorTy() ||
         name.starts_with("llvm.nvvm.shfl.") ||
         (call.getType()->isIntegerTy() && hasDataUse(&call)))
@@ -212,10 +221,19 @@ int main(int argc, char **argv) {
     errs() << "Invalid actual block size\n";
     return 2;
   }
-  const uint64_t Actors =
-      ObserverActors ? ObserverActors.getValue() : blockActors;
-  if (Actors != 1 && Actors != blockActors) {
-    errs() << "Observer selection differs from actual block\n";
+  bool requiresFullFootprint = false;
+  for (auto &basicBlock : function)
+    for (auto &instruction : basicBlock) {
+      std::string kind = classify(instruction);
+      requiresFullFootprint |=
+          kind == "copy_submit_after" || kind == "matrix_issue_bracket";
+    }
+  const uint64_t Actors = ObserverActors ? ObserverActors.getValue()
+                          : requiresFullFootprint
+                              ? blockActors
+                              : std::min<uint64_t>(4, blockActors);
+  if (!Actors || Actors > blockActors) {
+    errs() << "Observer selection exceeds actual block\n";
     return 2;
   }
   const uint64_t Capacity = RecordCapacity;
@@ -625,6 +643,7 @@ int main(int argc, char **argv) {
       "{0:2}\n",
       json::Value(json::Object{
           {"schema_version", 1},
+          {"record_layout_version", 1},
           {"prototype_only", true},
           {"batch_records", BatchRecords.getValue()},
           {"scratch_arg", scratchIndex},
@@ -635,6 +654,9 @@ int main(int argc, char **argv) {
           {"capacity_per_program", Capacity},
           {"header_words", HeaderWords},
           {"actors", Actors},
+          {"observer_selection",
+           "full_cta_for_native_async_matrix_else_first_threads"},
+          {"dependency_footprint_complete", Actors == blockActors},
           {"group_matrix", GroupMatrix.getValue()},
           {"compact_programs", CompactPrograms.getValue()},
           {"word_layout", "program/logical_word/actor"},

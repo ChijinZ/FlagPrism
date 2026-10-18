@@ -55,13 +55,20 @@ class TimelineOwnerPool:
                  *,
                  max_pending_bytes=8 * 1024 * 1024,
                  max_owners=64,
-                 guard_bytes=0):
+                 guard_bytes=0,
+                 max_cumulative_raw_bytes=None):
         for name, value, low, high in (('max_pending_bytes', max_pending_bytes,
                                         1, 0x7fffffff), ('max_owners',
                                                          max_owners, 1, 4096),
                                        ('guard_bytes', guard_bytes, 0, 4096)):
             if type(value) is not int or not low <= value <= high:
                 raise ValueError(f'Invalid {name}')
+        if max_cumulative_raw_bytes is not None and (
+                type(max_cumulative_raw_bytes) is not int
+                or not 1 <= max_cumulative_raw_bytes <= 0x7fffffff):
+            raise ValueError('Invalid max_cumulative_raw_bytes')
+        self.max_cumulative_raw_bytes = max_cumulative_raw_bytes
+        self.cumulative_admitted_raw_bytes = 0
         self.transport = transport
         self.max_pending_bytes = max_pending_bytes
         self.max_owners = max_owners
@@ -133,6 +140,11 @@ class TimelineOwnerPool:
                 or self._bytes + physical_bytes > self.max_pending_bytes):
             raise RuntimeError(
                 'Timeline pending-owner budget exceeded before allocation')
+        if (self.max_cumulative_raw_bytes is not None
+                and self.cumulative_admitted_raw_bytes + layout['raw_bytes']
+                > self.max_cumulative_raw_bytes):
+            raise RuntimeError(
+                'Timeline cumulative raw budget exceeded before allocation')
         self.transport.validate_target(device=device, stream=stream)
         invocation_id = 'invocation-' + uuid.uuid4().hex
         self._owners[invocation_id] = {
@@ -155,6 +167,7 @@ class TimelineOwnerPool:
             'error': None,
         }
         self._bytes += physical_bytes
+        self.cumulative_admitted_raw_bytes += layout['raw_bytes']
         _RETAINED_POOLS[self.capture_id] = self
         return invocation_id
 

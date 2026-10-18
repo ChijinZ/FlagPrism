@@ -55,7 +55,6 @@ class TimelineAllocator:
                         num_ctas,
                         stream=None):
         import torch
-        from ..timeline_storage import plan_compact_storage
         hook = self.hook
         if hook._timeline_current.get() is not None:
             raise RuntimeError(
@@ -63,6 +62,9 @@ class TimelineAllocator:
         if type(stream) is not int:
             raise RuntimeError(
                 'Timeline requires preallocation stream admission ABI v2')
+        prepare_admission = getattr(hook, '_before_timeline_admission', None)
+        if prepare_admission is not None:
+            prepare_admission(function)
         metadata = hook.observation_metadata.get(function)
         if metadata is None:
             raise RuntimeError(
@@ -74,11 +76,12 @@ class TimelineAllocator:
             raise RuntimeError(
                 'Timeline launch contradicts actual compiled scratch ABI')
         plan = metadata['automatic_plan']
-        layout = plan_compact_storage(plan,
-                                      grid=grid,
-                                      scratch_size=scratch_size,
-                                      alignment=alignment,
-                                      num_ctas=num_ctas)
+        layout = hook.timeline_pool.transport.plan_storage(
+            plan,
+            grid=grid,
+            scratch_size=scratch_size,
+            alignment=alignment,
+            num_ctas=num_ctas)
         hook._timeline_zero.set(not layout['raw_bytes'])
         if not layout['raw_bytes']:
             return
@@ -122,10 +125,16 @@ class TimelineInstrumentationMixin:
         self._init_timeline_state(CudaTimelineTransport())
         self.allocator = TimelineAllocator(self)
 
-    def _init_timeline_state(self, transport, *, guard_bytes=0):
+    def _init_timeline_state(self,
+                             transport,
+                             *,
+                             guard_bytes=0,
+                             max_cumulative_raw_bytes=None):
         from ..timeline_runtime import TimelineOwnerPool
-        self.timeline_pool = TimelineOwnerPool(transport,
-                                               guard_bytes=guard_bytes)
+        self.timeline_pool = TimelineOwnerPool(
+            transport,
+            guard_bytes=guard_bytes,
+            max_cumulative_raw_bytes=max_cumulative_raw_bytes)
         self._timeline_current = ContextVar('timeline_current_owner',
                                             default=None)
         self._timeline_zero = ContextVar('timeline_zero_grid', default=False)

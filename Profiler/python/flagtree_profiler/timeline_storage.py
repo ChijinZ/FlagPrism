@@ -37,6 +37,28 @@ def plan_compact_storage(plan,
         raise ValueError('Unsupported timeline storage policy')
     if plan.get('timeline_default_program_selection') != 'runtime_first_last':
         raise ValueError('Unsupported default timeline selection')
+    return plan_selected_program_storage(plan,
+                                         grid=grid,
+                                         scratch_size=scratch_size,
+                                         alignment=alignment,
+                                         num_ctas=num_ctas,
+                                         max_raw_bytes=max_raw_bytes,
+                                         storage_version=1)
+
+
+def plan_selected_program_storage(plan,
+                                  *,
+                                  grid,
+                                  scratch_size,
+                                  alignment,
+                                  num_ctas,
+                                  max_raw_bytes=8 * 1024 * 1024,
+                                  storage_version):
+    """Common launch geometry/budget arithmetic after backend ABI validation.
+
+    ``plan`` selects runtime first/last programs, or explicit fixed IDs. This
+    helper makes no claim about the physical record ABI supplied by its caller.
+    """
     _integer(num_ctas, 'num_ctas', 1, 1)
     if type(grid) not in (tuple, list) or len(grid) != 3:
         raise ValueError('Actual grid must have three integer dimensions')
@@ -71,7 +93,7 @@ def plan_compact_storage(plan,
     if raw_bytes > budget:
         raise ValueError('Compact scratch exceeds the admitted raw budget')
     return {
-        'storage_version': 1,
+        'storage_version': storage_version,
         'grid': dimensions,
         'num_ctas': 1,
         'slots': tuple(enumerate(programs)),

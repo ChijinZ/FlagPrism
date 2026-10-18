@@ -1,0 +1,174 @@
+{
+  "archive": {
+    "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-036/preflight/default-late-evidence-v1.tgz",
+    "bytes": 44762378,
+    "sha256": "2262871440873535e387b47ebebf18b4e375814372fecf94f23ce22018809542",
+    "members": 7251,
+    "retained_file_hashes_verified": 7249
+  },
+  "current_sources_match_installed_input": {
+    "Profiler/Dialect/tools/late-timeline/README.md": "f1af052fb04c6e66fe4b8deff2aa075b9b6dfba6aae8e900615ddfd77d32eb9d",
+    "Profiler/Dialect/tools/late-timeline/late-timeline.cpp": "d12576918b92378c6e6cfc1bcb231737bc003718aa3770540c191cf71499368d",
+    "Profiler/docs/timeline_runtime.md": "d9cdae32793be09e5ac349f564982acfca6b558c810235d6fe37afa16609a19d",
+    "Profiler/python/flagtree_profiler/hooks/instrumentation.py": "c22170c3ed1908dfd4e9925623cf6802dcafa67952bdc3960c460422c76a5084",
+    "Profiler/python/flagtree_profiler/hooks/timeline.py": "c5dc520fc334b9f11daa6a6b86827f91df9acfb9ab12580a7c3d6ec73642246e",
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "f3160f32f69ef38cbc6adaad7675c34f6fffd9083549add9344d409103cb820d",
+    "Profiler/python/flagtree_profiler/profile.py": "46619039b1ec1f646f5ca13ef123e160fe6af7c61a2b4010a04d4e22a8349694",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_async.py": "96d407a5f7f8476999a52d7a6e9d661c9de4b2b3c943f5aa55b9f594647e356f",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_compile.py": "d35654d374d4c4dd50f9bef757acd543b97d04e38b6d9c906f7b3c28af8abde2",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_model.py": "ea9f294d2a4fe4a4a99032cf973b1715b6c4a4bf08daaab2d8806cea169e8a22",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_storage.py": "24025943eba273167cc9bcecff238b9e9d5ab38c13d29b38190cb7b74e866f20",
+    "Profiler/python/flagtree_profiler/timeline_runtime.py": "18bcbd0d6af90d0c6434f11be58a86bb9dd5f111cd6f01a45a3dc206b3a5f41a",
+    "Profiler/python/flagtree_profiler/timeline_storage.py": "7cc5d673f6c5a32f8e92a6caa71296414dbfb20a922b06504836272f4b63235f",
+    "tests/timeline/p01_nvidia_late_async_contract.py": "553cfe74b09d7b1baca7fe59979733524ad5d7a271e27c0936a71981c54af259",
+    "tests/timeline/p01_nvidia_late_default.py": "76e71dc20cd0edcb24154efe2a3e114625c5dae73c057dfd8b451a04a245e15f",
+    "tests/timeline/p01_nvidia_late_metadata.py": "7eb73f25dbc805e2181c3a5345b66a6e4b6a244c1e8ce56de44036df65d9a78a",
+    "tests/timeline/p01_nvidia_late_pipeline.py": "58434b218997b48ebb56397f910774a098321053cddc9807c2bd1460a8fbfcfe",
+    "tests/timeline/test_timeline_runtime.py": "734c724985fae863d2c1a109bd3624b2c63acfed75a966cf8e1500c076f4b540"
+  },
+  "installed": {
+    "status": "installed_default_late_raw_api_not_full_timeline",
+    "wheel_sha256": "f6bedc677e2615f01234709a05dd38d6cc4ca996eab2ddc8186f6238ae49f306",
+    "installed_members": 611,
+    "python": "/workspace/chijin-timeline-r036/runs/install-public-v3/output/venv/bin/python",
+    "native_core_reused": true,
+    "late_tool_actually_built": true,
+    "standalone_tool_reused_exact_source": false
+  },
+  "api": {
+    "status": "default_late_raw_api_real_math_multicall_streams_warm_session_passed_not_full_timeline",
+    "math_calls": 23,
+    "captures": 11,
+    "warm_captures": 2,
+    "raw_bytes": 725120,
+    "distinct_binaries": 3
+  },
+  "pipeline": {
+    "status": "default_api_runtime_gemm_raw_and_byte_dependencies_passed_not_time_flow_or_perfetto",
+    "math": [
+      {
+        "phase": "ordinary",
+        "tiles": 3,
+        "hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+        "math": true,
+        "input": true,
+        "tail": true,
+        "calls": true
+      },
+      {
+        "phase": "ordinary",
+        "tiles": 7,
+        "hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+        "math": true,
+        "input": true,
+        "tail": true,
+        "calls": true
+      },
+      {
+        "phase": "profile",
+        "tiles": 3,
+        "hash": "2b01066f2d70c4815ce0e340c79f6c0753f3da5f1bed99200296498c1c44b9a2",
+        "math": true,
+        "input": true,
+        "tail": true,
+        "calls": true
+      },
+      {
+        "phase": "profile",
+        "tiles": 7,
+        "hash": "2b01066f2d70c4815ce0e340c79f6c0753f3da5f1bed99200296498c1c44b9a2",
+        "math": true,
+        "input": true,
+        "tail": true,
+        "calls": true
+      }
+    ],
+    "captures": [
+      {
+        "invocation": "invocation-26dc9bed510b4f2d91cbbbb5939a7b1a",
+        "raw_bytes": 2109440,
+        "groups": [
+          5,
+          5
+        ],
+        "consumers": 72,
+        "reuse": 26
+      },
+      {
+        "invocation": "invocation-db1cc040f92444668655ce7a32117078",
+        "raw_bytes": 2109440,
+        "groups": [
+          9,
+          9
+        ],
+        "consumers": 104,
+        "reuse": 42
+      }
+    ]
+  },
+  "cli": {
+    "status": "actual_standard_CLI_three_recurrences_constant_gemm_zero_grid_passed_not_perfetto",
+    "captures": [
+      {
+        "invocation": "invocation-abd1b9f902c843dc83fc9cc1a6429609",
+        "actors": 4,
+        "raw_bytes": 65920,
+        "async_status": "no_modeled_native_async_copy"
+      },
+      {
+        "invocation": "invocation-0e2965b0e6bf442ab2ff5f956f9d9016",
+        "actors": 4,
+        "raw_bytes": 65920,
+        "async_status": "no_modeled_native_async_copy"
+      },
+      {
+        "invocation": "invocation-1b51625564834df189802ec334bc4cf8",
+        "actors": 4,
+        "raw_bytes": 65920,
+        "async_status": "no_modeled_native_async_copy"
+      },
+      {
+        "invocation": "invocation-5a1fdf36916f47fdae2c60cafc319135",
+        "actors": 128,
+        "raw_bytes": 2109440,
+        "async_status": "dynamic_byte_model_consistent"
+      }
+    ]
+  },
+  "negative_contracts": {
+    "normal": {
+      "metadata": {
+        "status": "actual_compiler_cache_malformed_layout_rejected_before_allocation_no_device_work",
+        "negative_cases": 4
+      },
+      "async": {
+        "status": "actual_raw_byte_model_and_negative_cpu_fixtures_passed_no_device_replay",
+        "negative_cases": 7
+      }
+    },
+    "optimized": {
+      "metadata": {
+        "status": "actual_compiler_cache_malformed_layout_rejected_before_allocation_no_device_work",
+        "negative_cases": 4
+      },
+      "async": {
+        "status": "actual_raw_byte_model_and_negative_cpu_fixtures_passed_no_device_replay",
+        "negative_cases": 7
+      }
+    }
+  },
+  "recorded_process_identities": 44,
+  "recorded_active_identities": 0,
+  "qualification": {
+    "default_api_raw": true,
+    "default_cli_raw": true,
+    "conditional_collective_byte_model": true,
+    "final_machine_site_binding": false,
+    "counter_unit_or_clock_comparison": false,
+    "late_perfetto": false,
+    "full_three_backend": false,
+    "independent_six_math": false,
+    "final_three_reviewers": false
+  },
+  "remaining_receipt_issue": "Per-session compiler attempt logs/identity receipts are currently in temporary staging; final bundle retention must be completed before full acceptance"
+}

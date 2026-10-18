@@ -86,7 +86,7 @@ The implementation and tests must keep both execution structures visible.
 The final tool still needs the default compile/launch/owner/decoder interface,
 actual machine/timer binding and standard Perfetto integration before promotion.
 
-The candidate public integration uses the separate `optimized-llvm.patch`
+The automatic NVIDIA timeline integration uses the separate `optimized-llvm.patch`
 callback after ordinary O3 and scratch metadata extraction. Its
 `LateLLVMTransform` retains each compilation attempt and commits scratch
 metadata only after native validation; it does not use an MLIR pass-manager
@@ -97,10 +97,18 @@ Actual CTA dimensions determine the observer layout, rather than a fixed
 128-thread assumption. Raw decoding is separate from collective dependency
 analysis: arrived-empty and divergent observer streams are valid raw outcomes.
 
-These components are not yet selected by the default timeline hook. The
+The default timeline hook now selects this late recorder. Final-machine
+counter mapping and Perfetto export for the late layout remain incomplete. The
 optional wheel assembler argument `--late-timeline-tool` packages a separately
 built matching-SDK executable and verifies its archived bytes and execute mode;
 it does not rebuild that tool or the core library. `p01_nvidia_late_generic.py`
 is a development driver test on SM120, not public API or independent qualifier
 acceptance. Native issue brackets do not establish hardware busy time,
 source-region costs, or clock comparability across observers.
+
+Default observer selection follows actual native mechanisms: native async copy
+or matrix operations retain all actual CTA threads; other code selects the first
+four actual threads. Partial footprints do not acquire collective dependency
+qualification. Unknown calls/memory effects and non-global atomics stay opaque.
+The cached ordinary LLVM and actual tool/options reconstruct the producer layout
+before the runtime authorizes scratch allocation.

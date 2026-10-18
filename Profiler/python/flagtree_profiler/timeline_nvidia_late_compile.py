@@ -5,6 +5,8 @@ extraction. Each attempt retains original IR, native output, logs and an
 identity receipt. Metadata is committed only after bounded native validation.
 This module does not launch kernels or assert machine/time qualifications.
 """
+import base64
+import zlib
 import hashlib
 import json
 import os
@@ -50,12 +52,12 @@ class LateLLVMTransform:
 
     @property
     def cache_identity(self):
-        return dict(transform_version=1,
+        return dict(transform_version=2,
                     tool_sha256=self.tool_sha256,
                     max_sites=self.max_sites,
                     capacity=self.capacity,
                     profile_argument_abi=1,
-                    actors='actual-cta',
+                    actors='native-async-matrix-footprint-else-first4',
                     compact_programs=True,
                     batch_records=True)
 
@@ -151,9 +153,9 @@ class LateLLVMTransform:
             product = 1
             for value in dims:
                 product *= _integer(value, 'actual block dimension', 1, 1024)
-            if product != actors:
+            if actors > product:
                 raise LateCompileError(
-                    'Block dimensions and actor count differ')
+                    'Observer count exceeds actual block dimensions')
             if plan.get('header_words') != 6 or plan.get(
                     'capacity_per_program') != self.capacity:
                 raise LateCompileError('Native record capacity/header differs')
@@ -177,15 +179,18 @@ class LateLLVMTransform:
                 input_sha256=receipt['input_sha256'],
                 output_sha256=_sha(output),
                 tool_sha256=self.tool_sha256,
-                transform_version=1)
+                transform_version=2)
             receipt.update(state='validated',
                            output_sha256=_sha(output),
                            manifest_sha256=_sha(manifest),
                            stride_bytes=stride)
             save()
-            metadata.update(profile_scratch_size=stride,
-                            profile_scratch_align=8,
-                            flagprism_late_manifest=plan)
+            metadata.update(
+                flagprism_late_ordinary_llvm_zlib_b64=base64.b64encode(
+                    zlib.compress(llvm_text.encode())).decode("ascii"),
+                profile_scratch_size=stride,
+                profile_scratch_align=8,
+                flagprism_late_manifest=plan)
             return transformed
         except BaseException as error:
             receipt.update(state='failed',
