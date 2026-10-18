@@ -104,6 +104,17 @@ def control_evidence(capture,
                     status='native_shared_payload_bindings_unverified',
                     reason=str(error),
                     time_flows_qualified=False)
+        if directory is not None:
+            from .timeline_nvidia_late_addresses import load_record_ordinal_bindings
+            try:
+                report['native_record_ordinals'] = load_record_ordinal_bindings(
+                    directory, capture,
+                    report['native_boundaries']['record_address_arithmetic'])
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                report['native_record_ordinals'] = dict(
+                    status='native_record_ordinal_bindings_unverified',
+                    reason=str(error),
+                    time_flows_qualified=False)
         return report, Path(timeline_nvidia_late_control.__file__)
     from . import timeline_nvidia_control
     return (timeline_nvidia_control.inspect_wait_control_brackets(

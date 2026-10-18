@@ -601,3 +601,22 @@ without applicable shared operations produce an empty applicability result.
 The separate real ALU test exercises the native LUT/64-bit selector families;
 it is mechanism validation, not independent mathematical qualification. LUT
 truth-table reference: [NVIDIA PTX ISA](https://docs.nvidia.com/cuda/parallel-thread-execution/#logic-and-shift-instructions-lop3).
+
+
+### Native record ordinal addressing
+
+The SM120 late report additionally contains `record_address_arithmetic`, and
+captures retain invocation-specific `native_record_ordinal_file` tables. Public
+offline control evidence contains `native_record_ordinals`. The bounded native
+checker relates both pointer words to the published count header, checks each
+LEA/LEA.HI.X carry and input lifetime, and associates a complete straight-line
+store batch with its one full-width count update. Raw sequences must contain
+whole native batches with matching field offsets; the final count is not used
+to fabricate missing events. Initial count assignment and loop appends remain
+distinct. Unknown native patterns retain explicit diagnostics.
+
+This is header-relative record-ordinal binding. Absolute launch allocation,
+physical program/thread header addressing and full raw provenance remain
+separate requirements. No clock, physical overlap, engine-busy or temporal-flow
+qualification is granted by this report. The default timing/old offline formats
+are preserved when this additional diagnostic is unavailable.

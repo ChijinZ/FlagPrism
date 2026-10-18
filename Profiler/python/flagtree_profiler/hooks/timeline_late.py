@@ -329,6 +329,21 @@ class LateTimelineHook(InstrumentationHook):
                 _persist(directory / capture['native_shared_payload_file'],
                          (json.dumps(binding, separators=(',', ':')) +
                           '\n').encode())
+                from ..timeline_nvidia_late_addresses import load_record_ordinal_bindings
+                try:
+                    ordinals = load_record_ordinal_bindings(
+                        directory, capture,
+                        boundaries['record_address_arithmetic'])
+                except (ValueError, OSError, KeyError, TypeError) as error:
+                    ordinals = dict(
+                        status='native_record_ordinal_bindings_unverified',
+                        reason=str(error),
+                        time_flows_qualified=False)
+                capture['native_record_ordinal_file'] = str(
+                    prefix.with_suffix('.native-record-ordinals.json'))
+                _persist(directory / capture['native_record_ordinal_file'],
+                         (json.dumps(ordinals, separators=(',', ':')) +
+                          '\n').encode())
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))

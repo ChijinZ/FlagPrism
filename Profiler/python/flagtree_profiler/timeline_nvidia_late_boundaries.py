@@ -242,4 +242,6 @@ def load_native_boundary_report(directory, capture, machine_map):
     report['relative_record_fields'] = inspect_record_fields(**inputs)
     from .timeline_nvidia_late_payloads import inspect_shared_payloads
     report['shared_payload_values'] = inspect_shared_payloads(**inputs)
+    from .timeline_nvidia_late_addresses import inspect_record_addresses
+    report['record_address_arithmetic'] = inspect_record_addresses(**inputs)
     return report
