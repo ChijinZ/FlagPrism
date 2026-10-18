@@ -620,3 +620,42 @@ physical program/thread header addressing and full raw provenance remain
 separate requirements. No clock, physical overlap, engine-busy or temporal-flow
 qualification is granted by this report. The default timing/old offline formats
 are preserved when this additional diagnostic is unavailable.
+
+
+### Native launch header origins
+
+SM120 late captures add an invocation-specific `native_header_origins_file`;
+public offline control evidence contains `native_header_origins`. The checker
+uses the actual entry signature, ELF parameter table and referenced constant
+bank symbol to locate the reserved scratch pointer. It checks both pointer
+words, actual block dimensions, first/last program allocation, hardware thread
+and block getters, native identity stores, magic, and the source-bound shared
+symbol materialization. Context validation covers every recorded actor; a
+binary-wide successful invocation cannot authorize another launch geometry.
+This diagnostic is collected independently of clock-unit qualification.
+Unknown metadata or machine patterns retain explicit unverified diagnostics.
+
+`header_allocation_origin_verified` concerns the launch header only. Record
+ordinals, timer/payload values, native control boundaries, collective byte
+lifetimes and clocks remain distinct checks. This report alone grants neither
+full record provenance nor temporal flows, source cost or engine busy.
+
+### Lossless decoded-report storage
+
+New late captures store the full auxiliary decoded report as `.json.gz` with
+`decoded_encoding="gzip-json-v1"`. The raw native ABI, individual records and
+values are unchanged. Previous plain JSON reports remain readable; an absent
+encoding means `json-v1`. Use the same reader for both:
+
+```python
+from flagtree.profiler.timeline_decoded_reports import read_decoded_report
+
+decoded = read_decoded_report(timeline_directory, capture)
+```
+
+The reader bounds decompression to 256 MiB and rejects truncated, concatenated,
+oversized or corrupt gzip members and unknown codecs. Compression reduces
+repeated field-name storage without sampling or removing actors, events or raw
+references. Old count/native modes keep their existing plain report behavior.
+The primary offline analysis still reconstructs events from retained raw data;
+the auxiliary decoded report is a lossless convenience view.

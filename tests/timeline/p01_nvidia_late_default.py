@@ -72,7 +72,8 @@ def inspect(folder, expected):
         guard = capture['readback_guard']
         need((timeline / guard['file']).read_bytes() == bytes([165]) * 128,
              'Device record guard changed')
-        decoded = json.loads((timeline / capture['decoded_file']).read_text())
+        from flagtree.profiler.timeline_decoded_reports import read_decoded_report
+        decoded = read_decoded_report(timeline, capture)
         need(decoded['complete'],
              'Raw decoder did not verify complete capture')
         need(capture['owner']['layout']['storage_version'] == 'nvidia-late-1',

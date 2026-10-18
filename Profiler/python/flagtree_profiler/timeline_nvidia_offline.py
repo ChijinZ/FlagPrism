@@ -78,6 +78,10 @@ def control_evidence(capture,
             sass_json=sass_json,
             plan=capture['owner']['plan'])
         if directory is not None:
+            from .timeline_nvidia_late_origins import inspect_native_header_origins
+            report['native_header_origins'] = inspect_native_header_origins(
+                directory, capture, machine_map)
+        if directory is not None:
             from .timeline_nvidia_late_boundaries import load_native_boundary_report
             report['native_boundaries'] = load_native_boundary_report(
                 directory, capture, machine_map)

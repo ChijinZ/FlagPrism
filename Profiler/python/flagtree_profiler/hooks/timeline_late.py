@@ -235,9 +235,11 @@ class LateTimelineHook(InstrumentationHook):
             capture['capture_status'] = 'raw_complete' if decoded[
                 'complete'] else 'incomplete'
             capture['decoded_file'] = str(
-                prefix.with_suffix('.late-decoded.json'))
+                prefix.with_suffix('.late-decoded.json.gz'))
+            from ..timeline_decoded_reports import encode_decoded_report, GZIP_JSON
+            capture['decoded_encoding'] = GZIP_JSON
             _persist(directory / capture['decoded_file'],
-                     json.dumps(decoded, separators=(',', ':')).encode())
+                     encode_decoded_report(decoded))
             from ..timeline_nvidia_late_async import derive_late_async
             facts = derive_late_async(decoded,
                                       owner['plan'],
@@ -268,6 +270,26 @@ class LateTimelineHook(InstrumentationHook):
                     plan=owner['plan'],
                     deadline=deadline)
             capture['machine_counter_mapping'] = self._timeline_machine[key]
+            # Allocation/identity provenance is independent of clock units.
+            from ..timeline_unit_nvidia_late import load_late_machine_map
+            from ..timeline_nvidia_late_origins import inspect_native_header_origins, _rule_digests
+            try:
+                header_machine = load_late_machine_map(directory, capture)
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                origins = dict(
+                    status='unverified_native_header_origins_or_pattern',
+                    reason=str(error),
+                    header_allocation_origin_verified=False,
+                    time_flows_qualified=False,
+                    implementation_sha256=_rule_digests())
+            else:
+                origins = inspect_native_header_origins(
+                    directory, capture, header_machine)
+            capture['native_header_origins_file'] = str(
+                prefix.with_suffix('.native-header-origins.json'))
+            _persist(directory / capture['native_header_origins_file'],
+                     (json.dumps(origins, separators=(',', ':')) +
+                      '\n').encode())
             try:
                 proofs = load_late_counter_unit_proofs(directory, capture,
                                                        canonical)
