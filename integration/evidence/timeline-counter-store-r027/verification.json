@@ -1,0 +1,177 @@
+{
+  "status": "installed_timer_word_witnesses_and_original_bytes_verified_not_P01",
+  "product_commit": "5317093",
+  "archive": {
+    "bytes": 6249588,
+    "members": 621,
+    "sha256": "541530117e82ef9b67c4a7fa08432f977688b9f28f50ec116a49f39357879159"
+  },
+  "matching_current_source_files": 1987,
+  "matching_native_sources": 271,
+  "matching_installed_profiler_python": 78,
+  "native_core": {
+    "bytes": 922771608,
+    "sha256": "4774dee32ad6a7349a5e7674660dc2ffea3ccc372a15f9b016b3512c59fd39b3"
+  },
+  "installation": {
+    "wheel": "/workspace/chijin-timeline-r027/runs/installed-v1/output/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+    "wheel_sha256": "95e0eab2fc3d023294156820c26f3f0267c416ad101400e340447b541f511504",
+    "installed_members_byte_verified": 602,
+    "python": "/workspace/chijin-timeline-r027/runs/installed-v1/output/venv/bin/python"
+  },
+  "actual_user_math_launches": 0,
+  "installed_tests_per_mode": 26,
+  "control": {
+    "model": "nvidia.cp_async.wait_control.v2",
+    "binary_id": "4917753d42cfeddc46b1e4a8a714ed09e37f8af30ac8e2899373a47c65b50ead",
+    "sites": [
+      {
+        "site_id": 10,
+        "status": "wait_control_order_checked",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "clock_qualified": false,
+        "participation_verified": false,
+        "begin_call_pc": 8496,
+        "end_call_pc": 8832,
+        "wait_pc": 8768,
+        "pending_group_limit": 2,
+        "checked_control_states": 21,
+        "function": "gemm",
+        "endpoint_store_value_flows": [
+          {
+            "status": "counter_to_shared_store_values_checked",
+            "phase": "entry",
+            "getter_function": "$gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_10_entry",
+            "getter_pc": 26144,
+            "call_pc": 8496,
+            "store_pc": 8752,
+            "store_predicate": "@P2",
+            "tag_word": 10,
+            "word_registers": [
+              "R20",
+              "R21",
+              "R22",
+              "R23"
+            ],
+            "address_expression": "[R16+0x2000]",
+            "proof_scope": "conditional_on_this_call_and_store_execution",
+            "call_dominates_store_verified": false,
+            "record_storage_binding_verified": false,
+            "record_value_provenance_verified": false
+          },
+          {
+            "status": "counter_to_shared_store_values_checked",
+            "phase": "exit",
+            "getter_function": "$gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_10_exit",
+            "getter_pc": 26192,
+            "call_pc": 8832,
+            "store_pc": 9056,
+            "store_predicate": "@P2",
+            "tag_word": 2147483658,
+            "word_registers": [
+              "R16",
+              "R17",
+              "R18",
+              "R19"
+            ],
+            "address_expression": "[R20+0x2000]",
+            "proof_scope": "conditional_on_this_call_and_store_execution",
+            "call_dominates_store_verified": false,
+            "record_storage_binding_verified": false,
+            "record_value_provenance_verified": false
+          }
+        ]
+      },
+      {
+        "site_id": 20,
+        "status": "wait_control_order_checked",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "clock_qualified": false,
+        "participation_verified": false,
+        "begin_call_pc": 20128,
+        "end_call_pc": 20448,
+        "wait_pc": 20384,
+        "pending_group_limit": 0,
+        "checked_control_states": 20,
+        "function": "gemm",
+        "endpoint_store_value_flows": [
+          {
+            "status": "counter_to_shared_store_values_checked",
+            "phase": "entry",
+            "getter_function": "$gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_20_entry",
+            "getter_pc": 27952,
+            "call_pc": 20128,
+            "store_pc": 20368,
+            "store_predicate": "@P2",
+            "tag_word": 20,
+            "word_registers": [
+              "R24",
+              "R25",
+              "R26",
+              "R27"
+            ],
+            "address_expression": "[R8+0x2000]",
+            "proof_scope": "conditional_on_this_call_and_store_execution",
+            "call_dominates_store_verified": false,
+            "record_storage_binding_verified": false,
+            "record_value_provenance_verified": false
+          },
+          {
+            "status": "counter_to_shared_store_values_checked",
+            "phase": "exit",
+            "getter_function": "$gemm$__flagprism_counter_v3_flagprism_timeline_v1_site_20_exit",
+            "getter_pc": 28000,
+            "call_pc": 20448,
+            "store_pc": 20944,
+            "store_predicate": "@P2",
+            "tag_word": 2147483668,
+            "word_registers": [
+              "R28",
+              "R29",
+              "R30",
+              "R31"
+            ],
+            "address_expression": "[R14+0x2000]",
+            "proof_scope": "conditional_on_this_call_and_store_execution",
+            "call_dominates_store_verified": false,
+            "record_storage_binding_verified": false,
+            "record_value_provenance_verified": false
+          }
+        ]
+      }
+    ],
+    "proof_scope": "native_wait_control_order_between_inspected_leaf_calls",
+    "source_region_qualified": false,
+    "clock_qualified": false,
+    "hardware_overlap_verified": false
+  },
+  "offline": {
+    "v3": {
+      "actual_TP_imports": 24,
+      "real_captures": 3,
+      "fresh_reexport_processes": 3,
+      "application_replayed": false
+    },
+    "v2": {
+      "actual_TP_imports": 24,
+      "real_captures": 3,
+      "fresh_reexport_processes": 3,
+      "application_replayed": false
+    }
+  },
+  "UI_reuse": {
+    "byte_identical_trace_view_pairs": 48,
+    "previous_actual_UI_checks": 6,
+    "previous_UI_result_sha256": "9c199d5c1d3c2de854dfb94a414a015e11393c372a110cbacdacc92c58d94a8e",
+    "UI_rerun": false
+  },
+  "inactive_owned_identities": 37,
+  "active_owned_jobs": [],
+  "limitations": [
+    "Value flow is conditional on actual call/store execution",
+    "Call dominance, raw storage addressing/ownership, record provenance, precision and cross-observer epoch remain unqualified",
+    "GCU/Ascend complete timing/async, three-backend P01, independent six-math qualification and final three specified code reviews remain incomplete"
+  ]
+}
