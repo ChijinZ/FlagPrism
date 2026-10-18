@@ -527,3 +527,20 @@ flow, all-participant execution, source-region cost, engine busy intervals or
 physical completion times. It does not enable dependency arrows. Each report
 retains implementation digests so a future offline rule can derive a new
 report while preserving the initial raw capture and diagnostics.
+
+For late SM120 captures the native boundary report additionally contains
+`timer_store_values`. Its `timer_to_native_store_values_checked` entries bind
+both words of each actual full-width getter to native STG.E.64 stores mapped
+from original PTX. The bounded reaching-definition analysis covers branches,
+register moves (including overlapping MOV.64), predicated writes and matched
+forward reconvergence regions. A path bypassing the getter, an overwritten
+word, an unknown instruction or an ambiguous control pattern remains unverified.
+Implementation fingerprints and the inspected native/store PCs are retained.
+
+This establishes the stored timer value at the identified native instruction.
+It does not yet prove that the address expression selects the allocated raw
+slot, that payload/address geometry is correct, or that a publication represents
+all participants. `record_storage_binding_verified`, full
+`record_value_provenance_verified`, payload qualification and time-flow rights
+therefore remain false. Existing counter coordinates and original raw artifacts
+are unchanged; this diagnostic is evidence for completing the dependency path.

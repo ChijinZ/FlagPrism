@@ -230,9 +230,12 @@ def load_native_boundary_report(directory, capture, machine_map):
         hashlib.sha256(ptx).hexdigest() == rows[0]['sha256'],
         'Retained native-boundary PTX changed')
     base = 'machine/' + owner['binary_id']
-    return derive_native_boundaries(
-        machine_map=machine_map,
-        sass_lines=read_artifact(directory, base + '/lines.stdout'),
-        sass_json=read_artifact(directory, base + '/json.stdout'),
-        ptx=ptx,
-        plan=owner['plan'])
+    inputs = dict(machine_map=machine_map,
+                  sass_lines=read_artifact(directory, base + '/lines.stdout'),
+                  sass_json=read_artifact(directory, base + '/json.stdout'),
+                  ptx=ptx,
+                  plan=owner['plan'])
+    report = derive_native_boundaries(**inputs)
+    from .timeline_nvidia_late_values import inspect_timer_store_values
+    report['timer_store_values'] = inspect_timer_store_values(**inputs)
+    return report
