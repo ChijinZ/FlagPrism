@@ -36,7 +36,8 @@ public:
   void runOnOperation() override {
     auto module = getOperation();
     if (timeline && census) {
-      module.emitError("Timeline timestamps and source census are distinct modes");
+      module.emitError(
+          "Timeline timestamps and source census are distinct modes");
       return signalPassFailure();
     }
     if (timeline) {
@@ -49,7 +50,7 @@ public:
       module->setAttr("proton.timeline_record_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 2));
       module->setAttr("proton.timeline_boundary_version",
-                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 2));
+                      IntegerAttr::get(IntegerType::get(&getContext(), 32), 3));
       module->setAttr("proton.timeline_marker_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
       module->setAttr("proton.timeline_storage_version",
@@ -268,8 +269,9 @@ public:
         if (role.empty())
           continue;
         if (++requiredAsync > 128) {
-          module.emitError("Timeline async boundary set exceeds 128 static sites; "
-                           "refusing incomplete mechanism collection");
+          module.emitError(
+              "Timeline async boundary set exceeds 128 static sites; "
+              "refusing incomplete mechanism collection");
           return signalPassFailure();
         }
         if (role == "nvidia.cp_async.wait") {
@@ -285,9 +287,9 @@ public:
       }
       module->setAttr("proton.timeline_plan_version",
                       IntegerAttr::get(IntegerType::get(&getContext(), 32), 1));
-      module->setAttr("proton.timeline_async_boundary_count",
-                      IntegerAttr::get(IntegerType::get(&getContext(), 32),
-                                       requiredAsync));
+      module->setAttr(
+          "proton.timeline_async_boundary_count",
+          IntegerAttr::get(IntegerType::get(&getContext(), 32), requiredAsync));
       module->setAttr("proton.automatic_selected",
                       IntegerAttr::get(IntegerType::get(&getContext(), 64),
                                        ordinals.size()));
@@ -319,16 +321,17 @@ public:
       if (timeline) {
         auto role = mechanism(op);
         fields.push_back(builder.getNamedAttr(
-            "timeline_semantic", builder.getStringAttr(
+            "timeline_semantic",
+            builder.getStringAttr(
                 role == "nvidia.cp_async.wait" ? "wait_bracket"
-                : !role.empty()                 ? "issue_interval"
-                                                : "observer_region_elapsed")));
+                : !role.empty()                ? "issue_interval"
+                                               : "observer_region_elapsed")));
         if (!role.empty()) {
           fields.push_back(builder.getNamedAttr("timeline_mechanism",
                                                 builder.getStringAttr(role)));
           if (role == "nvidia.cp_async.wait")
-            fields.push_back(builder.getNamedAttr(
-                "timeline_wait_pending", op->getAttr("num")));
+            fields.push_back(builder.getNamedAttr("timeline_wait_pending",
+                                                  op->getAttr("num")));
         }
       }
       if (chosen)

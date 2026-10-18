@@ -13,8 +13,8 @@
 #include "mlir/Transforms/Passes.h"
 #include "triton/Dialect/Triton/IR/Dialect.h"
 #include "triton/Dialect/TritonGPU/IR/Dialect.h"
-#include "llvm/Support/Debug.h"
 #include "llvm/ADT/DenseSet.h"
+#include "llvm/Support/Debug.h"
 #include "llvm/Support/MathExtras.h"
 #include <algorithm>
 
@@ -81,7 +81,8 @@ void instrumentWarpSpecializeOps(FuncOp func, Value buffer, Value profileMem) {
 
 // Register-like values can be forwarded without changing their bits or layout.
 // Tokens/memdescs are deliberately not reinterpreted as ordinary values. Their
-// issue/wait semantics still require separate final-object/participant evidence.
+// issue/wait semantics still require separate final-object/participant
+// evidence.
 static bool supportsBoundaryValue(Type type) {
   if (auto tensor = dyn_cast<RankedTensorType>(type))
     type = tensor.getElementType();
@@ -114,8 +115,8 @@ LogicalResult replaceProtonRecordOp(OpBuilder &builder, FuncOp func,
         if (supportsBoundaryValue(value.getType()))
           dependencies.push_back(value);
     }
-    auto read = builder.create<gpu::ReadCounterOp>(
-        record.getLoc(), clkType, metricType, dependencies);
+    auto read = builder.create<gpu::ReadCounterOp>(record.getLoc(), clkType,
+                                                   metricType, dependencies);
     if (module->hasAttr("proton.timeline_marker_version")) {
       read->setAttr("proton.timeline_site_id",
                     builder.getI32IntegerAttr(scopeInfo.getOpScopeId(record)));
@@ -273,7 +274,8 @@ public:
     if (bufferSize != 0)
       bufferSize = llvm::alignTo(bufferSize, bytesPerEntry);
     if (bufferSize != 0 && bufferSize / segmentNum < bytesPerEntry) {
-      mlir::emitError(loc, "profile buffer cannot hold one complete entry per segment");
+      mlir::emitError(
+          loc, "profile buffer cannot hold one complete entry per segment");
       return failure();
     }
     // Validate buffer size
@@ -292,7 +294,8 @@ public:
         int alignedShared = llvm::alignTo(sharedMemUsed, bytesPerEntry);
         if (alignedShared >= maxSharedMemSize ||
             bufferSize > maxSharedMemSize - alignedShared) {
-          mlir::emitError(loc, "explicit timeline buffer exceeds target shared memory");
+          mlir::emitError(
+              loc, "explicit timeline buffer exceeds target shared memory");
           return failure();
         }
         allocBufferSize = bufferSize;
@@ -478,20 +481,25 @@ public:
     Location loc = m->getLoc();
 
     if (m->hasAttr("proton.timeline_marker_version")) {
-      auto marker = m->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
-      auto boundary = m->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
+      auto marker =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_marker_version");
+      auto boundary =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
       if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
-          !boundary || boundary.getInt() != 2) {
-        m.emitError("Unsupported timeline marker version or missing boundary ABI");
+          !boundary || !boundary.getType().isInteger(32) ||
+          (boundary.getInt() != 2 && boundary.getInt() != 3)) {
+        m.emitError(
+            "Unsupported timeline marker version or missing boundary ABI");
         return signalPassFailure();
       }
     }
 
     if (m->hasAttr("proton.timeline_boundary_version")) {
-      auto boundary = m->getAttrOfType<IntegerAttr>(
-          "proton.timeline_boundary_version");
+      auto boundary =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
       auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
-      if (!boundary || boundary.getInt() != 2 || !timer ||
+      if (!boundary || !boundary.getType().isInteger(32) ||
+          (boundary.getInt() != 2 && boundary.getInt() != 3) || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension) {
         m.emitError("Unsupported timeline compiler boundary version or getter");
         return signalPassFailure();
@@ -499,20 +507,23 @@ public:
     }
 
     if (m->hasAttr("proton.timeline_storage_version")) {
-      auto storage = m->getAttrOfType<IntegerAttr>(
-          "proton.timeline_storage_version");
-      auto record = m->getAttrOfType<IntegerAttr>(
-          "proton.timeline_record_version");
-      if (!storage || storage.getInt() != 1 || !record || record.getInt() != 2) {
-        m.emitError("Compact timeline storage requires storage v1 and record v2");
+      auto storage =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_storage_version");
+      auto record =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+      if (!storage || storage.getInt() != 1 || !record ||
+          record.getInt() != 2) {
+        m.emitError(
+            "Compact timeline storage requires storage v1 and record v2");
         return signalPassFailure();
       }
-      if (auto programs = m->getAttrOfType<DenseI32ArrayAttr>(
-              "proton.selected_programs")) {
+      if (auto programs =
+              m->getAttrOfType<DenseI32ArrayAttr>("proton.selected_programs")) {
         llvm::SmallDenseSet<int32_t, 8> seen;
         for (int32_t program : programs.asArrayRef())
           if (program < 0 || !seen.insert(program).second) {
-            m.emitError("Compact timeline program identities must be unique and nonnegative");
+            m.emitError("Compact timeline program identities must be unique "
+                        "and nonnegative");
             return signalPassFailure();
           }
         if (seen.empty()) {
@@ -523,12 +534,14 @@ public:
     }
 
     if (m->hasAttr("proton.timeline_record_version")) {
-      auto version = m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
+      auto version =
+          m->getAttrOfType<IntegerAttr>("proton.timeline_record_version");
       auto timer = m->getAttrOfType<StringAttr>("proton.timeline_timer");
       if (!version || version.getInt() != 2 || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns" || !clockExtension ||
           m->hasAttr("proton.source_census")) {
-        m.emitError("Timeline v2 requires its matching 64-bit timer and interval mode");
+        m.emitError(
+            "Timeline v2 requires its matching 64-bit timer and interval mode");
         return signalPassFailure();
       }
     }

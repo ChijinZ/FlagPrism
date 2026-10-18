@@ -162,22 +162,41 @@ def reexport_capture(directory, original_file):
                 json_bytes(receipt))
     rows, reason = [], None
     if backend == 'nvidia':
-        from .timeline_unit_nvidia import load_counter_unit_proofs
+        from .timeline_unit_nvidia import load_counter_unit_proofs, load_counter_machine_map
         from .timeline_perfetto import write_counter_exports
         binary = owner['binary_id']
         machine_base = 'machine/' + binary
         # All provider input paths are prechecked against symlink/traversal,
         # then independently parsed again by the target-specific provider.
-        for name in ('status.json', 'counter-map.json', 'lines.stdout',
-                     'json.stdout'):
+        for name in ('status.json', 'lines.stdout', 'json.stdout'):
             retain(machine_base + '/' + name)
         capture['machine_counter_mapping'] = _json(
             directory, machine_base + '/status.json')
         expected = machine_base + '/counter-map.json'
         if capture['machine_counter_mapping'].get(
-                'counter_map_file') != expected:
-            raise ValueError(
-                'Machine evidence references another capture binary')
+                'status') == 'counter_mapping_complete_region_unverified':
+            if capture['machine_counter_mapping'].get(
+                    'counter_map_file') != expected:
+                raise ValueError(
+                    'Machine evidence references another capture binary')
+            retain(expected)
+        actual_map = load_counter_machine_map(directory, capture)
+        # An upgraded rule creates a derived map, never replacing the first
+        # (possibly failed) machine diagnostic. All inputs remain inspectable.
+        from . import timeline_nvidia_machine
+        machine_inputs = dict(
+            schema_version=1,
+            original_inputs=dict(sorted(sources.items())),
+            machine_map_sha256=sha256(json_bytes(actual_map)),
+            rules_sha256=sha256(
+                Path(timeline_nvidia_machine.__file__).read_bytes()))
+        machine_revision = sha256(json_bytes(machine_inputs))
+        machine_derived = 'derived/machine/' + machine_revision
+        with export_lock(directory):
+            persist(directory, machine_derived + '/inputs.json',
+                    json_bytes(machine_inputs))
+            persist(directory, machine_derived + '/counter-map.json',
+                    json_bytes(actual_map))
         proofs = load_counter_unit_proofs(directory, capture, batch)
         views = derive_counter_ns_views(batch, proofs)
         rows = write_counter_exports(directory,

@@ -74,7 +74,7 @@ void init_triton_proton(py::module &&m) {
   m.attr("SOURCE_CENSUS_PARTITION_VERSION") = 2;
   m.attr("TIMELINE_TIMER_VERSION") = 1;
   m.attr("TIMELINE_RECORD_VERSION") = 2;
-  m.attr("TIMELINE_BOUNDARY_VERSION") = 2;
+  m.attr("TIMELINE_BOUNDARY_VERSION") = 3;
   m.attr("TIMELINE_MARKER_VERSION") = 1;
   m.attr("TIMELINE_STORAGE_VERSION") = 1;
   m.attr("TIMELINE_PLAN_VERSION") = 1;
@@ -192,7 +192,8 @@ void init_triton_proton(py::module &&m) {
         if (census && timeline)
           throw std::invalid_argument(
               "Timeline timestamps cannot use the count-only census ABI");
-        pm.addPass(proton::createAutomaticScopesPass(maxSites, census, timeline));
+        pm.addPass(
+            proton::createAutomaticScopesPass(maxSites, census, timeline));
       },
       py::arg("pm"), py::arg("max_sites") = 8, py::arg("census") = false,
       py::arg("timeline") = false);
@@ -200,33 +201,46 @@ void init_triton_proton(py::module &&m) {
   m.def("get_automatic_proton_plan", [](mlir::ModuleOp &module) {
     py::dict result;
     if (module->hasAttr("proton.timeline_marker_version")) {
-      auto marker = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_marker_version");
-      auto boundary = module->getAttrOfType<mlir::IntegerAttr>("proton.timeline_boundary_version");
+      auto marker = module->getAttrOfType<mlir::IntegerAttr>(
+          "proton.timeline_marker_version");
+      auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
+          "proton.timeline_boundary_version");
       if (!marker || !marker.getType().isInteger(32) || marker.getInt() != 1 ||
-          !boundary || boundary.getInt() != 2)
-        throw std::runtime_error("Unsupported timeline marker version or missing boundary ABI");
+          !boundary || !boundary.getType().isInteger(32) ||
+          (boundary.getInt() != 2 && boundary.getInt() != 3))
+        throw std::runtime_error(
+            "Unsupported timeline marker version or missing boundary ABI");
       result["timeline_marker_version"] = 1;
     }
     if (module->hasAttr("proton.timeline_boundary_version")) {
       auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
           "proton.timeline_boundary_version");
-      auto timer = module->getAttrOfType<mlir::StringAttr>(
-          "proton.timeline_timer");
-      if (!boundary || boundary.getInt() != 2 || !timer ||
+      auto timer =
+          module->getAttrOfType<mlir::StringAttr>("proton.timeline_timer");
+      if (!boundary || !boundary.getType().isInteger(32) ||
+          (boundary.getInt() != 2 && boundary.getInt() != 3) || !timer ||
           timer.getValue() != "nvidia.globaltimer.ns")
-        throw std::runtime_error("Unsupported timeline compiler boundary version");
+        throw std::runtime_error(
+            "Unsupported timeline compiler boundary version");
     }
-    if (auto timer = module->getAttrOfType<mlir::StringAttr>(
-            "proton.timeline_timer")) {
+    if (auto timer =
+            module->getAttrOfType<mlir::StringAttr>("proton.timeline_timer")) {
       auto version = module->getAttrOfType<mlir::IntegerAttr>(
           "proton.timeline_timer_version");
       if (!version || version.getInt() != 1)
-        throw std::runtime_error("Missing or unsupported timeline timer version");
+        throw std::runtime_error(
+            "Missing or unsupported timeline timer version");
       result["timeline_timer"] = timer.str();
       if (auto boundary = module->getAttrOfType<mlir::IntegerAttr>(
               "proton.timeline_boundary_version")) {
         result["timeline_boundary_version"] = boundary.getInt();
-        result["timeline_boundary_strategy"] = "outlined_device_calls_pending_region_audit";
+        result["timeline_boundary_strategy"] =
+            boundary.getInt() == 3
+                ? "runtime_zero_gated_calls_pending_region_audit"
+                : "outlined_device_calls_pending_region_audit";
+        if (boundary.getInt() == 3)
+          result["timeline_runtime_zero_symbol"] =
+              "__flagprism_timeline_runtime_zero_v3";
       }
       result["timeline_getter_bits"] = 64;
       auto recordVersion = module->getAttrOfType<mlir::IntegerAttr>(
@@ -249,9 +263,8 @@ void init_triton_proton(py::module &&m) {
         result["timeline_default_program_selection"] = "runtime_first_last";
         if (auto programs = module->getAttrOfType<mlir::DenseI32ArrayAttr>(
                 "proton.selected_programs"))
-          result["timeline_fixed_programs"] =
-              std::vector<int32_t>(programs.asArrayRef().begin(),
-                                   programs.asArrayRef().end());
+          result["timeline_fixed_programs"] = std::vector<int32_t>(
+              programs.asArrayRef().begin(), programs.asArrayRef().end());
       }
       if (auto planVersion = module->getAttrOfType<mlir::IntegerAttr>(
               "proton.timeline_plan_version")) {
@@ -337,8 +350,8 @@ void init_triton_proton(py::module &&m) {
         for (auto key : {"timeline_semantic", "timeline_mechanism"})
           if (auto value = candidate.getAs<mlir::StringAttr>(key))
             row[py::str(key)] = value.str();
-        if (auto pending = candidate.getAs<mlir::IntegerAttr>(
-                "timeline_wait_pending"))
+        if (auto pending =
+                candidate.getAs<mlir::IntegerAttr>("timeline_wait_pending"))
           row["timeline_wait_pending"] = pending.getInt();
         if (auto text = candidate.getAs<mlir::StringAttr>("source_statement"))
           row["source_statement"] = text.str();

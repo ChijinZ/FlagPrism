@@ -1,0 +1,56 @@
+{
+  "source_sha256": "09d30e75e919fa583051b14e44fe8e988d9f42faca7e37c3efd27f575aa51d2d",
+  "stages": [
+    {
+      "header": "LoopFullUnrollPass on loop %<unnamed loop> in function gemm (invalidated)",
+      "byte_offset": 1209140,
+      "section_bytes": 29847,
+      "contains_runtime_zero": false,
+      "invalidated": true,
+      "mma_call_lines": [],
+      "control_lines": [
+        "%20 = icmp slt i32 %13, 48, !dbg !16",
+        "%225 = icmp slt i32 %215, 48, !dbg !30",
+        "%226 = icmp slt i32 %214, 48, !dbg !30"
+      ]
+    },
+    {
+      "header": "LoopFullUnrollPass on loop %<unnamed loop> in function gemm",
+      "byte_offset": 17298592,
+      "section_bytes": 68004,
+      "contains_runtime_zero": false,
+      "invalidated": false,
+      "mma_call_lines": [],
+      "control_lines": [
+        "%617 = phi i32 [ -1, %591 ], [ %624, %1427 ]",
+        "%618 = phi i32 [ 1, %591 ], [ %1035, %1427 ]",
+        "%620 = phi i32 [ 0, %591 ], [ %1438, %1427 ]",
+        "%.0100 = phi i32 [ %594, %591 ], [ %1431, %1427 ]",
+        "%630 = icmp ult i32 %.0100, -4, !dbg !9",
+        "%644 = icmp ult i32 %632, -4, !dbg !9",
+        "%660 = icmp ult i32 %646, -4, !dbg !9",
+        "%712 = icmp ult i32 %662, -4, !dbg !9",
+        "%727 = icmp ult i32 %714, -4, !dbg !9",
+        "%779 = icmp ult i32 %729, -4, !dbg !9",
+        "%915 = icmp ult i32 %781, -4, !dbg !9",
+        "%1024 = icmp ult i32 %917, -4, !dbg !9",
+        "%1063 = icmp ult i32 %1026, -4, !dbg !9",
+        "%1096 = icmp ult i32 %1065, -4, !dbg !9",
+        "%1115 = icmp ult i32 %1098, -4, !dbg !9",
+        "%1134 = icmp ult i32 %1117, -4, !dbg !9",
+        "%1159 = icmp slt i32 %1073, 96, !dbg !28",
+        "%1160 = icmp slt i32 %1074, 96, !dbg !28"
+      ]
+    },
+    {
+      "header": "LoopFullUnrollPass on loop %.preheader in function gemm",
+      "byte_offset": 17373265,
+      "section_bytes": 2109,
+      "contains_runtime_zero": false,
+      "invalidated": false,
+      "mma_call_lines": [],
+      "control_lines": []
+    }
+  ],
+  "interpretation": "Actual LLVM full-unroll behavior differs; this diagnostic does not identify the responsible legality/profitability rule or certify ordinary pipeline preservation"
+}

@@ -14,6 +14,39 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
+def inspect_runtime_zero(compiled):
+    """Read the actual module symbol after math, never an assumed host value."""
+    import ctypes
+    driver = ctypes.CDLL('libcuda.so.1')
+    lookup = driver.cuModuleGetGlobal_v2
+    lookup.argtypes = [
+        ctypes.POINTER(ctypes.c_uint64),
+        ctypes.POINTER(ctypes.c_size_t), ctypes.c_void_p, ctypes.c_char_p
+    ]
+    lookup.restype = ctypes.c_int
+    pointer, size = ctypes.c_uint64(), ctypes.c_size_t()
+    symbol = b'__flagprism_timeline_runtime_zero_v3'
+    code = lookup(ctypes.byref(pointer), ctypes.byref(size),
+                  ctypes.c_void_p(int(compiled.module)), symbol)
+    require(
+        code == 0 and pointer.value and size.value == 4,
+        'Actual profiler module global is missing or has the wrong extent')
+    copy = driver.cuMemcpyDtoH_v2
+    copy.argtypes = [ctypes.c_void_p, ctypes.c_uint64, ctypes.c_size_t]
+    copy.restype = ctypes.c_int
+    value = ctypes.c_uint32()
+    code = copy(ctypes.byref(value), pointer, size)
+    require(code == 0 and value.value == 0,
+            'Actual module dependency mask was not zero after the user call')
+    return dict(
+        symbol=symbol.decode(),
+        bytes=size.value,
+        value=value.value,
+        module_handle=int(compiled.module),
+        device_pointer=pointer.value,
+        evidence='cuModuleGetGlobal_v2 and real four-byte cuMemcpyDtoH_v2')
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
@@ -41,69 +74,110 @@ def main():
         tl.store(State + pid + lane, prior + 1, lane == 0)
 
     torch.cuda.set_device(0)
-    require(torch.cuda.get_device_capability(0) == (12, 0), 'Wrong booked target')
-    types = [torch.float16, torch.bfloat16, torch.float32, torch.float64, torch.int64]
+    require(
+        torch.cuda.get_device_capability(0) == (12, 0), 'Wrong booked target')
+    types = [
+        torch.float16, torch.bfloat16, torch.float32, torch.float64,
+        torch.int64
+    ]
     rows = []
-    session = profiler.start(str(a.output/'public'), detail='timeline')
+    session = profiler.start(str(a.output / 'public'), detail='timeline')
     try:
         for dtype in types:
             integer = dtype == torch.int64
-            cpu = (torch.arange(-64, 65, dtype=dtype) if integer else
-                   torch.linspace(-2, 2, 129, dtype=dtype))
+            cpu = (torch.arange(-64, 65, dtype=dtype)
+                   if integer else torch.linspace(-2, 2, 129, dtype=dtype))
             x = cpu.cuda()
-            y = torch.full((132,), -77, dtype=dtype, device='cuda')
+            y = torch.full((132, ), -77, dtype=dtype, device='cuda')
             state = torch.zeros(3, dtype=torch.int32, device='cuda')
-            compiled = ordinary_update[(3,)](x, y, state, 129, integer, 64, num_warps=4)
+            compiled = ordinary_update[(3, )](x,
+                                              y,
+                                              state,
+                                              129,
+                                              integer,
+                                              64,
+                                              num_warps=4)
             torch.cuda.synchronize()
             expected = cpu ^ (cpu << 1) if integer else cpu * 0.5 + 0.25
             actual = y.cpu()
-            require(torch.equal(actual[:129], expected), 'Math differs: '+str(dtype))
-            require(torch.equal(x.cpu(), cpu), 'Input changed: '+str(dtype))
+            require(torch.equal(actual[:129], expected),
+                    'Math differs: ' + str(dtype))
+            require(torch.equal(x.cpu(), cpu), 'Input changed: ' + str(dtype))
             require(actual[129:].tolist() == [-77, -77, -77], 'Tail changed')
-            require(state.cpu().tolist() == [1, 1, 1], 'Math launch was replayed')
+            require(state.cpu().tolist() == [1, 1, 1],
+                    'Math launch was replayed')
             llir = compiled.asm['llir']
-            require('timeline_llvm_begin_dependency' in llir and
-                    'timeline_llvm_counter_dependency' in llir,
-                    'Actual compiled SSA dependencies are absent')
-            getter_lines = [line for line in llir.splitlines() if '%globaltimer' in line]
-            require(getter_lines and all('~{memory}' in line and 'asm sideeffect' in line
-                                         for line in getter_lines),
-                    'Actual timeline getter omitted its compiler memory clobber')
-            row = dict(dtype=str(dtype), programs=3, requested_math_launches=1,
-                       state=state.cpu().tolist(), exact_cpu_math=True,
-                       cubin_sha256=hashlib.sha256(compiled.asm['cubin']).hexdigest(),
+            require(
+                '__flagprism_timeline_runtime_zero_v3' in llir
+                and 'ld.volatile.global' in llir and 'br i1' in llir
+                and '__flagprism_counter_v3_' in llir,
+                'Actual compiled SSA dependencies are absent')
+            getter_lines = [
+                line for line in llir.splitlines() if '%globaltimer' in line
+            ]
+            require(
+                getter_lines
+                and all('~{memory}' in line and 'asm sideeffect' in line
+                        for line in getter_lines),
+                'Actual timeline getter omitted its compiler memory clobber')
+            row = dict(runtime_zero=inspect_runtime_zero(compiled),
+                       dtype=str(dtype),
+                       programs=3,
+                       requested_math_launches=1,
+                       state=state.cpu().tolist(),
+                       exact_cpu_math=True,
+                       cubin_sha256=hashlib.sha256(
+                           compiled.asm['cubin']).hexdigest(),
                        llir_sha256=hashlib.sha256(llir.encode()).hexdigest())
             rows.append(row)
-            (a.output/'math-results.json').write_text(json.dumps(rows, indent=2)+'\n')
+            (a.output / 'math-results.json'
+             ).write_text(json.dumps(rows, indent=2) + '\n')
     finally:
         profiler.finalize(session)
-    prefix = a.output/'public/timeline'
-    index = json.loads((prefix/'index.json').read_text())
-    require(index['status'] == 'partial_clock_unverified', 'Unproven clock was upgraded')
-    require(len(index['captures']) == len(types), 'Public path lost or replayed calls')
+    prefix = a.output / 'public/timeline'
+    index = json.loads((prefix / 'index.json').read_text())
+    require(index['status'] == 'partial_clock_unverified',
+            'Unproven clock was upgraded')
+    require(
+        len(index['captures']) == len(types),
+        'Public path lost or replayed calls')
     events = 0
     for row in index['captures']:
-        capture = json.loads((prefix/row['capture_file']).read_text())
+        capture = json.loads((prefix / row['capture_file']).read_text())
         plan = capture['owner']['plan']
         machine = capture['machine_counter_mapping']
-        require(machine['status']=='counter_mapping_complete_region_unverified',
-                'Actual type machine mapping failed: '+str(machine))
-        proof = json.loads((prefix/machine['counter_map_file']).read_text())
-        require(not proof['region_boundaries_verified'] and not proof['clock_qualified'] and
-                proof['counter_pcs'], 'Machine mapping incorrectly certified time or boundaries')
-        require(plan.get('timeline_boundary_version') == 2 and
-                plan.get('timeline_boundary_strategy') == 'outlined_device_calls_pending_region_audit',
-                'Actual binary plan lost the boundary strategy')
-        canonical = validate_raw_batch(json.loads((prefix/capture['events_file']).read_text()))
-        require(canonical['complete'] and all(e['kind']=='interval' for e in canonical['events']),
-                'Type regression lost complete source-linked records')
-        require({o['program_coordinates'][0] for o in canonical['observers']} == {0, 2},
+        require(
+            machine['status'] == 'counter_mapping_complete_region_unverified',
+            'Actual type machine mapping failed: ' + str(machine))
+        proof = json.loads((prefix / machine['counter_map_file']).read_text())
+        require(
+            not proof['region_boundaries_verified']
+            and not proof['clock_qualified'] and proof['counter_pcs'],
+            'Machine mapping incorrectly certified time or boundaries')
+        require(
+            plan.get('timeline_boundary_version') == 3
+            and plan.get('timeline_boundary_strategy')
+            == 'runtime_zero_gated_calls_pending_region_audit',
+            'Actual binary plan lost the boundary strategy')
+        canonical = validate_raw_batch(
+            json.loads((prefix / capture['events_file']).read_text()))
+        require(
+            canonical['complete']
+            and all(e['kind'] == 'interval' for e in canonical['events']),
+            'Type regression lost complete source-linked records')
+        require({o['program_coordinates'][0]
+                 for o in canonical['observers']} == {0, 2},
                 'Default selected programs lost actual runtime coordinates')
         events += len(canonical['events'])
-    (a.output/'result.json').write_text(json.dumps(dict(
-        status='public_type_math_and_llvm_dependencies_passed_not_machine_certified',
-        actual_math_launches=len(types), captures=len(index['captures']),
-        canonical_intervals=events, math=rows), indent=2)+'\n')
+    (a.output / 'result.json').write_text(
+        json.dumps(dict(
+            status=
+            'public_type_math_and_llvm_dependencies_passed_not_machine_certified',
+            actual_math_launches=len(types),
+            captures=len(index['captures']),
+            canonical_intervals=events,
+            math=rows),
+                   indent=2) + '\n')
 
 
 if __name__ == '__main__':

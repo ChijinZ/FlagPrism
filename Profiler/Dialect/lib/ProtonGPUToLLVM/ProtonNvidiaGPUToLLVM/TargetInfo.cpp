@@ -1,6 +1,7 @@
 #include "Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.h"
 #include "Conversion/ProtonGPUToLLVM/Utility.h"
 #include "Dialect/ProtonGPU/IR/Dialect.h"
+#include "mlir/Dialect/ControlFlow/IR/ControlFlowOps.h"
 #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/LLVMIR/LLVMTypes.h"
 #include "mlir/Dialect/LLVMIR/NVVMDialect.h"
@@ -10,6 +11,75 @@
 #include "llvm/Support/MathExtras.h"
 
 namespace mlir::triton::proton::gpu::NVIDIA {
+
+namespace {
+constexpr llvm::StringLiteral runtimeZeroName =
+    "__flagprism_timeline_runtime_zero_v3";
+
+// An initialized mutable device global stays opaque to both LLVM and PTXAS.
+// It is private profiler state: no instrumentation path writes it. Load once
+// per actual function invocation; the value dominates every local boundary.
+Value getRuntimeZero(ConversionPatternRewriter &rewriter, Location loc,
+                     ModuleOp mod) {
+  auto function = rewriter.getInsertionBlock()->getParentOp();
+  auto llvmFunction = dyn_cast<LLVM::LLVMFuncOp>(function);
+  if (!llvmFunction || llvmFunction.empty()) {
+    emitError(loc, "Timeline dependency mask requires an actual LLVM function");
+    return {};
+  }
+  for (Operation &operation : llvmFunction.front())
+    if (operation.hasAttr("proton.timeline_runtime_zero_load"))
+      return operation.getResult(0);
+  auto global = mod.lookupSymbol<LLVM::GlobalOp>(runtimeZeroName);
+  if (Operation *existing = SymbolTable::lookupSymbolIn(
+          mod, rewriter.getStringAttr(runtimeZeroName))) {
+    if (!global || !global->hasAttr("proton.timeline_runtime_zero")) {
+      emitError(loc, "Conflicting profiler runtime-zero global");
+      return {};
+    }
+  } else {
+    OpBuilder::InsertionGuard guard(rewriter);
+    rewriter.setInsertionPointToStart(mod.getBody());
+    global = rewriter.create<LLVM::GlobalOp>(
+        loc, rewriter.getI32Type(), false, LLVM::Linkage::External,
+        runtimeZeroName, rewriter.getI32IntegerAttr(0), 4, 1);
+    global->setAttr("proton.timeline_runtime_zero", rewriter.getUnitAttr());
+  }
+  OpBuilder::InsertionGuard guard(rewriter);
+  rewriter.setInsertionPointToStart(&llvmFunction.front());
+  auto address = rewriter.create<LLVM::AddressOfOp>(loc, global);
+  PTXBuilder builder;
+  auto *output = builder.newOperand("=r");
+  builder.create("ld")
+      ->o("volatile")
+      .global()
+      .b(32)(output, builder.newAddrOperand(address, "l"));
+  auto result = builder.launch(rewriter, loc, rewriter.getI32Type(), true);
+  result.getDefiningOp()->setAttr("proton.timeline_runtime_zero_load",
+                                  rewriter.getUnitAttr());
+  return result;
+}
+
+Value guardedClockCall(ConversionPatternRewriter &rewriter, Location loc,
+                       LLVM::LLVMFuncOp helper, Value condition) {
+  auto b = TritonLLVMOpBuilder(loc, rewriter);
+  Value empty = b.i64_val(0);
+  Block *before = rewriter.getInsertionBlock();
+  Block *after = rewriter.splitBlock(before, rewriter.getInsertionPoint());
+  Block *join = rewriter.createBlock(after, {rewriter.getI64Type()}, {loc});
+  Block *invoke = rewriter.createBlock(join);
+  rewriter.setInsertionPointToEnd(before);
+  rewriter.create<cf::CondBranchOp>(loc, condition, invoke, ValueRange{}, join,
+                                    ValueRange{empty});
+  rewriter.setInsertionPointToStart(invoke);
+  auto call = rewriter.create<LLVM::CallOp>(loc, helper, ValueRange{});
+  rewriter.create<cf::BranchOp>(loc, join, call.getResults());
+  rewriter.setInsertionPointToStart(join);
+  rewriter.create<cf::BranchOp>(loc, after);
+  rewriter.setInsertionPointToStart(after);
+  return join->getArgument(0);
+}
+} // namespace
 
 Value TargetInfo::clock(ConversionPatternRewriter &rewriter, Location loc,
                         bool isClock64) const {
@@ -41,8 +111,9 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
     }
     auto &mov = builder.create("mov")->o(isClock64 ? "u64" : "u32");
     auto *dest = builder.newOperand(isClock64 ? "=l" : "=r");
-    auto *clock = builder.newConstantOperand(
-        timeline ? "%globaltimer" : isClock64 ? "%clock64" : "%clock");
+    auto *clock = builder.newConstantOperand(timeline    ? "%globaltimer"
+                                             : isClock64 ? "%clock64"
+                                                         : "%clock");
     if (collect) {
       builder.create("mov")->o(isClock64 ? "u64" : "u32")(
           dest, builder.newConstantOperand(0));
@@ -57,18 +128,75 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
       auto &consume = *builder.create("// timeline_llvm_counter_dependency");
       consume(builder.newOperand(dependency, width == 64 ? "l" : "r"));
     }
-    Value result = builder.launch(rewriter, loc,
-        rewriter.getIntegerType(isClock64 ? 64 : 32), true);
+    Value result = builder.launch(
+        rewriter, loc, rewriter.getIntegerType(isClock64 ? 64 : 32), true);
     if (timeline && mod->hasAttr("proton.timeline_boundary_version")) {
       auto assembly = cast<LLVM::InlineAsmOp>(result.getDefiningOp());
-      assembly->setAttr("constraints", rewriter.getStringAttr(
-          assembly.getConstraints().str() + ",~{memory}"));
+      assembly->setAttr("constraints",
+                        rewriter.getStringAttr(assembly.getConstraints().str() +
+                                               ",~{memory}"));
     }
     return result;
   };
 
-  auto boundary = mod->getAttrOfType<IntegerAttr>(
-      "proton.timeline_boundary_version");
+  auto boundary =
+      mod->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
+  if (timeline && boundary && boundary.getInt() == 3) {
+    if (!isClock64 || marker.empty()) {
+      emitError(loc, "Gated timeline counter requires a marked 64-bit read");
+      return {};
+    }
+    Value zero = getRuntimeZero(rewriter, loc, mod);
+    if (!zero)
+      return {};
+    auto b = TritonLLVMOpBuilder(loc, rewriter);
+    Value combined = b.i32_val(0);
+    for (Value dependency : dependencies) {
+      auto type = dyn_cast<IntegerType>(dependency.getType());
+      if (!type || (type.getWidth() != 32 && type.getWidth() != 64)) {
+        emitError(loc, "Unsupported gated timeline dependency type");
+        return {};
+      }
+      Value word = dependency;
+      if (type.getWidth() == 64) {
+        auto low = rewriter.create<LLVM::TruncOp>(loc, i32_ty, dependency);
+        auto shifted = b.lshr(dependency, b.i64_val(32));
+        auto high = rewriter.create<LLVM::TruncOp>(loc, i32_ty, shifted);
+        word = b.or_(low, high);
+      }
+      combined = b.or_(combined, word);
+    }
+    Value ready = b.icmp_eq(b.and_(combined, zero), b.i32_val(0));
+    if (predicate)
+      ready = b.and_(ready, predicate);
+    std::string name = "__flagprism_counter_v3_" + marker.str();
+    auto functionType = LLVM::LLVMFunctionType::get(i64_ty, {}, false);
+    auto helper = mod.lookupSymbol<LLVM::LLVMFuncOp>(name);
+    if (Operation *existing =
+            SymbolTable::lookupSymbolIn(mod, rewriter.getStringAttr(name))) {
+      if (!helper || helper.getFunctionType() != functionType ||
+          !helper->hasAttr("proton.timeline_clock_helper")) {
+        emitError(loc, "Conflicting gated timeline helper symbol");
+        return {};
+      }
+    } else {
+      OpBuilder::InsertionGuard guard(rewriter);
+      rewriter.setInsertionPointToStart(mod.getBody());
+      helper = rewriter.create<LLVM::LLVMFuncOp>(loc, name, functionType,
+                                                 LLVM::Linkage::Internal);
+      helper->setAttr("proton.timeline_clock_helper", rewriter.getUnitAttr());
+      helper->setAttr(
+          "passthrough",
+          rewriter.getArrayAttr({rewriter.getStringAttr("noinline"),
+                                 rewriter.getStringAttr("nounwind"),
+                                 rewriter.getStringAttr("convergent")}));
+      Block *entry = helper.addEntryBlock(rewriter);
+      rewriter.setInsertionPointToStart(entry);
+      Value stamp = emitRead({}, {});
+      rewriter.create<LLVM::ReturnOp>(loc, ValueRange{stamp});
+    }
+    return guardedClockCall(rewriter, loc, helper, ready);
+  }
   if (!timeline || !boundary || boundary.getInt() != 2)
     return emitRead(dependencies, predicate);
   if (!isClock64 || marker.empty()) {
@@ -90,9 +218,11 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
     name += type.isInteger(32) ? 'a' : 'b';
   }
   auto resultType = rewriter.getI64Type();
-  auto functionType = LLVM::LLVMFunctionType::get(resultType, parameters, false);
+  auto functionType =
+      LLVM::LLVMFunctionType::get(resultType, parameters, false);
   auto helper = mod.lookupSymbol<LLVM::LLVMFuncOp>(name);
-  if (Operation *existing = SymbolTable::lookupSymbolIn(mod, rewriter.getStringAttr(name))) {
+  if (Operation *existing =
+          SymbolTable::lookupSymbolIn(mod, rewriter.getStringAttr(name))) {
     if (!helper || helper.getFunctionType() != functionType ||
         !helper->hasAttr("proton.timeline_clock_helper")) {
       emitError(loc, "Conflicting outlined timeline helper symbol");
@@ -101,12 +231,12 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
   } else {
     OpBuilder::InsertionGuard guard(rewriter);
     rewriter.setInsertionPointToStart(mod.getBody());
-    helper = rewriter.create<LLVM::LLVMFuncOp>(
-        loc, name, functionType, LLVM::Linkage::Internal);
+    helper = rewriter.create<LLVM::LLVMFuncOp>(loc, name, functionType,
+                                               LLVM::Linkage::Internal);
     helper->setAttr("proton.timeline_clock_helper", rewriter.getUnitAttr());
-    SmallVector<Attribute> attributes{
-        rewriter.getStringAttr("noinline"), rewriter.getStringAttr("nounwind"),
-        rewriter.getStringAttr("convergent")};
+    SmallVector<Attribute> attributes{rewriter.getStringAttr("noinline"),
+                                      rewriter.getStringAttr("nounwind"),
+                                      rewriter.getStringAttr("convergent")};
     helper->setAttr("passthrough", rewriter.getArrayAttr(attributes));
     Block *entry = helper.addEntryBlock(rewriter);
     rewriter.setInsertionPointToStart(entry);
@@ -128,7 +258,37 @@ Value TargetInfo::clockWithDependencies(ConversionPatternRewriter &rewriter,
 }
 
 Value TargetInfo::anchorValue(ConversionPatternRewriter &rewriter, Location loc,
-                               Value counter, Value bits) const {
+                              Value counter, Value bits) const {
+  auto mod =
+      rewriter.getInsertionBlock()->getParentOp()->getParentOfType<ModuleOp>();
+  auto boundary =
+      mod->getAttrOfType<IntegerAttr>("proton.timeline_boundary_version");
+  if (boundary && boundary.getInt() == 3) {
+    Value zero = getRuntimeZero(rewriter, loc, mod);
+    if (!zero)
+      return {};
+    auto width = cast<IntegerType>(bits.getType()).getWidth();
+    PTXBuilder builder;
+    auto *out = builder.newOperand(width == 64 ? "=l" : "=r");
+    auto *input = builder.newOperand(bits, width == 64 ? "l" : "r");
+    auto *stamp = builder.newOperand(counter, "l");
+    auto *mask = builder.newOperand(zero, "r");
+    std::string assembly;
+    if (width == 64)
+      assembly = "{ .reg .b64 z, m; mov.b64 z, {$3, $3}; "
+                 "and.b64 m, $2, z; xor.b64 $0, $1, m; }";
+    else
+      assembly = "{ .reg .b32 c, m; cvt.u32.u64 c, $2; "
+                 "and.b32 m, c, $3; xor.b32 $0, $1, m; }";
+    // Use the builder to establish the four operand constraints, then install
+    // the scoped PTX block. Temporaries are PTX-local registers, not extra
+    // LLVM output operands.
+    builder.create("mov")->b(width)(out, input);
+    (*builder.create("// timeline_runtime_mask_inputs"))(stamp, mask);
+    Value result = builder.launch(rewriter, loc, bits.getType(), true);
+    cast<LLVM::InlineAsmOp>(result.getDefiningOp()).setAsmString(assembly);
+    return result;
+  }
   PTXBuilder builder;
   auto width = cast<IntegerType>(bits.getType()).getWidth();
   auto *out = builder.newOperand(width == 64 ? "=l" : "=r");

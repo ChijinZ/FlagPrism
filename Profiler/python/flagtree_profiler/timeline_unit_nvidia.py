@@ -5,7 +5,6 @@ behavior is target-specific. Require the real binary's validated machine map,
 and currently restrict this provider to the actually inspected sm_120 target.
 https://docs.nvidia.com/cuda/parallel-thread-execution/#special-registers-globaltimer-globaltimer-lo-globaltimer-hi
 """
-import re
 import hashlib
 import json
 from pathlib import Path
@@ -27,11 +26,11 @@ def nvidia_counter_unit_proofs(batch, *, machine_map, max_elapsed_ns):
     rows = machine_map.get('counter_pcs')
     if type(rows) is not list or not rows:
         raise ValueError('Machine map lacks actual counter instructions')
+    from .timeline_nvidia_machine import is_globaltimer_getter
     mapped = set()
     for row in rows:
-        if (type(row) is not dict or row.get('opcode') != 'CS2R'
-                or not re.fullmatch(r'R[0-9]+,\s*SR_GLOBALTIMERLO',
-                                    str(row.get('operands')))
+        if (type(row) is not dict or not is_globaltimer_getter(
+                row.get('opcode'), row.get('operands'))
                 or type(row.get('site_id')) is not int or row['site_id'] < 0
                 or row.get('phase') not in ('entry', 'exit')):
             raise ValueError(
@@ -75,17 +74,20 @@ def nvidia_counter_unit_proofs(batch, *, machine_map, max_elapsed_ns):
     ]
 
 
-def load_counter_unit_proofs(directory, capture, batch):
+def load_counter_machine_map(directory, capture):
     """Revalidate retained machine inputs before deriving unit-only views.
 
     Cached JSON status is not a clock proof. Recompute the binary/PTX/SASS map
     and check all of its fields, using the existing pure actual-object parser.
     """
     from .timeline_nvidia_machine import counter_map
+    from .timeline_store import read_artifact
     directory = Path(directory)
     status = capture['machine_counter_mapping']
-    if status.get('status') != 'counter_mapping_complete_region_unverified':
-        raise ValueError('Actual machine counter mapping is unavailable')
+    kind = status.get('status')
+    if kind not in ('counter_mapping_complete_region_unverified',
+                    'counter_mapping_unavailable'):
+        raise ValueError('Actual machine counter inputs are unavailable')
     metadata = capture['metadata']
     artifacts = metadata['timeline_artifacts']
 
@@ -96,13 +98,24 @@ def load_counter_unit_proofs(directory, capture, batch):
         if len(rows) != 1:
             raise ValueError('Missing or ambiguous retained unit artifact')
         row = rows[0]
-        raw = (directory / row['retained_file']).read_bytes()
+        raw = read_artifact(directory, row['retained_file'])
         if hashlib.sha256(raw).hexdigest() != row['sha256']:
             raise ValueError('Counter unit input artifact changed')
         return raw
 
-    saved_file = directory / status['counter_map_file']
-    saved = json.loads(saved_file.read_text())
+    binary = metadata['binary_id']
+    if status.get('binary_id') != binary:
+        raise ValueError('Machine status references another binary')
+    machine_base = 'machine/' + binary
+    expected = machine_base + '/counter-map.json'
+    if kind == 'counter_mapping_complete_region_unverified':
+        if status.get('counter_map_file') != expected:
+            raise ValueError('Machine map references another binary')
+        saved = json.loads(read_artifact(directory, expected))
+    else:
+        if status.get('counter_map_file') is not None:
+            raise ValueError('Failed machine status unexpectedly claims a map')
+        saved = None
     target = metadata['compiler_metadata']['target']
     if target.get('backend') != 'cuda' or type(target.get('arch')) is not int:
         raise ValueError('Counter unit target is not actual CUDA metadata')
@@ -110,15 +123,26 @@ def load_counter_unit_proofs(directory, capture, batch):
     actual = counter_map(
         cubin=retained('.cubin'),
         ptx=retained('.ptx'),
-        sass_lines=(saved_file.parent / 'lines.stdout').read_bytes(),
-        sass_json=(saved_file.parent / 'json.stdout').read_bytes(),
+        sass_lines=read_artifact(directory, machine_base + '/lines.stdout'),
+        sass_json=read_artifact(directory, machine_base + '/json.stdout'),
         binary_id=metadata['binary_id'],
         scope_ids=tuple(int(key) for key, _ in metadata['scope_id_names']),
         expected_sm=(arch // 10, arch % 10),
         marker_version=capture['owner']['plan']['timeline_marker_version'])
-    if any(saved.get(key) != value for key, value in actual.items()):
+    if saved is not None and any(
+            saved.get(key) != value for key, value in actual.items()):
         raise ValueError(
             'Retained counter map differs from actual object validation')
+    return actual
+
+
+def load_counter_unit_proofs(directory, capture, batch):
+    """Revalidate original objects; an old failed status never grants proof.
+
+    Complete tool outputs retained by an older rule may be parsed by a newer
+    rule without running the application or rewriting the original status.
+    """
+    actual = load_counter_machine_map(directory, capture)
     owner = capture['owner']
     if owner.get('host_window_clock') != 'python.monotonic_ns':
         raise ValueError('Capture lacks an independent host completion window')

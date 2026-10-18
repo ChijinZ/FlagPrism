@@ -156,6 +156,25 @@ class CounterPerfettoTests(unittest.TestCase):
                                             machine_map=mapping,
                                             max_elapsed_ns=1000)
         self.assertEqual(len(proofs), 1)
+        for opcode, operands in [('CS2UR', 'UR4,SR_GLOBALTIMERLO'),
+                                 ('CS2R', 'R4,SR_GLOBALTIMERLO')]:
+            legal = copy.deepcopy(mapping)
+            legal['counter_pcs'][0].update(opcode=opcode, operands=operands)
+            self.assertEqual(
+                len(
+                    nvidia_counter_unit_proofs(batch,
+                                               machine_map=legal,
+                                               max_elapsed_ns=1000)), 1)
+        for opcode, operands in [('CS2UR', 'R4,SR_GLOBALTIMERLO'),
+                                 ('CS2R', 'UR4,SR_GLOBALTIMERLO'),
+                                 ('CS2UR.32', 'UR4,SR_GLOBALTIMERLO'),
+                                 ('CS2UR', 'UR4,SR_GLOBALTIMERHI')]:
+            bad = copy.deepcopy(mapping)
+            bad['counter_pcs'][0].update(opcode=opcode, operands=operands)
+            with self.assertRaises(ValueError):
+                nvidia_counter_unit_proofs(batch,
+                                           machine_map=bad,
+                                           max_elapsed_ns=1000)
         for change in [
                 dict(expected_sm=[12, False]),
                 dict(expected_sm=[9, 0]),

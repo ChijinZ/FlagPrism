@@ -48,8 +48,14 @@ class CudaAllocator:
         self._census_admission = ContextVar(
             'nvidia_census_allocation_admission', default=None)
 
-    def validate_launch(self, *, function, grid, scratch_size, alignment,
-                        num_ctas, stream=None):
+    def validate_launch(self,
+                        *,
+                        function,
+                        grid,
+                        scratch_size,
+                        alignment,
+                        num_ctas,
+                        stream=None):
         if not self.instrumentation_hook.census:
             return
         self._census_admission.set(None)
@@ -295,7 +301,8 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
         self.mode: mode.InstrumentationMode = _interpret_mode(mode_obj)
         self.observation_plan = observation_plan
         self.census = bool(observation_plan and observation_plan.get("census"))
-        self.timeline = bool(observation_plan and observation_plan.get('timeline'))
+        self.timeline = bool(observation_plan
+                             and observation_plan.get('timeline'))
         self.automatic = bool(observation_plan
                               and observation_plan.get('automatic'))
         self.max_sites = observation_plan.get('max_sites',
@@ -350,7 +357,8 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
             importlib.import_module('flagtree.debugger')
         if self.timeline:
             if _get_backend_name() != 'nvidia':
-                raise RuntimeError('Timeline hook is not yet implemented on this backend')
+                raise RuntimeError(
+                    'Timeline hook is not yet implemented on this backend')
             self._timeline_cache_key = self._timeline_fingerprint()
 
         InstrumentationHook.active_count += 1
@@ -406,9 +414,11 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
                 triton_proton.add_automatic_proton_scopes(
                     pm, self.max_sites, True)
             elif self.timeline:
-                triton_proton.add_automatic_proton_scopes(pm, self.max_sites, False, True)
+                triton_proton.add_automatic_proton_scopes(
+                    pm, self.max_sites, False, True)
                 if self.selected_programs is not None:
-                    triton_proton.add_select_proton_programs(pm, self.selected_programs)
+                    triton_proton.add_select_proton_programs(
+                        pm, self.selected_programs)
             else:
                 triton_proton.add_automatic_proton_scopes(pm, self.max_sites)
 
@@ -467,7 +477,7 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
                         'instrumentation_mode'] += ':source_census=1:partition_observers=2'
                 if instrumentation_hook.timeline:
                     kwargs['instrumentation_mode'] += (
-                        ':timeline_timer=1:timeline_record=2:timeline_storage=1:timeline_plan=1:timeline_boundary=2:timeline_marker=1:deps='
+                        ':timeline_timer=1:timeline_record=2:timeline_storage=1:timeline_plan=1:timeline_boundary=3:timeline_marker=1:deps='
                         + instrumentation_hook._timeline_cache_key)
                 if instrumentation_hook.selected_programs is not None:
                     kwargs[
@@ -588,7 +598,8 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
                 if self.timeline:
                     automatic_plan.update(
                         policy=automatic_plan.get('timeline_selection_policy'),
-                        semantics='uncertified_compiler_observer_globaltimer_ticks')
+                        semantics=
+                        'uncertified_compiler_observer_globaltimer_ticks')
             self.observation_metadata[function] = {
                 'binary_id':
                 hash,
@@ -610,14 +621,19 @@ class InstrumentationHook(TimelineInstrumentationMixin, Hook):
             }
             if self.timeline:
                 artifacts = []
-                prefix = 'binaries/' + hashlib.sha256(hash.encode()).hexdigest()
+                prefix = 'binaries/' + hashlib.sha256(
+                    hash.encode()).hexdigest()
                 for index, path in enumerate(metadata_group.values()):
                     path = Path(path)
                     if path.is_file():
-                        artifacts.append(dict(path=str(path),
-                            sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
-                            retained_file=prefix+'/'+str(index)+path.suffix))
-                self.observation_metadata[function]['timeline_artifacts'] = artifacts
+                        artifacts.append(
+                            dict(path=str(path),
+                                 sha256=hashlib.sha256(
+                                     path.read_bytes()).hexdigest(),
+                                 retained_file=prefix + '/' + str(index) +
+                                 path.suffix))
+                self.observation_metadata[function][
+                    'timeline_artifacts'] = artifacts
             else:
                 profiler_native.init_function_metadata(function, name,
                                                        scope_id_names,

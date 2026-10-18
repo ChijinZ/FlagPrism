@@ -85,15 +85,21 @@ per-capture epoch qualification is separate. Count/native modes keep their
 existing meaning.
 
 The automatic timeline compiler now also requires native
-`TIMELINE_BOUNDARY_VERSION=2`. Its plan reports
-`timeline_boundary_strategy="outlined_device_calls_pending_region_audit"`: begin
-timestamps feed bit-preserving operand anchors, and explicit noinline device
-clock helpers consume the begin operands or observed end results. Helpers return
-64-bit timestamps and retain native site/phase markers. NVIDIA getter inline asm
+`TIMELINE_BOUNDARY_VERSION=3`. Its plan reports
+`timeline_boundary_strategy="runtime_zero_gated_calls_pending_region_audit"`.
+A reserved mutable module global is initialized to zero and loaded once per
+function with a volatile device read. Begin timestamps feed bit-preserving
+XOR anchors masked by that runtime value; end dependencies control a branch to
+an explicit zero-argument noinline clock helper. No user kernel argument is
+added. The global has no instrumentation writer; actual development probes also
+read its four bytes through the CUDA module API after checking the real math.
+Helpers return 64-bit timestamps and retain native site/phase markers. NVIDIA getter inline asm
 also declares an LLVM memory clobber, constraining memory motion without emitting
 a GPU completion barrier. The helper call ABI is target-specific, not a required
 backend-neutral hardware interface.
-Compiler/cache identity includes this implementation. Unsupported boundary
+Explicit version-2 IR retains its historical lowering; the automatic public
+path requires version 3. Compiler/cache identity includes this implementation
+and declares the matching version in its instrumentation-mode key. Unsupported boundary
 versions are rejected in plan extraction and lowering; old native plugins are
 rejected before public hook activation.
 
@@ -133,6 +139,20 @@ debug sections; executable tokens, line positions and actual text/JSON getters
 must agree. Duplicated static PCs remain candidates, not exact per-occurrence PC
 attribution. Read suppression, source-region ordering, completion and clock
 qualification still require separate proof; raw event status stays unverified.
+
+On the inspected sm_120 objects, exact marked PTX `mov.u64 %globaltimer` reads
+lower to both `CS2R Rn,SR_GLOBALTIMERLO` and `CS2UR URn,SR_GLOBALTIMERLO`.
+The mapper checks the matching opcode/register bank and original debug/object
+binding; a uniform register is not a different timing qualification. Wrong banks,
+32-bit/HI variants and unknown opcodes do not inherit the unit proof.
+Actual version-3 runtime-K and GEMM math/raw/maps work, but the GEMM ordinary
+control has 12 static HMMA instructions and the observed loop has 4, with changed
+static synchronization structure. This candidate has not established preservation
+of the ordinary pipeline or automatic source-region boundaries; neither counts
+nor positive durations remove that qualification gap.
+The actual source/build/install, original-failure recovery and compiler-stage
+comparison are recorded in the [v3 engineering checkpoint](../../integration/evidence/timeline-boundary-v3-r022/README.md).
+
 
 `timeline_runtime.TimelineOwnerPool` owns one independent record allocation per
 invocation. `timeline_cuda_runtime.CudaTimelineTransport` supplies the actual
@@ -259,10 +279,16 @@ It does not trust a previously written events/view document as evidence. NVIDIA
 counter-ns re-export additionally requires the retained cubin/PTX, machine-map
 status and text/JSON disassembly: the target-specific provider re-parses those
 inputs and binds its result to this binary/raw/observer and recorded host window.
-Missing or inconsistent required machine evidence is an explicit error; the
-canonical revision and original capture remain. GCU currently returns `raw_only`
-with the missing-unit reason and does not invent a trace. Ascend's new timeline
-producer and offline adapter remain unfinished.
+A historical `counter_mapping_unavailable` diagnostic can be revalidated by
+new rules if its complete original object and text/JSON inputs remain. The
+command does not rerun tools or the application, or overwrite that first status;
+it saves the newly derived map and input digests under `derived/machine/<revision>/`.
+A prior successful map must still match the fresh parse. Missing or inconsistent
+required machine evidence is an explicit error; the canonical revision and
+original capture remain. GCU currently returns `raw_only`
+with the missing-unit reason and does not invent a trace. Ascend's paired raw
+producer also supports offline canonical revisions, while its time-unit and
+Perfetto qualification remain unfinished.
 
 `derived/counter-ns/<revision>/` contains a canonical snapshot, inputs, views,
 traces and `complete.json`. Revision identity includes canonical/raw identity,

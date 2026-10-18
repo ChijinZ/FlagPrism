@@ -1,0 +1,176 @@
+{
+  "state": "native_built_not_device_qualified",
+  "controller": {
+    "pid": 54145,
+    "ppid": 1,
+    "pgid": 54145,
+    "startticks": 17192645
+  },
+  "device_work": false,
+  "component_base_commit": "9d2de1a779b5747988554bf3686ceaa9eb067215",
+  "source_snapshot": "dirty candidate; content hashes are authoritative",
+  "script_sha256": "9fa33f57d95a7527d59dd2fe554da1895faa65fa8947d26b4f25d25287cebd01",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "/workspace/chijin-timeline-r021/native-build-v2/FlagTree"
+      ],
+      "cwd": "None",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54146,
+        "ppid": 54145,
+        "pgid": 54146,
+        "startticks": 17192733
+      },
+      "returncode": 0,
+      "wall_ns": 7216213
+    },
+    {
+      "name": "git-snapshot-add",
+      "argv": [
+        "git",
+        "-C",
+        "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+        "add",
+        "."
+      ],
+      "cwd": "None",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54147,
+        "ppid": 54145,
+        "pgid": 54147,
+        "startticks": 17192734
+      },
+      "returncode": 0,
+      "wall_ns": 1666144248
+    },
+    {
+      "name": "git-snapshot-commit",
+      "argv": [
+        "git",
+        "-C",
+        "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+        "-c",
+        "user.name=FlagPrism local build",
+        "-c",
+        "user.email=local-build@example.invalid",
+        "commit",
+        "-m",
+        "Local archived patched FlagTree build input; not upstream ancestry"
+      ],
+      "cwd": "None",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54148,
+        "ppid": 54145,
+        "pgid": 54148,
+        "startticks": 17192901
+      },
+      "returncode": 0,
+      "wall_ns": 614470211
+    },
+    {
+      "name": "parent-patch-0",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r021/native-build-v2/component/integration/patches/nvidia/flagtree-source.patch"
+      ],
+      "cwd": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54174,
+        "ppid": 54145,
+        "pgid": 54174,
+        "startticks": 17193020
+      },
+      "returncode": 0,
+      "wall_ns": 3156575
+    },
+    {
+      "name": "parent-patch-1",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r021/native-build-v2/component/integration/patches/nvidia/automatic-scopes.patch"
+      ],
+      "cwd": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54175,
+        "ppid": 54145,
+        "pgid": 54175,
+        "startticks": 17193021
+      },
+      "returncode": 0,
+      "wall_ns": 1087161
+    },
+    {
+      "name": "parent-patch-2",
+      "argv": [
+        "git",
+        "apply",
+        "--no-index",
+        "--reverse",
+        "--check",
+        "/workspace/chijin-timeline-r021/native-build-v2/component/integration/patches/nvidia/preallocation-admission.patch"
+      ],
+      "cwd": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+      "timeout": 60,
+      "state": "terminal",
+      "worker": {
+        "pid": 54176,
+        "ppid": 54145,
+        "pgid": 54176,
+        "startticks": 17193021
+      },
+      "returncode": 0,
+      "wall_ns": 1087010
+    },
+    {
+      "name": "native-wheel",
+      "argv": [
+        "bash",
+        "/workspace/chijin-timeline-r021/native-build-v2/component/integration/patches/nvidia/build_automatic_wheel.sh",
+        "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+        "/workspace/chijin-timeline-r021/native-build-v2/component",
+        "/workspace/chijin-timeline-r021/native-build-v2/build",
+        "/workspace/chijin-timeline-r021/native-build-v2/wheelhouse"
+      ],
+      "cwd": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+      "timeout": 3600,
+      "state": "terminal",
+      "worker": {
+        "pid": 54177,
+        "ppid": 54145,
+        "pgid": 54177,
+        "startticks": 17193021
+      },
+      "returncode": 0,
+      "wall_ns": 658794193199
+    }
+  ],
+  "parent_snapshot_kind": "local commit of retained patched archive; separate component hashes",
+  "component": "/workspace/chijin-timeline-r021/native-build-v2/component",
+  "parent": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree",
+  "wheel": "/workspace/chijin-timeline-r021/native-build-v2/wheelhouse/flagtree-0.7.0+git8d3def1d-cp310-cp310-linux_x86_64.whl",
+  "wheel_bytes": 391267339,
+  "wheel_sha256": "26e1881a898db39f360af375c984bbaf9fc3fd8f6d0916eac7d790305a0cae21"
+}

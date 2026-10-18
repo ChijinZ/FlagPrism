@@ -1,0 +1,64 @@
+{
+  "Profiler/Dialect/lib/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/TargetInfo.cpp": {
+    "source_sha256": "4a31fc6f0771fce28f36841c05856dec23faaad04be4a4f73626f7253653e34f",
+    "native_build_input_sha256": "4a31fc6f0771fce28f36841c05856dec23faaad04be4a4f73626f7253653e34f"
+  },
+  "Profiler/Dialect/lib/ProtonToProtonGPU/AutomaticScopes.cpp": {
+    "source_sha256": "ec7d799316c010760a3d24be63097967dafe5f025b8131240223128967aff24b",
+    "native_build_input_sha256": "ec7d799316c010760a3d24be63097967dafe5f025b8131240223128967aff24b"
+  },
+  "Profiler/Dialect/lib/ProtonToProtonGPU/ProtonToProtonGPUPass.cpp": {
+    "source_sha256": "cc0aa31f3820f21934fcc8ad71bc4e847bbf03753eea3a2ffd9e94472e2ebabf",
+    "native_build_input_sha256": "cc0aa31f3820f21934fcc8ad71bc4e847bbf03753eea3a2ffd9e94472e2ebabf"
+  },
+  "Profiler/Dialect/triton_proton.cc": {
+    "source_sha256": "d84047c0350e49dd9f796a4a1eda5b3b5061d24c9511cb37c47a4c8e680181e0",
+    "native_build_input_sha256": "d84047c0350e49dd9f796a4a1eda5b3b5061d24c9511cb37c47a4c8e680181e0"
+  },
+  "Profiler/python/flagtree_profiler/hooks/instrumentation.py": {
+    "source_sha256": "cd8c0fd4b1faeaeb68125d58b9f59ec191fc2243e2efaad79121ad40e831fcaf",
+    "installed_sha256": "cd8c0fd4b1faeaeb68125d58b9f59ec191fc2243e2efaad79121ad40e831fcaf"
+  },
+  "Profiler/python/flagtree_profiler/hooks/timeline.py": {
+    "source_sha256": "fee792336d864fbb442647da83833e7ad8ddfb37232afedeb5a8ee2539b00728",
+    "installed_sha256": "fee792336d864fbb442647da83833e7ad8ddfb37232afedeb5a8ee2539b00728"
+  },
+  "Profiler/python/flagtree_profiler/timeline_nvidia_machine.py": {
+    "source_sha256": "ec629c3c3f4a083bc7e44d39e78a77a9690d75c3767f127c8da004c9ed6d5918",
+    "installed_sha256": "ec629c3c3f4a083bc7e44d39e78a77a9690d75c3767f127c8da004c9ed6d5918"
+  },
+  "Profiler/python/flagtree_profiler/timeline_reexport.py": {
+    "source_sha256": "a702236ec50f7374f2099d3fb2991e7f1eb51fddf2aec2e9f7de4e4b49384cac",
+    "installed_sha256": "a702236ec50f7374f2099d3fb2991e7f1eb51fddf2aec2e9f7de4e4b49384cac"
+  },
+  "Profiler/python/flagtree_profiler/timeline_unit_nvidia.py": {
+    "source_sha256": "eb529ce7332c0975416d03855337e3d42038f03cc629ec212f0515fa32ae1b30",
+    "installed_sha256": "eb529ce7332c0975416d03855337e3d42038f03cc629ec212f0515fa32ae1b30"
+  },
+  "tests/timeline/nvidia_boundary_binding_smoke.py": {
+    "source_sha256": "ddd782f94885178a69ab129664d4caf408694156a2c00cde63c590b5e9c00214"
+  },
+  "tests/timeline/p01_nvidia_boundary_math.py": {
+    "source_sha256": "9a142a85855935dca213a43e165a095edb1b838504c9e4cb98776ed386efea58"
+  },
+  "tests/timeline/test_nvidia_machine_map.py": {
+    "source_sha256": "e9ebdf8819354e362be9409625d3df26a750186da2ee993bf0366acd79d67ae1"
+  },
+  "tests/timeline/test_timeline_perfetto.py": {
+    "source_sha256": "6027b70e3df6b6cec9abf0bcb5a3ec4be0d8f84177ec8751c0c7fe1b47f2cad1"
+  },
+  "tests/timeline/p01_nvidia_boundary_vertical.py": {
+    "source_sha256": "7f553a68c5f4c9402728df66e9dfe0de5658ac4f5b2f78383cd288db260b704a"
+  },
+  "tests/timeline/p01_nvidia_opaque_boundaries.py": {
+    "source_sha256": "5622cca18e32776606bd8a50a27642cd9358af3a7a3931a24446cfac4b269c0f"
+  },
+  "native_core": {
+    "file": "/workspace/chijin-timeline-r021/native-build-v2/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+    "bytes": 922550904,
+    "sha256": "467a29d0da809d1c9cf536d640d25b753c6e6068b2655295040453a81241dd56"
+  },
+  "owner-public-normal": "...............................                                          [100%]\n31 passed in 2.46s\n",
+  "owner-public-optimized": "...............................                                          [100%]\n=============================== warnings summary ===============================\nchijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/_pytest/config/__init__.py:1346\n  /workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/_pytest/config/__init__.py:1346: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)\n  \n    self._warn_about_missing_assertion(mode)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n31 passed, 1 warning in 2.50s\n",
+  "gpu_after": "0, NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 15 MiB, 0 %\n"
+}
