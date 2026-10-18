@@ -10,6 +10,34 @@ wait brackets and checkpoints, with conditional byte-dependency facts. They do
 not establish precise source costs, hardware busy time, shared epochs or verified
 physical time flows.
 
+The inspected SM120 late path additionally publishes `shared_counter_exports`
+with `shared_counter_status` in each capture. Each shared file uses one raw
+counter origin and one counter epoch for selected threads of the same actual
+invocation/program. Full-CTA recordings select up to four actual lane-zero
+threads from distinct compiled warps (for four warps: 0, 32, 64, 96); a recorder
+that only captured its first four threads cannot supply other warp data.
+The common trace has compact per-thread operation tracks and preserves native
+event labels, raw references, source navigation and lifecycle coverage. The
+index labels these entries as shared counter groups.
+
+The epoch provider requires the actual SM120 full-width marked machine getter,
+complete raw/manifest binding, a completed single-CTA invocation and an
+independent host completion window. It combines those inputs with NVIDIA's
+[documented device clock semantics](https://nvidia.github.io/cccl/unstable/libcudacxx/standard_api/time_library.html),
+whose retained excerpt and digest are part of the provider's evidence. It does
+not use a cached qualification flag or infer alignment from equal counts.
+Every raw tick uses `(tick - common_origin) * period`; observers are never
+individually zeroed. Proof scopes do not authorize comparisons between files,
+independent calls, native CTAs or GPUs.
+
+`shared_counter_epoch_precision_unverified` means a common nominal counter
+coordinate, with read precision still unknown. It does not certify physical
+source-operation times, hardware overlap, engine busy or time arrows. These
+rights remain false, and the original isolated exports remain available.
+The public offline reexport adds `shared_exports` through the same provider,
+without replaying an application or replacing old canonical/trace artifacts.
+Missing or mismatched inputs retain an explicit shared-counter diagnostic.
+
 Previously qualified NVIDIA early-recorder captures retain their isolated
 observer-relative ns exports through the legacy reader. Ascend 910B c220-vector
 captures also have counter-unit-only exports. Neither these legacy exports nor

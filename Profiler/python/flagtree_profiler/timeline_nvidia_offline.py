@@ -79,3 +79,10 @@ def control_evidence(capture, machine_map, *, sass_lines, sass_json):
         sass_lines=sass_lines,
         sass_json=sass_json,
         plan=capture['owner']['plan']), Path(timeline_nvidia_control.__file__))
+
+
+def shared_counter_inputs(directory, capture, raw):
+    if not _late(capture):
+        return None
+    from .timeline_nvidia_shared import load_shared_counter_inputs
+    return load_shared_counter_inputs(directory, capture, raw)

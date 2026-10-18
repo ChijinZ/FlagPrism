@@ -297,6 +297,22 @@ class LateTimelineHook(InstrumentationHook):
                     status='counter_unit_only',
                     read_precision_status='unverified',
                     time_arrows_verified=False)
+        if owner['submission_outcome'] == 'returned':
+            try:
+                from ..timeline_nvidia_offline import shared_counter_inputs
+                from ..timeline_perfetto import write_shared_counter_exports
+                shared_batch, shared_proofs = shared_counter_inputs(
+                    directory, capture, raw)
+                capture[
+                    'shared_counter_exports'] = write_shared_counter_exports(
+                        directory, shared_batch, shared_proofs)
+                capture['shared_counter_status'] = dict(
+                    status='shared_counter_epoch_precision_unverified',
+                    physical_temporal_comparison_verified=False,
+                    time_arrows_verified=False)
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                capture['shared_counter_status'] = dict(status='unavailable',
+                                                        reason=str(error))
         _persist(directory / prefix.with_suffix('.json'),
                  (json.dumps(capture, indent=2) + '\n').encode())
         self._timeline_rows.append(

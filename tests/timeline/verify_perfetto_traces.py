@@ -33,6 +33,22 @@ def main():
     for item in manifest:
         path = Path(item['trace_file'])
         view = json.loads(Path(item['view_file']).read_text())
+        shared = view.get('coordinate_system'
+                          ) == 'single_invocation_program_shared_counter_ns'
+        if shared:
+            need(
+                view.get('schema_version') == 2
+                and view.get('counter_epoch_shared') is True
+                and view.get('physical_temporal_comparison_verified') is False
+                and view.get('time_arrows_verified') is False,
+                'Shared coordinates falsely claim physical timing rights')
+            for record in view['records']:
+                need(
+                    record['relative_ns'] == (record['tick'] -
+                                              view['origin_tick']) *
+                    view['unit_proof']['period_numerator_ns'] //
+                    view['unit_proof']['period_denominator'],
+                    'Shared coordinate independently zeroed an observer')
         raw = path.read_bytes()
         need(
             hashlib.sha256(raw).hexdigest() == item['sha256'],
@@ -62,7 +78,10 @@ def main():
                 extract_arg(arg_set_id, 'debug.event_id') AS event_id,
                 extract_arg(arg_set_id, 'debug.raw_record_ids') AS raw_record_ids,
                 extract_arg(arg_set_id, 'debug.time_quality') AS time_quality,
-                extract_arg(arg_set_id, 'debug.unit_provider') AS unit_provider
+                extract_arg(arg_set_id, 'debug.unit_provider') AS unit_provider,
+                extract_arg(arg_set_id, 'debug.observer_id') AS observer_id,
+                extract_arg(arg_set_id, 'debug.counter_domain_id') AS counter_domain_id,
+                extract_arg(arg_set_id, 'debug.shared_origin_tick') AS shared_origin_tick
                 FROM slice ORDER BY ts, id'''
             rows = list(tp.query(query))
             need(
@@ -84,9 +103,22 @@ def main():
                     'TP lost raw field references')
                 need(
                     row.time_quality
-                    == 'counter_unit_only_precision_unverified'
+                    == ('shared_counter_epoch_precision_unverified' if shared
+                        else 'counter_unit_only_precision_unverified')
                     and row.unit_provider == view['unit_proof']['provider'],
                     'TP lost qualification/provenance limits')
+                need(row.observer_id == event['observer_id'],
+                     'TP changed actual observer identity')
+                if shared:
+                    need(
+                        row.counter_domain_id == view['domain_id']
+                        and row.shared_origin_tick == str(view['origin_tick']),
+                        'TP lost shared epoch/origin provenance')
+            if shared:
+                need({row.observer_id
+                      for row in rows} == {o['id']
+                                           for o in view['observers']},
+                     'TP lost one of the shared observer tracks')
             bad = [
                 dict(name=row.name, value=row.value, severity=row.severity)
                 for row in tp.query(

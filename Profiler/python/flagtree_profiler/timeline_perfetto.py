@@ -93,6 +93,10 @@ def encode_counter_trace(view,
     untouched; this is a separate chronological export projection.
     """
     view = validate_counter_view(view, canonical, proof)
+    return _encode_counter_views([view], max_bytes=max_bytes)
+
+
+def _encode_counter_views(views, *, max_bytes, shared=None):
     _integer(max_bytes, 'Perfetto byte budget', 1, 64 * 1024 * 1024)
     output = bytearray()
     first = True
@@ -131,108 +135,131 @@ def encode_counter_trace(view,
             packet(_bytes(60, descriptor))
         return uuid
 
-    identity = view['identity']
-    observer = view['observer']
-    namespace = ':'.join(
-        [identity['capture_id'], identity['invocation_id'], observer['id']])
-    root = track(namespace,
-                 identity['invocation_id'] + ' — isolated counter ns')
-    observer_track = track(
-        namespace + ':observer',
-        'program ' + str(observer['program_coordinates']) + ' / ' +
-        observer['kind'] + ' ' + observer['local_id'], root)
-    sites = {row['id']: row for row in view['sites']}
-    sources = {row['id']: row for row in view['sources']}
-    records = {row['id']: row for row in view['records']}
-
-    def presentation(site):
-        group = site.get('attributes', {}).get('display.track_group')
-        if group is None:
-            return site['id'], site['name'], False
-        if type(group) is not str or not group or len(
-                group.encode('utf-8')) > 1024:
-            raise ValueError(
-                'Display track group must be a bounded nonempty string')
-        return 'display-group:' + json.dumps([site['semantic'], group
-                                              ]), group, True
-
-    assignments, lanes, lane_counts = {}, {}, {}
-    ordered = sorted(view['events'],
-                     key=lambda e:
-                     (e['start_ns'], e['end_ns'] or e['start_ns'], e['id']))
-    for event in ordered:
-        site = sites[event['site_id']]
-        display_key, _, grouped = presentation(site)
-        key = (display_key, event['semantic'])
-        available = lanes.setdefault(key, [])
-        if available and available[0][0] <= event['start_ns']:
-            _, lane = heapq.heappop(available)
-        else:
-            lane = lane_counts.get(key, 0)
-            lane_counts[key] = lane + 1
-        occupied_until = event['end_ns'] if event[
-            'end_ns'] is not None else event['start_ns']
-        if grouped and occupied_until == event['start_ns']:
-            # Give coincident points separate visual lanes without moving time.
-            occupied_until += 1
-        heapq.heappush(available, (occupied_until, lane))
-        assignments[event['id']] = (*key, lane)
     pending = []
     pending_bytes = 0
     ordinal = 0
-    for event in ordered:
-        site = sites[event['site_id']]
-        display_key, display_name, _ = presentation(site)
-        lane = assignments[event['id']][2]
-        tid = track(
-            namespace + ':' + display_key + ':' + str(lane),
-            event['semantic'] + ' / ' + display_name + ' / lane ' + str(lane),
-            observer_track)
-        refs = [records[key] for key in event['record_ids']]
-        annotations = dict(
-            event_id=event['id'],
-            invocation_id=identity['invocation_id'],
-            binary_id=identity['binary_id'],
-            observer_id=observer['id'],
-            site_id=site['id'],
-            semantic=event['semantic'],
-            time_quality='counter_unit_only_precision_unverified',
-            source_boundary_status=view['source_boundary_status'],
-            source_locations=[
-                sources[key]['location'] for key in site['source_ids']
-            ],
-            raw_sha256=view['raw_artifact']['sha256'],
-            raw_record_ids=event['record_ids'],
-            raw_offsets=[row['offset'] for row in refs],
-            raw_ticks=[str(row['tick']) for row in refs],
-            occurrence=event['occurrence'],
-            iteration_id=event['iteration_id'],
-            coverage=event['coverage'],
-            missing_reason=event['missing_reason'],
-            endpoint_error_ns=None,
-            period_numerator_ns=view['unit_proof']['period_numerator_ns'],
-            period_denominator=view['unit_proof']['period_denominator'],
-            unit_provider=view['unit_proof']['provider'],
-            unit_evidence_ids=view['unit_proof']['evidence_ids'])
-        event_type = 1 if event['kind'] == 'interval' else 3
-        label = ('counter bracket: '
-                 if event_type == 1 else 'observed endpoint: ') + site['name']
-        message = _uint(9, event_type) + _uint(11, tid) + _text(
-            23, label) + _text(22, event['semantic'])
-        for name, value in annotations.items():
-            message += _annotation(name, value)
-        estimate = len(message) + 128
-        if len(output) + pending_bytes + estimate > max_bytes:
-            raise ValueError(
-                'Perfetto trace exceeds byte budget; originals remain intact')
-        pending_bytes += estimate
-        pending.append((event['start_ns'], tid, ordinal, _bytes(11, message)))
-        ordinal += 1
-        if event_type == 1:
-            pending.append((event['end_ns'], tid, ordinal,
-                            _bytes(11,
-                                   _uint(9, 2) + _uint(11, tid))))
+    for view in views:
+        identity = view['identity']
+        observer = view['observer']
+        namespace = ':'.join([
+            identity['capture_id'], identity['invocation_id'], observer['id']
+        ])
+        if shared is None:
+            root = track(namespace,
+                         identity['invocation_id'] + ' — isolated counter ns')
+        else:
+            root = track(
+                shared['domain_id'], identity['invocation_id'] +
+                ' / program ' + str(shared['program_coordinates']) +
+                ' — shared counter ns (precision unverified)')
+        observer_track = track(
+            namespace + ':observer',
+            'program ' + str(observer['program_coordinates']) + ' / ' +
+            observer['kind'] + ' ' + observer['local_id'], root)
+        sites = {row['id']: row for row in view['sites']}
+        sources = {row['id']: row for row in view['sources']}
+        records = {row['id']: row for row in view['records']}
+
+        def presentation(site):
+            if shared is not None:
+                return 'observer-order', 'Observed internal operations', False
+            group = site.get('attributes', {}).get('display.track_group')
+            if group is None:
+                return site['id'], site['name'], False
+            if type(group) is not str or not group or len(
+                    group.encode('utf-8')) > 1024:
+                raise ValueError(
+                    'Display track group must be a bounded nonempty string')
+            return 'display-group:' + json.dumps([site['semantic'], group
+                                                  ]), group, True
+
+        assignments, lanes, lane_counts = {}, {}, {}
+        ordered = sorted(
+            view['events'],
+            key=lambda e:
+            (e['start_ns'], e['end_ns'] or e['start_ns'], e['id']))
+        for event in ordered:
+            site = sites[event['site_id']]
+            display_key, _, grouped = presentation(site)
+            key = (display_key, event['semantic']
+                   if shared is None else 'counter_observations')
+            available = lanes.setdefault(key, [])
+            if available and available[0][0] <= event['start_ns']:
+                _, lane = heapq.heappop(available)
+            else:
+                lane = lane_counts.get(key, 0)
+                lane_counts[key] = lane + 1
+            occupied_until = event['end_ns'] if event[
+                'end_ns'] is not None else event['start_ns']
+            if grouped and occupied_until == event['start_ns']:
+                # Give coincident points separate visual lanes without moving time.
+                occupied_until += 1
+            heapq.heappush(available, (occupied_until, lane))
+            assignments[event['id']] = (*key, lane)
+        for event in ordered:
+            site = sites[event['site_id']]
+            display_key, display_name, _ = presentation(site)
+            lane = assignments[event['id']][2]
+            tid = track(
+                namespace + ':' + display_key + ':' + str(lane),
+                ((event['semantic'] + ' / ') if shared is None else '') +
+                display_name + ' / lane ' + str(lane), observer_track)
+            refs = [records[key] for key in event['record_ids']]
+            annotations = dict(
+                event_id=event['id'],
+                invocation_id=identity['invocation_id'],
+                binary_id=identity['binary_id'],
+                observer_id=observer['id'],
+                site_id=site['id'],
+                semantic=event['semantic'],
+                time_quality=('counter_unit_only_precision_unverified'
+                              if shared is None else
+                              'shared_counter_epoch_precision_unverified'),
+                source_boundary_status=view['source_boundary_status'],
+                source_locations=[
+                    sources[key]['location'] for key in site['source_ids']
+                ],
+                raw_sha256=view['raw_artifact']['sha256'],
+                raw_record_ids=event['record_ids'],
+                raw_offsets=[row['offset'] for row in refs],
+                raw_ticks=[str(row['tick']) for row in refs],
+                occurrence=event['occurrence'],
+                iteration_id=event['iteration_id'],
+                coverage=event['coverage'],
+                missing_reason=event['missing_reason'],
+                endpoint_error_ns=None,
+                period_numerator_ns=view['unit_proof']['period_numerator_ns'],
+                period_denominator=view['unit_proof']['period_denominator'],
+                unit_provider=view['unit_proof']['provider'],
+                unit_evidence_ids=view['unit_proof']['evidence_ids'])
+            if shared is not None:
+                annotations.update(counter_domain_id=shared['domain_id'],
+                                   counter_epoch_id=shared['epoch_id'],
+                                   shared_origin_tick=str(
+                                       shared['origin_tick']),
+                                   physical_temporal_comparison_verified=False,
+                                   time_arrows_verified=False)
+            event_type = 1 if event['kind'] == 'interval' else 3
+            label = ('counter bracket: ' if event_type == 1 else
+                     'observed endpoint: ') + site['name']
+            message = _uint(9, event_type) + _uint(11, tid) + _text(
+                23, label) + _text(22, event['semantic'])
+            for name, value in annotations.items():
+                message += _annotation(name, value)
+            estimate = len(message) + 128
+            if len(output) + pending_bytes + estimate > max_bytes:
+                raise ValueError(
+                    'Perfetto trace exceeds byte budget; originals remain intact'
+                )
+            pending_bytes += estimate
+            pending.append(
+                (event['start_ns'], tid, ordinal, _bytes(11, message)))
             ordinal += 1
+            if event_type == 1:
+                pending.append((event['end_ns'], tid, ordinal,
+                                _bytes(11,
+                                       _uint(9, 2) + _uint(11, tid))))
+                ordinal += 1
     for timestamp, _, _, payload in sorted(pending):
         packet(payload, timestamp)
     return bytes(output)
@@ -322,9 +349,12 @@ def _write_committed_index(directory):
     """Called under the same lock as receipt publication, including retries."""
     from .timeline_store import committed_exports, persist
     links = []
-    for item in committed_exports(directory):
+    entries = committed_exports(directory)
+    for item in entries:
         label = item['invocation_id'] + ' / program ' + str(
-            item['program_coordinates']) + ' / ' + item['observer_id']
+            item['program_coordinates']) + ' / ' + (
+                'shared counter group '
+                if item.get('observer_ids') else '') + item['observer_id']
         links.append('<li><a href="' +
                      html.escape(item['trace_file'], quote=True) + '">' +
                      html.escape(label) + '</a>'
@@ -339,6 +369,12 @@ def _write_committed_index(directory):
         'No data is uploaded by this index.</p><ul>' + ''.join(links) + '</ul>'
         '<p><a href="index.json">Raw capture index and qualification status</a></p></body></html>'
     )
+    if any(item.get('observer_ids') for item in entries):
+        body = body.replace(
+            'Each trace has an isolated observer-relative ns axis.',
+            'Isolated traces have observer-local origins. Shared counter groups use one verified '
+            'counter epoch and origin within their stated invocation/program scope; read precision remains unknown.'
+        )
     if not links:
         body = body.replace(
             '<ul></ul>',
@@ -355,3 +391,103 @@ def write_trace_index(directory, capture_rows):
     from .timeline_store import export_lock
     with export_lock(directory):
         _write_committed_index(directory)
+
+
+def encode_shared_counter_trace(view,
+                                canonical,
+                                *,
+                                proof,
+                                max_bytes=16 * 1024 * 1024):
+    from .timeline_shared import validate_shared_counter_view
+    view = validate_shared_counter_view(view, canonical, proof)
+    leaves = [
+        dict(view,
+             observer=observer,
+             records=[
+                 r for r in view['records']
+                 if r['observer_id'] == observer['id']
+             ],
+             events=[
+                 e for e in view['events']
+                 if e['observer_id'] == observer['id']
+             ]) for observer in view['observers']
+    ]
+    return _encode_counter_views(leaves, max_bytes=max_bytes, shared=view)
+
+
+def write_shared_counter_exports(directory, canonical, proofs):
+    """Publish scoped shared-counter traces, with precision explicitly unknown."""
+    from . import timeline_store, timeline_shared
+    from .timeline_shared import derive_shared_counter_view, SharedCounterProof
+    files = {'canonical.json': timeline_store.json_bytes(canonical)}
+    if type(proofs) not in (list, tuple) or len(proofs) > 128:
+        raise ValueError('Expected bounded shared counter proof set')
+    rows, used, domains, total = [], set(), set(), 0
+    for proof in sorted(proofs,
+                        key=lambda p: (p.program_coordinates, p.domain_id)):
+        if not isinstance(proof, SharedCounterProof):
+            raise TypeError(
+                'Shared trace requires a validated counter-domain proof')
+        if proof.domain_id in domains:
+            raise ValueError('Shared counter domain identity reused')
+        domains.add(proof.domain_id)
+        if used.intersection(proof.observer_ids):
+            raise ValueError(
+                'Shared trace observer appears in overlapping proof scopes')
+        used.update(proof.observer_ids)
+        view = derive_shared_counter_view(canonical, proof)
+        payload = encode_shared_counter_trace(view,
+                                              canonical,
+                                              proof=proof,
+                                              max_bytes=16 * 1024 * 1024 -
+                                              total)
+        total += len(payload)
+        view_file = 'views/' + proof.domain_id + '.json'
+        trace_file = 'traces/' + proof.domain_id + '.pftrace'
+        files[view_file] = timeline_store.json_bytes(view)
+        files[trace_file] = payload
+        rows.append(
+            dict(observer_id=proof.domain_id,
+                 observer_ids=list(proof.observer_ids),
+                 invocation_id=proof.invocation_id,
+                 program_coordinates=list(proof.program_coordinates),
+                 view_file=view_file,
+                 trace_file=trace_file,
+                 bytes=len(payload),
+                 sha256=hashlib.sha256(payload).hexdigest(),
+                 clock_status='shared_counter_epoch_precision_unverified',
+                 read_precision_status='unverified',
+                 time_arrows_verified=False))
+    if not rows:
+        return []
+    inputs = dict(
+        schema_version=2,
+        kind='single_program_shared_counter_ns',
+        identity=canonical['identity'],
+        canonical_sha256=timeline_views.document_sha256(canonical),
+        raw_artifact=canonical['raw_artifact'],
+        proofs=[asdict(p) for p in sorted(proofs, key=lambda p: p.domain_id)],
+        implementation_sha256={
+            'clock':
+            hashlib.sha256(Path(
+                timeline_clock.__file__).read_bytes()).hexdigest(),
+            'events':
+            hashlib.sha256(Path(
+                timeline_events.__file__).read_bytes()).hexdigest(),
+            'views':
+            hashlib.sha256(Path(
+                timeline_views.__file__).read_bytes()).hexdigest(),
+            'exporter':
+            hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'shared_projection':
+            hashlib.sha256(Path(
+                timeline_shared.__file__).read_bytes()).hexdigest(),
+            'store':
+            hashlib.sha256(Path(
+                timeline_store.__file__).read_bytes()).hexdigest()
+        },
+        perfetto_schema_commit=PERFETTO_SCHEMA_COMMIT)
+    with timeline_store.export_lock(directory):
+        rows = timeline_store.publish_revision(directory, inputs, files, rows)
+        _write_committed_index(directory)
+    return rows

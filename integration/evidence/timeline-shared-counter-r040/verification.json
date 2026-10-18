@@ -1,0 +1,606 @@
+{
+  "archive": {
+    "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-040/preflight/shared-axis-evidence-v1.tgz",
+    "bytes": 94374094,
+    "sha256": "6aef36fc253ef502bf576c5aa34c161d2f14d929714cf9c7e8313b87f6832477",
+    "members": 4684,
+    "retained_file_hashes_verified": 4681
+  },
+  "current_sources_match_installed_input": {
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "e989e05e932d7fd6e86aa8682d872dad312ac17a0bcbc1c92c39f2250b4f1f81",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_offline.py": "c49f67af7f5b9c50ec1caa69058ce1ccf4da60f7cb5812914d93301b4b6a3aa8",
+    "Profiler/python/flagtree_profiler/timeline_perfetto.py": "4d1002af03e71c8e9a41d83c85877fb07eb27a025ee9503c2b58dde014c3716a",
+    "Profiler/python/flagtree_profiler/timeline_reexport.py": "05a2782e681e828b9dbe90e80fb1948d737def98c499ad5fb750832e920020de",
+    "tests/timeline/verify_perfetto_traces.py": "0fc4c167ea1496c088389b1533bd95ea1dce60e9833b282db3ace9040e8d915e",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_shared.py": "3e2b9e5e722e64b4bf786e5d78f0ca40126b04de6e04137c92aed35a6ce72335",
+    "Profiler/python/flagtree_profiler/timeline_shared.py": "148c4cb2983f3044a3859b1f755bea65ebe02313af051ef698bbdaf24a439f28",
+    "tests/timeline/p01_nvidia_shared_counter.py": "254fc66a52dd4191568808562e23e7995d6c9c766242bd5cfb3602ffb0d8a24f"
+  },
+  "post_install_deltas": {
+    "Profiler/docs/timeline_runtime.md": {
+      "sha256": "bb5824512b6f53db420d407b6f00c991b215913557a97a9c9a4e9289706541c4",
+      "scope": "runtime documentation updated after tests; no product change"
+    },
+    "tests/timeline/browser_counter_traces.py": {
+      "sha256": "9615119b39b671eef4622a12118b9bdefccd2dbadaebf97d034066d843603b7d",
+      "scope": "actual successful UI-only-v2 checker; first-row canvas click fixes test selection, no product code changed"
+    }
+  },
+  "installed": {
+    "status": "installed_default_shared_CTA_counter_coordinates_recovery_offline_passed_not_precision_or_flows",
+    "wheel_sha256": "e81b9cd24d035d378ffb9f9a0a119b0f7b024a79b8492fa2d7d1085e705e5814",
+    "installed_members": 617,
+    "python": "/workspace/chijin-timeline-r040/runs/install-public-v1/output/venv/bin/python",
+    "native_core_reused": true,
+    "standalone_tool_reused_exact_source": true
+  },
+  "installed_terminal": {
+    "controller": {
+      "pid": 79236,
+      "ppid": 1,
+      "pgid": 79236,
+      "startticks": 22088400
+    },
+    "worker": {
+      "pid": 79237,
+      "ppid": 79236,
+      "pgid": 79237,
+      "startticks": 22088402
+    },
+    "argv": [
+      "/workspace/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r040/install-public-input-v1/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r040/runs/install-public-v1/output"
+    ],
+    "argv_sha256": "45c224f2148df226631770e337c720e2df980fd0e197455636781d3eb7702af6",
+    "script_sha256": "454c030019592c3a7ee2c8b4fd0fa06023d72ce2739d78d9ead851070f8b345d",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 161437576168
+  },
+  "shared_normal": {
+    "status": "actual_distinct_warp_shared_counter_coordinates_and_legacy_bytes_passed_not_physical_precision_or_flows",
+    "actual": [
+      {
+        "invocation": "invocation-6e02102ba650481faf262301a5015fe7",
+        "program": [
+          0,
+          0,
+          0
+        ],
+        "observers": 4,
+        "events": 332,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 0
+        }
+      },
+      {
+        "invocation": "invocation-6e02102ba650481faf262301a5015fe7",
+        "program": [
+          1,
+          1,
+          0
+        ],
+        "observers": 4,
+        "events": 332,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 32,
+          "96": 32
+        }
+      },
+      {
+        "invocation": "invocation-83ce040ab9014c6a962f266e8c4ae4ae",
+        "program": [
+          0,
+          0,
+          0
+        ],
+        "observers": 4,
+        "events": 652,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 0
+        }
+      },
+      {
+        "invocation": "invocation-83ce040ab9014c6a962f266e8c4ae4ae",
+        "program": [
+          1,
+          1,
+          0
+        ],
+        "observers": 4,
+        "events": 652,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 32
+        }
+      }
+    ],
+    "negative_cases": [
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "capture_loss",
+        "reason": "Batch completeness disagrees with retained event coverage"
+      },
+      {
+        "case": "boolean_native_geometry",
+        "reason": "Shared counter provider requires one completed native CTA per program"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "capture_loss",
+        "reason": "Batch completeness disagrees with retained event coverage"
+      },
+      {
+        "case": "boolean_native_geometry",
+        "reason": "Shared counter provider requires one completed native CTA per program"
+      }
+    ],
+    "shared_traces": 4,
+    "original_files_unchanged": 102,
+    "application_replayed": false
+  },
+  "shared_optimized": {
+    "status": "actual_distinct_warp_shared_counter_coordinates_and_legacy_bytes_passed_not_physical_precision_or_flows",
+    "actual": [
+      {
+        "invocation": "invocation-6e02102ba650481faf262301a5015fe7",
+        "program": [
+          0,
+          0,
+          0
+        ],
+        "observers": 4,
+        "events": 332,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 0
+        }
+      },
+      {
+        "invocation": "invocation-6e02102ba650481faf262301a5015fe7",
+        "program": [
+          1,
+          1,
+          0
+        ],
+        "observers": 4,
+        "events": 332,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 32,
+          "96": 32
+        }
+      },
+      {
+        "invocation": "invocation-83ce040ab9014c6a962f266e8c4ae4ae",
+        "program": [
+          0,
+          0,
+          0
+        ],
+        "observers": 4,
+        "events": 652,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 0
+        }
+      },
+      {
+        "invocation": "invocation-83ce040ab9014c6a962f266e8c4ae4ae",
+        "program": [
+          1,
+          1,
+          0
+        ],
+        "observers": 4,
+        "events": 652,
+        "first_ns_by_observer": {
+          "0": 0,
+          "32": 0,
+          "64": 0,
+          "96": 32
+        }
+      }
+    ],
+    "negative_cases": [
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "capture_loss",
+        "reason": "Batch completeness disagrees with retained event coverage"
+      },
+      {
+        "case": "boolean_native_geometry",
+        "reason": "Shared counter provider requires one completed native CTA per program"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "different_invocation",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "changed_canonical",
+        "reason": "Shared counter proof belongs to another raw/canonical invocation"
+      },
+      {
+        "case": "cross_program_observers",
+        "reason": "Shared proof crosses program scope or incomplete observers"
+      },
+      {
+        "case": "forged_shared_coordinate",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "forged_time_flow_rights",
+        "reason": "Shared counter view differs from original canonical/proof projection"
+      },
+      {
+        "case": "capture_loss",
+        "reason": "Batch completeness disagrees with retained event coverage"
+      },
+      {
+        "case": "boolean_native_geometry",
+        "reason": "Shared counter provider requires one completed native CTA per program"
+      }
+    ],
+    "shared_traces": 4,
+    "original_files_unchanged": 102,
+    "application_replayed": false
+  },
+  "SQL": {
+    "status": "generated_protobuf_and_real_TP_exact_counter_ns_passed_not_full_P01",
+    "checks": [
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/75f14edd436af898e438afb0cf3af9dc20922719e1b70c42950168b8d0dbe7b2/traces/shared-device-counter-3d0d54a33a87c1cda52a7d01801755a125890a7e8e040c3ad576f4baea9b8372.pftrace",
+        "sha256": "fd199021e5dbe8a54a46cbdf9a06881dd76ab6756b8f74882b39633466974927",
+        "fixture": false,
+        "slices": 332,
+        "protobuf_packets": 560,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/75f14edd436af898e438afb0cf3af9dc20922719e1b70c42950168b8d0dbe7b2/traces/shared-device-counter-4b00883cd0c5a8d20e4924722f0c6443b77ecaf48c1d3f72e7da46182a1b3e16.pftrace",
+        "sha256": "70f7c915bbb0e3f70778da5c493bb521a3dd0b4e4ebcf8a83df208c18c9c9e54",
+        "fixture": false,
+        "slices": 332,
+        "protobuf_packets": 560,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/913c069be64545d62a5ddb92979761bc66afc4cfe9751a5dde4b8201db264299/traces/shared-device-counter-9892383f8ad7488989cf3dc5ce1c3961d8546f43cf54dd2c904944f8ee8652d2.pftrace",
+        "sha256": "51764e237174851d45c52322a84c404c4330533407c81796e823b2339bd2d54b",
+        "fixture": false,
+        "slices": 652,
+        "protobuf_packets": 1120,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/913c069be64545d62a5ddb92979761bc66afc4cfe9751a5dde4b8201db264299/traces/shared-device-counter-089188de59bdfed14ff0decb8aff3e25c2f27bf71a986cf5aa395baa06b48881.pftrace",
+        "sha256": "540f6191296245b55a5fbec46b972bda1f2cbdfb05c89a302b7ca43d6c166b26",
+        "fixture": false,
+        "slices": 652,
+        "protobuf_packets": 1120,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5c105a8b5483f34c39096f3c3d41e687daa61aef142a5f693b47fd16b660b92c/traces/shared-device-counter-42b9e7214c79fa58a44015097b23f7d6df54d3375f784dc611277c678a1a3577.pftrace",
+        "sha256": "41e3f45ef99396497ec0f45a3608fc530504265bd22427ab688e1e2abd45b13e",
+        "fixture": false,
+        "slices": 332,
+        "protobuf_packets": 560,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5c105a8b5483f34c39096f3c3d41e687daa61aef142a5f693b47fd16b660b92c/traces/shared-device-counter-111fb7377f80c356581b4b8b145576c9efd0175c980d10a89b2a0bddd940ae7e.pftrace",
+        "sha256": "8f1c8a43cd51ebbe87e9b4c995f5876bf90ad66aa0fb3b9912e30f1777821fda",
+        "fixture": false,
+        "slices": 332,
+        "protobuf_packets": 560,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5b2d133299f62669aa9715ae6a0d950d1f9c0bcedd3fc85b4ebdfad567feb685/traces/shared-device-counter-de5a6c663a73e5378bdedab47d99019e8b5147051da3cb75675abb42ddec5015.pftrace",
+        "sha256": "f6ab165dca6a1d9c3305d31673696869da2787414cafe0083dc7483e21b45fea",
+        "fixture": false,
+        "slices": 652,
+        "protobuf_packets": 1120,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5b2d133299f62669aa9715ae6a0d950d1f9c0bcedd3fc85b4ebdfad567feb685/traces/shared-device-counter-04af564a3eb5be6e2e1be38126f8d80337d57bd52441d45806a75d51f4e7c08c.pftrace",
+        "sha256": "65d303458603252fb6f5d047f7f967eade2a3c98cad10e884950ed8db120735b",
+        "fixture": false,
+        "slices": 652,
+        "protobuf_packets": 1120,
+        "exact_ns_and_raw_references": true,
+        "importer_errors": [],
+        "flows": 0
+      }
+    ],
+    "clock_precision_qualified": false,
+    "source_boundaries_qualified": false,
+    "async_qualified": false,
+    "UI_qualified": false
+  },
+  "UI": {
+    "status": "six_actual_counter_traces_UI_checked_not_full_timeline_qualification",
+    "checks": [
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/75f14edd436af898e438afb0cf3af9dc20922719e1b70c42950168b8d0dbe7b2/traces/shared-device-counter-3d0d54a33a87c1cda52a7d01801755a125890a7e8e040c3ad576f4baea9b8372.pftrace",
+        "trace_sha256": "fd199021e5dbe8a54a46cbdf9a06881dd76ab6756b8f74882b39633466974927",
+        "event_id": "event-28e7f7716b077a5b3f5dc86f2823bf24512af5dd734b5c7fda46a9d1a86ee018",
+        "actual_observers": [
+          "observer-4d20f97d4ce2ca9c51fa6aaad550ac8f00769bfff8497a5f529e185f7a9861cc",
+          "observer-1571ae31130a5a7b421e36e0355974545d1ee6243c83f0640bc7a022b252345c",
+          "observer-d90b4c3e819c5f3bc83b50d2760eea03e1096fb7c24e43143b5198b079251f8a",
+          "observer-0b574839753f450a00df64c793549d3b3b594cd5c3196bd15f484e05ee28ed9e"
+        ]
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/913c069be64545d62a5ddb92979761bc66afc4cfe9751a5dde4b8201db264299/traces/shared-device-counter-9892383f8ad7488989cf3dc5ce1c3961d8546f43cf54dd2c904944f8ee8652d2.pftrace",
+        "trace_sha256": "51764e237174851d45c52322a84c404c4330533407c81796e823b2339bd2d54b",
+        "event_id": "event-52cd1a1f859fdaa1b1f3dbb4db02d541534f39b1a8fefe524a48b8e94718f8f9",
+        "actual_observers": [
+          "observer-662efe3739cb591b93ff4076ba30495fdc78bf83f9783965d55553115b2e9459",
+          "observer-f082121b33d41dbe0ab76b19c409e31894e58f9cc6d2e4a3abdad42a2a0cedcb",
+          "observer-543f1c24f0a60b8c9bab799cdc553a89d43ae8377cfd426ad1b163c660492631",
+          "observer-c7e1ba17a6f51a3e50a7abfeb696991247bc7c09774d60f2e900449da8a77660"
+        ]
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5c105a8b5483f34c39096f3c3d41e687daa61aef142a5f693b47fd16b660b92c/traces/shared-device-counter-42b9e7214c79fa58a44015097b23f7d6df54d3375f784dc611277c678a1a3577.pftrace",
+        "trace_sha256": "41e3f45ef99396497ec0f45a3608fc530504265bd22427ab688e1e2abd45b13e",
+        "event_id": "event-6b564ad2753ec05a3c3f885b76e41367c71be19920d2fe157fc1311a4eac19a6",
+        "actual_observers": [
+          "observer-e5a6d31dd41214e9718b293f6e5618ba0152a6f594364378e7347d58977a3568",
+          "observer-309090b880dde33bd0054650fa0177c44b84336e37095c02ceeefd5b1e1c5d90",
+          "observer-29e0dc982d3466f46edc6f1e9df0ff09842c177a184124f79623901cbffc415b",
+          "observer-c88de0b69f11f5d43d893c294bf84849c0e835de97d42ce9fd2a053469b6ff9a"
+        ]
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/upgraded/derived/counter-ns/5b2d133299f62669aa9715ae6a0d950d1f9c0bcedd3fc85b4ebdfad567feb685/traces/shared-device-counter-de5a6c663a73e5378bdedab47d99019e8b5147051da3cb75675abb42ddec5015.pftrace",
+        "trace_sha256": "f6ab165dca6a1d9c3305d31673696869da2787414cafe0083dc7483e21b45fea",
+        "event_id": "event-aa093250b53cf29cf08247b77335628dd182a0c87abfb5010a96c691368397c6",
+        "actual_observers": [
+          "observer-72cf9233b09c8977fd2002dedea05363859fd1c34c44fef3ac60153d169d98d6",
+          "observer-ebe276dc5409b12aab0afc8e694c140a4239136a230d2edd745bb6af9c791b04",
+          "observer-0f3a47c02d64791dc146a92ac59db791a080badae5560b249c8147a1001c823f",
+          "observer-36c3cf082d7e9a20e0e1b68529bff5827bd25ed5790e446b83da3b78fd48bec8"
+        ]
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/75f14edd436af898e438afb0cf3af9dc20922719e1b70c42950168b8d0dbe7b2/traces/shared-device-counter-4b00883cd0c5a8d20e4924722f0c6443b77ecaf48c1d3f72e7da46182a1b3e16.pftrace",
+        "trace_sha256": "70f7c915bbb0e3f70778da5c493bb521a3dd0b4e4ebcf8a83df208c18c9c9e54",
+        "event_id": "event-cca897af348cf4e60b7c73c9c8d5b5e488a102bd9eed8e7a917f0628a1aea28c",
+        "actual_observers": [
+          "observer-ffc9046c46525466588add07984011d9e717d0d43f2d6854fdcfb198823a0d4e",
+          "observer-d92ae3c282c44398e632188cdaaded3e91cd626cc73ab2600e44fc2d4304da9d",
+          "observer-cadcb44103e122af504bc8f10068e56ddcd9a82d4738481b8d08a5888504a334",
+          "observer-be59b2f736a12e50c4f1c16fd22035a686d1c236362d5cbb00fbca52e9feec78"
+        ]
+      },
+      {
+        "trace_file": "/workspace/chijin-timeline-r040/runs/installed-views-v1/output/timeline/fresh/derived/counter-ns/913c069be64545d62a5ddb92979761bc66afc4cfe9751a5dde4b8201db264299/traces/shared-device-counter-089188de59bdfed14ff0decb8aff3e25c2f27bf71a986cf5aa395baa06b48881.pftrace",
+        "trace_sha256": "540f6191296245b55a5fbec46b972bda1f2cbdfb05c89a302b7ca43d6c166b26",
+        "event_id": "event-753aeb0840de3c9d0e2291d33cdb9b8f79f7851d61a54e9f718a130b3234f99b",
+        "actual_observers": [
+          "observer-4fdddf68e3625a5fda4d6247fe8360d50a92555a4eeeb88f640d3d5b7532a569",
+          "observer-262333397744d57f5e5d2a6ccab6636772e73a5166d64aed64a7258e765ca24b",
+          "observer-3213ddf418d01cbfa7825a9421733623f49a436377b59a8c2233c6712168ff85",
+          "observer-a488008d9be16901762918658a2141ace6a6b07ee096712679edd70b50527c7e"
+        ]
+      }
+    ],
+    "browser_version": "140.0.7339.16"
+  },
+  "legacy": {
+    "status": "actual_installed_legacy24_exact_bytes_and_TP_passed",
+    "legacy": {
+      "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+      "real_captures": 3,
+      "real_traces": 24,
+      "fresh_reexport_processes": 3,
+      "original_artifacts_unchanged": 110,
+      "original_environment_denied_in_two_processes": true,
+      "forbidden_environment_roots": [
+        "/workspace/chijin-timeline-r024/"
+      ],
+      "trace_bytes_match_prior_bundle": true,
+      "application_replayed": false,
+      "raw_originals": {
+        "captures/invocation-b8badd6b82cf45a696dfcf0c895cbd52.raw": "cc38fb40766fd8e56ab01a37b6195cee5b6801f961c79ebbe1686b761593357e",
+        "captures/invocation-fd624fd2bc444740bb52147836afe2b2.raw": "78e1c7cef37ba3454e6dd2f0a849824cb1c20b0e733a3fcabe2c4d93703dfa33",
+        "captures/invocation-c7b556d00d9e4c86878ef859476b0fad.raw": "cada0eaa1f69158e230520a3e41df638fd4bd40ca4dbcdea1f6a0e85f498be3a"
+      },
+      "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+    }
+  },
+  "original_input_hashes_checked": 189,
+  "historical_originals_match_r039_archive": 88,
+  "old_new_navigation_links": 36,
+  "process_identities": 99,
+  "active_recorded_identities": 0,
+  "qualification": {
+    "actual_shared_CTA_counter_epoch": true,
+    "actual_multiwarp_counter_coordinates": true,
+    "precision": false,
+    "physical_temporal_comparison": false,
+    "time_flows": false,
+    "source_cost": false,
+    "engine_busy": false,
+    "full_three_backend": false,
+    "independent_six_math": false,
+    "final_three_reviewers": false
+  }
+}

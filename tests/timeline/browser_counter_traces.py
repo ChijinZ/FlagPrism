@@ -122,18 +122,25 @@ def main():
                             opener.click()
                         chooser.value.set_files(row['trace_file'])
                         invocation = view['identity']['invocation_id']
+                        shared = view.get(
+                            'coordinate_system'
+                        ) == 'single_invocation_program_shared_counter_ns'
                         page.wait_for_function(
                             '(id)=>document.body.innerText.includes(id)',
                             arg=invocation,
                             timeout=30000)
                         cookie = page.get_by_text('OK', exact=True)
                         if cookie.count(): cookie.first.click()
+                        root_title = (
+                            invocation + ' / program ' +
+                            str(view['program_coordinates']) +
+                            ' — shared counter ns (precision unverified)' if
+                            shared else invocation + ' — isolated counter ns')
                         page.locator('.pf-track__title').filter(
-                            has_text=invocation +
-                            ' — isolated counter ns').first.locator(
-                                '..').locator(
-                                    '.pf-track__collapse-button').click()
-                        observer = view['observer']
+                            has_text=root_title).first.locator('..').locator(
+                                '.pf-track__collapse-button').click()
+                        observer = view['observers'][0] if shared else view[
+                            'observer']
                         title = 'program ' + str(
                             observer['program_coordinates']
                         ) + ' / ' + observer['kind'] + ' ' + observer[
@@ -143,7 +150,8 @@ def main():
                                 '.pf-track__collapse-button').click()
                         candidates = [
                             e for e in view['events']
-                            if e['end_ns'] is not None and (
+                            if e['end_ns'] is not None
+                            and e['observer_id'] == observer['id'] and (
                                 not args.require_coverage_key
                                 or args.require_coverage_key in e['coverage'])
                         ]
@@ -170,13 +178,15 @@ def main():
                         track_name = site.get('attributes',
                                               {}).get('display.track_group',
                                                       site['name'])
+                        track_title = ('Observed internal operations'
+                                       if shared else event['semantic'] +
+                                       ' / ' + track_name)
                         page.wait_for_function(
                             '(title)=>document.body.innerText.includes(title)',
-                            arg=event['semantic'] + ' / ' + track_name,
+                            arg=track_title,
                             timeout=10000)
                         tracks = page.locator('.pf-track__title').filter(
-                            has_text=event['semantic'] + ' / ' + track_name +
-                            ' / lane ')
+                            has_text=track_title + ' / lane ')
                         (folder / 'track-dom.json').write_text(
                             json.dumps(page.locator(
                                 '.pf-track__title').all_text_contents(),
@@ -201,7 +211,7 @@ def main():
                                     box['x'] +
                                     (event['start_ns'] + event['end_ns']) / 2 /
                                     end * box['width'],
-                                    box['y'] + box['height'] / 2)
+                                    box['y'] + min(12, box['height'] / 2))
                                 try:
                                     page.wait_for_function(
                                         '(id)=>document.body.innerText.includes(id)',
@@ -225,9 +235,17 @@ def main():
                         body = page.locator('body').inner_text()
                         for field in [
                                 'raw_ticks', 'source_locations',
+                                'shared_counter_epoch_precision_unverified'
+                                if shared else
                                 'counter_unit_only_precision_unverified'
                         ]:
                             need(field in body, 'Slice details lost ' + field)
+                        if shared:
+                            need(
+                                'counter_domain_id' in body
+                                and 'shared_origin_tick' in body,
+                                'Shared epoch provenance absent in actual slice details'
+                            )
                         if args.require_coverage_key:
                             need(
                                 args.require_coverage_key in body,
@@ -243,6 +261,20 @@ def main():
                         page.keyboard.press('Escape')
                         page.get_by_text('keyboard_arrow_down',
                                          exact=True).click()
+                        if shared:
+                            for extra in view['observers'][1:]:
+                                extra_title = 'program ' + str(
+                                    extra['program_coordinates']
+                                ) + ' / ' + extra['kind'] + ' ' + extra[
+                                    'local_id']
+                                page.locator('.pf-track__title').filter(
+                                    has_text=extra_title
+                                ).first.locator('..').locator(
+                                    '.pf-track__collapse-button').click()
+                            need(
+                                len(view['observers']) == 4,
+                                'Actual shared UI did not expose four observed threads'
+                            )
                         page.mouse.move(0, 0)
                         page.evaluate('''async () => {
                             await document.fonts.ready;
@@ -259,6 +291,9 @@ def main():
                             dict(trace_file=row['trace_file'],
                                  trace_sha256=row['sha256'],
                                  event_id=event['id'],
+                                 shared_observer_ids=[
+                                     o['id'] for o in view['observers']
+                                 ] if shared else None,
                                  required_coverage_key=args.
                                  require_coverage_key,
                                  invocation_id=invocation,

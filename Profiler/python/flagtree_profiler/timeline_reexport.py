@@ -146,6 +146,7 @@ def reexport_capture(directory, original_file):
         persist(directory, canonical_base + '/complete.json',
                 json_bytes(receipt))
     rows, reason, control_file, machine_file = [], None, None, None
+    shared_rows, shared_reason = [], None
     if backend == 'nvidia':
         from .timeline_nvidia_offline import load_counter_unit_proofs, load_counter_machine_map, control_evidence
         from .timeline_perfetto import write_counter_exports
@@ -207,6 +208,14 @@ def reexport_capture(directory, original_file):
                                      views,
                                      batch,
                                      proofs=proofs)
+        from .timeline_nvidia_offline import shared_counter_inputs
+        from .timeline_perfetto import write_shared_counter_exports
+        try:
+            shared = shared_counter_inputs(directory, capture, raw)
+            if shared is not None:
+                shared_rows = write_shared_counter_exports(directory, *shared)
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            shared_reason = str(error)
     elif backend == 'ascend':
         from . import timeline_ascend_machine
         binary = owner['binary_id']
@@ -250,6 +259,8 @@ def reexport_capture(directory, original_file):
                   canonical_revision=canonical_revision,
                   wait_control_file=control_file,
                   exports=rows,
+                  shared_exports=shared_rows,
+                  shared_counter_reason=shared_reason,
                   status='counter_unit_only' if rows else 'raw_only',
                   reason=reason)
     if backend == 'ascend':
