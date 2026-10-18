@@ -44,10 +44,14 @@ def prepare(event):
         destination = tempfile.mkdtemp(prefix='flagprism-ascend-compiler-')
     census = bool(requested
                   and requested.get('program_policy') == 'all_grid_census')
+    timeline = bool(requested and requested.get('program_policy') == 'runtime_first_last')
     if requested:
         fields = (('flagprism_ascend_trace_capacity', 1,
                    1_000_000), ('flagprism_ascend_trace_program', 0, None),
                   ('flagprism_ascend_trace_source_argument_index', 0, None))
+        if timeline:
+            fields = (('flagprism_ascend_trace_capacity', 1, 16384),
+                      ('flagprism_ascend_trace_source_argument_index', 0, None))
         if census:
             fields = (('flagprism_ascend_trace_source_argument_index', 0,
                        None), )
@@ -73,7 +77,7 @@ def prepare(event):
         raise FileNotFoundError(plugin)
     if requested:
         semantics = requested.get('semantics')
-        allowed = {'counter'} if census else {
+        allowed = {'source_control_interval'} if timeline else {'counter'} if census else {
             'issue', 'wait_bracket', 'control_checkpoint',
             'operation_checkpoint'
         }
@@ -90,7 +94,20 @@ def prepare(event):
         if type(max_sites) is not int or not 1 <= max_sites <= 256:
             raise ValueError('Ascend operation site budget must be 1..256')
         event.environment['FLAGPRISM_ASCEND_TRACE_MAX_SITES'] = str(max_sites)
-        if census:
+        if timeline:
+            abi = event.metadata.get('debug_frontend_marker_abi') or {}
+            columns = event.metadata.get('debug_census_columns')
+            if (event.metadata.get('flagprism_ascend_source_timeline_version') != 1
+                    or abi.get('version') != 3
+                    or type(columns) is not int or not 1 <= columns <= 128
+                    or abi.get('site_count') != columns
+                    or abi.get('record_layout') != 'ascend_source_census_v3'
+                    or event.metadata.get('debug_record_layout') != 'ascend_source_timeline_v1'):
+                raise ValueError('Ascend timeline requires actual v3 frontend coordinates and v1 late storage')
+            event.environment['FLAGPRISM_ASCEND_CENSUS_COLUMNS'] = str(columns)
+            event.environment['FLAGPRISM_ASCEND_TRACE_MODE'] = 'source_timeline_v1'
+            event.environment['FLAGPRISM_ASCEND_TRACE_CAPACITY'] = str(event.metadata['flagprism_ascend_trace_capacity'])
+        elif census:
             version = event.metadata.get(
                 'flagprism_ascend_source_census_version')
             if type(version) is not int or version not in (1, 2, 3):

@@ -268,17 +268,22 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             "ascend", "cann", "npu"
     }:
         census = request.get("program_policy") == "all_grid_census"
-        if census:
-            if request.get("semantics") != [
-                    "counter"
-            ] or request.get("programs") is not None or request.get(
-                    "sample_every") != 1:
-                raise ValueError(
-                    "Ascend census requires an all-grid unsampled counter request"
-                )
-            for key in ("max_census_cells", "max_census_bytes"):
-                if type(request.get(key)) is not int or request[key] <= 0:
-                    raise ValueError("Ascend census requires positive " + key)
+        timeline = request.get("program_policy") == "runtime_first_last"
+        if census or timeline:
+            if timeline:
+                if (request.get("semantics") != ["source_control_interval"]
+                        or request.get("programs") is not None
+                        or request.get("sample_every") != 1
+                        or request.get("automatic") is not True
+                        or type(request.get("max_events_per_instance")) is not int
+                        or not 1 <= request["max_events_per_instance"] <= 16384):
+                    raise ValueError("Ascend timeline requires automatic unsampled runtime first/last intervals")
+            else:
+                if request.get("semantics") != ["counter"] or request.get("programs") is not None or request.get("sample_every") != 1:
+                    raise ValueError("Ascend census requires an all-grid unsampled counter request")
+                for key in ("max_census_cells", "max_census_bytes"):
+                    if type(request.get(key)) is not int or request[key] <= 0:
+                        raise ValueError("Ascend census requires positive " + key)
             # Inline first: the IDs subsequently assigned name the actual final
             # TTIR operations to which the source-site markers are attached.
             inline_pm = ir.pass_manager(mod.context)
@@ -352,9 +357,9 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "debug_census_version":
                 3,
                 "debug_max_census_cells":
-                request["max_census_cells"],
+                request.get("max_census_cells"),
                 "debug_max_census_bytes":
-                request["max_census_bytes"],
+                request.get("max_census_bytes"),
                 "flagprism_ascend_trace_source_argument_index":
                 int(index),
                 "flagprism_ascend_observation_request":
@@ -362,6 +367,24 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 "flagprism_ascend_source_census_version":
                 3,
             })
+            if timeline:
+                # Native v3 is only the six-coordinate frontend carrier and
+                # hidden-formal ABI. Runtime storage is the new late producer,
+                # never the census count layout returned by that native call.
+                capacity = request["max_events_per_instance"]
+                metadata.pop("debug_ascend_census_abi", None)
+                metadata.pop("flagprism_ascend_source_census_version", None)
+                metadata.update({
+                    "debug_frontend_marker_abi": abi,
+                    "debug_record_layout": "ascend_source_timeline_v1",
+                    "debug_record_size": 64,
+                    "debug_record_capacity": capacity,
+                    "debug_records_per_instance": 3 * capacity,
+                    "debug_timeline_storage_version": 1,
+                    "debug_timeline_publisher_version": 1,
+                    "flagprism_ascend_source_timeline_version": 1,
+                    "flagprism_ascend_trace_capacity": capacity,
+                })
             return
         programs = request.get("programs")
         if not isinstance(programs, list) or len(programs) != 1:

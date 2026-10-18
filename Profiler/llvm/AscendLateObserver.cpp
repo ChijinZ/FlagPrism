@@ -1,6 +1,7 @@
 // An actual upstream LLVM15 pass applied by the compiler driver adapter.
 // Capture post-actor lowering evidence before forwarding IR to the SDK.
 #include "AscendSourceCensus.h"
+#include "AscendTimeline.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/StringExtras.h"
@@ -10,6 +11,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/InlineAsm.h"
 #include "llvm/IR/Instructions.h"
+#include "llvm/IR/IntrinsicInst.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/PassManager.h"
 #include "llvm/Passes/PassBuilder.h"
@@ -169,7 +171,15 @@ static unsigned censusVersion() {
   const auto mode = environment("FLAGPRISM_ASCEND_TRACE_MODE");
   return mode == "source_census_v3" ? 3 : mode == "source_census_v2" ? 2 : mode == "source_census_v1" ? 1 : 0;
 }
+static bool sourceTimeline() {
+  return environment("FLAGPRISM_ASCEND_TRACE_MODE") == "source_timeline_v1";
+}
 static uint64_t selectedSemantics() {
+  if (sourceTimeline()) {
+    if (environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS") != "source_control_interval")
+      report_fatal_error("Ascend source timeline requires source_control_interval");
+    return 0;
+  }
   if (censusVersion() != 0) {
     if (environment("FLAGPRISM_ASCEND_TRACE_SEMANTICS") != "counter")
       report_fatal_error(
@@ -205,8 +215,12 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
                             json::Object &controlPlan,
                             json::Object &runtimeActorBinding) {
   const bool census = censusVersion() != 0;
+  const bool timeline = sourceTimeline();
+  const unsigned carrierVersion = timeline ? 3 : censusVersion();
+  if (timeline && capacity > 16384)
+    report_fatal_error("Ascend timeline pair capacity exceeds 16384");
   uint64_t censusColumns = 128;
-  if (censusVersion() >= 2) {
+  if (carrierVersion >= 2) {
     const std::string encodedColumns =
         environment("FLAGPRISM_ASCEND_CENSUS_COLUMNS");
     if (StringRef(encodedColumns).getAsInteger(10, censusColumns) ||
@@ -349,7 +363,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
   };
   SmallVector<CensusMarker, 16> censusMarkers;
   json::Array anchorManifest;
-  if (census) {
+  if (census || timeline) {
     DenseMap<uint64_t, uint64_t> columns;
     for (BasicBlock &block : function)
       for (Instruction &instruction : block) {
@@ -362,14 +376,14 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         if (!marker.startswith("/* flagprism.source_census_site."))
           continue;
         if (!marker.consume_front("/* flagprism.source_census_site.v" +
-                                  std::to_string(censusVersion()) + ":"))
+                                  std::to_string(carrierVersion) + ":"))
           report_fatal_error("Ascend census marker physical version mismatch");
         if (!marker.consume_back(" */"))
           report_fatal_error("invalid Ascend source census marker terminator");
         auto fields = marker.split(':');
         uint64_t sourceId = 0, column = 0, markerColumns = censusColumns;
         StringRef columnText = fields.second;
-        if (censusVersion() >= 2) {
+        if (carrierVersion >= 2) {
           auto layout = fields.second.split(':');
           columnText = layout.first;
           if (layout.second.getAsInteger(10, markerColumns) ||
@@ -486,6 +500,100 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
       {"expression", std::move(expression)},
       {"value_use", "same_emitted_i64_for_segment_offset_and_record_word5"},
       {"basis", "actual_emitted_logger_actor_value"}};
+  if (timeline) {
+    // Reuse the existing SDK-whitelisted six-coordinate carrier, not its
+    // counter storage ABI. Capture only non-empty lowered basic-block
+    // fragments; these are not certified source-operation costs.
+    struct Fragment {
+      CensusMarker marker;
+      Instruction *end;
+      std::string block;
+      std::string body;
+      uint64_t instructions;
+    };
+    SmallVector<Fragment, 16> fragments;
+    SmallPtrSet<Instruction *, 32> markerCalls;
+    for (const auto &marker : censusMarkers)
+      markerCalls.insert(marker.call);
+    json::Array skipped;
+    for (const auto &marker : censusMarkers) {
+      Instruction *stop = marker.call->getNextNode();
+      std::string body;
+      raw_string_ostream printed(body);
+      uint64_t count = 0;
+      while (stop && !stop->isTerminator() && !markerCalls.contains(stop)) {
+        if (!isa<DbgInfoIntrinsic>(stop)) {
+          stop->print(printed);
+          printed << "\n";
+          ++count;
+        }
+        stop = stop->getNextNode();
+      }
+      printed.flush();
+      if (!stop)
+        report_fatal_error("Ascend timeline marker has no block terminator");
+      if (!count) {
+        skipped.push_back(json::Object{
+            {"source_op_id", static_cast<int64_t>(marker.sourceId)},
+            {"reason", "empty_lowered_block_fragment"}});
+        continue;
+      }
+      fragments.push_back({marker, stop, printValue(*marker.call->getParent()),
+                           std::move(body), count});
+    }
+    if (fragments.size() > 256)
+      report_fatal_error("Ascend timeline static fragment budget exceeds 256");
+    runtimeActorBinding["layout"] = "ascend_source_timeline_v1";
+    runtimeActorBinding["frontend_carrier"] = "source_census_site.v3";
+    runtimeActorBinding["header_bytes"] = 64;
+    runtimeActorBinding["record_bytes"] = 64;
+    runtimeActorBinding["segment_words"] = static_cast<int64_t>(8 + capacity * 8);
+    runtimeActorBinding["max_program_slots"] = 2;
+    runtimeActorBinding["selection"] = "runtime_first_last";
+    runtimeActorBinding["value_use"] = "same_source_tuple_for_selection_and_pair_identity";
+    runtimeActorBinding["source_program_binding"] = json::Object{
+        {"basis", "actual_selected_source_site_marker_operands"},
+        {"linear_expression", "x + grid_x * (y + grid_y * z)"},
+        {"anchors", std::move(anchorManifest)}};
+    for (const auto &fragment : fragments) {
+      const auto &marker = fragment.marker;
+      IRBuilder<> b(marker.call);
+      Value *logicalProgram = b.CreateAdd(marker.call->getArgOperand(0),
+          b.CreateMul(marker.call->getArgOperand(3),
+            b.CreateAdd(marker.call->getArgOperand(1),
+              b.CreateMul(marker.call->getArgOperand(4), marker.call->getArgOperand(2)))));
+      Value *last = b.CreateSub(b.CreateMul(marker.call->getArgOperand(3),
+          b.CreateMul(marker.call->getArgOperand(4), marker.call->getArgOperand(5))),
+          b.getInt64(1));
+      const uint64_t id = sites.size() + 1;
+      Value *start = flagprism_ascend::beginTimeline(
+          marker.call, function.getArg(argumentIndex), logicalProgram, last,
+          actor, program, capacity);
+      flagprism_ascend::endTimeline(fragment.end, function.getArg(argumentIndex),
+          logicalProgram, last, actor, program, start, capacity, id, 1);
+      json::Object site{
+          {"site_id", static_cast<int64_t>(id)},
+          {"source_op_id", static_cast<int64_t>(marker.sourceId)},
+          {"frontend_column", static_cast<int64_t>(marker.column)},
+          {"public_semantic", "source_control_interval"},
+          {"semantic_code", 1},
+          {"operation_class", "lowered_source_fragment"},
+          {"boundary_status", "unverified"},
+          {"scope", "same_original_llvm_basic_block_until_next_marker_or_terminator"},
+          {"original_block", fragment.block},
+          {"original_instruction_count", static_cast<int64_t>(fragment.instructions)},
+          {"original_instructions_sha256", digest(fragment.body)},
+          {"original_instructions", fragment.body}};
+      attachSourceOrigin(site, *marker.call);
+      site["source_op_id"] = static_cast<int64_t>(marker.sourceId);
+      sites.push_back(std::move(site));
+    }
+    operationPlan["policy"] = "actual_frontend_carrier_nonempty_lowered_block_fragments";
+    operationPlan["selected_count"] = static_cast<int64_t>(fragments.size());
+    operationPlan["skipped_fragments"] = std::move(skipped);
+    controlPlan["selected_count"] = 0;
+    return !fragments.empty();
+  }
   if (census) {
     runtimeActorBinding["layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
     runtimeActorBinding.erase("record_actor_word");
@@ -1008,6 +1116,14 @@ public:
         {"source_association",
          "surviving_source_metadata_and_full_debug_locations"},
         {"actors", std::move(actors)}};
+    if (sourceTimeline()) {
+      manifest["dynamic_record_layout"] = "ascend_source_timeline_v1";
+      manifest["effective_semantics"] = json::Array{"source_control_interval"};
+      manifest["observation_plan_version"] = 4;
+      manifest["boundary_status"] = "unverified";
+      manifest["frontend_marker_carrier"] = "source_census_site.v3";
+      manifest["record_ordering"] = "paired_endpoints";
+    }
     if (censusVersion() != 0) {
       manifest["dynamic_clock"] = nullptr;
       manifest["dynamic_record_layout"] = "ascend_source_census_v" + std::to_string(censusVersion());
