@@ -544,3 +544,25 @@ all participants. `record_storage_binding_verified`, full
 `record_value_provenance_verified`, payload qualification and time-flow rights
 therefore remain false. Existing counter coordinates and original raw artifacts
 are unchanged; this diagnostic is evidence for completing the dependency path.
+
+The same late native diagnostic also contains `relative_record_fields`:
+`native_record_fields_checked` means the actual four stores for a site's tag,
+begin, end and payload have the declared coalesced relative displacement and
+stable common native address/descriptor registers, the tag is the actual
+literal, and both timer fields are the previously verified getter values.
+Constant payloads are checked through all native reaching definitions. Wait
+payloads additionally match the actual DEPBAR group limit; commit/barrier
+reserved-zero payloads require their checked native control boundary.
+
+Default captures independently retain `native_control_payload_file`, scoped to
+the invocation and raw SHA. It records each decoded wait/commit/barrier payload
+that agrees with the freshly checked native operand, including actual actor,
+ordinal and exact raw tag/payload byte spans. Public offline reexport retains
+this as `native_control_payloads` in its versioned control report. It never
+updates a binary-wide static report with invocation-specific data.
+
+Relative fields and decoded value agreement do not establish the absolute raw
+allocation/program/ordinal address expression or variable shared-memory address
+and valid-size payloads. Those qualifications and dependency flows remain
+unverified. A mismatch is retained as an explicit diagnostic and does not grant
+or remove an unrelated counter unit. No engine-busy interval is inferred.

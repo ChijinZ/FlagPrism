@@ -238,4 +238,6 @@ def load_native_boundary_report(directory, capture, machine_map):
     report = derive_native_boundaries(**inputs)
     from .timeline_nvidia_late_values import inspect_timer_store_values
     report['timer_store_values'] = inspect_timer_store_values(**inputs)
+    from .timeline_nvidia_late_records import inspect_record_fields
+    report['relative_record_fields'] = inspect_record_fields(**inputs)
     return report

@@ -81,6 +81,17 @@ def control_evidence(capture,
             from .timeline_nvidia_late_boundaries import load_native_boundary_report
             report['native_boundaries'] = load_native_boundary_report(
                 directory, capture, machine_map)
+            from .timeline_nvidia_late_records import load_control_payload_agreement
+            try:
+                report[
+                    'native_control_payloads'] = load_control_payload_agreement(
+                        directory, capture,
+                        report['native_boundaries']['relative_record_fields'])
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                report['native_control_payloads'] = dict(
+                    status='native_control_payloads_unverified',
+                    reason=str(error),
+                    time_flows_qualified=False)
         return report, Path(timeline_nvidia_late_control.__file__)
     from . import timeline_nvidia_control
     return (timeline_nvidia_control.inspect_wait_control_brackets(

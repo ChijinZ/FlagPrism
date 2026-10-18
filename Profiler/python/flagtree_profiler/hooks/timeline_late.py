@@ -299,6 +299,21 @@ class LateTimelineHook(InstrumentationHook):
                     machine_base / 'late-native-boundaries.json')
                 _persist(directory / capture['native_boundary_control_file'],
                          (json.dumps(boundaries, indent=2) + '\n').encode())
+                from ..timeline_nvidia_late_records import load_control_payload_agreement
+                try:
+                    agreement = load_control_payload_agreement(
+                        directory, capture,
+                        boundaries['relative_record_fields'])
+                except (ValueError, OSError, KeyError, TypeError) as error:
+                    agreement = dict(
+                        status='native_control_payloads_unverified',
+                        reason=str(error),
+                        time_flows_qualified=False)
+                capture['native_control_payload_file'] = str(
+                    prefix.with_suffix('.native-control-payloads.json'))
+                _persist(directory / capture['native_control_payload_file'],
+                         (json.dumps(agreement, separators=(',', ':')) +
+                          '\n').encode())
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))

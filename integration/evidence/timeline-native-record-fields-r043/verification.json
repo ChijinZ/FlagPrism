@@ -1,0 +1,273 @@
+{
+  "base_commit": "c86841d5f35e48259f9a1d5911ed6599f093be63",
+  "archive": {
+    "path": "artifacts/timeline/run-043/preflight/native-records-evidence-v1.tgz",
+    "bytes": 33119462,
+    "sha256": "7e9623b3bf1f1024bdeddde1184f89023d80988808454f657d54ddac717b4497",
+    "members": 3502,
+    "sha_verified_files": 3499
+  },
+  "installation": {
+    "status": "installed_default_native_fields_control_payloads_normal_O_recovery_offline_TP_passed_not_absolute_addresses_or_variable_payloads_or_flows",
+    "wheel_sha256": "fd3a8bf23133ad173ef9294b5ceeb03d848b93d98d000f4ce7f68588d3504517",
+    "installed_members": 620,
+    "python": "/workspace/chijin-timeline-r043/runs/install-public-v1/output/venv/bin/python",
+    "native_core_reused": true,
+    "standalone_tool_reused_exact_source": true
+  },
+  "source_sha256": {
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_records.py": "bba52a83c5fe2257a354f411083dea07a5b141276d831440100e8ffefb181070",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_boundaries.py": "d7734ab8884662200c46ab06ef2181b269a79a950d185e868fa0ef30a030fb71",
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "9593b9953ac7ba22989c441ece3f785b87bc986009131cfee88b8b3b748b642b",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_offline.py": "e4fd8e28c0e59a3bd6a1ed5293f7a87c46de7f8386a89b8afa269d2437667695",
+    "tests/timeline/p01_nvidia_late_records.py": "25de8d33d19a0f8ed5661945f69815e57c897ffbf8f25b6522c7a3d19d48c265",
+    "Profiler/docs/timeline_runtime.md": "a6e7223a94a53a714b2389afd9611ff3e2d8908334e6ed0c05d1cda28e89d2f6"
+  },
+  "tests": {
+    "normal": {
+      "captures": 2,
+      "checked_sites": [
+        43,
+        43
+      ],
+      "dynamic_control_occurrences": [
+        4608,
+        8704
+      ],
+      "negative_checks": 750,
+      "original_files_unchanged": 105
+    },
+    "optimized": {
+      "captures": 2,
+      "checked_sites": [
+        43,
+        43
+      ],
+      "dynamic_control_occurrences": [
+        4608,
+        8704
+      ],
+      "negative_checks": 750,
+      "original_files_unchanged": 105
+    }
+  },
+  "default_captures": [
+    {
+      "invocation_id": "invocation-67e791669a734abea5c0a77ff7fedfce",
+      "raw_sha256": "5c63862e6369be023f3cd140d49f9f2b3d1d84a6e94152a736221d8a4a800990",
+      "static_fields_checked": 43,
+      "dynamic_control_occurrences": 4608,
+      "dynamic_file": "captures/invocation-67e791669a734abea5c0a77ff7fedfce.native-control-payloads.json",
+      "identity": {
+        "capture_id": "timeline-e7f40cc75ba749b18ba23c63c61e5870",
+        "invocation_id": "invocation-67e791669a734abea5c0a77ff7fedfce",
+        "binary_id": "bfa07aed0d9bfed1f23bc8a09b252bb5043ab86242f6493c2c4c3fbafbe91c89"
+      }
+    },
+    {
+      "invocation_id": "invocation-59658f6980354e57b95db63217af7130",
+      "raw_sha256": "6df6497b755d0f2bcc9552271a950cff005348879c7b4fd80dca42e783954522",
+      "static_fields_checked": 43,
+      "dynamic_control_occurrences": 8704,
+      "dynamic_file": "captures/invocation-59658f6980354e57b95db63217af7130.native-control-payloads.json",
+      "identity": {
+        "capture_id": "timeline-e7f40cc75ba749b18ba23c63c61e5870",
+        "invocation_id": "invocation-59658f6980354e57b95db63217af7130",
+        "binary_id": "bfa07aed0d9bfed1f23bc8a09b252bb5043ab86242f6493c2c4c3fbafbe91c89"
+      }
+    }
+  ],
+  "offline": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 2,
+    "real_traces": 16,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 104,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r043/runs/install-public-v1/output/pipeline-device/",
+      "/workspace/chijin-timeline-r043/install-public-input-v1/source/",
+      "/workspace/chijin-timeline-r043/runs/install-public-v1/cache/",
+      "/workspace/chijin-timeline-r043/runs/install-public-v1/tmp/"
+    ],
+    "trace_bytes_match_prior_bundle": true,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-59658f6980354e57b95db63217af7130.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+      "captures/invocation-67e791669a734abea5c0a77ff7fedfce.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+      "captures/invocation-59658f6980354e57b95db63217af7130.raw": "6df6497b755d0f2bcc9552271a950cff005348879c7b4fd80dca42e783954522",
+      "captures/invocation-67e791669a734abea5c0a77ff7fedfce.raw": "5c63862e6369be023f3cd140d49f9f2b3d1d84a6e94152a736221d8a4a800990"
+    },
+    "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+  },
+  "controllers": {
+    "source-records-v1": {
+      "controller": {
+        "pid": 81635,
+        "ppid": 1,
+        "pgid": 81635,
+        "startticks": 22457388
+      },
+      "worker": {
+        "pid": 81636,
+        "ppid": 81635,
+        "pgid": 81636,
+        "startticks": 22457391
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r043/source-records-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r043/runs/source-records-v1/output"
+      ],
+      "argv_sha256": "0d9a5c417e644226fd87d0fc0becb73fd5123de2a8134948c2387e429f0abd5a",
+      "script_sha256": "28af25b2dd5cda55626f0926ecad3559ea88000de0014eac26b37f432a97f48a",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 615582128
+    },
+    "source-contracts-v1": {
+      "controller": {
+        "pid": 81656,
+        "ppid": 1,
+        "pgid": 81656,
+        "startticks": 22503618
+      },
+      "worker": {
+        "pid": 81657,
+        "ppid": 81656,
+        "pgid": 81657,
+        "startticks": 22503621
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r043/source-contracts-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r043/runs/source-contracts-v1/output"
+      ],
+      "argv_sha256": "ef44c1380e87bc6fba90fcc6cb4d9a3b12099cb1e68ce6b052b0343eb02df238",
+      "script_sha256": "5261ab1761c4a0ee79b794d9283dcdb3cf512214c4a2f8e7d92762c0d6592d4b",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 240,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 5073561147
+    },
+    "install-public-v1": {
+      "controller": {
+        "pid": 81672,
+        "ppid": 1,
+        "pgid": 81672,
+        "startticks": 22511367
+      },
+      "worker": {
+        "pid": 81673,
+        "ppid": 81672,
+        "pgid": 81673,
+        "startticks": 22511370
+      },
+      "argv": [
+        "/workspace/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r043/install-public-input-v1/run.py",
+        "--output",
+        "/workspace/chijin-timeline-r043/runs/install-public-v1/output"
+      ],
+      "argv_sha256": "80d637a3c01fc89fc4929e94879c6ae4389da547425aa7730cf546ad89237bd3",
+      "script_sha256": "8f76fc77b671b76425fdfe5b036ee6116b09bbf0a33334a101edaa14ce7c0930",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 300,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 157489750783
+    }
+  },
+  "actual_process_audit": {
+    "distinct_recorded_nv": 70,
+    "all_inactive": true,
+    "gcu_format": [
+      {
+        "run": "format-v1",
+        "identity": {
+          "pid": 426018,
+          "ppid": 1,
+          "pgid": 426018,
+          "startticks": 1017621259
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v1",
+        "identity": {
+          "pid": 426019,
+          "ppid": 426018,
+          "pgid": 426019,
+          "startticks": 1017621263
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v3",
+        "identity": {
+          "pid": 428834,
+          "ppid": 1,
+          "pgid": 428834,
+          "startticks": 1017634571
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v3",
+        "identity": {
+          "pid": 428835,
+          "ppid": 428834,
+          "pgid": 428835,
+          "startticks": 1017634575
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v2",
+        "identity": {
+          "pid": 427426,
+          "ppid": 1,
+          "pgid": 427426,
+          "startticks": 1017628373
+        },
+        "active": false,
+        "state": "missing"
+      },
+      {
+        "run": "format-v2",
+        "identity": {
+          "pid": 427427,
+          "ppid": 427426,
+          "pgid": 427427,
+          "startticks": 1017628376
+        },
+        "active": false,
+        "state": "missing"
+      }
+    ]
+  },
+  "native_build": "Exact unchanged r024 core and r036 standalone source/executable reused with receipts; no native rebuild",
+  "r042_originals_exact_unchanged": true,
+  "limits": [
+    "Relative field-address binding only; absolute allocation/program/ordinal address not proven",
+    "Variable shared-address/valid-size payloads not qualified",
+    "Decoded control agreement does not grant full raw provenance or temporal flows",
+    "No encoder/canonical change or new browser run; old trace bytes unchanged",
+    "Three-backend full pipelines, independent qualification, controlled cases and final three reviewers still required"
+  ]
+}
