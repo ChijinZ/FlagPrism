@@ -1,0 +1,117 @@
+{
+  "archive": {
+    "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-037/preflight/late-views-evidence-v1.tgz",
+    "bytes": 61643777,
+    "sha256": "894a5bcc2e248867b9da1b18ac5aa929b09facab912bc8fe52ae863f26f0db3b",
+    "members": 5228,
+    "retained_file_hashes_verified": 5226
+  },
+  "current_sources_match_installed_input": {
+    "Profiler/python/flagtree_profiler/hooks/timeline_late.py": "7e0783729ecd535867d8621226b68a115b70f7ef3a1509d114ca9af4c90f06fb",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_compile.py": "4c72ae45831317162a39cd1fe58e8b1b4f5eb94d90128dffb02a8716673d2f78",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_machine.py": "f7848e92c04320fa2b058164e39319fcc76155372106671ac2e9c49dda11779c",
+    "Profiler/python/flagtree_profiler/timeline_perfetto.py": "9c0c56c95b0138e3f38d52b58caf7a5adc582b55588d0924b061a2ac6d3e7b18",
+    "Profiler/python/flagtree_profiler/timeline_reexport.py": "2c5ce3ab7df946a4e720581d9ab3cc6411864fbb82d0b56b2856ae905762b06f",
+    "tests/timeline/browser_counter_traces.py": "699140375d8a4d9223d7fda097e4d2773cefb5a274eda7cb07bb6b561e1d0c1d",
+    "tests/timeline/p01_nvidia_late_default.py": "514b0cf5295581b31bc528d26921214ec7c3a07e70ee8bd93a18a5db803cd7c7",
+    "tests/timeline/p01_nvidia_late_pipeline.py": "c311cef7dd057ded7fa5ec186537ea956264b3cdb59bc317bdb1756af1b4357b",
+    "tests/timeline/p01_offline_reexport.py": "d35259a4338c5719f38dbf50a507f52efbdb26087ee234a30ea89a6d0d8719c4",
+    "Profiler/python/flagtree_profiler/timeline_events_nvidia_late.py": "988e44087e8eb09564150f277f69e72912572a2c62e4f5a1c8533dce56c6a172",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_offline.py": "0cd98e9e6e2a2e5289904ab48ed735851b688fbe9c62c00111001a197e99f349",
+    "Profiler/python/flagtree_profiler/timeline_unit_nvidia_late.py": "019d7ce98491e3d81e2720eed35567e75f34fdde320550abf691691f57bb4081",
+    "tests/timeline/p01_nvidia_late_view_contract.py": "48b9a5e2b34398526e11acc5223dc3fc14dc8da1812318f41cbaa35840017a33"
+  },
+  "post_install_deltas": {
+    "Profiler/docs/timeline_runtime.md": {
+      "sha256": "1841dbb4f77aa91a17f11aa036e3f954b6cadcb94b15c32758bbebdc45e571ce",
+      "scope": "build/runtime documentation updated after installed tests; no product code change"
+    },
+    "integration/patches/nvidia/README.md": {
+      "sha256": "2b7a0a2f8268b8e3b0cd593a32e6df857ffdaafffeb614356ff2363cfd9c397f",
+      "scope": "build/runtime documentation updated after installed tests; no product code change"
+    },
+    "tests/timeline/p01_nvidia_late_receipts.py": {
+      "sha256": "9f3febd8ff10321617da526daa801ba2a8bf42bfb85357dd4ccbf98727aa75fb",
+      "scope": "AST-identical to actual successful followup receipt test, server-formatted afterwards"
+    }
+  },
+  "installed": {
+    "wheel_sha256": "140df3b61e10ad9d4c85323f80ea382bb8decc984f07bc511e4ddff1e0baf270",
+    "installed_members": 614,
+    "python": "/workspace/chijin-timeline-r037/runs/install-public-v1/output/venv/bin/python"
+  },
+  "receipt_recovery": {
+    "status": "actual_default_math_compile_derive_copy_faults_and_durable_receipt_recovery_passed_not_full_pipeline",
+    "compiler_failure": "Native LLVM recorder failed (exit 1)",
+    "derived_failure": "Profiling finalization failed: session 0 timeline raw export: RuntimeError: controlled late derived-output failure. Capture intermediates retained at: ['/workspace/chijin-timeline-r037/runs/followup-installed-v1/tmp/flagprism-session-ckrr1k8t']",
+    "copy_failure": "controlled compiler-receipt copy failure",
+    "successful_kernel_launches": 2,
+    "failed_compile_kernel_launches": 0,
+    "original_calls_unchanged_after_recovery": true,
+    "recovery_path": "documented retained-hook flush then durable bundle copy; finalized session IDs are no-ops",
+    "retained_compiler_receipts": 5,
+    "retained_compiler_artifacts": 28,
+    "traces": 16
+  },
+  "offline_new": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 2,
+    "real_traces": 16,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 86,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r037/runs/install-public-v1/output/pipeline-device/",
+      "/workspace/chijin-timeline-r037/install-public-input-v1/source/",
+      "/workspace/chijin-timeline-r037/runs/install-public-v1/cache/",
+      "/workspace/chijin-timeline-r037/runs/install-public-v1/tmp/"
+    ],
+    "trace_bytes_match_prior_bundle": true,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-6204631d54a74ee392d80db6fc1d1d30.raw": "c34f0faa8636389b5f4555fa18df7ee507fbbf24e96bb4c9bfe5bdbce15e3a62",
+      "captures/invocation-e595ccc3ec5d423ba54bf00c5f2c6976.raw": "4022e1e5b18b3edc2dcb3d1e71f553ec42a78730876bf21917db7dfa555f5333",
+      "captures/invocation-e595ccc3ec5d423ba54bf00c5f2c6976.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad",
+      "captures/invocation-6204631d54a74ee392d80db6fc1d1d30.guard.raw": "39557315215be0f6922cec45d29336c8f72198032cababdc5ec0672d45e894ad"
+    },
+    "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+  },
+  "offline_legacy": {
+    "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+    "real_captures": 3,
+    "real_traces": 24,
+    "fresh_reexport_processes": 3,
+    "original_artifacts_unchanged": 110,
+    "original_environment_denied_in_two_processes": true,
+    "forbidden_environment_roots": [
+      "/workspace/chijin-timeline-r024/"
+    ],
+    "trace_bytes_match_prior_bundle": true,
+    "application_replayed": false,
+    "raw_originals": {
+      "captures/invocation-b8badd6b82cf45a696dfcf0c895cbd52.raw": "cc38fb40766fd8e56ab01a37b6195cee5b6801f961c79ebbe1686b761593357e",
+      "captures/invocation-fd624fd2bc444740bb52147836afe2b2.raw": "78e1c7cef37ba3454e6dd2f0a849824cb1c20b0e733a3fcabe2c4d93703dfa33",
+      "captures/invocation-c7b556d00d9e4c86878ef859476b0fad.raw": "cada0eaa1f69158e230520a3e41df638fd4bd40ca4dbcdea1f6a0e85f498be3a"
+    },
+    "proof_limits": "counter_unit_only; precision/boundary/async not qualified"
+  },
+  "installed_SQL_UI": {
+    "status": "actual_installed_grouped_late_traces_SQL_UI_passed_not_source_cost_or_shared_clock",
+    "traces": 48,
+    "unchanged_files": 592
+  },
+  "actual_process_identities": 110,
+  "active_recorded_identities": 0,
+  "qualification": {
+    "actual_default_late_counter_views": true,
+    "actual_machine_getter_binding": true,
+    "durable_runtime_compiler_receipts": true,
+    "source_cost": false,
+    "read_precision": false,
+    "shared_epoch": false,
+    "time_flows": false,
+    "full_three_backend": false,
+    "independent_six_math": false,
+    "final_three_reviewers": false
+  }
+}

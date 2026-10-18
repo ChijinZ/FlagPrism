@@ -87,6 +87,11 @@ def main():
         capture = json.loads((timeline / row['capture_file']).read_text())
         need(capture['capture_status'] == 'raw_complete', 'GEMM raw loss')
         need(
+            capture.get('counter_ns_status',
+                        {}).get('status') == 'counter_unit_only'
+            and len(capture.get('counter_ns_exports', [])) == 8,
+            'Default GEMM lacks actual machine-validated counter-ns traces')
+        need(
             capture['owner']['plan']['actors'] == 128
             and capture['owner']['plan']['dependency_footprint_complete'],
             'Missing actual CTA footprint')

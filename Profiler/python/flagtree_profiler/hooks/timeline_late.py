@@ -8,6 +8,7 @@ import copy
 import hashlib
 import importlib
 import json
+import sys
 from pathlib import Path
 import time
 import zlib
@@ -54,11 +55,13 @@ class LateTimelineHook(InstrumentationHook):
         from .. import timeline_nvidia_late_compile, timeline_nvidia_late_raw
         from .. import timeline_nvidia_late_storage, timeline_storage
         from .. import timeline_nvidia_late_async, timeline_nvidia_late_model
+        from .. import timeline_events_nvidia_late, timeline_unit_nvidia_late
         modules = [
             importlib.import_module(CUDABackend.__module__),
             timeline_nvidia_late_compile, timeline_nvidia_late_raw,
             timeline_nvidia_late_storage, timeline_storage,
-            timeline_nvidia_late_async, timeline_nvidia_late_model
+            timeline_nvidia_late_async, timeline_nvidia_late_model,
+            timeline_events_nvidia_late, timeline_unit_nvidia_late
         ]
         hashes = [
             hashlib.sha256(Path(m.__file__).read_bytes()).hexdigest()
@@ -242,11 +245,41 @@ class LateTimelineHook(InstrumentationHook):
             _persist(directory / capture['async_file'],
                      json.dumps(facts, separators=(',', ':')).encode())
         capture['record_backend'] = 'nvidia-late-1'
-        capture['counter_ns_status'] = dict(
-            status='unavailable',
-            reason=
-            'Final-machine timestamp binding for late recorder is not yet qualified'
-        )
+        if owner['submission_outcome'] == 'returned':
+            from ..timeline_events_nvidia_late import canonicalize_late_capture
+            from ..timeline_unit_nvidia_late import inspect_late_capture_binary, load_late_counter_unit_proofs
+            from ..timeline_views import derive_counter_ns_views
+            from ..timeline_perfetto import write_counter_exports
+            canonical = canonicalize_late_capture(raw,
+                                                  owner=owner,
+                                                  metadata=capture['metadata'])
+            capture['events_file'] = str(
+                prefix.with_suffix('.late-events.json'))
+            _persist(directory / capture['events_file'],
+                     (json.dumps(canonical, separators=(',', ':')) +
+                      '\n').encode())
+            key = (str(directory), owner['binary_id'])
+            if key not in self._timeline_machine:
+                self._timeline_machine[key] = inspect_late_capture_binary(
+                    directory,
+                    metadata=capture['metadata'],
+                    plan=owner['plan'],
+                    deadline=deadline)
+            capture['machine_counter_mapping'] = self._timeline_machine[key]
+            try:
+                proofs = load_late_counter_unit_proofs(directory, capture,
+                                                       canonical)
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                capture['counter_ns_status'] = dict(status='unavailable',
+                                                    reason=str(error))
+            else:
+                views = derive_counter_ns_views(canonical, proofs)
+                capture['counter_ns_exports'] = write_counter_exports(
+                    directory, prefix, views, canonical, proofs=proofs)
+                capture['counter_ns_status'] = dict(
+                    status='counter_unit_only',
+                    read_precision_status='unverified',
+                    time_arrows_verified=False)
         _persist(directory / prefix.with_suffix('.json'),
                  (json.dumps(capture, indent=2) + '\n').encode())
         self._timeline_rows.append(
@@ -256,3 +289,75 @@ class LateTimelineHook(InstrumentationHook):
                  capture_file=str(prefix.with_suffix('.json')),
                  capture_status=capture['capture_status']))
         del self._timeline_pending[identity]
+
+    def _retain_compiler_attempts(self, directory, deadline):
+        """Copy original compiler receipts/logs before session staging cleanup."""
+        allowed = {
+            'ordinary.ll', 'instrumented.ll', 'manifest.json', 'stdout.log',
+            'stderr.log', 'compile-receipt.json'
+        }
+        rows, total = [], 0
+        root = self._late_transform.root
+        attempts = sorted(root.iterdir())
+        if len(attempts) > 128:
+            raise RuntimeError(
+                'Compiler attempt count exceeds retention budget')
+        for attempt in attempts:
+            if (attempt.is_symlink() or not attempt.is_dir()
+                    or len(attempt.name) != 40
+                    or not attempt.name.startswith('compile-')
+                    or any(char not in '0123456789abcdef'
+                           for char in attempt.name[8:])):
+                raise RuntimeError('Unexpected compiler attempt path')
+            for path in sorted(attempt.iterdir()):
+                if time.monotonic() >= deadline:
+                    raise TimeoutError(
+                        'Compiler receipt retention exceeded export deadline')
+                if path.is_symlink(
+                ) or not path.is_file() or path.name not in allowed:
+                    raise RuntimeError('Unexpected compiler attempt artifact')
+                size = path.stat().st_size
+                total += size
+                if size > 16 * 1024 * 1024 or total > 32 * 1024 * 1024:
+                    raise RuntimeError(
+                        'Compiler attempt artifacts exceed retention budget')
+                data = path.read_bytes()
+                if len(data) != size:
+                    raise RuntimeError(
+                        'Compiler attempt changed during retention')
+                retained = Path('compiler-attempts') / attempt.name / path.name
+                _persist(directory / retained, data)
+                rows.append(
+                    dict(file=str(retained),
+                         bytes=len(data),
+                         sha256=hashlib.sha256(data).hexdigest()))
+        _persist(
+            directory / 'compiler-attempts/index.json',
+            (json.dumps(dict(schema_version=1, artifacts=rows), indent=2) +
+             '\n').encode())
+
+    def flush_timeline(self, base):
+        self.timeline_pool._check_thread()
+        deadline = time.monotonic() + 60
+        directory = Path(base).with_suffix('.timeline').resolve()
+        if self._timeline_directory not in (None, str(directory)):
+            raise RuntimeError(
+                'Recover late timeline into its original evidence directory')
+        try:
+            # First give every completed device owner a raw-salvage opportunity.
+            result = super().flush_timeline(base)
+        except BaseException as primary:
+            try:
+                self._retain_compiler_attempts(directory, deadline)
+            except BaseException as secondary:
+                if hasattr(primary, 'add_note'):
+                    primary.add_note(
+                        'Compiler receipt retention also failed: ' +
+                        repr(secondary))
+                else:
+                    print('Compiler receipt retention also failed: ' +
+                          repr(secondary),
+                          file=sys.stderr)
+            raise
+        self._retain_compiler_attempts(directory, deadline)
+        return result

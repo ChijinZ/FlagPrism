@@ -20,24 +20,8 @@ def _json(directory, name):
 
 
 def _nvidia(capture, raw):
-    from .timeline_nvidia import decode_timeline_ring
-    from .timeline_events_nvidia import canonicalize_nvidia_capture
-    owner, metadata = capture['owner'], capture['metadata']
-    layout = owner['layout']
-    warps = metadata['compiler_metadata']['num_warps']
-    decoded = decode_timeline_ring(
-        raw,
-        scratch_size=layout['scratch_size'],
-        total_warps=warps,
-        selected_warps=tuple(range(warps)),
-        slots=tuple(tuple(slot) for slot in layout['slots']),
-        scope_ids=frozenset(int(key) for key, _ in metadata['scope_id_names']),
-        record_version=owner['plan']['timeline_record_version'])
-    return canonicalize_nvidia_capture(decoded,
-                                       owner=owner,
-                                       metadata=metadata,
-                                       raw_sha256=sha256(raw),
-                                       raw_bytes=len(raw))
+    from .timeline_nvidia_offline import decode_capture
+    return decode_capture(capture, raw)
 
 
 def _enflame(capture, raw):
@@ -105,7 +89,7 @@ def _original(directory, name):
 
 def reexport_capture(directory, original_file):
     """Decode actual bytes anew; cached canonical/view JSON cannot grant proof."""
-    from . import timeline_events_nvidia, timeline_events_enflame, timeline_nvidia, timeline_events_ascend, timeline_nvidia_async
+    from . import timeline_nvidia_offline, timeline_events_enflame, timeline_events_ascend
     directory = Path(directory).resolve()
     capture, raw, sources, retain = _original(directory, original_file)
     owner, metadata = capture['owner'], capture['metadata']
@@ -114,8 +98,7 @@ def reexport_capture(directory, original_file):
         target = {}
     if target.get('backend') == 'cuda':
         backend, decoder = 'nvidia', _nvidia
-        rules = (timeline_events_nvidia, timeline_nvidia,
-                 timeline_nvidia_async)
+        rules = timeline_nvidia_offline.decoder_rules(capture)
     elif metadata['compiler_metadata'].get(
             'debug_record_layout') == 'ascend_source_timeline_v1':
         backend, decoder, rules = 'ascend', _ascend, (timeline_events_ascend, )
@@ -164,7 +147,7 @@ def reexport_capture(directory, original_file):
                 json_bytes(receipt))
     rows, reason, control_file, machine_file = [], None, None, None
     if backend == 'nvidia':
-        from .timeline_unit_nvidia import load_counter_unit_proofs, load_counter_machine_map
+        from .timeline_nvidia_offline import load_counter_unit_proofs, load_counter_machine_map, control_evidence
         from .timeline_perfetto import write_counter_exports
         binary = owner['binary_id']
         machine_base = 'machine/' + binary
@@ -199,20 +182,18 @@ def reexport_capture(directory, original_file):
                     json_bytes(machine_inputs))
             persist(directory, machine_derived + '/counter-map.json',
                     json_bytes(actual_map))
-        from . import timeline_nvidia_control
-        control = timeline_nvidia_control.inspect_wait_control_brackets(
-            machine_map=actual_map,
+        control, control_rules = control_evidence(
+            capture,
+            actual_map,
             sass_lines=read_artifact(directory,
                                      machine_base + '/lines.stdout'),
-            sass_json=read_artifact(directory, machine_base + '/json.stdout'),
-            plan=owner['plan'])
-        control_inputs = dict(
-            schema_version=1,
-            machine_revision=machine_revision,
-            plan_sha256=sha256(json_bytes(owner['plan'])),
-            report_sha256=sha256(json_bytes(control)),
-            implementation_sha256=sha256(
-                Path(timeline_nvidia_control.__file__).read_bytes()))
+            sass_json=read_artifact(directory, machine_base + '/json.stdout'))
+        control_inputs = dict(schema_version=1,
+                              machine_revision=machine_revision,
+                              plan_sha256=sha256(json_bytes(owner['plan'])),
+                              report_sha256=sha256(json_bytes(control)),
+                              implementation_sha256=sha256(
+                                  control_rules.read_bytes()))
         control_base = 'derived/control/' + sha256(json_bytes(control_inputs))
         control_file = control_base + '/wait-control.json'
         with export_lock(directory):

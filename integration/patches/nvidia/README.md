@@ -16,6 +16,8 @@ git -C "$compiler" apply --check "$component/integration/patches/nvidia/automati
 git -C "$compiler" apply "$component/integration/patches/nvidia/automatic-scopes.patch"
 git -C "$compiler" apply --check "$component/integration/patches/nvidia/preallocation-admission.patch"
 git -C "$compiler" apply "$component/integration/patches/nvidia/preallocation-admission.patch"
+git -C "$compiler" apply --check "$component/integration/patches/nvidia/optimized-llvm.patch"
+git -C "$compiler" apply "$component/integration/patches/nvidia/optimized-llvm.patch"
 ```
 
 The first patch supplies the integrated build and cache identity policy. The
@@ -23,6 +25,7 @@ second adds the completed-TTGIR hook for automatic scopes in Triton and Gluon.
 The third patch lets the profiling allocator validate the actual function,
 compiler stride and launch grid before global or profile scratch allocation.
 It is optional for stock allocators and leaves their ABI unchanged.
+The fourth patch adds the post-O3 LLVM-text callback used by automatic timeline.
 The pass and Python bindings are built from this component; replacing only the
 Python package cannot supply this feature.
 
@@ -51,6 +54,42 @@ alter the host driver. Keep dependency caches and build output on a volume with
 sufficient space; the verified wheel contains debug information and is about
 387 MiB.
 
+## Package the late timeline recorder
+
+The full native helper above produces the count/native wheel. Automatic
+`detail="timeline"` additionally needs the matching post-O3 recorder executable
+inside that wheel. Build it with the same complete LLVM SDK, then use the public
+assembler to package the native outputs just built. The assembler does not
+rebuild or replace the core libraries; keep source and dependency identities
+matched to that native build. Use fresh output directories.
+
+```bash
+python "$component/integration/patches/nvidia/build_late_timeline_tool.py" \
+  --llvm-root "$LLVM_SYSPATH" --output /absolute/path/to/late-recorder
+native_python="$compiler/$(python -c 'import sys,sysconfig; print("build/lib."+sysconfig.get_platform()+"-"+sys.implementation.cache_tag)')"
+python "$component/integration/patches/nvidia/assemble_automatic_wheel.py" \
+  --flagtree "$compiler" --component "$component" \
+  --native-python "$native_python" \
+  --core-library "$native_python/triton/_C/libtriton.so" \
+  --backend-build /absolute/path/to/build \
+  --late-timeline-tool /absolute/path/to/late-recorder/late-timeline \
+  --output /absolute/path/to/timeline-package
+```
+
+Install the wheel under `timeline-package/dist/`, rather than the earlier wheel
+without the recorder. No source-directory `PYTHONPATH` is needed. The tested
+assembler verifies archived tool bytes and executable mode alongside native and
+component Python files. Retain the tool's `build-receipt.json` with build output.
+A bare full-native-helper wheel without this additional packaging does not
+supply automatic late timeline support.
+
+For SM120 standard counter-ns export, install NVIDIA's matching `nvdisasm` wheel
+in that runtime or set `FLAGTREE_NVDISASM` to an absolute executable path. The
+validated tool is `nvidia-cuda-nvdisasm` 13.2.86; automatic finalization validates
+original PTX/embedded debug and SASS before granting counter units. Missing or
+unrecognized machine evidence leaves raw available with an explicit diagnostic.
+Read precision, source costs, shared epochs and hardware busy remain separate.
+
 ## Install into an independent environment
 
 The verified runtime combination is Torch `2.8.0+cu128`, NumPy `2.2.6`, and the
@@ -68,7 +107,7 @@ runtime=/absolute/path/to/runtime-venv/bin/python
 "$runtime" -m pip install --no-deps /path/to/matching-cuda-wheels/nvidia_*.whl
 "$runtime" -m pip install filelock 'typing-extensions>=4.10' 'sympy>=1.13.3' \
   networkx jinja2 fsspec 'numpy==2.2.6'
-"$runtime" -m pip install --no-deps /absolute/path/to/wheelhouse/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl
+"$runtime" -m pip install --no-deps /absolute/path/to/timeline-package/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl
 ```
 
 For an offline installation, add `--no-index --find-links /path/to/dependency-wheels`

@@ -1,4 +1,4 @@
-"""NVIDIA optimized-LLVM transform, not yet enabled by the default hook.
+"""NVIDIA optimized-LLVM transform used by automatic timeline capture.
 
 The matching parent compiler invokes this after O3 and scratch metadata
 extraction. Each attempt retains original IR, native output, logs and an

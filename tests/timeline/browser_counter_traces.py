@@ -140,9 +140,6 @@ def main():
                         page.locator('.pf-track__title').filter(
                             has_text=title).first.locator('..').locator(
                                 '.pf-track__collapse-button').click()
-                        page.wait_for_function(
-                            "()=>document.body.innerText.includes('observer_region_elapsed /')",
-                            timeout=10000)
                         event = max((e for e in view['events']
                                      if e['end_ns'] is not None),
                                     key=lambda e: e['end_ns'] - e['start_ns'])
@@ -150,34 +147,56 @@ def main():
                              'No positive real interval to select')
                         site = next(s for s in view['sites']
                                     if s['id'] == event['site_id'])
-                        track = page.locator('.pf-track__title').filter(
-                            has_text=event['semantic'] + ' / ' + site['name'] +
-                            ' / lane 0').first.locator('xpath=../../..')
-                        box = track.locator('.pf-track__canvas').bounding_box()
-                        need(box and box['width'] > 0,
-                             'No visible rendered source-site track')
+                        track_name = site.get('attributes',
+                                              {}).get('display.track_group',
+                                                      site['name'])
+                        page.wait_for_function(
+                            '(title)=>document.body.innerText.includes(title)',
+                            arg=event['semantic'] + ' / ' + track_name,
+                            timeout=10000)
+                        tracks = page.locator('.pf-track__title').filter(
+                            has_text=event['semantic'] + ' / ' + track_name +
+                            ' / lane ')
+                        need(tracks.count() > 0,
+                             'No rendered semantic-group track')
                         end = max(r['relative_ns'] for r in view['records'])
                         selection_deadline = time.monotonic() + 10
-                        while True:
-                            page.mouse.click(
-                                box['x'] +
-                                (event['start_ns'] + event['end_ns']) / 2 /
-                                end * box['width'],
-                                box['y'] + box['height'] / 2)
-                            try:
-                                page.wait_for_function(
-                                    '(id)=>document.body.innerText.includes(id)',
-                                    arg=event['id'],
-                                    timeout=max(
-                                        1,
-                                        min(
-                                            500,
-                                            int((selection_deadline -
-                                                 time.monotonic()) * 1000))))
-                                break
-                            except PlaywrightTimeoutError:
-                                if time.monotonic() >= selection_deadline:
-                                    raise
+                        selected = False
+                        while not selected and time.monotonic(
+                        ) < selection_deadline:
+                            for lane in range(tracks.count()):
+                                track = tracks.nth(lane).locator(
+                                    'xpath=../../..')
+                                track.scroll_into_view_if_needed(timeout=3000)
+                                box = track.locator(
+                                    '.pf-track__canvas').bounding_box()
+                                need(box and box['width'] > 0,
+                                     'No visible rendered counter track')
+                                page.mouse.click(
+                                    box['x'] +
+                                    (event['start_ns'] + event['end_ns']) / 2 /
+                                    end * box['width'],
+                                    box['y'] + box['height'] / 2)
+                                try:
+                                    page.wait_for_function(
+                                        '(id)=>document.body.innerText.includes(id)',
+                                        arg=event['id'],
+                                        timeout=max(
+                                            1,
+                                            min(
+                                                500,
+                                                int((selection_deadline -
+                                                     time.monotonic()) *
+                                                    1000))))
+                                    selected = True
+                                    break
+                                except PlaywrightTimeoutError:
+                                    if time.monotonic() >= selection_deadline:
+                                        raise
+                        need(
+                            selected,
+                            'Could not select the actual event on its rendered lane'
+                        )
                         body = page.locator('body').inner_text()
                         for field in [
                                 'raw_ticks', 'source_locations',

@@ -47,9 +47,20 @@ def inspect(folder, expected):
     need(
         not index['pending_decode'] and not index['retained_owners']
         and not index['failures'], 'Finalization left failures or owners')
+    need((timeline / 'compiler-attempts/index.json').is_file(),
+         'Compiler receipts not retained in final bundle')
+    need(
+        sum(p.stat().st_size for p in folder.rglob('*') if p.is_file())
+        <= 64 * 1024 * 1024, 'Default bundle exceeded 64MiB budget')
     summaries = []
     for row in index['captures']:
         capture = json.loads((timeline / row['capture_file']).read_text())
+        need(
+            capture.get('counter_ns_status',
+                        {}).get('status') == 'counter_unit_only'
+            and len(capture.get('counter_ns_exports', [])) == 8,
+            'Default late capture lacks its actual machine-validated counter-ns views'
+        )
         need(
             capture['record_backend'] == 'nvidia-late-1'
             and capture['capture_status'] == 'raw_complete',

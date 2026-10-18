@@ -19,6 +19,8 @@ LIMIT = 32 * 1024 * 1024
 MAX_CALL_REFERENCES = 65536
 _MARKER = re.compile(
     r'flagprism_timeline_v1_site_(\d+)_(entry|exit)\s*;?\s*\Z')
+_LATE_MARKER = re.compile(
+    r'flagprism_late_probe_site_(\d+)_(entry|exit)\s*;?\s*\Z')
 _GETTER = re.compile(
     r'(?:@!?%[\w.$]+\s+)?mov\.(?:u64|b64)\s+[%\w.$]+,\s*%globaltimer\s*;\Z')
 
@@ -93,8 +95,11 @@ def embedded_ptx(cubin):
     return raw
 
 
-def _lex(text):
+def _lex(text, marker_flavor='timeline-v1'):
     """Remove comments/outer whitespace while preserving line numbers/strings."""
+    if marker_flavor not in ('timeline-v1', 'late-v1'):
+        raise ValueError('Unknown counter marker flavor')
+    marker = _MARKER if marker_flavor == 'timeline-v1' else _LATE_MARKER
     lines, markers = [], []
     block = False
     for number, line in enumerate(text.splitlines(), 1):
@@ -124,7 +129,7 @@ def _lex(text):
                 pos += 2
             elif pair == '//':
                 annotation = line[pos + 2:].strip()
-                match = _MARKER.fullmatch(annotation)
+                match = marker.fullmatch(annotation)
                 if match:
                     _need(not out,
                           'Counter marker must occupy a separate line')
@@ -222,7 +227,9 @@ def counter_map(*,
                 binary_id,
                 scope_ids,
                 expected_sm,
-                marker_version=1):
+                marker_version=1,
+                marker_flavor='timeline-v1',
+                expected_phases=None):
     """Pure bounded validation, binding input hashes and every actual getter PC."""
     _need(
         type(marker_version) is int and marker_version == 1,
@@ -230,8 +237,10 @@ def counter_map(*,
     _need(
         type(binary_id) is str and re.fullmatch(r'[0-9a-f]{64}', binary_id),
         'Invalid actual binary identity')
+    _need(marker_flavor in ('timeline-v1', 'late-v1'), 'Unknown marker flavor')
     _need(
-        type(scope_ids) is tuple and scope_ids and len(scope_ids) <= 128,
+        type(scope_ids) is tuple and scope_ids and len(scope_ids)
+        <= (128 if marker_flavor == 'timeline-v1' else 4096),
         'Invalid selected scope identities')
     for site in scope_ids:
         _int(site, 'scope id', 0x7fffffff)
@@ -251,7 +260,7 @@ def counter_map(*,
     raw_debug = embedded_ptx(cubin)
     # PTXAS removes comments but retains their blank lines. Comparing all actual
     # per-line tokens binds raw annotations to the debug table inside this cubin.
-    source_lines, annotations = _lex(ptx.decode('utf-8'))
+    source_lines, annotations = _lex(ptx.decode('utf-8'), marker_flavor)
     debug_text = '\n'.join(raw_debug.decode('utf-8').split('\0')[:-1])
     debug_lines, _ = _lex(debug_text)
     debug_omissions = _bind_debug_lines(source_lines, debug_lines)
@@ -285,11 +294,29 @@ def counter_map(*,
                                           if clean.startswith('@') else None))
             pending = None
     _need(pending is None and by_line, 'Missing marked globaltimer getter')
+    required = {(site, phase) for site in sites for phase in ('entry', 'exit')}
+    if marker_flavor == 'late-v1':
+        _need(
+            type(expected_phases) in (tuple, list) and expected_phases,
+            'Late mapping requires explicit manifest phases')
+        required = set()
+        for item in expected_phases:
+            _need(
+                type(item) in (tuple, list) and len(item) == 2
+                and type(item[0]) is int and item[0] in sites
+                and item[1] in ('entry', 'exit'),
+                'Malformed late phase requirement')
+            _need(
+                tuple(item) not in required,
+                'Duplicated late phase requirement')
+            required.add(tuple(item))
+        _need({site
+               for site, _ in required} == sites, 'Missing late site phases')
+    else:
+        _need(expected_phases is None,
+              'Legacy marker contract has fixed endpoint phases')
     _need({(v['site_id'], v['phase'])
-           for v in by_line.values()} == {(s, p)
-                                          for s in sites
-                                          for p in ('entry', 'exit')},
-          'Missing scope phase')
+           for v in by_line.values()} == required, 'Missing scope phase')
     doc = json.loads(sass_json)
     _need(
         type(doc) is list and len(doc) == 2 and type(doc[0]) is dict
@@ -493,7 +520,7 @@ def counter_map(*,
                  site_id=counter['site_id'],
                  phase=counter['phase'],
                  direct_call_sites=references))
-    return dict(
+    result = dict(
         schema_version=1,
         static_model_version=1,
         status='counter_mapping_complete_region_unverified',
@@ -520,6 +547,11 @@ def counter_map(*,
             'PTX collection predication does not prove SASS read suppression.',
             'Source-region, participation and completion proofs remain separate.'
         ])
+
+    if marker_flavor == 'late-v1':
+        result['marker_flavor'] = marker_flavor
+        result['expected_phases'] = [list(item) for item in sorted(required)]
+    return result
 
 
 def is_globaltimer_getter(opcode, operands):
@@ -602,7 +634,15 @@ def _run_tool(tool, flags, directory, name, deadline, commands):
     return path.read_bytes()
 
 
-def inspect_capture_binary(directory, *, metadata, plan, deadline=None):
+def inspect_capture_binary(directory,
+                           *,
+                           metadata,
+                           plan,
+                           deadline=None,
+                           marker_flavor='timeline-v1',
+                           scope_ids=None,
+                           expected_phases=None,
+                           inspect_wait_control=True):
     """Optional postprocessing. Preserve raw captures if the tool is unavailable."""
     try:
         tool = find_nvdisasm()
@@ -678,24 +718,28 @@ def inspect_capture_binary(directory, *, metadata, plan, deadline=None):
                             sass_json=output['json'],
                             binary_id=binary,
                             scope_ids=tuple(
-                                int(k) for k, _ in metadata['scope_id_names']),
+                                int(k) for k, _ in metadata['scope_id_names'])
+                            if scope_ids is None else scope_ids,
                             expected_sm=(arch // 10, arch % 10),
-                            marker_version=plan.get('timeline_marker_version'))
+                            marker_version=plan.get('timeline_marker_version'),
+                            marker_flavor=marker_flavor,
+                            expected_phases=expected_phases)
         proof.update(tool_sha256=tool_hash,
                      tool_path=str(tool),
                      tool_version_sha256=_sha(output['version']))
         (target /
          'counter-map.json').write_text(json.dumps(proof, indent=2) + '\n')
-        from .timeline_nvidia_control import inspect_wait_control_brackets
-        control = inspect_wait_control_brackets(machine_map=proof,
-                                                sass_lines=output['lines'],
-                                                sass_json=output['json'],
-                                                plan=plan)
-        (target /
-         'wait-control.json').write_text(json.dumps(control, indent=2) + '\n')
+        if inspect_wait_control:
+            from .timeline_nvidia_control import inspect_wait_control_brackets
+            control = inspect_wait_control_brackets(machine_map=proof,
+                                                    sass_lines=output['lines'],
+                                                    sass_json=output['json'],
+                                                    plan=plan)
+            (target / 'wait-control.json'
+             ).write_text(json.dumps(control, indent=2) + '\n')
+            status['wait_control_file'] = str(prefix / 'wait-control.json')
         status.update(status=proof['status'],
-                      counter_map_file=str(prefix / 'counter-map.json'),
-                      wait_control_file=str(prefix / 'wait-control.json'))
+                      counter_map_file=str(prefix / 'counter-map.json'))
     except (ValueError, OSError, KeyError, TypeError, UnicodeError,
             subprocess.SubprocessError) as error:
         status.update(reason=str(error), exception=type(error).__name__)

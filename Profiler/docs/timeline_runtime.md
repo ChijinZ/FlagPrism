@@ -3,9 +3,12 @@
 The public hook/API/CLI collect source-linked raw internal timestamps. Captures
 remain explicitly `partial_clock_unverified`. NVIDIA automatic timeline now uses
 late instrumentation after ordinary LLVM O3, with a separately packaged matching
-LLVM recorder and `optimized-llvm.patch`. The new late layout currently retains
-raw observer issue brackets/checkpoints and conditional byte-dependency facts;
-its final-machine counter mapping and Perfetto export are still pending.
+LLVM recorder and `optimized-llvm.patch`. On the inspected SM120 target, the late
+layout now also maps actual marked PTX/CUBIN readers and exports standard
+observer-relative counter-ns Perfetto files. These show observer issue brackets,
+wait brackets and checkpoints, with conditional byte-dependency facts. They do
+not establish precise source costs, hardware busy time, shared epochs or verified
+physical time flows.
 
 Previously qualified NVIDIA early-recorder captures retain their isolated
 observer-relative ns exports through the legacy reader. Ascend 910B c220-vector
@@ -52,13 +55,31 @@ with the bound native executable before authorizing allocation, rather than
 trusting cached scratch dimensions alone. Raw, guard, compiler/source artifacts
 and per-invocation identity are saved before releasing completed device storage.
 
-Late captures contain `.late-decoded.json` and `.late-async.json`. A consistent
+Late captures contain `.late-decoded.json`, `.late-events.json` and
+`.late-async.json`. The canonical time view explicitly selects up to four actual
+threads per program after validating the whole captured raw. Complete CTA raw
+remains available for other views and dependency footprints; this display
+selection does not lower instrumentation work or hide loss in other threads.
+Backend-provided display groups collect related native sites into readable
+tracks, retaining every event, its actual coordinates and raw references.
+
+A consistent
 byte model reports observed submit/commit/wait/publication/consumer and reused
 buffer generations, with no verified time arrows. Opaque side effects or
 incomplete/divergent collective participation leave raw data available and
 explain why this particular model cannot be used. This is not a hardware busy
-or source-cost measurement. New late captures do not yet provide the standard
-Perfetto views required for final acceptance.
+or source-cost measurement. Final acceptance still requires the full clock,
+dynamic time-flow, source-boundary and three-backend evidence in the goal.
+
+`compiler-attempts/index.json` in the final timeline directory identifies retained
+ordinary/instrumented LLVM, manifests, stdout/stderr and actual compiler process
+receipts. Raw owner salvage precedes this retention, so a derived/copy failure
+cannot prevent other completed calls from preserving original data. A public
+`finalize` failure wraps the original exception as its cause and reports internal
+staging; finalized session IDs are no-ops. In-process ownership recovery uses the
+retained hook and the original staging base; fully retained captures can then be
+re-exported with the public offline command. Compiler receipts survive copying
+the recovered timeline and removal of owned temporary staging.
 
 The current public raw paths support NVIDIA, Enflame GCU and Ascend CANN,
 eager and one host thread per session. All three have actual multiple-stream

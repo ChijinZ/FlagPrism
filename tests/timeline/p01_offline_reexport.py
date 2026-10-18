@@ -146,10 +146,13 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
             need(bool(capture['reason']),
                  'Raw-only export must explain missing unit evidence')
         canonical = json.loads((root / capture['canonical_file']).read_text())
-        original = next(
-            json.loads(p.read_text())
-            for p in root.glob('captures/*.events.json')
-            if json.loads(p.read_text())['identity'] == canonical['identity'])
+        original_capture = next(
+            json.loads((root / row['capture_file']).read_text())
+            for row in json.loads((root /
+                                   'index.json').read_text())['captures']
+            if row['invocation_id'] == capture['invocation_id'])
+        original = json.loads(
+            (root / original_capture['events_file']).read_text())
         need(original == canonical,
              'Offline decoder changed the original canonical semantics')
         for row in capture['exports']:

@@ -144,30 +144,49 @@ def encode_counter_trace(view,
     sites = {row['id']: row for row in view['sites']}
     sources = {row['id']: row for row in view['sources']}
     records = {row['id']: row for row in view['records']}
+
+    def presentation(site):
+        group = site.get('attributes', {}).get('display.track_group')
+        if group is None:
+            return site['id'], site['name'], False
+        if type(group) is not str or not group or len(
+                group.encode('utf-8')) > 1024:
+            raise ValueError(
+                'Display track group must be a bounded nonempty string')
+        return 'display-group:' + json.dumps([site['semantic'], group
+                                              ]), group, True
+
     assignments, lanes, lane_counts = {}, {}, {}
     ordered = sorted(view['events'],
                      key=lambda e:
                      (e['start_ns'], e['end_ns'] or e['start_ns'], e['id']))
     for event in ordered:
-        key = (event['site_id'], event['semantic'])
+        site = sites[event['site_id']]
+        display_key, _, grouped = presentation(site)
+        key = (display_key, event['semantic'])
         available = lanes.setdefault(key, [])
         if available and available[0][0] <= event['start_ns']:
             _, lane = heapq.heappop(available)
         else:
             lane = lane_counts.get(key, 0)
             lane_counts[key] = lane + 1
-        heapq.heappush(available, (event['end_ns'] if event['end_ns']
-                                   is not None else event['start_ns'], lane))
+        occupied_until = event['end_ns'] if event[
+            'end_ns'] is not None else event['start_ns']
+        if grouped and occupied_until == event['start_ns']:
+            # Give coincident points separate visual lanes without moving time.
+            occupied_until += 1
+        heapq.heappush(available, (occupied_until, lane))
         assignments[event['id']] = (*key, lane)
     pending = []
     pending_bytes = 0
     ordinal = 0
     for event in ordered:
         site = sites[event['site_id']]
+        display_key, display_name, _ = presentation(site)
         lane = assignments[event['id']][2]
         tid = track(
-            namespace + ':' + site['id'] + ':' + str(lane),
-            event['semantic'] + ' / ' + site['name'] + ' / lane ' + str(lane),
+            namespace + ':' + display_key + ':' + str(lane),
+            event['semantic'] + ' / ' + display_name + ' / lane ' + str(lane),
             observer_track)
         refs = [records[key] for key in event['record_ids']]
         annotations = dict(
