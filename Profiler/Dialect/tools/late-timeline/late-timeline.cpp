@@ -1,6 +1,9 @@
 // Isolated late-recording experiment. Not a default backend or qualified ABI.
 #include "llvm/ADT/MapVector.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallVector.h"
+#include "llvm/ADT/StringSet.h"
 #include "llvm/Analysis/AssumptionCache.h"
 #include "llvm/IR/Attributes.h"
 #include "llvm/IR/CallingConv.h"
@@ -25,10 +28,12 @@ using namespace llvm;
 static cl::opt<std::string> Input(cl::Positional, cl::Required);
 static cl::opt<std::string> Output("output", cl::Required);
 static cl::opt<std::string> Manifest("manifest", cl::Required);
-static cl::opt<unsigned> ScratchArg("scratch-arg", cl::Required);
+static cl::opt<int> ScratchArg("scratch-arg", cl::init(-1));
+static cl::opt<unsigned> ProfileABI("flagtree-profile-abi", cl::init(0));
+static cl::opt<unsigned> LogicalBudget("max-sites", cl::init(8));
 static cl::opt<bool> BatchRecords("batch-records", cl::init(false));
 static cl::opt<unsigned> RecordCapacity("capacity", cl::init(512));
-static cl::opt<unsigned> ObserverActors("actors", cl::init(1));
+static cl::opt<unsigned> ObserverActors("actors", cl::init(0));
 static cl::opt<bool> GroupMatrix("group-matrix", cl::init(false));
 static cl::opt<bool> CompactPrograms("compact-programs", cl::init(false));
 struct Site {
@@ -48,17 +53,63 @@ struct Stamp {
   Value *end;
   Value *payload;
 };
+static bool hasDataUse(Value *value, unsigned budget = 256) {
+  SmallVector<Value *> work{value};
+  SmallPtrSet<Value *, 32> seen;
+  while (!work.empty() && budget--) {
+    Value *current = work.pop_back_val();
+    if (!seen.insert(current).second)
+      continue;
+    for (User *user : current->users()) {
+      auto *instruction = dyn_cast<Instruction>(user);
+      if (!instruction)
+        continue;
+      if (auto *store = dyn_cast<StoreInst>(instruction)) {
+        if (store->getValueOperand() == current)
+          return true;
+        continue;
+      }
+      if (isa<GetElementPtrInst, ICmpInst, BranchInst>(instruction) ||
+          instruction->getType()->isPointerTy())
+        continue;
+      if (auto *select = dyn_cast<SelectInst>(instruction)) {
+        if (select->getCondition() == current)
+          continue;
+      }
+      if (auto *call = dyn_cast<CallBase>(instruction)) {
+        if (auto *callee = call->getCalledFunction())
+          if (callee->getName().contains("barrier") ||
+              callee->getName().contains("cp.async") ||
+              callee->getName().starts_with("llvm.assume"))
+            continue;
+        return true;
+      }
+      if (!instruction->getType()->isVoidTy())
+        work.push_back(instruction);
+    }
+  }
+  return false;
+}
 static std::string classify(Instruction &instruction) {
   if (auto *store = dyn_cast<StoreInst>(&instruction)) {
     if (store->getPointerAddressSpace() == 3)
       return "shared_store_after";
+    if (store->getPointerAddressSpace() == 1)
+      return "global_store_issue_bracket";
     return {};
   }
   if (auto *load = dyn_cast<LoadInst>(&instruction)) {
     if (load->getPointerAddressSpace() == 3)
       return "shared_load_native_bracket";
+    if (load->getPointerAddressSpace() == 1)
+      return "global_load_issue_bracket";
     return {};
   }
+  if (isa<BinaryOperator>(instruction) &&
+      (instruction.getType()->isFPOrFPVectorTy() || hasDataUse(&instruction)))
+    return "compute_issue_bracket";
+  if (isa<AtomicRMWInst, AtomicCmpXchgInst>(instruction))
+    return "global_atomic_issue_bracket";
   auto *operation = dyn_cast<CallBase>(&instruction);
   if (!operation)
     return {};
@@ -75,16 +126,35 @@ static std::string classify(Instruction &instruction) {
       if (name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.b16.p3" ||
           name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.trans.b16.p3")
         return "shared_load_issue_bracket";
-      return "unsupported_ldmatrix_geometry";
+      return "opaque_native_issue_bracket";
     }
+    if (name.starts_with("llvm.nvvm.read.ptx.sreg.") ||
+        name.starts_with("llvm.assume") || name.starts_with("llvm.lifetime.") ||
+        name.starts_with("llvm.dbg."))
+      return {};
+    if (call.getType()->isFPOrFPVectorTy() ||
+        name.starts_with("llvm.nvvm.shfl.") ||
+        (call.getType()->isIntegerTy() && hasDataUse(&call)))
+      return "compute_issue_bracket";
+    if (!function->isIntrinsic())
+      return "opaque_native_issue_bracket";
   }
   if (auto *assembly = dyn_cast<InlineAsm>(call.getCalledOperand())) {
     StringRef text = assembly->getAsmString();
-    if (text.starts_with("cp.async.cg.shared.global") ||
-        text.starts_with("cp.async.ca.shared.global"))
+    if (text == "cp.async.cg.shared.global [ $0 + 0 ], [ $1 + 0 ], 0x10, $2;" ||
+        text == "cp.async.ca.shared.global [ $0 + 0 ], [ $1 + 0 ], 0x10, $2;")
       return "copy_submit_after";
-    if (text.starts_with("mma.sync."))
+    if (text.starts_with("mma.sync.") && text.count(';') == 1)
       return "matrix_issue_bracket";
+    if (text.contains(".shared") || text.contains("cp.async"))
+      return "opaque_native_issue_bracket";
+    if (text.contains("ld.global"))
+      return "global_load_issue_bracket";
+    if (text.contains("st.global"))
+      return "global_store_issue_bracket";
+    if (text.contains("atom.global") || text.contains("red.global"))
+      return "global_atomic_issue_bracket";
+    return "opaque_native_issue_bracket";
   }
   return {};
 }
@@ -117,25 +187,53 @@ int main(int argc, char **argv) {
     return 2;
   }
   Function &function = *kernels.front();
-  if (RecordCapacity < 1 || RecordCapacity > 4096 ||
-      (ObserverActors != 1 && ObserverActors != 128)) {
-    errs() << "Invalid bounded prototype capacity/actor selection\n";
+  if (RecordCapacity < 1 || RecordCapacity > 4096 || LogicalBudget < 1 ||
+      LogicalBudget > 128) {
+    errs() << "Invalid bounded capture capacity/selection\n";
     return 2;
   }
-  if (ObserverActors == 128 &&
-      function.getFnAttribute("nvvm.reqntid").getValueAsString() != "128") {
-    errs() << "Full-actor prototype requires actual reqntid=128\n";
+  StringRef blockText =
+      function.getFnAttribute("nvvm.reqntid").getValueAsString();
+  SmallVector<StringRef> parts;
+  blockText.split(parts, ',');
+  uint64_t block[3] = {1, 1, 1};
+  if (parts.empty() || parts.size() > 3) {
+    errs() << "Missing actual block dimensions\n";
+    return 2;
+  }
+  for (unsigned i = 0; i < parts.size(); ++i)
+    if (parts[i].trim().getAsInteger(10, block[i]) || !block[i] ||
+        block[i] > 1024) {
+      errs() << "Invalid actual block dimensions\n";
+      return 2;
+    }
+  uint64_t blockActors = block[0] * block[1] * block[2];
+  if (!blockActors || blockActors > 1024) {
+    errs() << "Invalid actual block size\n";
+    return 2;
+  }
+  const uint64_t Actors =
+      ObserverActors ? ObserverActors.getValue() : blockActors;
+  if (Actors != 1 && Actors != blockActors) {
+    errs() << "Observer selection differs from actual block\n";
     return 2;
   }
   const uint64_t Capacity = RecordCapacity;
-  const uint64_t Actors = ObserverActors;
   const uint64_t HeaderWords = 6;
   const uint64_t SegmentWords = Actors * (HeaderWords + Capacity * 4);
-  if (ScratchArg >= function.arg_size()) {
+  int scratchIndex = ScratchArg;
+  if (scratchIndex < 0) {
+    if (ProfileABI != 1 || function.arg_size() < 2) {
+      errs() << "Reserved profile-argument ABI is not declared\n";
+      return 2;
+    }
+    scratchIndex = function.arg_size() - 1;
+  }
+  if (static_cast<unsigned>(scratchIndex) >= function.arg_size()) {
     errs() << "Scratch argument outside actual signature\n";
     return 2;
   }
-  Argument *scratch = function.getArg(ScratchArg);
+  Argument *scratch = function.getArg(scratchIndex);
   if (!scratch->use_empty()) {
     errs()
         << "Ordinary reserved scratch must be unused before instrumentation\n";
@@ -189,7 +287,10 @@ int main(int argc, char **argv) {
       bool interval = kind != "commit_after" && kind != "copy_submit_after" &&
                       kind != "cta_barrier_after" &&
                       kind != "shared_store_after";
-      if (GroupMatrix && kind == "matrix_issue_bracket" && !sites.empty() &&
+      if (!sites.empty() &&
+          ((GroupMatrix && kind == "matrix_issue_bracket") ||
+           (kind == "compute_issue_bracket" &&
+            sites.back().last->getNextNode() == call)) &&
           sites.back().kind == kind &&
           sites.back().call->getParent() == call->getParent()) {
         sites.back().last = call;
@@ -200,6 +301,56 @@ int main(int argc, char **argv) {
       sites.push_back(
           {call, call, id, kind, interval, payload, 1, storeBytes, {call}});
     }
+  if (sites.empty()) {
+    for (auto &block : function)
+      if (auto *ret = dyn_cast<ReturnInst>(block.getTerminator()))
+        sites.push_back({ret,
+                         ret,
+                         static_cast<unsigned>(sites.size() + 1),
+                         "control_checkpoint",
+                         false,
+                         nullptr,
+                         1,
+                         0,
+                         {ret}});
+  }
+  StringSet<> optionalKeys;
+  SmallVector<std::string> keys;
+  auto optional = [](const Site &site) {
+    return StringRef(site.kind).starts_with("global_") ||
+           site.kind == "compute_issue_bracket" ||
+           site.kind == "opaque_native_issue_bracket";
+  };
+  auto sourceKey = [](const Site &site) {
+    std::string key = site.kind;
+    if (auto loc = site.call->getDebugLoc())
+      key += ":" + loc->getFilename().str() + ":" +
+             std::to_string(loc.getLine()) + ":" + std::to_string(loc.getCol());
+    return key;
+  };
+  for (const Site &site : sites)
+    if (optional(site)) {
+      std::string key = sourceKey(site);
+      if (optionalKeys.insert(key).second)
+        keys.push_back(key);
+    }
+  StringSet<> chosen;
+  unsigned keep = std::min<unsigned>(LogicalBudget, keys.size());
+  for (unsigned i = 0; i < keep; ++i)
+    chosen.insert(keys[keep == 1 ? 0
+                                 : static_cast<size_t>(i) * (keys.size() - 1) /
+                                       (keep - 1)]);
+  SmallVector<Site> selected;
+  json::Array unselected;
+  for (const Site &site : sites) {
+    if (!optional(site) || chosen.contains(sourceKey(site)))
+      selected.push_back(site);
+    else
+      unselected.push_back(json::Object{{"site_id", site.id},
+                                        {"kind", site.kind},
+                                        {"reason", "logical_site_budget"}});
+  }
+  sites = std::move(selected);
   for (const Site &site : sites) {
     const Instruction &instruction = *site.call;
     unsigned id = site.id;
@@ -249,7 +400,7 @@ int main(int argc, char **argv) {
     }
     inventory.push_back(std::move(row));
   }
-  if (sites.empty() || sites.size() > 128) {
+  if (sites.empty() || sites.size() > 4096) {
     errs() << "No supported sites or selection budget exceeded\n";
     return 2;
   }
@@ -264,10 +415,13 @@ int main(int argc, char **argv) {
   Value *tx = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.x");
   Value *ty = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.y");
   Value *tz = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.z");
-  Value *actorIndex = init.CreateZExt(tx, init.getInt64Ty());
-  Value *actor = init.CreateAnd(
-      init.CreateICmpULT(tx, init.getInt32(Actors)),
-      init.CreateICmpEQ(init.CreateOr(ty, tz), init.getInt32(0)));
+  Value *ntx = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ntid.x");
+  Value *nty = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ntid.y");
+  Value *actorIndex = init.CreateZExt(
+      init.CreateAdd(
+          tx, init.CreateMul(ntx, init.CreateAdd(ty, init.CreateMul(nty, tz)))),
+      init.getInt64Ty());
+  Value *actor = init.CreateICmpULT(actorIndex, init.getInt64(Actors));
   Value *x = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.x"),
         *y = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.y"),
         *z = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.z");
@@ -282,11 +436,17 @@ int main(int argc, char **argv) {
               init.CreateMul(init.CreateZExt(ny, init.getInt64Ty()),
                              init.CreateZExt(z, init.getInt64Ty())))));
   auto *sharedSymbol = module->getNamedGlobal("global_smem");
-  if (!sharedSymbol || sharedSymbol->getAddressSpace() != 3) {
+  if ((!sharedSymbol || sharedSymbol->getAddressSpace() != 3) &&
+      llvm::any_of(sites, [](const Site &site) {
+        return StringRef(site.kind).starts_with("shared_") ||
+               site.kind == "copy_submit_after";
+      })) {
     errs() << "Missing actual compiler dynamic-shared symbol\n";
     return 2;
   }
-  Value *sharedBase = init.CreatePtrToInt(sharedSymbol, init.getInt64Ty());
+  Value *sharedBase = sharedSymbol
+                          ? init.CreatePtrToInt(sharedSymbol, init.getInt64Ty())
+                          : init.getInt64(0);
   Value *physicalProgram = init.CreateZExt(program, init.getInt64Ty());
   Value *programSelected = init.getTrue();
   if (CompactPrograms) {
@@ -315,7 +475,9 @@ int main(int argc, char **argv) {
   for (Site &site : sites) {
     IRBuilder<> before(site.call);
     Value *begin = site.interval ? clock(before, site.id, "entry") : nullptr;
-    Instruction *next = site.last->getNextNode();
+    Instruction *next = site.kind == "control_checkpoint"
+                            ? site.last
+                            : site.last->getNextNode();
     if (!next) {
       errs() << "Unsupported terminator call\n";
       return 3;
@@ -390,8 +552,11 @@ int main(int argc, char **argv) {
     Value *count = b.CreateLoad(b.getInt64Ty(), ordinal);
     Value *enabled =
         b.CreateAnd(actor, b.CreateNot(b.CreateLoad(b.getInt1Ty(), lost)));
-    Value *fits =
-        b.CreateICmpULE(count, b.getInt64(Capacity - batch.second.size()));
+    Value *fits = b.CreateAnd(
+        b.getInt1(batch.second.size() <= Capacity),
+        b.CreateICmpULE(count, b.getInt64(Capacity >= batch.second.size()
+                                              ? Capacity - batch.second.size()
+                                              : 0)));
     Value *selected = b.CreateAnd(enabled, fits);
     Value *overflowed = b.CreateAnd(enabled, b.CreateNot(fits));
     Instruction *thenTerm =
@@ -456,23 +621,28 @@ int main(int argc, char **argv) {
     errs() << error.message();
     return 5;
   }
-  manifest << formatv("{0:2}\n",
-                      json::Value(json::Object{
-                          {"schema_version", 1},
-                          {"prototype_only", true},
-                          {"batch_records", BatchRecords.getValue()},
-                          {"scratch_arg", ScratchArg.getValue()},
-                          {"capacity_per_program", Capacity},
-                          {"header_words", HeaderWords},
-                          {"actors", Actors},
-                          {"group_matrix", GroupMatrix.getValue()},
-                          {"compact_programs", CompactPrograms.getValue()},
-                          {"word_layout", "program/logical_word/actor"},
-                          {"segment_words", SegmentWords},
-                          {"observer", "actual thread (actor,0,0) per program"},
-                          {"sites", std::move(inventory)},
-                          {"source_cost_qualified", false},
-                          {"epoch_qualified", false}}));
+  manifest << formatv(
+      "{0:2}\n",
+      json::Value(json::Object{
+          {"schema_version", 1},
+          {"prototype_only", true},
+          {"batch_records", BatchRecords.getValue()},
+          {"scratch_arg", scratchIndex},
+          {"profile_argument_abi", ProfileABI.getValue()},
+          {"block_dimensions", json::Array{block[0], block[1], block[2]}},
+          {"max_sites", LogicalBudget.getValue()},
+          {"unselected_sites", std::move(unselected)},
+          {"capacity_per_program", Capacity},
+          {"header_words", HeaderWords},
+          {"actors", Actors},
+          {"group_matrix", GroupMatrix.getValue()},
+          {"compact_programs", CompactPrograms.getValue()},
+          {"word_layout", "program/logical_word/actor"},
+          {"segment_words", SegmentWords},
+          {"observer", "actual flattened CTA thread per program"},
+          {"sites", std::move(inventory)},
+          {"source_cost_qualified", false},
+          {"epoch_qualified", false}}));
   manifest.close();
   if (manifest.has_error()) {
     errs() << "Failed writing complete manifest\n";

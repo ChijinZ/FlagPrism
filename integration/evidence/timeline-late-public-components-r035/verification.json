@@ -1,0 +1,99 @@
+{
+  "archive": {
+    "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-035/preflight/public-late-components-evidence-v2.tgz",
+    "bytes": 20883032,
+    "sha256": "3801fdc83cb998cd80645bd87dcc910b32097058fb1c1cc04e35b10e44456a33",
+    "members": 2467,
+    "all_retained_file_hashes_verified": 2465
+  },
+  "current_source_matches_installed_input": {
+    "Profiler/Dialect/tools/late-timeline/late-timeline.cpp": "ec6c0e4cf9be55223dd3e7323dc75f26382af54e9d8540636a8af36f481131a5",
+    "Profiler/python/flagtree_profiler/hooks/instrumentation.py": "e7751df14986aa303e13aefe3bdae2b6db9b91bd02b091309d48eeeec153785b",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_compile.py": "5864cd937f9b0004504f66af277f381c02b1fd7caa14f91cb78b47eb7916af1d",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_late_raw.py": "d8332af2bd819ca594da014675bcaf90b8ab6944cc3ee683c42829a0f3376dc4",
+    "integration/patches/nvidia/assemble_automatic_wheel.py": "009c0896890dfd7fe8a235b350ea0ae6f0dfc07d08df55a952c0a31e898542b0",
+    "integration/patches/nvidia/optimized-llvm.patch": "80d89193a2133edaf47f171da0db11fbaa871b1b7e905419bc7a7db2d72b726e",
+    "tests/timeline/p01_nvidia_late_raw.py": "4b44fab9c81008880172d11a281eb22054894bae25d26d7481845dd3d288ab0d",
+    "tests/timeline/p01_nvidia_late_generic.py": "6857d3166e2afbf121d7fb652cdf77dd1bd682322fb91df34e2240c24d71ed5c"
+  },
+  "callback_test_formatter_ast_preserved": true,
+  "installed": {
+    "status": "installed_candidate_components_not_default_public_api",
+    "wheel_sha256": "d74e84a22ff7d63287c1e324b73f678be3cca9531f05c1973efac935fb5ae8ab",
+    "installed_members": 608,
+    "python": "/workspace/chijin-timeline-r035/runs/install-public-v1/output/venv/bin/python",
+    "native_core_reused": true,
+    "late_tool_actually_built": true
+  },
+  "native_emission_bridge": {
+    "status": "format_native_emission_bridge_and_installed_regressions_passed",
+    "results": [
+      {
+        "name": "runtime",
+        "llvm_sha256": "93f67ea8e5c5a4ec25ed70db802cb6666b74c2c698caefe484575b17e646e524",
+        "nonsemantic_difference": "only first ModuleID input-path comment",
+        "manifest_equal_excluding_tool_binding": true
+      },
+      {
+        "name": "constant",
+        "llvm_sha256": "3b1d0db379f9318354bfa8945e2370238bf2bc0f377c5994d54fa7d2f309b121",
+        "nonsemantic_difference": "only first ModuleID input-path comment",
+        "manifest_equal_excluding_tool_binding": true
+      }
+    ]
+  },
+  "generic_real_math": {
+    "status": "actual_ordinary_generic_math_and_late_driver_not_public_api",
+    "results": [
+      {
+        "name": "nonlinear",
+        "ordinary_launches": 1,
+        "instrumented_launches": 1,
+        "math": true,
+        "guards": true,
+        "inputs": true,
+        "raw_bytes": 2109440,
+        "actors": 128,
+        "events": 2304,
+        "positive_brackets": 2304,
+        "kinds": [
+          "compute_issue_bracket",
+          "global_load_issue_bracket",
+          "global_store_issue_bracket"
+        ]
+      },
+      {
+        "name": "row_softmax",
+        "ordinary_launches": 1,
+        "instrumented_launches": 1,
+        "math": true,
+        "guards": true,
+        "inputs": true,
+        "raw_bytes": 4218880,
+        "actors": 256,
+        "events": 28672,
+        "positive_brackets": 24512,
+        "kinds": [
+          "compute_issue_bracket",
+          "cta_barrier_after",
+          "global_load_issue_bracket",
+          "global_store_issue_bracket",
+          "opaque_native_issue_bracket",
+          "shared_load_native_bracket"
+        ]
+      }
+    ]
+  },
+  "current_owned_identities": 66,
+  "active_owned_identities": 0,
+  "qualification": {
+    "default_public_api": false,
+    "perfetto_this_round": false,
+    "source_cost": false,
+    "hardware_busy": false,
+    "cross_observer_clock": false,
+    "full_three_backend": false,
+    "independent_six_math": false,
+    "final_three_reviews": false
+  }
+}

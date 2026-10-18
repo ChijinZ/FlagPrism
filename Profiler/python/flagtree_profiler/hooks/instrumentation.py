@@ -147,6 +147,17 @@ class Instrumentation:
         if ir in self.manager:
             self.manager[ir](pm)
 
+    def transform_optimized_llvm(self, llvm_text, metadata):
+        """Text callback after optimization; never an MLIR pass manager hook."""
+        callback = self.manager.get("optimized_llvm")
+        if callback is None:
+            return llvm_text
+        result = callback(llvm_text, metadata)
+        if not isinstance(result, str) or not result.strip():
+            raise RuntimeError(
+                "Optimized LLVM callback must return nonempty text")
+        return result
+
     def load_dialects(self, ctx):
         triton_proton.load_dialects(ctx)
 

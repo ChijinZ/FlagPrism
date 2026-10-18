@@ -25,9 +25,12 @@ def main():
     parser.add_argument('--core-library', type=Path, required=True)
     parser.add_argument('--backend-build', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--late-timeline-tool', type=Path)
     args = parser.parse_args()
     for name in vars(args):
-        setattr(args, name, getattr(args, name).resolve())
+        value = getattr(args, name)
+        if value is not None:
+            setattr(args, name, value.resolve())
     args.output.mkdir(parents=True, exist_ok=False)
     integrated = args.flagtree / 'third_party/FlagPrism'
     if not integrated.exists():
@@ -119,6 +122,14 @@ def main():
         args.component /
         'Profiler/csrc/include/Profiler/Vendor/CannLaunchReceipt.h',
         stage / 'flagtree/profiler/_cann_launch_receipt.h')
+    late_target = None
+    if args.late_timeline_tool is not None:
+        if not args.late_timeline_tool.is_file() or not os.access(
+                args.late_timeline_tool, os.X_OK):
+            raise RuntimeError('Explicit late recorder is not executable')
+        late_target = stage / 'flagtree/profiler/_bin/late-timeline'
+        late_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(args.late_timeline_tool, late_target)
     core_target = stage / 'triton/_C'
     core_target.mkdir(parents=True, exist_ok=True)
     shutil.copy2(args.core_library, core_target / 'libtriton.so')
@@ -139,6 +150,14 @@ def main():
                 raise RuntimeError('Packaged native/header mismatch: ' +
                                    relative)
             files[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        if late_target is not None:
+            entry = late_target.relative_to(stage).as_posix()
+            if archive.read(entry) != args.late_timeline_tool.read_bytes():
+                raise RuntimeError('Packaged late recorder bytes differ')
+            if not (archive.getinfo(entry).external_attr >> 16) & 0o111:
+                raise RuntimeError(
+                    'Packaged late recorder lost executable mode')
+            files[entry] = hashlib.sha256(late_target.read_bytes()).hexdigest()
         python_count = 0
         for component in ('Profiler', 'Debugger'):
             source = args.component / component / 'python' / (

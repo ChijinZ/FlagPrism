@@ -1,0 +1,24 @@
+--- a/third_party/nvidia/backend/compiler.py
++++ b/third_party/nvidia/backend/compiler.py
+@@ -168,6 +168,9 @@
+ 
+ 
+ class CUDABackend(BaseBackend):
++    # Optional text callback after O3 and profile scratch metadata extraction.
++    optimized_llvm_transform_version = 1
++
+     instrumentation = None
+ 
+     @staticmethod
+@@ -569,6 +572,11 @@
+         metadata["profile_scratch_size"] = src.get_int_attr("ttg.profile_scratch_memory_size") or 0
+         metadata["profile_scratch_align"] = src.get_int_attr("ttg.profile_scratch_memory_alignment") or 1
+         ret = str(llvm_mod)
++        transform = getattr(CUDABackend.instrumentation, "transform_optimized_llvm", None)
++        if transform is not None:
++            ret = transform(ret, metadata)
++            if not isinstance(ret, str) or not ret.strip():
++                raise RuntimeError("Optimized LLVM transform must return nonempty text")
+         del llvm_mod
+         del context
+         return ret
