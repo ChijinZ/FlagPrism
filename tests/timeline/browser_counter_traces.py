@@ -12,6 +12,7 @@ import json
 import os
 from pathlib import Path
 import threading
+import time
 
 
 def need(value, message):
@@ -72,8 +73,9 @@ def main():
         ('127.0.0.1', 0), functools.partial(Handler, directory=str(args.ui)))
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
-    from playwright.sync_api import sync_playwright
+    from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
     checks = []
+    blocked_external_requests = []
     try:
         with sync_playwright() as play:
             browser = play.chromium.launch(executable_path=str(args.browser),
@@ -89,8 +91,21 @@ def main():
                     errors = []
                     page = browser.new_page(viewport=dict(width=1440,
                                                           height=1000),
-                                            device_scale_factor=1)
+                                            device_scale_factor=1,
+                                            service_workers='block')
                     page.on('pageerror', lambda e: errors.append(str(e)))
+                    origin = f'http://127.0.0.1:{server.server_port}/'
+
+                    def local_assets_only(route):
+                        if route.request.url.startswith(origin):
+                            route.continue_()
+                        else:
+                            blocked_external_requests.append(route.request.url)
+                            route.abort()
+
+                    # Use the retained UI assets rather than depending on
+                    # optional external services or a local RPC accelerator.
+                    page.route('**/*', local_assets_only)
                     try:
                         need(
                             digest(Path(row['trace_file'])) == row['sha256'],
@@ -128,7 +143,6 @@ def main():
                         page.wait_for_function(
                             "()=>document.body.innerText.includes('observer_region_elapsed /')",
                             timeout=10000)
-                        page.screenshot(path=str(folder / 'overview.png'))
                         event = max((e for e in view['events']
                                      if e['end_ns'] is not None),
                                     key=lambda e: e['end_ns'] - e['start_ns'])
@@ -143,14 +157,27 @@ def main():
                         need(box and box['width'] > 0,
                              'No visible rendered source-site track')
                         end = max(r['relative_ns'] for r in view['records'])
-                        page.mouse.click(
-                            box['x'] + (event['start_ns'] + event['end_ns']) /
-                            2 / end * box['width'],
-                            box['y'] + box['height'] / 2)
-                        page.wait_for_function(
-                            '(id)=>document.body.innerText.includes(id)',
-                            arg=event['id'],
-                            timeout=10000)
+                        selection_deadline = time.monotonic() + 10
+                        while True:
+                            page.mouse.click(
+                                box['x'] +
+                                (event['start_ns'] + event['end_ns']) / 2 /
+                                end * box['width'],
+                                box['y'] + box['height'] / 2)
+                            try:
+                                page.wait_for_function(
+                                    '(id)=>document.body.innerText.includes(id)',
+                                    arg=event['id'],
+                                    timeout=max(
+                                        1,
+                                        min(
+                                            500,
+                                            int((selection_deadline -
+                                                 time.monotonic()) * 1000))))
+                                break
+                            except PlaywrightTimeoutError:
+                                if time.monotonic() >= selection_deadline:
+                                    raise
                         body = page.locator('body').inner_text()
                         for field in [
                                 'raw_ticks', 'source_locations',
@@ -161,6 +188,19 @@ def main():
                         (folder / 'details.txt').write_text(body)
                         page.keyboard.press('f')
                         page.screenshot(path=str(folder / 'focus.png'))
+                        # A populated track list can precede the asynchronous
+                        # canvas query/paint. Selecting a real slice above is
+                        # the readiness check; only then capture the overview.
+                        page.keyboard.press('Escape')
+                        page.get_by_text('keyboard_arrow_down',
+                                         exact=True).click()
+                        page.mouse.move(0, 0)
+                        page.evaluate('''async () => {
+                            await document.fonts.ready;
+                            await new Promise(requestAnimationFrame);
+                            await new Promise(requestAnimationFrame);
+                        }''')
+                        page.screenshot(path=str(folder / 'overview.png'))
                         need(not errors,
                              'Standard UI page errors: ' + repr(errors))
                         need(
@@ -212,6 +252,7 @@ def main():
             browser_version=version,
             browser_sha256=digest(args.browser),
             ui_index_sha256=digest(args.ui / 'index.html'),
+            blocked_external_requests=sorted(set(blocked_external_requests)),
             checks=checks,
             before_bundle_files=before,
             after_bundle_files=after,

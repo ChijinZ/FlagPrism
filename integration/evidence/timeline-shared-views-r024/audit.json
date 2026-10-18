@@ -1,0 +1,72 @@
+{
+  "status": "retained_bytes_and_current_source_bridges_passed_not_P01",
+  "archive": {
+    "bytes": 16100874,
+    "sha256": "0d8eb07015a838b3b61549e5644519f08221a520ba7daa55c6dc30a4a9480455",
+    "members": 780
+  },
+  "matching_native_sources": 271,
+  "matching_installed_python": 77,
+  "installed_core": {
+    "bytes": 922771608,
+    "sha256": "4774dee32ad6a7349a5e7674660dc2ffea3ccc372a15f9b016b3512c59fd39b3"
+  },
+  "captures": [
+    {
+      "invocation_id": "invocation-c7b556d00d9e4c86878ef859476b0fad",
+      "records": 160,
+      "intervals": 80,
+      "positive_intervals": 80,
+      "zero_intervals": 0,
+      "observers": 8,
+      "committed_attempt_generations": 0,
+      "loads": 0,
+      "program0_warp0_load_origins": {}
+    },
+    {
+      "invocation_id": "invocation-fd624fd2bc444740bb52147836afe2b2",
+      "records": 224,
+      "intervals": 112,
+      "positive_intervals": 112,
+      "zero_intervals": 0,
+      "observers": 8,
+      "committed_attempt_generations": 0,
+      "loads": 0,
+      "program0_warp0_load_origins": {}
+    },
+    {
+      "invocation_id": "invocation-b8badd6b82cf45a696dfcf0c895cbd52",
+      "records": 1152,
+      "intervals": 576,
+      "positive_intervals": 576,
+      "zero_intervals": 0,
+      "observers": 8,
+      "committed_attempt_generations": 128,
+      "loads": 96,
+      "program0_warp0_load_origins": {
+        "11": [
+          1024,
+          3072,
+          1024,
+          3072,
+          1024,
+          3072
+        ],
+        "12": [
+          5120,
+          7168,
+          5120,
+          7168,
+          5120,
+          7168
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "No source-boundary or ordinary-pipeline certificate",
+    "No timer precision or cross-observer epoch certificate",
+    "Generations are committed attempts, not certified byte writes or safe reuse",
+    "Three-backend qualification and independent six-math matrix remain incomplete"
+  ]
+}
