@@ -1,0 +1,89 @@
+{
+  "status": "actual_bytes_source_install_and_control_replay_verified_not_P01",
+  "product_commit": "df48ae5",
+  "archive": {
+    "bytes": 15652174,
+    "members": 1597,
+    "sha256": "9a54254077506a0b67e878acc1b932d61ca0535aa73952b3037cadab07cce53e"
+  },
+  "matching_current_source_files": 1982,
+  "matching_native_sources": 271,
+  "matching_installed_profiler_python": 78,
+  "core": {
+    "bytes": 922771608,
+    "sha256": "4774dee32ad6a7349a5e7674660dc2ffea3ccc372a15f9b016b3512c59fd39b3"
+  },
+  "installation": {
+    "wheel": "/workspace/chijin-timeline-r026/runs/installed-v2/output/wheel/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl",
+    "wheel_sha256": "3543b4f5fd1b69d39806f5b99f725d5d15c83603e68d0ca4a0c94cea5e5d42b7",
+    "installed_members_byte_verified": 602,
+    "python": "/workspace/chijin-timeline-r026/runs/installed-v2/output/venv/bin/python"
+  },
+  "wait_control": {
+    "model": "nvidia.cp_async.wait_control.v1",
+    "binary_id": "4917753d42cfeddc46b1e4a8a714ed09e37f8af30ac8e2899373a47c65b50ead",
+    "sites": [
+      {
+        "site_id": 10,
+        "status": "wait_control_order_checked",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "clock_qualified": false,
+        "participation_verified": false,
+        "begin_call_pc": 8496,
+        "end_call_pc": 8832,
+        "wait_pc": 8768,
+        "pending_group_limit": 2,
+        "checked_control_states": 21,
+        "function": "gemm"
+      },
+      {
+        "site_id": 20,
+        "status": "wait_control_order_checked",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "clock_qualified": false,
+        "participation_verified": false,
+        "begin_call_pc": 20128,
+        "end_call_pc": 20448,
+        "wait_pc": 20384,
+        "pending_group_limit": 0,
+        "checked_control_states": 20,
+        "function": "gemm"
+      }
+    ],
+    "proof_scope": "native_wait_control_order_between_inspected_leaf_calls",
+    "source_region_qualified": false,
+    "clock_qualified": false,
+    "hardware_overlap_verified": false
+  },
+  "offline": {
+    "v3": {
+      "real_captures": 3,
+      "TP_imports": 24,
+      "fresh_reexport_processes": 3,
+      "trace_bytes_match_original": true,
+      "application_replayed": false
+    },
+    "v2": {
+      "real_captures": 3,
+      "TP_imports": 24,
+      "fresh_reexport_processes": 3,
+      "trace_bytes_match_original": true,
+      "application_replayed": false
+    }
+  },
+  "UI": {
+    "traces": 6,
+    "browser_version": "140.0.7339.16",
+    "ui_index_sha256": "00f30fc225e83616ff084fee6126dfcd41d73ac923cb267be683867dbf9f0815"
+  },
+  "owned_identities": 76,
+  "active_owned_jobs": [],
+  "limits": [
+    "Native wait control order only; not source timing or record-value provenance",
+    "No new user math; actual r024/r022 captures retained and re-exported without replay",
+    "Precision, participation, cross-observer clocks, verified async flows and three-backend P01 incomplete",
+    "Independent six-math qualification and final three extra specified code reviewers pending"
+  ]
+}
