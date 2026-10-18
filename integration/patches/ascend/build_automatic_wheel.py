@@ -212,7 +212,8 @@ def main():
             name:
             hashlib.sha256((args.component / 'Profiler/llvm' /
                             name).read_bytes()).hexdigest()
-            for name in ('AscendLateObserver.cpp', 'CMakeLists.txt')
+            for name in ('AscendLateObserver.cpp', 'AscendSourceCensus.h',
+                         'AscendTimeline.h', 'CMakeLists.txt')
         },
         'native_provenance':
         'packaging copies supplied artifacts without compiling; see their external native build/source audit',
