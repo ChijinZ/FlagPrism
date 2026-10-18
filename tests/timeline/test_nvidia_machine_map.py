@@ -213,6 +213,65 @@ class CounterMapTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 machine.counter_map(**a)
 
+    def test_dwarf_code_label_address_erasure_preserves_executable_lines(self):
+        source = [
+            '.visible.entrykernel(){', '$L__func_begin18:',
+            'mov.u64%rd1,%globaltimer;', '$L__tmp1:', '}',
+            '.section.debug_info', '{', '.b64$L__func_begin18', '.b64$L__tmp1',
+            '}'
+        ]
+        debug = list(source)
+        debug[7:9] = ['', '']
+        self.assertEqual(machine._bind_debug_lines(source, debug), [
+            dict(line=8, kind='dwarf_address'),
+            dict(line=9, kind='dwarf_address')
+        ])
+        changed = list(debug)
+        changed[2] = 'mov.u64%rd1,0;'
+        with self.assertRaisesRegex(ValueError, 'executable tokens'):
+            machine._bind_debug_lines(source, changed)
+
+    def test_dwarf_address_erasure_cannot_hide_unknown_symbols_or_code(self):
+        for token in ('.b64$L__missing', '.b64$L__tmp1+8',
+                      '.b64$L__tmp1;mov.u64%rd1,%globaltimer;',
+                      'mov.u64%rd1,%globaltimer;'):
+            source = ['$L__tmp1:', '.section.debug_info', '{', token, '}']
+            debug = list(source)
+            debug[3] = ''
+            with self.assertRaisesRegex(ValueError, 'executable tokens'):
+                machine._bind_debug_lines(source, debug)
+        source = ['$L__tmp1:', '.b64$L__tmp1']
+        with self.assertRaisesRegex(ValueError, 'executable tokens'):
+            machine._bind_debug_lines(source, ['$L__tmp1:', ''])
+
+    def test_actual_P2R_JSON_PR_is_an_operand_not_a_guard(self):
+        data = args()
+        doc = copy.deepcopy(DOC)
+        doc[1][0]['length'] = 48
+        doc[1][0]['sass-instructions'].insert(
+            1, dict(opcode='P2R', predicate='PR', operands='R3,RZ,0x1'))
+        text = SASS.replace('/*0010*/', '/*0020*/').replace(
+            '//## File ".nv_debug_ptx_txt", line 8',
+            '/*0010*/ P2R R3, PR, RZ, 0x1;\n//## File ".nv_debug_ptx_txt", line 8'
+        )
+        data.update(cubin=elf(text_bytes=48),
+                    sass_lines=text.encode(),
+                    sass_json=json.dumps(doc).encode())
+        result = machine.counter_map(**data)
+        self.assertEqual([r['pc'] for r in result['counter_pcs']], [0, 32])
+        self.assertFalse(result['region_boundaries_verified'])
+        for changed in ('P2R R3, PR, R1, 0x1', 'P2R R4, PR, RZ, 0x1',
+                        'P2R R3, PR, RZ, 0x2', '@P0 P2R R3, PR, RZ, 0x1'):
+            broken = dict(data,
+                          sass_lines=text.replace('P2R R3, PR, RZ, 0x1',
+                                                  changed).encode())
+            with self.assertRaises(ValueError):
+                machine.counter_map(**broken)
+        for operands in ('R3,RZ,0x1;BRA', 'R3,PR,RZ,0x1', None):
+            with self.assertRaisesRegex(ValueError, 'P2R register operands'):
+                machine.normalized_json_instruction(
+                    dict(opcode='P2R', predicate='PR', operands=operands))
+
     def test_missing_marker_does_not_guess_nearest_clock(self):
         a = args()
         a['ptx'] = PTX.replace('// flagprism_timeline_v1_site_0_entry;',

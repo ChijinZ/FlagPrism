@@ -153,6 +153,14 @@ def _bind_debug_lines(source, debug):
     _need(
         len(source) == len(debug),
         'PTX line count differs from cubin debug text')
+    # Address entries in DWARF may refer to local code labels. PTXAS erases
+    # those metadata words too; only a complete symbol defined by the actual
+    # source is accepted, never an expression or an executable-line rewrite.
+    labels = {
+        match[1]
+        for line in source
+        if (match := re.fullmatch(r'([.$A-Za-z_][.$A-Za-z_0-9]*):', line))
+    }
     pending_debug, in_debug, omissions = False, False, []
     for number, (left, right) in enumerate(zip(source, debug), 1):
         if re.fullmatch(r'\.section\.debug_[a-zA-Z0-9_.]+', left):
@@ -175,12 +183,35 @@ def _bind_debug_lines(source, debug):
         elif in_debug and re.fullmatch(
                 r'\.b(?:8|16|32|64)(?:-?[0-9]+|\.debug_[a-zA-Z0-9_.]+)', left):
             kind = 'dwarf_data'
+        elif in_debug:
+            address = re.fullmatch(r'\.b64([.$A-Za-z_][.$A-Za-z_0-9]*)', left)
+            if address is not None and address[1] in labels:
+                kind = 'dwarf_address'
         _need(
             right == '' and kind is not None,
             'PTX executable tokens/line numbers differ from cubin debug text')
         omissions.append(dict(line=number, kind=kind))
     _need(not pending_debug and not in_debug, 'Unterminated PTX debug section')
     return omissions
+
+
+def normalized_json_instruction(row):
+    """Normalize the inspected nvdisasm 13.2 unpredicated P2R spelling.
+
+    JSON moves the PR source operand into its predicate field. Text retains
+    `P2R Rd, PR, Rs, mask`. Restore that operand; PR never becomes an execution
+    guard. All other instruction/predicate spellings remain unchanged.
+    """
+    _need(type(row) is dict, 'Invalid JSON instruction')
+    if row.get('opcode') == 'P2R' and row.get('predicate') == 'PR':
+        operands = row.get('operands')
+        match = re.fullmatch(r'(R[0-9]+),(RZ|R[0-9]+),(0x[0-9a-fA-F]+)',
+                             operands) if type(operands) is str else None
+        _need(match is not None, 'Unknown nvdisasm P2R register operands')
+        return dict(row,
+                    predicate=None,
+                    operands=match[1] + ',PR,' + match[2] + ',' + match[3])
+    return row
 
 
 def counter_map(*,
@@ -300,7 +331,7 @@ def counter_map(*,
         # A root's declared extent may include explicitly named child functions.
         # Its actual instruction body must never absorb those child bodies.
         instructions[name] = {
-            start + i * 16: instruction
+            start + i * 16: normalized_json_instruction(instruction)
             for i, instruction in enumerate(body)
         }
         ranges[name] = dict(function=name,
@@ -369,6 +400,10 @@ def counter_map(*,
         without_predicate = text.split(None, 1)[1] if predicate else text
         fields = without_predicate.split(None, 1)
         text_operands = fields[1] if len(fields) == 2 else ''
+        if opcode == 'P2R':
+            _need(
+                re.sub(r'\s+', '', text_operands) == operands,
+                'Text/JSON P2R operands mismatch')
         position = dict(function=function,
                         section=current_section,
                         pc=pc,

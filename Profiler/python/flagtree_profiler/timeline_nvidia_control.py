@@ -68,6 +68,7 @@ def _bound_functions(machine_map, sass_lines, sass_json):
             type(payload) is bytes
             and hashlib.sha256(payload).hexdigest() == artifacts[key],
             'Control inputs differ from the validated machine map')
+    from .timeline_nvidia_machine import normalized_json_instruction
     labels, text = _text_instructions(sass_lines)
     functions = {}
     ranges = {row['function']: row for row in machine_map['function_ranges']}
@@ -81,6 +82,7 @@ def _bound_functions(machine_map, sass_lines, sass_json):
             'Control function differs from the actual instruction body')
         body = {}
         for i, row in enumerate(function['sass-instructions']):
+            row = normalized_json_instruction(row)
             pc = function['start'] + i * 16
             opcode, predicate, operands = text[extent['section'], pc]
             _need(
