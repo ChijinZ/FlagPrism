@@ -8,7 +8,7 @@ from flagtree.profiler.timeline_nvidia_control import (
     derive_wait_control_brackets, inspect_wait_control_brackets)
 
 
-def fixture(change=None):
+def fixture(change=None, *, stores=False):
 
     def op(opcode, operands='', **extra):
         return dict(opcode=opcode, operands=operands, **extra)
@@ -24,13 +24,36 @@ def fixture(change=None):
         op('CALL.REL.NOINC', '$clock_end'),
         op('EXIT')
     ]
+    if stores:
+        root = [
+            op('BRA', '0x70', predicate='@!P0'),
+            op('MOV', 'R16,0x30'),
+            op('CALL.REL.NOINC', '$clock_begin'),
+            op('MOV', 'R21,R2'),
+            op('MOV', 'R22,R3'),
+            op('MOV', 'R20,0x0', predicate='@P2'),
+            op('STS.128', '[R8+0x2000],R20', predicate='@P2'),
+            op('DEPBAR.LE', 'SB0,0x2'),
+            op('BAR.SYNC.DEFER_BLOCKING', '0x0'),
+            op('BRA', '0x100', predicate='@!P0'),
+            op('MOV', 'R16,0xc0'),
+            op('CALL.REL.NOINC', '$clock_end'),
+            op('MOV', 'R25,R2'),
+            op('MOV', 'R26,R3'),
+            op('MOV', 'R24,0x80000000', predicate='@P2'),
+            op('STS.128', '[R8+0x2000],R24', predicate='@P2'),
+            op('EXIT')
+        ]
+    root_length = len(root) * 16
+    begin_helper, end_helper = root_length, root_length + 48
+    end_call = 176 if stores else 112
     functions = [
         dict(**{'function-name': 'kernel'},
              start=0,
-             length=144,
+             length=root_length,
              **{'sass-instructions': root})
     ]
-    for label, start in [('begin', 144), ('end', 192)]:
+    for label, start in [('begin', begin_helper), ('end', end_helper)]:
         functions.append(
             dict(**{'function-name': '$clock_' + label},
                  start=start,
@@ -78,8 +101,9 @@ def fixture(change=None):
                  site_id=0,
                  phase=phase,
                  direct_call_sites=[dict(function='kernel', pc=pc)])
-            for label, phase, start, pc in [('begin', 'entry', 144,
-                                             32), ('end', 'exit', 192, 112)]
+            for label, phase, start, pc in [(
+                'begin', 'entry', begin_helper,
+                32), ('end', 'exit', end_helper, end_call)]
         ])
     plan = dict(binary_id='a' * 64,
                 inventory=[
@@ -232,6 +256,90 @@ class WaitControlTests(unittest.TestCase):
             lambda fs: fs[1]['sass-instructions'][1].update(
                 opcode='MOV.64', operands='R15,UR8'),
             'checked caller return address')
+
+
+class StoreValueFlowTests(unittest.TestCase):
+
+    def report(self, change=None):
+        row = derive_wait_control_brackets(
+            **fixture(change, stores=True))['sites'][0]
+        self.assertEqual(row['status'], 'wait_control_order_checked')
+        return row['endpoint_store_value_flows']
+
+    def test_clock_words_and_both_phase_tags_reach_vector_store(self):
+        flows = self.report()
+        self.assertEqual([r['status'] for r in flows],
+                         ['counter_to_shared_store_values_checked'] * 2)
+        self.assertEqual([r['tag_word'] for r in flows], [0, 1 << 31])
+        self.assertEqual(flows[0]['word_registers'],
+                         ['R20', 'R21', 'R22', 'R23'])
+        self.assertFalse(flows[0]['record_storage_binding_verified'])
+        self.assertFalse(flows[0]['call_dominates_store_verified'])
+        self.assertFalse(flows[0]['record_value_provenance_verified'])
+
+    def test_reversed_timer_words_do_not_acquire_provenance(self):
+
+        def change(fs):
+            fs[0]['sass-instructions'][3]['operands'] = 'R21,R3'
+            fs[0]['sass-instructions'][4]['operands'] = 'R22,R2'
+
+        self.assertEqual(self.report(change)[0]['status'], 'unverified')
+
+    def test_overwritten_high_word_and_wrong_tag_are_rejected(self):
+        for index, operands in [(4, 'R22,0x0'), (5, 'R20,0x100')]:
+            with self.subTest(index=index):
+                flows = self.report(lambda fs: fs[0]['sass-instructions'][
+                    index].update(operands=operands))
+                self.assertEqual(flows[0]['status'], 'unverified')
+
+    def test_same_predicate_name_after_a_write_is_a_different_guard(self):
+
+        def change(fs):
+            rows = fs[0]['sass-instructions']
+            rows[3] = dict(opcode='MOV', operands='R20,0x0', predicate='@P2')
+            rows[4] = dict(opcode='MOV.64', operands='R21,R2')
+            rows[5] = dict(opcode='ISETP.EQ.AND', operands='P2,PT,R1,R2,PT')
+
+        self.assertEqual(self.report(change)[0]['status'], 'unverified')
+
+    def test_tag_guard_must_cover_the_actual_store(self):
+        flows = self.report(
+            lambda fs: fs[0]['sass-instructions'][6].update(predicate='@P3'))
+        self.assertEqual(flows[0]['status'], 'unverified')
+
+    def test_second_word_of_helper_wide_move_cannot_silently_clobber_clock(
+            self):
+        flows = self.report(lambda fs: fs[1]['sass-instructions'][1].update(
+            opcode='MOV.64', operands='R1,RZ'))
+        self.assertEqual(flows[0]['status'], 'unverified')
+
+    def test_unknown_write_after_exit_call_keeps_order_but_loses_value_fact(
+            self):
+        flows = self.report(lambda fs: fs[0]['sass-instructions'][13].update(
+            opcode='UNKNOWN', operands='R26,R3'))
+        self.assertEqual(flows[1]['status'], 'unverified')
+
+    def test_value_flow_does_not_claim_an_address_or_raw_record_proof(self):
+        flows = self.report(lambda fs: fs[0]['sass-instructions'][6].update(
+            operands='[R9+0x1000],R20'))
+        self.assertEqual(flows[0]['status'],
+                         'counter_to_shared_store_values_checked')
+        self.assertFalse(flows[0]['record_storage_binding_verified'])
+
+    def test_unknown_move_family_is_not_assumed_to_be_a_scalar_move(self):
+
+        def change(fs):
+            rows = fs[0]['sass-instructions']
+            rows[12] = dict(opcode='MOV.64', operands='R25,R2')
+            rows[13] = dict(opcode='MOVM.16.MT88', operands='R22,R1')
+
+        self.assertEqual(self.report(change)[1]['status'], 'unverified')
+
+    def test_unknown_opcode_invalidates_entry_predicate_fact(self):
+        result = derive_wait_control_brackets(
+            **fixture(lambda fs: fs[0]['sass-instructions'][4].update(
+                opcode='UNKNOWN', operands='R1,R2')))
+        self.assertEqual(result['sites'][0]['status'], 'unverified')
 
 
 if __name__ == '__main__':

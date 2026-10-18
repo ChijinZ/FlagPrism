@@ -154,6 +154,14 @@ Record-value provenance, source-region timing, participation, clock precision
 and hardware overlap remain unqualified. Unknown paths retain a specific reason.
 This analysis adds no device instruction or synchronization.
 
+Model `nvidia.cp_async.wait_control.v2` also reports
+`endpoint_store_value_flows`: the full timer pair through helper/caller moves
+into the tag/low/high words of a shared vector store. Word swaps, clobbers,
+changed predicate generations and unknown writing opcodes lose this fact.
+`counter_to_shared_store_values_checked` is conditional on executing that call
+and store; it does not establish call dominance, raw-buffer addressing or full
+record provenance. Those flags remain false. Original v1 reports are retained.
+
 `counter_mapping_complete_region_unverified` means the static counter PCs are
 located, not that the observed operation stayed inside their machine boundaries.
 Line matching permits only erased `.loc`/`.file` and typed DWARF data in explicit

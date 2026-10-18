@@ -9,7 +9,14 @@ import json
 import re
 
 MAX_REGION_INSTRUCTIONS = 2048
-MODEL = 'nvidia.cp_async.wait_control.v1'
+MODEL = 'nvidia.cp_async.wait_control.v2'
+
+# Explicit scalar families inspected in the logger lowering. Unknown operations
+# invalidate predicate facts rather than silently preserving an entry guard.
+_SCALAR_FAMILIES = frozenset(
+    ('MOV', 'ISETP', 'UISETP', 'PSETP', 'PLOP3', 'LOP3', 'SHF', 'VIMNMX',
+     'IMAD', 'IADD3', 'IADD', 'SEL', 'USEL', 'ULEA', 'SGXT', 'LDCU', 'DEPBAR',
+     'BAR'))
 
 
 def _need(condition, message):
@@ -129,6 +136,145 @@ def _truth(predicate, known):
     value = known.get(name)
     return None if value is None else (
         not value if predicate.startswith('!') else value)
+
+
+def _registers(base, words):
+    match = re.fullmatch(r'(U?R)(\d+)', base)
+    _need(match is not None, 'Unrecognized register range')
+    return [match[1] + str(int(match[2]) + i) for i in range(words)]
+
+
+def _writes(row):
+    opcode = row['opcode']
+    if opcode.split('.')[0] in ('STS', 'STG', 'STL'):
+        return []
+    _need(
+        opcode.split('.')[0] in _SCALAR_FAMILIES,
+        'Unknown register-writing opcode: ' + opcode)
+    if opcode == 'DEPBAR.LE' or opcode.startswith('BAR.SYNC'):
+        return []
+    _need(not opcode.startswith(('DEPBAR', 'BAR.')),
+          'Unknown synchronization outputs')
+    fields = _compact(row.get('operands', '')).split(',')
+    first = fields[0]
+    result = [first]
+    if opcode.startswith(('ISETP', 'UISETP', 'PSETP', 'PLOP3')):
+        result = fields[:2]
+    elif opcode.startswith('IADD3'):
+        result = fields[:3]
+    elif opcode.startswith('LOP3') and re.fullmatch(r'U?P\d+', first):
+        result = fields[:2]
+    if opcode.split('.')[0] in ('IMAD', 'IADD', 'IADD3', 'ULEA', 'SHF'):
+        result += [
+            field for field in fields[:3] if re.fullmatch(r'U?P\d+', field)
+        ]
+    if ('.64' in opcode or '.WIDE' in opcode) and re.fullmatch(
+            r'U?R\d+', first):
+        result = _registers(first, 2) + [
+            field for field in result if re.fullmatch(r'U?P\d+', field)
+        ]
+    return result
+
+
+def _word(operand, values, epochs, predicate=None):
+    operand = operand.removesuffix('.reuse')
+    if operand in ('RZ', 'URZ'):
+        return 0
+    if re.fullmatch(r'-?0x[0-9a-fA-F]+', operand):
+        return int(operand, 16) & 0xffffffff
+    value, guard = values.get(operand, (None, None))
+    active = (predicate,
+              epochs.get(predicate.lstrip('@!'), 0)) if predicate else None
+    return value if guard is None or guard == active else None
+
+
+def _move_words(row, values, epochs):
+    fields = _compact(row.get('operands', '')).split(',')
+    _need(len(fields) == 2, 'Unknown move operands')
+    destination, source = fields
+    width = 2 if row['opcode'] == 'MOV.64' else 1
+    destinations = _registers(destination, width)
+    if source in ('RZ', 'URZ'):
+        sources = [source] * width
+    elif re.fullmatch(r'U?R\d+(?:\.reuse)?', source):
+        sources = _registers(source.removesuffix('.reuse'), width)
+    elif width == 1:
+        sources = [source]
+    else:
+        raise ValueError('Unknown wide move source')
+    # Snapshot all input words first: overlapping MOV.64 is simultaneous.
+    words = [
+        _word(source, values, epochs, row.get('predicate'))
+        for source in sources
+    ]
+    predicate = row.get('predicate')
+    guard = (predicate,
+             epochs.get(predicate.lstrip('@!'), 0)) if predicate else None
+    for register, value in zip(destinations, words):
+        values[register] = value, guard
+
+
+def _counter_store_flow(counter, call, functions, *, site_id, phase):
+    """Conditional value-flow witness, not a raw-storage or dominance proof."""
+    leaf = functions[counter['function']]
+    first = leaf[counter['pc']]
+    output = _compact(first['operands']).split(',')[0]
+    low, high = _registers(output, 2)
+    values = {low: ('timer_low', None), high: ('timer_high', None)}
+    for pc in sorted(leaf):
+        if leaf[pc]['opcode'] in ('MOV', 'MOV.64'):
+            _move_words(leaf[pc], values, {})
+    body = functions[call['function']]
+    epochs = {}
+    tag = site_id | ((1 << 31) if phase == 'exit' else 0)
+    for pc in range(call['pc'] + 16, call['pc'] + 16 * 257, 16):
+        row = body.get(pc)
+        _need(row is not None, 'No matching log store before the caller ends')
+        opcode = row['opcode']
+        if opcode == 'STS.128':
+            match = re.fullmatch(r'(\[[^\]]+\]),(R\d+|RZ)',
+                                 _compact(row['operands']))
+            _need(match is not None, 'Unknown vector store operands')
+            registers = _registers(match[2],
+                                   4) if match[2] != 'RZ' else ['RZ'] * 4
+            words = [
+                _word(r, values, epochs, row.get('predicate'))
+                for r in registers
+            ]
+            if ((match[2] != 'RZ' and words[0] == tag)
+                    or any(v in ('timer_low', 'timer_high') for v in words)):
+                _need(words[:3] == [tag, 'timer_low', 'timer_high'],
+                      'Log tag or timer word order/value was not preserved')
+                return dict(
+                    status='counter_to_shared_store_values_checked',
+                    phase=phase,
+                    getter_function=counter['function'],
+                    getter_pc=counter['pc'],
+                    call_pc=call['pc'],
+                    store_pc=pc,
+                    store_predicate=row.get('predicate'),
+                    tag_word=tag,
+                    word_registers=registers,
+                    address_expression=match[1],
+                    proof_scope='conditional_on_this_call_and_store_execution',
+                    call_dominates_store_verified=False,
+                    record_storage_binding_verified=False,
+                    record_value_provenance_verified=False)
+            continue
+        if opcode in ('MOV', 'MOV.64'):
+            _move_words(row, values, epochs)
+            continue
+        if opcode.startswith('BSSY'):
+            # Only a reconvergence setup before any branch; this witness is
+            # conditional on executing this straight instruction sequence.
+            continue
+        _need(not opcode.startswith(('CALL', 'RET', 'EXIT', 'BRA', 'BSYNC')),
+              'Control transition before the matching log store')
+        for register in _writes(row):
+            values.pop(register, None)
+            if re.fullmatch(r'U?P\d+', register):
+                epochs[register] = epochs.get(register, 0) + 1
+    raise ValueError('Log-store value-flow budget exceeded')
 
 
 def _leaf(counter, call, functions):
@@ -256,11 +402,11 @@ def _check_region(begin, end, body, pending):
                 ('CALL', 'RET', 'EXIT', 'BSSY', 'BSYNC'))
             and row.get('other-attributes', {}).get('control-flow') != 'True',
             'Unrecognized control inside the bracket')
-        fields = _compact(row.get('operands', '')).split(',')
-        count = 2 if row['opcode'].startswith(
-            ('ISETP', 'UISETP', 'PSETP', 'PLOP3')) else 1
-        for destination in fields[:count]:
-            known.pop(destination, None)
+        try:
+            for destination in _writes(row):
+                known.pop(destination, None)
+        except ValueError:
+            known.clear()
         work.append((pc + 16, seen
                      or pc == wait_pc, tuple(sorted(known.items()))))
     _need(arrivals and all(arrivals),
@@ -301,7 +447,7 @@ def derive_wait_control_brackets(*, machine_map, sass_lines, sass_json, plan):
             _need(
                 type(pending) is int and 0 <= pending <= 7,
                 'Invalid wait operand')
-            calls = []
+            calls, endpoints = [], []
             for phase in ('entry', 'exit'):
                 rows = counters.get((site['scope_id'], phase), [])
                 _need(
@@ -311,6 +457,7 @@ def derive_wait_control_brackets(*, machine_map, sass_lines, sass_json, plan):
                 call = counter['direct_call_sites'][0]
                 _leaf(counter, call, functions)
                 calls.append(call)
+                endpoints.append(counter)
             _need(calls[0]['function'] == calls[1]['function'],
                   'Counters have different callers')
             result.update(
@@ -318,6 +465,20 @@ def derive_wait_control_brackets(*, machine_map, sass_lines, sass_json, plan):
                               pending))
             result.update(status='wait_control_order_checked',
                           function=calls[0]['function'])
+            flows = []
+            for counter, call in zip(endpoints, calls):
+                try:
+                    flow = _counter_store_flow(counter,
+                                               call,
+                                               functions,
+                                               site_id=site['scope_id'],
+                                               phase=counter['phase'])
+                except ValueError as error:
+                    flow = dict(phase=counter['phase'],
+                                status='unverified',
+                                reason=str(error))
+                flows.append(flow)
+            result['endpoint_store_value_flows'] = flows
         except ValueError as error:
             result['reason'] = str(error)
         results.append(result)
