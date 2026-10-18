@@ -77,3 +77,8 @@ claimed. Pinned formatting checks remain pending for this checkpoint.
 
 The complete objective, independent math, full regression and three fresh final
 code reviewers remain required. Development success does not reduce those gates.
+
+Git log snapshots use JSON text envelopes so the exact pytest whitespace is
+preserved without introducing source-tree whitespace errors. Their byte lengths
+and SHA256 hashes refer to the decoded text; plain originals remain in the
+immutable archive. This is an evidence representation change, not a new test.
