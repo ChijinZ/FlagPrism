@@ -30,6 +30,14 @@ def _integer(value, name, lower, upper):
     return value
 
 
+def _automatic_pair_budget(actors, full):
+    if full:
+        target = min(8 * 1024 * 1024,
+                     max(2 * 1024 * 1024, 2 * actors * (6 + 4 * 512) * 8))
+        return (1 << (target.bit_length() - 1)) - 128
+    return min(8 * 1024 * 1024 - 128, 2 * actors * (6 + 4 * 4096) * 8)
+
+
 class LateLLVMTransform:
     """One capture's callable compiler hook with retained per-compile attempts."""
 
@@ -57,7 +65,7 @@ class LateLLVMTransform:
                     tool_sha256=self.tool_sha256,
                     max_sites=self.max_sites,
                     capacity=self.capacity,
-                    capacity_policy='bounded-actor-bytes-v3'
+                    capacity_policy='bounded-actor-bytes-v4'
                     if self.capacity is None else 'explicit-record-count',
                     profile_argument_abi=1,
                     actors='native-async-matrix-footprint-else-first4',
@@ -165,16 +173,10 @@ class LateLLVMTransform:
             if capacity is None:
                 full = plan.get('requires_full_footprint')
                 if type(full) is not bool or plan.get(
-                        'capacity_policy') != 'bounded-actor-bytes-v3':
+                        'capacity_policy') != 'bounded-actor-bytes-v4':
                     raise LateCompileError(
                         'Native automatic record policy differs')
-                if full:
-                    budget = min(
-                        8 * 1024 * 1024 - 128,
-                        max(2 * 1024 * 1024, 2 * actors * (6 + 4 * 512) * 8))
-                else:
-                    budget = min(8 * 1024 * 1024 - 128,
-                                 2 * actors * (6 + 4 * 4096) * 8)
+                budget = _automatic_pair_budget(actors, full)
                 if plan.get('automatic_pair_budget_bytes') != budget:
                     raise LateCompileError(
                         'Native automatic raw byte budget differs')

@@ -305,12 +305,16 @@ int main(int argc, char **argv) {
   }
   const uint64_t HeaderWords = 6;
   // A complete CTA records every participating thread for dependency facts.
-  // Retain the old 2 MiB allowance, targeting at least 512 records per actor
-  // where the 8 MiB raw ceiling permits. Small CTAs need no maximum allocation.
-  const uint64_t CompleteFootprintBytes = std::min<uint64_t>(
-      8 * 1024 * 1024 - 128,
-      std::max<uint64_t>(2 * 1024 * 1024,
-                         2 * Actors * (HeaderWords + 4 * 512) * 8));
+  // Round the physical pair allowance down to a power of two, then reserve
+  // guards. Headers must not make a nominal 4 MiB pair slightly exceed 4 MiB
+  // and reject a second invocation within the unchanged 8 MiB session budget.
+  const uint64_t FootprintTarget = std::max<uint64_t>(
+      2 * 1024 * 1024, 2 * Actors * (HeaderWords + 4 * 512) * 8);
+  uint64_t FullPhysicalBudget = 2 * 1024 * 1024;
+  while (FullPhysicalBudget < 8 * 1024 * 1024 &&
+         2 * FullPhysicalBudget <= FootprintTarget)
+    FullPhysicalBudget *= 2;
+  const uint64_t CompleteFootprintBytes = FullPhysicalBudget - 128;
   const uint64_t CaptureBudgetBytes =
       requiresFullFootprint
           ? CompleteFootprintBytes
@@ -766,7 +770,7 @@ int main(int argc, char **argv) {
           {"unselected_sites", std::move(unselected)},
           {"capacity_per_program", Capacity},
           {"capacity_policy",
-           AutoCapacity ? "bounded-actor-bytes-v3" : "explicit-record-count"},
+           AutoCapacity ? "bounded-actor-bytes-v4" : "explicit-record-count"},
           {"automatic_pair_budget_bytes",
            AutoCapacity ? CaptureBudgetBytes : 0},
           {"requires_full_footprint", requiresFullFootprint},
