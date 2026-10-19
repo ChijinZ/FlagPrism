@@ -1,0 +1,59 @@
+[
+  {
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "-m",
+      "pytest",
+      "-q",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/test_nvidia_pipeline_relations.py",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/test_nvidia_matrix_inputs.py"
+    ],
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "-O",
+      "-m",
+      "pytest",
+      "-q",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/test_nvidia_pipeline_relations.py",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/test_nvidia_matrix_inputs.py"
+    ],
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/p01_nvidia_matrix_inputs.py",
+      "--inventory",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-objects-v1/output/result.json",
+      "--native-receipt",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/result.json",
+      "--ordinary-native-json",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/ordinary-native.stdout",
+      "--output",
+      "/workspace/chijin-timeline-r075-nvidia/runs/final-suite-v1/output/matrix"
+    ],
+    "returncode": 0
+  },
+  {
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r075-nvidia/final-suite-input-v1/p01_nvidia_pipeline_inputs.py",
+      "--inventory",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-objects-v1/output/result.json",
+      "--native-receipt",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/result.json",
+      "--ordinary-native-json",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/ordinary-native.stdout",
+      "--output",
+      "/workspace/chijin-timeline-r075-nvidia/runs/final-suite-v1/output/inputs"
+    ],
+    "returncode": 1
+  }
+]

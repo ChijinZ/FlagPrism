@@ -1,0 +1,3612 @@
+{
+  "status": "native_matrix_input_words_and_raw_generations_checked",
+  "runtime_changed": false,
+  "runtime_source": "efb23636c2aa3a6e8866875133765c4de3a00f91",
+  "archive_sha256": "26faaa67e10cdb0b1e174d33432367674cd5550ca59df53c478d3006fa0af214",
+  "full_matrix_result_sha256": "6799fce589ee233f7c791b8ab028233b8dd0592674f0ab525f5240bca6a38ff1",
+  "full_matrix_result_path": "artifacts/timeline/run-075/preflight/receipts-v1/final-suite-v1/output/matrix/result.json",
+  "source_sha256": {
+    "native_matrix_inputs.py": "ffb2e4dd1a4056bfeaa894a9dbeb5be85e96f59c7de7c3acbd9d2965331bc8f2",
+    "test_nvidia_matrix_inputs.py": "91ac8ec9cdf35d78aa31b3997f9390e14ace23f90dc8f459ad11a4d2401e4f09",
+    "p01_nvidia_matrix_inputs.py": "fb7bbb6a35c88a7caccb2b2f725905474a8cc6a98ccd8b2c9c34d7f7de0012c0",
+    "native_pipeline_relations.py": "5fcac896218618252d1c89946ecc6d597389f53135fb065182b018528e27f4ba",
+    "test_nvidia_pipeline_relations.py": "7bd2c5eb98c8b9991b11d2d7fcbda9e7a7473224a1af9e5028d46cf799a4c26c",
+    "p01_nvidia_pipeline_inputs.py": "9175ddeb9bc13722fb78971529a9c6c0b639c5ff6773fa201608416dd0f1385a"
+  },
+  "cases": [
+    {
+      "case": "ordinary",
+      "cubin_sha256": "76d2bd463b479eeb70eae1d86c6e14f6689c2c699f7ff174f0eae4e83ceb5956",
+      "function": "runtime_gemm",
+      "matrix_inputs": [
+        {
+          "matrix_pc": 2704,
+          "native_loop_header_pc": 1824,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 2656,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 2656,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R22",
+              "load_pc": 2656,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R23",
+              "load_pc": 2656,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R4",
+              "load_pc": 2672,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R5",
+              "load_pc": 2672,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 2736,
+          "native_loop_header_pc": 1824,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 2656,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 2656,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R22",
+              "load_pc": 2656,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R23",
+              "load_pc": 2656,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R8",
+              "load_pc": 2688,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R9",
+              "load_pc": 2688,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 2944,
+          "native_loop_header_pc": 1824,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 2752,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 2752,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R22",
+              "load_pc": 2752,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R23",
+              "load_pc": 2752,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R6",
+              "load_pc": 2672,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R7",
+              "load_pc": 2672,
+              "load_word": 3
+            }
+          ]
+        },
+        {
+          "matrix_pc": 3072,
+          "native_loop_header_pc": 1824,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 2752,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 2752,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R22",
+              "load_pc": 2752,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R23",
+              "load_pc": 2752,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R10",
+              "load_pc": 2688,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R11",
+              "load_pc": 2688,
+              "load_word": 3
+            }
+          ]
+        }
+      ],
+      "raw_generation_binding_verified": false
+    },
+    {
+      "case": "default",
+      "binary_id": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "invocation_id": "invocation-8854e4fe1c2f4e04a27b0c3dd5485601",
+      "raw_sha256": "fd756b88ffd175adb378493a9198da46fc7ff9f25bd5e0ce836e42d3f9caee3d",
+      "expected_runtime_tiles": 3,
+      "matrix_inputs": [
+        {
+          "matrix_pc": 4720,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 4528,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 4528,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 4528,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 4528,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R16",
+              "load_pc": 4624,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R17",
+              "load_pc": 4624,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4752,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 4528,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 4528,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 4528,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 4528,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 4672,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 4672,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4784,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R12",
+              "load_pc": 4576,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R13",
+              "load_pc": 4576,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R14",
+              "load_pc": 4576,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R15",
+              "load_pc": 4576,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R18",
+              "load_pc": 4624,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R19",
+              "load_pc": 4624,
+              "load_word": 3
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4816,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R12",
+              "load_pc": 4576,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R13",
+              "load_pc": 4576,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R14",
+              "load_pc": 4576,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R15",
+              "load_pc": 4576,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R22",
+              "load_pc": 4672,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R23",
+              "load_pc": 4672,
+              "load_word": 3
+            }
+          ]
+        }
+      ],
+      "raw_generation_binding_verified": true,
+      "programs": [
+        {
+          "program": 0,
+          "matrix_occurrences": 3,
+          "input_word_bindings": 72,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "sync-15",
+            "sync-35",
+            "sync-55"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 22,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              }
+            ]
+          }
+        },
+        {
+          "program": 3,
+          "matrix_occurrences": 3,
+          "input_word_bindings": 72,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "sync-15",
+            "sync-35",
+            "sync-55"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 22,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              }
+            ]
+          }
+        }
+      ],
+      "provenance_evidence_ids": [
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:cfa56fdc8b75318a635f2075eabbc997af4a7d11cbb0e4066727a7e57aeaef13",
+          "waits_sha256:709ffa1cba35630370bfe7e32191178d8bac9b450baba987ccfa7fe71c40cfdf",
+          "origins_sha256:81edceb7dc0214a125337152deb75787ef44d895abd075f40a65f8b6b0b1453c",
+          "ordinals_sha256:8924f8d9eb6a5e19433888cc2e28ff89c42de73891115597facad7812315c0be",
+          "controls_sha256:aa3f257184d0d3a0d3c9bc471b4fe7a3e21edf6cfcaeebaf170a50aa73bf5a81",
+          "payloads_sha256:546283aa8ef578dc41680b810a184afb502081c489731ef77ccf42d36acfa321",
+          "byte_model_sha256:58c78fb5c568e5684c52720bd3607b438e12c85b46594e930ce48efb7da70fba"
+        ],
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:cfa56fdc8b75318a635f2075eabbc997af4a7d11cbb0e4066727a7e57aeaef13",
+          "waits_sha256:709ffa1cba35630370bfe7e32191178d8bac9b450baba987ccfa7fe71c40cfdf",
+          "origins_sha256:81edceb7dc0214a125337152deb75787ef44d895abd075f40a65f8b6b0b1453c",
+          "ordinals_sha256:8924f8d9eb6a5e19433888cc2e28ff89c42de73891115597facad7812315c0be",
+          "controls_sha256:aa3f257184d0d3a0d3c9bc471b4fe7a3e21edf6cfcaeebaf170a50aa73bf5a81",
+          "payloads_sha256:546283aa8ef578dc41680b810a184afb502081c489731ef77ccf42d36acfa321",
+          "byte_model_sha256:58c78fb5c568e5684c52720bd3607b438e12c85b46594e930ce48efb7da70fba"
+        ]
+      ]
+    },
+    {
+      "case": "default",
+      "binary_id": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "invocation_id": "invocation-9c45934e345e417ca1afeedf8ee7c15b",
+      "raw_sha256": "62f5fb5338027c31bbcb9221f1d2bcc3876146655a06d8de6f81e6f7b381b01d",
+      "expected_runtime_tiles": 7,
+      "matrix_inputs": [
+        {
+          "matrix_pc": 4720,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 4528,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 4528,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 4528,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 4528,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R16",
+              "load_pc": 4624,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R17",
+              "load_pc": 4624,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4752,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 4528,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 4528,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 4528,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 4528,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 4672,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 4672,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4784,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R12",
+              "load_pc": 4576,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R13",
+              "load_pc": 4576,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R14",
+              "load_pc": 4576,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R15",
+              "load_pc": 4576,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R18",
+              "load_pc": 4624,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R19",
+              "load_pc": 4624,
+              "load_word": 3
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4816,
+          "native_loop_header_pc": 3056,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R12",
+              "load_pc": 4576,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R13",
+              "load_pc": 4576,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R14",
+              "load_pc": 4576,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R15",
+              "load_pc": 4576,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R22",
+              "load_pc": 4672,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R23",
+              "load_pc": 4672,
+              "load_word": 3
+            }
+          ]
+        }
+      ],
+      "raw_generation_binding_verified": true,
+      "programs": [
+        {
+          "program": 0,
+          "matrix_occurrences": 7,
+          "input_word_bindings": 168,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "async-4",
+            "async-5",
+            "async-6",
+            "async-7",
+            "sync-115",
+            "sync-135",
+            "sync-15",
+            "sync-35",
+            "sync-55",
+            "sync-75",
+            "sync-95"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 22,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              }
+            ]
+          }
+        },
+        {
+          "program": 3,
+          "matrix_occurrences": 7,
+          "input_word_bindings": 168,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "async-4",
+            "async-5",
+            "async-6",
+            "async-7",
+            "sync-115",
+            "sync-135",
+            "sync-15",
+            "sync-35",
+            "sync-55",
+            "sync-75",
+            "sync-95"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 22,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4720,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4528,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4528,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4528,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4528,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 18,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4752,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4624,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4784,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4624,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 20,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 4576,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 4576,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 4576,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 4576,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 19,
+                "generation_id": "sync-15",
+                "completion_observed_sequence": 17,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4672,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              },
+              {
+                "matrix_pc": 4816,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4672,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 21,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 16,
+                "publication_barrier_sequence": 17
+              }
+            ]
+          }
+        }
+      ],
+      "provenance_evidence_ids": [
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:cfa56fdc8b75318a635f2075eabbc997af4a7d11cbb0e4066727a7e57aeaef13",
+          "waits_sha256:709ffa1cba35630370bfe7e32191178d8bac9b450baba987ccfa7fe71c40cfdf",
+          "origins_sha256:7881af54fb72fc604c47f2bc4cfc6ff0b6d069348c12e7557881db4a66477b40",
+          "ordinals_sha256:45edc52d5f6fb26343a11004b729ab099d1b5b086414f65c8996f3841aa70f18",
+          "controls_sha256:4e9a4b0048aa4d6eadd4f21356c2ad7ed611dc3364885ddb27710cff1823cc14",
+          "payloads_sha256:ef8926f6f14ad28859b03d7dc427842518ca768258300430a3e8c1f2b3e6cf20",
+          "byte_model_sha256:1130528083ad3d84cc403ed86ea6b96f5fa2e59d81bf694700c3249b94e3497f"
+        ],
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:cfa56fdc8b75318a635f2075eabbc997af4a7d11cbb0e4066727a7e57aeaef13",
+          "waits_sha256:709ffa1cba35630370bfe7e32191178d8bac9b450baba987ccfa7fe71c40cfdf",
+          "origins_sha256:7881af54fb72fc604c47f2bc4cfc6ff0b6d069348c12e7557881db4a66477b40",
+          "ordinals_sha256:45edc52d5f6fb26343a11004b729ab099d1b5b086414f65c8996f3841aa70f18",
+          "controls_sha256:4e9a4b0048aa4d6eadd4f21356c2ad7ed611dc3364885ddb27710cff1823cc14",
+          "payloads_sha256:ef8926f6f14ad28859b03d7dc427842518ca768258300430a3e8c1f2b3e6cf20",
+          "byte_model_sha256:1130528083ad3d84cc403ed86ea6b96f5fa2e59d81bf694700c3249b94e3497f"
+        ]
+      ]
+    },
+    {
+      "case": "sparse",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "invocation_id": "invocation-7531e8dc1ede49a7a44a79f980dc0137",
+      "raw_sha256": "d8ab61cf4e257c1f16ffe16eacbd2e8670a5e99bb8c0069333125b835dbe5fc8",
+      "expected_runtime_tiles": 3,
+      "matrix_inputs": [
+        {
+          "matrix_pc": 4128,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R28",
+              "load_pc": 3936,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R29",
+              "load_pc": 3936,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R30",
+              "load_pc": 3936,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R31",
+              "load_pc": 3936,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 4032,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 4032,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4160,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R28",
+              "load_pc": 3936,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R29",
+              "load_pc": 3936,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R30",
+              "load_pc": 3936,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R31",
+              "load_pc": 3936,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R32",
+              "load_pc": 4080,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R33",
+              "load_pc": 4080,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4192,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 3984,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 3984,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 3984,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 3984,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R22",
+              "load_pc": 4032,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R23",
+              "load_pc": 4032,
+              "load_word": 3
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4224,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 3984,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 3984,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 3984,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 3984,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R34",
+              "load_pc": 4080,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R35",
+              "load_pc": 4080,
+              "load_word": 3
+            }
+          ]
+        }
+      ],
+      "raw_generation_binding_verified": true,
+      "programs": [
+        {
+          "program": 0,
+          "matrix_occurrences": 3,
+          "input_word_bindings": 72,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "sync-17",
+            "sync-28",
+            "sync-6"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 13,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              }
+            ]
+          }
+        },
+        {
+          "program": 3,
+          "matrix_occurrences": 3,
+          "input_word_bindings": 72,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "sync-17",
+            "sync-28",
+            "sync-6"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 13,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              }
+            ]
+          }
+        }
+      ],
+      "provenance_evidence_ids": [
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:6e37ae3d1c86860ab5f07cca0beb13ca4b9829366a9961a23d707b652e0df153",
+          "waits_sha256:32a82549357f55d8065ad1848bc316335dd8b01b5dad2f1206bc76c7ccf2a0c7",
+          "origins_sha256:bab341d76ae75d3a717b6610f21e900bac738599759435b809f82db25e500630",
+          "ordinals_sha256:2b9899f7165fcb21c648bc37e0c70cf0ca87c21f6b5b2e673cdf2fe49de70de5",
+          "controls_sha256:bd0c048e74a021312693091061d8e10c598bb6869cd06e09dc4d0efd7262ef00",
+          "payloads_sha256:6505940cbf072eb62b5c08f89d088078e4e9d6a88e2399a073fba1c1986e630a",
+          "byte_model_sha256:cabed7e58c88c53d4a0cc1f2f2107b0a48b42145536cf98fc5b5138acf6dbc1f"
+        ],
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:6e37ae3d1c86860ab5f07cca0beb13ca4b9829366a9961a23d707b652e0df153",
+          "waits_sha256:32a82549357f55d8065ad1848bc316335dd8b01b5dad2f1206bc76c7ccf2a0c7",
+          "origins_sha256:bab341d76ae75d3a717b6610f21e900bac738599759435b809f82db25e500630",
+          "ordinals_sha256:2b9899f7165fcb21c648bc37e0c70cf0ca87c21f6b5b2e673cdf2fe49de70de5",
+          "controls_sha256:bd0c048e74a021312693091061d8e10c598bb6869cd06e09dc4d0efd7262ef00",
+          "payloads_sha256:6505940cbf072eb62b5c08f89d088078e4e9d6a88e2399a073fba1c1986e630a",
+          "byte_model_sha256:cabed7e58c88c53d4a0cc1f2f2107b0a48b42145536cf98fc5b5138acf6dbc1f"
+        ]
+      ]
+    },
+    {
+      "case": "sparse",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "invocation_id": "invocation-a69ed76b182e4590a9193aa062835a68",
+      "raw_sha256": "31e8e0bdfa064e4de842c3c1d5f50626c2d7bcdc1ad2907e65a6413842af1300",
+      "expected_runtime_tiles": 7,
+      "matrix_inputs": [
+        {
+          "matrix_pc": 4128,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R28",
+              "load_pc": 3936,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R29",
+              "load_pc": 3936,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R30",
+              "load_pc": 3936,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R31",
+              "load_pc": 3936,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R20",
+              "load_pc": 4032,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R21",
+              "load_pc": 4032,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4160,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R28",
+              "load_pc": 3936,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R29",
+              "load_pc": 3936,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R30",
+              "load_pc": 3936,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R31",
+              "load_pc": 3936,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R32",
+              "load_pc": 4080,
+              "load_word": 0
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R33",
+              "load_pc": 4080,
+              "load_word": 1
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4192,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 3984,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 3984,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 3984,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 3984,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R22",
+              "load_pc": 4032,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R23",
+              "load_pc": 4032,
+              "load_word": 3
+            }
+          ]
+        },
+        {
+          "matrix_pc": 4224,
+          "native_loop_header_pc": 3104,
+          "input_words": [
+            {
+              "operand": "A",
+              "word": 0,
+              "register": "R24",
+              "load_pc": 3984,
+              "load_word": 0
+            },
+            {
+              "operand": "A",
+              "word": 1,
+              "register": "R25",
+              "load_pc": 3984,
+              "load_word": 1
+            },
+            {
+              "operand": "A",
+              "word": 2,
+              "register": "R26",
+              "load_pc": 3984,
+              "load_word": 2
+            },
+            {
+              "operand": "A",
+              "word": 3,
+              "register": "R27",
+              "load_pc": 3984,
+              "load_word": 3
+            },
+            {
+              "operand": "B",
+              "word": 0,
+              "register": "R34",
+              "load_pc": 4080,
+              "load_word": 2
+            },
+            {
+              "operand": "B",
+              "word": 1,
+              "register": "R35",
+              "load_pc": 4080,
+              "load_word": 3
+            }
+          ]
+        }
+      ],
+      "raw_generation_binding_verified": true,
+      "programs": [
+        {
+          "program": 0,
+          "matrix_occurrences": 7,
+          "input_word_bindings": 168,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "async-4",
+            "async-5",
+            "async-6",
+            "async-7",
+            "sync-17",
+            "sync-28",
+            "sync-39",
+            "sync-50",
+            "sync-6",
+            "sync-61",
+            "sync-72"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 13,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              }
+            ]
+          }
+        },
+        {
+          "program": 3,
+          "matrix_occurrences": 7,
+          "input_word_bindings": 168,
+          "generation_ids": [
+            "async-1",
+            "async-2",
+            "async-3",
+            "async-4",
+            "async-5",
+            "async-6",
+            "async-7",
+            "sync-17",
+            "sync-28",
+            "sync-39",
+            "sync-50",
+            "sync-6",
+            "sync-61",
+            "sync-72"
+          ],
+          "first_occurrence": {
+            "matrix_sequence": 13,
+            "matrix_site_id": 23,
+            "input_words": [
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 0,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4128,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 1,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3936,
+                "load_word": 0,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3936,
+                "load_word": 1,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3936,
+                "load_word": 2,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3936,
+                "load_word": 3,
+                "load_site_id": 19,
+                "load_sequence": 9,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 0,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4160,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 1,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4032,
+                "load_word": 2,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4192,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4032,
+                "load_word": 3,
+                "load_site_id": 21,
+                "load_sequence": 11,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 0,
+                "load_pc": 3984,
+                "load_word": 0,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 1,
+                "load_pc": 3984,
+                "load_word": 1,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 2,
+                "load_pc": 3984,
+                "load_word": 2,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "A",
+                "word": 3,
+                "load_pc": 3984,
+                "load_word": 3,
+                "load_site_id": 20,
+                "load_sequence": 10,
+                "generation_id": "sync-6",
+                "completion_observed_sequence": 8,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 0,
+                "load_pc": 4080,
+                "load_word": 2,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              },
+              {
+                "matrix_pc": 4224,
+                "operand": "B",
+                "word": 1,
+                "load_pc": 4080,
+                "load_word": 3,
+                "load_site_id": 22,
+                "load_sequence": 12,
+                "generation_id": "async-1",
+                "completion_observed_sequence": 7,
+                "publication_barrier_sequence": 8
+              }
+            ]
+          }
+        }
+      ],
+      "provenance_evidence_ids": [
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:6e37ae3d1c86860ab5f07cca0beb13ca4b9829366a9961a23d707b652e0df153",
+          "waits_sha256:32a82549357f55d8065ad1848bc316335dd8b01b5dad2f1206bc76c7ccf2a0c7",
+          "origins_sha256:d345573d72e78c4d34b5dc93b73dd7fdccf22017114451069fcd93aa59c5a64f",
+          "ordinals_sha256:37619baa0a32ce083c82b124a95734dbdebbbb30d9602ad0e77653d02d80fe51",
+          "controls_sha256:b4e9b9369a9550355abb78ce1712da4489ba53cae3ba095a1e486955eef2750d",
+          "payloads_sha256:66404714deff295f566ddc60d29f76ff170a60d91140e903af552596e486662c",
+          "byte_model_sha256:303c3f4979a5e50c65e180ca244ddb25b41f317420d952d37cf94d2ba41e14e2"
+        ],
+        [
+          "warp_scopes_sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "native_sha256:6e37ae3d1c86860ab5f07cca0beb13ca4b9829366a9961a23d707b652e0df153",
+          "waits_sha256:32a82549357f55d8065ad1848bc316335dd8b01b5dad2f1206bc76c7ccf2a0c7",
+          "origins_sha256:d345573d72e78c4d34b5dc93b73dd7fdccf22017114451069fcd93aa59c5a64f",
+          "ordinals_sha256:37619baa0a32ce083c82b124a95734dbdebbbb30d9602ad0e77653d02d80fe51",
+          "controls_sha256:b4e9b9369a9550355abb78ce1712da4489ba53cae3ba095a1e486955eef2750d",
+          "payloads_sha256:66404714deff295f566ddc60d29f76ff170a60d91140e903af552596e486662c",
+          "byte_model_sha256:303c3f4979a5e50c65e180ca244ddb25b41f317420d952d37cf94d2ba41e14e2"
+        ]
+      ]
+    }
+  ],
+  "ordinary_preservation_verified": false,
+  "hardware_overlap_verified": false
+}

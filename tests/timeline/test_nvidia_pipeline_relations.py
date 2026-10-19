@@ -166,9 +166,44 @@ def test_64bit_select_keeps_both_source_words(opcode):
                        roots)['status'] == 'forbidden_dependency_found'
 
 
-def test_packed_predicate_register_is_not_an_empty_source():
+def test_packed_predicate_sources_include_bank_merge_and_execution_guard():
+    assert rules.sources(
+        dict(opcode='P2R', operands='R2,PR,R30.reuse,0x1',
+             predicate='@UP0')) == {
+                 'P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'R30', 'UP0'
+             }
+
+
+def test_unknown_entry_values_do_not_become_current_function_result_definitions(
+):
     body = fixture()
-    body[112] = dict(opcode='P2R', operands='R2,PR,RZ,0xff')
-    with pytest.raises(ValueError,
-                       match='Packed predicate source is not modeled'):
+    body[112] = dict(opcode='P2R', operands='R2,PR,RZ,0x1')
+    row = rules.audit(body, 128, {'R2'})
+    assert row['status'] == 'unverified_entry_registers'
+    assert row['register_entry_definitions_complete'] is False
+    assert row['entry_registers'] == ['P0', 'P1', 'P2', 'P3', 'P4', 'P5', 'P6']
+    assert row['internal_result_register_dependency_excluded'] is True
+    assert row['memory_alias_analysis_verified'] is False
+
+
+@pytest.mark.parametrize('variant', ['predicate', 'merge'])
+def test_packed_predicate_or_merge_dependency_keeps_matrix_result(variant):
+    body = fixture()
+    body[112] = dict(opcode='ISETP.NE.U32.AND', operands='P6,PT,R20,RZ,PT')
+    body[128] = dict(opcode='P2R',
+                     operands='R2,PR,' +
+                     ('R20' if variant == 'merge' else 'RZ') + ',0x1')
+    body[144] = dict(opcode='NOP', operands='')
+    body[160] = dict(opcode='EXIT', operands='')
+    row = rules.audit(body, 144, {'R2'})
+    assert row['status'] == 'forbidden_dependency_found'
+    assert row['internal_result_register_dependency_excluded'] is False
+
+
+@pytest.mark.parametrize('opcode,operand', [('P2R.X', 'R2,PR,RZ,0x1'),
+                                            ('P2R', 'R2,PR,RZ,0x80')])
+def test_unsupported_packed_form_stays_unverified(opcode, operand):
+    body = fixture()
+    body[112] = dict(opcode=opcode, operands=operand)
+    with pytest.raises(ValueError):
         rules.audit(body, 128, {'R2'})

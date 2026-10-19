@@ -83,7 +83,8 @@ def main():
             raise ValueError('Profile capture and object inventory differ')
         machine = load_late_machine_map(root, capture)
         if machine['artifacts']['cubin_sha256'] != item['cubin_sha256']:
-            raise ValueError('Machine map and original object inventory differ')
+            raise ValueError(
+                'Machine map and original object inventory differ')
         base = root / 'machine' / item['binary_id']
         functions = _bound_functions(machine, read(base / 'lines.stdout'),
                                      read(base / 'json.stdout'))

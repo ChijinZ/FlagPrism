@@ -4,7 +4,10 @@ These helpers consume object-bound instructions from the installed reader.
 They check actual uses rather than physical register names over a function.
 They do not certify memory aliasing, complete scheduling or engine activity.
 Unknown register writers and control transitions fail closed. Register roots
-left undefined at function entry also remain unverified.
+left undefined at function entry also remain unverified. A separate, bounded
+negative result excludes paths from this function's matrix/clock definitions;
+external entry symbols do not become definitions made by this function. This
+never excludes through-memory, implicit scoreboard or physical completion edges.
 """
 from collections import deque
 import re
@@ -42,9 +45,19 @@ def sources(row):
                 r'(?:U?P\d+|UPT|PT)', fields[count]):
             count += 1
     operands = ','.join(fields[count:])
+    packed = set()
     if re.search(r'\bPR\b', operands):
-        raise ValueError('Packed predicate source is not modeled')
-    values = registers(operands)
+        if (op != 'P2R' or len(fields) != 4 or fields[1] != 'PR'
+                or re.fullmatch(r'R\d+', fields[0]) is None
+                or re.fullmatch(r'R(?:\d+|Z)(?:\.reuse)?', fields[2]) is None
+                or re.fullmatch(r'0x[0-9a-fA-F]+', fields[3]) is None
+                or int(fields[3], 16) > 0x7f):
+            raise ValueError('Packed predicate source form is not modeled')
+        # NVIDIA documents P2R as predicate-register to register movement
+        # and the physical predicate bank as P0..P6. Include the whole bank;
+        # do not assume a particular immediate-bit to predicate mapping.
+        packed = {'P' + str(i) for i in range(7)}
+    values = registers(operands) | packed
     if family in {'IMAD', 'UIMAD'} and '.WIDE' in op:
         addend = fields[-1]
         m = re.fullmatch(r'(UR|R)(\d+)(?:\.reuse)?', addend)
@@ -109,6 +122,9 @@ def audit(body, pc, roots):
                 visited_states=len(seen),
                 definitions=list(definitions.values()),
                 entry_registers=sorted(entry),
+                register_entry_definitions_complete=not entry,
+                internal_result_register_dependency_excluded=not forbidden,
+                register_source_traversal_complete=True,
                 forbidden=forbidden,
                 memory_alias_analysis_verified=False,
                 hidden_scoreboard_decoded=False)
