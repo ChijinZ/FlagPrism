@@ -1,0 +1,30 @@
+{
+  "status": "loaded_release_C1_FMA_bracket_and_runtime_loop_regression_passed_not_source_exclusive_cost",
+  "math": {
+    "status": "real_device_resume_passed",
+    "backend": "nvidia",
+    "first_binary": "bffb05682586487ad10e0510abb7c90115486a7cb20346ec00168777cc34efee",
+    "ordinary_binary": "3732e2714af6d09d6572628f6d2878a94dc76fadab89553375edb0ec49c5885c",
+    "resumed_binary": "bffb05682586487ad10e0510abb7c90115486a7cb20346ec00168777cc34efee",
+    "captured": [
+      {
+        "invocation_id": "invocation-17d6f9db4d9c46c7bcef4303ca71c2a2",
+        "positive_intervals": 16,
+        "ns_exports": 8
+      },
+      {
+        "invocation_id": "invocation-c94a4bc87c904f41b09cf149900e4404",
+        "positive_intervals": 28,
+        "ns_exports": 8
+      }
+    ],
+    "mathematical_calls": 3,
+    "performance_measured": false
+  },
+  "device_root": "/workspace/chijin-timeline-r061-nvidia/runs/compute-device-v1/output/device/resume/timeline",
+  "before_root": "/workspace/chijin-timeline-r058-nvidia/runs/device-recovery-v1/output/device/resume/timeline",
+  "archives": {
+    "nvidia-compute-evidence-v1.tgz": "d4c3287c265df8d8048261277568e28c48b72610a403b7230bc210545cd0ab19",
+    "gcu-nvidia-compute-cpu-evidence-v2.tgz": "256072e409cf55c11b97c37de1c9df34ca30a40a72d7285bc4ffa35e29afae2f"
+  }
+}
