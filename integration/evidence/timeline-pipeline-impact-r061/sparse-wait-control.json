@@ -1,0 +1,121 @@
+{
+  "status": "actual_final_object_wait_control_and_dynamic_operands_passed_not_clock_or_time_flows",
+  "reports": [
+    {
+      "invocation": "invocation-77ddf37b7a9f4b91aa9cdf633e617dda",
+      "dynamic_wait_occurrences": 1024,
+      "control": {
+        "model": "nvidia.cp_async.late_wait_control.v1",
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "sites": [
+          {
+            "site_id": 17,
+            "status": "late_wait_control_order_checked",
+            "source_region_qualified": false,
+            "record_value_provenance_verified": false,
+            "clock_qualified": false,
+            "participation_verified": false,
+            "function": "runtime_gemm",
+            "begin_reader_pc": 3824,
+            "end_reader_pc": 3856,
+            "wait_pc": 3840,
+            "pending_group_limit": 1,
+            "checked_control_states": 2
+          },
+          {
+            "site_id": 27,
+            "status": "late_wait_control_order_checked",
+            "source_region_qualified": false,
+            "record_value_provenance_verified": false,
+            "clock_qualified": false,
+            "participation_verified": false,
+            "function": "runtime_gemm",
+            "begin_reader_pc": 6224,
+            "end_reader_pc": 6256,
+            "wait_pc": 6240,
+            "pending_group_limit": 0,
+            "checked_control_states": 2
+          }
+        ],
+        "helper_rules_sha256": "9b44425c0de48391718f38b6e886a7f4db74bad5e4fda4d90d27157f31a955d1",
+        "proof_scope": "native_wait_control_order_between_late_inline_readers",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "participation_verified": false,
+        "clock_qualified": false,
+        "hardware_overlap_verified": false,
+        "time_flows_qualified": false
+      }
+    },
+    {
+      "invocation": "invocation-6beb0af7274b462480bec5a95e4fc116",
+      "dynamic_wait_occurrences": 2048,
+      "control": {
+        "model": "nvidia.cp_async.late_wait_control.v1",
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "sites": [
+          {
+            "site_id": 17,
+            "status": "late_wait_control_order_checked",
+            "source_region_qualified": false,
+            "record_value_provenance_verified": false,
+            "clock_qualified": false,
+            "participation_verified": false,
+            "function": "runtime_gemm",
+            "begin_reader_pc": 3824,
+            "end_reader_pc": 3856,
+            "wait_pc": 3840,
+            "pending_group_limit": 1,
+            "checked_control_states": 2
+          },
+          {
+            "site_id": 27,
+            "status": "late_wait_control_order_checked",
+            "source_region_qualified": false,
+            "record_value_provenance_verified": false,
+            "clock_qualified": false,
+            "participation_verified": false,
+            "function": "runtime_gemm",
+            "begin_reader_pc": 6224,
+            "end_reader_pc": 6256,
+            "wait_pc": 6240,
+            "pending_group_limit": 0,
+            "checked_control_states": 2
+          }
+        ],
+        "helper_rules_sha256": "9b44425c0de48391718f38b6e886a7f4db74bad5e4fda4d90d27157f31a955d1",
+        "proof_scope": "native_wait_control_order_between_late_inline_readers",
+        "source_region_qualified": false,
+        "record_value_provenance_verified": false,
+        "participation_verified": false,
+        "clock_qualified": false,
+        "hardware_overlap_verified": false,
+        "time_flows_qualified": false
+      }
+    }
+  ],
+  "cpu_control_fixtures_rejected": [
+    {
+      "case": "wait_bypass",
+      "reason": "Native wait can be bypassed between counter calls"
+    },
+    {
+      "case": "wrong_wait_operand",
+      "reason": "Missing or ambiguous native wait operand"
+    },
+    {
+      "case": "predicated_wait",
+      "reason": "Conditional native wait"
+    },
+    {
+      "case": "missing_wait",
+      "reason": "Missing or ambiguous native wait operand"
+    },
+    {
+      "case": "external_entry_after_wait",
+      "reason": "External control edge enters after the inline entry reader"
+    }
+  ],
+  "originals_unchanged": 109,
+  "device_replayed": false
+}

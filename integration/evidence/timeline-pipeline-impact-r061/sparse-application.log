@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/chijin-timeline-r061-nvidia/sparse-pipeline-input-v1/source/tests/timeline/p01_nvidia_late_pipeline.py", line 137, in <module>
+    main()
+  File "/workspace/chijin-timeline-r061-nvidia/sparse-pipeline-input-v1/source/tests/timeline/p01_nvidia_late_pipeline.py", line 113, in main
+    need(
+  File "/workspace/chijin-timeline-r061-nvidia/sparse-pipeline-input-v1/source/tests/timeline/p01_nvidia_late_pipeline.py", line 12, in need
+    raise RuntimeError(message)
+RuntimeError: Default API lacks qualified observed dependency traces: {'status': 'unavailable', 'reason': 'Published count has a partial or predicated write', 'time_arrows_verified': False}

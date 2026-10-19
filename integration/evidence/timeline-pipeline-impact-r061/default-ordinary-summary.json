@@ -1,0 +1,265 @@
+{
+  "mode": "default",
+  "phase": "ordinary",
+  "math_hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+  "actual_metadata": "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/cache/K77OMYDAZWYRX44WH2AVC6SPWHITQZR3XO2UU7ZHIWCUSFVLVU4Q/runtime_gemm.json",
+  "metadata_sha256": "89a8ee13239b3615839a335e8e1bbcc1bfeb2fe1699601e5a798e0302f20bf30",
+  "cubin_sha256": "f984f303f9dcf9c1b09c294e23f40fbe66248b338cb0e0ad8ab6ff5cf6105bc5",
+  "PTX_sha256": "cecdd26be53518108b71cf29aab6bdd6008dd1b039e7e245672e12b3f9fc73c1",
+  "SASS_sha256": "bc7ddc5e76351b13a68466912ba87951f01fb53f5994434daac5240b1ad3b3bb",
+  "steps": [
+    {
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--print-code",
+        "--print-line-info-ptx",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/cache/K77OMYDAZWYRX44WH2AVC6SPWHITQZR3XO2UU7ZHIWCUSFVLVU4Q/runtime_gemm.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--emit-json",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/cache/K77OMYDAZWYRX44WH2AVC6SPWHITQZR3XO2UU7ZHIWCUSFVLVU4Q/runtime_gemm.cubin"
+      ],
+      "returncode": 0
+    }
+  ],
+  "critical_native": [
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 912,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R32], desc[UR20][R8.64], P0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 928,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 944,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1008,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R32+0x800], desc[UR20][R10.64], P1"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1024,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2624,
+      "opcode": "DEPBAR.LE",
+      "predicate": null,
+      "operands": "SB0, 0x1"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2640,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2656,
+      "opcode": "LDSM.16.M88.4",
+      "predicate": null,
+      "operands": "R20, [R27+UR12+0x1000]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2672,
+      "opcode": "LDSM.16.MT88.4",
+      "predicate": null,
+      "operands": "R4, [R25+UR11]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2688,
+      "opcode": "LDSM.16.MT88.4",
+      "predicate": null,
+      "operands": "R8, [R8+UR11]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2704,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R12, R20, R4, R12"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2736,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R16, R20, R8, R16"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2752,
+      "opcode": "LDSM.16.M88.4",
+      "predicate": null,
+      "operands": "R20, [R26+UR12+0x1000]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2800,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 2944,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R12, R20, R6, R12"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3056,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R7], desc[UR20][R4.64], P1"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3072,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R16, R20, R10, R16"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3088,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3184,
+      "opcode": "DEPBAR.LE",
+      "predicate": null,
+      "operands": "SB0, 0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3584,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 3792,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    }
+  ],
+  "critical_PTX": [
+    {
+      "line": 85,
+      "instruction": "cp.async.cg.shared.global [ %r20 + 0 ], [ %rd11 + 0 ], 0x10, %r21;"
+    },
+    {
+      "line": 87,
+      "instruction": "cp.async.commit_group;"
+    },
+    {
+      "line": 99,
+      "instruction": "bar.sync \t0;"
+    },
+    {
+      "line": 105,
+      "instruction": "cp.async.cg.shared.global [ %r22 + 0 ], [ %rd12 + 0 ], 0x10, %r23;"
+    },
+    {
+      "line": 107,
+      "instruction": "cp.async.commit_group;"
+    },
+    {
+      "line": 251,
+      "instruction": "cp.async.wait_group \t1;"
+    },
+    {
+      "line": 252,
+      "instruction": "bar.sync \t0;"
+    },
+    {
+      "line": 256,
+      "instruction": "ldmatrix.sync.aligned.m8n8.x4.shared.b16 {%r54, %r55, %r56, %r57}, [%r15];"
+    },
+    {
+      "line": 257,
+      "instruction": "ldmatrix.sync.aligned.m8n8.x4.shared.b16 {%r62, %r63, %r64, %r65}, [%r16];"
+    },
+    {
+      "line": 260,
+      "instruction": "ldmatrix.sync.aligned.m8n8.x4.trans.shared.b16 {%r58, %r59, %r66, %r67}, [%r79];"
+    },
+    {
+      "line": 262,
+      "instruction": "ldmatrix.sync.aligned.m8n8.x4.trans.shared.b16 {%r60, %r61, %r68, %r69}, [%r80];"
+    },
+    {
+      "line": 265,
+      "instruction": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { %r135, %r136, %r137, %r138 }, { %r54, %r55, %r56, %r57 }, { %r58, %r59 }, { %r135, %r136, %r137, %r138 };"
+    },
+    {
+      "line": 268,
+      "instruction": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { %r139, %r140, %r141, %r142 }, { %r54, %r55, %r56, %r57 }, { %r60, %r61 }, { %r139, %r140, %r141, %r142 };"
+    },
+    {
+      "line": 271,
+      "instruction": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { %r135, %r136, %r137, %r138 }, { %r62, %r63, %r64, %r65 }, { %r66, %r67 }, { %r135, %r136, %r137, %r138 };"
+    },
+    {
+      "line": 274,
+      "instruction": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { %r139, %r140, %r141, %r142 }, { %r62, %r63, %r64, %r65 }, { %r68, %r69 }, { %r139, %r140, %r141, %r142 };"
+    },
+    {
+      "line": 289,
+      "instruction": "bar.sync \t0;"
+    },
+    {
+      "line": 295,
+      "instruction": "cp.async.cg.shared.global [ %r70 + 0 ], [ %rd27 + 0 ], 0x10, %r71;"
+    },
+    {
+      "line": 297,
+      "instruction": "cp.async.commit_group;"
+    },
+    {
+      "line": 329,
+      "instruction": "cp.async.wait_group \t0;"
+    },
+    {
+      "line": 330,
+      "instruction": "bar.sync \t0;"
+    },
+    {
+      "line": 364,
+      "instruction": "bar.sync \t0;"
+    }
+  ],
+  "critical_relation_or_schedule_qualified": false
+}

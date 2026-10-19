@@ -1,0 +1,210 @@
+{
+  "status": "CPU_codegen_matrix_clock_memory_clobber_probe_only",
+  "application_replayed": false,
+  "device_executed": false,
+  "shipping_implementation_changed": false,
+  "source_LLVM_sha256": "a331175028a5c13768a14e127e8c523c1c75a3300e326e7cd08b59dd7c7db5f9",
+  "modified_LLVM_sha256": "ef938057f3d9f9daed45b3372d3da5302aa9a934581899998746b38adcea86f3",
+  "changed_matrix_reader_lines": [
+    "  %486 = call i64 asm sideeffect \"// flagprism_late_probe_site_23_entry\\0A\\09mov.u64 $0, %globaltimer;\", \"=l\"(), !dbg !39\n",
+    "  %503 = call i64 asm sideeffect \"// flagprism_late_probe_site_23_exit\\0A\\09mov.u64 $0, %globaltimer;\", \"=l\"(), !dbg !39\n"
+  ],
+  "critical_native": [
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1072,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R9], desc[UR24][R4.64], P0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1104,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1136,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1408,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R11], desc[UR24][R4.64], P1"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 1440,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 4608,
+      "opcode": "DEPBAR.LE",
+      "predicate": null,
+      "operands": "SB0, 0x1"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 4640,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 4752,
+      "opcode": "LDSM.16.M88.4",
+      "predicate": null,
+      "operands": "R52, [R44+0x1000]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 4816,
+      "opcode": "LDSM.16.M88.4",
+      "predicate": null,
+      "operands": "R48, [R44+0x1000]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 4928,
+      "opcode": "LDSM.16.MT88.4",
+      "predicate": null,
+      "operands": "R44, [R44]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5024,
+      "opcode": "LDSM.16.MT88.4",
+      "predicate": null,
+      "operands": "R56, [R56]"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5072,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R64, R52, R44, R64"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5104,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R60, R52, R56, R60"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5136,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R64, R48, R46, R64"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5168,
+      "opcode": "HMMA.16816.F32",
+      "predicate": null,
+      "operands": "R60, R48, R58, R60"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5232,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5552,
+      "opcode": "LDGSTS.E.BYPASS.128",
+      "predicate": null,
+      "operands": "[R0], desc[UR24][R46.64], P0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 5584,
+      "opcode": "LDGDEPBAR",
+      "predicate": null,
+      "operands": ""
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 7904,
+      "opcode": "DEPBAR.LE",
+      "predicate": null,
+      "operands": "SB0, 0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 7936,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    },
+    {
+      "section": ".text.runtime_gemm",
+      "pc": 8624,
+      "opcode": "BAR.SYNC.DEFER_BLOCKING",
+      "predicate": null,
+      "operands": "0x0"
+    }
+  ],
+  "matrix_reader_checks": [
+    {
+      "site_id": 23,
+      "begin_reader_pc": 5056,
+      "end_reader_pc": 5184,
+      "HMMA": [
+        5072,
+        5104,
+        5136,
+        5168
+      ],
+      "all_same_function_HMMA_between_readers": true
+    }
+  ],
+  "steps": [
+    {
+      "name": "ptxas",
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages/triton/backends/nvidia/bin/ptxas-blackwell",
+        "-lineinfo",
+        "-v",
+        "--gpu-name=sm_120a",
+        "/workspace/chijin-timeline-r061-nvidia/runs/matrix-clock-probe-v1/output/modified.ptx",
+        "-o",
+        "/workspace/chijin-timeline-r061-nvidia/runs/matrix-clock-probe-v1/output/modified.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "lines",
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--print-code",
+        "--print-line-info-ptx",
+        "/workspace/chijin-timeline-r061-nvidia/runs/matrix-clock-probe-v1/output/modified.cubin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "json",
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages/nvidia/cu13/bin/nvdisasm",
+        "--emit-json",
+        "/workspace/chijin-timeline-r061-nvidia/runs/matrix-clock-probe-v1/output/modified.cubin"
+      ],
+      "returncode": 0
+    }
+  ],
+  "source_cost_or_schedule_qualified": false
+}

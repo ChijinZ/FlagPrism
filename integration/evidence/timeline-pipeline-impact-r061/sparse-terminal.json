@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 120321,
+    "ppid": 1,
+    "pgid": 120321,
+    "startticks": 29450647
+  },
+  "worker": {
+    "pid": 120322,
+    "ppid": 120321,
+    "pgid": 120322,
+    "startticks": 29450650
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r061-nvidia/sparse-pipeline-input-v1/run.py",
+    "--output",
+    "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output"
+  ],
+  "argv_sha256": "a5202069ffb2ac7b8f9acc10e929ccbd185dac05f327a35ce71bc4f0d29c3102",
+  "script_sha256": "f6d6d87235f6de34da10bea0715aca4bb61f8720299b5ba023ff118b8331a0cb",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 300,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 16791858878
+}
