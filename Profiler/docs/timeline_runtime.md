@@ -98,17 +98,28 @@ remains an acceptance failure. These measurements establish the finite cases'
 storage bounds, not an overhead or exclusive-GPU performance certification.
 
 Default record capacity is now chosen from the actual recorded actor count.
-A complete-CTA recording targets 2 MiB for the first/last program pair; a
+A complete-CTA recording uses the existing 8 MiB raw limit, reserving 128 bytes
+for allocation guards, for the first/last program pair; a
 sampled recording targets 64 KiB. Each actor has six header words and four
 64-bit words per record, with at most 4096 records. The compiler manifest
-records `bounded-actor-bytes-v1`, the footprint decision and the resulting
+records `bounded-actor-bytes-v2`, the automatic pair byte budget, the footprint decision and the resulting
 capacity; the Python adapter independently recomputes and checks them. An
 explicit record-count request keeps its original meaning. The existing 8 MiB
 session raw, 16 MiB trace and 64 MiB bundle limits remain in force. The old
 one-warp seven-tile capture overflowed at the previous fixed 256-record limit;
 that failure is retained. Fresh runs with the actor-byte capacity policy
-record both reduction lengths without loss; this does not imply arbitrary
+record both reduction lengths without loss. Later independent 256-thread
+cases overflowed the v1 policy's 126 records per actor; those original failures
+remain retained. The v2 policy admits 510 records per actor for that geometry,
+without raising the 8 MiB raw ceiling. This does not imply arbitrary
 loop lengths fit the bounded buffer.
+
+NVPTX lowering can remove complete static sites from constant libdevice
+branches after late-LLVM instrumentation. The machine map lists these as
+`not_emitted_static_sites`; this is not a claim about their source cost or
+reachability. Every emitted site must retain all of its expected phases, and
+every actual raw endpoint must have its corresponding inspected machine
+getter before nanosecond export. Legacy marker mapping remains strict.
 
 The recorder also preserves warp-synchronization brackets and their actual
 member masks. A full-mask synchronization can publish for the whole actual

@@ -315,8 +315,23 @@ def counter_map(*,
     else:
         _need(expected_phases is None,
               'Legacy marker contract has fixed endpoint phases')
-    _need({(v['site_id'], v['phase'])
-           for v in by_line.values()} == required, 'Missing scope phase')
+    emitted = {(v['site_id'], v['phase']) for v in by_line.values()}
+    absent_sites = []
+    if marker_flavor == 'late-v1':
+        # NVPTX target lowering can remove entire constant libdevice branches
+        # after the optimized LLVM recorder has inventoried them. Bind every
+        # emitted getter, retaining absent static sites explicitly. A partially
+        # emitted bracket is still invalid. The unit provider separately checks
+        # every actual raw endpoint against this final machine map.
+        _need(emitted <= required, 'Unexpected late scope phase')
+        for site in sorted(sites):
+            wanted = {item for item in required if item[0] == site}
+            actual = {item for item in emitted if item[0] == site}
+            _need(not actual or actual == wanted, 'Missing scope phase')
+            if not actual:
+                absent_sites.append(site)
+    else:
+        _need(emitted == required, 'Missing scope phase')
     doc = json.loads(sass_json)
     _need(
         type(doc) is list and len(doc) == 2 and type(doc[0]) is dict
@@ -551,6 +566,8 @@ def counter_map(*,
     if marker_flavor == 'late-v1':
         result['marker_flavor'] = marker_flavor
         result['expected_phases'] = [list(item) for item in sorted(required)]
+        if absent_sites:
+            result['not_emitted_static_sites'] = absent_sites
     return result
 
 

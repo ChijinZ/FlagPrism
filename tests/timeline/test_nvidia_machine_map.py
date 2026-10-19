@@ -97,6 +97,30 @@ def args():
 
 class CounterMapTests(unittest.TestCase):
 
+    def test_late_inventory_can_include_wholly_unemitted_static_site(self):
+        a = args()
+        a.update(marker_flavor='late-v1',
+                 scope_ids=(0, 1),
+                 expected_phases=((0, 'entry'), (0, 'exit'), (1, 'entry'),
+                                  (1, 'exit')))
+        a['ptx'] = PTX.replace('flagprism_timeline_v1_',
+                               'flagprism_late_probe_').encode()
+        result = machine.counter_map(**a)
+        self.assertEqual(result['not_emitted_static_sites'], [1])
+        self.assertEqual({row['site_id']
+                          for row in result['counter_pcs']}, {0})
+        self.assertEqual(len(result['expected_phases']), 4)
+        # An emitted half-bracket is a defect, rather than an absent site.
+        a['ptx'] = a['ptx'].replace(b'site_0_exit', b'site_1_exit')
+        with self.assertRaisesRegex(ValueError, 'Missing scope phase'):
+            machine.counter_map(**a)
+
+    def test_legacy_missing_static_site_remains_rejected(self):
+        a = args()
+        a['scope_ids'] = (0, 1)
+        with self.assertRaisesRegex(ValueError, 'Missing scope phase'):
+            machine.counter_map(**a)
+
     def test_uniform_counter_binding_keeps_exact_line_and_register_bank(self):
         a = args()
         doc = copy.deepcopy(DOC)

@@ -240,8 +240,11 @@ int main(int argc, char **argv) {
     return 2;
   }
   const uint64_t HeaderWords = 6;
+  // A complete CTA records every participating thread for dependency facts.
+  // Use the existing 8 MiB raw ceiling, reserving allocator guard bytes, rather
+  // than overflowing ordinary multi-warp loops at an artificial 2 MiB target.
   const uint64_t CaptureBudgetBytes =
-      requiresFullFootprint ? 2 * 1024 * 1024 : 64 * 1024;
+      requiresFullFootprint ? 8 * 1024 * 1024 - 128 : 64 * 1024;
   uint64_t Capacity = RecordCapacity;
   if (AutoCapacity) {
     const uint64_t wordsPerActor = CaptureBudgetBytes / (2 * Actors * 8);
@@ -667,7 +670,9 @@ int main(int argc, char **argv) {
           {"unselected_sites", std::move(unselected)},
           {"capacity_per_program", Capacity},
           {"capacity_policy",
-           AutoCapacity ? "bounded-actor-bytes-v1" : "explicit-record-count"},
+           AutoCapacity ? "bounded-actor-bytes-v2" : "explicit-record-count"},
+          {"automatic_pair_budget_bytes",
+           AutoCapacity ? CaptureBudgetBytes : 0},
           {"requires_full_footprint", requiresFullFootprint},
           {"header_words", HeaderWords},
           {"actors", Actors},

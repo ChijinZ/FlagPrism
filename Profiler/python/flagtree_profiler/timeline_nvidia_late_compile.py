@@ -57,7 +57,7 @@ class LateLLVMTransform:
                     tool_sha256=self.tool_sha256,
                     max_sites=self.max_sites,
                     capacity=self.capacity,
-                    capacity_policy='bounded-actor-bytes-v1'
+                    capacity_policy='bounded-actor-bytes-v2'
                     if self.capacity is None else 'explicit-record-count',
                     profile_argument_abi=1,
                     actors='native-async-matrix-footprint-else-first4',
@@ -165,10 +165,13 @@ class LateLLVMTransform:
             if capacity is None:
                 full = plan.get('requires_full_footprint')
                 if type(full) is not bool or plan.get(
-                        'capacity_policy') != 'bounded-actor-bytes-v1':
+                        'capacity_policy') != 'bounded-actor-bytes-v2':
                     raise LateCompileError(
                         'Native automatic record policy differs')
-                budget = 2 * 1024 * 1024 if full else 64 * 1024
+                budget = 8 * 1024 * 1024 - 128 if full else 64 * 1024
+                if plan.get('automatic_pair_budget_bytes') != budget:
+                    raise LateCompileError(
+                        'Native automatic raw byte budget differs')
                 words = budget // (2 * actors * 8)
                 if words < 10:
                     raise LateCompileError(
