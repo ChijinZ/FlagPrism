@@ -1,0 +1,25 @@
+docker exec chijin-study-pro6000 /workspace/venv/bin/python -I -c 'from pathlib import Path
+import json,hashlib,tarfile
+base=Path('"'"'/workspace/chijin-timeline-r059-nvidia'"'"');summary=[];members=set()
+for name in ['"'"'nvidia-0'"'"','"'"'nvidia-1'"'"','"'"'enflame'"'"','"'"'ascend'"'"']:
+ root=base/'"'"'runs'"'"'/(name+'"'"'-tp-cohort-v1'"'"');result=json.loads((root/'"'"'output/result.json'"'"').read_text());terminal=json.loads((root/'"'"'terminal.json'"'"').read_text())
+ if terminal['"'"'returncode'"'"']!=0 or result['"'"'passed'"'"']!=result['"'"'registered'"'"']:raise RuntimeError('"'"'Nonpassing cohort '"'"'+name)
+ for p in [root/'"'"'terminal.json'"'"',root/'"'"'launch.json'"'"',root/'"'"'output/result.json'"'"',root/'"'"'output/registered.json'"'"']:members.add(p)
+ for check in result['"'"'checks'"'"']:
+  p=Path(check['"'"'result_file'"'"']);data=p.read_bytes();digest=hashlib.sha256(data).hexdigest()
+  if check.get('"'"'result_sha256'"'"',digest)!=digest:raise RuntimeError('"'"'Receipt SHA differs'"'"')
+  d=json.loads(data)['"'"'checks'"'"'][check['"'"'result_row'"'"']]
+  if d['"'"'sha256'"'"']!=check['"'"'trace_sha256'"'"'] or d['"'"'importer_errors'"'"']:raise RuntimeError('"'"'Trace SHA/importer failure'"'"')
+  members.add(p)
+ summary.append(dict(cohort=name,terminal=terminal,**{k:v for k,v in result.items() if k not in ['"'"'checks'"'"','"'"'failed'"'"']}))
+for name in ['"'"'counter-normal'"'"','"'"'dependency-normal'"'"']:members.add(base/'"'"'runs/tools-smoke-v1/output'"'"'/(name+'"'"'.json'"'"'))
+for p in (base/'"'"'tools-smoke-input-v1/source'"'"').glob('"'"'*.py'"'"'):members.add(p)
+for p in base.glob('"'"'*-tp-cohort-input-v1/run.py'"'"'):members.add(p)
+output=base/'"'"'audit-receipts-v1'"'"';output.mkdir(exist_ok=True)
+inventory=[dict(file=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),bytes=p.stat().st_size) for p in sorted(members)]
+(output/'"'"'summary.json'"'"').write_text(json.dumps(dict(cohorts=summary,registered=sum(r['"'"'registered'"'"'] for r in summary),passed=sum(r['"'"'passed'"'"'] for r in summary),fresh_TP=sum(r['"'"'fresh_TP'"'"'] for r in summary),reused=sum(r['"'"'reused'"'"'] for r in summary),scope='"'"'Actual retained trace SQL import only; original capture qualification unchanged'"'"',files=inventory),indent=2))
+members.add(output/'"'"'summary.json'"'"');archive=output/'"'"'receipts.tgz'"'"'
+with tarfile.open(archive,'"'"'w:gz'"'"') as t:
+ for p in sorted(members):t.add(p,arcname=str(p.relative_to(base)),recursive=False)
+print(json.dumps(dict(archive=str(archive),sha256=hashlib.sha256(archive.read_bytes()).hexdigest(),bytes=archive.stat().st_size,files=len(members),registered=sum(r['"'"'registered'"'"'] for r in summary),passed=sum(r['"'"'passed'"'"'] for r in summary),fresh_TP=sum(r['"'"'fresh_TP'"'"'] for r in summary),reused=sum(r['"'"'reused'"'"'] for r in summary)),indent=2))
+'

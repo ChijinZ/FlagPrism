@@ -1,0 +1,1158 @@
+[
+  {
+    "file": "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/FlagTree/third_party/ascend/backend/npu_utils.cpp",
+    "sha256": "7a01c1ad2882b6b435d9e693e93298cffd290d5523f2c38d85596d1f07c380a5",
+    "lines": [
+      {
+        "line": 1,
+        "text": "/*"
+      },
+      {
+        "line": 2,
+        "text": " * Copyright (c) Huawei Technologies Co., Ltd. 2025. All rights reserved."
+      },
+      {
+        "line": 3,
+        "text": " *"
+      },
+      {
+        "line": 4,
+        "text": " * Permission is hereby granted, free of charge, to any person obtaining a copy"
+      },
+      {
+        "line": 5,
+        "text": " * of this software and associated documentation files (the \"Software\"), to deal"
+      },
+      {
+        "line": 6,
+        "text": " * in the Software without restriction, including without limitation the rights"
+      },
+      {
+        "line": 7,
+        "text": " * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell"
+      },
+      {
+        "line": 8,
+        "text": " * copies of the Software, and to permit persons to whom the Software is"
+      },
+      {
+        "line": 9,
+        "text": " * furnished to do so, subject to the following conditions:"
+      },
+      {
+        "line": 10,
+        "text": " *"
+      },
+      {
+        "line": 11,
+        "text": " * The above copyright notice and this permission notice shall be included in"
+      },
+      {
+        "line": 12,
+        "text": " * all copies or substantial portions of the Software."
+      },
+      {
+        "line": 13,
+        "text": " *"
+      },
+      {
+        "line": 14,
+        "text": " * THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR"
+      },
+      {
+        "line": 15,
+        "text": " * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,"
+      },
+      {
+        "line": 16,
+        "text": " * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE"
+      },
+      {
+        "line": 17,
+        "text": " * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER"
+      },
+      {
+        "line": 18,
+        "text": " * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,"
+      },
+      {
+        "line": 19,
+        "text": " * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN"
+      },
+      {
+        "line": 20,
+        "text": " * THE SOFTWARE."
+      },
+      {
+        "line": 21,
+        "text": " */"
+      },
+      {
+        "line": 22,
+        "text": ""
+      },
+      {
+        "line": 23,
+        "text": "#define PY_SSIZE_T_CLEAN"
+      },
+      {
+        "line": 24,
+        "text": "#include <Python.h>"
+      },
+      {
+        "line": 25,
+        "text": ""
+      },
+      {
+        "line": 26,
+        "text": "#include <algorithm>"
+      },
+      {
+        "line": 27,
+        "text": "#include <fstream>"
+      },
+      {
+        "line": 28,
+        "text": "#include <memory>"
+      },
+      {
+        "line": 29,
+        "text": "#include <string>"
+      },
+      {
+        "line": 30,
+        "text": "#include <tuple>"
+      },
+      {
+        "line": 31,
+        "text": "#include <unordered_map>"
+      },
+      {
+        "line": 32,
+        "text": "#include <vector>"
+      },
+      {
+        "line": 33,
+        "text": ""
+      },
+      {
+        "line": 34,
+        "text": "#include \"runtime/runtime/rt.h\""
+      },
+      {
+        "line": 35,
+        "text": ""
+      },
+      {
+        "line": 36,
+        "text": "// Use map to differentiate same name functions from different binary"
+      },
+      {
+        "line": 37,
+        "text": "static std::unordered_map<std::string, size_t> registered_names;"
+      },
+      {
+        "line": 38,
+        "text": "static std::unordered_map<std::string, std::unique_ptr<size_t>> func_stubs;"
+      },
+      {
+        "line": 39,
+        "text": ""
+      },
+      {
+        "line": 40,
+        "text": "static std::tuple<void *, void *> registerKernel(const char *name,"
+      },
+      {
+        "line": 41,
+        "text": "                                                 const void *data,"
+      },
+      {
+        "line": 42,
+        "text": "                                                 size_t data_size, int device,"
+      },
+      {
+        "line": 43,
+        "text": "                                                 const char *kernel_mode_str) {"
+      },
+      {
+        "line": 44,
+        "text": "  rtError_t rtRet;"
+      },
+      {
+        "line": 45,
+        "text": ""
+      },
+      {
+        "line": 46,
+        "text": "  rtDevBinary_t devbin;"
+      },
+      {
+        "line": 47,
+        "text": "  devbin.data = data;"
+      },
+      {
+        "line": 48,
+        "text": "  devbin.length = data_size;"
+      },
+      {
+        "line": 49,
+        "text": "  const std::string kernel_mode{kernel_mode_str};"
+      },
+      {
+        "line": 50,
+        "text": "  if (kernel_mode == \"aiv\")"
+      },
+      {
+        "line": 51,
+        "text": "    devbin.magic = RT_DEV_BINARY_MAGIC_ELF_AIVEC;"
+      },
+      {
+        "line": 52,
+        "text": "  else"
+      },
+      {
+        "line": 53,
+        "text": "    devbin.magic = RT_DEV_BINARY_MAGIC_ELF;"
+      },
+      {
+        "line": 54,
+        "text": "  devbin.version = 0;"
+      },
+      {
+        "line": 55,
+        "text": ""
+      },
+      {
+        "line": 56,
+        "text": "  rtRet = rtSetDevice(device);"
+      },
+      {
+        "line": 57,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 58,
+        "text": "    printf(\"rtSetDevice failed, 0x%x\\n\", rtRet);"
+      },
+      {
+        "line": 59,
+        "text": "    return {nullptr, nullptr};"
+      },
+      {
+        "line": 60,
+        "text": "  }"
+      },
+      {
+        "line": 61,
+        "text": ""
+      },
+      {
+        "line": 62,
+        "text": "  void *devbinHandle = nullptr;"
+      },
+      {
+        "line": 63,
+        "text": "  rtRet = rtDevBinaryRegister(&devbin, &devbinHandle);"
+      },
+      {
+        "line": 64,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 65,
+        "text": "    printf(\"rtDevBinaryRegister failed, 0x%x\\n\", rtRet);"
+      },
+      {
+        "line": 66,
+        "text": "    return {nullptr, nullptr};"
+      },
+      {
+        "line": 67,
+        "text": "  }"
+      },
+      {
+        "line": 68,
+        "text": ""
+      },
+      {
+        "line": 69,
+        "text": "  std::string stubName = name;"
+      },
+      {
+        "line": 70,
+        "text": "  stubName += \"_\" + std::to_string(registered_names[name]);"
+      },
+      {
+        "line": 71,
+        "text": "  registered_names[name]++;"
+      },
+      {
+        "line": 72,
+        "text": "  auto registered = func_stubs.emplace(stubName, std::make_unique<size_t>(0));"
+      },
+      {
+        "line": 73,
+        "text": "  void *func_stub_handle = registered.first->second.get();"
+      },
+      {
+        "line": 74,
+        "text": "  rtRet = rtFunctionRegister(devbinHandle, func_stub_handle, stubName.c_str(),"
+      },
+      {
+        "line": 75,
+        "text": "                             (void *)name, 0);"
+      },
+      {
+        "line": 76,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 77,
+        "text": "    printf(\"rtFunctionRegister failed(stubName = %s), 0x%x\\n\", stubName.c_str(),"
+      },
+      {
+        "line": 78,
+        "text": "           rtRet);"
+      },
+      {
+        "line": 79,
+        "text": "    return {nullptr, nullptr};"
+      },
+      {
+        "line": 80,
+        "text": "  }"
+      },
+      {
+        "line": 81,
+        "text": ""
+      },
+      {
+        "line": 82,
+        "text": "  return std::make_tuple(devbinHandle, func_stub_handle);"
+      },
+      {
+        "line": 83,
+        "text": "}"
+      },
+      {
+        "line": 84,
+        "text": ""
+      },
+      {
+        "line": 85,
+        "text": "static PyObject *loadKernelBinary(PyObject *self, PyObject *args) {"
+      },
+      {
+        "line": 86,
+        "text": "  const char *name;        // kernel name"
+      },
+      {
+        "line": 87,
+        "text": "  const char *data;        // binary pointer"
+      },
+      {
+        "line": 88,
+        "text": "  Py_ssize_t data_size;    // binary size"
+      },
+      {
+        "line": 89,
+        "text": "  int shared;              // shared_memory(meaningless now)"
+      },
+      {
+        "line": 90,
+        "text": "  int device;              // device ID"
+      },
+      {
+        "line": 91,
+        "text": "  const char *kernel_mode; // kernel mode"
+      },
+      {
+        "line": 92,
+        "text": "  int32_t n_max_threads = 0;"
+      },
+      {
+        "line": 93,
+        "text": ""
+      },
+      {
+        "line": 94,
+        "text": "  if (!PyArg_ParseTuple(args, \"ss#iis\", &name, &data, &data_size, &shared,"
+      },
+      {
+        "line": 95,
+        "text": "                        &device, &kernel_mode)) {"
+      },
+      {
+        "line": 96,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 97,
+        "text": "  }"
+      },
+      {
+        "line": 98,
+        "text": ""
+      },
+      {
+        "line": 99,
+        "text": "  auto [module_handle, func_handle] ="
+      },
+      {
+        "line": 100,
+        "text": "      registerKernel(name, data, data_size, device, kernel_mode);"
+      },
+      {
+        "line": 101,
+        "text": ""
+      },
+      {
+        "line": 102,
+        "text": "  uint64_t mod = reinterpret_cast<uint64_t>(module_handle);"
+      },
+      {
+        "line": 103,
+        "text": "  uint64_t func = reinterpret_cast<uint64_t>(func_handle);"
+      },
+      {
+        "line": 104,
+        "text": "  if (PyErr_Occurred()) {"
+      },
+      {
+        "line": 105,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 106,
+        "text": "  }"
+      },
+      {
+        "line": 107,
+        "text": ""
+      },
+      {
+        "line": 108,
+        "text": "  return Py_BuildValue(\"(KKiii)\", mod, func, 0, 0, n_max_threads);"
+      },
+      {
+        "line": 109,
+        "text": "}"
+      },
+      {
+        "line": 110,
+        "text": ""
+      },
+      {
+        "line": 111,
+        "text": "static PyObject *getArch(PyObject *self, PyObject *args) {"
+      },
+      {
+        "line": 112,
+        "text": "  char name[64] = {'\\0'};"
+      },
+      {
+        "line": 113,
+        "text": ""
+      },
+      {
+        "line": 114,
+        "text": "  rtError_t rtRet = rtGetSocVersion(name, 64);"
+      },
+      {
+        "line": 115,
+        "text": ""
+      },
+      {
+        "line": 116,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 117,
+        "text": "    printf(\"rtGetSocVersion failed, 0x%x\", rtRet);"
+      },
+      {
+        "line": 118,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 119,
+        "text": "  }"
+      },
+      {
+        "line": 120,
+        "text": "  if (PyErr_Occurred()) {"
+      },
+      {
+        "line": 121,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 122,
+        "text": "  }"
+      },
+      {
+        "line": 123,
+        "text": "  return Py_BuildValue(\"s\", name);"
+      },
+      {
+        "line": 124,
+        "text": "}"
+      },
+      {
+        "line": 125,
+        "text": ""
+      },
+      {
+        "line": 126,
+        "text": "static PyObject *getAiCoreNum(PyObject *self, PyObject *args) {"
+      },
+      {
+        "line": 127,
+        "text": "  uint32_t aiCoreCnt;"
+      },
+      {
+        "line": 128,
+        "text": ""
+      },
+      {
+        "line": 129,
+        "text": "  rtError_t rtRet = rtGetAiCoreCount(&aiCoreCnt);"
+      },
+      {
+        "line": 130,
+        "text": ""
+      },
+      {
+        "line": 131,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 132,
+        "text": "    printf(\"rtGetAiCoreCount failed, 0x%x\", rtRet);"
+      },
+      {
+        "line": 133,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 134,
+        "text": "  }"
+      },
+      {
+        "line": 135,
+        "text": "  if (PyErr_Occurred()) {"
+      },
+      {
+        "line": 136,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 137,
+        "text": "  }"
+      },
+      {
+        "line": 138,
+        "text": "  return Py_BuildValue(\"I\", aiCoreCnt);"
+      },
+      {
+        "line": 139,
+        "text": "}"
+      },
+      {
+        "line": 140,
+        "text": ""
+      },
+      {
+        "line": 141,
+        "text": "static PyObject *createStream(PyObject *self, PyObject *args) {"
+      },
+      {
+        "line": 142,
+        "text": "  rtStream_t stream;"
+      },
+      {
+        "line": 143,
+        "text": ""
+      },
+      {
+        "line": 144,
+        "text": "  rtError_t rtRet = rtStreamCreate(&stream, 0);"
+      },
+      {
+        "line": 145,
+        "text": ""
+      },
+      {
+        "line": 146,
+        "text": "  if (rtRet != RT_ERROR_NONE) {"
+      },
+      {
+        "line": 147,
+        "text": "    printf(\"rtStreamCreate failed, 0x%x\", rtRet);"
+      },
+      {
+        "line": 148,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 149,
+        "text": "  }"
+      },
+      {
+        "line": 150,
+        "text": "  if (PyErr_Occurred()) {"
+      },
+      {
+        "line": 151,
+        "text": "    return nullptr;"
+      },
+      {
+        "line": 152,
+        "text": "  }"
+      },
+      {
+        "line": 153,
+        "text": "  uint64_t stream_uint64 = reinterpret_cast<uint64_t>(stream);"
+      },
+      {
+        "line": 154,
+        "text": "  PyObject *result = Py_BuildValue(\"K\", stream_uint64);"
+      },
+      {
+        "line": 155,
+        "text": ""
+      }
+    ]
+  },
+  {
+    "file": "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/FlagTree/third_party/ascend/backend/utils.py",
+    "sha256": "fca32bdb878c54015479c89298d97c4e69791bfbab15d65f7063c271990dfc9c",
+    "lines": [
+      {
+        "line": 465,
+        "text": "        \"-lascendcl\","
+      },
+      {
+        "line": 466,
+        "text": "    ]"
+      },
+      {
+        "line": 467,
+        "text": "    # FIXME: check why this condition works wrong in parall scene"
+      },
+      {
+        "line": 468,
+        "text": "    if kernel_launcher == \"torch\":"
+      },
+      {
+        "line": 469,
+        "text": "        cc_cmd += get_backend_func(\"get_cc_cmd\", build_pch=False)"
+      },
+      {
+        "line": 470,
+        "text": ""
+      },
+      {
+        "line": 471,
+        "text": "    cc_cmd += [\"-std=c++17\", \"-shared\", \"-fPIC\", \"-Winvalid-pch\", \"-o\", so_path]"
+      },
+      {
+        "line": 472,
+        "text": ""
+      },
+      {
+        "line": 473,
+        "text": "    result = subprocess.run(cc_cmd, capture_output=True, text=True)"
+      },
+      {
+        "line": 474,
+        "text": ""
+      },
+      {
+        "line": 475,
+        "text": "    if result.returncode == 0:"
+      },
+      {
+        "line": 476,
+        "text": "        return so_path"
+      },
+      {
+        "line": 477,
+        "text": "    else:"
+      },
+      {
+        "line": 478,
+        "text": "        if \"precompiled.h.gch\" in result.stderr:"
+      },
+      {
+        "line": 479,
+        "text": "            # only for clang++, when precompile invalid, fallback to normal compile"
+      },
+      {
+        "line": 480,
+        "text": "            return _build_npu_ext(obj_name, header_path, src_path, precompile=False)"
+      },
+      {
+        "line": 481,
+        "text": "        else:"
+      },
+      {
+        "line": 482,
+        "text": "            raise RuntimeError(f\"Failed to compile {src_path}, error: {result.stderr},cmd={cc_cmd}\")"
+      },
+      {
+        "line": 483,
+        "text": ""
+      },
+      {
+        "line": 484,
+        "text": ""
+      },
+      {
+        "line": 485,
+        "text": "def _get_kernel_target(metadata: dict):"
+      },
+      {
+        "line": 486,
+        "text": "    if \"target\" not in metadata:"
+      },
+      {
+        "line": 487,
+        "text": "        raise Exception(\"No target provided!\")"
+      },
+      {
+        "line": 488,
+        "text": "    sub_target = metadata[\"target\"].arch"
+      },
+      {
+        "line": 489,
+        "text": "    assert isinstance(sub_target, str)"
+      },
+      {
+        "line": 490,
+        "text": "    if sub_target.startswith(\"Ascend910B\"):"
+      },
+      {
+        "line": 491,
+        "text": "        mix_mode = metadata[\"mix_mode\"]"
+      },
+      {
+        "line": 492,
+        "text": "        if mix_mode.lower().strip(\"_\").startswith(\"aiv\"):"
+      },
+      {
+        "line": 493,
+        "text": "            return \"ascend_910b_vec\", \"c220-vec\", \"aiv\""
+      },
+      {
+        "line": 494,
+        "text": "        elif mix_mode.lower().strip(\"_\").startswith(\"aic\"):"
+      },
+      {
+        "line": 495,
+        "text": "            return \"ascend_910b_cube\", \"c220-cube\", \"aic\""
+      },
+      {
+        "line": 496,
+        "text": "        else:"
+      },
+      {
+        "line": 497,
+        "text": "            return \"ascend_910b\", \"c220\", \"mix\""
+      },
+      {
+        "line": 498,
+        "text": "    elif sub_target.startswith(\"Ascend910\"):"
+      },
+      {
+        "line": 499,
+        "text": "        return \"ascend_910\", \"c100\", \"mix\""
+      },
+      {
+        "line": 500,
+        "text": "    else:"
+      },
+      {
+        "line": 501,
+        "text": "        raise NotImplementedError(f\"NPU subtarget {sub_target} not supported yet\")"
+      },
+      {
+        "line": 502,
+        "text": ""
+      },
+      {
+        "line": 503,
+        "text": ""
+      },
+      {
+        "line": 504,
+        "text": "def _check_cxx11_abi():"
+      },
+      {
+        "line": 505,
+        "text": "    return get_backend_func(\"cxx_abi\")"
+      },
+      {
+        "line": 506,
+        "text": ""
+      },
+      {
+        "line": 507,
+        "text": ""
+      },
+      {
+        "line": 508,
+        "text": "def convert_sigtype_to_int(sigty: str):"
+      },
+      {
+        "line": 509,
+        "text": "    MAP_SIGTYPE_TO_INT = {"
+      },
+      {
+        "line": 510,
+        "text": "        # Boolean"
+      },
+      {
+        "line": 511,
+        "text": "        \"i1\": 12,  # BOOL"
+      },
+      {
+        "line": 512,
+        "text": "        # Integer types"
+      }
+    ]
+  },
+  {
+    "file": "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/FlagTree/third_party/ascend/backend/driver.py",
+    "sha256": "07ece28ddf331e61c3dc16018db104b0bc50c96621d2feefdd3419d6a8075859",
+    "lines": [
+      {
+        "line": 140,
+        "text": "        self.enable_msprof_register_tensor = os.getenv(\"TRITON_REGISTER_TENSOR_MSPROF\","
+      },
+      {
+        "line": 141,
+        "text": "                                                       'false').lower() in ('true', '1')"
+      },
+      {
+        "line": 142,
+        "text": "        debug_mode = metadata.debug"
+      },
+      {
+        "line": 143,
+        "text": "        header_src = generate_npu_header_src()"
+      },
+      {
+        "line": 144,
+        "text": "        constants = src.constants if hasattr(src, \"constants\") else dict()"
+      },
+      {
+        "line": 145,
+        "text": "        cst_key = lambda i: src.fn.arg_names.index(i) if isinstance(i, str) else i"
+      },
+      {
+        "line": 146,
+        "text": "        constants = {cst_key(key): value for key, value in constants.items()}"
+      },
+      {
+        "line": 147,
+        "text": "        signature = {cst_key(key): value for key, value in src.signature.items()}"
+      },
+      {
+        "line": 148,
+        "text": "        wrapper_src = make_launcher(constants, signature, metadata)"
+      },
+      {
+        "line": 149,
+        "text": "        so_launcher_path = make_npu_launcher_stub(header_src, wrapper_src, metadata.debug)"
+      },
+      {
+        "line": 150,
+        "text": "        self.metadata = metadata  # FlagPrism"
+      },
+      {
+        "line": 151,
+        "text": "        # setup for remote run"
+      },
+      {
+        "line": 152,
+        "text": "        # TODO: use a var to pack all vars required to run on a remote machine"
+      },
+      {
+        "line": 153,
+        "text": "        self.mix_mode = metadata.mix_mode"
+      },
+      {
+        "line": 154,
+        "text": "        self.shared = metadata.shared"
+      },
+      {
+        "line": 155,
+        "text": "        # initialize launcher"
+      },
+      {
+        "line": 156,
+        "text": "        import importlib.util"
+      },
+      {
+        "line": 157,
+        "text": "        spec = importlib.util.spec_from_file_location(\"__triton_launcher\", so_launcher_path)"
+      },
+      {
+        "line": 158,
+        "text": "        mod = importlib.util.module_from_spec(spec)"
+      },
+      {
+        "line": 159,
+        "text": "        spec.loader.exec_module(mod)"
+      },
+      {
+        "line": 160,
+        "text": "        self.launch = getattr(mod, \"launch\")"
+      },
+      {
+        "line": 161,
+        "text": ""
+      },
+      {
+        "line": 162,
+        "text": "    def __call__(self, *args, **kwargs):"
+      },
+      {
+        "line": 163,
+        "text": "        if self.compile_only:"
+      },
+      {
+        "line": 164,
+        "text": "            cache_manager = get_cache_manager(args[5]['hash'])"
+      },
+      {
+        "line": 165,
+        "text": "            print(\"[INFO]: skip running kernel\")"
+      },
+      {
+        "line": 166,
+        "text": "            print(f\"[INFO]: The compiled kernel cache is in {cache_manager.cache_dir}\")"
+      },
+      {
+        "line": 167,
+        "text": "        if self.enable_msprof_register_tensor:"
+      },
+      {
+        "line": 168,
+        "text": "            tensor_params_shape = get_backend_func(\"get_tensor_params_shape\", *args)"
+      },
+      {
+        "line": 169,
+        "text": "            # args[5] must be the packed metadata."
+      },
+      {
+        "line": 170,
+        "text": "            # Check the launch wrapper in which PyArg_ParseTuple specifies the ordering of args"
+      },
+      {
+        "line": 171,
+        "text": "            args[5]['tensor_params_shape'] = tensor_params_shape"
+      },
+      {
+        "line": 172,
+        "text": "        else:"
+      },
+      {
+        "line": 173,
+        "text": "            if self.compile_only:"
+      },
+      {
+        "line": 174,
+        "text": "                return"
+      },
+      {
+        "line": 175,
+        "text": "            debug_enabled = bool(getattr(self.metadata, \"debug_enabled\", False))"
+      },
+      {
+        "line": 176,
+        "text": "            if debug_enabled:"
+      },
+      {
+        "line": 177,
+        "text": "                # FlagPrism: use the backend-neutral launch gateway; this"
+      },
+      {
+        "line": 178,
+        "text": "                # backend only supplies its name and launch state."
+      },
+      {
+        "line": 179,
+        "text": "                with _flagprism.debugger_launch_context("
+      },
+      {
+        "line": 180,
+        "text": "                        \"ascend\","
+      }
+    ]
+  },
+  {
+    "file": "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/FlagTree/third_party/ascend/backend/compiler.py",
+    "sha256": "d22abf839c0b0d863fc9d476f7860cdb265d45a0aded43df8017e87db5ec1bc1",
+    "lines": [
+      {
+        "line": 568,
+        "text": "            try:"
+      },
+      {
+        "line": 569,
+        "text": "                ret = subprocess.run(driver_event.command, env=driver_event.environment, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)"
+      },
+      {
+        "line": 570,
+        "text": "            except subprocess.CalledProcessError as error:"
+      },
+      {
+        "line": 571,
+        "text": "                _flagprism.finish_compiler_driver(driver_event, returncode=error.returncode)"
+      },
+      {
+        "line": 572,
+        "text": "                raise"
+      },
+      {
+        "line": 573,
+        "text": "            _flagprism.finish_compiler_driver(driver_event, returncode=ret.returncode)"
+      },
+      {
+        "line": 574,
+        "text": "        except subprocess.CalledProcessError as e:"
+      },
+      {
+        "line": 575,
+        "text": "            if opt.debug:"
+      },
+      {
+        "line": 576,
+        "text": "                _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata[\"hash\"])"
+      },
+      {
+        "line": 577,
+        "text": "            raise"
+      },
+      {
+        "line": 578,
+        "text": ""
+      },
+      {
+        "line": 579,
+        "text": "        if opt.debug:"
+      },
+      {
+        "line": 580,
+        "text": "            _save_npuir_debug_output(ret.stdout, ret.stderr, tmpdir, metadata[\"hash\"])"
+      },
+      {
+        "line": 581,
+        "text": ""
+      },
+      {
+        "line": 582,
+        "text": "        stdout_str = ret.stdout.decode('utf-8') if ret.stdout else ''"
+      },
+      {
+        "line": 583,
+        "text": "        match = re.search(r'UB\\s+size\\s*=\\s*(\\d+)\\s*bits', stdout_str)"
+      },
+      {
+        "line": 584,
+        "text": "        if match:"
+      },
+      {
+        "line": 585,
+        "text": "            # get the ub bits of triton kernel from bisheng for inductor autotune using"
+      },
+      {
+        "line": 586,
+        "text": "            metadata[\"required_ub_bits\"] = int(match.group(1))"
+      },
+      {
+        "line": 587,
+        "text": ""
+      },
+      {
+        "line": 588,
+        "text": "        if not Path(bin_path).exists():"
+      },
+      {
+        "line": 589,
+        "text": "            error_msg = ret.stderr.decode('utf-8') if ret.stderr else ''"
+      },
+      {
+        "line": 590,
+        "text": "            print(f\"[DEBUG] {bin_path} is not found\")"
+      },
+      {
+        "line": 591,
+        "text": "            print(f\"[DEBUG] Stderr:\\n{error_msg}\")"
+      },
+      {
+        "line": 592,
+        "text": "            raise subprocess.CalledProcessError(ret.returncode, cmd_list, ret.stdout, ret.stderr)"
+      },
+      {
+        "line": 593,
+        "text": ""
+      },
+      {
+        "line": 594,
+        "text": "        if Path(callback_path).is_file():"
+      },
+      {
+        "line": 595,
+        "text": "            lib = ctypes.CDLL(callback_path)"
+      },
+      {
+        "line": 596,
+        "text": "            __get_metadata_attr_by_callback(lib, \"_infer_task_type_function\", metadata, \"bs_task_type\")"
+      },
+      {
+        "line": 597,
+        "text": "            __get_metadata_attr_by_callback(lib, \"_infer_workspace_shape_function\", metadata, \"workspace_size\")"
+      },
+      {
+        "line": 598,
+        "text": "            __get_metadata_attr_by_callback(lib, \"_infer_sync_block_lock_num_function\", metadata, \"lock_num\")"
+      },
+      {
+        "line": 599,
+        "text": "            __get_metadata_attr_by_callback(lib, \"_infer_sync_block_lock_init_function\", metadata, \"lock_init_val\")"
+      },
+      {
+        "line": 600,
+        "text": ""
+      },
+      {
+        "line": 601,
+        "text": "        return Path(bin_path).read_bytes()"
+      },
+      {
+        "line": 602,
+        "text": ""
+      },
+      {
+        "line": 603,
+        "text": ""
+      },
+      {
+        "line": 604,
+        "text": "def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):"
+      },
+      {
+        "line": 605,
+        "text": "    linalg, metadata = _parse_linalg_metadata(linalg, metadata)"
+      },
+      {
+        "line": 606,
+        "text": "    with tempfile.TemporaryDirectory() as tmpdir:"
+      }
+    ]
+  }
+]

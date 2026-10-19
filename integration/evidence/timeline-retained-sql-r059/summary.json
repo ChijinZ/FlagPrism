@@ -1,0 +1,237 @@
+{
+  "registered": 1740,
+  "passed": 1740,
+  "fresh_TP": 1735,
+  "reused": 5,
+  "counts": [
+    {
+      "backend": "nvidia",
+      "kind": "counter",
+      "count": 944
+    },
+    {
+      "backend": "enflame",
+      "kind": "counter",
+      "count": 218
+    },
+    {
+      "backend": "enflame",
+      "kind": "dependency",
+      "count": 194
+    },
+    {
+      "backend": "ascend",
+      "kind": "counter",
+      "count": 336
+    },
+    {
+      "backend": "ascend",
+      "kind": "dependency",
+      "count": 48
+    }
+  ],
+  "cohorts": [
+    {
+      "cohort": "nvidia-0",
+      "terminal": {
+        "controller": {
+          "pid": 115259,
+          "ppid": 1,
+          "pgid": 115259,
+          "startticks": 28704430
+        },
+        "worker": {
+          "pid": 115261,
+          "ppid": 115259,
+          "pgid": 115261,
+          "startticks": 28704433
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/nvidia-0-tp-cohort-input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r059-nvidia/runs/nvidia-0-tp-cohort-v1/output"
+        ],
+        "argv_sha256": "9d8490df64d096a626c261ee1b04d82d7266ad70fd46bb49a652d46ea50fa93e",
+        "script_sha256": "c4ef5d575beee3c5c24e0efe1c4f7276688bf6535f71eac9314349cc772f8cb7",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 141468156198
+      },
+      "status": "actual_TP_cohort_passed",
+      "backend": "nvidia",
+      "part": 0,
+      "registered": 472,
+      "passed": 472,
+      "fresh_TP": 471,
+      "reused": 1,
+      "elapsed_s": 141.37920049601234,
+      "application_replayed": false,
+      "device_executed": false,
+      "source_sha256": {
+        "verify_dependency_traces.py": "0d72cf3a882ea4b9d3bd1fe6c7172066fa486f708db8d2787ae47aef15147e03",
+        "verify_perfetto_traces.py": "75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618"
+      },
+      "limits": "historical retained views only; not current mechanism/default completeness/source-boundary/UI qualification"
+    },
+    {
+      "cohort": "nvidia-1",
+      "terminal": {
+        "controller": {
+          "pid": 117075,
+          "ppid": 1,
+          "pgid": 117075,
+          "startticks": 28727282
+        },
+        "worker": {
+          "pid": 117077,
+          "ppid": 117075,
+          "pgid": 117077,
+          "startticks": 28727285
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/nvidia-1-tp-cohort-input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r059-nvidia/runs/nvidia-1-tp-cohort-v1/output"
+        ],
+        "argv_sha256": "52f596358b60c084b8cd385360cec1ab2fabd3df4e5f29dfda664b1a67a7f318",
+        "script_sha256": "c4ef5d575beee3c5c24e0efe1c4f7276688bf6535f71eac9314349cc772f8cb7",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 144326061808
+      },
+      "status": "actual_TP_cohort_passed",
+      "backend": "nvidia",
+      "part": 1,
+      "registered": 472,
+      "passed": 472,
+      "fresh_TP": 472,
+      "reused": 0,
+      "elapsed_s": 144.19384499598527,
+      "application_replayed": false,
+      "device_executed": false,
+      "source_sha256": {
+        "verify_dependency_traces.py": "0d72cf3a882ea4b9d3bd1fe6c7172066fa486f708db8d2787ae47aef15147e03",
+        "verify_perfetto_traces.py": "75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618"
+      },
+      "limits": "historical retained views only; not current mechanism/default completeness/source-boundary/UI qualification"
+    },
+    {
+      "cohort": "enflame",
+      "terminal": {
+        "controller": {
+          "pid": 115258,
+          "ppid": 1,
+          "pgid": 115258,
+          "startticks": 28704428
+        },
+        "worker": {
+          "pid": 115260,
+          "ppid": 115258,
+          "pgid": 115260,
+          "startticks": 28704431
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/enflame-tp-cohort-input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r059-nvidia/runs/enflame-tp-cohort-v1/output"
+        ],
+        "argv_sha256": "9ce1c783661e90fcf4d707b453a560ef0f11cf088815856327438b2157a8773f",
+        "script_sha256": "c4ef5d575beee3c5c24e0efe1c4f7276688bf6535f71eac9314349cc772f8cb7",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 123337351358
+      },
+      "status": "actual_TP_cohort_passed",
+      "backend": "enflame",
+      "part": null,
+      "registered": 412,
+      "passed": 412,
+      "fresh_TP": 410,
+      "reused": 2,
+      "elapsed_s": 123.22309562301962,
+      "application_replayed": false,
+      "device_executed": false,
+      "source_sha256": {
+        "verify_dependency_traces.py": "0d72cf3a882ea4b9d3bd1fe6c7172066fa486f708db8d2787ae47aef15147e03",
+        "verify_perfetto_traces.py": "75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618"
+      },
+      "limits": "historical retained views only; not current mechanism/default completeness/source-boundary/UI qualification"
+    },
+    {
+      "cohort": "ascend",
+      "terminal": {
+        "controller": {
+          "pid": 117074,
+          "ppid": 1,
+          "pgid": 117074,
+          "startticks": 28727282
+        },
+        "worker": {
+          "pid": 117076,
+          "ppid": 117074,
+          "pgid": 117076,
+          "startticks": 28727285
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/ascend-tp-cohort-input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r059-nvidia/runs/ascend-tp-cohort-v1/output"
+        ],
+        "argv_sha256": "33fa29ca7769c1a4003f67145e65c19705a2b1ec2f2f7a575e0767bc33e7d685",
+        "script_sha256": "c4ef5d575beee3c5c24e0efe1c4f7276688bf6535f71eac9314349cc772f8cb7",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 113812086505
+      },
+      "status": "actual_TP_cohort_passed",
+      "backend": "ascend",
+      "part": null,
+      "registered": 384,
+      "passed": 384,
+      "fresh_TP": 382,
+      "reused": 2,
+      "elapsed_s": 113.70449590595672,
+      "application_replayed": false,
+      "device_executed": false,
+      "source_sha256": {
+        "verify_dependency_traces.py": "0d72cf3a882ea4b9d3bd1fe6c7172066fa486f708db8d2787ae47aef15147e03",
+        "verify_perfetto_traces.py": "75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618"
+      },
+      "limits": "historical retained views only; not current mechanism/default completeness/source-boundary/UI qualification"
+    }
+  ],
+  "archive": {
+    "archive": "/workspace/chijin-timeline-r059-nvidia/audit-receipts-v1/receipts.tgz",
+    "sha256": "d52653b3ab7c4183fd0875fab4a2ad97a3aebc5281e4adeff3da9db3cb9efe51",
+    "bytes": 6852305,
+    "files": 1762,
+    "registered": 1740,
+    "passed": 1740,
+    "fresh_TP": 1735,
+    "reused": 5
+  },
+  "index_sha256": "921cd412a8cc4160955b1764a1afe9b95c5d2ca6906991f9a8770b8a8ca6d6a8",
+  "runtime_freeze": "46c23c65fced45e7afb22412a08953a40fc71fe2",
+  "verifier_commit": "27abfe9",
+  "limits": "Historical retained views only; original collection failures and completeness remain unchanged; not a new current-provider, source-boundary, schedule or UI certificate."
+}

@@ -1,0 +1,401 @@
+{
+  "scope": "retained coordinate SSA only, no device/compiler execution; no completeness promotion",
+  "cases": [
+    {
+      "case": "q01-s0-c0-cold",
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "batch_complete": false,
+      "observers": [
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 0
+          },
+          "attempted_records": 36,
+          "committed_records": 36,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": null,
+          "attempted_records": 0,
+          "committed_records": 0,
+          "complete": false
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            6,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 6
+          },
+          "attempted_records": 48,
+          "committed_records": 48,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            6,
+            0,
+            0
+          ],
+          "physical_identity": null,
+          "attempted_records": 0,
+          "committed_records": 0,
+          "complete": false
+        }
+      ],
+      "actors": [
+        {
+          "actor_kind": "AIV",
+          "admissible_slots": [
+            1,
+            2
+          ],
+          "anchor_count": 8,
+          "unique_coordinate_bases": [
+            {
+              "operands": [
+                "%23",
+                "%24",
+                "%25",
+                "%26",
+                "%27",
+                "%28"
+              ],
+              "coordinate_definitions": [
+                "%26 = sext i32 %9 to i64, !dbg !50",
+                "%23 = sext i32 %22 to i64, !dbg !50",
+                "%22 = srem i32 %21, %9, !dbg !51",
+                "%21 = sdiv i32 %16, %20, !dbg !51",
+                "%20 = mul i32 %11, %10, !dbg !51",
+                "%16 = trunc i64 %15 to i32, !dbg !51",
+                "%15 = call i64 @llvm.hivm.GET.BLOCK.IDX(), !dbg !51",
+                "%24 = sext i32 %19 to i64, !dbg !50",
+                "%19 = srem i32 %18, %10, !dbg !51",
+                "%18 = sdiv i32 %16, %11, !dbg !51",
+                "%27 = sext i32 %10 to i64, !dbg !50",
+                "%25 = sext i32 %17 to i64, !dbg !50",
+                "%17 = srem i32 %16, %11, !dbg !51",
+                "%28 = sext i32 %11 to i64, !dbg !50"
+              ],
+              "truncated": false
+            }
+          ],
+          "original_ir_sha256": "d7d7310a9725940fb2b2e8de320c1593f1aba522fcfd2436f6b503a98eed4876",
+          "definition_scope": "exact_manifest_entry_function"
+        }
+      ]
+    },
+    {
+      "case": "q03-s0-c0-cold",
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "batch_complete": false,
+      "observers": [
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 0
+          },
+          "attempted_records": 44,
+          "committed_records": 44,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": null,
+          "attempted_records": 0,
+          "committed_records": 0,
+          "complete": false
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            16,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 16
+          },
+          "attempted_records": 44,
+          "committed_records": 44,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            16,
+            0,
+            0
+          ],
+          "physical_identity": null,
+          "attempted_records": 0,
+          "committed_records": 0,
+          "complete": false
+        }
+      ],
+      "actors": [
+        {
+          "actor_kind": "AIV",
+          "admissible_slots": [
+            1,
+            2
+          ],
+          "anchor_count": 8,
+          "unique_coordinate_bases": [
+            {
+              "operands": [
+                "%22",
+                "%23",
+                "%24",
+                "%25",
+                "%26",
+                "%27"
+              ],
+              "coordinate_definitions": [
+                "%26 = sext i32 %9 to i64, !dbg !32",
+                "%23 = sext i32 %18 to i64, !dbg !32",
+                "%18 = srem i32 %17, %9, !dbg !33",
+                "%17 = sdiv i32 %15, %10, !dbg !33",
+                "%15 = trunc i64 %14 to i32, !dbg !33",
+                "%14 = call i64 @llvm.hivm.GET.BLOCK.IDX(), !dbg !33",
+                "%25 = sext i32 %8 to i64, !dbg !32",
+                "%27 = sext i32 %10 to i64, !dbg !32",
+                "%24 = sext i32 %16 to i64, !dbg !32",
+                "%16 = srem i32 %15, %10, !dbg !33",
+                "%22 = sext i32 %21 to i64, !dbg !32",
+                "%21 = srem i32 %20, %8, !dbg !33",
+                "%20 = sdiv i32 %15, %19, !dbg !33",
+                "%19 = mul i32 %10, %9, !dbg !33"
+              ],
+              "truncated": false
+            }
+          ],
+          "original_ir_sha256": "cba119bef023444a9722520d6205467f4c034c55a46a718d1b5c34abd35d6368",
+          "definition_scope": "exact_manifest_entry_function"
+        }
+      ]
+    },
+    {
+      "case": "q05-s0-c0-cold",
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "batch_complete": true,
+      "observers": [
+        {
+          "kind": "ascend.AIC.scalar_observer",
+          "local_id": "0",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 0
+          },
+          "attempted_records": 56,
+          "committed_records": 56,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 0
+          },
+          "attempted_records": 98,
+          "committed_records": 98,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            0,
+            0,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 0
+          },
+          "attempted_records": 98,
+          "committed_records": 98,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIC.scalar_observer",
+          "local_id": "0",
+          "program_coordinates": [
+            3,
+            1,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 7
+          },
+          "attempted_records": 56,
+          "committed_records": 56,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "1",
+          "program_coordinates": [
+            3,
+            1,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 7
+          },
+          "attempted_records": 98,
+          "committed_records": 98,
+          "complete": true
+        },
+        {
+          "kind": "ascend.AIV.scalar_observer",
+          "local_id": "2",
+          "program_coordinates": [
+            3,
+            1,
+            0
+          ],
+          "physical_identity": {
+            "ascend.block_id": 7
+          },
+          "attempted_records": 98,
+          "committed_records": 98,
+          "complete": true
+        }
+      ],
+      "actors": [
+        {
+          "actor_kind": "AIC",
+          "admissible_slots": [
+            0
+          ],
+          "anchor_count": 8,
+          "unique_coordinate_bases": [
+            {
+              "operands": [
+                "%22",
+                "%23",
+                "%24",
+                "%25",
+                "%26",
+                "%27"
+              ],
+              "coordinate_definitions": [
+                "%26 = sext i32 %9 to i64, !dbg !7",
+                "%23 = sext i32 %18 to i64, !dbg !7",
+                "%18 = srem i32 %17, %9",
+                "%17 = sdiv i32 %15, %10",
+                "%15 = trunc i64 %14 to i32",
+                "%14 = call i64 @llvm.hivm.GET.BLOCK.IDX()",
+                "%25 = sext i32 %8 to i64, !dbg !7",
+                "%27 = sext i32 %10 to i64, !dbg !7",
+                "%24 = sext i32 %16 to i64, !dbg !7",
+                "%16 = srem i32 %15, %10",
+                "%22 = sext i32 %21 to i64, !dbg !7",
+                "%21 = srem i32 %20, %8",
+                "%20 = sdiv i32 %15, %19",
+                "%19 = mul i32 %10, %9"
+              ],
+              "truncated": false
+            }
+          ],
+          "original_ir_sha256": "993772ce449e03f5a50b091f4a54e96efbe76e6ced025a2abd1885f538099111",
+          "definition_scope": "exact_manifest_entry_function"
+        },
+        {
+          "actor_kind": "AIV",
+          "admissible_slots": [
+            1,
+            2
+          ],
+          "anchor_count": 8,
+          "unique_coordinate_bases": [
+            {
+              "operands": [
+                "%22",
+                "%23",
+                "%24",
+                "%25",
+                "%26",
+                "%27"
+              ],
+              "coordinate_definitions": [
+                "%26 = sext i32 %9 to i64, !dbg !59",
+                "%23 = sext i32 %18 to i64, !dbg !59",
+                "%18 = srem i32 %17, %9",
+                "%17 = sdiv i32 %15, %10",
+                "%15 = trunc i64 %14 to i32",
+                "%14 = call i64 @llvm.hivm.GET.BLOCK.IDX()",
+                "%25 = sext i32 %8 to i64, !dbg !59",
+                "%27 = sext i32 %10 to i64, !dbg !59",
+                "%24 = sext i32 %16 to i64, !dbg !59",
+                "%16 = srem i32 %15, %10",
+                "%22 = sext i32 %21 to i64, !dbg !59",
+                "%21 = srem i32 %20, %8",
+                "%20 = sdiv i32 %15, %19",
+                "%19 = mul i32 %10, %9"
+              ],
+              "truncated": false
+            }
+          ],
+          "original_ir_sha256": "6dd81a1323607708cb7ff933911d931b1a9b03be8661b0060b2f40f153c0e6a7",
+          "definition_scope": "exact_manifest_entry_function"
+        }
+      ]
+    }
+  ]
+}

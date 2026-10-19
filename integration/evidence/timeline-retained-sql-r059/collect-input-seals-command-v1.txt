@@ -1,0 +1,11 @@
+docker exec chijin-study-pro6000 /workspace/venv/bin/python -I -c 'from pathlib import Path
+import json
+base=Path('"'"'/workspace/chijin-timeline-r059-nvidia'"'"')
+checks={r['"'"'file'"'"']:r for r in json.loads((base/'"'"'runs/tools-smoke-v1/output/input-sha-checks.json'"'"').read_text())};checks.update(json.loads((base/'"'"'runs/q04-audit-v1/output/extra-input-sha-checks.json'"'"').read_text()))
+used=set()
+for tag in ['"'"'nvidia-0'"'"','"'"'nvidia-1'"'"','"'"'enflame'"'"','"'"'ascend'"'"']:
+ for row in json.loads((base/'"'"'runs'"'"'/(tag+'"'"'-tp-cohort-v1'"'"')/'"'"'output/registered.json'"'"').read_text())['"'"'rows'"'"']:
+  for key in ['"'"'trace_file'"'"','"'"'view_file'"'"','"'"'raw_file'"'"','"'"'canonical_file'"'"','"'"'inputs_file'"'"']:
+   if key in row:used.add(row[key])
+print(json.dumps({k:checks[k] for k in sorted(used)},separators=('"'"','"'"','"'"':'"'"')))
+'
