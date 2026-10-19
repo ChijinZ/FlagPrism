@@ -58,10 +58,12 @@ class Transport:
 
 
 @pytest.fixture
-def collector(monkeypatch):
+def collector(monkeypatch, request):
     transport = Transport()
     hook = TimelineInstrumentationMixin()
-    hook.timeline_pool = TimelineOwnerPool(transport)
+    fault = getattr(request.node, 'callspec', None)
+    guard_bytes = 128 if fault and fault.params.get('fault') == 'guard' else 0
+    hook.timeline_pool = TimelineOwnerPool(transport, guard_bytes=guard_bytes)
     hook._timeline_descriptors = {}
     hook._timeline_rows = []
     hook._timeline_machine = {}
@@ -267,7 +269,9 @@ def test_release_failure_is_owned_and_not_decoded(collector, tmp_path):
         raise RuntimeError('Release retry still owns buffer')
 
 
-@pytest.mark.parametrize('fault', ['raw', 'object', 'metadata', 'guard'])
+@pytest.mark.parametrize('fault', [
+    'raw', 'object', 'metadata', 'guard', 'owner_submission', 'owner_integrity'
+])
 def test_release_retry_rechecks_saved_inputs_before_freeing(
         collector, tmp_path, fault):
     hook, transport, ids = collector
@@ -287,13 +291,20 @@ def test_release_retry_rechecks_saved_inputs_before_freeing(
         suffix = {
             'raw': '.raw',
             'metadata': '.input.json',
-            'guard': '.guard.raw'
+            'guard': '.guard.raw',
+            'owner_submission': '.input.json',
+            'owner_integrity': '.input.json'
         }[fault]
         target = root / 'captures' / (ids[0] + suffix)
     original = target.read_bytes()
-    if fault == 'metadata':
+    if fault in ('metadata', 'owner_submission', 'owner_integrity'):
         document = json.loads(original)
-        document['metadata']['compiler_metadata']['num_warps'] = 99
+        if fault == 'metadata':
+            document['metadata']['compiler_metadata']['num_warps'] = 99
+        elif fault == 'owner_submission':
+            document['owner']['submission_outcome'] = 'aborted'
+        else:
+            document['owner']['readback_integrity']['status'] = 'invalid'
         target.write_text(json.dumps(document))
     else:
         target.write_bytes(b'corrupt')

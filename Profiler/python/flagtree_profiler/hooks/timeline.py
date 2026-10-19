@@ -244,12 +244,19 @@ class TimelineInstrumentationMixin:
             from ..timeline_capture_store import load_capture
             from ..timeline_store import json_bytes, read_artifact
             saved = load_capture(directory, self._timeline_pending[identity])
-            for field in ('capture_id', 'invocation_id', 'binary_id',
-                          'function', 'plan', 'layout', 'device', 'stream'):
-                if json_bytes(saved['owner'].get(field)) != json_bytes(
-                        owner.get(field)):
-                    raise RuntimeError(
-                        'Retained capture owner identity changed')
+            # Only release bookkeeping may change after publication. Preserve
+            # every collector fact consumed later by decoding/qualification.
+            mutable = {'error', 'release_status'}
+            saved_facts = {
+                key: value
+                for key, value in saved['owner'].items() if key not in mutable
+            }
+            current_facts = {
+                key: value
+                for key, value in owner.items() if key not in mutable
+            }
+            if json_bytes(saved_facts) != json_bytes(current_facts):
+                raise RuntimeError('Retained capture owner facts changed')
             if (json_bytes(saved['launch']) != json_bytes(descriptor['launch'])
                     or json_bytes(saved['metadata']) != json_bytes(metadata)
                     or saved['raw_file'] != str(
