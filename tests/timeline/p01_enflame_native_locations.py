@@ -5,6 +5,8 @@ tail guards and once-only side effects. Final-machine line tables are inspected
 from the resulting executable snapshots separately, without application replay.
 """
 import argparse
+import base64
+import hashlib
 import json
 from pathlib import Path
 
@@ -158,6 +160,22 @@ def main():
             '__flagprism_gcu_clock_v1__' in llir
             and '#llvm.di_subprogram<' in llir,
             'Final SDK LLVM serialization lost clock locations/scopes')
+        retained = compiler['debug_execution_native_locations']
+        fatbin = base64.b64decode(snapshot['binary_base64'], validate=True)
+        need(
+            retained['fatbin_sha256'] == hashlib.sha256(fatbin).hexdigest() ==
+            snapshot['executable']['binary_sha256'],
+            'Native locations belong to another executable')
+        points = retained['report']['locations']
+        need(
+            retained['report']['status'] == 'compiler_locations_mapped'
+            and len({p['site_id']
+                     for p in points}) >= 2,
+            'Normal compiler did not retain native site/phase locations')
+        need(
+            retained['report']['source_region_qualified'] is False
+            and retained['report']['reader_valueflow_qualified'] is False,
+            'Debug locations granted unrelated timing rights')
         manifest = compiler['debug_execution_manifest']
         need(
             all(s['native_clock_marker']['line'] == s['id']
@@ -167,6 +185,8 @@ def main():
             dict(capture_file=entry['capture_file'],
                  binary_id=capture['owner']['binary_id'],
                  sites=len(manifest['sites']),
+                 native_location_points=len(points),
+                 native_missing_phase_sites=len(retained['missing_phase_locations']),
                  events=len(batch['events']),
                  observers=len(batch['observers']),
                  native_scope_output_sha256=compiler[

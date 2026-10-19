@@ -4,14 +4,18 @@
 #include <charconv>
 
 int main(int argc, char **argv) {
-  if (argc == 4 && llvm::StringRef(argv[1]) == "--debug-scopes") {
+  if (argc == 4 && (llvm::StringRef(argv[1]) == "--debug-scopes" ||
+                    llvm::StringRef(argv[1]) == "--native-locations")) {
     auto input = llvm::MemoryBuffer::getFile(argv[2]);
     if (!input) {
       llvm::errs() << input.getError().message() << '\n';
       return 1;
     }
-    auto result = mlir::flagtree::debugger::addGcuNativeDebugScopes(
-        (*input)->getBuffer());
+    auto result = llvm::StringRef(argv[1]) == "--debug-scopes"
+                      ? mlir::flagtree::debugger::addGcuNativeDebugScopes(
+                            (*input)->getBuffer())
+                      : mlir::flagtree::debugger::mapGcuNativeLocations(
+                            (*input)->getBuffer());
     if (!result) {
       llvm::errs() << llvm::toString(result.takeError()) << '\n';
       return 1;

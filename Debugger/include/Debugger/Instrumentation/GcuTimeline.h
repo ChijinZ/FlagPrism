@@ -9,6 +9,9 @@ namespace mlir::flagtree::debugger {
 // DI-only serialization bridge. The SDK must verify its output before codegen.
 llvm::Expected<std::string> addGcuNativeDebugScopes(llvm::StringRef input);
 
+// Standard DWARF rows for generated markers; no instruction/valueflow rights.
+llvm::Expected<std::string> mapGcuNativeLocations(llvm::StringRef input);
+
 struct GcuExecutionRewrite {
   std::string ir;
   std::string manifest;
