@@ -1,54 +1,20 @@
 """Re-export retained timeline inputs without executing the application.
 
 Usage: python -m flagtree.profiler.timeline_reexport BUNDLE/timeline
-NVIDIA currently supports target-validated isolated counter-ns traces. GCU
-supports canonical raw revisions; its missing unit proof stays explicit.
+Backend providers decode their physical records and supply independently
+qualified views. The common consumer retains and validates canonical revisions.
 """
 import argparse
-import base64
 import json
 from pathlib import Path
 
 from .timeline_events import validate_raw_batch
 from .timeline_store import (bundle_path, export_lock, json_bytes, persist,
                              read_artifact, sha256)
-from .timeline_views import derive_counter_ns_views
 
 
 def _json(directory, name):
     return json.loads(read_artifact(directory, name, limit=8 * 1024 * 1024))
-
-
-def _nvidia(capture, raw):
-    from .timeline_nvidia_offline import decode_capture
-    return decode_capture(capture, raw)
-
-
-def _enflame(capture, raw):
-    from .timeline_events_enflame import canonicalize_enflame_capture
-    owner = capture['owner']
-    native = owner['native_export_metadata']
-    runtime = dict(native['runtime_metadata'])
-    runtime.update(profiler_invocation_id=capture['launch']['invocation_id'],
-                   profiler_association_evidence=capture['launch'])
-    return canonicalize_enflame_capture(
-        dict(capture_status='raw_complete',
-             record_layout=capture['metadata']['compiler_metadata']
-             ['debug_record_layout'],
-             runtime_metadata=runtime,
-             raw_base64=base64.b64encode(raw).decode(),
-             raw_sha256=sha256(raw)),
-        compiler_metadata=capture['metadata']['compiler_metadata'],
-        capture_id=owner['capture_id'])
-
-
-def _ascend(capture, raw):
-    from .timeline_events_ascend import canonicalize_ascend_capture
-    return canonicalize_ascend_capture(
-        raw,
-        owner=capture['owner'],
-        metadata=capture['metadata']['compiler_metadata'],
-        association=capture['launch'])
 
 
 def _original(directory, name):
@@ -90,25 +56,14 @@ def _original(directory, name):
 
 def reexport_capture(directory, original_file):
     """Decode actual bytes anew; cached canonical/view JSON cannot grant proof."""
-    from . import timeline_nvidia_offline, timeline_events_enflame, timeline_events_ascend
+    from .timeline_offline import offline_provider
     directory = Path(directory).resolve()
     capture, raw, sources, retain = _original(directory, original_file)
-    owner, metadata = capture['owner'], capture['metadata']
-    target = metadata['compiler_metadata'].get('target') or {}
-    if type(target) is not dict:
-        target = {}
-    if target.get('backend') == 'cuda':
-        backend, decoder = 'nvidia', _nvidia
-        rules = timeline_nvidia_offline.decoder_rules(capture)
-    elif metadata['compiler_metadata'].get(
-            'debug_record_layout') == 'ascend_source_timeline_v1':
-        backend, decoder, rules = 'ascend', _ascend, (timeline_events_ascend, )
-    elif 'native_export_metadata' in owner:
-        backend, decoder, rules = 'enflame', _enflame, (
-            timeline_events_enflame, )
-    else:
-        raise ValueError('No offline decoder for this retained producer')
-    batch = validate_raw_batch(decoder(capture, raw))
+    owner = capture['owner']
+    provider = offline_provider(capture)
+    backend = provider.backend_name
+    rules = provider.decoder_rules(capture)
+    batch = validate_raw_batch(provider.decode_capture(capture, raw))
     if batch['identity']['binary_id'] != owner['binary_id']:
         raise ValueError(
             'Decoded canonical binary differs from the retained owner')
@@ -175,182 +130,14 @@ def reexport_capture(directory, original_file):
             persist(directory, name, payload)
         persist(directory, canonical_base + '/complete.json',
                 json_bytes(receipt))
-    rows, reason, control_file, machine_file = [], None, None, None
-    shared_rows, shared_reason = [], None
-    dependency_rows, dependency_reason = [], None
-    if backend == 'nvidia':
-        from .timeline_nvidia_offline import load_counter_unit_proofs, load_counter_machine_map, control_evidence
-        from .timeline_perfetto import write_counter_exports
-        binary = owner['binary_id']
-        machine_base = 'machine/' + binary
-        # All provider input paths are prechecked against symlink/traversal,
-        # then independently parsed again by the target-specific provider.
-        for name in ('status.json', 'lines.stdout', 'json.stdout'):
-            retain(machine_base + '/' + name)
-        capture['machine_counter_mapping'] = _json(
-            directory, machine_base + '/status.json')
-        expected = machine_base + '/counter-map.json'
-        if capture['machine_counter_mapping'].get(
-                'status') == 'counter_mapping_complete_region_unverified':
-            if capture['machine_counter_mapping'].get(
-                    'counter_map_file') != expected:
-                raise ValueError(
-                    'Machine evidence references another capture binary')
-            retain(expected)
-        actual_map = load_counter_machine_map(directory, capture)
-        # An upgraded rule creates a derived map, never replacing the first
-        # (possibly failed) machine diagnostic. All inputs remain inspectable.
-        from . import timeline_nvidia_machine
-        machine_inputs = dict(
-            schema_version=1,
-            original_inputs=dict(sorted(sources.items())),
-            machine_map_sha256=sha256(json_bytes(actual_map)),
-            rules_sha256=sha256(
-                Path(timeline_nvidia_machine.__file__).read_bytes()))
-        machine_revision = sha256(json_bytes(machine_inputs))
-        machine_derived = 'derived/machine/' + machine_revision
-        with export_lock(directory):
-            persist(directory, machine_derived + '/inputs.json',
-                    json_bytes(machine_inputs))
-            persist(directory, machine_derived + '/counter-map.json',
-                    json_bytes(actual_map))
-        control, control_rules = control_evidence(
-            capture,
-            actual_map,
-            sass_lines=read_artifact(directory,
-                                     machine_base + '/lines.stdout'),
-            sass_json=read_artifact(directory, machine_base + '/json.stdout'),
-            directory=directory)
-        control_inputs = dict(schema_version=1,
-                              machine_revision=machine_revision,
-                              plan_sha256=sha256(json_bytes(owner['plan'])),
-                              report_sha256=sha256(json_bytes(control)),
-                              implementation_sha256=sha256(
-                                  control_rules.read_bytes()))
-        control_base = 'derived/control/' + sha256(json_bytes(control_inputs))
-        control_file = control_base + '/wait-control.json'
-        with export_lock(directory):
-            persist(directory, control_base + '/inputs.json',
-                    json_bytes(control_inputs))
-            persist(directory, control_file, json_bytes(control))
-        proofs = load_counter_unit_proofs(directory, capture, batch)
-        views = derive_counter_ns_views(batch, proofs)
-        rows = write_counter_exports(directory,
-                                     Path('captures') / owner['invocation_id'],
-                                     views,
-                                     batch,
-                                     proofs=proofs)
-        from .timeline_nvidia_offline import observed_dependency_inputs
-        from .timeline_dependency_perfetto import write_dependency_exports
-        try:
-            dependencies = observed_dependency_inputs(directory, capture, raw)
-            if dependencies is not None:
-                dependency_rows = write_dependency_exports(
-                    directory, *dependencies)
-        except (ValueError, OSError, KeyError, TypeError) as error:
-            dependency_reason = str(error)
-        if not dependency_rows:
-            from .timeline_nvidia_offline import shared_counter_inputs
-            from .timeline_perfetto import write_shared_counter_exports
-            try:
-                shared = shared_counter_inputs(directory, capture, raw)
-                if shared is not None:
-                    shared_rows = write_shared_counter_exports(
-                        directory, *shared)
-            except (ValueError, OSError, KeyError, TypeError) as error:
-                shared_reason = str(error)
-    elif backend == 'ascend':
-        from . import timeline_ascend_machine
-        binary = owner['binary_id']
-        machine_base = 'machine/' + binary
-        try:
-            for name in ('loaded.elf', 'dwarf.stdout'):
-                retain(machine_base + '/' + name)
-            actual_map = timeline_ascend_machine.load_counter_machine_map(
-                directory, capture)
-            machine_inputs = dict(
-                schema_version=1,
-                original_inputs=dict(sorted(sources.items())),
-                machine_map_sha256=sha256(json_bytes(actual_map)),
-                rules_sha256=sha256(
-                    Path(timeline_ascend_machine.__file__).read_bytes()))
-            derived = 'derived/machine/' + sha256(json_bytes(machine_inputs))
-            with export_lock(directory):
-                persist(directory, derived + '/inputs.json',
-                        json_bytes(machine_inputs))
-                persist(directory, derived + '/counter-map.json',
-                        json_bytes(actual_map))
-            machine_file = derived + '/counter-map.json'
-            from .timeline_unit_ascend import load_counter_unit_proofs
-            from .timeline_perfetto import write_counter_exports
-            proofs = load_counter_unit_proofs(directory, capture, batch)
-            views = derive_counter_ns_views(batch, proofs)
-            rows = write_counter_exports(directory,
-                                         Path('captures') /
-                                         owner['invocation_id'],
-                                         views,
-                                         batch,
-                                         proofs=proofs)
-        except (ValueError, OSError, KeyError, TypeError,
-                UnicodeError) as error:
-            reason = 'Ascend counter mapping unavailable: ' + str(error)
-        try:
-            from .timeline_ascend_native import load_observed_dependency_inputs
-            from .timeline_dependency_perfetto import write_dependency_exports
-            dependency_batch, dependency_proofs = load_observed_dependency_inputs(
-                directory, capture, raw)
-            dependency_rows = write_dependency_exports(directory,
-                                                       dependency_batch,
-                                                       dependency_proofs)
-        except (ValueError, OSError, KeyError, TypeError,
-                UnicodeError) as error:
-            dependency_reason = 'Ascend observed dependencies unavailable: ' + str(
-                error)
-    elif backend == 'enflame':
-        try:
-            retain(metadata['clock_calibration_file'])
-            from .timeline_unit_enflame import load_counter_unit_proofs
-            from .timeline_perfetto import write_counter_exports
-            proofs = load_counter_unit_proofs(directory, capture, batch)
-            views = derive_counter_ns_views(batch, proofs)
-            rows = write_counter_exports(directory,
-                                         Path('captures') /
-                                         owner['invocation_id'],
-                                         views,
-                                         batch,
-                                         proofs=proofs)
-        except (ValueError, OSError, KeyError, TypeError,
-                UnicodeError) as error:
-            reason = 'GCU counter calibration unavailable: ' + str(error)
-        try:
-            from .timeline_enflame_dependencies import load_observed_dependency_inputs
-            from .timeline_dependency_perfetto import write_dependency_exports
-            dependency_batch, dependency_proofs = load_observed_dependency_inputs(
-                directory, capture, raw, canonical=batch)
-            dependency_rows = write_dependency_exports(directory,
-                                                       dependency_batch,
-                                                       dependency_proofs)
-        except (ValueError, OSError, KeyError, TypeError,
-                UnicodeError) as error:
-            dependency_reason = 'GCU observed dependencies unavailable: ' + str(
-                error)
-    else:
-        reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
-    result = dict(invocation_id=owner['invocation_id'],
-                  backend=backend,
-                  canonical_file=canonical_file,
-                  canonical_revision=canonical_revision,
-                  wait_control_file=control_file,
-                  exports=rows,
-                  shared_exports=shared_rows,
-                  shared_counter_reason=shared_reason,
-                  observed_dependency_exports=dependency_rows,
-                  observed_dependency_reason=dependency_reason,
-                  status='counter_unit_only' if rows else 'raw_only',
-                  reason=reason)
-    if backend == 'ascend':
-        result['machine_counter_map_file'] = machine_file
-    return result
+    views = provider.reexport_views(directory, capture, raw, batch, sources,
+                                    retain)
+    return dict(invocation_id=owner['invocation_id'],
+                backend=backend,
+                canonical_file=canonical_file,
+                canonical_revision=canonical_revision,
+                status='counter_unit_only' if views['exports'] else 'raw_only',
+                **views)
 
 
 def reexport_bundle(directory, *, invocation_id=None):

@@ -4,6 +4,9 @@ The exporter does not interpret native packet layouts, marker phases or wait
 instructions. Legacy and late producers keep their own decoder/proof rules.
 """
 from pathlib import Path
+import json
+from .timeline_store import export_lock, json_bytes, persist, read_artifact, sha256
+from .timeline_views import derive_counter_ns_views
 
 
 def _late(capture):
@@ -141,3 +144,109 @@ def observed_dependency_inputs(directory, capture, raw):
         return None
     from .timeline_nvidia_dependencies import load_observed_dependency_inputs
     return load_observed_dependency_inputs(directory, capture, raw)
+
+
+backend_name = 'nvidia'
+
+
+def matches(capture):
+    return (isinstance(capture['metadata']['compiler_metadata'].get('target'),
+                       dict) and
+            capture['metadata']['compiler_metadata']['target'].get('backend')
+            == 'cuda')
+
+
+def reexport_views(directory, capture, raw, batch, sources, retain):
+    owner = capture['owner']
+    rows, reason, control_file = [], None, None
+    shared_rows, shared_reason = [], None
+    dependency_rows, dependency_reason = [], None
+    from .timeline_nvidia_offline import load_counter_unit_proofs, load_counter_machine_map, control_evidence
+    from .timeline_perfetto import write_counter_exports
+    binary = owner['binary_id']
+    machine_base = 'machine/' + binary
+    # All provider input paths are prechecked against symlink/traversal,
+    # then independently parsed again by the target-specific provider.
+    for name in ('status.json', 'lines.stdout', 'json.stdout'):
+        retain(machine_base + '/' + name)
+    capture['machine_counter_mapping'] = json.loads(
+        read_artifact(directory,
+                      machine_base + '/status.json',
+                      limit=8 * 1024 * 1024))
+    expected = machine_base + '/counter-map.json'
+    if capture['machine_counter_mapping'].get(
+            'status') == 'counter_mapping_complete_region_unverified':
+        if capture['machine_counter_mapping'].get(
+                'counter_map_file') != expected:
+            raise ValueError(
+                'Machine evidence references another capture binary')
+        retain(expected)
+    actual_map = load_counter_machine_map(directory, capture)
+    # An upgraded rule creates a derived map, never replacing the first
+    # (possibly failed) machine diagnostic. All inputs remain inspectable.
+    from . import timeline_nvidia_machine
+    machine_inputs = dict(
+        schema_version=1,
+        original_inputs=dict(sorted(sources.items())),
+        machine_map_sha256=sha256(json_bytes(actual_map)),
+        rules_sha256=sha256(
+            Path(timeline_nvidia_machine.__file__).read_bytes()))
+    machine_revision = sha256(json_bytes(machine_inputs))
+    machine_derived = 'derived/machine/' + machine_revision
+    with export_lock(directory):
+        persist(directory, machine_derived + '/inputs.json',
+                json_bytes(machine_inputs))
+        persist(directory, machine_derived + '/counter-map.json',
+                json_bytes(actual_map))
+    control, control_rules = control_evidence(
+        capture,
+        actual_map,
+        sass_lines=read_artifact(directory, machine_base + '/lines.stdout'),
+        sass_json=read_artifact(directory, machine_base + '/json.stdout'),
+        directory=directory)
+    control_inputs = dict(schema_version=1,
+                          machine_revision=machine_revision,
+                          plan_sha256=sha256(json_bytes(owner['plan'])),
+                          report_sha256=sha256(json_bytes(control)),
+                          implementation_sha256=sha256(
+                              control_rules.read_bytes()))
+    control_base = 'derived/control/' + sha256(json_bytes(control_inputs))
+    control_file = control_base + '/wait-control.json'
+    with export_lock(directory):
+        persist(directory, control_base + '/inputs.json',
+                json_bytes(control_inputs))
+        persist(directory, control_file, json_bytes(control))
+    proofs = load_counter_unit_proofs(directory, capture, batch)
+    views = derive_counter_ns_views(batch, proofs)
+    rows = write_counter_exports(directory,
+                                 Path('captures') / owner['invocation_id'],
+                                 views,
+                                 batch,
+                                 proofs=proofs)
+    from .timeline_nvidia_offline import observed_dependency_inputs
+    from .timeline_dependency_perfetto import write_dependency_exports
+    try:
+        dependencies = observed_dependency_inputs(directory, capture, raw)
+        if dependencies is not None:
+            dependency_rows = write_dependency_exports(directory,
+                                                       *dependencies)
+    except (ValueError, OSError, KeyError, TypeError) as error:
+        dependency_reason = str(error)
+    if not dependency_rows:
+        from .timeline_nvidia_offline import shared_counter_inputs
+        from .timeline_perfetto import write_shared_counter_exports
+        try:
+            shared = shared_counter_inputs(directory, capture, raw)
+            if shared is not None:
+                shared_rows = write_shared_counter_exports(directory, *shared)
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            shared_reason = str(error)
+
+    result = dict(wait_control_file=control_file,
+                  exports=rows,
+                  shared_exports=shared_rows,
+                  shared_counter_reason=shared_reason,
+                  observed_dependency_exports=dependency_rows,
+                  observed_dependency_reason=dependency_reason,
+                  reason=reason)
+    return result
