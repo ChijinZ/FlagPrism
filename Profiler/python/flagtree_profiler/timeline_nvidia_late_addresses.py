@@ -462,6 +462,22 @@ def _published_header_address(wide, native_count):
     return address
 
 
+def _no_prior_recording(graph, start, forbidden):
+    """A zero reset or fixed-base initial batch must precede any recording."""
+    work, visited = list(graph[start]), set()
+    while work:
+        pc = work.pop()
+        if pc in visited:
+            continue
+        visited.add(pc)
+        _need(
+            len(visited) <= MAX_STATES,
+            'Initial native count path budget exceeded')
+        _need(pc not in forbidden,
+              'Initial native count/batch can overwrite earlier records')
+        work.extend(graph[pc])
+
+
 def _check_batch_control(body, graph, counter, batches, writes):
     """Each complete store batch and its one count update execute together.
 
@@ -477,6 +493,8 @@ def _check_batch_control(body, graph, counter, batches, writes):
     }
     initial = [r for r in writes if r['mode'] == 'initialize']
     _need(len(initial) == 1, 'Missing unique native count initialization')
+    count_updates = {r['pc'] for r in writes if r['mode'] != 'initialize'}
+    _no_prior_recording(graph, initial[0]['pc'], record_stores | count_updates)
     unused = {r['pc']: r for r in writes if r['mode'] != 'initialize'}
     for batch in batches:
         wanted = 'initial_batch_count' if batch[
@@ -505,18 +523,7 @@ def _check_batch_control(body, graph, counter, batches, writes):
             start = min(batch['field_store_pcs'] + [
                 batch['address_low_pc'], batch['address_high_pc'], update['pc']
             ])
-            work, visited = list(graph[start]), set()
-            while work:
-                pc = work.pop()
-                if pc in visited:
-                    continue
-                visited.add(pc)
-                _need(
-                    len(visited) <= MAX_STATES,
-                    'Initial native batch path budget exceeded')
-                _need(pc not in record_stores,
-                      'Initial native batch can overwrite earlier records')
-                work.extend(graph[pc])
+            _no_prior_recording(graph, start, record_stores | count_updates)
         else:
             _need(batch['address_high_pc'] < update['pc'],
                   'Native batch address reads an already incremented count')

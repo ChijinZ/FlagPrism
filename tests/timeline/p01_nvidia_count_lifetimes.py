@@ -22,6 +22,41 @@ def run(timelines, output):
         else:
             raise RuntimeError('Invalid native count accepted: ' + name)
 
+    # Synthetic native CFG: a complete fixed-base batch precedes a branch;
+    # one path resets its count, the other publishes the nonzero count. The
+    # first batch itself has no earlier stores, so only the zero-reset guard
+    # can reject this corruption. This fixture is not device evidence.
+    reset = {
+        0: dict(opcode='LEA', operands='R0,P0,R2,R4,0x3'),
+        16: dict(opcode='LEA.HI.X', operands='R1,R2,R5,R3,0x3,P0'),
+        32: dict(opcode='MOV.64', operands='R12,0x1'),
+        48: dict(opcode='STG.E.64', operands='desc[UR0][R0.64],R6'),
+        64: dict(opcode='STG.E.64', operands='desc[UR0][R0.64+0x8],R8'),
+        80: dict(opcode='STG.E.64', operands='desc[UR0][R0.64+0x10],R10'),
+        96: dict(opcode='STG.E.64', operands='desc[UR0][R0.64+0x18],R14'),
+        112: dict(opcode='BRA', operands='0x90', predicate='@P0'),
+        128: dict(opcode='BRA', operands='0xa0'),
+        144: dict(opcode='MOV.64', operands='R12,RZ'),
+        160: dict(opcode='STG.E.64', operands='desc[UR0][R16.64],R12'),
+        176: dict(opcode='EXIT', operands='')
+    }
+    reset_graph = addresses._predecessors(reset)
+    live = addresses._live_count_definitions(reset, reset_graph, 'R12', {160})
+    reset_writes = addresses._count_write_inventory(reset, 'R12', live)
+    if {r['pc'] for r in reset_writes} != {32, 144}:
+        raise RuntimeError(
+            'Conditional zero-reset fixture lacks both live paths')
+    reset_batch = dict(mode='initial_zero_count',
+                       count=1,
+                       address_low_pc=0,
+                       address_high_pc=16,
+                       field_store_pcs=[48, 64, 80, 96])
+    addresses._no_prior_recording(reset_graph, 0, {32, 48, 64, 80, 96})
+    reject(
+        'conditional_zero_reset_after_complete_batch',
+        lambda: addresses._check_batch_control(reset, reset_graph, 'R12',
+                                               [reset_batch], reset_writes))
+
     for timeline in timelines:
         for item in json.loads(
             (timeline / 'index.json').read_text())['captures']:
