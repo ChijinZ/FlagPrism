@@ -39,10 +39,15 @@ def inspect(bundle, expected_count):
          'Physical allocation guard changed')
     batch = json.loads((root / capture['events_file']).read_text())
     need(batch['complete'], 'Actual default capture is incomplete')
+    sites = {s['id']: s for s in batch['sites']}
+    positive_source_sites = {
+        e['site_id']
+        for e in batch['events'] if e['end_tick'] > e['start_tick']
+        and 'ascend.native_operation' not in sites[e['site_id']]['attributes']
+    }
     need(
-        len(batch['sites']) >= 2
-        and sum(e['end_tick'] > e['start_tick'] for e in batch['events']) >= 2,
-        'No positive internal source structure')
+        len(positive_source_sites) >= 2,
+        'Fewer than two actual positive source fragment sites')
     need(capture.get('counter_ns_exports'), 'Missing actual counter-ns trace')
     layout = capture['owner']['layout']
     stride = layout['scratch_size']
@@ -83,6 +88,7 @@ def inspect(bundle, expected_count):
                 headers=headers,
                 observers=len(batch['observers']),
                 events=len(batch['events']),
+                positive_source_sites=sorted(positive_source_sites),
                 complete=batch['complete'],
                 ns_exports=capture['counter_ns_exports'],
                 bundle=str(bundle))
