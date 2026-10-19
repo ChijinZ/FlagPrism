@@ -942,3 +942,23 @@ repeated field-name storage without sampling or removing actors, events or raw
 references. Old count/native modes keep their existing plain report behavior.
 The primary offline analysis still reconstructs events from retained raw data;
 the auxiliary decoded report is a lossless convenience view.
+
+### Reading the controlled examples
+
+`tests/timeline/p01_controlled_workloads.py` exercises real runtime work and
+matrix tilings without kernel annotations. In the recorded GCU C1 example,
+the same instrumented binary executes work counts 3, 7 and 11. On program 0,
+the repeated loop-body region (origin label `gcu.border`) has respectively
+3, 7 and 11 occurrences. Its summed counter-bracket times across three captures
+are 1514–1545 ns, 3496–3570 ns and 5503–5581 ns. This identifies the repeated
+region and its measured growth; logger perturbation is part of these timings.
+
+GCU C2 keeps the same 64-by-192 times 192-by-64 matrix product and changes
+the reduction tile from 32 to 64. Program 0 then has six versus three
+`gcu.matmul` brackets, summing to 811927–812126 ns versus 779536–779626 ns
+over three captures each. The developer can inspect the surrounding actual
+submit/wait records to distinguish fewer stages from shorter individual stages.
+These are elapsed brackets in instrumented execution, not native engine busy
+times, an uninstrumented speedup, or an overhead estimate. Re-measure ordinary
+execution before claiming an optimization benefit. The original captures and
+summary provenance are indexed in `integration/evidence/timeline-independent-deltas-r056/`.
