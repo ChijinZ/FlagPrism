@@ -43,3 +43,19 @@ are indexed in `local-input-index.json` and remain in the workspace/server.
 
 No new mathematical qualification, Trace Processor/UI result, performance
 measurement, or full-goal acceptance is claimed here.
+
+## Additional finite compute-prefix check
+
+A retained-only server Docker check in normal Python and `-O` establishes that
+every 4-byte position from site16's entry through its VADDS has an SDK decoding
+row, with no JUMP-family instruction or END before the two required operations.
+This strengthens numeric containment to a local contiguous prefix without
+control transfers. Three negative fixtures reject an exit before the add, a
+missing decoded prefix instruction, and a branch before the multiply.
+
+This is not proof of external-entry coverage, actual hardware dynamic order,
+or all paths through the entire region. The independent reviewer assessed the
+finite criterion as sound, including JUMPC/JUMPCMP in the JUMP family; that
+follow-up did not execute or perform a new line-by-line script review. It grants
+no additional runtime proof rights. No model, application, SDK compiler,
+Trace Processor, or UI was rerun.

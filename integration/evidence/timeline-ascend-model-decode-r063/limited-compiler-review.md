@@ -24,3 +24,14 @@ This adds finite opcode/PC position evidence for the unchanged actual example.
 It does not close complete G1, prove dynamic traversal/all-path boundaries,
 hardware occurrences, exclusive cost, or ordinary overlap. No ISA framework
 or new matrix is required by this review.
+
+## Compute-prefix criterion follow-up
+
+The same reviewer found no logic error in the described limited criterion:
+require every decoded word through the required VMULS/VADDS, and reject any
+JUMP-family opcode (including JUMPC/JUMPCMP) or END before that prefix completes.
+It adds local continuous, control-transfer-free prefix evidence over numeric
+containment. The three rejection fixtures fit that criterion. The reviewer did
+not run commands or newly inspect the script line by line in this follow-up.
+External entries, hardware dynamic order and whole-region all-path qualification
+remain unproven; complete G1 is not closed.

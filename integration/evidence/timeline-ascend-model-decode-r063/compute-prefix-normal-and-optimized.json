@@ -1,0 +1,98 @@
+[
+  {
+    "opt": [],
+    "returncode": 0,
+    "result": {
+      "status": "finite_decoded_compute_prefix_checked",
+      "actual_ELF_sha256": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+      "SDK_instruction_csv_sha256": "3fcd3f93b52b99d1e5fbe9369f53c5c0c31f8f8100fa2a8e991f069bc1bf5846",
+      "entry_pc": 4816,
+      "exit_pc": 4916,
+      "required_native_operations": [
+        [
+          4840,
+          "VMULS"
+        ],
+        [
+          4876,
+          "VADDS"
+        ]
+      ],
+      "complete_contiguous_decoding_through_last_required_operation": true,
+      "no_control_transfer_in_that_prefix": true,
+      "negative_fixtures": [
+        {
+          "name": "exit_before_add",
+          "rejected": true,
+          "reason": "Clock exit precedes required native computation"
+        },
+        {
+          "name": "missing_prefix_instruction",
+          "rejected": true,
+          "reason": "Retained decoding has a gap before the required compute prefix ends"
+        },
+        {
+          "name": "branch_before_multiply",
+          "rejected": true,
+          "reason": "Control transfer before all required native compute operations"
+        }
+      ],
+      "SDK_child_failure_139_remains": true,
+      "all_path_region_proof": false,
+      "external_entry_coverage_proved": false,
+      "hardware_dynamic_order_proved": false,
+      "product_qualification_changed": false,
+      "simulation_or_application_replayed": false
+    },
+    "stderr": ""
+  },
+  {
+    "opt": [
+      "-O"
+    ],
+    "returncode": 0,
+    "result": {
+      "status": "finite_decoded_compute_prefix_checked",
+      "actual_ELF_sha256": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+      "SDK_instruction_csv_sha256": "3fcd3f93b52b99d1e5fbe9369f53c5c0c31f8f8100fa2a8e991f069bc1bf5846",
+      "entry_pc": 4816,
+      "exit_pc": 4916,
+      "required_native_operations": [
+        [
+          4840,
+          "VMULS"
+        ],
+        [
+          4876,
+          "VADDS"
+        ]
+      ],
+      "complete_contiguous_decoding_through_last_required_operation": true,
+      "no_control_transfer_in_that_prefix": true,
+      "negative_fixtures": [
+        {
+          "name": "exit_before_add",
+          "rejected": true,
+          "reason": "Clock exit precedes required native computation"
+        },
+        {
+          "name": "missing_prefix_instruction",
+          "rejected": true,
+          "reason": "Retained decoding has a gap before the required compute prefix ends"
+        },
+        {
+          "name": "branch_before_multiply",
+          "rejected": true,
+          "reason": "Control transfer before all required native compute operations"
+        }
+      ],
+      "SDK_child_failure_139_remains": true,
+      "all_path_region_proof": false,
+      "external_entry_coverage_proved": false,
+      "hardware_dynamic_order_proved": false,
+      "product_qualification_changed": false,
+      "simulation_or_application_replayed": false
+    },
+    "stderr": ""
+  }
+]
