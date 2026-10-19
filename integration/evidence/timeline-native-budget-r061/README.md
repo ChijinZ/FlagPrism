@@ -35,3 +35,10 @@ negative fixtures, with actual original files unchanged. No performance or
 ordinary-schedule certificate is inferred. All workers are terminal; controller
 zombies are not live work. Exact cache object index binds recorded ordinary
 and profile math hashes without replaying to recover their binary inputs.
+
+The twenty new actual pipeline traces subsequently passed the fixed real TP
+verifiers: sixteen observer-ns plus four dependency traces. Per-trace raw-word,
+ns, protobuf/SQL, flow endpoint and263-row stats checks passed with no positive
+error/data_loss. All actual original input seals were unchanged. No application
+was replayed for SQL and no old trace/UI matrix was repeated. The reviews were
+completed before this SQL result, so their exact limited scope is preserved.
