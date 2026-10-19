@@ -75,7 +75,9 @@ def native_fault_binary(tmp_path_factory):
 @pytest.mark.parametrize('fault', [
     'active', 'invalidated', 'query', 'malloc', 'host', 'host-and-free',
     'memset', 'memset-and-free', 'copy', 'copy-and-free', 'eager', 'stream-v2',
-    'stream-v3'
+    'stream-v3', 'guard-intact', 'guard-prefix', 'guard-suffix',
+    'release-host-before', 'release-host-after', 'release-device-before',
+    'release-device-after'
 ])
 def test_enflame_prepare_failure_is_catchable_and_transactional(
         native_fault_binary, fault):

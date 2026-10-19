@@ -910,8 +910,17 @@ public:
     ensurePrepared();
     if (!initialized_)
       throw py::value_error("debugger launch buffer was not initialized");
-    return toPyExportedRun(prepared_->transferEngine->syncExport(
-        prepared_->request.launchContext));
+    auto &context = prepared_->request.launchContext;
+    py::dict result =
+        toPyExportedRun(prepared_->transferEngine->syncExport(context));
+    if (context.runtimeMetadata.recordLayout == "gcu_execution_timeline_v3" ||
+        context.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2") {
+      const auto *raw = static_cast<const char *>(context.hostBufferPtr);
+      std::string guard(raw - 64, 64);
+      guard.append(raw + context.bufferSize, 64);
+      result["readback_guard"] = py::bytes(guard);
+    }
+    return result;
   }
 
   py::dict finish() {
@@ -928,6 +937,9 @@ private:
     if (!prepared_.has_value()) {
       throw py::value_error("debugger launch handle is no longer active");
     }
+    if (releaseOutcomeUnknown_)
+      throw py::value_error(
+          "native release outcome is unknown; launch handle is quarantined");
   }
 
   void releaseInternal() {
@@ -935,13 +947,19 @@ private:
       return;
     }
     if (prepared_->transferEngine) {
-      prepared_->transferEngine->release(prepared_->request.launchContext);
+      try {
+        prepared_->transferEngine->release(prepared_->request.launchContext);
+      } catch (...) {
+        releaseOutcomeUnknown_ = true;
+        throw;
+      }
       prepared_->transferEngine.reset();
     }
     prepared_.reset();
   }
 
   bool initialized_ = false;
+  bool releaseOutcomeUnknown_ = false;
   std::optional<PreparedDebugLaunch> prepared_;
 };
 
@@ -963,6 +981,7 @@ void init_flagtree_debugger_runtime(py::module &&m) {
   m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
   m.attr("GCU_TIMELINE_PUBLISHER_VERSION") = 2;
   m.attr("GCU_TIMELINE_CLOCK_IDENTITY_VERSION") = 1;
+  m.attr("GCU_TIMELINE_ALLOCATION_GUARD_VERSION") = 1;
   m.def("allocate_timeline_launch", [](py::dict metadata, uint64_t streamHandle,
                                        py::object runtimeMetadata) {
     if (getStringOr(metadata, "debug_record_layout", "") !=

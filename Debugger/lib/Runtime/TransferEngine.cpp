@@ -1009,9 +1009,14 @@ private:
 };
 
 struct BackendTransferAllocation {
+  void *deviceAllocation = nullptr;
+  void *hostAllocation = nullptr;
   void *deviceBuffer = nullptr;
   void *hostBuffer = nullptr;
   size_t bytes = 0;
+  size_t physicalBytes = 0;
+  size_t guardBytesPerSide = 0;
+  std::exception_ptr releaseFailure;
   bool asyncExportPending = false;
   bool asyncCopySubmitted = false;
 };
@@ -1148,30 +1153,43 @@ public:
 
     auto allocation = std::make_unique<BackendTransferAllocation>();
     allocation->bytes = ctx.bufferSize;
-    allocation->deviceBuffer = adapter_->allocateDevice(ctx.bufferSize);
-    if (!allocation->deviceBuffer) {
+    allocation->guardBytesPerSide = firstLast ? 64 : 0;
+    const size_t guards = 2 * allocation->guardBytesPerSide;
+    if (ctx.bufferSize > std::numeric_limits<size_t>::max() - guards)
+      throw std::runtime_error("guarded runtime allocation size overflow");
+    allocation->physicalBytes = ctx.bufferSize + guards;
+    allocation->deviceAllocation =
+        adapter_->allocateDevice(allocation->physicalBytes);
+    if (!allocation->deviceAllocation) {
       if (options_.driverKind == TransferDriverKind::CANN ||
           options_.driverKind == TransferDriverKind::TOPS)
         throw std::runtime_error("failed to allocate runtime device buffer");
       failRuntime("failed to allocate runtime device buffer");
     }
+    allocation->deviceBuffer =
+        static_cast<uint8_t *>(allocation->deviceAllocation) +
+        allocation->guardBytesPerSide;
 
     try {
       if (runtimeMetadata.recordLayout == "ascend_source_census_v3" &&
           reinterpret_cast<uintptr_t>(allocation->deviceBuffer) % 64)
         throw std::runtime_error(
             "Ascend census v3 requires 64-byte aligned device storage");
-      allocation->hostBuffer = adapter_->allocateHost(ctx.bufferSize);
-      if (!allocation->hostBuffer) {
+      allocation->hostAllocation =
+          adapter_->allocateHost(allocation->physicalBytes);
+      if (!allocation->hostAllocation) {
         if (options_.driverKind == TransferDriverKind::CANN ||
             options_.driverKind == TransferDriverKind::TOPS)
           throw std::runtime_error("failed to allocate runtime host buffer");
         failRuntime("failed to allocate runtime host buffer");
       }
+      allocation->hostBuffer =
+          static_cast<uint8_t *>(allocation->hostAllocation) +
+          allocation->guardBytesPerSide;
     } catch (...) {
       // Preserve the allocation error even if rollback itself also fails.
       try {
-        adapter_->freeDevice(allocation->deviceBuffer);
+        adapter_->freeDevice(allocation->deviceAllocation);
       } catch (const std::exception &error) {
         std::fprintf(stderr, "FlagPrism debugger allocation rollback: %s\n",
                      error.what());
@@ -1179,16 +1197,37 @@ public:
       throw;
     }
 
+    std::memset(allocation->hostAllocation, 165, allocation->physicalBytes);
     std::memset(allocation->hostBuffer, 0, ctx.bufferSize);
     ctx.deviceCtrlPtr = allocation->deviceBuffer;
     ctx.hostBufferPtr = allocation->hostBuffer;
 
     std::lock_guard<std::mutex> lock(mutex_);
+    if (allocations_.find(ctx.deviceCtrlPtr) != allocations_.end()) {
+      // An SDK may reuse an address whose previous free returned an error.
+      // Never let a stale quarantined context address a different allocation.
+      for (bool host : {true, false}) {
+        try {
+          if (host)
+            adapter_->freeHost(allocation->hostAllocation);
+          else
+            adapter_->freeDevice(allocation->deviceAllocation);
+        } catch (const std::exception &error) {
+          std::fprintf(stderr, "FlagPrism allocation collision cleanup: %s\n",
+                       error.what());
+        }
+      }
+      throw std::runtime_error("SDK allocation reused a retained runtime "
+                               "identity; context remains quarantined");
+    }
     allocations_[ctx.deviceCtrlPtr] = std::move(allocation);
     return ctx;
   }
 
   uint64_t hiddenArg(const DebugLaunchContext &ctx) override {
+    std::lock_guard<std::mutex> lock(mutex_);
+    if (!findAllocationLocked(ctx))
+      throw std::runtime_error("Runtime allocation is no longer active");
     return reinterpret_cast<uint64_t>(ctx.deviceCtrlPtr);
   }
 
@@ -1212,6 +1251,9 @@ public:
           ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
             ? ctx.streamHandle
             : 0;
+    if (allocation->guardBytesPerSide)
+      adapter_->memsetDevice(allocation->deviceAllocation, 165,
+                             allocation->physicalBytes, initializationStream);
     adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes,
                            initializationStream);
 
@@ -1283,9 +1325,9 @@ public:
     const uint64_t streamHandle = resolveStreamHandle(ctx, options_);
     allocation->asyncCopySubmitted = false;
     if (options_.driverKind != TransferDriverKind::HOST && streamHandle != 0) {
-      adapter_->copyDeviceToHost(allocation->hostBuffer,
-                                 allocation->deviceBuffer, allocation->bytes,
-                                 streamHandle);
+      adapter_->copyDeviceToHost(allocation->hostAllocation,
+                                 allocation->deviceAllocation,
+                                 allocation->physicalBytes, streamHandle);
       allocation->asyncCopySubmitted = true;
     }
     allocation->asyncExportPending = true;
@@ -1305,29 +1347,44 @@ public:
   }
 
   void release(DebugLaunchContext &ctx) override {
-    std::unique_ptr<BackendTransferAllocation> allocation;
-    {
-      std::lock_guard<std::mutex> lock(mutex_);
-      auto it = allocations_.find(ctx.deviceCtrlPtr);
-      if (it != allocations_.end()) {
-        allocation = std::move(it->second);
-        allocations_.erase(it);
-      }
-    }
-
+    std::lock_guard<std::mutex> lock(mutex_);
+    auto it = allocations_.find(ctx.deviceCtrlPtr);
     std::exception_ptr releaseError;
-    if (allocation) {
+    if (it != allocations_.end()) {
+      auto &allocation = *it->second;
+      if (allocation.releaseFailure)
+        throw std::runtime_error("Native release outcome is unknown; "
+                                 "allocation remains quarantined");
+      // An SDK error does not prove that free had no side effects. Attempt each
+      // resource once, retain an unknown outcome, and never retry that pointer.
       try {
-        adapter_->freeHost(allocation->hostBuffer);
+        adapter_->freeHost(allocation.hostAllocation);
+        allocation.hostAllocation = nullptr;
       } catch (...) {
         releaseError = std::current_exception();
       }
       try {
-        adapter_->freeDevice(allocation->deviceBuffer);
+        adapter_->freeDevice(allocation.deviceAllocation);
+        allocation.deviceAllocation = nullptr;
       } catch (...) {
         if (!releaseError)
           releaseError = std::current_exception();
       }
+      if (releaseError) {
+        allocation.releaseFailure = releaseError;
+        try {
+          std::rethrow_exception(releaseError);
+        } catch (const std::exception &error) {
+          throw std::runtime_error(
+              std::string(
+                  "Native release outcome unknown; allocation quarantined: ") +
+              error.what());
+        } catch (...) {
+          throw std::runtime_error(
+              "Native release outcome unknown; allocation quarantined");
+        }
+      }
+      allocations_.erase(it);
     }
 
     ctx.deviceCtrlPtr = nullptr;
@@ -1336,8 +1393,6 @@ public:
     ctx.recordCapacity = 0;
     ctx.streamHandle = 0;
     ctx.layout = {};
-    if (releaseError)
-      std::rethrow_exception(releaseError);
   }
 
 private:
@@ -1390,14 +1445,18 @@ private:
     if (it == allocations_.end()) {
       return nullptr;
     }
+    if (it->second->releaseFailure)
+      throw std::runtime_error(
+          "Native allocation is quarantined after an unknown release outcome");
     return it->second.get();
   }
 
   void copyDeviceToHostLocked(const DebugLaunchContext &ctx,
                               BackendTransferAllocation &allocation) {
     const uint64_t streamHandle = resolveStreamHandle(ctx, options_);
-    adapter_->copyDeviceToHost(allocation.hostBuffer, allocation.deviceBuffer,
-                               allocation.bytes, streamHandle);
+    adapter_->copyDeviceToHost(allocation.hostAllocation,
+                               allocation.deviceAllocation,
+                               allocation.physicalBytes, streamHandle);
     allocation.asyncCopySubmitted = streamHandle != 0;
     finalizeAsyncCopyLocked(ctx, allocation);
   }

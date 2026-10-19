@@ -69,6 +69,7 @@ class TimelineOwnerPool:
             raise ValueError('Invalid max_cumulative_raw_bytes')
         self.max_cumulative_raw_bytes = max_cumulative_raw_bytes
         self.cumulative_admitted_raw_bytes = 0
+        self.cumulative_admitted_physical_bytes = 0
         self.transport = transport
         self.max_pending_bytes = max_pending_bytes
         self.max_owners = max_owners
@@ -141,7 +142,7 @@ class TimelineOwnerPool:
             raise RuntimeError(
                 'Timeline pending-owner budget exceeded before allocation')
         if (self.max_cumulative_raw_bytes is not None
-                and self.cumulative_admitted_raw_bytes + layout['raw_bytes']
+                and self.cumulative_admitted_physical_bytes + physical_bytes
                 > self.max_cumulative_raw_bytes):
             raise RuntimeError(
                 'Timeline cumulative raw budget exceeded before allocation')
@@ -168,6 +169,7 @@ class TimelineOwnerPool:
         }
         self._bytes += physical_bytes
         self.cumulative_admitted_raw_bytes += layout['raw_bytes']
+        self.cumulative_admitted_physical_bytes += physical_bytes
         _RETAINED_POOLS[self.capture_id] = self
         return invocation_id
 
@@ -330,7 +332,11 @@ class TimelineOwnerPool:
         if owner['state'] != 'raw_ready':
             raise RuntimeError(
                 'Cannot release a timeline writer without completed raw data')
-        self.transport.release(owner)
+        try:
+            self.transport.release(owner)
+        except BaseException as error:
+            owner.update(error=repr(error), release_status='outcome_unknown')
+            raise
         self._remove(invocation_id)
 
     def _remove(self, invocation_id):

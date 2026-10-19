@@ -59,12 +59,20 @@ topsError_t topsHostMalloc(void **ptr, size_t bytes, unsigned int) {
 }
 topsError_t topsFree(void *ptr) {
   ++deviceFree;
+  if (fault == "release-device-before")
+    return code(905);
   std::free(ptr);
+  if (fault == "release-device-after")
+    return code(905);
   return cleanupFails() ? code(905) : topsSuccess;
 }
 topsError_t topsHostFree(void *ptr) {
   ++hostFree;
+  if (fault == "release-host-before")
+    return code(904);
   std::free(ptr);
+  if (fault == "release-host-after")
+    return code(904);
   return cleanupFails() ? code(904) : topsSuccess;
 }
 topsError_t topsMemset(void *ptr, int value, size_t bytes) {
@@ -106,16 +114,17 @@ int main(int argc, char **argv) {
   meta.backendKind =
       scenario == "cann-unavailable" ? BackendKind::CANN : BackendKind::ENFLAME;
   DebugRuntimeMetadata runtime{};
-  const bool timelineStream =
-      scenario == "stream-v2" || scenario == "stream-v3";
+  const bool timelineStream = scenario == "stream-v2" ||
+                              scenario == "stream-v3" ||
+                              scenario.find("guard-") == 0;
   if (timelineStream) {
-    runtime.recordLayout = scenario == "stream-v3"
-                               ? "gcu_execution_timeline_v3"
-                               : "gcu_first_last_timeline_v2";
+    runtime.recordLayout = scenario == "stream-v2"
+                               ? "gcu_first_last_timeline_v2"
+                               : "gcu_execution_timeline_v3";
     runtime.hasLaunchGrid = true;
     runtime.gridX = 3;
     runtime.gridY = runtime.gridZ = 1;
-    artifacts.bufferPlan.recordSize = scenario == "stream-v3" ? 128 : 64;
+    artifacts.bufferPlan.recordSize = scenario == "stream-v2" ? 64 : 128;
   }
   auto bridge = createFrontendBridge();
   auto eager = [&] {
@@ -126,18 +135,73 @@ int main(int argc, char **argv) {
       throw std::logic_error(
           "timeline initialization escaped the launch stream");
     assert(prepared.request.hiddenArgValue != 0);
+    auto &context = prepared.request.launchContext;
+    auto *device = static_cast<uint8_t *>(context.deviceCtrlPtr);
+    if (timelineStream) {
+      for (size_t i = 0; i != 64; ++i) {
+        assert(device[-64 + static_cast<ptrdiff_t>(i)] == 165);
+        assert(device[context.bufferSize + i] == 165);
+      }
+      if (scenario == "guard-prefix")
+        device[-1] = 164;
+      if (scenario == "guard-suffix")
+        device[context.bufferSize] = 164;
+    }
     auto exported =
         prepared.transferEngine->syncExport(prepared.request.launchContext);
     assert(exported.rawBuffer.size() >= sizeof(RingBufferHeader));
     RingBufferHeader header{};
     std::memcpy(&header, exported.rawBuffer.data(), sizeof(header));
     assert(header.capacity == 4 && header.writeIdx == 0);
+    if (timelineStream) {
+      const auto *host = static_cast<const uint8_t *>(context.hostBufferPtr);
+      for (size_t i = 0; i != 64; ++i) {
+        assert(host[-64 + static_cast<ptrdiff_t>(i)] ==
+               (scenario == "guard-prefix" && i == 63 ? 164 : 165));
+        assert(host[context.bufferSize + i] ==
+               (scenario == "guard-suffix" && i == 0 ? 164 : 165));
+      }
+    }
+    if (scenario.find("release-") == 0) {
+      void *hostIdentity = context.hostBufferPtr;
+      void *deviceIdentity = context.deviceCtrlPtr;
+      for (int attempt = 0; attempt != 2; ++attempt) {
+        bool rejected = false;
+        try {
+          prepared.transferEngine->release(context);
+        } catch (const std::runtime_error &error) {
+          rejected = std::string(error.what()).find("quarantined") !=
+                     std::string::npos;
+        }
+        assert(rejected && context.deviceCtrlPtr == deviceIdentity);
+        assert(hostFree == 1 && deviceFree == 1);
+      }
+      bool accessRejected = false;
+      try {
+        prepared.transferEngine->syncExport(context);
+      } catch (const std::runtime_error &error) {
+        accessRejected =
+            std::string(error.what()).find("quarantined") != std::string::npos;
+      }
+      assert(accessRejected);
+      // Only the fixture knows whether its failing SDK call had a side effect.
+      // The production runtime must never make this inference or retry free.
+      if (scenario == "release-host-before")
+        std::free(hostIdentity);
+      if (scenario == "release-device-before")
+        std::free(deviceIdentity);
+      return;
+    }
     prepared.transferEngine->release(prepared.request.launchContext);
     assert(prepared.request.launchContext.deviceCtrlPtr == nullptr);
   };
   std::string original;
   try {
     eager();
+    if (scenario.find("release-") == 0) {
+      std::cout << "CPU_FAULT_PASS " << scenario << '\n';
+      return 0;
+    }
     if (scenario != "eager" && !timelineStream)
       throw std::logic_error("fault did not reject");
   } catch (const std::runtime_error &error) {

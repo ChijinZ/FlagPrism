@@ -95,6 +95,37 @@ class OwnerTests(unittest.TestCase):
         self.assertEqual(pool.invocation_ids, ())
         pool.close()
 
+    def test_cumulative_admission_counts_guard_without_changing_raw_units(
+            self):
+        backend = Transport()
+        pool = TimelineOwnerPool(backend,
+                                 max_pending_bytes=1024,
+                                 guard_bytes=32,
+                                 max_cumulative_raw_bytes=575)
+        plan = dict(binary_id='binary-A',
+                    timeline_storage_version=1,
+                    timeline_record_version=2,
+                    timeline_storage_policy='compact_selected_programs',
+                    timeline_default_program_selection='runtime_first_last')
+        args = dict(binary_id='binary-A',
+                    function=123,
+                    grid=(2, 1, 1),
+                    scratch_size=128,
+                    alignment=128,
+                    num_ctas=1,
+                    device=0,
+                    stream=0)
+        identity = pool.prepare(plan, **args)
+        try:
+            self.assertEqual(pool.cumulative_admitted_raw_bytes, 256)
+            self.assertEqual(pool.cumulative_admitted_physical_bytes, 288)
+            with self.assertRaisesRegex(RuntimeError, 'cumulative'):
+                pool.prepare(plan, **args)
+            self.assertFalse(any(a[0] == 'allocate' for a in backend.actions))
+        finally:
+            pool.abort(identity)
+            pool.close()
+
     def setUp(self):
         self.backend = Transport()
         self.pool = TimelineOwnerPool(self.backend,

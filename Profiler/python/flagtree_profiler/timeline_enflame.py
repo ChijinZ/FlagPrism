@@ -91,6 +91,10 @@ class EnflameTimelineTransport:
         from flagtree.debugger.native import compiler_binding, runtime_binding
         self.torch = torch
         self.binding = runtime_binding()
+        _need(
+            getattr(self.binding, 'GCU_TIMELINE_ALLOCATION_GUARD_VERSION',
+                    None) == 1,
+            'GCU timeline requires a native runtime with allocation guards')
         compiler = compiler_binding()
         for module in (self.binding, compiler):
             for name in ('GCU_TIMELINE_STORAGE_VERSION',
@@ -157,9 +161,14 @@ class EnflameTimelineTransport:
         from .hooks.launch import _json_value
         owner['native_export_metadata'] = _json_value({
             key: value
-            for key, value in run.items() if key != 'raw_buffer'
+            for key, value in run.items()
+            if key not in ('raw_buffer', 'readback_guard')
         })
-        return bytes(run['raw_buffer'])
+        from .timeline_runtime import TimelineReadback
+        guard = bytes(run.get('readback_guard', b''))
+        errors = () if guard == bytes([165]) * 128 else (
+            'allocation_guard_changed', )
+        return TimelineReadback(bytes(run['raw_buffer']), guard, errors)
 
     def release(self, owner):
         owner['resource']['handle'].release()
@@ -171,7 +180,7 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
     def __init__(self):
         from flagtree.debugger.gcu_timeline import tool_identity
         self._execution_tool_identity = tool_identity()
-        self._init_timeline_state(EnflameTimelineTransport())
+        self._init_timeline_state(EnflameTimelineTransport(), guard_bytes=128)
         self._clock_anchors = None
         self._clock_initial_sha = None
         self._clock_file = 'clock/enflame-window-v2.json'
