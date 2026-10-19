@@ -248,7 +248,10 @@ int main(int argc, char **argv) {
       std::max<uint64_t>(2 * 1024 * 1024,
                          2 * Actors * (HeaderWords + 4 * 512) * 8));
   const uint64_t CaptureBudgetBytes =
-      requiresFullFootprint ? CompleteFootprintBytes : 64 * 1024;
+      requiresFullFootprint
+          ? CompleteFootprintBytes
+          : std::min<uint64_t>(8 * 1024 * 1024 - 128,
+                               2 * Actors * (HeaderWords + 4 * 4096) * 8);
   uint64_t Capacity = RecordCapacity;
   if (AutoCapacity) {
     const uint64_t wordsPerActor = CaptureBudgetBytes / (2 * Actors * 8);
@@ -674,7 +677,7 @@ int main(int argc, char **argv) {
           {"unselected_sites", std::move(unselected)},
           {"capacity_per_program", Capacity},
           {"capacity_policy",
-           AutoCapacity ? "bounded-actor-bytes-v2" : "explicit-record-count"},
+           AutoCapacity ? "bounded-actor-bytes-v3" : "explicit-record-count"},
           {"automatic_pair_budget_bytes",
            AutoCapacity ? CaptureBudgetBytes : 0},
           {"requires_full_footprint", requiresFullFootprint},

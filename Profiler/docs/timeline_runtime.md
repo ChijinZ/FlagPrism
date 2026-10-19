@@ -100,10 +100,11 @@ storage bounds, not an overhead or exclusive-GPU performance certification.
 Default record capacity is now chosen from the actual recorded actor count.
 A complete-CTA recording retains a 2 MiB allowance for the first/last program
 pair and grows it to target at least 512 records per actor where possible.
-The maximum remains 8 MiB minus 128 bytes for allocation guards; a
-sampled recording targets 64 KiB. Each actor has six header words and four
+The maximum remains 8 MiB minus 128 bytes for allocation guards. A sampled
+recording targets the full 4096 records for its at most four recorded threads,
+using 1,048,960 bytes for a first/last pair with four threads. Each actor has six header words and four
 64-bit words per record, with at most 4096 records. The compiler manifest
-records `bounded-actor-bytes-v2`, the automatic pair byte budget, the footprint decision and the resulting
+records `bounded-actor-bytes-v3`, the automatic pair byte budget, the footprint decision and the resulting
 capacity; the Python adapter independently recomputes and checks them. An
 explicit record-count request keeps its original meaning. The existing 8 MiB
 session raw, 16 MiB trace and 64 MiB bundle limits remain in force. The old
@@ -114,6 +115,9 @@ cases overflowed the v1 policy's 126 records per actor; those original failures
 remain retained. The v2 policy admits 510 records per actor for that geometry,
 without raising the 8 MiB raw ceiling. This does not imply arbitrary
 loop lengths fit the bounded buffer.
+The subsequent independent sampled-loop case overflowed v2's 254-record limit;
+v3 removes that artificial small-buffer target while keeping the same record
+layout and 8 MiB raw ceiling. The original overflow remains an acceptance failure.
 
 NVPTX lowering can remove complete static sites from constant libdevice
 branches after late-LLVM instrumentation. The machine map lists these as
