@@ -1,0 +1,51 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 563914,
+      "ppid": 1,
+      "pgid": 563914,
+      "startticks": 1026034556
+    },
+    "worker": {
+      "pid": 563915,
+      "ppid": 563914,
+      "pgid": 563915,
+      "startticks": 1026034559
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r070-gcu/format-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r070-gcu/runs/format-v3/output"
+    ],
+    "argv_sha256": "6b6ee842c16e0c1ff11c91f94620c97e9c89e6b1e3570c2d6daa182660ced885",
+    "script_sha256": "9e831da97a1b722aa789fb8c42bccc557a0d6e04b9f6862287f84ca1de04cf56",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 1066347081
+  },
+  "output/result.json": [
+    {
+      "hook": "clang-format",
+      "returncode": 0,
+      "stdout": "clang-format.........................................(no files to check)Skipped\n",
+      "stderr": ""
+    },
+    {
+      "hook": "yapf",
+      "returncode": 0,
+      "stdout": "yapf.....................................................................Passed\n",
+      "stderr": ""
+    },
+    {
+      "hook": "ruff",
+      "returncode": 0,
+      "stdout": "ruff.....................................................................Passed\n",
+      "stderr": ""
+    }
+  ]
+}

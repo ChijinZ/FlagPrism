@@ -921,6 +921,16 @@ Constant payloads are checked through all native reaching definitions. Wait
 payloads additionally match the actual DEPBAR group limit; commit/barrier
 reserved-zero payloads require their checked native control boundary.
 
+The header-relative record-address checker follows both words of the actual
+count uses at publication and record-index address formation, including
+loop-carried additions. Earlier or later reuse of the same physical registers
+for unrelated temporaries is not a count update. Live partial or predicated
+count writes remain unverified. A zero initialization or fixed-base first batch
+must precede all record stores and nonzero count updates on every reaching
+path; this also rejects a conditional reset after recording has begun.
+This check binds relative record ordinals, not source-exclusive durations or
+preservation of the uninstrumented pipeline.
+
 Default captures independently retain `native_control_payload_file`, scoped to
 the invocation and raw SHA. It records each decoded wait/commit/barrier payload
 that agrees with the freshly checked native operand, including actual actor,

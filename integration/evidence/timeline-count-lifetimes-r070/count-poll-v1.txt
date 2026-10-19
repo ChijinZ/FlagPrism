@@ -1,0 +1,139 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 121229,
+      "ppid": 1,
+      "pgid": 121229,
+      "startticks": 30839069
+    },
+    "worker": {
+      "pid": 121230,
+      "ppid": 121229,
+      "pgid": 121230,
+      "startticks": 30839072
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r070-nvidia/count_liveness_probe_v1.py",
+      "--output",
+      "/workspace/chijin-timeline-r070-nvidia/runs/count-liveness-v1/output"
+    ],
+    "argv_sha256": "85fb98a5cc8c85e27efa946d54735855547540980afcc5e600f1c49789411c42",
+    "script_sha256": "50318049acb974195770f1ccc6235b1e8b10409750217192f93bb92edbc44d31",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 615556450
+  },
+  "output/result.json": {
+    "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+    "reports": [
+      {
+        "function": "runtime_gemm",
+        "header": {
+          "pc": 9120,
+          "descriptor": "UR22",
+          "address_register": "R10",
+          "offset": 0,
+          "value_register": "R12",
+          "ptx_line": 828
+        },
+        "counter": "R12",
+        "writes": [
+          {
+            "pc": 1392,
+            "opcode": "MOV.64",
+            "predicate": null,
+            "operands": "R12,RZ"
+          },
+          {
+            "pc": 1456,
+            "opcode": "IADD3",
+            "predicate": null,
+            "operands": "R13,PT,PT,R64,0x800,RZ"
+          },
+          {
+            "pc": 1552,
+            "opcode": "MOV.64",
+            "predicate": null,
+            "operands": "R12,0x1"
+          },
+          {
+            "pc": 2064,
+            "opcode": "MOV.64",
+            "predicate": null,
+            "operands": "R12,0x6"
+          },
+          {
+            "pc": 4800,
+            "opcode": "IADD.64",
+            "predicate": null,
+            "operands": "R12,R12,0xb"
+          },
+          {
+            "pc": 7808,
+            "opcode": "IADD.64",
+            "predicate": null,
+            "operands": "R12,R12,0xd"
+          }
+        ],
+        "header_reaching_definitions": {
+          "R12": [
+            [
+              "definition",
+              1392,
+              "R12"
+            ],
+            [
+              "definition",
+              2064,
+              "R12"
+            ],
+            [
+              "definition",
+              4800,
+              "R12"
+            ],
+            [
+              "definition",
+              7808,
+              "R12"
+            ]
+          ],
+          "R13": [
+            [
+              "definition",
+              1392,
+              "R13"
+            ],
+            [
+              "definition",
+              2064,
+              "R13"
+            ],
+            [
+              "definition",
+              4800,
+              "R13"
+            ],
+            [
+              "definition",
+              7808,
+              "R13"
+            ]
+          ]
+        },
+        "address_status": "rejected",
+        "reason": "Published count has a partial or predicated write",
+        "first_record_store_pc": 1600,
+        "last_record_store_pc": 8960
+      }
+    ],
+    "device_executed": false,
+    "application_replayed": false
+  }
+}
+{'stdout.log': '', 'stderr.log': ''}

@@ -1,0 +1,22 @@
+{
+  "commit": "132650989f25088eaaf87c0cae1796c0b67ae20d",
+  "backend": "nvidia",
+  "parent": "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/FlagTree",
+  "native": "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/native",
+  "core": "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+  "cache": "/workspace/chijin-timeline-r024/native-build-v1/build/CMakeCache.txt",
+  "codegen": "nvidia;amd",
+  "assembler": "integration/patches/nvidia/assemble_automatic_wheel.py",
+  "tool": "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/late-native/late-timeline",
+  "backend_build": "/workspace/chijin-timeline-r024/native-build-v1/build",
+  "dependency_sites": [
+    "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/lib/python3.10/site-packages",
+    "/workspace/chijin-timeline-r058-nvidia/runs/native-install-v2/output/venv/lib/python3.10/site-packages",
+    "/workspace/chijin-timeline-r057-nvidia/runs/install-v1/output/venv/lib/python3.10/site-packages",
+    "/workspace/chijin-timeline-r053-nvidia/runs/install-v3/output/venv/lib/python3.10/site-packages",
+    "/workspace/chijin-timeline-r047/runs/install-public-v6/output/venv/lib/python3.10/site-packages",
+    "/workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages"
+  ],
+  "installed_source": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source",
+  "nvdisasm_wheel": "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+}

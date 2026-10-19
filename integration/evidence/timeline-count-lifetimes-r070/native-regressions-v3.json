@@ -1,0 +1,441 @@
+{
+  "count-normal/result.json": {
+    "status": "actual_native_count_lifetimes_and_raw_ordinals_passed",
+    "checks": [
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 2304
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 2304
+      }
+    ],
+    "rejected": [
+      "conditional_zero_reset_after_complete_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch"
+    ],
+    "device_executed": false,
+    "application_replayed": false,
+    "source_regions_qualified": false,
+    "ordinary_pipeline_preservation_qualified": false
+  },
+  "count-optimized/result.json": {
+    "status": "actual_native_count_lifetimes_and_raw_ordinals_passed",
+    "checks": [
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 2304
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 2304
+      }
+    ],
+    "rejected": [
+      "conditional_zero_reset_after_complete_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch"
+    ],
+    "device_executed": false,
+    "application_replayed": false,
+    "source_regions_qualified": false,
+    "ordinary_pipeline_preservation_qualified": false
+  },
+  "existing-addresses": {
+    "rejected": [
+      {
+        "case": "low_address_output_clobbers_high_word_input",
+        "reason": "Low address output overwrites an input needed by the high word"
+      },
+      {
+        "case": "header_base_depends_on_mutable_count_epoch",
+        "reason": "Published header address depends on a mutable record-count epoch"
+      },
+      {
+        "case": "wrong_carry",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_index_high",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_shift",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "carry_overwritten_between_words",
+        "reason": "Native address inputs or carry changed between words"
+      },
+      {
+        "case": "wrong_carry",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_index_high",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_shift",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "carry_overwritten_between_words",
+        "reason": "Native address inputs or carry changed between words"
+      },
+      {
+        "case": "increment_before_address",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "different_update_count",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "missing_update",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "duplicate_update",
+        "reason": "Unassociated native record-count update"
+      },
+      {
+        "case": "wrong_binary",
+        "reason": "Record address proof belongs to another binary or unavailable pattern"
+      },
+      {
+        "case": "wrong_native_batch_order",
+        "reason": "Raw occurrence does not start a native recorder batch"
+      },
+      {
+        "case": "incomplete_native_batch",
+        "reason": "Raw record order differs from complete native batch"
+      },
+      {
+        "case": "header_base_depends_on_mutable_count_epoch",
+        "reason": "Published header address depends on a mutable record-count epoch"
+      },
+      {
+        "case": "wrong_carry",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_index_high",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_shift",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "carry_overwritten_between_words",
+        "reason": "Native address inputs or carry changed between words"
+      },
+      {
+        "case": "wrong_carry",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_index_high",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "wrong_shift",
+        "reason": "Native low/high address operands or carry disagree"
+      },
+      {
+        "case": "carry_overwritten_between_words",
+        "reason": "Native address inputs or carry changed between words"
+      },
+      {
+        "case": "increment_before_address",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "different_update_count",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "missing_update",
+        "reason": "Record batch and count update are not one unambiguous straight native region"
+      },
+      {
+        "case": "duplicate_update",
+        "reason": "Unassociated native record-count update"
+      },
+      {
+        "case": "wrong_binary",
+        "reason": "Record address proof belongs to another binary or unavailable pattern"
+      },
+      {
+        "case": "wrong_native_batch_order",
+        "reason": "Raw occurrence does not start a native recorder batch"
+      },
+      {
+        "case": "incomplete_native_batch",
+        "reason": "Raw record order differs from complete native batch"
+      }
+    ],
+    "negative_checks": 33,
+    "original_files_unchanged": 113,
+    "application_replayed": false
+  }
+}

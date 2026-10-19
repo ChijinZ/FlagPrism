@@ -1,0 +1,450 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 121786,
+      "ppid": 1,
+      "pgid": 121786,
+      "startticks": 30904743
+    },
+    "worker": {
+      "pid": 121787,
+      "ppid": 121786,
+      "pgid": 121787,
+      "startticks": 30904745
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output"
+    ],
+    "argv_sha256": "ca3b5d973a768fbea64b063e4fa3a6ef63b30af2d2dd91ee9b7ac62ce94ace02",
+    "script_sha256": "26a94cab61077a60307bca8d53c8df6449d8a40aca55b28c82e501a60558ad6a",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 240,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 78702621451
+  },
+  "result": {
+    "status": "wheel_installed_python_only_count_lifetime_regressions_passed",
+    "backend": "nvidia",
+    "source_commit": "baea70620f8561369cc440fefba48f7938cbc25a",
+    "source": "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source",
+    "python": "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+    "native": "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/native",
+    "installed_members": 639,
+    "wheel": "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/wheel/dist/flagtree-0.7.0+git75174c03-cp310-cp310-linux_x86_64.whl",
+    "wheel_sha256": "eb6452e55bf6d6f851cdc778bd8e853377bcad41e97da1d939520efddc6a0613",
+    "unchanged_compiler": "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+    "unchanged_recorder": "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/late-native/late-timeline",
+    "steps": [
+      {
+        "name": "git-init",
+        "argv": [
+          "git",
+          "init",
+          "-q"
+        ],
+        "pid": 121788,
+        "startticks": 30904826,
+        "returncode": 0
+      },
+      {
+        "name": "git-parent",
+        "argv": [
+          "git",
+          "fetch",
+          "--update-shallow",
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/FlagTree",
+          "HEAD"
+        ],
+        "pid": 121789,
+        "startticks": 30904827,
+        "returncode": 0
+      },
+      {
+        "name": "git-identity",
+        "argv": [
+          "git",
+          "reset",
+          "--mixed",
+          "FETCH_HEAD"
+        ],
+        "pid": 121945,
+        "startticks": 30904879,
+        "returncode": 0
+      },
+      {
+        "name": "assemble",
+        "argv": [
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/integration/patches/nvidia/assemble_automatic_wheel.py",
+          "--flagtree",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/FlagTree",
+          "--component",
+          "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source",
+          "--native-python",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/native",
+          "--core-library",
+          "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+          "--output",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/wheel",
+          "--backend-build",
+          "/workspace/chijin-timeline-r024/native-build-v1/build",
+          "--late-timeline-tool",
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/late-native/late-timeline"
+        ],
+        "pid": 121958,
+        "startticks": 30904985,
+        "returncode": 0
+      },
+      {
+        "name": "venv",
+        "argv": [
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+          "-m",
+          "venv",
+          "--without-pip",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv"
+        ],
+        "pid": 122023,
+        "startticks": 30909926,
+        "returncode": 0
+      },
+      {
+        "name": "seed-pip",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-m",
+          "ensurepip",
+          "--default-pip"
+        ],
+        "pid": 122024,
+        "startticks": 30909929,
+        "returncode": 0
+      },
+      {
+        "name": "install",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-m",
+          "pip",
+          "install",
+          "--no-index",
+          "--no-deps",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/wheel/dist/flagtree-0.7.0+git75174c03-cp310-cp310-linux_x86_64.whl"
+        ],
+        "pid": 122028,
+        "startticks": 30910124,
+        "returncode": 0
+      },
+      {
+        "name": "install-disassembler",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-m",
+          "pip",
+          "install",
+          "--no-index",
+          "--no-deps",
+          "--ignore-installed",
+          "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+        ],
+        "pid": 122037,
+        "startticks": 30911203,
+        "returncode": 0
+      },
+      {
+        "name": "installed-import",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-c",
+          "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+        ],
+        "pid": 122040,
+        "startticks": 30911236,
+        "returncode": 0
+      },
+      {
+        "name": "count-lifetime-normal",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_count_lifetimes.py",
+          "--timeline",
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+          "--timeline",
+          "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline",
+          "--output",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/count-normal"
+        ],
+        "pid": 122041,
+        "startticks": 30911293,
+        "returncode": 0
+      },
+      {
+        "name": "count-lifetime-optimized",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-O",
+          "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_count_lifetimes.py",
+          "--timeline",
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+          "--timeline",
+          "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline",
+          "--output",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/count-optimized"
+        ],
+        "pid": 122042,
+        "startticks": 30911539,
+        "returncode": 0
+      },
+      {
+        "name": "existing-native-address-regression",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_late_addresses.py",
+          "--timeline",
+          "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+          "--output",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/existing-addresses"
+        ],
+        "pid": 122043,
+        "startticks": 30911796,
+        "returncode": 0
+      },
+      {
+        "name": "installed-public-reexport",
+        "argv": [
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+          "-I",
+          "-m",
+          "flagtree.profiler.timeline_reexport",
+          "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/public-timeline",
+          "--invocation-id",
+          "invocation-77ddf37b7a9f4b91aa9cdf633e617dda"
+        ],
+        "pid": 122044,
+        "startticks": 30911997,
+        "returncode": 0
+      }
+    ],
+    "public_reexport": {
+      "status": "counter_unit_only",
+      "counter_exports": 8,
+      "dependency_exports": 2,
+      "dependency_reason": null,
+      "application_replayed": false
+    }
+  },
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "pid": 121788,
+      "startticks": 30904826,
+      "returncode": 0
+    },
+    {
+      "name": "git-parent",
+      "argv": [
+        "git",
+        "fetch",
+        "--update-shallow",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/FlagTree",
+        "HEAD"
+      ],
+      "pid": 121789,
+      "startticks": 30904827,
+      "returncode": 0
+    },
+    {
+      "name": "git-identity",
+      "argv": [
+        "git",
+        "reset",
+        "--mixed",
+        "FETCH_HEAD"
+      ],
+      "pid": 121945,
+      "startticks": 30904879,
+      "returncode": 0
+    },
+    {
+      "name": "assemble",
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/integration/patches/nvidia/assemble_automatic_wheel.py",
+        "--flagtree",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/FlagTree",
+        "--component",
+        "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source",
+        "--native-python",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/native",
+        "--core-library",
+        "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+        "--output",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/wheel",
+        "--backend-build",
+        "/workspace/chijin-timeline-r024/native-build-v1/build",
+        "--late-timeline-tool",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/late-native/late-timeline"
+      ],
+      "pid": 121958,
+      "startticks": 30904985,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv"
+      ],
+      "pid": 122023,
+      "startticks": 30909926,
+      "returncode": 0
+    },
+    {
+      "name": "seed-pip",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "ensurepip",
+        "--default-pip"
+      ],
+      "pid": 122024,
+      "startticks": 30909929,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/wheel/dist/flagtree-0.7.0+git75174c03-cp310-cp310-linux_x86_64.whl"
+      ],
+      "pid": 122028,
+      "startticks": 30910124,
+      "returncode": 0
+    },
+    {
+      "name": "install-disassembler",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "--ignore-installed",
+        "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+      ],
+      "pid": 122037,
+      "startticks": 30911203,
+      "returncode": 0
+    },
+    {
+      "name": "installed-import",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+      ],
+      "pid": 122040,
+      "startticks": 30911236,
+      "returncode": 0
+    },
+    {
+      "name": "count-lifetime-normal",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_count_lifetimes.py",
+        "--timeline",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+        "--timeline",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline",
+        "--output",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/count-normal"
+      ],
+      "pid": 122041,
+      "startticks": 30911293,
+      "returncode": 0
+    },
+    {
+      "name": "count-lifetime-optimized",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_count_lifetimes.py",
+        "--timeline",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+        "--timeline",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline",
+        "--output",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/count-optimized"
+      ],
+      "pid": 122042,
+      "startticks": 30911539,
+      "returncode": 0
+    },
+    {
+      "name": "existing-native-address-regression",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r070-nvidia/native-install-input-v3/source/tests/timeline/p01_nvidia_late_addresses.py",
+        "--timeline",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline",
+        "--output",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/existing-addresses"
+      ],
+      "pid": 122043,
+      "startticks": 30911796,
+      "returncode": 0
+    },
+    {
+      "name": "installed-public-reexport",
+      "argv": [
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "flagtree.profiler.timeline_reexport",
+        "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/public-timeline",
+        "--invocation-id",
+        "invocation-77ddf37b7a9f4b91aa9cdf633e617dda"
+      ],
+      "pid": 122044,
+      "startticks": 30911997,
+      "returncode": 0
+    }
+  ],
+  "stderr": ""
+}

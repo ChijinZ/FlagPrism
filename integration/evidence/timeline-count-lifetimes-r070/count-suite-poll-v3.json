@@ -1,0 +1,184 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 121257,
+      "ppid": 1,
+      "pgid": 121257,
+      "startticks": 30858286
+    },
+    "worker": {
+      "pid": 121258,
+      "ppid": 121257,
+      "pgid": 121258,
+      "startticks": 30858289
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r070-nvidia/count-suite-input-v3/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r070-nvidia/runs/count-suite-v3/output"
+    ],
+    "argv_sha256": "a29cd16288a9391e7447200aea347f403d141c943e9549cb0f200b748afd0b2d",
+    "script_sha256": "8742794574ac899bc9db96d2d2b56264ae390613bd6123e6312827c7674c4c79",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 2468912959
+  },
+  "result": {
+    "status": "actual_native_count_lifetimes_and_raw_ordinals_passed",
+    "checks": [
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1408,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 1504,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 5456,
+            "mode": "append_batch_count",
+            "value": 20
+          },
+          {
+            "pc": 9344,
+            "mode": "append_batch_count",
+            "value": 17
+          }
+        ],
+        "unrelated_register_writes": [],
+        "raw_bound_batches": 2304
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 1280
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "function": "runtime_gemm",
+        "live_count_writes": [
+          {
+            "pc": 1392,
+            "mode": "initialize",
+            "value": 0
+          },
+          {
+            "pc": 2064,
+            "mode": "initial_batch_count",
+            "value": 6
+          },
+          {
+            "pc": 4800,
+            "mode": "append_batch_count",
+            "value": 11
+          },
+          {
+            "pc": 7808,
+            "mode": "append_batch_count",
+            "value": 13
+          }
+        ],
+        "unrelated_register_writes": [
+          1456,
+          1552
+        ],
+        "raw_bound_batches": 2304
+      }
+    ],
+    "rejected": [
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch",
+      "live_high_word_overwrite",
+      "predicated_live_add",
+      "different_add_input",
+      "repeated_initial_batch",
+      "initial_after_other_batch"
+    ],
+    "device_executed": false,
+    "application_replayed": false,
+    "source_regions_qualified": false,
+    "ordinary_pipeline_preservation_qualified": false
+  },
+  "logs": {
+    "stdout.log": "",
+    "stderr.log": ""
+  }
+}

@@ -1,0 +1,4114 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 122063,
+      "ppid": 1,
+      "pgid": 122063,
+      "startticks": 30916421
+    },
+    "worker": {
+      "pid": 122064,
+      "ppid": 122063,
+      "pgid": 122064,
+      "startticks": 30916424
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r070-nvidia/new-dependencies-sql-v1.py",
+      "--output",
+      "/workspace/chijin-timeline-r070-nvidia/runs/new-dependencies-sql-v1/output"
+    ],
+    "argv_sha256": "55eeec34bac40dae9210707459005bbe9fe5f4375db4bfc8c3a4d457a6a3352f",
+    "script_sha256": "46c4a2e60a51c8e677896c0f5d0ae80cc1a9518fe1997d0488dcb9d259f05b44",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 2418973813
+  },
+  "result": {
+    "status": "actual_dependency_traces_raw_internal_intervals_protobuf_TP_flows_passed_not_full_goal",
+    "checks": [
+      {
+        "trace": "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/public-timeline/derived/counter-ns/cc662fc02a0f4072dee5760389f97a8f0af594633f33f3bc523bec117a7b2bae/traces/shared-device-counter-f19d25aa9587922058d1691e386b1297252d0f5e229f36550561b3c0906af00d.pftrace",
+        "sha256": "2df4f2bc4696bbf3956cf958532afbce29c84f4d3ea923185327e1b51f1afbc2",
+        "nodes": 180,
+        "node_depths": {
+          "record-222cda58ddc98f3fc46b6e833b4dcb5521418fe9c086a7c7e5bdcbc458b3174c": 0,
+          "record-2afdf67b2bca23e9e70e9e35662965036fa2ac6addf33d740ccb9ddeec2fb42b": 0,
+          "record-463af6441806133e944599006823e50a11d4d09bd8274cd6903464e4a01c395e": 0,
+          "record-4331ed0621afa91b87670202c949f748914a969f3fe204d4f14f16a53157d877": 1,
+          "record-806f38b8e17bc36ccaaa1074eb151ef72d95e07a44a30395e6c07964d8307213": 0,
+          "record-67475c2373b44dac53d53f13fa103045b9ddce7bb95b406d883e576437780044": 1,
+          "record-af4cada9e74f7bc30d0ec9819b69b00a89b7f6f839baae4672a54197a65e31f4": 1,
+          "record-e1812d860527ae72ba419397901a0abff95d3418abc91371a66070b74d176253": 1,
+          "record-32c223266fbcbc19ca1e3ab13395bbaadf7b9926928e5b76f9e19c7fb56b9cf9": 0,
+          "record-45e3fda0faa007f80e93e0eacd1b4ef08079a9c5c2711e90f0d7b504532296d0": 0,
+          "record-5aa1992dee3359bc1a91a9deaadb9538aa741e01713c326f65ce66791b7ec0c4": 1,
+          "record-7fc4ba864e0a4ded25f3d0381601bbc80262bc04e6e8a16fae13a538ed2a9f06": 0,
+          "record-6c2e1d62a76e7d288193100e2b4a71c1f80522abdca2b7e84cbf5664cd45d5c9": 1,
+          "record-81a3c5375f6db73f47864f3f911781cb9d3faab201ab9cd9ea356222651b127f": 0,
+          "record-a379dfa9f838f268559772d0ec9e1c06b1558a278f582b09977bc7dc020740c9": 1,
+          "record-b6cc54df23759100327e2a15fb7c92e771d632e8c054a65dfef22a75c57d5b80": 1,
+          "record-6838e2798d4f04c4e5cb4833b2b219913e8e1cd902ece3e7189055f0e6f84c4a": 0,
+          "record-891a2766f82671e7ab0eb5fe989f83bdb04399eb55e6fce4336f8f86009a7b75": 0,
+          "record-9b45d122ad38763eb575fdb0202a6b03e151f64783a0b97c857d51d02c171042": 1,
+          "record-e37ff8a10956e8d74d66d3a8b6259970eefc1fa633adc23cc67440d88a189f1f": 1,
+          "record-bee4a01686e27fbef62516128e7fd165ef64d4f4a01583feeeb995fe517580b6": 2,
+          "record-e5db64078723eb7772c35d08633b7d3a8c95ca33327e3638275a59608fafd859": 2,
+          "record-0dde92dd81da64cf3a183c84b7df623e03b00db189f93edd5bc25934e83631aa": 0,
+          "record-47e243e5b118f3deffa5ae686ee280fdfa132e10c4c7d1857a709ddbab944931": 0,
+          "record-4bc544e7e171ce0616fadc4a27a77805b3cdc5555ba1ddca2096c05c3076eb2f": 0,
+          "record-4e5c0a203acf36b954e7a613fab55f39d4aa4a20d0e99ab66e4c9a19f3547f85": 1,
+          "record-573ccfee0174a4b4a6c53502f21220bc0b351c9b7c347feba673741695e37c1f": 0,
+          "record-8bf2489d1abedef71852d1828af96421d7760a2eed7da69fc68a276d084155e3": 1,
+          "record-9bba02368eb38e5a808460ccc002bc6e46dfb4069d00ab07a4ba606ba4b96fce": 1,
+          "record-9ea2bdce220de768e010cee0188d605e8125997b5668d16331eb899845fdf04c": 2,
+          "record-a3ca9a4030e2e4ef0b042381a5e3d9aedd3ebc18a478c2d88fb1ea28bceb5ed8": 2,
+          "record-cdd9b54df9a2289e9c74b20d850bcb708f469bb2df4fbb15e27d51cc0d3af5d0": 1,
+          "record-4431ad4e47b566011d9865a32c60bb3c8556bb519a77a1cf8b5b41ea9af9148d": 2,
+          "record-37973ede7e2a8611e3e241be68768e5678868e0cd476c9f0ebf8a260d04de412": 3,
+          "record-55d211c6ad8fc3a7c06bfdb120232b110ae2b62ed2c4624d85dbd294d50df023": 4,
+          "record-cc711467c166ca43f9dfe1f75ed5a7eae21110bf82f911f4771980c14e21da39": 5,
+          "record-e4690d111ec0efbbf37ddba824576108f79695aba0f9127df836258934ec6671": 6,
+          "record-e978a71efaf35c603be8b57b8c0ce1185b58ce3777678608c97c1d9151be6ff5": 3,
+          "record-eb8b5f547c6b18833ff2fd4a78fed56d1c3f6e38aaef5108765d820fbb9945bc": 2,
+          "record-09d6c5d98a44658c87557c700b48da4c637a891a1e1df0bee22358fef1075a3f": 3,
+          "record-7391ed401d1c51db028ef58dde02e002c2ab0c3c64556f177e51298f04345c4d": 4,
+          "record-841bae32e26500b72d68809771fdaae42e45b454e828f78dc33d4bb43302429e": 5,
+          "record-913d7fbfc168463d69b28f81474b424357d2e201ba4176d10f4ead6ecb46049f": 6,
+          "record-ed496a3ec2fe2eff8bf059295f62ff2cbcefd75d4ed9e706fcf6f9b1e1eb23be": 3,
+          "record-d086f8e6b81daad941b328d5c03a4639285f940628eb32cdde604ed36799a584": 0,
+          "record-a8deeb01ff70cab5c03e5a410fec2692664d173cd4943d329666e629909cdd99": 1,
+          "record-9c489badf3c5fbba3ebb9316ab4a9541c385402461766edfc9ac3c2c739999c0": 2,
+          "record-da3d417e5d12f10244f1a802758b1e4b95186523f2289ece4819748ce5921aa8": 0,
+          "record-97e87c7c5badfd774b0be7d5623aed5bfc14fd6ab70249ce6f5d7ff4f461886f": 1,
+          "record-e1191a75f7bf3868ce5b4a054593585a50c0b3a2d425983097715470abca1d29": 0,
+          "record-221b3011131ec08b60d929ec61dfb6e6f15d5d87e3279acc90d4cf35107ec2ac": 1,
+          "record-04a486958f86f344cb58c12a6bb2dc2ac9ed618af9b9a6b1e8437c09dc37995b": 2,
+          "record-f631cc5f1a64160fdb6ba0c36ec2b1ecdf37aeced36bcfb984de5e5849f186db": 0,
+          "record-f7fc4bba2417ee1021f02dd9cd0df527c4aca519c34e4a9f7db852207be9806c": 2,
+          "record-012c1e9e8ecc4941894180693b443625ea78b769b662ce06ee84ca6702aa72f7": 0,
+          "record-f606b7393ca0108fa764dae033872e9bcc401d5de281b8c2669d5f24ebeea122": 1,
+          "record-7d9ed9691985dddcba31e37ec61a76f3a2ace2d73e3fbc806234d38397af2d56": 0,
+          "record-7f9fb3baa5a8ef46c530ffc0300b130b17f6c522cdd04aa2c88ec11d9181523c": 1,
+          "record-a0de412df4ae33ab1c7778e0fcbfc62f9795b73b632e8f1a186a74370c5985b5": 2,
+          "record-17db63b5a0a485b70f0a38c84a695bd991baa4aa2ef6a6aed4b282ccc97ff13a": 0,
+          "record-31802e187e2b3b3546850606681983d5aa36052059faef15c8fe52b0ce917f0e": 0,
+          "record-3db4ec6e595a4336922d466812dfb6c9d02c5d433f9a85be373f005a1acf30b2": 1,
+          "record-2908a193c31a15e2f942c3a3fe4b6b4f3478699ca44309af5b39d5f8febf8057": 2,
+          "record-418f47c01112852148f7aa82148c98cc3d99e499ec6d8f328c5aa55ce1b1fd5e": 0,
+          "record-688cc094ed4d49d0d788f1336744142dba2923cfc8f14a901a4b8caa8f10fb5b": 1,
+          "record-702a7ac2454da2c1524a7c6d0b9c4b57f2ba446d30938680824a428c3da8a455": 0,
+          "record-7c73bf16fbfc017240d8ef6b4ea4a2f266ddba4d725d2e03b13a9fa21022ce39": 3,
+          "record-b1c04e1f1278db5848f58bec53a2b92eee3cf8faf5b7a959eafe5e457169ca70": 4,
+          "record-b38903816e7ed55210618f2de3998a7d4493df17dd8d5c67423a0614d9e2f4b0": 1,
+          "record-bc239eee92e159ca6aa7747ea10548f1db60482dbec81f960dae40b4de7f9833": 5,
+          "record-d6abe4d238b846a3b07d52aa07faa289a3f50419a202d4948e3aaa722f1f1a7a": 2,
+          "record-dd8e4ef97f95eb014a01c27fca3fd3298ab8d0aeb63b714ce2e3f09c6326aded": 1,
+          "record-4b245400ee67f00c244540e521efec6a240bd45fd42321d1c4a2361d7acd23c9": 2,
+          "record-1f94f29de53df5e82a8c3347ec30bfc7d2e065ba7e8fb950cf2afc47dc1ee6f7": 3,
+          "record-432430fa10504604da3fc4f8e11eca9e676cd92e2f198f8a19ef74e5707f5390": 4,
+          "record-8c3d9a83a8ae5d048e28e6a2794ded823425092e2edab2a055616b02e84dbd68": 5,
+          "record-b772b668cf0ab6f7ac3d50a2c2afb7824ba0c57f20e78b737d0256af84a9713c": 6,
+          "record-e5d355fb4a8d66103e99067a9f2a4847aa7f5ab446f2034ed64ffb6d2b8c9620": 2,
+          "record-03057da8694bc80827d7bcd2bc2a866bcd89d703fc9c9bee4ff2fae48a7cf1b0": 3,
+          "record-5ee2dea1dde5b06aa9842e2bb479f98a629d833268ce40803e73a924f11052d3": 4,
+          "record-a7de74d9b9113674cf5bc6a318ba455fdb4ecead8866052bfa0d26f5f2ac2d5f": 5,
+          "record-d4ea4873787c5e9f6c4691459b3908b5be666ca13c89ee5cc1ff3ac221a6c25e": 6,
+          "record-e6b86eb47d97794137f394d65cb8d9442203894e7f7dc243eaf12a434cbb07b4": 6,
+          "record-f3b7a04f64d245605f8903bc0cae95425a6cc211942d5878d868442463fd4d1f": 3,
+          "record-8e6ec907ea75776cda15c3ce49b9ff9c0d8e6261f69e702bd09729d41c7b4de5": 0,
+          "record-a3d04e4f8e9cf555f181ce28e541ab28c48cb6e0ca9c3b4f3082b6c679a61a0d": 0,
+          "record-a86e083fe36fc5568bc604510fd42c8b5dcb4cd45645256bcae1fb9f97a94ec6": 0,
+          "record-eb0bb801f9d0a581e3f13e857a54cedac88130841b97e1a457c342c08168a16b": 0,
+          "record-ec213abd83a1d954054e22a8a652c34fc80b0c4b308218411befb8f1c3b092bb": 1,
+          "record-2fffffb80b85bea3ee71005eba1c39ff5facee946717a59ace306403cf257a91": 0,
+          "record-39da0aa0b979eaf710f511c36f44e9af8a0e89abdfdca3147de442d878ff54b0": 0,
+          "record-a37df3cb74607315229c66f4f45b705ebcdd59a6412b6246cbbfa0391dc4f723": 1,
+          "record-ac6655ca9710eb248cc1a453070a9a7fe192a7777bf21587a5d4daf878d2edfe": 0,
+          "record-caeaf6aea4462c0287f82372b505f1c425b7f508e6c07ca8ec0bfde2cdb40f25": 1,
+          "record-ea392b0ee172bfcdc69dfac5796ca23b3a13c5e6904cc0834b6f3897a097a2ca": 0,
+          "record-6d808526d4da2f579960b8caaf5a0bd690f8838316d036cbb9b21dd46793b6b9": 1,
+          "record-44d73d51a327a05277753e20c91777122b6dfc0e3f4b007dca982767f9e0e7d2": 0,
+          "record-66d88f0ca56bb0192950db4842bc978ceb013d283dc7d5d7d04de5a462539946": 1,
+          "record-659a4ed4392438f4da112c0ec99821f4e06e827cc6878ad5db0692c64c54278e": 2,
+          "record-239c2e8fe491fac96a13a2ee502da4b6e1237ce5e379f2fc2f6a8f6b69917f43": 0,
+          "record-93e8d4fe30525a1d18adb97eeb117c32d7df43b39869951330780e66ab059e2a": 1,
+          "record-993eda41a8fb600eddb157fe0ec6a40583f4c916828c857d98d03621498c3b2f": 0,
+          "record-e0bff112b621a69aa393e196325bfd52581d6716687f36533afa7570464ab309": 2,
+          "record-02e154a065bcc4d05c0a643bd131873685369e8354ffce1d1bd3f08e4b9c2096": 0,
+          "record-0e271cb6e37a4b704798cf29d6d9db23dc3683aed0446f8911835a44857f28db": 0,
+          "record-119b4409a346dea8cc7b1f110b2293bf98bcf06f49f5329a457e6c999fa862c5": 0,
+          "record-21f308bf6437faaedfe260361c5fe5220867c02984e2022e0fef9679e19ca556": 1,
+          "record-3db45eb9a2bd0fe94193d832e1572e2f62c1a247de1e57480161576572deea5a": 1,
+          "record-af8a5d9e924badcc44c584de71b703777637efbe06dee3406d7ce63e16a22b51": 2,
+          "record-be0094be801bd247df88ed9badac9a06735a79a2235d6e6172820d9241626c0c": 1,
+          "record-8601d07ffa9341db0ecb6445e9dbf26e706b8312870635bf839e0c8b814320a3": 2,
+          "record-1627e7327e9f1eeb891f549aec287b59618f51a20e77ff30ee94c77666064aba": 3,
+          "record-5cf49894e919650e4a0c9aea1960ae7e31b476c513cdaf70c5c32966c4fc1d7d": 4,
+          "record-71e4b6eff6eb1fc65f4c12d3512159c574683055ee0d907abe6b5831530800b6": 5,
+          "record-bef1f1bef418919173794f7b094c37104cb7bff321b33cdd3b48e03e3e71add6": 6,
+          "record-de0de96c8ac453c1d88590416e727c1867e74bab3adcf9ca50227392ec1483c7": 2,
+          "record-e2092d5b54473c361007631ac7d561104dc48e434e7f1e4886d14681c6653d52": 0,
+          "record-72a155c7fa0efc41f0676205d702d2d0db0cc8e1f5694cb136d0c37adaf42e89": 1,
+          "record-57c6adfdd6d233f3fea3b2049d47d3017b81c5aec7fa82e47ff99927c9bb7681": 2,
+          "record-7e7466d5cbb5306cb68da8c40719bd4f7d80f51a2791fd83924b042994bdd180": 3,
+          "record-cec18dceb6b1458e35f8e850189dac44e52ce688af01b116eb3db3b2e6cb557c": 4,
+          "record-dd11fa2670ad015cb234eb0d04aa3304375c068c2fcd4fb57edc94b238108bd3": 5,
+          "record-ebeafee1660fc80cd1d5dc4dba4bd4ce03d4e0f5e0ae0c92a3dd3d7c88c7affa": 3,
+          "record-f7d418f81636b61e7c635bf2f093af8edf2929e27bd7e4c2503d523215f21bac": 3,
+          "record-4bf15e3c6c93ca03ce42609432091256c0140a0986550f122b04e009fd8ebcad": 0,
+          "record-8b184317126e30238eb165210038c75d1723810c1efb5ca4fef228d5a47df0d5": 0,
+          "record-0f8c139aadf0f8e53a533cd20c07e8661cfc4cae485e7f9a7325804a3242683b": 1,
+          "record-68cb8dfc701fe00a45f426dea172fb31db9479ea627602a2bc194dd3d39a826f": 2,
+          "record-96d5f4e487f482ecf6366cf9589ca4e95a16c41d2e9eb78b505278416cd45265": 0,
+          "record-06621d7a64f793876f84387423addf19ec61938f9b969707a27cbc7782b6f189": 1,
+          "record-b76cee3e337070253a70adc58e7b422d63bf3bba06adde32f332cdb24705b91c": 1,
+          "record-457c0bdf2461f465339bd148375f9a9ec072a08bac69b0b53a417f3c5e8a6f74": 2,
+          "record-d3661b71478807277115b7ee7d33cdeb5277958a03f0aa6f8ababb0776f2cc82": 2,
+          "record-edc5d60d473e419b848778fd0a09093844fb4ba467c98b9f10cce96d2cc5faf1": 0,
+          "record-52ded12f765d1fcb273f0e1fa8d55d692bac1193b4187fc2381ce16f9ae35b4a": 1,
+          "record-4b63da4632f3fd5aff3521bbf6f20130da9ff435f5db30d188013991b7c43a2a": 2,
+          "record-3c68fb12b5f0046738274e377e32c14d3e7353bae43bf7cda7fb280444a37e65": 0,
+          "record-5a4aa38f2b5c7bd0885cec0e925cb7aa7aaffef748dba8d529c9dec98e5c62d4": 1,
+          "record-cd0a5ae6a73b0478ae72725234d774e4110cb7bce08803d1b10c2fbbc40348ea": 0,
+          "record-b2bebb5b52c6c4ef35222eaec9a51763b647e47561a8f094ca781c8c0b50e87d": 1,
+          "record-1827107c0ff12617e8d658689a82ce83b6c01bbdf4c92303be1172f76aef28f5": 0,
+          "record-8abef40acd6d8d34e4f45983d797e688e8ada6c75a74ea6e152c51ab970e975e": 1,
+          "record-26de60e9383f013719338d1649d803a3069bef762550058fb8957c29006659ca": 0,
+          "record-2ebd9101a32ff58f1c2b4b6d2ed990a0fa62b556741fb1ff078f5705818af2a1": 0,
+          "record-6439831fc70d0c1c1761ff34565315c32c1a0e237d255d73cc291c9b90470c6a": 0,
+          "record-718a2e43f3a09219aee744f0e8524dc2d666aa2dd36f40d4e9c57f159133fc86": 1,
+          "record-be31450448f49f080aa8d07d02ef931e5ec14d199fc82937e897681bf9c20c67": 1,
+          "record-c9646e7c6b1a7c93861ca86ddcb3f9d802e2f235e26f010023a88d0da24d2e52": 0,
+          "record-cf4589857ef07f8cbeb48d0e6456866583541c39160fce456a81d13609c8c80b": 1,
+          "record-d7d6c717f296f11fa2bd96510e961fa0dc08402a027c54a7cdb125e89de511b3": 1,
+          "record-672bb56962a85b189a7327f67c9a936c43327c7c95012389865914fe7fc69299": 2,
+          "record-f49b921eb2b27aafcf955b92709c94a8630fbdeb17e1be85d90c07e3ab0320bb": 3,
+          "record-0cb88cf3d6a42e964728ba6729888bd1e61bcfeb2e83207f52b2583ac9d30e04": 0,
+          "record-25d57d0cd237bcb04d7aad827d2286f1c1e994dfc7a159bfd7b7351d1c686a17": 0,
+          "record-56f4904feb8fedb7a8ffb7f81324a079120f1823cfd759d4ee1f4865af8f0350": 1,
+          "record-48e9db3fe6c32cbc25db433ccaa0624320cd4a0fa2a82e3dc9b88f2c48cfe2e8": 2,
+          "record-9a72b542eab668770ccd1868e2e9853408607a12e2c4738968e7206c5c20ad32": 0,
+          "record-9df5d571f589ab486ed4f42ebc7726d466eb260fcaa961d0f995e72be0f8b407": 0,
+          "record-a41132d60235b5ac647d3a294230a66b23b795f1a607cc88830c156229cb061d": 1,
+          "record-a92376da1d7cb738ad8b2fc885a6272ac90ee2124ec8ecb3b40edc30d994a221": 2,
+          "record-d95e6ce8d03d97d327139fb48a559f4b5014e41e3c235a018e7303f3ae91920c": 1,
+          "record-090c702bf28ee9c2eeffb1188d50675e91ad379199a3d84ecca7becdd5f82ab7": 3,
+          "record-38986318919093aa749c3d31ae1bf8665461ba3a820708a550e5d223c997b04d": 3,
+          "record-49fa89942244b15fee3c4b47cefdd1f085ed6689d6c603919c5be808e058a3c3": 2,
+          "record-742f547fdc78c248abf6281328c6df6252f0a6fe1403d6d38043c1dbc3fb6933": 4,
+          "record-7595874ac8b0a2c97f51630db786109a4b197259d0413bc27571de8c9f0c6729": 4,
+          "record-8fc998956457cbded0071caf3a7ac1a2cbd584df986b131d544a8e310e4af49e": 5,
+          "record-9ac0feb7dcf1887c6aff65c945634ffaaef8128ed8de2e806bbfe0ba255639d4": 3,
+          "record-a7ace02d66068e290658ce91242350211a8e3631a7fab5a14e5a6a39872ded1a": 5,
+          "record-aec36ddf34f06443b5c51a39d81e0a052b6338451a847973482f1ec5ee543f27": 4,
+          "record-c373bec06985de83b2de427cd6fb08000224f6a883723ea0a054ca9b4bb7538e": 6,
+          "record-d0e7e4b1c2fa960486b23335f947af3d11f793aeb448b9cb6b56f8cf8c052c79": 5,
+          "record-e65fbbe169169c91357d86df1f670c4967fb7f3de8b867d918ce7afde846b289": 6,
+          "record-ed4382467836e5906be5c4cd7da88a4c588e7d396ef4bb3879aec38d1d6ecad1": 1,
+          "record-acfbd18c911edea0c527c6a9212419b63e06beb9fc2dd6bfeae2ee056ed87482": 2,
+          "record-2b577cd7a1a65a880185d858b0240068d53a846d4c7753c06185bd9c7008df0c": 3,
+          "record-a1d87029d1b2ff6a05a51970968097de9cdd8d5b34c203387be8d4e9f21dc956": 4,
+          "record-c00faa1dcffe12529a414c469b27bb0331e91f7098576cf955bd064b3e4c7d60": 5,
+          "record-d6505a70c2ca6bd037ea61fcdf3eda81b709855ff4d5aece427d2a2b3f583553": 6,
+          "record-f7955a56bb4466336439ced34d57cd8cfa9981e39b634e2d3e7192d7f370fd9a": 6
+        },
+        "flows": 404,
+        "internal_events": 208,
+        "positive_internal_intervals": 22,
+        "raw_offsets_ticks_ns_exact": true,
+        "protobuf_fixed64_exact": true,
+        "importer_errors": [],
+        "importer_stats": [
+          {
+            "name": "deobfuscate_location_parse_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "guess_trace_type_duration_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 11297
+          },
+          {
+            "name": "parse_trace_duration_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 17466756
+          },
+          {
+            "name": "sorter_push_event_out_of_order",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "trace_sorter_negative_timestamp_dropped",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heap_graph_non_finalized_graph",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_aflags_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_br_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_format_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_total",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_size_cap_hit",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_codec_error",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_display_gone",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_no_encoder",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_display_not_found",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_encoder_setup_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_virtual_display_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_parse_size_cap_hit",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "energy_breakdown_missing_values",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "energy_descriptor_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_descriptor_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_residency_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_residency_lookup_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "energy_uid_breakdown_missing_values",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "frame_timeline_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "frame_timeline_unpaired_end_event",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_bundle_tokenizer_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_end",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_delta",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_end",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_delta",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_setup_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_abi_errors_skipped_zero_data_length",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_generic_descriptor_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_thermal_exynos_acpm_unknown_tz_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_non_numeric_counters",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_timestamp_overflow",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_record_read_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event_arg_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event_arg_name",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_unknown_event_arg",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_string_ref",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "generic_task_state_invalid_order",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_invalid_spec",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_missing_spec",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_missing_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "gpu_render_stage_parser_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "graphics_frame_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_tokenizer_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "invalid_clock_snapshots",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "invalid_cpu_times",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_reused_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_unknown_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_zero_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_non_monotonic_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_implausibly_large_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_trackevent_format_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "app_wakelock_parse_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "app_wakelock_unknown_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "meminfo_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "missing_disk_io_event_name",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mismatched_sched_switch_tids",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mm_unknown_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "power_rail_empty_packet",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "power_rail_unknown_index",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "proc_stat_unknown_counters",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_negative_size",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_unknown_thread_for_mm_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "filter_input_bytes",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_input_packets",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_output_bytes",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_time_taken_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_duplicate_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_no_enclosing_slice",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_step_without_start",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_end_without_start",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_invalid_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_without_direction",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_empty_callstack",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_string_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_mapping_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_frame_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_callstack_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_parser_error",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "smaps_parser_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systemd_journal_num_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systemd_journal_num_total",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systrace_parse_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "task_state_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "traced_clone_started_timestamp_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_clone_trigger_timestamp_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_chunks_discarded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_data_sources_registered",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_data_sources_seen",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_final_flush_failed",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_final_flush_succeeded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_failed",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_requested",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_succeeded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_patches_discarded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_producers_connected",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_producers_seen",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_total_buffers",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_tracing_sessions",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "track_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_dropped_packets_outside_of_range_of_interest",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_tokenizer_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_hierarchy_missing_uuid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_thread_invalid_end",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "tokenizer_skipped_packets",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "vmstat_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "psi_unknown_resource",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "vulkan_allocations_invalid_string_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_unknown_source_clock",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_unknown_target_clock",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_no_path",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_mixed_clock_sources",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_undeferrable_packet_loss",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_cache_miss",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 2
+          },
+          {
+            "name": "process_tracker_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "namespaced_thread_missing_process",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "json_tokenizer_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "json_parser_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "json_display_time_unit",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heapprofd_missing_packet",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heapprofd_non_finalized_profile",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "symbolization_tmp_build_id_not_found",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "metatrace_overruns",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "packages_list_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "packages_list_has_read_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "user_list_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "game_intervention_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "game_intervention_has_read_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "misplaced_end_event",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "truncated_sys_write_duration",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_switch_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_waking_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "empty_chrome_metadata",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ninja_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_skipped",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_cpu_mode_unknown",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_skipped_dataloss",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_dummy_mapping_used",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_missing",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_ignored",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_lost",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_truncated",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_partial",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_collision",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_auxtrace_missing",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_no_tsc_data",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "spe_no_timestamp",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "etm_no_importer",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "memory_snapshot_parser_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_time_in_state_unknown_cpu_freq",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_packet_before_tracing_start",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "unknown_extension_fields",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "network_trace_intern_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "network_trace_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "atom_timestamp_missing",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "atom_unknown",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_intern_errors",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_isolate_has_no_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_no_defaults",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_no_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_unknown_code_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_code_load_missing_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_clients_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_manager_service_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_service_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_sf_layers_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_sf_transactions_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_shell_transitions_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_invalid_interpolation_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_missing_interned_arg_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_missing_interned_stacktrace_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_decoding_failed",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_collision",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_collision_resolved",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_group_tag_collision",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_group_tag_missing",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_param_mismatch",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_viewcapture_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_viewcapture_missing_interned_string_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_windowmanager_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "jit_unknown_frame",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_missing_event_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "android_input_event_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mali_unknown_mcu_state_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "pixel_modem_negative_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "legacy_v8_cpu_profile_invalid_callsite",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "legacy_v8_cpu_profile_invalid_sample",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "config_write_into_file_no_flush",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "hprof_string_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_class_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_heap_dump_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_instance_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_object_array_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_primitive_array_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_root_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_reference_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_record_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_segment_overshoot_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_field_value_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_class_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_header_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_heap_dump_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_primitive_array_parsing_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_reference_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "slice_drop_overlapping_complete_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "slice_spill_overlapping_complete_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_text_importer_sample_no_frames",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "simpleperf_missing_file_mapping",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "slice_negative_duration",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_work_period_negative_duration",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_missing_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_thread_missing_pid_tid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_process_missing_pid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_missing_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_descriptor_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "incremental_state_cleared_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "previous_packet_dropped_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "trace_packet_defaults_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_track_hierarchy_loop",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_track_hierarchy_too_deep",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_default_track_with_parent",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_conflicting_reservation",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_range_of_interest_missing_start_us",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_invalid_child_ordering",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_missing_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_missing_value",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_invalid_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_missing_track_uuids",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_state_missing_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_state_invalid_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_track_uuid_mismatch",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_exceeds_max",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_invalid_track",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_descriptor_skipped_incremental_state_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_timestamp_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_thread_time_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_thread_instruction_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "packet_skipped_seq_needs_incremental_state_invalid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_skipped_incremental_state_invalid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_unknown_edge_type",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_executor_not_found",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_end_without_matching_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_missing_entity_details",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_missing_parent_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_malformed_timestamp",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "protovm_abort",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "protovm_registration_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          }
+        ]
+      },
+      {
+        "trace": "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/public-timeline/derived/counter-ns/cc662fc02a0f4072dee5760389f97a8f0af594633f33f3bc523bec117a7b2bae/traces/shared-device-counter-3e9194856b664d0c46e0abd02e00712b41740f334ef644f126ca345986e2edb6.pftrace",
+        "sha256": "288b4d4f74dc1f36d1840606612385daea837cb2226c7567720a971b0be1292f",
+        "nodes": 180,
+        "node_depths": {
+          "record-1b64f9fb688c89d4e33823da0d9f62e9f5889b1c0f3c3fc50d227d0769e1276d": 0,
+          "record-1ea38adbf99f3575450479b6504747a492f1c28bc419f8320ca336aba2abda67": 0,
+          "record-1796c9841138d53bd0ea9ac8620a843ff5b6e69f27ed74c4d875bc4be37ca153": 1,
+          "record-3836b16f7add309cf1e10ba9473d47abe668bff56023595553f8254ded5b855c": 1,
+          "record-44eb7fee8f561639e2e80d3bf5384e730de65e43094340dbc784c0a2e083bf39": 2,
+          "record-521d062bbea6b2ea6e95452f6e02e2798aa428a938ed322cc775e24ba8f40872": 2,
+          "record-bb253f0cbf18146f2925b1301dbcfc2ddf5be826afbcf0af25f1ae5cfa609858": 0,
+          "record-c2991802eb4905cda86dee31fc757fff557b8b4e5c07c3f9ab1d3da3cbace201": 1,
+          "record-c399be46a90277267508f39fd7338db8e4f1fca6c58abfc27d99b89e9a0a66a1": 2,
+          "record-cc84c28e467850c074c52eb43b10d890596e3dcaf8dcfc6fc46e3fc04b9e498f": 3,
+          "record-d2bd4c040f992352454c15ca2c67d01f0e0bb6e64219de85c3ac0df5b58b46b2": 3,
+          "record-f81e957a51002d99ffc027de1a63e257ef9bb0be2683cceade69bce003450879": 3,
+          "record-faf05040d425b6fb9e83e22f0b24cebdbdfd770d0ba4e8279b0520f0e4824f69": 0,
+          "record-9a8258431f50221c0069440229e41259d1c3bbbf08238eb8a17fc40987f637d8": 1,
+          "record-fc4bc7c23ff054c371703af607633c5edf74f5b521df8625c313ff90337ac983": 2,
+          "record-7e07fb7f8d449d4653f5109377dbf3a45c490a7e71c6ae8bb49d67dcd1c87b3b": 3,
+          "record-34f9074700c69fc3fb6146df958db42c9730d9d6105137a4a077087e5984ee8b": 0,
+          "record-3779f658c1bd80b562bcc08bcbd8daa3d5b3948f9c7a327a21b9ab460b31e33f": 1,
+          "record-219902b2769fd3f115a4d58b0d0179b10a61ad3b3b1e1a5f3240fe8fd5246ce8": 2,
+          "record-cc96f5341a51e712f44662dcf7655f19ad0ab8c0822b168cff43c98284e8a2c0": 0,
+          "record-15d63c21d8fe05b42393f9c34ad92d232b58040d25cfe1857dd8c2e93d5a0c3a": 0,
+          "record-412692f93a656a794bdf7bbda2bfe63ba6e19aad30a7becf2284db6817d71d70": 0,
+          "record-56320677d53a337cc192f6a6d731c0187753e2a50eb118a61b806438d78a295a": 0,
+          "record-63a5e3aa94458c8739e457d9b690ea256cb4e487ba439d8f70650fc4d42f4fe3": 0,
+          "record-7968a0d338a26b9cbb1bcc54baa56f89297108851e31e4cfbddf135e2c2f3910": 1,
+          "record-79a8d2c600874e16d896fd861b43d08f07e488c502d5c19cd4a338aee7f80ef5": 1,
+          "record-2776df7df10930dbfd1224c218eca0a09bdfd9de259a585177345019b5103bdd": 2,
+          "record-23c0cee963e9b875bc98d97c57ad6f5dfa921af19334d2463b49c5dee36a1c67": 3,
+          "record-5751e2dd2f0f75fd9b6855b27eba0a8cee3e48799043f8f99c7b2a03ad1d87ba": 4,
+          "record-79b078251d9ea858535602dafa836e33d21e2cdc444aa9e913510602225d6fde": 1,
+          "record-16cbecc2c896583898e4059d35a0e146532fa952c9e1b182abd02cf547639475": 2,
+          "record-67b12271732093cb620d472bf19ca83c81fbf6808a38bd9f859a898738cb59c5": 3,
+          "record-85d589d107d0dfbd30640d1571911c8d0909cb750c49e0589abc523bd13f7bb0": 2,
+          "record-98adcb129052d6ad8efb5ef048200056a1a4b1bbc4d73da1fdc1df431b7cad31": 5,
+          "record-a4003964ac8631115175613a54d162bad28c0ff19ef3cc377c8b18f92e3cc51e": 4,
+          "record-c279e190cb18b2713b2ef8e79c1d5b4b47b829a0595ed04c861e51c251df5931": 3,
+          "record-c84108efbc1bd76294553caad4ae80967b7c28b16e3214b5d4f2cdecaddb1b26": 5,
+          "record-e07a94767cbfa59bc152a1842b576e189e0509e6b2036bbe58107ea4dcbe07c6": 6,
+          "record-f7e61cb90197cc7f16cbed8b5daeaa21255a08347efe585be13b71e5266c0f38": 1,
+          "record-4e4e6f2bd7c3d4e69bbf692083e1332696c4685513da74a1eb72b94411ebcc22": 2,
+          "record-298890e6a3cec3d9570ebb6d26b20798aefb5894b7f2d7087e349082167cb966": 3,
+          "record-52798e80f6347fe0f9f279533c10094b70cc89ce621855124357865d419b2f51": 4,
+          "record-5e7e1134428416abbd01d21e8d20baf5cdac99aa7a39121242bff3f05a872dd4": 5,
+          "record-e7bdb77aeacf39b7ae4af1846f76b91c2325b850bbffe46459cc65b16a797d1d": 6,
+          "record-5160be8401996588b8f2edb902ce1d5c92ef9a28894655b8c5995ffe46d24e6a": 0,
+          "record-694306c871334082b0a046324e6eb851ebf486afb001ca10418e3e47d2b392cf": 0,
+          "record-b90dc42c077dbfd73b6abd36091f4bb7b675e73c5c7e2a5fa88d5df3dfd2446b": 0,
+          "record-c38ef657694f0dda6527ba41e77d3975ae529cd56deda0080c73f7d5b05900a0": 0,
+          "record-56446ce9b11adeab6b04350ae690ac4b8659366b550065b1720a75877e09d1f5": 1,
+          "record-32ac17d34559ffaba3df93d768215ef51c2465c1462bad94de1f54327ac74e97": 2,
+          "record-273c9068fcea9490dc8526b55867520908f63733278298d72a96cbf6bf20ac3e": 0,
+          "record-51cb2a44118b04e5679f73cf5ff94fabcb9bcedc8d688924a96ea872af807a2c": 1,
+          "record-7f3ab8879d8589ee36bc754cccdf4b95e62dccd6a2b6ce673fc9357321b84d7b": 0,
+          "record-f0c096b9166153a3e5b08b588be67475a32eebccefd473f8d8703d171e903428": 1,
+          "record-f1fbd30a4bf3655ab1295a242844742018c990f3db7223775bec081e07647634": 0,
+          "record-2d02a577b55d4dba28d2bef74bcec3553ae48cdf4eedda628ab7f6a266fe5d8b": 1,
+          "record-f56103605002493c246ab0d9408d94220466becd34478e9359ac79579ff802c0": 0,
+          "record-c6e861d7986e81d122ee9875da85fad274fccdc34e850160fe081efcc7bc89c9": 0,
+          "record-135d24b39df6413f60689e9c86d044d0c924c0fbbd44c948a258ccdc22f4f853": 1,
+          "record-01a0ed40040eba21640a483e83e5b7bdd6058aeae1a06ceb8b83ee002f77985f": 0,
+          "record-19dffd0dfa2f0dda45c77dbc48997ea44aa02e13acc6b9ba8ef04fd64c0755d1": 0,
+          "record-6bf505dafb53320fa20081d5308361923d824c9b3a3a5e07f7fc02bfa8d6fec9": 1,
+          "record-96459b7bad42a61cc7c0e8ff7684638ce8e6ef69bf0f32984be9918cc5ef54c1": 0,
+          "record-a7483ad4b6f816eca320431e2f35c9be0751f9b442e8b141226edd2b88c56eaa": 2,
+          "record-647cee0bf32d2b281d04198745d643f17bdeb3c8d67a8756304fc7c89c101358": 3,
+          "record-b0a03fb98390a6e02c9c375938d16075c4bbffd41e6c6ff878504007ce2a6fbe": 0,
+          "record-da4122c4cde73c02a8090243feb3cb39c30a8f143b2cfddb26bc717be75fe4bf": 1,
+          "record-0b8b5b956ceb1fb1c483c51ee407624db1485fa44aedfefaea40911d2c7be81b": 2,
+          "record-48ccc4397d60c72e997f7d243188863abd09b91aacf75e33dc47d6824efa62b9": 3,
+          "record-e72046cee114c15dd288bfbaf3297b566dd5168305ad0b007af5b6a4697f452e": 1,
+          "record-ef0aa7df32ee32d3072b0abd4789c3f65a588a3d20d339822ae4176184b814cf": 2,
+          "record-7b34f5d62e3e3a4d1d67a1ba8a714c8c5532f66e7c7bc5a769c820ba04791914": 3,
+          "record-1af0741ed9ef412c8565ed94413467084750e7f3b8cc01dd9268af531b68eb12": 0,
+          "record-311683b57905af3e94e4fa4bc3f52b380ae2f719d595fa118507ee65da1940d4": 0,
+          "record-3de3ff2ae691698db2e045927a1ec26163e41bb2b67765613c2deec444f22562": 0,
+          "record-3e6d3d78f137bd597b14e6b17a9aa6e5a4dbedd065b85b5b28c5b1bffaadbabd": 1,
+          "record-5ee134dd4db52609f4ca290a40163f4430154d394be25a9756ed3a77231dced0": 1,
+          "record-6c23156ec838e004df4f0150429c01c1c5922d511457a8992335db9a86eca4aa": 0,
+          "record-75ddd72b4f3f96d6b343a4fe29f1b8d30ebe7ba5e7eb787923eca9cc9b0a7cda": 1,
+          "record-7624b991ba710da93918c9f668ff70225ec865a4d36e250340a21d844f066ff6": 2,
+          "record-7b0deb5a58c36132b39aeb45c610297570120a12f28d935d5484f3a183d16031": 2,
+          "record-b8b778c7603685018a0034b88aa0e81d451b3dfe915a192a0736a65d5f48342e": 1,
+          "record-d088ba0660a64b326d08755dbfbc5031e336f070fb212d95f1b398fb678eb952": 2,
+          "record-eafa50ae7a9bb7b12bea68498052c6355141cb23d2d90deaf5b8c3c729b5cc89": 2,
+          "record-6807ef4ce7562c9773eb96e1b744c9bff0d02e60b6e6efcfba1df55a0dd7be51": 0,
+          "record-993cf7fa260af938ba354353fcd673590d13f475e9c14aad9e308670c169f980": 0,
+          "record-bf4462d5c276872012d77957894ce64bfc8efb9a21acd8b344fa995f7b162986": 0,
+          "record-c27f9a92eb204fd6d69904751bb225f4f58907208edc210feeae4632f5e9e485": 0,
+          "record-10cc5011f029f093909480483a40d42a5948526b100355c352fc8f17934c5263": 0,
+          "record-3b0fc4b636e498148d08c5321f0d1c561ce0a672c4ec108998320a5544a6ec58": 0,
+          "record-455ed363003e7170f5bd36a7d0270a541cd7d9d66b0ebee49bdf7fbbee28cfdb": 0,
+          "record-04de9f6aa29b3eecff6e8af677b56ef873573cbafe383371220ccb6c7de0c875": 1,
+          "record-480634bfa4e95e7d7fd33ac5c3a569b66483e5a452e295d86ac4f116c329aa19": 0,
+          "record-558cd1067e93e27e6c4e1cd7cbc34b64e097c6863a9eb3aef14763cb901bfedf": 1,
+          "record-cdc54fa5a6bcfacb32846bd49bb33b5dd6d7335a4312385a38914b66caec6d7e": 1,
+          "record-f5be6c0ac94f18ae7f5f717a3af71b5b41cddfba44a8053a60d142d6aff1ed03": 1,
+          "record-0272f6506a096d21e35d42007fe598cae330cdfd09907a0e3cce85d79f708b09": 0,
+          "record-0347977a84c9d343d17b88b529d074455c7c7bdfdf22464aa52dd1ee0b4747d1": 1,
+          "record-6146494b870fb6a6ae505ba4858a3bb72b59293782230539bc7c67a61689efab": 2,
+          "record-151bbe6bab8dec964832bf63af6e549c4a4187395c7b8013da16851289b1ed25": 0,
+          "record-ecf7191e25ec10354a0a10f89b70bd9e75aa2491d95dffc8ddc244578ebcd3e3": 1,
+          "record-ab790b0af305b4d581b3f9161942ab4ab0f8a629ca92f2f5c7742809e3e110e3": 2,
+          "record-00415da3ed5e31f4b8915fe4e4a4d11ca001fbc67c077a5f9dd61266cd4a8727": 0,
+          "record-105bc6434d7d804d4d957d09827736b08c29a04436302a7660cf2ee053f56636": 0,
+          "record-236a0d7fb0ec92c3b6e012549fee77d4c84c3e097354a5b30848f8c1f4ad0e8a": 0,
+          "record-6ce5a8537040dddca739c4ec7f137e342b3d66758b4ffa0411b42ac4fc03a160": 1,
+          "record-53315c93dcc1a01758f4b5dafab088dee818166aca948dbb2bcb72ebb070aea7": 2,
+          "record-1516bfc557e5a9c7c5f2f33eb45d818eaa5b9d1ea5f1bde69b626497a128f7f0": 3,
+          "record-23051720ab04a05053ad33a3be4f87bb67bb57a26af29b1026d23120e6870334": 4,
+          "record-5a0d6e5adc2507ee8808f04e475fdb5f1a5c951ced1db9b566946bb4f03c91fd": 5,
+          "record-63f0be2dbb0eccd424b65051d954c402fe2fa58294862bfcf2e139ff10b7512d": 6,
+          "record-77544ad42f4233cdd83687edafbe577d8d21f67551440ba9c6bd9d63150886d2": 1,
+          "record-822eb621786ad19ef551cec2039e94ab80c75f24e982898c0182e7ef37ae1d58": 2,
+          "record-8d75cd300233d3632aff8b1d102648b8e84572d50309d7acd73afb30e0af5ad9": 3,
+          "record-97b1c4240c636098905946296c0f75d8e1337428e9fd0535b88462228724a725": 1,
+          "record-b76de3456b11dd3e148213577af5a5b0b90174050757b182c653c2409058f38d": 0,
+          "record-c9786f0d543298e87bf8092fc36bce7c3af3a68d80ba9794e0e99a7b4828ad7c": 2,
+          "record-ca8c8f1ce9c3ee6778b7aef6a072d048f019c8d447cc04fe8e542e1334393076": 1,
+          "record-8b28e03f4bf17cb0f9f755dce07396426f2a13e68821c1a1a12a57620661c26f": 2,
+          "record-19d37e3ab8317d6639fa40272aa20ac8f19653089e187b95f0f654d0a4399632": 3,
+          "record-5e0c38f49237f7a06f21079dff4a9c66986f309fc183ad94df548ec98e4179e5": 4,
+          "record-83b081a7594e1b83f8f21754b4b74f77a948e49a48f92f4d81ddd883cdf3147f": 5,
+          "record-aac3b10b596fa7c5a788781998a90003abf05782a390c5c254471eb2c45bc81a": 6,
+          "record-d760af05f2d955cb4058f6d972a5dd02e4fd93cfecf73bba924d3cd807f3fef1": 3,
+          "record-42644e3037db1fce97b431c527370a33c04dc3c0db7f6b3fde2bb91d27b48f34": 0,
+          "record-a11b2dbaf22c31e6b3b60eaa8366a4db434c27091922033599dbfeb1478b483d": 0,
+          "record-bae54a0043ec4cd6b21b22f665dfffe63e9fde12c7989b863861e688f41bca92": 0,
+          "record-c811042fa8c7f6b47ba6467268505bafc8798f4e3a407a7d0749ae4a946226a3": 1,
+          "record-56fcdb6702e37c81b9584762aac102c7b26508c50319a1ce13931aa06330856e": 2,
+          "record-f13b7abe01ec11311de5a2f43cd55ae4de7f4980b3771d6daed8c1d2991c10f7": 0,
+          "record-eaddfa0799d408776876795c42095d59e8007eb9bd3226e95e8a31d928c1b8c6": 1,
+          "record-8475aea1b1eb46bb3e5883818b7ea1780473c24b9567769a1614c98abe4a7406": 2,
+          "record-24958fa275917492bead723278eae9e217d0e12a189ab3791659132728aa556d": 0,
+          "record-4ae8073bd34ffa422c0bd42a7846886aa0c615dece38ac7245661f917fd474e4": 0,
+          "record-5ac87dc382a203beb1290d6d8e6cfa4c36b4d8e641f69bf7dea84adb35a85751": 1,
+          "record-e46f2d12960d6f17645b9c624272995e47b20852f943797e511ec1ca83904b76": 1,
+          "record-d187ca5aa7c0cd50514c42fb55009d2469359d3d45c0b0695db2ca0d8b6a31cb": 0,
+          "record-e1b09fabe8b9cf149c80eed969d62bf7f3f5125c631e298a0b3b2b50d0f52933": 1,
+          "record-2abcd483b73f856f1552faac8ab7dba0433a05c945bb73203ee47b971e7094e6": 0,
+          "record-2d17a93cb285ad49911cf9a542c9e33bf9aed6c2127e4cad45954d6438a80fe3": 1,
+          "record-3f53ea04d335a205af95c9cf237ce92d11259aeb81bc1be5810f76418dd893e9": 0,
+          "record-dd6bdc97ae3f86d6c03c590055b630b6cf03611de3db12504acad5854eb0bbdc": 1,
+          "record-08a01195141c5324d19b845cbf1775ae8291f92e78e21818274f9c4f80ad9f37": 0,
+          "record-6e1481ecab7778e72c9ec012eda4c24119fdd028b8178ead017817e46146fc7f": 0,
+          "record-25c1c9776c8d640c8a742dc347b4a0ec33b24a11b2103df740417b66ff8f6470": 1,
+          "record-73c6975c23d1d94816a45af3514744c5e0c219c9d4963cc87775b8c2839b152f": 0,
+          "record-b5877c0350378916fe4f120f8b33982e6278d30c45d60fbd03033f3ac794bc6c": 1,
+          "record-be55673f914cd4d518521c281f346e46dd0c0f1b05a1e36304d8ce3ead576d97": 2,
+          "record-d28f0afca340c23b5624f3a37e7f120b0d23c8deb0678d3f78d058c7c875dab8": 3,
+          "record-dc6975b169330153d427544c80dbc63e290f786cc3e410811354c4f1d6d2bf21": 0,
+          "record-dea9151e78cfe5ecf0b1436710d8e4d917e288d899c5541ec9ec5778ab660191": 1,
+          "record-ee4bbe964416fd7d9bd4a82a98280c8e7d55d1b4e6298fff45f55db88f7b909e": 1,
+          "record-389620cd3542d615d5e0a03cd7f8cc1559536d87fc14a49c079483235202090f": 0,
+          "record-41a020c32bb348ab748d0f4ad22552e0e02927e5744ca7bdb3ee1a65d9369a61": 0,
+          "record-593527d760a56ed057cb46cfc38fe2179a322b6d427151b5a4b2e716e1440f88": 1,
+          "record-75d2793f51a972ce926f50cabccc4cb918c2760c0b5858a7b940d45313ca5792": 0,
+          "record-7ed8b7800d605a7cdc850828723129ae8082cb47b3b1c8a23c58fa3195354449": 0,
+          "record-8a8b2e1a35ed39230c0e7b8f0840d9c66b7223b41d9813af551baefc41370853": 1,
+          "record-3d5ff7e209c3f4d82c58be8bf3c4fe10ac7c19f0b2eaa8665c34c6b78b3ff352": 2,
+          "record-40d8a2ce230c69840662e37e83806610acf3b92e3428b04ef23cd70e13920f64": 3,
+          "record-6ad5210807a2d4084205a81b4156a61930aa8335a7dad9a6b84a8a7f73525fa0": 4,
+          "record-94f58409350864d59873b7c9004be7273c69d687cad913aa9893379c3798b9a5": 2,
+          "record-0ddf2ff0425961820e0d8c53f7b48a1831fa0fd4d94a3a8ef63ffdc9123a786c": 3,
+          "record-3f812ef78899d38b4eb07e9313ad1d3ec20d5085be9a218e04ff3cbe8ff795b9": 4,
+          "record-8f870ae7e5d177b1f269eb8046c3e38dc17dee7b09f8f45fdebcb7284e8c3776": 5,
+          "record-9e168c31c4ea48c51500b4e9f1d64f46dd8c35da7b6e6a6f9c302a85f287677a": 1,
+          "record-af89b26c72f6fc9e8a192acf25c08785b3f915ccfed7a9fdf8e2ec693e4076da": 5,
+          "record-b2c02784d3424997e6b29d2f3bf174d5a7b7c154bcf2f9f9f44997e33f256ea1": 6,
+          "record-b37d66bb0c237e474e6eb49920b8164d3f2e91dbfc8a59ba6d7aa5584c94759b": 1,
+          "record-65e82ef5326e587bc0a1387c9706eebed3c3f58cc023911c2aaf0380e82c2677": 2,
+          "record-0a55391643b0b2599b4e911d263a1cd5087d16e4e63cc8a7eda9b235a0d4e0f1": 3,
+          "record-6b690e48d7d60c74244e7ae11a4fe7a2931e04c7e4a5d15447e33cf8a11c6227": 4,
+          "record-c5e6d92106ee73ade2458e4844e52b39d277086ca3f06466a3dd957d646b8379": 5,
+          "record-e630b99bcb6e10bc14571a70dcff925971ef252d5d334be807e9d9307ee2f919": 6,
+          "record-ebac366786d7221e8c40afa1dd68cc581d1f6c5f166dc2541300ad35b3a039f7": 6,
+          "record-ebc2a361be6c772a51a33035ff793de799cb8c3d68aded07b7a73579aca67473": 2,
+          "record-29374fadc9dd128743f5d44c44307e792a55775230dcb9a5cd2bde320acc7c0f": 3,
+          "record-9d64d4f71907310495203c686fa27da425c674a27ae46354d02e9d91e75a815d": 4,
+          "record-eae39df8e094e99cbfe3dd252b375e18735b8ff0e7672a8ebcfbd3c468ffc303": 5,
+          "record-f1c8ec0ce8beeaf0df8eda4ce7d7d20a1502f753d780cc065498efefc99d1998": 6
+        },
+        "flows": 404,
+        "internal_events": 208,
+        "positive_internal_intervals": 27,
+        "raw_offsets_ticks_ns_exact": true,
+        "protobuf_fixed64_exact": true,
+        "importer_errors": [],
+        "importer_stats": [
+          {
+            "name": "deobfuscate_location_parse_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "guess_trace_type_duration_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 10546
+          },
+          {
+            "name": "parse_trace_duration_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 26944891
+          },
+          {
+            "name": "sorter_push_event_out_of_order",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "trace_sorter_negative_timestamp_dropped",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heap_graph_non_finalized_graph",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_aflags_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_br_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_format_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_log_num_total",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_size_cap_hit",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_codec_error",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_display_gone",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_no_encoder",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_display_not_found",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_encoder_setup_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_virtual_display_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "android_video_parse_size_cap_hit",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "energy_breakdown_missing_values",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "energy_descriptor_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_descriptor_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_residency_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "entity_state_residency_lookup_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "energy_uid_breakdown_missing_values",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "frame_timeline_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "frame_timeline_unpaired_end_event",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_bundle_tokenizer_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_end",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_hits_delta",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_end",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_kprobe_misses_delta",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_setup_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_abi_errors_skipped_zero_data_length",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_generic_descriptor_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_thermal_exynos_acpm_unknown_tz_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_non_numeric_counters",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_timestamp_overflow",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_record_read_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event_arg_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_event_arg_name",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_unknown_event_arg",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "fuchsia_invalid_string_ref",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "generic_task_state_invalid_order",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_invalid_spec",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_missing_spec",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_counters_missing_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "gpu_render_stage_parser_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "graphics_frame_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_tokenizer_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "invalid_clock_snapshots",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "invalid_cpu_times",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_reused_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_unknown_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_zero_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_non_monotonic_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_wakelock_implausibly_large_value_reported",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "kernel_trackevent_format_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "app_wakelock_parse_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "app_wakelock_unknown_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "meminfo_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "missing_disk_io_event_name",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mismatched_sched_switch_tids",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mm_unknown_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "power_rail_empty_packet",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "power_rail_unknown_index",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "proc_stat_unknown_counters",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_negative_size",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "rss_stat_unknown_thread_for_mm_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "filter_input_bytes",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_input_packets",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_output_bytes",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_time_taken_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "filter_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_duplicate_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_no_enclosing_slice",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_step_without_start",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_end_without_start",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_invalid_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "flow_without_direction",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_empty_callstack",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_string_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_mapping_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_frame_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_invalid_callstack_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "stackprofile_parser_error",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "smaps_parser_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systemd_journal_num_failed",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systemd_journal_num_total",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "systrace_parse_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "task_state_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "traced_clone_started_timestamp_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_clone_trigger_timestamp_ns",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_chunks_discarded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_data_sources_registered",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_data_sources_seen",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_final_flush_failed",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_final_flush_succeeded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_failed",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_requested",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_flushes_succeeded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_patches_discarded",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_producers_connected",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_producers_seen",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_total_buffers",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "traced_tracing_sessions",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "track_event_parser_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_dropped_packets_outside_of_range_of_interest",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_tokenizer_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_hierarchy_missing_uuid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_thread_invalid_end",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "tokenizer_skipped_packets",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "vmstat_unknown_keys",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "psi_unknown_resource",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "vulkan_allocations_invalid_string_id",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_unknown_source_clock",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_unknown_target_clock",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_no_path",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_mixed_clock_sources",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_failure_undeferrable_packet_loss",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "clock_sync_cache_miss",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 2
+          },
+          {
+            "name": "process_tracker_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "namespaced_thread_missing_process",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "json_tokenizer_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "json_parser_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "json_display_time_unit",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heapprofd_missing_packet",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "heapprofd_non_finalized_profile",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "symbolization_tmp_build_id_not_found",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "metatrace_overruns",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "packages_list_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "packages_list_has_read_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "user_list_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "game_intervention_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "game_intervention_has_read_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_has_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "misplaced_end_event",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "truncated_sys_write_duration",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_switch_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "compact_sched_waking_skipped",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "empty_chrome_metadata",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ninja_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_skipped",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_cpu_mode_unknown",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_samples_skipped_dataloss",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_dummy_mapping_used",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_missing",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_ignored",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_lost",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_truncated",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_partial",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_aux_collision",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_auxtrace_missing",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "perf_no_tsc_data",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "spe_no_timestamp",
+            "idx": null,
+            "severity": "info",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "etm_no_importer",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "memory_snapshot_parser_failure",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_time_in_state_unknown_cpu_freq",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "ftrace_packet_before_tracing_start",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "unknown_extension_fields",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "network_trace_intern_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "network_trace_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "atom_timestamp_missing",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "atom_unknown",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_intern_errors",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_isolate_has_no_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_no_defaults",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_no_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_unknown_code_type",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "v8_code_load_missing_code_range",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_clients_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_manager_service_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_inputmethod_service_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_sf_layers_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_sf_transactions_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_shell_transitions_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_invalid_interpolation_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_missing_interned_arg_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_missing_interned_stacktrace_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_decoding_failed",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_collision",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_message_collision_resolved",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_group_tag_collision",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_group_tag_missing",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_protolog_param_mismatch",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_viewcapture_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_viewcapture_missing_interned_string_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "winscope_windowmanager_parse_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "jit_unknown_frame",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "ftrace_missing_event_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "android_input_event_parse_errors",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "mali_unknown_mcu_state_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "pixel_modem_negative_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "legacy_v8_cpu_profile_invalid_callsite",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "legacy_v8_cpu_profile_invalid_sample",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "config_write_into_file_no_flush",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "hprof_string_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_class_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_heap_dump_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_instance_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_object_array_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_primitive_array_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_root_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_reference_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_record_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_segment_overshoot_counter",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_field_value_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_class_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_header_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_heap_dump_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_primitive_array_parsing_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "hprof_reference_errors",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "slice_drop_overlapping_complete_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "slice_spill_overlapping_complete_event",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "perf_text_importer_sample_no_frames",
+            "idx": null,
+            "severity": "error",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "simpleperf_missing_file_mapping",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "trace",
+            "value": 0
+          },
+          {
+            "name": "slice_negative_duration",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "gpu_work_period_negative_duration",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_missing_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_thread_missing_pid_tid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_process_missing_pid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_missing_timestamp",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_descriptor_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "incremental_state_cleared_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "previous_packet_dropped_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "trace_packet_defaults_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_missing_sequence_id",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_track_hierarchy_loop",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_track_hierarchy_too_deep",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_default_track_with_parent",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_conflicting_reservation",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_range_of_interest_missing_start_us",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_descriptor_invalid_child_ordering",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_missing_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_missing_value",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_counter_invalid_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_missing_track_uuids",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_state_missing_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_state_invalid_track_uuid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_track_uuid_mismatch",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_exceeds_max",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_extra_counter_invalid_track",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "thread_descriptor_skipped_incremental_state_invalid",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_timestamp_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_thread_time_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "track_event_skipped_thread_instruction_delta_without_valid_state",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "packet_skipped_seq_needs_incremental_state_invalid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "interned_data_skipped_incremental_state_invalid",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_unknown_edge_type",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_executor_not_found",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_end_without_matching_begin",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_missing_entity_details",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_missing_parent_id",
+            "idx": null,
+            "severity": "info",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "primes_malformed_timestamp",
+            "idx": null,
+            "severity": "data_loss",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "protovm_abort",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          },
+          {
+            "name": "protovm_registration_error",
+            "idx": null,
+            "severity": "error",
+            "source": "analysis",
+            "value": 0
+          }
+        ]
+      }
+    ]
+  },
+  "logs": {
+    "stdout.log": "",
+    "stderr.log": "",
+    "output/stdout.log": "\"name\": \"track_event_extra_counter_invalid_track\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"thread_descriptor_skipped_incremental_state_invalid\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"track_event_skipped_timestamp_delta_without_valid_state\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"track_event_skipped_thread_time_delta_without_valid_state\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"track_event_skipped_thread_instruction_delta_without_valid_state\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"packet_skipped_seq_needs_incremental_state_invalid\", \"idx\": null, \"severity\": \"info\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"interned_data_skipped_incremental_state_invalid\", \"idx\": null, \"severity\": \"info\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_unknown_edge_type\", \"idx\": null, \"severity\": \"data_loss\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_executor_not_found\", \"idx\": null, \"severity\": \"data_loss\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_end_without_matching_begin\", \"idx\": null, \"severity\": \"info\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_missing_entity_details\", \"idx\": null, \"severity\": \"info\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_missing_parent_id\", \"idx\": null, \"severity\": \"info\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"primes_malformed_timestamp\", \"idx\": null, \"severity\": \"data_loss\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"protovm_abort\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}, {\"name\": \"protovm_registration_error\", \"idx\": null, \"severity\": \"error\", \"source\": \"analysis\", \"value\": 0}]}\n",
+    "output/stderr.log": ""
+  }
+}
