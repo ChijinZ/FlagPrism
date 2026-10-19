@@ -133,3 +133,11 @@ def shared_counter_inputs(directory, capture, raw):
         return None
     from .timeline_nvidia_shared import load_shared_counter_inputs
     return load_shared_counter_inputs(directory, capture, raw)
+
+
+def observed_dependency_inputs(directory, capture, raw):
+    """Qualify retained late-native dependencies without application replay."""
+    if not _late(capture):
+        return None
+    from .timeline_nvidia_dependencies import load_observed_dependency_inputs
+    return load_observed_dependency_inputs(directory, capture, raw)

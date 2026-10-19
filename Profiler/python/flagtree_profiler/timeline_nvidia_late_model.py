@@ -56,7 +56,7 @@ def decode_probe(manifest, metadata, allocation):
                 'copy_submit_after', 'commit_after', 'wait_bracket',
                 'cta_barrier_after', 'shared_store_after',
                 'shared_load_issue_bracket', 'shared_load_native_bracket',
-                'matrix_issue_bracket'
+                'matrix_issue_bracket', 'warp_sync_issue_bracket'
             }, 'Unknown native observation kind')
         if row['kind'] == 'shared_load_issue_bracket' and 'members' in row:
             allowed = {
@@ -297,22 +297,33 @@ def analyze_probe(decoded):
                         generation[
                             'completion_observation_kind'] = 'native_wait_return'
                     generation['completed'] = True
-            elif kind == 'cta_barrier_after':
-                _need({r['payload']
-                       for r in rows} == {0},
-                      'Only actual all-CTA barrier zero is modeled')
+            elif kind == 'cta_barrier_after' or (
+                    kind == 'warp_sync_issue_bracket' and len(actors) <= 32
+                    and {r['payload']
+                         for r in rows} == {0xffffffff}):
+                if kind == 'cta_barrier_after':
+                    _need({r['payload']
+                           for r in rows} == {0},
+                          'Only actual all-CTA barrier zero is modeled')
                 last_barrier, barriers = sequence, barriers + 1
                 for generation in generations.values():
                     if generation[
                             'kind'] == 'sync' and not generation['completed']:
                         generation['completed'] = True
                         generation['completion_observed_sequence'] = sequence
-                        generation[
-                            'completion_observation_kind'] = 'native_cta_barrier_return'
+                        generation['completion_observation_kind'] = (
+                            'native_cta_barrier_return'
+                            if kind == 'cta_barrier_after' else
+                            'full_block_warp_barrier_return_observed')
                     if generation['completed'] and not generation['visible']:
                         generation['visible'] = True
                         generation['publication_barrier_sequence'] = sequence
-            elif kind not in ('matrix_issue_bracket', 'compute_issue_bracket',
+            # A partial/multi-warp synchronization remains an observation;
+            # it cannot publish shared bytes for the entire CTA. The full-block
+            # case above additionally requires a native-bound mask in the
+            # dependency provider before it can qualify any time arrows.
+            elif kind not in ('warp_sync_issue_bracket',
+                              'matrix_issue_bracket', 'compute_issue_bracket',
                               'global_load_issue_bracket',
                               'global_store_issue_bracket',
                               'global_atomic_issue_bracket'):

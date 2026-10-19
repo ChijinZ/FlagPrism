@@ -69,6 +69,8 @@ def load_shared_counter_inputs(directory, capture, raw):
                 'Actual full-CTA recorder geometry differs from compiled function'
             )
         indices = tuple(i * warp for i in range(min(4, compiled['num_warps'])))
+        if len(indices) < 2:
+            indices = tuple(range(min(4, actors)))
     else:
         indices = tuple(range(min(4, actors)))
     if len(indices) < 2:

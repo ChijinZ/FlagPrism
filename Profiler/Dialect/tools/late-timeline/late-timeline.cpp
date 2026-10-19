@@ -128,6 +128,8 @@ static std::string classify(Instruction &instruction) {
       return "wait_bracket";
     if (name == "llvm.nvvm.barrier.cta.sync.aligned.all")
       return "cta_barrier_after";
+    if (name == "llvm.nvvm.bar.warp.sync")
+      return "warp_sync_issue_bracket";
     if (name.starts_with("llvm.nvvm.ldmatrix.")) {
       if (name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.b16.p3" ||
           name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.trans.b16.p3")
@@ -300,7 +302,8 @@ int main(int argc, char **argv) {
         storeBytes = bytes.getFixedValue();
       } else if (kind == "copy_submit_after" ||
                  kind == "shared_load_issue_bracket" ||
-                 kind == "wait_bracket" || kind == "cta_barrier_after")
+                 kind == "wait_bracket" || kind == "cta_barrier_after" ||
+                 kind == "warp_sync_issue_bracket")
         payload = cast<CallBase>(call)->getArgOperand(0);
       bool interval = kind != "commit_after" && kind != "copy_submit_after" &&
                       kind != "cta_barrier_after" &&

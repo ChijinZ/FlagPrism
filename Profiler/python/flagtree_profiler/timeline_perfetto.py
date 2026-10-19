@@ -9,6 +9,7 @@ import hashlib
 import heapq
 import json
 import html
+import struct
 from pathlib import Path
 
 from . import timeline_views, timeline_clock, timeline_events
@@ -31,6 +32,11 @@ def _varint(value):
 
 def _uint(field, value):
     return _varint(field << 3) + _varint(value)
+
+
+def _fixed64(field, value):
+    _integer(value, 'protobuf fixed64')
+    return _varint((field << 3) | 1) + struct.pack('<Q', value)
 
 
 def _bytes(field, value):
@@ -96,7 +102,7 @@ def encode_counter_trace(view,
     return _encode_counter_views([view], max_bytes=max_bytes)
 
 
-def _encode_counter_views(views, *, max_bytes, shared=None):
+def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
     _integer(max_bytes, 'Perfetto byte budget', 1, 64 * 1024 * 1024)
     output = bytearray()
     first = True
@@ -138,6 +144,7 @@ def _encode_counter_views(views, *, max_bytes, shared=None):
     pending = []
     pending_bytes = 0
     ordinal = 0
+    observer_tracks = {}
     for view in views:
         identity = view['identity']
         observer = view['observer']
@@ -154,8 +161,10 @@ def _encode_counter_views(views, *, max_bytes, shared=None):
                 ' — shared counter ns (precision unverified)')
         observer_track = track(
             namespace + ':observer',
-            'program ' + str(observer['program_coordinates']) + ' / ' +
-            observer['kind'] + ' ' + observer['local_id'], root)
+            ('Observer ' + observer['local_id'] if dependencies is not None
+             else 'program ' + str(observer['program_coordinates']) + ' / ' +
+             observer['kind'] + ' ' + observer['local_id']), root)
+        observer_tracks[observer['id']] = (namespace, observer_track)
         sites = {row['id']: row for row in view['sites']}
         sources = {row['id']: row for row in view['sources']}
         records = {row['id']: row for row in view['records']}
@@ -239,6 +248,18 @@ def _encode_counter_views(views, *, max_bytes, shared=None):
                                        shared['origin_tick']),
                                    physical_temporal_comparison_verified=False,
                                    time_arrows_verified=False)
+            if dependencies is not None:
+                # Keep exact endpoints and source locations in the trace. The
+                # complete repeated coverage/unit documents remain losslessly
+                # available in the immutable canonical/dependency sidecars.
+                annotations.pop('coverage')
+                annotations[
+                    'coverage_sha256'] = timeline_views.document_sha256(
+                        event['coverage'])
+                annotations.pop('unit_evidence_ids')
+                annotations[
+                    'unit_proof_sha256'] = timeline_views.document_sha256(
+                        view['unit_proof'])
             event_type = 1 if event['kind'] == 'interval' else 3
             label = ('counter bracket: ' if event_type == 1 else
                      'observed endpoint: ') + site['name']
@@ -260,6 +281,68 @@ def _encode_counter_views(views, *, max_bytes, shared=None):
                                 _bytes(11,
                                        _uint(9, 2) + _uint(11, tid))))
                 ordinal += 1
+    if dependencies is not None:
+        incoming, outgoing, flow_ids, incident = {}, {}, {}, {}
+        dependency_digest = timeline_views.document_sha256(dependencies)
+        for edge in dependencies['edges']:
+            number = int.from_bytes(
+                hashlib.sha256(edge['id'].encode()).digest()[:8],
+                'little') or 1
+            if number in flow_ids and flow_ids[number] != edge['id']:
+                raise ValueError('Perfetto flow ID collision')
+            flow_ids[number] = edge['id']
+            outgoing.setdefault(edge['source'], []).append(number)
+            incoming.setdefault(edge['target'], []).append(number)
+            incident.setdefault(edge['source'], []).append(edge)
+            incident.setdefault(edge['target'], []).append(edge)
+        for node in dependencies['nodes']:
+            namespace, parent = observer_tracks[node['observer_id']]
+            tid = track(namespace + ':dependency-endpoints',
+                        'Observed dependency checkpoints', parent)
+            message = _uint(9, 3) + _uint(11, tid) + _text(
+                23, node['label']) + _text(22, 'observed_dependency')
+            for number in sorted(outgoing.get(node['id'], [])):
+                message += _fixed64(47, number)
+            for number in sorted(incoming.get(node['id'], [])):
+                message += _fixed64(48, number)
+            annotations = dict(
+                node_id=node['id'],
+                event_id=node['event_id'],
+                observer_id=node['observer_id'],
+                site_id=node['site_id'],
+                raw_record_id=node['id'],
+                raw_offset=node['raw_offset'],
+                raw_length=node['raw_length'],
+                raw_tick=str(node['tick']),
+                occurrence=node['occurrence'],
+                phase=node['phase'],
+                source_locations=node['source_locations'],
+                raw_sha256=dependencies['raw_artifact']['sha256'],
+                invocation_id=dependencies['identity']['invocation_id'],
+                counter_domain_id=dependencies['domain_id'],
+                counter_epoch_id=dependencies['epoch_id'],
+                dynamic_dependencies_verified=True,
+                physical_temporal_comparison_verified=False,
+                source_cost_qualified=False,
+                hardware_busy_qualified=False,
+                dependency_view_sha256=dependency_digest,
+                dependency_relations=sorted(
+                    set(('outgoing' if edge['source'] ==
+                         node['id'] else 'incoming') + ': ' +
+                        edge['relation'] + ' / ' + edge['display_label']
+                        for edge in incident[node['id']])),
+                outgoing_dependency_ids=[
+                    flow_ids[n] for n in sorted(outgoing.get(node['id'], []))
+                ],
+                incoming_dependency_ids=[
+                    flow_ids[n] for n in sorted(incoming.get(node['id'], []))
+                ])
+            for name, value in annotations.items():
+                message += _annotation(name, value)
+            # Base slice lanes and checkpoint lanes are independent. Equal-ns
+            # dependency endpoints follow their verified DAG order, not UUIDs.
+            pending.append((node['time_ns'], -1, node['topological_rank'],
+                            _bytes(11, message)))
     for timestamp, _, _, payload in sorted(pending):
         packet(payload, timestamp)
     return bytes(output)
@@ -353,7 +436,8 @@ def _write_committed_index(directory):
     for item in entries:
         label = item['invocation_id'] + ' / program ' + str(
             item['program_coordinates']) + ' / ' + (
-                'shared counter group '
+                'observed dependency timeline ' if item.get('view_kind') ==
+                'observed_dynamic_dependencies_ns' else 'shared counter group '
                 if item.get('observer_ids') else '') + item['observer_id']
         links.append('<li><a href="' +
                      html.escape(item['trace_file'], quote=True) + '">' +

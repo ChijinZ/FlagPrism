@@ -91,6 +91,8 @@ def canonicalize_late_capture(raw, *, owner, metadata, actor_indices=None):
         'copy_submit_after': ('Async copy submitted', 'Async copy submission'),
         'commit_after': ('Async group committed', 'Async copy submission'),
         'wait_bracket': ('Async wait', 'Async wait'),
+        'warp_sync_issue_bracket': ('Warp synchronization',
+                                    'Warp synchronization'),
         'matrix_issue_bracket': ('Matrix instruction group', 'Matrix issue'),
         'compute_issue_bracket': ('Compute instruction group',
                                   'Compute issue'),

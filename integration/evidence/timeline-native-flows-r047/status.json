@@ -1,0 +1,36 @@
+{
+  "state": "work_in_progress_not_three_backend_acceptance",
+  "base_commit": "1ab8e423e15b2f1378bd433fb5799540846e0f50",
+  "branch": "timeline-native-flows",
+  "wheel_sha256": "8de17adf86e76468b749fa9ec1d34bcb455bbeef261b9bcf53b505d7846ced54",
+  "native_recorder_source_sha256": "9f8531abfd1850242e0088d468dd92e5a637a813b28dea6c3486148842f5bddd",
+  "native_recorder_executable_sha256": "8030d40f1782b0c9e58e70e0f9badd3e386604ec5c1719a047eae1e5a86a59ef",
+  "installed_python": "/workspace/chijin-timeline-r047/runs/install-public-v3/output/venv/bin/python",
+  "tested_target": "NVIDIA SM120 Pro6000",
+  "tested_invocations": 2,
+  "tested_programs_per_invocation": 2,
+  "math": "ordinary and profile runtime K tiles 3 and 7, numerical/input/canary/host-once checks passed",
+  "installed_four_warp_TP_UI": "passed",
+  "installed_one_warp": "numeric and byte model passed; observed dependency qualification failed",
+  "full_install_acceptance": "failed before later offline checks; preserve terminal returncode 1",
+  "source_only_after_install": [
+    "negated uniform branch polarity normal and optimized Python passed"
+  ],
+  "source_files_differing_from_installed_snapshot": [
+    "Profiler/docs/timeline_runtime.md",
+    "Profiler/python/flagtree_profiler/timeline_nvidia_control.py",
+    "tests/timeline/p01_observed_dependencies.py"
+  ],
+  "canonical_not_updated": true,
+  "independent_six_math_matrix_started": false,
+  "final_three_reviewers_started": false,
+  "remaining": [
+    "generic native spill/local-memory timer value tracing",
+    "wide literal and variable shared-address expression qualification",
+    "complete default/offline source-build regression",
+    "Ascend/GCU complete internal time and async dependencies",
+    "independent mathematical qualification and controlled cases",
+    "three fresh independent GPT-6.1-Sol xhigh final code reviews",
+    "merge and push qualified implementation to detailed-profiler"
+  ]
+}

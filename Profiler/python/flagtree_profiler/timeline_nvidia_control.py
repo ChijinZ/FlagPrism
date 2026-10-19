@@ -116,7 +116,7 @@ def _branch(row):
     predicate = row.get('predicate')
     operands = _compact(row.get('operands', ''))
     if row['opcode'] == 'BRA.U':
-        match = re.fullmatch(r'(UP\d+),0x([0-9a-fA-F]+)', operands)
+        match = re.fullmatch(r'(!?UP\d+),0x([0-9a-fA-F]+)', operands)
         _need(match is not None and predicate is None,
               'Unknown uniform branch')
         return match[1], int(match[2], 16)

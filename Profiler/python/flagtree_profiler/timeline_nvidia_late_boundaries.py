@@ -63,7 +63,8 @@ def _straight_path(body, first, last):
 def _ptx_operation(lines, markers, site, counters):
     key = site['site_id']
     end = counters[key, 'exit']
-    if site['kind'] == 'shared_load_issue_bracket':
+    if site['kind'] in ('shared_load_issue_bracket',
+                        'warp_sync_issue_bracket'):
         begin = counters[key, 'entry']
         _need(begin['ptx_line'] < end['ptx_line'], 'Reversed PTX readers')
         # Exclude both reader instructions, keep original one-based PTX lines.

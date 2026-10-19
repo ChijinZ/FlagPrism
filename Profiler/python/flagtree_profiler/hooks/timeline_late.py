@@ -379,6 +379,26 @@ class LateTimelineHook(InstrumentationHook):
                     time_arrows_verified=False)
         if owner['submission_outcome'] == 'returned':
             try:
+                from ..timeline_nvidia_offline import observed_dependency_inputs
+                from ..timeline_dependency_perfetto import write_dependency_exports
+                dependency_batch, dependency_proofs = observed_dependency_inputs(
+                    directory, capture, raw)
+                capture[
+                    'observed_dependency_exports'] = write_dependency_exports(
+                        directory, dependency_batch, dependency_proofs)
+                capture['observed_dependency_status'] = dict(
+                    status='observed_dynamic_dependencies_ns',
+                    physical_temporal_comparison_verified=False,
+                    read_precision_status='unverified',
+                    time_arrows_verified=True)
+            except (ValueError, OSError, KeyError, TypeError) as error:
+                capture['observed_dependency_status'] = dict(
+                    status='unavailable',
+                    reason=str(error),
+                    time_arrows_verified=False)
+        if owner['submission_outcome'] == 'returned' and not capture.get(
+                'observed_dependency_exports'):
+            try:
                 from ..timeline_nvidia_offline import shared_counter_inputs
                 from ..timeline_perfetto import write_shared_counter_exports
                 shared_batch, shared_proofs = shared_counter_inputs(

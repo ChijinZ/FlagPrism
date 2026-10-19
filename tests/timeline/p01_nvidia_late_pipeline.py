@@ -16,6 +16,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--kernel-module', type=Path, required=True)
+    p.add_argument('--num-warps', type=int, choices=(1, 2, 4, 8), default=4)
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
     spec = importlib.util.spec_from_file_location('late_pipeline_math',
@@ -50,7 +51,7 @@ def main():
                                                         32,
                                                         32,
                                                         32,
-                                                        num_warps=4,
+                                                        num_warps=a.num_warps,
                                                         num_stages=3)
                 need(
                     torch.allclose(out[:m * n].cpu().reshape(m, n).double(),
@@ -92,7 +93,7 @@ def main():
             and len(capture.get('counter_ns_exports', [])) == 8,
             'Default GEMM lacks actual machine-validated counter-ns traces')
         need(
-            capture['owner']['plan']['actors'] == 128
+            capture['owner']['plan']['actors'] == 32 * a.num_warps
             and capture['owner']['plan']['dependency_footprint_complete'],
             'Missing actual CTA footprint')
         facts = json.loads((timeline / capture['async_file']).read_text())
@@ -106,6 +107,12 @@ def main():
             not facts['time_flows_qualified']
             and not facts['hardware_busy_qualified'],
             'Unproven timing qualification')
+        need(
+            capture.get('observed_dependency_status',
+                        {}).get('time_arrows_verified') is True
+            and len(capture.get('observed_dependency_exports', [])) == 2,
+            'Default API lacks qualified observed dependency traces: ' +
+            str(capture.get('observed_dependency_status')))
         captures.append(
             dict(invocation=row['invocation_id'],
                  raw_bytes=capture['owner']['layout']['raw_bytes'],
@@ -116,7 +123,7 @@ def main():
     (a.output / 'result.json').write_text(
         json.dumps(dict(
             status=
-            'default_api_runtime_gemm_raw_and_byte_dependencies_passed_not_time_flow_or_perfetto',
+            'default_api_runtime_gemm_math_raw_and_observed_dependency_exports_passed',
             math=results,
             captures=captures),
                    indent=2))

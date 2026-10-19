@@ -244,6 +244,54 @@ def publish_revision(directory, inputs, files, exports):
                 'Same derivative inputs produced different outputs')
         return rows
     previous = committed_exports(directory)
+    # A new rule implementation can reproduce every output byte exactly.
+    # Preserve the original receipt and avoid storing/counting duplicate traces.
+    # Retain the new validation inputs separately; never label the old receipt
+    # as having been produced by the new implementation.
+    for old_receipt in sorted({row['receipt_file'] for row in previous}):
+        old = _receipt(directory, old_receipt)
+        old_base = str(Path(old_receipt).parent) + '/'
+        old_files = {
+            row['file'][len(old_base):]: row
+            for row in old['files']
+            if row['file'].startswith(old_base) and row['file'] != old_base +
+            'inputs.json'
+        }
+        if set(old_files) != set(files) or any(
+                old_files[name]['sha256'] != sha256(raw)
+                or old_files[name]['bytes'] != len(raw)
+                for name, raw in files.items()):
+            continue
+        expected_rows = [
+            dict(row,
+                 view_file=old_base + row['view_file'],
+                 trace_file=old_base + row['trace_file'],
+                 revision_id=old['revision_id'],
+                 receipt_file=old_receipt) for row in exports
+        ]
+        if expected_rows != old['exports']:
+            continue
+        revalidation = dict(schema_version=1,
+                            kind='byte_identical_derivative_revalidation',
+                            original_receipt_file=old_receipt,
+                            original_receipt_sha256=sha256(
+                                read_artifact(directory, old_receipt)),
+                            validated_inputs=inputs)
+        evidence = json_bytes(revalidation)
+        name = 'derived/revalidations/' + sha256(evidence) + '.json'
+        existing = list(
+            Path(directory).resolve().glob('derived/revalidations/*.json'))
+        if any(p.is_symlink() for p in existing):
+            raise ValueError('Timeline revalidation contains a symlink')
+        if len(existing) >= 128 and not bundle_path(directory, name).exists():
+            raise ValueError('Timeline revalidation count budget exceeded')
+        if len(evidence) > 1024 * 1024 or sum(
+                p.stat().st_size
+                for p in existing) + (0 if bundle_path(directory, name).exists(
+                ) else len(evidence)) > 8 * 1024 * 1024:
+            raise ValueError('Timeline revalidation byte budget exceeded')
+        persist(directory, name, evidence)
+        return [dict(row, revalidation_file=name) for row in old['exports']]
     if sum(row['bytes']
            for row in previous) + sum(row['bytes']
                                       for row in rows) > 16 * 1024 * 1024:

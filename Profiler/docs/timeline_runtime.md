@@ -6,15 +6,19 @@ late instrumentation after ordinary LLVM O3, with a separately packaged matching
 LLVM recorder and `optimized-llvm.patch`. On the inspected SM120 target, the late
 layout now also maps actual marked PTX/CUBIN readers and exports standard
 observer-relative counter-ns Perfetto files. These show observer issue brackets,
-wait brackets and checkpoints, with conditional byte-dependency facts. They do
-not establish precise source costs, hardware busy time, shared epochs or verified
-physical time flows.
+wait brackets and checkpoints. The qualified dependency path described below
+also joins observed dynamic dependencies within a proved invocation/program
+counter epoch. Neither path establishes precise source costs, hardware busy
+time or physical engine completion instants.
 
-The inspected SM120 late path additionally publishes `shared_counter_exports`
-with `shared_counter_status` in each capture. Each shared file uses one raw
+The inspected SM120 late path publishes `observed_dependency_exports` when
+its native, storage, collective-byte and clock evidence jointly qualify.
+Otherwise it attempts `shared_counter_exports` with `shared_counter_status`.
+These are alternative shared views, rather than duplicate default exports. Each shared file uses one raw
 counter origin and one counter epoch for selected threads of the same actual
 invocation/program. Full-CTA recordings select up to four actual lane-zero
-threads from distinct compiled warps (for four warps: 0, 32, 64, 96); a recorder
+threads from distinct compiled warps (for four warps: 0, 32, 64, 96). A
+single-warp full-CTA recording selects actual threads 0 through 3; a recorder
 that only captured its first four threads cannot supply other warp data.
 The common trace has compact per-thread operation tracks and preserves native
 event labels, raw references, source navigation and lifecycle coverage. The
@@ -37,6 +41,49 @@ rights remain false, and the original isolated exports remain available.
 The public offline reexport adds `shared_exports` through the same provider,
 without replaying an application or replacing old canonical/trace artifacts.
 Missing or mismatched inputs retain an explicit shared-counter diagnostic.
+
+Qualified dependency files contain the same observed internal intervals plus
+an `Observed dependency checkpoints` track per actual observer. Selecting a
+checkpoint in Perfetto reveals its incoming/outgoing flows, actual generation,
+source locations, raw record offset and full-width tick. The arrows connect
+observed submission, commit, wait return, barrier instruction, consumer issue
+and reuse checkpoints. They do not locate an unobserved engine completion.
+A barrier instruction checkpoint is not a synthetic collective-ready timestamp.
+Coalesced source loads share their actual native observation witness.
+
+`observed_dependency_status.time_arrows_verified` qualifies these logical
+observed relations only. Read precision, physical overlap, source costs and
+engine busy remain unqualified. All recorded CTA actors feed the byte model;
+the four displayed observers do not replace that participation evidence.
+A missing mechanism witness produces an explicit `unavailable` reason and
+retains the raw data and any independently qualified counter-only view.
+The offline command returns `observed_dependency_exports` and
+`observed_dependency_reason` using freshly derived evidence without application
+replay. Pure shared-counter exports remain available as the fallback and via
+their existing writer API.
+
+Re-export preserves existing immutable receipts. When every canonical, view
+and trace byte and export descriptor is identical, the store may reuse an old
+revision after validating its receipt, recording the current validation inputs
+in `derived/revalidations/`. Returned rows identify that evidence through
+`revalidation_file`. A changed view or trace gets a new revision; a current
+rule identity never overwrites the original producer identity. The 16 MiB
+session trace budget still applies; revalidation records have separate bounded
+count and byte limits.
+
+Current dependency qualification has been exercised with the four-warp
+runtime-K GEMM. Its one-warp variant passes numerical and collective-byte
+checks but still fails native timestamp/payload qualification for register
+spills, a wide literal and several shared-address expressions. The failure
+remains visible with retained raw data; it is not classified as an unsupported
+ordinary kernel or counted as a successful dependency timeline.
+
+The recorder also preserves warp-synchronization brackets and their actual
+member masks. A full-mask synchronization can publish for the whole actual
+block only when that block fits within a single native warp. Partial or
+multiple-warp scopes are not promoted to a CTA publication fence. A source
+warp fence may have no physical instruction after code generation; its
+counter bracket does not imply hardware engine activity.
 
 Previously qualified NVIDIA early-recorder captures retain their isolated
 observer-relative ns exports through the legacy reader. Ascend 910B c220-vector
