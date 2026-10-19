@@ -5,6 +5,10 @@ compiled through its matching FlagTree integration. Operator source does not
 need scopes, observer IDs, hidden arguments, or per-kernel instrumentation edits.
 The compiler selects bounded internal locations from the actual specialization.
 
+For internal timestamps and standard Perfetto files, start with the
+[timeline quickstart](timeline_quickstart.md). `--detail auto` and
+`--detail timeline` request different observation modes.
+
 ## Install the matching compiler and component
 
 Use a wheel built from this component and the pinned backend integration in

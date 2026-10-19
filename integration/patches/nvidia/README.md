@@ -107,7 +107,7 @@ runtime=/absolute/path/to/runtime-venv/bin/python
 "$runtime" -m pip install --no-deps /path/to/matching-cuda-wheels/nvidia_*.whl
 "$runtime" -m pip install filelock 'typing-extensions>=4.10' 'sympy>=1.13.3' \
   networkx jinja2 fsspec 'numpy==2.2.6'
-"$runtime" -m pip install --no-deps /absolute/path/to/timeline-package/dist/flagtree-0.7.0-cp310-cp310-linux_x86_64.whl
+"$runtime" -m pip install --no-deps /absolute/path/to/timeline-package/dist/flagtree-*.whl
 ```
 
 For an offline installation, add `--no-index --find-links /path/to/dependency-wheels`

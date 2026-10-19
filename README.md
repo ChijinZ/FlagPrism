@@ -94,6 +94,8 @@ Python files does not install these passes. After installation, follow
 unmodified kernel script with `--detail auto` and open its report. Without
 `--detail auto`, the CLI keeps its native collection mode; a successful native
 capture alone does not establish that internal dynamic records were collected.
+For internal timestamps and standard Perfetto files, use the
+[timeline quickstart](Profiler/docs/timeline_quickstart.md) with `--detail timeline`.
 
 ## Repository Layout
 
