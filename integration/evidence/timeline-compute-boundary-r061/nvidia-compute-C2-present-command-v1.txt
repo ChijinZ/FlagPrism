@@ -1,0 +1,15 @@
+docker exec chijin-study-pro6000 /workspace/chijin-timeline-r061-nvidia/runs/compute-install-v1/output/venv/bin/python -I -c 'from pathlib import Path
+import json,hashlib
+from flagtree.profiler import timeline_unit_nvidia_late as units
+from flagtree.profiler import timeline_nvidia_late_boundaries as rules
+r=Path('"'"'/workspace/chijin-timeline-r061-nvidia/runs/compute-C2-v1/output'"'"');rows=[]
+for rep in [0,1]:
+ root=r/'"'"'device'"'"'/('"'"'32-'"'"'+str(rep))/'"'"'capture/timeline'"'"';seals={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('"'"'*'"'"') if p.is_file()}
+ for item in json.loads((root/'"'"'index.json'"'"').read_text())['"'"'captures'"'"']:
+  cap=json.loads((root/item['"'"'capture_file'"'"']).read_text());plan=cap['"'"'owner'"'"']['"'"'plan'"'"'];bid=cap['"'"'owner'"'"']['"'"'binary_id'"'"'];base=root/'"'"'machine'"'"'/bid;ptxrow=next(x for x in cap['"'"'metadata'"'"']['"'"'timeline_artifacts'"'"'] if x['"'"'retained_file'"'"'].endswith('"'"'.ptx'"'"'));report=rules.derive_native_boundaries(machine_map=units.load_late_machine_map(root,cap),sass_lines=(base/'"'"'lines.stdout'"'"').read_bytes(),sass_json=(base/'"'"'json.stdout'"'"').read_bytes(),ptx=(root/ptxrow['"'"'retained_file'"'"']).read_bytes(),plan=plan)
+  native=report['"'"'sites'"'"'];expected={x['"'"'kind'"'"'] for x in plan['"'"'sites'"'"'] if x['"'"'kind'"'"'] in rules._KINDS}
+  if {x['"'"'kind'"'"'] for x in native}!=expected or any(x['"'"'status'"'"']!='"'"'native_boundary_control_order_checked'"'"' for x in native):raise RuntimeError('"'"'Actual present native family rejected'"'"')
+  rows.append(dict(repetition=rep,binary_id=bid,capture_file=item['"'"'capture_file'"'"'],capture_sha256=seals[item['"'"'capture_file'"'"']],actual_native_kinds=sorted(expected),all_four_native_families_present=expected==set(rules._KINDS),report=report,dependency_status=cap.get('"'"'observed_dependency_status'"'"'),counter_exports=len(cap.get('"'"'counter_ns_exports'"'"',[]))))
+ if seals!={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in root.rglob('"'"'*'"'"') if p.is_file()}:raise RuntimeError('"'"'Original C2 files changed'"'"')
+(r/'"'"'actual-present-boundaries.json'"'"').write_text(json.dumps(dict(status='"'"'actual_present_C2_native_boundaries_checked_no_new_async_family_coverage_claim'"'"',math=json.loads((r/'"'"'device/result.json'"'"').read_text()),captures=rows,first_all_families_test_failed=True,application_replayed=False,device_executed=False),indent=2));print(json.dumps([dict(repetition=x['"'"'repetition'"'"'],actual_native_kinds=x['"'"'actual_native_kinds'"'"'],native_count=len(x['"'"'report'"'"']['"'"'sites'"'"']),dependency_status=x['"'"'dependency_status'"'"'],counter_exports=x['"'"'counter_exports'"'"']) for x in rows]))
+'

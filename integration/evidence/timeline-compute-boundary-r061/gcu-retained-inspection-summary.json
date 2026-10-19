@@ -1,0 +1,89 @@
+{
+  "status": "retained_actual_GCU_target_disassembly_only_not_schedule_certificate",
+  "terminal": {
+    "controller": {
+      "pid": 556032,
+      "ppid": 1,
+      "pgid": 556032,
+      "startticks": 1024332777
+    },
+    "worker": {
+      "pid": 556033,
+      "ppid": 556032,
+      "pgid": 556033,
+      "startticks": 1024332780
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r061-gcu/final-inspect-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output"
+    ],
+    "argv_sha256": "5d96e4f23fe3a8881dec40f355e7a9036700d8397378cd7f177b31aa5d7f9f83",
+    "script_sha256": "09b7245b0f6518a6807b10cb6d0bdb460c6bc40219f0c6784bb33f3f8412d7c4",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 1266844837
+  },
+  "archive_sha256": "571782171fa09bf3c22271198f54b4a57b097965f49f04660eecef71dc5e30eb",
+  "archive_bytes": 1291038,
+  "cases": [
+    {
+      "variant": 32,
+      "density": 1,
+      "source_capture_root": "/tmp/chijin-timeline-r057-gcu/runs/controlled-density-v1/output/density-1/32-0/capture/timeline",
+      "capture_input_sha256": "1eb284885090315c7f31474533d1c64d9a1f77fecfc550c64841389e3506e835",
+      "binary_sha256": "9c2a4dc67eb2ae3c7158c1db5f9e94142d61c91d66ca8f536e6e360b9e6ec7f8",
+      "compiler_LLVM_sha256": "6329697a380b25b0c3f4bd328177848701148974238a86c9ce5324b967e23bed",
+      "native_stdout_sha256": "730fc1850392dde0944dd2dfa7770fc0892ddb035950b60acd24b6733e01a494",
+      "native_decode_failure_regions": 22,
+      "native_code_fully_decoded": false,
+      "final_schedule_qualified": false,
+      "device_executed": false
+    },
+    {
+      "variant": 32,
+      "density": 8,
+      "source_capture_root": "/tmp/chijin-timeline-r057-gcu/runs/controlled-density-v1/output/density-8/32-0/capture/timeline",
+      "capture_input_sha256": "fa35be044476e8bd57e74e7ebd4a597cb9e5374389160e3a5c36948d846521b8",
+      "binary_sha256": "bd419b80d02b60ee661cd03e3a1d787a15f4b745089add4d1d773e1e8196f7ef",
+      "compiler_LLVM_sha256": "0d874d3b93246f9d5487ae4f860333e1de59af6ca44adf455c195662113da66e",
+      "native_stdout_sha256": "4f99a0e455369959098a9468138efbdbfbf09682efc85ae0f02f197a3bef7083",
+      "native_decode_failure_regions": 22,
+      "native_code_fully_decoded": false,
+      "final_schedule_qualified": false,
+      "device_executed": false
+    },
+    {
+      "variant": 64,
+      "density": 1,
+      "source_capture_root": "/tmp/chijin-timeline-r057-gcu/runs/controlled-density64-v1/output/density-1/64-0/capture/timeline",
+      "capture_input_sha256": "98f8d735a797b3cc8f1f1664758b75f94d6dc2e4cb68e489678c8b582caa6607",
+      "binary_sha256": "e60166c10fdc5a595194d16899801584ef1f248217561899830b4259c3f3cbc1",
+      "compiler_LLVM_sha256": "0b26bbc5f1e5993bef508523701dd256f628e96b29e83ae6bbb160ef16acb6ff",
+      "native_stdout_sha256": "6013ea91056d718e3016b8aa19011eb3161721e9ea71d5bef0d86fe80fc60ebb",
+      "native_decode_failure_regions": 22,
+      "native_code_fully_decoded": false,
+      "final_schedule_qualified": false,
+      "device_executed": false
+    },
+    {
+      "variant": 64,
+      "density": 8,
+      "source_capture_root": "/tmp/chijin-timeline-r057-gcu/runs/controlled-density64-v1/output/density-8/64-0/capture/timeline",
+      "capture_input_sha256": "03ae94b7840079095699e29c5ca868527aa60f6c0769307d94e2786d96f34e08",
+      "binary_sha256": "0c529b09bd0e4d9149d63d2c0c7794ffd44a2178dde62e272522310cfb7b2929",
+      "compiler_LLVM_sha256": "c7df8e736c562b92076d3038d98eb054112e59ba98439d323bb2995145da343d",
+      "native_stdout_sha256": "7271e89aa635714887c482d2409a885c42ec274940a3081834ad1159b3f3dfc5",
+      "native_decode_failure_regions": 22,
+      "native_code_fully_decoded": false,
+      "final_schedule_qualified": false,
+      "device_executed": false
+    }
+  ],
+  "limits": "actual retained target-aware disassembly has decoder gaps; exit0 is not full instruction coverage or final schedule evidence; no SDK/private binary/source committed"
+}

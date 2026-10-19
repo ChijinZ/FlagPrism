@@ -36,3 +36,28 @@ No extra math matrix, UI sweep, SDK or core rebuild was performed.
 
 Evidence archives contain bounded receipts/reports, not full private kernel
 sources or vendor binaries. Full raw/object/PTX remain in their server bundle.
+
+## Additional affected C2 and new-file TP closure
+
+C2 BK32 used the unchanged controlled workload: one ordinary plus two profile
+calls. Math/input/tail/state-once and actual ns capture all passed. A mistakenly
+reused dedicated test then required all four async operation families; the
+whole run is terminal1 and its original log is retained. C2 actually contains
+CTA barriers and shared matrix loads (no native async copy); a retained-only
+followup validates all ten present native boundaries per capture. Dependency
+exports remain unavailable, rather than manufacturing async coverage.
+
+The forty new C1/C2 observer/shared-counter traces passed the existing pinned
+real TP verifier, exact raw-word/rational-ns/protobuf/SQL checks and complete
+263-row stats per trace, without importer errors. This is CPU-only and does
+not replay math or repeat the prior 1740 traces/UI. First audit attempt used
+the default display canonical for a different shared-view projection and got
+a record-ID KeyError. The corrected second attempt uses each committed view
+revision's own canonical.json; the verifier and original data are unchanged.
+The first failure is in the completion archive alongside the second success.
+This does not grant source-exclusive cost, schedule or new UI qualification.
+
+GCU target-aware inspection of four existing BK32/BK64 sparse/default objects
+completed without device calls. The SDK disassembler reports incomplete decode
+regions, so exit0 is not counted as full native schedule verification. Only
+the hashes/limits summary is committed; private binaries/SDK IR stay off Git.
