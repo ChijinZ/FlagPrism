@@ -9,6 +9,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import tempfile
 
 
 def run(args):
@@ -141,6 +142,48 @@ def run(args):
             if origins.matrix_member_locations(
                     wrong, boundaries, report)[0]['status'] != 'unverified':
                 raise RuntimeError('Wrong LLVM member family accepted')
+        # Exercise only retained sidecar reads: these owned fixtures use the
+        # actual object outputs above and never modify the original capture.
+        with tempfile.TemporaryDirectory(
+                prefix='flagprism-origin-reader-') as tmp:
+            directory = Path(tmp)
+            base = directory / 'machine' / machine['binary_id']
+            base.mkdir(parents=True)
+            saved = dict(report,
+                         tool_sha256='a' * 64,
+                         origins=[],
+                         source_regions_qualified=True)
+            (base / 'operation-origins.json').write_text(json.dumps(saved))
+            (base / 'counter-map.json').write_text(
+                json.dumps(dict(tool_sha256='a' * 64)))
+            (base / 'json.stdout').write_bytes(native)
+            (base / 'source-lines.stdout').write_bytes(source)
+            capture = dict(owner=dict(plan=plan))
+            loaded = origins.load_operation_origins(directory, capture,
+                                                    machine, boundaries)
+            if loaded.get('origins') != report['origins'] or loaded[
+                    'source_regions_qualified']:
+                raise RuntimeError(
+                    'Offline reader trusted saved qualification')
+            for name, change in [('source_hash',
+                                  dict(source_lines_sha256='0' * 64)),
+                                 ('tool_hash', dict(tool_sha256='b' * 64))]:
+                (base / 'operation-origins.json').write_text(
+                    json.dumps(dict(saved, **change)))
+                loaded = origins.load_operation_origins(
+                    directory, capture, machine, boundaries)
+                if loaded['status'] != 'unverified_native_operation_origins':
+                    raise RuntimeError('Offline reader accepted corrupt ' +
+                                       name)
+                rejected.append('offline_' + name)
+            (base / 'operation-origins.json').write_text(json.dumps(saved))
+            (base / 'source-lines.stdout').unlink()
+            loaded = origins.load_operation_origins(directory, capture,
+                                                    machine, boundaries)
+            if loaded['status'] != 'unverified_native_operation_origins':
+                raise RuntimeError(
+                    'Offline reader invented missing source data')
+            rejected.append('offline_missing_source')
         results.append(
             dict(binary_id=machine['binary_id'],
                  origins=len(report['origins']),

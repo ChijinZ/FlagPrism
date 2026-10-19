@@ -387,3 +387,21 @@ file's line table. It preserves raw line programs, native output, tool exits,
 warnings and compiler line-zero rows. Missing final file/site markers fail even
 if the LLIR contains marker strings. This test does not independently prove
 phase/column mapping, reader-to-raw value flow or all-path source regions.
+
+### NVIDIA operation-origin regression
+
+Run `tests/timeline/p01_nvidia_origin_markers.py --tool TOOL --output OUT`
+inside the matching NVIDIA Docker. The native CLI fixtures check ordinary,
+missing-debug and inlined scopes, preservation of original source navigation,
+unique operation IDs, and absence of operation IDs on inserted clock markers.
+These fixtures do not execute a device.
+
+After a real public capture, run
+`tests/timeline/p01_nvidia_operation_origins.py --timeline BUNDLE --output OUT`
+with the installed wheel. This rereads retained native source output and JSON,
+binds the original LLVM matrix members to independently bounded HMMA issues,
+and checks duplicate/unknown origin IDs, wrong binary/member family, missing
+locations, corrupt offline identities and rejection of cached qualification.
+The mutations use owned sidecar fixtures; original captures remain unchanged.
+Run the same reader with `python -O` to check validation without assertions.
+Missing debug locations stay visible and cannot become source-exclusive costs.
