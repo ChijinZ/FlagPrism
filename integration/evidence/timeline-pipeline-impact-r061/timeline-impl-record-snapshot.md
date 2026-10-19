@@ -1866,3 +1866,14 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - T093 sparse新增20条counter/shared trace已实际TP通过：controller120540/worker120541 terminal0/22.154s、worker missing；注册20/实际20、锁定verifier75e1b08...，无应用重跑。archive69804B SHA55316cd59dfe8139c33bac5bd9ed8f98d334d2c44ac89f67f48263f1c68be246。不是高级dependency arrows或ordinary overlap资格。实际sparse原wholefailure、四math成功及负CPU probe均封存，完整archive4284693B；小证据integration/evidence/timeline-pipeline-impact-r061，仍留pipeline-impact open。
 
 - T093原compiler reviewer有限复核已回：确认实际native scheduling扰动，ordinary preservation在本例不能通过；尚不能量化物理overlap损失，也不能唯一归因matrix clobber。具体约束为各reader sideeffect/memory clobber与block末发布引起活跃区间变化。现有绑定actual profile binary的qualified observed dependencies仍可解释instrumented执行，不获ordinary/hardware completion资格。转录limited-compiler-review.md；quickstart明确说明寄存器/调度扰动和解释范围。无产品代码/资格门修改，不把文档说明冒充修复。
+
+- T093 compiler reviewer后续边界澄清：先前“ordinary preservation不能通过”措辞过强，准确分类为B=保持资格未证明，而不是A=已证明新增完成依赖/串行化。实际profile PTX prefetch submit/commit147/153先于wait_group1第530及当前LDSM/MMA547–597；MMA输出与下一copy/reader操作数不同，没有展示新增MMA完成→logger→copy RAW路径。issue次序改变本身不判§8.7结构失真，5/9group也不授物理overlap证书。今后不把该verification gap报告为已确认需修的串行化bug。未再启动无根据的探针。
+
+
+## T094 原affected60结束后的新导出SQL审计编排（run062，在研）
+
+- 本轮原队列持续推进，已见54/60成功至q08-s0-c1/warm2；session35162仍live，无新数学case/重放。新修复后的source-boundary qualification仍未从这些通过推断。
+- 为避免等待后重复手工大矩阵，准备retained-only包装脚本ascend-affected-audit-prepare-runner-v1.py：只接受同原60登记全部终态、原首000 rc1+retained修复例外原样保留；按primary index收60capture/既有counter与observed-dependency导出。每个view使用其已提交revision自己的canonical，所有trace/raw按原SHA核同，按blob摘要去重和3MiB chunks传输。源码/数学实现没有被打开。
+- 准备ascend-affected-tp-runner-v1.py，复用同字节固定verifier75e1b08...与0d72cf3...、同TP55ba613...，只在原NVIDIA工具Docker/venv进行CPU实际导入/SQL。新cohort分母由封存原60capture的实际导出确定，不重旧1740/新NV80/UI/用户数学。普通source/ordinary-overlap/UI资格不从SQL升级。
+- 已启动本机纯SSH后续编排finish_affected60_audit_v1.py，session99790、PID25150/start37877750，SHA942c8f71e0840450b2575d74eb4530ee27a06a7588cf95e2734029f25828602d，launch保留audit-orchestration-v1/launch.json。当前等待同原queue result；只接受passed60/not_completed0后启动server bounded300s CPU prepare，再传已核SHA chunk，再在/workspace/chijin-timeline-r062-nvidia/runs/affected60-tp-v1启动bounded300s SQL。SSH观察timeout只poll同root不重launch。此编排不是新设备实验或重跑应用。
+- 昇腾当前SDK实际反汇编仍全<not available>，已向用户async询问是否有能解码该设备的AI Core工具/匹配SDK路径；未把无答复视作已提供工具，不重历史无效选项。继续独立工作，goal active，未改paper/Study、未merge/push。
