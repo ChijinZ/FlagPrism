@@ -1200,11 +1200,12 @@ public:
     }
 
     std::memset(allocation->hostBuffer, 0, allocation->bytes);
-    // Header initialization is part of launch setup, not payload capture. Keep
-    // it synchronous so the instrumented kernel never observes stale allocation
-    // contents when different backend launch APIs are mixed in one process.
+    // Initialize timeline storage on the launch stream so setup is ordered
+    // before its writer without depending on default-stream synchronization.
+    // Legacy layouts retain their synchronous initialization behavior.
     const uint64_t initializationStream =
-        (ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+        (ctx.runtimeMetadata.recordLayout == "gcu_execution_timeline_v3" ||
+         ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
          ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
          ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
          (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" ||

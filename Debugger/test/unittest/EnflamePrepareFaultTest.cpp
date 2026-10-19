@@ -15,6 +15,7 @@ std::string fault;
 int deviceAttempts = 0, hostAttempts = 0;
 int deviceAlloc = 0, hostAlloc = 0, deviceFree = 0, hostFree = 0;
 int queries = 0, memsets = 0, copies = 0;
+uint64_t memsetStream = 0, headerCopyStream = 0;
 constexpr uint64_t actualStream = 0x123456;
 topsError_t code(int value) { return static_cast<topsError_t>(value); }
 bool cleanupFails() { return fault.find("and-free") != std::string::npos; }
@@ -73,7 +74,9 @@ topsError_t topsMemset(void *ptr, int value, size_t bytes) {
   std::memset(ptr, value, bytes);
   return topsSuccess;
 }
-topsError_t topsMemsetAsync(void *ptr, int value, size_t bytes, topsStream_t) {
+topsError_t topsMemsetAsync(void *ptr, int value, size_t bytes,
+                            topsStream_t stream) {
+  memsetStream = reinterpret_cast<uint64_t>(stream);
   return topsMemset(ptr, value, bytes);
 }
 topsError_t topsMemcpy(void *dst, const void *src, size_t bytes,
@@ -85,7 +88,9 @@ topsError_t topsMemcpy(void *dst, const void *src, size_t bytes,
   return topsSuccess;
 }
 topsError_t topsMemcpyAsync(void *dst, const void *src, size_t bytes,
-                            topsMemcpyKind kind, topsStream_t) {
+                            topsMemcpyKind kind, topsStream_t stream) {
+  if (kind == topsMemcpyHostToDevice)
+    headerCopyStream = reinterpret_cast<uint64_t>(stream);
   return topsMemcpy(dst, src, bytes, kind);
 }
 topsError_t topsStreamSynchronize(topsStream_t) { return topsSuccess; }
@@ -101,10 +106,25 @@ int main(int argc, char **argv) {
   meta.backendKind =
       scenario == "cann-unavailable" ? BackendKind::CANN : BackendKind::ENFLAME;
   DebugRuntimeMetadata runtime{};
+  const bool timelineStream =
+      scenario == "stream-v2" || scenario == "stream-v3";
+  if (timelineStream) {
+    runtime.recordLayout = scenario == "stream-v3"
+                               ? "gcu_execution_timeline_v3"
+                               : "gcu_first_last_timeline_v2";
+    runtime.hasLaunchGrid = true;
+    runtime.gridX = 3;
+    runtime.gridY = runtime.gridZ = 1;
+    artifacts.bufferPlan.recordSize = scenario == "stream-v3" ? 128 : 64;
+  }
   auto bridge = createFrontendBridge();
   auto eager = [&] {
     auto prepared =
         bridge->prepareOwnedLaunch(artifacts, meta, runtime, actualStream);
+    if (timelineStream &&
+        (memsetStream != actualStream || headerCopyStream != actualStream))
+      throw std::logic_error(
+          "timeline initialization escaped the launch stream");
     assert(prepared.request.hiddenArgValue != 0);
     auto exported =
         prepared.transferEngine->syncExport(prepared.request.launchContext);
@@ -118,7 +138,7 @@ int main(int argc, char **argv) {
   std::string original;
   try {
     eager();
-    if (scenario != "eager")
+    if (scenario != "eager" && !timelineStream)
       throw std::logic_error("fault did not reject");
   } catch (const std::runtime_error &error) {
     original = error.what();
@@ -158,14 +178,14 @@ int main(int argc, char **argv) {
            std::string::npos);
     assert(queries == 0 && deviceAttempts == 0 && hostAttempts == 0);
   } else {
-    assert(scenario == "eager" && original.empty());
+    assert((scenario == "eager" || timelineStream) && original.empty());
     assert(queries == 1 && deviceAlloc == 1 && hostAlloc == 1 &&
            deviceFree == 1 && hostFree == 1);
   }
   // Recovering from an early query or SDK allocation/header error leaves Python
   // alive; exercise a fresh native eager handle in the same CPU test process.
   if (scenario != "unavailable" && scenario != "cann-unavailable" &&
-      scenario != "eager") {
+      scenario != "eager" && !timelineStream) {
     fault = "eager";
     eager();
     assert(deviceAlloc == deviceFree && hostAlloc == hostFree);

@@ -1,8 +1,12 @@
 """Actual public GEMM and SDK-translated buffer address check; two real calls."""
 import argparse, pathlib, json, ctypes
+from contextlib import nullcontext
 
 p = argparse.ArgumentParser()
 p.add_argument('--output', type=pathlib.Path, required=True)
+p.add_argument('--two-streams',
+               action='store_true',
+               help='Submit the two real GEMMs on distinct nondefault streams')
 a = p.parse_args()
 a.output.mkdir(parents=True)
 import torch
@@ -68,21 +72,26 @@ for k in [96, 224]:
              x=left.to('gcu'),
              y=right.to('gcu'),
              out=torch.full((4100, ), -17.25, device='gcu')))
+streams = [torch.gcu.Stream(device=0) for _ in inputs] if a.two_streams else []
+if streams:
+    torch.gcu.synchronize(
+        0)  # Finish input setup before either independent stream.
 api._infer_runtime_metadata = observe
 session = profiler.start(str(a.output / 'public'), detail='timeline')
 try:
-    for row in inputs:
-        tiled_product[(2, 2)](row['x'],
-                              row['y'],
-                              row['out'],
-                              64,
-                              64,
-                              row['k'],
-                              32,
-                              32,
-                              32,
-                              num_warps=4,
-                              num_stages=1)
+    for index, row in enumerate(inputs):
+        with torch.gcu.stream(streams[index]) if streams else nullcontext():
+            tiled_product[(2, 2)](row['x'],
+                                  row['y'],
+                                  row['out'],
+                                  64,
+                                  64,
+                                  row['k'],
+                                  32,
+                                  32,
+                                  32,
+                                  num_warps=4,
+                                  num_stages=1)
 finally:
     api._infer_runtime_metadata = original
     (a.output / 'sdk-pointer-bindings.json').write_text(
@@ -129,6 +138,9 @@ for snapshot, item, row in zip(snapshots, index['captures'], inputs):
         raise RuntimeError(
             'Actual SDK-translated addresses do not match native records ' +
             repr(dict(expected=snapshot, observed=sorted(addresses))))
+    if streams and c['owner']['stream'] != int(
+            streams[len(checks)].gcu_stream):
+        raise RuntimeError('Captured invocation belongs to another stream')
     checks.append(
         dict(k=row['k'],
              binary_id=c['owner']['binary_id'],
