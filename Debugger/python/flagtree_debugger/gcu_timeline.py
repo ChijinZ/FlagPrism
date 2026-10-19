@@ -268,8 +268,8 @@ def preserve_native_locations(text, metadata):
         try:
             # This native helper has no subprocesses. Reap it even if recording
             # launch ownership or writing its receipt fails.
-            fields = (Path('/proc') / str(child.pid) / 'stat').read_text().rsplit(
-                ')', 1)[1].split()
+            fields = (Path('/proc') / str(child.pid) /
+                      'stat').read_text().rsplit(')', 1)[1].split()
             receipt.update(pgid=int(fields[2]), startticks=int(fields[19]))
             (root / 'launch.json').write_text(json.dumps(receipt, indent=2))
             result = child.wait(timeout=30)

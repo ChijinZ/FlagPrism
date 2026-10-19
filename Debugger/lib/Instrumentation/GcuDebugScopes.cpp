@@ -36,6 +36,35 @@ llvm::Expected<std::string> addGcuNativeDebugScopes(llvm::StringRef input) {
   manager.addPass(mlir::LLVM::createDIScopeForLLVMFuncOpPass());
   if (mlir::failed(manager.run(*module)))
     return reject("Cannot add LLVM debug scopes");
+  // FileLineColLoc alone does not switch the file associated with LLVM's
+  // current DISubprogram. Give generated clock markers an explicit local
+  // file scope; the user's source positions stay in the execution manifest.
+  bool missingScope = false;
+  module->walk([&](mlir::Operation *op) {
+    auto marker = mlir::dyn_cast<mlir::FileLineColLoc>(op->getLoc());
+    if (!marker || marker.getFilename() != "__flagprism_gcu_clock_v1__")
+      return;
+    auto function = op->getParentOfType<mlir::LLVM::LLVMFuncOp>();
+    if (!function) {
+      missingScope = true;
+      return;
+    }
+    auto subprogram =
+        function.getLoc()
+            ->findInstanceOf<
+                mlir::FusedLocWith<mlir::LLVM::DISubprogramAttr>>();
+    if (!subprogram) {
+      missingScope = true;
+      return;
+    }
+    auto file = mlir::LLVM::DIFileAttr::get(
+        &context, marker.getFilename().getValue(), ".");
+    auto scope = mlir::LLVM::DILexicalBlockFileAttr::get(
+        &context, subprogram.getMetadata(), file, 0);
+    op->setLoc(mlir::FusedLoc::get(&context, {marker}, scope));
+  });
+  if (missingScope)
+    return reject("Native clock marker has no containing LLVM debug scope");
   if (coreText(*module) != before) {
     llvm::errs() << "DI scope pass changed non-location IR; refusing output\n";
     return reject("Debug scopes changed non-location IR");

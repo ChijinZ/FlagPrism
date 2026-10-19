@@ -1,0 +1,254 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 559400,
+      "ppid": 1,
+      "pgid": 559400,
+      "startticks": 1025609745
+    },
+    "worker": {
+      "pid": 559401,
+      "ppid": 559400,
+      "pgid": 559401,
+      "startticks": 1025609748
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output"
+    ],
+    "argv_sha256": "d1cd342d29c30a5ee0b2c6c6779e0fb47390b8b6c0e352c7b0193caa2a1dc8d8",
+    "script_sha256": "6fd9e4028c3b214db62bb373fc5cb1ebd70258f7b7afca5a9efe6c7f92a73f20",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 13535615599
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 559400,
+      "ppid": 1,
+      "pgid": 559400,
+      "startticks": 1025609745
+    },
+    "worker": {
+      "pid": 559401,
+      "ppid": 559400,
+      "pgid": 559401,
+      "startticks": 1025609748
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output"
+    ],
+    "argv_sha256": "d1cd342d29c30a5ee0b2c6c6779e0fb47390b8b6c0e352c7b0193caa2a1dc8d8",
+    "script_sha256": "6fd9e4028c3b214db62bb373fc5cb1ebd70258f7b7afca5a9efe6c7f92a73f20",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_product_GCU_native_debug_scope_build",
+    "steps": [
+      {
+        "name": "configure",
+        "argv": [
+          "cmake",
+          "-S",
+          "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/tools/gcu-timeline",
+          "-B",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "build",
+        "argv": [
+          "cmake",
+          "--build",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build",
+          "--parallel",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "native-unit",
+        "argv": [
+          "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/test/gcu_native_debug_scopes.py",
+          "--tool",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "bridge",
+        "argv": [
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline",
+          "--debug-scopes",
+          "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/with-scope.mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "SDK-validate",
+        "argv": [
+          "/opt/triton_gcu/bin/gcu-compiler-opt",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/with-scope.mlir",
+          "--mlir-print-debuginfo",
+          "-o",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/SDK-roundtrip.mlir"
+        ],
+        "returncode": 0
+      }
+    ],
+    "files": [
+      {
+        "path": "SDK-roundtrip.mlir",
+        "bytes": 840183,
+        "sha256": "57c99f72db880ba403585790900c7ec6bd595a00f66ff08e88ea6deefca11453"
+      },
+      {
+        "path": "SDK-validate.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "SDK-validate.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "build.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "build.stdout",
+        "bytes": 468,
+        "sha256": "537d45184df8c4aa9a8eecb4de01cf7e7a30591a9e7f0d38fe28e1761ca651bb"
+      },
+      {
+        "path": "configure.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "configure.stdout",
+        "bytes": 838,
+        "sha256": "a4ce52240189613b2201f793b4847188ea792d397f8fa53b3cd516d579533070"
+      },
+      {
+        "path": "native-unit.stderr",
+        "bytes": 677,
+        "sha256": "f73c7efdabc74b6b38f8e7dfecb0b93704c132e5f8542c190e234d7c98ad1612"
+      },
+      {
+        "path": "native-unit.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "steps.json",
+        "bytes": 1720,
+        "sha256": "4d562b02a0884553bd2e99f9a995e76ac1279c95941d7af84cc1988eb2523f05"
+      },
+      {
+        "path": "with-scope.mlir",
+        "bytes": 1000694,
+        "sha256": "d37d051f91fc56b8df29467ad0f31f2a10cae7bd46bf2159cea41a5171d79e2a"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "product_or_SDK_modified": false,
+    "actual_native_mapping_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/tools/gcu-timeline",
+        "-B",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build",
+        "--parallel",
+        "2"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "native-unit",
+      "argv": [
+        "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/test/gcu_native_debug_scopes.py",
+        "--tool",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "bridge",
+      "argv": [
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline",
+        "--debug-scopes",
+        "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/with-scope.mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "SDK-validate",
+      "argv": [
+        "/opt/triton_gcu/bin/gcu-compiler-opt",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/with-scope.mlir",
+        "--mlir-print-debuginfo",
+        "-o",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/SDK-roundtrip.mlir"
+      ],
+      "returncode": 0
+    }
+  ],
+  "output/build.stdout": "[1/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/main.cpp.o\n[2/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/lib/Instrumentation/GcuDebugScopes.cpp.o\n[3/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/tmp/chijin-timeline-r068-gcu/scopes-build-input-v3/source/Debugger/lib/Instrumentation/GcuTimeline.cpp.o\n[4/4] Linking CXX executable flagprism-gcu-timeline\n",
+  "output/native-unit.stderr": "test_existing_scopes_can_be_parsed_again (__main__.NativeScopes.test_existing_scopes_can_be_parsed_again) ... ok\ntest_malformed_ir_rejected_without_output (__main__.NativeScopes.test_malformed_ir_rejected_without_output) ... ok\ntest_missing_input_rejected_without_output (__main__.NativeScopes.test_missing_input_rejected_without_output) ... ok\ntest_output_io_error_is_failure (__main__.NativeScopes.test_output_io_error_is_failure) ... ok\ntest_scopes_preserve_marker_and_sdk_overflow_encoding (__main__.NativeScopes.test_scopes_preserve_marker_and_sdk_overflow_encoding) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.023s\n\nOK\n"
+}

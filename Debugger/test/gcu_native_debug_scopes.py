@@ -45,6 +45,7 @@ class NativeScopes(unittest.TestCase):
         text = self.output.read_text()
         self.assertIn('__flagprism_gcu_clock_v1__":7:2', text)
         self.assertIn('#llvm.di_subprogram<', text)
+        self.assertIn('#llvm.di_lexical_block_file<', text)
         self.assertIn('#llvm.overflow<none>', text)
         self.assertEqual(self.source.read_text(), SOURCE)
 

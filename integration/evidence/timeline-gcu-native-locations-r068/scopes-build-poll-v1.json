@@ -1,0 +1,183 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 557589,
+      "ppid": 1,
+      "pgid": 557589,
+      "startticks": 1025546516
+    },
+    "worker": {
+      "pid": 557590,
+      "ppid": 557589,
+      "pgid": 557590,
+      "startticks": 1025546519
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output"
+    ],
+    "argv_sha256": "2c2ddea031338144a5fce79f0b35aa6bc6e3d36daf6949c2942f053624f312da",
+    "script_sha256": "6fd9e4028c3b214db62bb373fc5cb1ebd70258f7b7afca5a9efe6c7f92a73f20",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 13483716260
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 557589,
+      "ppid": 1,
+      "pgid": 557589,
+      "startticks": 1025546516
+    },
+    "worker": {
+      "pid": 557590,
+      "ppid": 557589,
+      "pgid": 557590,
+      "startticks": 1025546519
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output"
+    ],
+    "argv_sha256": "2c2ddea031338144a5fce79f0b35aa6bc6e3d36daf6949c2942f053624f312da",
+    "script_sha256": "6fd9e4028c3b214db62bb373fc5cb1ebd70258f7b7afca5a9efe6c7f92a73f20",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_product_GCU_native_debug_scope_build",
+    "steps": [
+      {
+        "name": "configure",
+        "argv": [
+          "cmake",
+          "-S",
+          "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/tools/gcu-timeline",
+          "-B",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "build",
+        "argv": [
+          "cmake",
+          "--build",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build",
+          "--parallel",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "native-unit",
+        "argv": [
+          "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/test/gcu_native_debug_scopes.py",
+          "--tool",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline"
+        ],
+        "returncode": 1
+      }
+    ],
+    "files": [
+      {
+        "path": "build.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "build.stdout",
+        "bytes": 468,
+        "sha256": "b02edc1f9304be30c5a3264200c2e40a50db26ef05264b1c1579f32222019d99"
+      },
+      {
+        "path": "configure.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "configure.stdout",
+        "bytes": 838,
+        "sha256": "3422f90be944bc1855282a6fef220ca86c2693fe7bd29129def42798dcb52bd6"
+      },
+      {
+        "path": "native-unit.stderr",
+        "bytes": 2051,
+        "sha256": "11c31ce0f8b9a970abe79b24b9494f33f5cf779db5a3a327bc5a93e91c0d32c7"
+      },
+      {
+        "path": "native-unit.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "steps.json",
+        "bytes": 1026,
+        "sha256": "f052c95d9c109a8c0ce7dbc9b9e9d277aac623b72faa2dd74084d221421110c3"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "product_or_SDK_modified": false,
+    "actual_native_mapping_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/tools/gcu-timeline",
+        "-B",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build",
+        "--parallel",
+        "2"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "native-unit",
+      "argv": [
+        "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/test/gcu_native_debug_scopes.py",
+        "--tool",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline"
+      ],
+      "returncode": 1
+    }
+  ],
+  "stderr.log": "Traceback (most recent call last):\n  File \"/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/run.py\", line 35, in <module>\n    if len(steps)!=5 or any(r['returncode'] for r in steps):raise RuntimeError('DI bridge prototype is incomplete; preserve diagnostics')\n                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: DI bridge prototype is incomplete; preserve diagnostics\n",
+  "output/build.stdout": "[1/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/main.cpp.o\n[2/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/lib/Instrumentation/GcuDebugScopes.cpp.o\n[3/4] Building CXX object CMakeFiles/flagprism-gcu-timeline.dir/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/lib/Instrumentation/GcuTimeline.cpp.o\n[4/4] Linking CXX executable flagprism-gcu-timeline\n",
+  "output/native-unit.stderr": "test_existing_scopes_can_be_parsed_again (__main__.NativeScopes.test_existing_scopes_can_be_parsed_again) ... FAIL\ntest_malformed_ir_rejected_without_output (__main__.NativeScopes.test_malformed_ir_rejected_without_output) ... ok\ntest_missing_input_rejected_without_output (__main__.NativeScopes.test_missing_input_rejected_without_output) ... ok\ntest_output_io_error_is_failure (__main__.NativeScopes.test_output_io_error_is_failure) ... ok\ntest_scopes_preserve_marker_and_sdk_overflow_encoding (__main__.NativeScopes.test_scopes_preserve_marker_and_sdk_overflow_encoding) ... FAIL\n\n======================================================================\nFAIL: test_existing_scopes_can_be_parsed_again (__main__.NativeScopes.test_existing_scopes_can_be_parsed_again)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/test/gcu_native_debug_scopes.py\", line 47, in test_existing_scopes_can_be_parsed_again\n    self.assertEqual(first.returncode, 0, first.stderr.decode())\nAssertionError: 1 != 0 : loc(\"-\":2:3): error: Dialect `llvm' not found for custom op 'llvm.func' \nCannot parse opaque SDK debug scope IR\n\n\n======================================================================\nFAIL: test_scopes_preserve_marker_and_sdk_overflow_encoding (__main__.NativeScopes.test_scopes_preserve_marker_and_sdk_overflow_encoding)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/tmp/chijin-timeline-r068-gcu/scopes-build-input-v1/source/Debugger/test/gcu_native_debug_scopes.py\", line 38, in test_scopes_preserve_marker_and_sdk_overflow_encoding\n    self.assertEqual(result.returncode, 0, result.stderr.decode())\nAssertionError: 1 != 0 : loc(\"-\":2:3): error: Dialect `llvm' not found for custom op 'llvm.func' \nCannot parse opaque SDK debug scope IR\n\n\n----------------------------------------------------------------------\nRan 5 tests in 0.022s\n\nFAILED (failures=2)\n"
+}

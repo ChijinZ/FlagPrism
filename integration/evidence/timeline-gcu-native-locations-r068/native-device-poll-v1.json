@@ -1,0 +1,89 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 558466,
+      "ppid": 1,
+      "pgid": 558466,
+      "startticks": 1025582241
+    },
+    "worker": {
+      "pid": 558467,
+      "ppid": 558466,
+      "pgid": 558467,
+      "startticks": 1025582244
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r068-gcu/runs/native-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-device-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-device-v1/output"
+    ],
+    "argv_sha256": "6200ea1a820d7cacf7cdc0e66094c9d16fded7aa96611753411a2f6436850118",
+    "script_sha256": "ff2e18d2e861c0b52f69268b8527e68e4e865ffa59f5858bcd268934725d04c8",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 16940979165
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 558466,
+      "ppid": 1,
+      "pgid": 558466,
+      "startticks": 1025582241
+    },
+    "worker": {
+      "pid": 558467,
+      "ppid": 558466,
+      "pgid": 558467,
+      "startticks": 1025582244
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r068-gcu/runs/native-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-device-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-device-v1/output"
+    ],
+    "argv_sha256": "6200ea1a820d7cacf7cdc0e66094c9d16fded7aa96611753411a2f6436850118",
+    "script_sha256": "ff2e18d2e861c0b52f69268b8527e68e4e865ffa59f5858bcd268934725d04c8",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "GCU_native_location_two_math_public_capture_passed",
+    "ordinary_math_calls": 2,
+    "profiled_math_calls": 2,
+    "math": true,
+    "input_unchanged": true,
+    "guards": true,
+    "host_once": true,
+    "captures": [
+      {
+        "capture_file": "captures/invocation-15b7e58dacd14bbfb3b9513a313409e3.json",
+        "binary_id": "883e41a0b9e9da56a695de09cd2f8e1a6193c222ba6a0b739da32d55fe9c54b1",
+        "sites": 13,
+        "events": 22,
+        "observers": 2,
+        "native_scope_output_sha256": "86e7581b5a1cb5af6a11786375cc7ae37cc886fece7563f262a29ab51cc31775",
+        "final_sdk_ir_sha256": "6837d496f6f3f7b9af249b5a6f5477288f8f948689b5185f0b68ea79abc3601f"
+      },
+      {
+        "capture_file": "captures/invocation-74302e7a6de549aea9b13dcd7390af61.json",
+        "binary_id": "0ccc7d40d6e31018e90c2ea6899dcf079b56966cd72ade0ee7c71cdd237a4dc1",
+        "sites": 13,
+        "events": 20,
+        "observers": 2,
+        "native_scope_output_sha256": "b0d7c85b46697c23b803601c036cba3b9e71e50a8c1b14c13b2e4d328517aade",
+        "final_sdk_ir_sha256": "92d506fbde50f148bc2249f72686a71a66d8488cf7602131013549c8447e0c67"
+      }
+    ],
+    "final_machine_boundary_qualified": false
+  },
+  "stderr.log": "[W1020 03:30:29.934947281 gcu_caching_allocator.cpp:2976] Warning: [GCU Allocator] Static initialization: PYTORCH_GCU_ALLOC_CONF=\"(not set, using default)\", selected_backend=native (function BackendStaticInitializer)\n/usr/local/lib/python3.12/dist-packages/torch_gcu/transfer_to_gcu.py:443: ImportWarning: \n    *************************************************************************************************************\n    The torch.Tensor.cuda and torch.nn.Module.cuda are replaced with torch.Tensor.gcu and torch.nn.Module.gcu now..\n    The backend in torch.distributed.init_process_group set to eccl now..\n    The torch.cuda.* and torch.cuda.amp.* are replaced with torch.gcu.* and torch.gcu.amp.* now..\n    The device parameters have been replaced with gcu in the function below:\n    torch.logspace, torch.randint, torch.hann_window, torch.rand, torch.full_like, torch.ones_like, torch.rand_like, torch.randperm, torch.arange, torch.frombuffer, torch.normal, torch._empty_per_channel_affine_quantized, torch.empty_strided, torch.empty_like, torch.scalar_tensor, torch.tril_indices, torch.bartlett_window, torch.ones, torch.sparse_coo_tensor, torch.randn, torch.kaiser_window, torch.tensor, torch.triu_indices, torch.as_tensor, torch.zeros, torch.randint_like, torch.full, torch.eye, torch._sparse_csr_tensor_unsafe, torch.empty, torch._sparse_coo_tensor_unsafe, torch.blackman_window, torch.zeros_like, torch.range, torch.sparse_csr_tensor, torch.randn_like, torch.from_file, torch._cudnn_init_dropout_state, torch._empty_affine_quantized, torch.linspace, torch.hamming_window, torch.empty_quantized, torch._pin_memory, torch.autocast, torch.load, torch.Tensor.new_empty, torch.Tensor.new_empty_strided, torch.Tensor.new_full, torch.Tensor.new_ones, torch.Tensor.new_tensor, torch.Tensor.new_zeros, torch.Tensor.to, torch.nn.Module.to, torch.nn.Module.to_empty\n    *************************************************************************************************************\n    \n  warnings.warn(msg, ImportWarning)\n"
+}

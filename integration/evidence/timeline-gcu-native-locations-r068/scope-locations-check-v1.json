@@ -1,0 +1,72 @@
+{
+  "calls": [
+    [
+      184,
+      "      %99 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc12)"
+    ],
+    [
+      195,
+      "      %108 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc15)"
+    ],
+    [
+      318,
+      "      %192 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc18)"
+    ],
+    [
+      332,
+      "      %204 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc20)"
+    ],
+    [
+      468,
+      "      %295 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc22)"
+    ],
+    [
+      481,
+      "      %310 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc24)"
+    ],
+    [
+      617,
+      "      %402 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc26)"
+    ],
+    [
+      634,
+      "      %413 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc28)"
+    ]
+  ],
+  "call_count": 23,
+  "markers": [
+    [
+      1789,
+      "#loc12 = loc(\"__flagprism_gcu_clock_v1__\":9:1)"
+    ],
+    [
+      1790,
+      "#loc13 = loc(\"__flagprism_gcu_clock_v1__\":9:3)"
+    ],
+    [
+      1791,
+      "#loc15 = loc(\"__flagprism_gcu_clock_v1__\":9:2)"
+    ],
+    [
+      1792,
+      "#loc16 = loc(\"__flagprism_gcu_clock_v1__\":9:4)"
+    ],
+    [
+      1794,
+      "#loc18 = loc(\"__flagprism_gcu_clock_v1__\":10:1)"
+    ],
+    [
+      1795,
+      "#loc19 = loc(\"__flagprism_gcu_clock_v1__\":10:3)"
+    ]
+  ],
+  "marker_count": 46,
+  "pre_scope_calls": [
+    "      %99 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc12)",
+    "      %108 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc15)",
+    "      %192 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc18)",
+    "      %204 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc20)",
+    "      %295 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc22)",
+    "      %310 = \"llvm.call\"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc24)"
+  ]
+}

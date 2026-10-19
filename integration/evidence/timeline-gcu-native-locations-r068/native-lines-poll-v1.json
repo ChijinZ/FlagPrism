@@ -1,0 +1,241 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 559356,
+      "ppid": 1,
+      "pgid": 559356,
+      "startticks": 1025590094
+    },
+    "worker": {
+      "pid": 559357,
+      "ppid": 559356,
+      "pgid": 559357,
+      "startticks": 1025590097
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-lines-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output"
+    ],
+    "argv_sha256": "32ae8d831884b2d27999168ec7cbef8520face084bc4a9cea7aba4dbb284bfc1",
+    "script_sha256": "3e44f397ae5c202ed16af78ce574c3bba4845bf356fd1b9e3b1f8b6ef0e36a38",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 214869439
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 559356,
+      "ppid": 1,
+      "pgid": 559356,
+      "startticks": 1025590094
+    },
+    "worker": {
+      "pid": 559357,
+      "ppid": 559356,
+      "pgid": 559357,
+      "startticks": 1025590097
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-lines-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output"
+    ],
+    "argv_sha256": "32ae8d831884b2d27999168ec7cbef8520face084bc4a9cea7aba4dbb284bfc1",
+    "script_sha256": "3e44f397ae5c202ed16af78ce574c3bba4845bf356fd1b9e3b1f8b6ef0e36a38",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "actual_capture_native_location_inspection",
+    "captures": [
+      {
+        "capture_file": "captures/invocation-15b7e58dacd14bbfb3b9513a313409e3.json",
+        "binary_id": "883e41a0b9e9da56a695de09cd2f8e1a6193c222ba6a0b739da32d55fe9c54b1",
+        "fatbin_sha256": "03cdf7e432ae1b1d8ca8f03de6aae52072312e695e21870dd5170afc55209257",
+        "images": [
+          {
+            "target": "tops-dtu-enflame-tops--gcu300",
+            "elf_sha256": "80787b3e71ddb0ea9aa0786f560b2e0c3bc015b7549705a3ad35eed5648f0c8e",
+            "tools": [
+              {
+                "name": "line-rows",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=decodedline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 50237,
+                "sha256": "a28d57b81c0ef849758a131925579a4d914130273071396a321884db694ded5f",
+                "stderr": ""
+              },
+              {
+                "name": "line-program",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=rawline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 91367,
+                "sha256": "889a6d840e3a4322314a49855569f2ec954a62566bbbcee0d93df4651f64dcaa",
+                "stderr": ""
+              },
+              {
+                "name": "native",
+                "argv": [
+                  "/opt/tops/llvm11/bin/llvm-objdump",
+                  "-d",
+                  "--triple=dtu",
+                  "--mcpu=gcu300",
+                  "--demangle",
+                  "--line-numbers",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 1707019,
+                "sha256": "172a0a0d0706fdaab4bb74f057c6b2bf59d132e657ad570adc5f1752ece1994c",
+                "stderr": "/opt/tops/llvm11/bin/llvm-objdump: warning: '/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/0/1.elf': failed to parse debug information for /tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/0/1.elf\n"
+              }
+            ],
+            "expected_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "sites_in_actual_line_table": [],
+            "missing_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "actual_marker_rows": []
+          }
+        ]
+      },
+      {
+        "capture_file": "captures/invocation-74302e7a6de549aea9b13dcd7390af61.json",
+        "binary_id": "0ccc7d40d6e31018e90c2ea6899dcf079b56966cd72ade0ee7c71cdd237a4dc1",
+        "fatbin_sha256": "fd4a4bb868ff01d25781a6d37818ce5e4067c8db52dd7bfe025b93ce410c7479",
+        "images": [
+          {
+            "target": "tops-dtu-enflame-tops--gcu300",
+            "elf_sha256": "8349cc164c84209fb726bab8d3afdc5cf942e55c45251541d4c061de803dacef",
+            "tools": [
+              {
+                "name": "line-rows",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=decodedline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 50091,
+                "sha256": "013b21da9b1a1fba796a007c13cc4f88e48000bd11a775597183e88910f3f7c2",
+                "stderr": ""
+              },
+              {
+                "name": "line-program",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=rawline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 89889,
+                "sha256": "22be3b136aa389408e835f2ba1be1580cddc132c6469f5c8b44e4547c5ff8652",
+                "stderr": ""
+              },
+              {
+                "name": "native",
+                "argv": [
+                  "/opt/tops/llvm11/bin/llvm-objdump",
+                  "-d",
+                  "--triple=dtu",
+                  "--mcpu=gcu300",
+                  "--demangle",
+                  "--line-numbers",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 1685061,
+                "sha256": "4eba156951a20ab1430c916c49fc47ddc63082de008433cda8f05a529e3d439a",
+                "stderr": "/opt/tops/llvm11/bin/llvm-objdump: warning: '/tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/1/1.elf': failed to parse debug information for /tmp/chijin-timeline-r068-gcu/runs/native-lines-v1/output/1/1.elf\n"
+              }
+            ],
+            "expected_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "sites_in_actual_line_table": [],
+            "missing_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "actual_marker_rows": []
+          }
+        ]
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "reader_to_raw_valueflow_qualified": false,
+    "all_path_region_qualified": false
+  }
+}

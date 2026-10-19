@@ -1,0 +1,63 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 557708,
+      "ppid": 1,
+      "pgid": 557708,
+      "startticks": 1025553749
+    },
+    "worker": {
+      "pid": 557709,
+      "ppid": 557708,
+      "pgid": 557709,
+      "startticks": 1025553752
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/patch-check-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/patch-check-v1/output"
+    ],
+    "argv_sha256": "5f639df389d917f7223125e41e9a7012d2424a821378f9c95d86d466cbc1b2a7",
+    "script_sha256": "3cb7b721f0ded99db69e118ff972d61869786578d0e2431c163c9ab2ac3db1ea",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 64844157
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 557708,
+      "ppid": 1,
+      "pgid": 557708,
+      "startticks": 1025553749
+    },
+    "worker": {
+      "pid": 557709,
+      "ppid": 557708,
+      "pgid": 557709,
+      "startticks": 1025553752
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/patch-check-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/patch-check-v1/output"
+    ],
+    "argv_sha256": "5f639df389d917f7223125e41e9a7012d2424a821378f9c95d86d466cbc1b2a7",
+    "script_sha256": "3cb7b721f0ded99db69e118ff972d61869786578d0e2431c163c9ab2ac3db1ea",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "returncode": 0,
+    "stdout": "",
+    "stderr": "Checking patch third_party/enflame/backend/compiler.py...\nChecking patch third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp...\nChecking patch third_party/enflame/triton_gcu/triton_gcu400/lib/triton_gcu400_core.cpp...\n"
+  }
+}

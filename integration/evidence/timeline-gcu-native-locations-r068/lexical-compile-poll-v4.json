@@ -1,0 +1,418 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 559504,
+      "ppid": 1,
+      "pgid": 559504,
+      "startticks": 1025619196
+    },
+    "worker": {
+      "pid": 559505,
+      "ppid": 559504,
+      "pgid": 559505,
+      "startticks": 1025619200
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/lexical-compile-input-v4/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output"
+    ],
+    "argv_sha256": "e1e5b33864ec60035887786612e8bd5b264c2d88e306b660f3e719b16936edde",
+    "script_sha256": "938cf3f80e4002e575f1e0fc431d1de179ff5a7f712bfbaff06b6480e7f6bb91",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 1316718074
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 559504,
+      "ppid": 1,
+      "pgid": 559504,
+      "startticks": 1025619196
+    },
+    "worker": {
+      "pid": 559505,
+      "ppid": 559504,
+      "pgid": 559505,
+      "startticks": 1025619200
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/lexical-compile-input-v4/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output"
+    ],
+    "argv_sha256": "e1e5b33864ec60035887786612e8bd5b264c2d88e306b660f3e719b16936edde",
+    "script_sha256": "938cf3f80e4002e575f1e0fc431d1de179ff5a7f712bfbaff06b6480e7f6bb91",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_retained_LLIR_explicit_marker_scope_compiled",
+    "steps": [
+      {
+        "name": "scopes",
+        "argv": [
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline",
+          "--debug-scopes",
+          "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/actual-input.mlir",
+          "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "SDK-validate",
+        "argv": [
+          "/opt/triton_gcu/bin/gcu-compiler-opt",
+          "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.mlir",
+          "--mlir-print-debuginfo",
+          "-o",
+          "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/validated.mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "SDK-compile",
+        "argv": [
+          "/opt/triton_gcu/bin/gcu-compiler-compile",
+          "--device-only",
+          "--is-triton-backend",
+          "--arch=gcu300",
+          "--toolkit-path=/opt/triton_gcu",
+          "--output=/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.fatbin"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "line-rows",
+        "argv": [
+          "/usr/bin/readelf",
+          "--wide",
+          "--debug-dump=decodedline",
+          "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/1.elf"
+        ],
+        "returncode": 0
+      }
+    ],
+    "original_capture_file": "captures/invocation-15b7e58dacd14bbfb3b9513a313409e3.json",
+    "input_sha256": "6837d496f6f3f7b9af249b5a6f5477288f8f948689b5185f0b68ea79abc3601f",
+    "tool_sha256": "baa5de69c8e79ae9228ff695a3c4e5dff22ae7af6e713076640ddfaef70e3caa",
+    "scoped_sha256": "70e39a76b156729a8a5a38b6f5cc06127d1486f92f1907253cc85f2cb6b83f10",
+    "validated_sha256": "e4516504c2b336508dc43c3da20d81b7ba12da13dbd3ff505d9c18afad5d69f6",
+    "fatbin_sha256": "7213f78208af80ba9b75ee26efe0f7130c232a643cf325db4e508e6b73eb5f1e",
+    "images": [
+      {
+        "target": "tops-dtu-enflame-tops--gcu300",
+        "elf_sha256": "b7402d920d720b4b440b76cbc0a0ee41abf2071424d432d7a32eb5b9e6a71d32",
+        "marker_rows": [
+          {
+            "site": 9,
+            "address": 13648
+          },
+          {
+            "site": 9,
+            "address": 13792
+          },
+          {
+            "site": 0,
+            "address": 13808
+          },
+          {
+            "site": 9,
+            "address": 14000
+          },
+          {
+            "site": 9,
+            "address": 14112
+          },
+          {
+            "site": 0,
+            "address": 14208
+          },
+          {
+            "site": 10,
+            "address": 15616
+          },
+          {
+            "site": 10,
+            "address": 15760
+          },
+          {
+            "site": 10,
+            "address": 15984
+          },
+          {
+            "site": 10,
+            "address": 16096
+          },
+          {
+            "site": 1,
+            "address": 17776
+          },
+          {
+            "site": 1,
+            "address": 17920
+          },
+          {
+            "site": 3,
+            "address": 18704
+          },
+          {
+            "site": 3,
+            "address": 18848
+          },
+          {
+            "site": 2,
+            "address": 19680
+          },
+          {
+            "site": 2,
+            "address": 19824
+          },
+          {
+            "site": 4,
+            "address": 20128
+          },
+          {
+            "site": 4,
+            "address": 20272
+          },
+          {
+            "site": 0,
+            "address": 20336
+          },
+          {
+            "site": 4,
+            "address": 38320
+          },
+          {
+            "site": 0,
+            "address": 38400
+          },
+          {
+            "site": 4,
+            "address": 38416
+          },
+          {
+            "site": 4,
+            "address": 38464
+          },
+          {
+            "site": 1,
+            "address": 43680
+          },
+          {
+            "site": 1,
+            "address": 43792
+          },
+          {
+            "site": 0,
+            "address": 44000
+          },
+          {
+            "site": 5,
+            "address": 45168
+          },
+          {
+            "site": 5,
+            "address": 45312
+          },
+          {
+            "site": 0,
+            "address": 45344
+          },
+          {
+            "site": 5,
+            "address": 46464
+          },
+          {
+            "site": 5,
+            "address": 46576
+          },
+          {
+            "site": 11,
+            "address": 48240
+          },
+          {
+            "site": 11,
+            "address": 48368
+          },
+          {
+            "site": 11,
+            "address": 48544
+          },
+          {
+            "site": 11,
+            "address": 48640
+          },
+          {
+            "site": 6,
+            "address": 50320
+          },
+          {
+            "site": 6,
+            "address": 50480
+          },
+          {
+            "site": 0,
+            "address": 50528
+          },
+          {
+            "site": 7,
+            "address": 50640
+          },
+          {
+            "site": 7,
+            "address": 50752
+          },
+          {
+            "site": 7,
+            "address": 50784
+          },
+          {
+            "site": 8,
+            "address": 58400
+          },
+          {
+            "site": 8,
+            "address": 58544
+          },
+          {
+            "site": 0,
+            "address": 58576
+          },
+          {
+            "site": 8,
+            "address": 59696
+          },
+          {
+            "site": 8,
+            "address": 59808
+          },
+          {
+            "site": 6,
+            "address": 65632
+          },
+          {
+            "site": 6,
+            "address": 65744
+          },
+          {
+            "site": 12,
+            "address": 71424
+          },
+          {
+            "site": 12,
+            "address": 71568
+          },
+          {
+            "site": 0,
+            "address": 71584
+          },
+          {
+            "site": 12,
+            "address": 71744
+          },
+          {
+            "site": 12,
+            "address": 71856
+          },
+          {
+            "site": 0,
+            "address": 71984
+          },
+          {
+            "site": 13,
+            "address": 74928
+          },
+          {
+            "site": 13,
+            "address": 75072
+          },
+          {
+            "site": 13,
+            "address": 75232
+          },
+          {
+            "site": 13,
+            "address": 75344
+          }
+        ],
+        "marker_line_examples": [
+          "./__flagprism_gcu_clock_v1__:[++]",
+          "__flagprism_gcu_clock_v1__                 9              0x3550               x",
+          "__flagprism_gcu_clock_v1__                 9              0x35e0        ",
+          "__flagprism_gcu_clock_v1__                 0              0x35f0        ",
+          "__flagprism_gcu_clock_v1__                 9              0x36b0        ",
+          "__flagprism_gcu_clock_v1__                 9              0x3720        ",
+          "__flagprism_gcu_clock_v1__                 0              0x3780        ",
+          "./__flagprism_gcu_clock_v1__:[++]",
+          "__flagprism_gcu_clock_v1__                10              0x3d00               x",
+          "__flagprism_gcu_clock_v1__                10              0x3d90        ",
+          "./__flagprism_gcu_clock_v1__:[++]",
+          "__flagprism_gcu_clock_v1__                10              0x3e70               x",
+          "__flagprism_gcu_clock_v1__                10              0x3ee0        ",
+          "./__flagprism_gcu_clock_v1__:[++]",
+          "__flagprism_gcu_clock_v1__                 1              0x4570               x"
+        ],
+        "marker_line_count": 81
+      }
+    ],
+    "device_executed": false,
+    "original_capture_or_binary_modified": false,
+    "original_capture_native_mapping_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "scopes",
+      "argv": [
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v3/output/build/flagprism-gcu-timeline",
+        "--debug-scopes",
+        "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/actual-input.mlir",
+        "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "SDK-validate",
+      "argv": [
+        "/opt/triton_gcu/bin/gcu-compiler-opt",
+        "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.mlir",
+        "--mlir-print-debuginfo",
+        "-o",
+        "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/validated.mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "SDK-compile",
+      "argv": [
+        "/opt/triton_gcu/bin/gcu-compiler-compile",
+        "--device-only",
+        "--is-triton-backend",
+        "--arch=gcu300",
+        "--toolkit-path=/opt/triton_gcu",
+        "--output=/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/scoped.fatbin"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "line-rows",
+      "argv": [
+        "/usr/bin/readelf",
+        "--wide",
+        "--debug-dump=decodedline",
+        "/tmp/chijin-timeline-r068-gcu/runs/lexical-compile-v4/output/1.elf"
+      ],
+      "returncode": 0
+    }
+  ]
+}

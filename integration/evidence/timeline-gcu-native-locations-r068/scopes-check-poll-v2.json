@@ -1,0 +1,181 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 557683,
+      "ppid": 1,
+      "pgid": 557683,
+      "startticks": 1025550550
+    },
+    "worker": {
+      "pid": 557684,
+      "ppid": 557683,
+      "pgid": 557684,
+      "startticks": 1025550553
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-check-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output"
+    ],
+    "argv_sha256": "8f00e77cb0f29a47e2b33297fd059ca31427de35c0c697d95eacd0b87c427305",
+    "script_sha256": "7c9d582f780a5244e0d86771caec07fd91688c71d0727efe8e4e30927056e33b",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 515601846
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 557683,
+      "ppid": 1,
+      "pgid": 557683,
+      "startticks": 1025550550
+    },
+    "worker": {
+      "pid": 557684,
+      "ppid": 557683,
+      "pgid": 557684,
+      "startticks": 1025550553
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/scopes-check-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output"
+    ],
+    "argv_sha256": "8f00e77cb0f29a47e2b33297fd059ca31427de35c0c697d95eacd0b87c427305",
+    "script_sha256": "7c9d582f780a5244e0d86771caec07fd91688c71d0727efe8e4e30927056e33b",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_product_GCU_native_debug_scope_build",
+    "steps": [
+      {
+        "name": "native-unit",
+        "argv": [
+          "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r068-gcu/scopes-check-input-v2/gcu_native_debug_scopes.py",
+          "--tool",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "bridge",
+        "argv": [
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline",
+          "--debug-scopes",
+          "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/with-scope.mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "SDK-validate",
+        "argv": [
+          "/opt/triton_gcu/bin/gcu-compiler-opt",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/with-scope.mlir",
+          "--mlir-print-debuginfo",
+          "-o",
+          "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/SDK-roundtrip.mlir"
+        ],
+        "returncode": 0
+      }
+    ],
+    "files": [
+      {
+        "path": "SDK-roundtrip.mlir",
+        "bytes": 840183,
+        "sha256": "57c99f72db880ba403585790900c7ec6bd595a00f66ff08e88ea6deefca11453"
+      },
+      {
+        "path": "SDK-validate.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "SDK-validate.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "native-unit.stderr",
+        "bytes": 677,
+        "sha256": "894c2b75e162a4ae429b82752564a0b773eb4789898dabc5a517f94866ebaca3"
+      },
+      {
+        "path": "native-unit.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "steps.json",
+        "bytes": 1072,
+        "sha256": "fd2f22b582eb295c37986638cb3112515263537d26c90ab2475450e0e4da6a3c"
+      },
+      {
+        "path": "with-scope.mlir",
+        "bytes": 1000694,
+        "sha256": "d37d051f91fc56b8df29467ad0f31f2a10cae7bd46bf2159cea41a5171d79e2a"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "product_or_SDK_modified": false,
+    "actual_native_mapping_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "native-unit",
+      "argv": [
+        "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r068-gcu/scopes-check-input-v2/gcu_native_debug_scopes.py",
+        "--tool",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "bridge",
+      "argv": [
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-build-v1/output/build/flagprism-gcu-timeline",
+        "--debug-scopes",
+        "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/with-scope.mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "SDK-validate",
+      "argv": [
+        "/opt/triton_gcu/bin/gcu-compiler-opt",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/with-scope.mlir",
+        "--mlir-print-debuginfo",
+        "-o",
+        "/tmp/chijin-timeline-r068-gcu/runs/scopes-check-v2/output/SDK-roundtrip.mlir"
+      ],
+      "returncode": 0
+    }
+  ],
+  "output/native-unit.stderr": "test_existing_scopes_can_be_parsed_again (__main__.NativeScopes.test_existing_scopes_can_be_parsed_again) ... ok\ntest_malformed_ir_rejected_without_output (__main__.NativeScopes.test_malformed_ir_rejected_without_output) ... ok\ntest_missing_input_rejected_without_output (__main__.NativeScopes.test_missing_input_rejected_without_output) ... ok\ntest_output_io_error_is_failure (__main__.NativeScopes.test_output_io_error_is_failure) ... ok\ntest_scopes_preserve_marker_and_sdk_overflow_encoding (__main__.NativeScopes.test_scopes_preserve_marker_and_sdk_overflow_encoding) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.025s\n\nOK\n"
+}
