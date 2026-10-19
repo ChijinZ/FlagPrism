@@ -183,6 +183,39 @@ def _move_source(row, register):
     return _registers(source, width)[offset]
 
 
+def _local_access(row):
+    """Decode bounded fixed local slots, preserving 32-bit word addresses."""
+    opcode = row['opcode']
+    match = re.fullmatch(r'(LDL(?:\.LU)?|STL)(?:\.(32|64|128))?', opcode)
+    _need(match is not None, 'Unknown native local-memory access')
+    size = int(match[2] or 32) // 8
+    operands = _compact(row.get('operands', ''))
+    if match[1] == 'STL':
+        parsed = re.fullmatch(r'(\[[^\[\]]+\]),(R\d+|RZ)', operands)
+        _need(parsed is not None, 'Unknown local store operands')
+        address, value = parsed[1], parsed[2]
+    else:
+        # The inspected nvdisasm JSON omits the delimiter before a local
+        # address; its text counterpart is independently bound by the caller.
+        parsed = re.fullmatch(r'(R\d+),?(\[[^\[\]]+\])', operands)
+        _need(parsed is not None, 'Unknown local load operands')
+        value, address = parsed[1], parsed[2]
+    slot = re.fullmatch(r'\[(R\d+)(?:\+(-?0x[0-9a-fA-F]+))?\]', address)
+    _need(slot is not None,
+          'Dynamic local-memory address is not a fixed spill slot')
+    offset = int(slot[2], 16) if slot[2] else 0
+    _need(offset % 4 == 0 and abs(offset) + size <= 1024 * 1024,
+          'Unaligned or oversized local spill slot')
+    if value == 'RZ' and match[1] == 'STL':
+        values = ['RZ'] * (size // 4)
+    else:
+        _need(
+            re.fullmatch(r'R\d+', value) is not None,
+            'Unknown local spill register range')
+        values = _registers(value, size // 4)
+    return slot[1], offset, values
+
+
 def check_timer_word(body, predecessors, *, reader, store_pc, word_register,
                      word_index):
     """Every possible reaching definition must be this reader's actual word.
@@ -226,12 +259,28 @@ def check_timer_word(body, predecessors, *, reader, store_pc, word_register,
             continue
         active = _predicate(row.get('predicate'))
         inputs = [register]
-        if active is not False and register in _destinations(row):
-            _need(
-                row['opcode'] in ('MOV', 'MOV.64', 'UMOV', 'UMOV.64'),
-                'Timer word overwritten before native global store at ' +
-                hex(at) + ': ' + register + ' ' + row['opcode'])
-            source = _move_source(row, register)
+        if isinstance(register, tuple):
+            _, base, offset = register
+            _need(active is False or base not in _destinations(row),
+                  'Local spill base changed before its reaching store')
+            if active is not False and row['opcode'].split('.')[0] == 'STL':
+                actual_base, actual_offset, values = _local_access(row)
+                _need(actual_base == base,
+                      'Possible alias from another local spill base')
+                delta = offset - actual_offset
+                if 0 <= delta < 4 * len(values):
+                    source = values[delta // 4]
+                    inputs = [source] if active is True else [register, source]
+        elif active is not False and register in _destinations(row):
+            if row['opcode'].split('.')[0] == 'LDL':
+                base, offset, values = _local_access(row)
+                source = ('local', base, offset + 4 * values.index(register))
+            else:
+                _need(
+                    row['opcode'] in ('MOV', 'MOV.64', 'UMOV', 'UMOV.64'),
+                    'Timer word overwritten before native global store at ' +
+                    hex(at) + ': ' + register + ' ' + row['opcode'])
+                source = _move_source(row, register)
             inputs = [source] if active is True else [register, source]
         parents = predecessors.get(at, ())
         _need(parents, 'A native store path bypasses the expected timer read')

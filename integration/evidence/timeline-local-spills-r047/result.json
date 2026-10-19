@@ -1,0 +1,81 @@
+{
+  "status": "actual_four_and_one_warp_timer_stores_normal_O_passed_not_full_goal",
+  "results": [
+    {
+      "actual": [
+        {
+          "case": "pipeline-device",
+          "captures": 2,
+          "sites": [
+            70,
+            70
+          ],
+          "negative_checks": 1386
+        },
+        {
+          "case": "one-warp-device",
+          "captures": 2,
+          "sites": [
+            163,
+            163
+          ],
+          "negative_checks": 3114
+        }
+      ],
+      "fixture": {
+        "positive_cases": 6,
+        "rejected": [
+          "different_slot",
+          "dynamic_slot",
+          "unaligned_slot",
+          "unknown_width",
+          "overwritten_low",
+          "changed_base",
+          "potential_alias",
+          "predicated_missing_store_path",
+          "branch_bypasses_spill",
+          "wrong_timer_word"
+        ],
+        "fixture_only": true
+      }
+    },
+    {
+      "actual": [
+        {
+          "case": "pipeline-device",
+          "captures": 2,
+          "sites": [
+            70,
+            70
+          ],
+          "negative_checks": 1386
+        },
+        {
+          "case": "one-warp-device",
+          "captures": 2,
+          "sites": [
+            163,
+            163
+          ],
+          "negative_checks": 3114
+        }
+      ],
+      "fixture": {
+        "positive_cases": 6,
+        "rejected": [
+          "different_slot",
+          "dynamic_slot",
+          "unaligned_slot",
+          "unknown_width",
+          "overwritten_low",
+          "changed_base",
+          "potential_alias",
+          "predicated_missing_store_path",
+          "branch_bypasses_spill",
+          "wrong_timer_word"
+        ],
+        "fixture_only": true
+      }
+    }
+  ]
+}
