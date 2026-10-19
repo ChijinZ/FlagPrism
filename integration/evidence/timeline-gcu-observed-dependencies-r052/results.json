@@ -1,0 +1,297 @@
+{
+  "status": "development_milestone_passed_not_full_timeline_qualification",
+  "runtime_commit": "934563029bc162d141ed333e5331fcc2af33c1bf",
+  "archives": [
+    {
+      "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-052/preflight/public-dependencies-evidence-v1.tgz",
+      "bytes": 1655435,
+      "sha256": "fa0bec80e9eca64e76e4ef76c0ea8d08875abfe17f0bea18c491f2d6d4630847"
+    },
+    {
+      "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-052/preflight/graph-view-evidence-v1.tgz",
+      "bytes": 1357298,
+      "sha256": "ff62d1fc0ed73b993695522dc2bfb6c4ce677aab2ee65fc836e7654143370bd0"
+    },
+    {
+      "path": "/home/jin-lab-pc/workspace/osdi_flagprism/artifacts/timeline/run-052/preflight/stream-fix-evidence-v1.tgz",
+      "bytes": 1716541,
+      "sha256": "2396a1bace97646b651b7509357c9ca8adb71efe8814f031dbb62361b29fdf4a"
+    }
+  ],
+  "default_GEMM": {
+    "status": "public_GCU_GEMM_real_math_and_full_width_SDK_address_bindings_passed_not_dependency_qualification",
+    "calls": 2,
+    "checks": [
+      {
+        "k": 96,
+        "binary_id": "6f4c09718457ba2d39ac63dd71f18bb8fc770138d7d0ecabb6c8255f41907108",
+        "math_passed": true,
+        "matched_device_pointer_arguments": [
+          {
+            "position": 0,
+            "host_pointer": 36105771688132608,
+            "device_pointer": 182498258944
+          },
+          {
+            "position": 1,
+            "host_pointer": 36105771688144896,
+            "device_pointer": 182498271232
+          },
+          {
+            "position": 2,
+            "host_pointer": 36105771688157184,
+            "device_pointer": 182498283520
+          }
+        ],
+        "intervals": 96,
+        "positive_intervals": 96,
+        "counter_ns_status": "empirical_counter_unit_for_enclosed_window"
+      },
+      {
+        "k": 224,
+        "binary_id": "6f4c09718457ba2d39ac63dd71f18bb8fc770138d7d0ecabb6c8255f41907108",
+        "math_passed": true,
+        "matched_device_pointer_arguments": [
+          {
+            "position": 0,
+            "host_pointer": 36105771688174080,
+            "device_pointer": 182498300416
+          },
+          {
+            "position": 1,
+            "host_pointer": 36105771688202752,
+            "device_pointer": 182498329088
+          },
+          {
+            "position": 2,
+            "host_pointer": 36105771688231424,
+            "device_pointer": 182498357760
+          }
+        ],
+        "intervals": 216,
+        "positive_intervals": 216,
+        "counter_ns_status": "empirical_counter_unit_for_enclosed_window"
+      }
+    ]
+  },
+  "retained_tag_generations": {
+    "status": "retained_real_GCU_observed_tag_generations_passed_not_device_or_UI_qualification",
+    "application_replayed": false,
+    "captures": [
+      {
+        "invocation_id": "invocation-dcaf758b9ddc4f50a2308eac679788aa",
+        "scopes": [
+          {
+            "program": [
+              0,
+              0,
+              0
+            ],
+            "edges": 19,
+            "maximum_tag_generation": 8
+          },
+          {
+            "program": [
+              1,
+              1,
+              0
+            ],
+            "edges": 19,
+            "maximum_tag_generation": 8
+          }
+        ]
+      },
+      {
+        "invocation_id": "invocation-e3bfbe36a0794058a1cb38fa753e3447",
+        "scopes": [
+          {
+            "program": [
+              0,
+              0,
+              0
+            ],
+            "edges": 43,
+            "maximum_tag_generation": 20
+          },
+          {
+            "program": [
+              1,
+              1,
+              0
+            ],
+            "edges": 43,
+            "maximum_tag_generation": 20
+          }
+        ]
+      }
+    ]
+  },
+  "actual_TP": [
+    {
+      "trace": "/workspace/chijin-timeline-r052-gcu-graph-view/input-v1/captures/gemm/timeline/derived/counter-ns/2c5d82f9de6942176e1eb8a41d40962a53e28fc2f0efa82dc2a23022b7aa0f8e/traces/gcu-issuer-counter-scope-031439475b19ae8bb6cfe17df35804d6700df35b0dba089c52cfe3bfd11ba8ae.pftrace",
+      "sha256": "307ce39813bbbbc41db941d29e07858b1db50bc730473133b1274e13a5ea57ca",
+      "nodes": 38,
+      "flows": 19,
+      "internal_events": 48,
+      "positive_internal_intervals": 48,
+      "raw_offsets_ticks_ns_exact": true,
+      "protobuf_fixed64_exact": true,
+      "importer_errors": []
+    },
+    {
+      "trace": "/workspace/chijin-timeline-r052-gcu-graph-view/input-v1/captures/gemm/timeline/derived/counter-ns/2c5d82f9de6942176e1eb8a41d40962a53e28fc2f0efa82dc2a23022b7aa0f8e/traces/gcu-issuer-counter-scope-918f148599963c7cafff24e013df0ee6b8e202a4a4064f506945cfe705a9f02f.pftrace",
+      "sha256": "4d3cc0ba2b09636452e9550e9afa781f4a4bd1b33799a1057a92642e78865323",
+      "nodes": 38,
+      "flows": 19,
+      "internal_events": 48,
+      "positive_internal_intervals": 48,
+      "raw_offsets_ticks_ns_exact": true,
+      "protobuf_fixed64_exact": true,
+      "importer_errors": []
+    },
+    {
+      "trace": "/workspace/chijin-timeline-r052-gcu-graph-view/input-v1/captures/gemm/timeline/derived/counter-ns/26c385f2ff04791766ee1e7767fcee3ad2b77b03ec7c9031ac16e5b2f947ea2a/traces/gcu-issuer-counter-scope-a8ce5c55ff957d35f285f007cfa2b040607e6c382c49610227fae1ad2fbef5a3.pftrace",
+      "sha256": "563a6c0337d47d7289c787beaec7cc5c851bffa43164337ec182628d11b9ff66",
+      "nodes": 86,
+      "flows": 43,
+      "internal_events": 108,
+      "positive_internal_intervals": 108,
+      "raw_offsets_ticks_ns_exact": true,
+      "protobuf_fixed64_exact": true,
+      "importer_errors": []
+    },
+    {
+      "trace": "/workspace/chijin-timeline-r052-gcu-graph-view/input-v1/captures/gemm/timeline/derived/counter-ns/26c385f2ff04791766ee1e7767fcee3ad2b77b03ec7c9031ac16e5b2f947ea2a/traces/gcu-issuer-counter-scope-e925b8f3b0a9b718bd9c8cf44d26f45f6916a26bc6eaa112de061dd223dd0cbb.pftrace",
+      "sha256": "9e6174b782bfd5fd868db765fe9a6cb45af8db1ad8d650f54ff0a6c7dce45a50",
+      "nodes": 86,
+      "flows": 43,
+      "internal_events": 108,
+      "positive_internal_intervals": 108,
+      "raw_offsets_ticks_ns_exact": true,
+      "protobuf_fixed64_exact": true,
+      "importer_errors": []
+    }
+  ],
+  "UI_status": "actual_dependency_traces_UI_passed_not_full_qualification",
+  "UI_terminal": {
+    "controller": {
+      "pid": 99039,
+      "ppid": 1,
+      "pgid": 99039,
+      "startticks": 26956356
+    },
+    "worker": {
+      "pid": 99040,
+      "ppid": 99039,
+      "pgid": 99040,
+      "startticks": 26956359
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r017/runs/browser-tools-v3/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r052-gcu-graph-view/input-v1/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r052-gcu-graph-view/runs/browser-v1/output"
+    ],
+    "argv_sha256": "d27cd3aacbb9f69daf9cffb4c4c7b1bc1777a96fef5021fe6fdd8a4fd1cc0212",
+    "script_sha256": "f6face6dcd077fe6b03c7b6565a9eac54bc48f62e98b9d6b9b6f043d2d3a77d3",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 28414663754
+  },
+  "new_runtime_build_terminal": {
+    "controller": {
+      "pid": 503696,
+      "ppid": 1,
+      "pgid": 503696,
+      "startticks": 1022132623
+    },
+    "worker": {
+      "pid": 503697,
+      "ppid": 503696,
+      "pgid": 503697,
+      "startticks": 1022132627
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r052-tests/runs/install-dependencies-v1/output/installed/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r052-tests/install-stream-fix-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r052-tests/runs/install-stream-fix-v3/output"
+    ],
+    "argv_sha256": "b890c8b24f5a91552faea39d1905b6f74819f1ac186118fe7207ab3b783874f3",
+    "script_sha256": "b76800a73200288bb7b24c9e8c4f4b86a7602909325ddc08a753335e328855a3",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 58354705476
+  },
+  "native_fixture_output": " pytest-regex selected 14 tests to run for regex: .*\n..............                                                           [100%]\n14 passed in 4.44s\n",
+  "two_nondefault_streams": {
+    "terminal": {
+      "controller": {
+        "pid": 504233,
+        "ppid": 1,
+        "pgid": 504233,
+        "startticks": 1022143290
+      },
+      "worker": {
+        "pid": 504234,
+        "ppid": 504233,
+        "pgid": 504234,
+        "startticks": 1022143293
+      },
+      "argv": [
+        "/tmp/chijin-timeline-r052-tests/runs/install-stream-fix-v3/output/installed/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r052-tests/public-streams-input-v1/run.py",
+        "--output",
+        "/tmp/chijin-timeline-r052-tests/runs/public-streams-v1/output"
+      ],
+      "argv_sha256": "f986eb5ef74d449680b824c9d6cc6792720a298544d70a52e782e140b4e1cca8",
+      "script_sha256": "457425935ee51dc4301b22ea5dfa441105e01fd30749fcb22f49b2a555881b46",
+      "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+      "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+      "timeout_seconds": 300,
+      "state": "terminal",
+      "returncode": 0,
+      "wall_ns": 17541597655
+    },
+    "reports": [
+      {
+        "invocation_id": "invocation-13dc71a97a57441ba19a528e07d94aca",
+        "stream": 1033339200,
+        "status": {
+          "status": "observed_tag_generations",
+          "time_arrows_verified": true,
+          "read_precision_status": "unverified",
+          "precise_hardware_completion_time_verified": false
+        },
+        "trace_count": 2
+      },
+      {
+        "invocation_id": "invocation-d9dcde4380b24b73a7040d6bc034f054",
+        "stream": 1033109936,
+        "status": {
+          "status": "observed_tag_generations",
+          "time_arrows_verified": true,
+          "read_precision_status": "unverified",
+          "precise_hardware_completion_time_verified": false
+        },
+        "trace_count": 2
+      }
+    ]
+  },
+  "limits": [
+    "Single actual observer counter per GCU dependency trace; no cross-observer alignment.",
+    "Submission exit to observed wait return; not precise hardware completion or engine busy.",
+    "Buffer descriptor addresses/write generations do not establish alias-safe byte coverage or unobserved consumer readiness.",
+    "Empirical finite-window clock units retain scale uncertainty; hardware read precision remains unknown.",
+    "Independent six-kernel profile matrix, controlled cases, remaining whole-goal tests and final three fresh reviewers are not certified by this milestone."
+  ]
+}

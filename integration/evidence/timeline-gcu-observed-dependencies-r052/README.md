@@ -1,0 +1,9 @@
+# GCU observed tag dependency milestone (R052)
+
+The public unannotated timeline API records actual GCU300 execution brackets and matches DTE submissions to observed wait returns using tag storage, index, and generation. The common Perfetto exporter preserves backend descriptor details and empirical clock-scale uncertainty.
+
+Two actual GEMM calls, K=96 and K=224, use the same executable and produce 96 and 216 positive internal intervals. Their first/last observer scopes contain 19 and 43 dependency arrows, including repeated tag reuse. Four actual traces pass Trace Processor raw-endpoint/time/flow checks and standard Perfetto UI inspection. A subsequent native runtime correction initializes the new v3 ring on its launch stream; two more GEMM calls on distinct nondefault streams pass math, input/tail protection, actual owner-stream binding, and automatic dependency export. The runtime extension was rebuilt from the normal CMake target graph and installed in a new wheel; unchanged compiler and recording tool artifacts were reused explicitly.
+
+`results.json` identifies actual process terminals, archive locations, checks, and remaining limits. This is an engineering milestone, not full independent qualification. In particular, wait return is an observed completion envelope, not an exact hardware completion timestamp, and descriptor addresses alone do not prove consumer readiness. No paper files were changed.
+
+Public tests: `tests/timeline/p01_enflame_native_arguments.py` (optionally `--two-streams`), `tests/timeline/p01_enflame_observed_dependencies.py`, and `Profiler/test/test_enflame_native_prepare_faults.py`. Raw data, actual `.pftrace` files and UI screenshots remain in the referenced archives and `artifacts/timeline/run-052/preview/`; proprietary SDK files are not committed.
