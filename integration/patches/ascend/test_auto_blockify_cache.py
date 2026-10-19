@@ -155,3 +155,32 @@ def test_actual_driver_identity_precedes_in_memory_lookup(
     assert second.metadata.compiler_driver_identity != first.metadata.compiler_driver_identity
     assert second.hash != first.hash
     assert not torch_npu.npu.is_initialized()
+
+
+def test_bare_opt_PATH_switch_changes_actual_JIT_identity(
+        jit_cache, tmp_path, monkeypatch):
+    fn, compilations, torch_npu = jit_cache
+    from flagtree.profiler import ascend_compiler
+    plugin = tmp_path / 'plugin.so'
+    plugin.write_bytes(b'plugin')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_OPT', 'opt-15')
+    paths = []
+    for name in ('first', 'second'):
+        directory = tmp_path / name
+        directory.mkdir()
+        tool = directory / 'opt-15'
+        tool.write_bytes(b'same-tool-bytes')
+        tool.chmod(0o755)
+        paths.append(directory)
+    original_path = os.environ.get('PATH', '')
+    results = []
+    for directory in (paths[0], paths[1], paths[0]):
+        monkeypatch.setenv('PATH', str(directory) + os.pathsep + original_path)
+        assert ascend_compiler._resolve_executable('opt-15') == str(directory /
+                                                                    'opt-15')
+        results.append(fn.run(7, grid=(1, ), warmup=True))
+    assert len(compilations) == 2 and results[0] is results[2]
+    assert results[0].metadata.compiler_driver_identity != results[
+        1].metadata.compiler_driver_identity
+    assert not torch_npu.npu.is_initialized()

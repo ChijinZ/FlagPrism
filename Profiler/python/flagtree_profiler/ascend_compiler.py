@@ -153,6 +153,7 @@ def prepare(event):
     real_bisheng = shutil.which('bisheng', path=event.environment.get('PATH'))
     opt = event.metadata.get('flagprism_ascend_opt') or os.environ.get(
         'FLAGPRISM_ASCEND_OPT') or shutil.which('opt-15')
+    opt = _resolve_executable(opt)
     if not real_bisheng or not opt:
         raise RuntimeError(
             'Ascend late capture requires actual bisheng and LLVM15 opt')
@@ -470,9 +471,23 @@ def finish(event, *, returncode):
             )
 
 
+def _resolve_executable(path):
+    """Match subprocess lookup: bare names use PATH, paths use the caller CWD."""
+    if not path:
+        return None
+    value = os.fspath(path)
+    resolved = value if os.path.dirname(value) else shutil.which(value)
+    return str(Path(resolved).resolve()) if resolved else None
+
+
 def _input_identity(path, *, executable=False):
     if not path:
         return dict(status='unresolved')
+    requested = os.fspath(path)
+    if executable:
+        path = _resolve_executable(path)
+        if not path:
+            return dict(requested=requested, status='unavailable')
     path = Path(path).resolve()
     if not path.is_file() or (executable and not os.access(path, os.X_OK)):
         return dict(path=str(path), status='unavailable')
