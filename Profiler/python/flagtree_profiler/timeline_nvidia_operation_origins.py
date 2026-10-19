@@ -176,6 +176,9 @@ def load_operation_origins(directory, capture, machine_map, boundaries):
         base = 'machine/' + machine_map['binary_id']
         saved = json.loads(
             read_artifact(directory, base + '/operation-origins.json'))
+        _need(
+            type(saved) is dict,
+            'Native operation-origin sidecar must be an object')
         source = read_artifact(directory, base + '/source-lines.stdout')
         for key, value in [
             ('binary_id', machine_map['binary_id']),
@@ -188,6 +191,8 @@ def load_operation_origins(directory, capture, machine_map, boundaries):
                 'Retained native source identity differs: ' + key)
         counter = json.loads(
             read_artifact(directory, base + '/counter-map.json'))
+        _need(
+            type(counter) is dict, 'Native counter sidecar must be an object')
         _need(
             saved.get('tool_sha256') == counter.get('tool_sha256')
             and isinstance(saved.get('tool_sha256'), str)

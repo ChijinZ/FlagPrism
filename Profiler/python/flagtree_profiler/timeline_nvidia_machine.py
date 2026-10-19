@@ -614,19 +614,20 @@ def _run_tool(tool, flags, directory, name, deadline, commands):
                                    stdout=out,
                                    stderr=err,
                                    start_new_session=True)
-        fields = Path('/proc/' + str(process.pid) +
-                      '/stat').read_text().rsplit(')', 1)[1].split()
         receipt = dict(name=name,
                        argv=argv,
                        pid=process.pid,
-                       pgid=int(fields[2]),
-                       startticks=int(fields[19]),
                        timeout_seconds=remaining,
-                       state='running')
+                       state='starting')
         commands.append(receipt)
-        (directory /
-         'commands.json').write_text(json.dumps(commands, indent=2) + '\n')
         try:
+            fields = Path('/proc/' + str(process.pid) +
+                          '/stat').read_text().rsplit(')', 1)[1].split()
+            receipt.update(pgid=int(fields[2]),
+                           startticks=int(fields[19]),
+                           state='running')
+            (directory / 'commands.json'
+             ).write_text(json.dumps(commands, indent=2) + '\n')
             stop = time.monotonic() + remaining
             while process.poll() is None:
                 _need(path.stat().st_size + error_path.stat().st_size <= LIMIT,
@@ -639,10 +640,17 @@ def _run_tool(tool, flags, directory, name, deadline, commands):
             _need(process.returncode == 0, 'nvdisasm command failed: ' + name)
             receipt['state'] = 'terminal'
         finally:
-            if process.poll() is None:
-                _stop_worker(process)
-                receipt['state'] = 'stopped'
-            if receipt['state'] == 'running':
+            try:
+                if process.poll() is None:
+                    receipt['state'] = 'stopped'
+                    _stop_worker(process)
+            finally:
+                # A missing /proc identity may prevent descendant discovery.
+                # This unreaped Popen handle still owns its direct child.
+                if process.poll() is None:
+                    process.kill()
+                process.wait(timeout=10)
+            if receipt['state'] in ('starting', 'running'):
                 receipt['state'] = 'failed'
             receipt.update(returncode=process.returncode,
                            wall_ns=time.monotonic_ns() - started)

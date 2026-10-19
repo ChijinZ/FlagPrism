@@ -177,6 +177,19 @@ def run(args):
                                        name)
                 rejected.append('offline_' + name)
             (base / 'operation-origins.json').write_text(json.dumps(saved))
+            for name in ['operation-origins.json', 'counter-map.json']:
+                path = base / name
+                original = path.read_bytes()
+                for invalid in ([], None, 'invalid'):
+                    path.write_text(json.dumps(invalid))
+                    loaded = origins.load_operation_origins(
+                        directory, capture, machine, boundaries)
+                    if loaded[
+                            'status'] != 'unverified_native_operation_origins':
+                        raise RuntimeError(
+                            'Wrong JSON type escaped isolation: ' + name)
+                    rejected.append('offline_wrong_type_' + name)
+                path.write_bytes(original)
             (base / 'source-lines.stdout').unlink()
             loaded = origins.load_operation_origins(directory, capture,
                                                     machine, boundaries)
