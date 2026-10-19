@@ -448,4 +448,7 @@ def load_native_boundary_report(directory, capture, machine_map):
     report['shared_payload_values'] = inspect_shared_payloads(**inputs)
     from .timeline_nvidia_late_addresses import inspect_record_addresses
     report['record_address_arithmetic'] = inspect_record_addresses(**inputs)
+    from .timeline_nvidia_operation_origins import load_operation_origins
+    report['operation_origins'] = load_operation_origins(
+        directory, capture, machine_map, report['matrix_issue_sites'])
     return report

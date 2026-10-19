@@ -757,6 +757,32 @@ def inspect_capture_binary(directory,
             status['wait_control_file'] = str(prefix / 'wait-control.json')
         status.update(status=proof['status'],
                       counter_map_file=str(prefix / 'counter-map.json'))
+        if (marker_flavor == 'late-v1'
+                and type(plan.get('native_origin_marker_version')) is int
+                and plan['native_origin_marker_version'] == 1):
+            try:
+                from .timeline_nvidia_operation_origins import derive_operation_origins
+                source_lines = _run_tool(tool, [
+                    '--print-code', '--print-line-info',
+                    str(Path(directory) / cubin_row['retained_file'])
+                ], target, 'source-lines', deadline, receipts)
+                origins = derive_operation_origins(machine_map=proof,
+                                                   source_lines=source_lines,
+                                                   sass_json=output['json'],
+                                                   plan=plan)
+                _need(
+                    _sha(tool.read_bytes()) == tool_hash,
+                    'Native source disassembler changed during inspection')
+                origins['tool_sha256'] = tool_hash
+                (target / 'operation-origins.json'
+                 ).write_text(json.dumps(origins, indent=2) + '\n')
+                status['operation_origins'] = dict(
+                    status=origins['status'],
+                    file=str(prefix / 'operation-origins.json'))
+            except (ValueError, OSError, KeyError, TypeError, UnicodeError,
+                    subprocess.SubprocessError) as error:
+                status['operation_origins'] = dict(status='unverified',
+                                                   reason=str(error))
     except (ValueError, OSError, KeyError, TypeError, UnicodeError,
             subprocess.SubprocessError) as error:
         status.update(reason=str(error), exception=type(error).__name__)

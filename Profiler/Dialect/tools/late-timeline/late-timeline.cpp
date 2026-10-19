@@ -461,6 +461,13 @@ int main(int argc, char **argv) {
                                         {"reason", "logical_site_budget"}});
   }
   sites = std::move(selected);
+  // Keep user navigation in the manifest before assigning separate final-code
+  // origin locations. Apply them only after inserting the recorder so clock
+  // and logger instructions do not inherit an original operation's marker.
+  SmallVector<std::pair<Instruction *, DebugLoc>> nativeOrigins;
+  unsigned nextOrigin = 1;
+  auto *originFile =
+      DIFile::get(context, "__flagprism_native_origin_v1__", ".");
   for (const Site &site : sites) {
     const Instruction &instruction = *site.call;
     unsigned id = site.id;
@@ -494,6 +501,27 @@ int main(int argc, char **argv) {
           origin["native_operation"] = assembly->getAsmString();
       } else
         origin["native_operation"] = member->getOpcodeName();
+      if (auto location = member->getDebugLoc()) {
+        if (nextOrigin > 65535) {
+          errs() << "Native source-origin location budget exceeded\n";
+          return 3;
+        }
+        auto *scope = DILexicalBlockFile::get(context, location->getScope(),
+                                              originFile, 0);
+        auto *marked = DILocation::get(context, nextOrigin, 1, scope,
+                                       location->getInlinedAt());
+        origin["native_origin_marker"] =
+            json::Object{{"version", 1},
+                         {"file", "__flagprism_native_origin_v1__"},
+                         {"line", nextOrigin},
+                         {"column", 1},
+                         {"status", "compiler_location_assigned"}};
+        nativeOrigins.push_back({member, DebugLoc(marked)});
+        ++nextOrigin;
+      } else {
+        origin["native_origin_marker"] = json::Object{
+            {"version", 1}, {"status", "unavailable_no_debug_scope"}};
+      }
       members.push_back(std::move(origin));
     }
     row["members"] = std::move(members);
@@ -737,6 +765,8 @@ int main(int argc, char **argv) {
   DominatorTree dominators(function);
   SmallVector<AllocaInst *> allocas{ordinal, lost};
   PromoteMemToReg(allocas, dominators);
+  for (auto &[instruction, location] : nativeOrigins)
+    instruction->setDebugLoc(location);
   if (verifyModule(*module, &errs()))
     return 4;
   std::error_code error;
@@ -781,6 +811,7 @@ int main(int argc, char **argv) {
           {"dependency_footprint_complete", Actors == blockActors},
           {"group_matrix", GroupMatrix.getValue()},
           {"compute_operand_fence_version", 1},
+          {"native_origin_marker_version", 1},
           {"compact_programs", CompactPrograms.getValue()},
           {"word_layout", "program/logical_word/actor"},
           {"segment_words", SegmentWords},

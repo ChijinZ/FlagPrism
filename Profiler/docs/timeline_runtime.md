@@ -921,6 +921,24 @@ missing mappings or branches leave that site unverified. This is instruction
 issue placement; it does not establish matrix completion, source-exclusive
 elapsed cost, collective participation or ordinary pipeline preservation.
 
+New NVIDIA late captures also retain compiler operation-origin markers. Each
+selected LLVM operation receives its own location in
+`__flagprism_native_origin_v1__`; the manifest preserves its original source
+file, line and column. Instrumentation is inserted before assigning these
+locations, so timer/recorder instructions do not inherit an operation ID.
+Missing debug scope is explicit and does not prevent raw capture.
+
+The optional native inspection retains `source-lines.stdout` and
+`operation-origins.json` beside the counter map. Offline export rechecks the
+same binary, native JSON, source output and disassembler identity without
+invoking a compiler or rerunning the application. `operation_origins` reports
+one-to-many native locations and missing origins. Its `matrix_members` field
+independently associates each supported LLVM matrix member with the bounded
+HMMA issues; unknown shapes or missing/duplicate mappings remain unverified.
+These are instruction identities, not source-exclusive durations, collective
+participation or hardware busy measurements. Legacy captures remain readable
+with operation origins explicitly unverified.
+
 The same late native diagnostic also contains `relative_record_fields`:
 `native_record_fields_checked` means the actual four stores for a site's tag,
 begin, end and payload have the declared coalesced relative displacement and
