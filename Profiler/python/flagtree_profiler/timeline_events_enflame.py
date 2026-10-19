@@ -359,6 +359,52 @@ def _canonicalize_slot(capture,
 
 def canonicalize_enflame_capture(capture, *, compiler_metadata, capture_id):
     """Decode physical rings, preserving whole-raw offsets and per-slot loss."""
+    if compiler_metadata.get(
+            'debug_record_layout') == 'gcu_execution_timeline_v3':
+        from .timeline_events_enflame_native import decode_execution_capture
+        runtime = capture.get('runtime_metadata')
+        _need(
+            type(runtime) is dict
+            and capture.get('record_layout') == 'gcu_execution_timeline_v3'
+            and runtime.get('record_layout') == 'gcu_execution_timeline_v3',
+            'GCU execution capture/runtime/compiler ABI mismatch')
+        association = runtime.get('profiler_association_evidence')
+        _need(
+            type(association) is dict
+            and association.get('evidence') == 'same_launch_metadata_object'
+            and association.get('invocation_id')
+            == runtime.get('profiler_invocation_id'),
+            'GCU execution capture lacks its actual native launch association')
+        binary = _sha(compiler_metadata.get('hash'))
+        _need(
+            association.get('binary_id') == binary,
+            'GCU execution binary association mismatch')
+        scope = _integer(association.get('scope_id'), 'native scope')
+        sessions = association.get('session_ids')
+        _need(
+            type(sessions) is list and sessions
+            and len(sessions) == len(set(sessions)),
+            'GCU execution capture has no unique actual session membership')
+        for session in sessions:
+            _integer(session, 'native session')
+        invocation = stable_id((capture_id, ), 'enflame-invocation',
+                               association['invocation_id'], scope,
+                               sorted(sessions))
+        encoded = capture.get('raw_base64')
+        _need(
+            type(encoded) is str and len(encoded) <= 12 * 1024 * 1024,
+            'GCU execution base64 exceeds its budget')
+        raw = base64.b64decode(encoded, validate=True)
+        _need(
+            hashlib.sha256(raw).hexdigest() == capture['raw_sha256'],
+            'GCU execution raw SHA changed')
+        return decode_execution_capture(raw,
+                                        compiler_metadata=compiler_metadata,
+                                        identity=dict(capture_id=capture_id,
+                                                      invocation_id=invocation,
+                                                      binary_id=binary),
+                                        association=association,
+                                        grid=runtime['grid'])['canonical']
     first = _canonicalize_slot(capture,
                                compiler_metadata=compiler_metadata,
                                capture_id=capture_id)
@@ -440,8 +486,11 @@ def attach_enflame_timeline_export(exported_run,
                     association_evidence=runtime[
                         'profiler_association_evidence'],
                     source='flagtree_ir_dynamic',
-                    semantic='observer_region_elapsed',
-                    storage='selected_dynamic_append',
+                    semantic='issue' if event['semantic'] == 'issue_interval'
+                    else event['semantic'],
+                    storage='gcu_local_execution_ring'
+                    if compiler_metadata.get('debug_execution_version') == 1
+                    else 'selected_dynamic_append',
                     program=x + grid[0] * (y + grid[1] * z),
                     actor=int(observer['local_id']),
                     site=int(sites[event['site_id']]['backend_site_id']),

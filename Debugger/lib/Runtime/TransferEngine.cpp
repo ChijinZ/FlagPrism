@@ -1018,12 +1018,14 @@ struct BackendTransferAllocation {
 
 void synthesizeExportHeader(const DebugLaunchContext &ctx,
                             BackendTransferAllocation &allocation) {
-  if (ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+  if (ctx.runtimeMetadata.recordLayout == "gcu_execution_timeline_v3" ||
+      ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
       ctx.runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
       ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
       ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-      (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
+      (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" ||
+       ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
     return; // The actual writer publishes its own counts, including overflow.
   if (!ctx.runtimeMetadata.hasLaunchGrid ||
       ctx.runtimeMetadata.recordsPerInstance == 0 || !allocation.hostBuffer ||
@@ -1057,22 +1059,37 @@ public:
   prepare(const BufferMeta &meta, const DebugBufferPlan &plan,
           const DebugRuntimeMetadata &runtimeMetadata) override {
     // Reject incompatible driver/metadata combinations before probing an SDK
-    // or allocating any storage. This is a caller error, not an abort condition.
-    if ((options_.driverKind == TransferDriverKind::CANN && meta.backendKind != BackendKind::CANN) ||
-        (options_.driverKind == TransferDriverKind::TOPS && meta.backendKind != BackendKind::ENFLAME) ||
-        (options_.driverKind == TransferDriverKind::COREX && meta.backendKind != BackendKind::TIANSHU) ||
-        (options_.driverKind == TransferDriverKind::MUSA && meta.backendKind != BackendKind::MUSA))
-      throw std::invalid_argument("Transfer driver and BufferMeta.backendKind mismatch");
-    const bool firstLast = runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+    // or allocating any storage. This is a caller error, not an abort
+    // condition.
+    if ((options_.driverKind == TransferDriverKind::CANN &&
+         meta.backendKind != BackendKind::CANN) ||
+        (options_.driverKind == TransferDriverKind::TOPS &&
+         meta.backendKind != BackendKind::ENFLAME) ||
+        (options_.driverKind == TransferDriverKind::COREX &&
+         meta.backendKind != BackendKind::TIANSHU) ||
+        (options_.driverKind == TransferDriverKind::MUSA &&
+         meta.backendKind != BackendKind::MUSA))
+      throw std::invalid_argument(
+          "Transfer driver and BufferMeta.backendKind mismatch");
+    const bool firstLast =
+        runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+        runtimeMetadata.recordLayout == "gcu_execution_timeline_v3";
     uint64_t programCount = 0;
     if (firstLast) {
-      programCount = saturatingMul(saturatingMul(runtimeMetadata.gridX,
-          runtimeMetadata.gridY), runtimeMetadata.gridZ);
-      if (meta.backendKind != BackendKind::ENFLAME || !runtimeMetadata.hasLaunchGrid ||
-          !programCount || programCount > std::numeric_limits<int32_t>::max() ||
+      programCount = saturatingMul(
+          saturatingMul(runtimeMetadata.gridX, runtimeMetadata.gridY),
+          runtimeMetadata.gridZ);
+      if (meta.backendKind != BackendKind::ENFLAME ||
+          !runtimeMetadata.hasLaunchGrid || !programCount ||
+          programCount > std::numeric_limits<int32_t>::max() ||
           !plan.recordCapacity || plan.recordCapacity > 16384 ||
-          plan.recordSize != 64 || plan.payloadBytes)
-        throw std::invalid_argument("Invalid GCU first/last storage geometry or ABI");
+          plan.recordSize !=
+              (runtimeMetadata.recordLayout == "gcu_execution_timeline_v3"
+                   ? 128
+                   : 64) ||
+          plan.payloadBytes)
+        throw std::invalid_argument(
+            "Invalid GCU first/last storage geometry or ABI");
     }
     // Enflame full-payload lowering elides per-record bounds masks. Enforce
     // its precondition here too, so native callers share the Python guard.
@@ -1142,7 +1159,8 @@ public:
     try {
       if (runtimeMetadata.recordLayout == "ascend_source_census_v3" &&
           reinterpret_cast<uintptr_t>(allocation->deviceBuffer) % 64)
-        throw std::runtime_error("Ascend census v3 requires 64-byte aligned device storage");
+        throw std::runtime_error(
+            "Ascend census v3 requires 64-byte aligned device storage");
       allocation->hostBuffer = adapter_->allocateHost(ctx.bufferSize);
       if (!allocation->hostBuffer) {
         if (options_.driverKind == TransferDriverKind::CANN ||
@@ -1189,7 +1207,8 @@ public:
         (ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
          ctx.runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
          ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-         (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
+         (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" ||
+          ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3"))
             ? ctx.streamHandle
             : 0;
     adapter_->memsetDevice(allocation->deviceBuffer, 0, allocation->bytes,
@@ -1197,7 +1216,8 @@ public:
 
     if (ctx.runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1" ||
         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v1" ||
-        (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" || ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3")) {
+        (ctx.runtimeMetadata.recordLayout == "ascend_source_census_v2" ||
+         ctx.runtimeMetadata.recordLayout == "ascend_source_census_v3")) {
       allocation->asyncExportPending = false;
       allocation->asyncCopySubmitted = false;
       return; // Actor-local headers are initialized by the actual selected
@@ -1214,18 +1234,23 @@ public:
     header.reserved0 = 0;
     header.reserved1 = 0;
 
-    const bool firstLast = ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
-    uint64_t programs = saturatingMul(saturatingMul(ctx.runtimeMetadata.gridX,
-        ctx.runtimeMetadata.gridY), ctx.runtimeMetadata.gridZ);
+    const bool firstLast =
+        ctx.runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
+        ctx.runtimeMetadata.recordLayout == "gcu_execution_timeline_v3";
+    uint64_t programs = saturatingMul(
+        saturatingMul(ctx.runtimeMetadata.gridX, ctx.runtimeMetadata.gridY),
+        ctx.runtimeMetadata.gridZ);
     const unsigned slots = firstLast && programs > 1 ? 2 : 1;
     for (unsigned slot = 0; slot < slots; ++slot) {
       // reserved1 names the actual logical program in this versioned layout.
-      header.reserved1 = firstLast && slot ? static_cast<uint32_t>(programs - 1) : 0;
+      header.reserved1 =
+          firstLast && slot ? static_cast<uint32_t>(programs - 1) : 0;
       size_t offset = slot * ctx.layout.payloadOffset;
       auto *host = static_cast<uint8_t *>(allocation->hostBuffer) + offset;
       auto *device = static_cast<uint8_t *>(allocation->deviceBuffer) + offset;
       std::memcpy(host, &header, sizeof(header));
-      adapter_->copyHostToDevice(device, host, sizeof(header), initializationStream);
+      adapter_->copyHostToDevice(device, host, sizeof(header),
+                                 initializationStream);
     }
     allocation->asyncExportPending = false;
     allocation->asyncCopySubmitted = false;

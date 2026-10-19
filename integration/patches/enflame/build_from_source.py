@@ -153,7 +153,7 @@ def main():
         'triton-gcu300-opt', 'triton-gcu400-opt',
         f'_triton_gcu300_py{sys.version_info.major}{sys.version_info.minor}',
         f'_triton_gcu400_py{sys.version_info.major}{sys.version_info.minor}',
-        'FlagTreeDebuggerMetadataTest'
+        'FlagTreeDebuggerMetadataTest', 'flagprism-gcu-timeline'
     ]
     run([
         'cmake', '--build', build, '--target', *targets, '--parallel',

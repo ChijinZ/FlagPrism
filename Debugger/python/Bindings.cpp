@@ -711,7 +711,31 @@ public:
         throw std::invalid_argument(
             "GCU first/last runtime contradicts compiler storage ABI");
     }
-    if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
+    if (runtimeMetadata.recordLayout == "gcu_execution_timeline_v3") {
+      for (const char *key :
+           {"debug_execution_version", "debug_record_size",
+            "debug_record_capacity", "debug_dynamic_storage_version",
+            "debug_dynamic_publisher_version", "debug_dynamic_slot_bytes",
+            "debug_execution_hidden_argument"}) {
+        auto value = lookup(metadata, key);
+        if (!value || !PyLong_CheckExact(value.ptr()))
+          throw std::invalid_argument(
+              std::string("GCU execution requires exact integer ") + key);
+      }
+      const auto capacity = getUInt32Or(metadata, "debug_record_capacity", 0);
+      if (getStringOr(metadata, "debug_record_layout", "") !=
+              runtimeMetadata.recordLayout ||
+          getUInt32Or(metadata, "debug_execution_version", 0) != 1 ||
+          getUInt32Or(metadata, "debug_record_size", 0) != 128 || !capacity ||
+          capacity > 4096 ||
+          getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 3 ||
+          getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) != 3 ||
+          getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) !=
+              32 + 128 * capacity)
+        throw std::invalid_argument("GCU execution manifest/storage mismatch");
+    }
+    if (runtimeMetadata.recordLayout == "gcu_execution_timeline_v3" ||
+        runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
         runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
         runtimeMetadata.recordLayout == "ascend_actor_dynamic_v1") {
       // Legacy snapshots retain their minimum allocation. Dynamic capacity is
@@ -725,13 +749,16 @@ public:
       // The bounded GCU writer uses signed pointer offsets and unsigned flat
       // program ids. Validate the actual launch before allocating any buffer;
       // compile-time selection alone cannot establish these runtime bounds.
-      const bool firstLast =
-          runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+      const bool execution =
+          runtimeMetadata.recordLayout == "gcu_execution_timeline_v3";
+      const uint32_t recordBytes = execution ? 128 : 64;
+      const bool firstLast = execution || runtimeMetadata.recordLayout ==
+                                              "gcu_first_last_timeline_v2";
       if ((!firstLast &&
            runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1") ||
           getStringOr(metadata, "debug_clock_carrier", "") !=
               "llvm_i64_words" ||
-          getUInt32Or(metadata, "debug_record_size", 0) != 64)
+          getUInt32Or(metadata, "debug_record_size", 0) != recordBytes)
         throw std::invalid_argument("bounded dynamic indexing requires "
                                     "selected_dynamic_timeline_v1, 64-byte "
                                     "records and llvm_i64_words clock carrier");
@@ -757,7 +784,7 @@ public:
         throw std::invalid_argument(
             "bounded dynamic launch grid product exceeds UINT32_MAX");
       const uint64_t bufferBytes =
-          32 + checkedMulU64(compileRequest.options.recordCapacity, 64,
+          32 + checkedMulU64(compileRequest.options.recordCapacity, recordBytes,
                              "bounded dynamic record area");
       if (bufferBytes > signedLimit)
         throw std::invalid_argument(
@@ -765,8 +792,10 @@ public:
       if (firstLast) {
         if (getStringOr(metadata, "debug_dynamic_program_policy", "") !=
                 "runtime_first_last" ||
-            getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 2 ||
-            getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) != 2 ||
+            getUInt32Or(metadata, "debug_dynamic_storage_version", 0) !=
+                (execution ? 3 : 2) ||
+            getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) !=
+                (execution ? 3 : 2) ||
             getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) !=
                 bufferBytes ||
             !compileRequest.options.recordCapacity ||
@@ -930,13 +959,16 @@ void init_flagtree_debugger_runtime(py::module &&m) {
       .def("finish", &PreparedLaunchHandle::finish)
       .def("release", &PreparedLaunchHandle::release);
 
+  m.attr("GCU_EXECUTION_TIMELINE_VERSION") = 1;
   m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
   m.attr("GCU_TIMELINE_PUBLISHER_VERSION") = 2;
   m.attr("GCU_TIMELINE_CLOCK_IDENTITY_VERSION") = 1;
   m.def("allocate_timeline_launch", [](py::dict metadata, uint64_t streamHandle,
                                        py::object runtimeMetadata) {
     if (getStringOr(metadata, "debug_record_layout", "") !=
-        "gcu_first_last_timeline_v2")
+            "gcu_first_last_timeline_v2" &&
+        getStringOr(metadata, "debug_record_layout", "") !=
+            "gcu_execution_timeline_v3")
       throw py::value_error(
           "Deferred timeline allocation requires GCU storage v2");
     return std::make_unique<PreparedLaunchHandle>(metadata, streamHandle,

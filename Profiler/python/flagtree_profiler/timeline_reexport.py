@@ -33,7 +33,8 @@ def _enflame(capture, raw):
                    profiler_association_evidence=capture['launch'])
     return canonicalize_enflame_capture(
         dict(capture_status='raw_complete',
-             record_layout='gcu_first_last_timeline_v2',
+             record_layout=capture['metadata']['compiler_metadata']
+             ['debug_record_layout'],
              runtime_metadata=runtime,
              raw_base64=base64.b64encode(raw).decode(),
              raw_sha256=sha256(raw)),

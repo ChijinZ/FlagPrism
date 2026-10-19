@@ -42,7 +42,7 @@ index db4c5ff..dfed6b6 100644
      if (options.instrumentation_mode.startswith("debugger")
              and metadata.get("debug_full_dump_payload_bytes_per_instance", 0) > 0 and not options.enable_i64):
          metadata["enable_i64"] = True
-@@ -302,6 +335,10 @@ def make_gcuir(mod, metadata, options):
+@@ -302,6 +335,14 @@ def make_gcuir(mod, metadata, options):
              if metadata['tle_raw_deferred']:
                  gcu_passes.gcu400.add_tle_dslregion_inline(pm)
      gcu_passes.mlir.add_print_op_generic(pm)
@@ -51,7 +51,12 @@ index db4c5ff..dfed6b6 100644
 +    pm.add_pass("mlir-print-debuginfo")
 +    metadata["gcu_source_location_provenance"] = "compiler_location_chain"
  
-     return pm.run(patched_mod)
+-    return pm.run(patched_mod)
++    lowered = pm.run(patched_mod)
++    if metadata.get("debug_execution_version") == 1:
++        from flagtree.debugger.gcu_timeline import rewrite_execution_ir
++        lowered = rewrite_execution_ir(lowered, metadata)
++    return lowered
  
 diff --git a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp b/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
 index b7ba104..cd2315d 100644

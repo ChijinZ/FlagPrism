@@ -59,6 +59,21 @@ def _gcu_publication_config(config):
             result["debug_automatic_plan_version"] = AUTOMATIC_PLAN_VERSION
             result[
                 "debug_control_flow_metadata_version"] = CONTROL_FLOW_METADATA_VERSION
+    if (isinstance(request, dict) and request.get('automatic') is True
+            and request.get('program_policy') == 'runtime_first_last'):
+        from .gcu_timeline import packaged_tool, tool_identity
+        if packaged_tool().is_file():
+            from pathlib import Path
+            import triton
+            backend = os.environ.get('FLAGTREE_BACKEND')
+            if backend is None:
+                marker = Path(triton.__file__).with_name('FLAGTREE_BACKEND')
+                backend = marker.read_text().strip() if marker.is_file(
+                ) else ''
+            if backend.lower() in {'gcu', 'enflame', 'tops'}:
+                result['debug_gcu_execution_identity'] = tool_identity()
+                result[
+                    'debug_dynamic_publication_mode'] = 'local_ring_return_dma_v1'
     return result
 
 
@@ -460,6 +475,12 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
         })
         if request.get("automatic"):
             metadata["flagprism_ascend_trace_max_sites"] = request["max_sites"]
+        return
+    if (_target_backend(metadata) in {"gcu", "enflame"}
+            and isinstance(request, dict) and request.get('automatic') is True
+            and request.get('program_policy') == 'runtime_first_last'):
+        from .gcu_timeline import prepare_ttir
+        prepare_ttir(mod, metadata, request, fd)
         return
     if _target_backend(metadata) in {"gcu", "enflame"}:
         # Selects the read-only SDK helper during the actual backend lowering.

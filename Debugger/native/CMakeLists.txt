@@ -138,3 +138,8 @@ if(PYTHON_EXTENSION_SUFFIX)
   set_target_properties(flagtree_debugger_native PROPERTIES
     SUFFIX "${PYTHON_EXTENSION_SUFFIX}")
 endif()
+
+if(FLAGPRISM_BACKEND STREQUAL "enflame")
+  add_subdirectory("${DEBUGGER_ROOT}/tools/gcu-timeline"
+                   "${CMAKE_CURRENT_BINARY_DIR}/gcu-timeline-tool")
+endif()

@@ -157,9 +157,11 @@ def _take_instrumentation_runs() -> list[dict]:
             "source_census":
             run.get("source_census"),
             "raw_encoding":
-            ("base64_gcu_first_last_timeline_v2"
+            ("base64_gcu_execution_timeline_v3"
              if runtime_metadata.get("record_layout")
-             == "gcu_first_last_timeline_v2" else
+             == "gcu_execution_timeline_v3" else
+             "base64_gcu_first_last_timeline_v2" if runtime_metadata.get(
+                 "record_layout") == "gcu_first_last_timeline_v2" else
              "base64_source_census_v1" if runtime_metadata.get("record_layout")
              == "gcu_site_census_v1" else "base64_ascend_source_timeline_v1"
              if runtime_metadata.get("record_layout") ==

@@ -25,14 +25,18 @@ def plan_enflame_storage(plan, *, grid, scratch_size, alignment, num_ctas,
     _need(
         metadata.get('hash') == plan.get('binary_id'),
         'GCU plan/binary mismatch')
-    for name, expected in (('debug_dynamic_storage_version',
-                            2), ('debug_dynamic_publisher_version', 2),
-                           ('debug_dynamic_index_bits', 32)):
+    execution = metadata.get(
+        'debug_record_layout') == 'gcu_execution_timeline_v3'
+    version = 3 if execution else 2
+    for name, expected in (('debug_dynamic_storage_version', version),
+                           ('debug_dynamic_publisher_version',
+                            version), ('debug_dynamic_index_bits', 32)):
         _need(
             type(metadata.get(name)) is int and metadata[name] == expected,
             'Unsupported GCU ' + name)
     _need(
-        metadata.get('debug_record_layout') == 'gcu_first_last_timeline_v2' and
+        metadata.get('debug_record_layout')
+        in ('gcu_first_last_timeline_v2', 'gcu_execution_timeline_v3') and
         metadata.get('debug_dynamic_program_policy') == 'runtime_first_last',
         'GCU timeline requires the compact first/last publisher')
     _need(
@@ -45,7 +49,16 @@ def plan_enflame_storage(plan, *, grid, scratch_size, alignment, num_ctas,
     _need(
         type(capacity) is int and 1 <= capacity <= 16384,
         'Invalid GCU capacity')
-    stride = 32 + 64 * capacity
+    record_bytes = 128 if execution else 64
+    stride = 32 + record_bytes * capacity
+    if execution:
+        manifest = metadata.get("debug_execution_manifest")
+        _need(
+            type(manifest) is dict and capacity <= 4096
+            and manifest.get("capacity") == capacity
+            and manifest.get("record_size") == 128
+            and manifest.get("slot_bytes") == stride,
+            "Invalid late GCU execution geometry")
     _need(
         type(scratch_size) is int and scratch_size == stride
         and metadata.get('debug_dynamic_slot_bytes') == stride,
@@ -60,8 +73,8 @@ def plan_enflame_storage(plan, *, grid, scratch_size, alignment, num_ctas,
         type(max_raw_bytes) is int and 0 < max_raw_bytes <= 0x7fffffff
         and size <= max_raw_bytes,
         'GCU compact allocation exceeds admission budget')
-    return dict(storage_version=2,
-                publisher_version=2,
+    return dict(storage_version=version,
+                publisher_version=version,
                 grid=tuple(grid),
                 slots=tuple(enumerate(programs)),
                 programs=programs,
@@ -156,6 +169,8 @@ class EnflameTimelineTransport:
 class EnflameTimelineCollector(TimelineInstrumentationMixin):
 
     def __init__(self):
+        from flagtree.debugger.gcu_timeline import tool_identity
+        self._execution_tool_identity = tool_identity()
         self._init_timeline_state(EnflameTimelineTransport())
         self._clock_anchors = None
         self._clock_initial_sha = None
@@ -208,6 +223,12 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
             == 'llvm.dtu.movs.sipinfo',
             'GCU automatic timeline requires freshly compiled full clock identity metadata'
         )
+        if actual.get('debug_execution_version') == 1:
+            from flagtree.debugger.gcu_timeline import tool_identity
+            _need(
+                actual.get('debug_execution_tool_identity') == tool_identity(),
+                'GCU execution cache refers to a different recorder/compiler/SDK'
+            )
         identity_object = (
             launch_metadata.get('_flagprism_launch_identity_object')
             if isinstance(launch_metadata, dict) else launch_metadata)
@@ -328,7 +349,8 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
                 dict(native,
                      raw_buffer=raw,
                      runtime_metadata=runtime,
-                     record_layout='gcu_first_last_timeline_v2',
+                     record_layout=capture['metadata']['compiler_metadata']
+                     ['debug_record_layout'],
                      capture_status='raw_complete'),
                 capture['metadata']['compiler_metadata'],
                 capture_id=owner['capture_id'])

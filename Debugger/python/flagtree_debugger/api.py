@@ -1476,7 +1476,8 @@ def _default_launch_prepare_hook(
             runtime_metadata.update(dict(built_runtime_metadata))
     grid = _normalize_launch_grid(launch_metadata)
     if metadata_dict.get("debug_record_layout") in {
-            "gcu_first_last_timeline_v2", "gcu_site_census_v1", "ascend_source_census_v1",
+            "gcu_first_last_timeline_v2", "gcu_execution_timeline_v3",
+            "gcu_site_census_v1", "ascend_source_census_v1",
             "ascend_source_census_v2", "ascend_source_census_v3"
     }:
         if grid is None:
@@ -1578,9 +1579,11 @@ def _default_launch_prepare_hook(
                     "debug_record_layout") == "gcu_site_census_v1":
                 from .gcu_census import attach_export
                 exported_run = attach_export(exported_run, metadata_dict)
-            elif metadata_dict.get('debug_record_layout') == 'gcu_first_last_timeline_v2':
+            elif metadata_dict.get('debug_record_layout') in (
+                    'gcu_first_last_timeline_v2', 'gcu_execution_timeline_v3'):
                 from flagtree.profiler.timeline_events_enflame import attach_enflame_timeline_export
-                exported_run = attach_enflame_timeline_export(exported_run, metadata_dict)
+                exported_run = attach_enflame_timeline_export(
+                    exported_run, metadata_dict)
             elif metadata_dict.get("debug_record_layout") in {
                     "ascend_source_census_v1", "ascend_source_census_v2",
                     "ascend_source_census_v3"

@@ -172,6 +172,11 @@ class FlagPrismBuildConfig:
             for source, destination in native_modules:
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, destination)
+            tool = flagtree_root / 'debugger/_bin/gcu-timeline'
+            if tool.is_file():
+                target = self.root / 'Debugger/python/flagtree_debugger/_bin/gcu-timeline'
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(tool, target)
 
     def package_dirs(self) -> tuple[tuple[str, str], ...]:
         if not self.enabled:
