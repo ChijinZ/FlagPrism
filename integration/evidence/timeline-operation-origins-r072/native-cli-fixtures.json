@@ -1,0 +1,36 @@
+{
+  "status": "native_origin_marker_CLI_fixtures_passed",
+  "checks": [
+    {
+      "case": "direct",
+      "members": 3,
+      "native_marker_statuses": [
+        "compiler_location_assigned",
+        "compiler_location_assigned",
+        "compiler_location_assigned"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "no_debug",
+      "members": 3,
+      "native_marker_statuses": [
+        "unavailable_no_debug_scope",
+        "unavailable_no_debug_scope",
+        "unavailable_no_debug_scope"
+      ],
+      "stderr": ""
+    },
+    {
+      "case": "inlined",
+      "members": 3,
+      "native_marker_statuses": [
+        "compiler_location_assigned",
+        "compiler_location_assigned",
+        "compiler_location_assigned"
+      ],
+      "stderr": ""
+    }
+  ],
+  "device_executed": false
+}

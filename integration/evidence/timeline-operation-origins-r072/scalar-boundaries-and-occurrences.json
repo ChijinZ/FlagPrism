@@ -1,0 +1,67 @@
+{
+  "status": "actual_retained_C1_FFMA_bracket_and_three_occurrences_passed",
+  "rows": [
+    {
+      "invocation": "invocation-efd635b43f7b41728f8a325edb8fe28c",
+      "source_issue": {
+        "site_id": 3,
+        "kind": "compute_issue_bracket",
+        "status": "source_issue_control_order_checked",
+        "source_cost_qualified": false,
+        "byte_transfer_completion_verified": false,
+        "function": "recurrence",
+        "ptx_operation_line": 150,
+        "ptx_operation": "fma.rn.f32%r22,%r22,0f3F400000,0f3E000000;",
+        "native_pc": 1024,
+        "native_opcode": "FFMA",
+        "native_predicate": null,
+        "predicate_identity_verified": false,
+        "begin_reader_pc": 1008,
+        "end_reader_pc": 1040,
+        "relation": "conditional_issue_between_inline_readers"
+      },
+      "intervals_per_observer": {
+        "observer-f3aefa05bfccbefd61170cacbc89339792777618075d9c61d79a8e9b3ddfd751": 3,
+        "observer-4031b19e8cebb695765d81666bf4752c3c02537c4342f27af9f39d175dc2afeb": 3,
+        "observer-74fc091cf6028d36d45811d748482368810a7a78ddfa6dd30cd37952a7448ff7": 3,
+        "observer-77c00b389d86263ecb695bb7fda2e7ae3b0f13757a50877b01d7e7ad597c7741": 3,
+        "observer-b16c245218d06176011ae08c51ff4b8bbaa383afc3d0850406807c79f49b5059": 3,
+        "observer-520be4c5ffec54a0a5fab79dbfd8a97fd1cceb34644ad1d0c3660c07d8d0c598": 3,
+        "observer-47729f362899823d0922bcbe91f09bbd633dca4940063cba708ddfe0affc1726": 3,
+        "observer-867f3a3524205de2a005db503dbcd6ba6b7026f92315a625bd2d71c57391945b": 3
+      }
+    },
+    {
+      "invocation": "invocation-f24b1ad211d1420e8037da4dcbbf9e67",
+      "source_issue": {
+        "site_id": 3,
+        "kind": "compute_issue_bracket",
+        "status": "source_issue_control_order_checked",
+        "source_cost_qualified": false,
+        "byte_transfer_completion_verified": false,
+        "function": "recurrence",
+        "ptx_operation_line": 150,
+        "ptx_operation": "fma.rn.f32%r22,%r22,0f3F400000,0f3E000000;",
+        "native_pc": 1024,
+        "native_opcode": "FFMA",
+        "native_predicate": null,
+        "predicate_identity_verified": false,
+        "begin_reader_pc": 1008,
+        "end_reader_pc": 1040,
+        "relation": "conditional_issue_between_inline_readers"
+      },
+      "intervals_per_observer": {
+        "observer-3ae799f58d2c931bc15e7bd0434b228003db31e0518a554b48c1314feb07c6b0": 3,
+        "observer-6d628d8953b23de0a69d3d51151c538cf77ed7c4412389701ad2e229eb98d7b7": 3,
+        "observer-6505c6366e085fb0a9ad8dd9e3cdfdc540d5edb1ac9791bc28dfd3bf9bfd1e69": 3,
+        "observer-c9312c44f15e6ff946f445571359aca15c3d95951ea4823b11d4789df495089a": 3,
+        "observer-2c57d7e47744041a071898f89777716adb16fdeec9775d1ee178d3a4ca9c32e1": 3,
+        "observer-1880ca2911916586f677223f55eba950e844fd9fc95262fff5d80834069693d7": 3,
+        "observer-f92dd4d5c83c11e8e22760abb8b243c22eb2e60818b8e5c6c10e4a598f5c0c29": 3,
+        "observer-7b9a9cabc9bd6c5dd81e62612ccd1311589c413219c99e751409d634297d9298": 3
+      }
+    }
+  ],
+  "device_executed": false,
+  "application_replayed": false
+}

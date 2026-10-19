@@ -1,0 +1,123 @@
+{
+  "status": "installed_real_kernels_and_automatic_native_origins_passed",
+  "source_commit": "5dca71cd80dda78afafebb52b8c965ac9368b377",
+  "performance_measured": false,
+  "results": [
+    {
+      "root": "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline",
+      "invocation": "invocation-7531e8dc1ede49a7a44a79f980dc0137",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "origins": 33,
+      "mapped": 31,
+      "missing": [
+        31,
+        33
+      ],
+      "matrix_members": [
+        {
+          "site_id": 23,
+          "status": "matrix_member_native_locations_checked",
+          "source_cost_qualified": false,
+          "participation_verified": false,
+          "members": [
+            {
+              "member_index": 0,
+              "origin_line": 14,
+              "native_pc": 4128
+            },
+            {
+              "member_index": 1,
+              "origin_line": 15,
+              "native_pc": 4160
+            },
+            {
+              "member_index": 2,
+              "origin_line": 16,
+              "native_pc": 4192
+            },
+            {
+              "member_index": 3,
+              "origin_line": 17,
+              "native_pc": 4224
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "root": "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline",
+      "invocation": "invocation-a69ed76b182e4590a9193aa062835a68",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "origins": 33,
+      "mapped": 31,
+      "missing": [
+        31,
+        33
+      ],
+      "matrix_members": [
+        {
+          "site_id": 23,
+          "status": "matrix_member_native_locations_checked",
+          "source_cost_qualified": false,
+          "participation_verified": false,
+          "members": [
+            {
+              "member_index": 0,
+              "origin_line": 14,
+              "native_pc": 4128
+            },
+            {
+              "member_index": 1,
+              "origin_line": 15,
+              "native_pc": 4160
+            },
+            {
+              "member_index": 2,
+              "origin_line": 16,
+              "native_pc": 4192
+            },
+            {
+              "member_index": 3,
+              "origin_line": 17,
+              "native_pc": 4224
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "steps": [
+    {
+      "name": "sparse-one",
+      "argv": [
+        "/workspace/chijin-timeline-r072-nvidia/runs/native-install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r072-nvidia/native-install-input-v1/source/tests/timeline/p01_nvidia_late_pipeline.py",
+        "--kernel-module",
+        "/workspace/chijin-timeline-r072-nvidia/native-install-input-v1/source/tests/timeline/p01_nvidia_dynamic_pipeline.py",
+        "--output",
+        "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one",
+        "--site-budget",
+        "1"
+      ],
+      "pid": 123491,
+      "startticks": 31182378,
+      "returncode": 0
+    },
+    {
+      "name": "native-origins-0",
+      "argv": [
+        "/workspace/chijin-timeline-r072-nvidia/runs/native-install-v1/output/venv/bin/python",
+        "-I",
+        "/workspace/chijin-timeline-r072-nvidia/native-install-input-v1/source/tests/timeline/p01_nvidia_operation_origins.py",
+        "--timeline",
+        "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline",
+        "--output",
+        "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/origins-0"
+      ],
+      "pid": 123643,
+      "startticks": 31184410,
+      "returncode": 0
+    }
+  ]
+}
