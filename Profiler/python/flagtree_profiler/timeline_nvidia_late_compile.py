@@ -168,7 +168,10 @@ class LateLLVMTransform:
                         'capacity_policy') != 'bounded-actor-bytes-v2':
                     raise LateCompileError(
                         'Native automatic record policy differs')
-                budget = 8 * 1024 * 1024 - 128 if full else 64 * 1024
+                budget = min(
+                    8 * 1024 * 1024 -
+                    128, max(2 * 1024 * 1024, 2 * actors * (6 + 4 * 512) *
+                             8)) if full else 64 * 1024
                 if plan.get('automatic_pair_budget_bytes') != budget:
                     raise LateCompileError(
                         'Native automatic raw byte budget differs')

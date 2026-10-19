@@ -98,8 +98,9 @@ remains an acceptance failure. These measurements establish the finite cases'
 storage bounds, not an overhead or exclusive-GPU performance certification.
 
 Default record capacity is now chosen from the actual recorded actor count.
-A complete-CTA recording uses the existing 8 MiB raw limit, reserving 128 bytes
-for allocation guards, for the first/last program pair; a
+A complete-CTA recording retains a 2 MiB allowance for the first/last program
+pair and grows it to target at least 512 records per actor where possible.
+The maximum remains 8 MiB minus 128 bytes for allocation guards; a
 sampled recording targets 64 KiB. Each actor has six header words and four
 64-bit words per record, with at most 4096 records. The compiler manifest
 records `bounded-actor-bytes-v2`, the automatic pair byte budget, the footprint decision and the resulting

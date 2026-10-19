@@ -241,10 +241,14 @@ int main(int argc, char **argv) {
   }
   const uint64_t HeaderWords = 6;
   // A complete CTA records every participating thread for dependency facts.
-  // Use the existing 8 MiB raw ceiling, reserving allocator guard bytes, rather
-  // than overflowing ordinary multi-warp loops at an artificial 2 MiB target.
+  // Retain the old 2 MiB allowance, targeting at least 512 records per actor
+  // where the 8 MiB raw ceiling permits. Small CTAs need no maximum allocation.
+  const uint64_t CompleteFootprintBytes = std::min<uint64_t>(
+      8 * 1024 * 1024 - 128,
+      std::max<uint64_t>(2 * 1024 * 1024,
+                         2 * Actors * (HeaderWords + 4 * 512) * 8));
   const uint64_t CaptureBudgetBytes =
-      requiresFullFootprint ? 8 * 1024 * 1024 - 128 : 64 * 1024;
+      requiresFullFootprint ? CompleteFootprintBytes : 64 * 1024;
   uint64_t Capacity = RecordCapacity;
   if (AutoCapacity) {
     const uint64_t wordsPerActor = CaptureBudgetBytes / (2 * Actors * 8);
