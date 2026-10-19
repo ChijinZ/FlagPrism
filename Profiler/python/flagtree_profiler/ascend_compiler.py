@@ -156,6 +156,18 @@ def prepare(event):
     if not real_bisheng or not opt:
         raise RuntimeError(
             'Ascend late capture requires actual bisheng and LLVM15 opt')
+    bound_driver = event.metadata.get('compiler_driver_identity')
+    if bound_driver is not None:
+        from flagtree import _flagprism
+        if bound_driver != _flagprism.compiler_driver_cache_key():
+            raise RuntimeError(
+                'Ascend driver inputs changed after JIT option binding; retry the launch'
+            )
+        if cache_key(plugin=str(plugin), opt=str(opt),
+                     bisheng=real_bisheng) != cache_key():
+            raise RuntimeError(
+                'Ascend metadata tool overrides differ from the JIT-bound driver inputs'
+            )
     wrapper_directory = output / 'bin'
     wrapper_directory.mkdir()
     wrapper = wrapper_directory / 'bisheng'
@@ -458,8 +470,46 @@ def finish(event, *, returncode):
             )
 
 
-def cache_key():
-    plugin = os.environ.get('FLAGPRISM_ASCEND_LATE_PLUGIN')
+def _input_identity(path, *, executable=False):
+    if not path:
+        return dict(status='unresolved')
+    path = Path(path).resolve()
+    if not path.is_file() or (executable and not os.access(path, os.X_OK)):
+        return dict(path=str(path), status='unavailable')
+    # Reuse the parent's change-aware file watcher when available. Development
+    # fixtures and older parents still get an actual byte fingerprint.
+    module = sys.modules.get('triton.backends.ascend.compiler_identity')
+    identity = getattr(module, 'file_identity', None)
+    if identity is not None:
+        return json.loads(identity(str(path)))
+    return dict(path=str(path),
+                sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+
+
+def _driver_inputs(opt, bisheng):
+    compiler = os.environ.get('TRITON_ASCEND_COMPILER') or shutil.which(
+        'bishengir-compile')
+    resources = set()
+    for tool in (compiler, bisheng):
+        if tool:
+            root = Path(tool).resolve().parent.parent
+            resources.update(root / 'lib' / name
+                             for name in ('meta_op.aic.bc', 'meta_op.aiv.bc'))
+    backend = sys.modules.get('triton.backends.ascend.compiler')
+    if getattr(backend, '__file__', None):
+        resources.update(
+            Path(
+                backend.__file__).parent.joinpath('lib').glob('libdevice*.bc'))
+    return dict(opt=_input_identity(opt, executable=True),
+                bisheng=_input_identity(bisheng, executable=True),
+                sdk_resources={
+                    str(path): _input_identity(path)
+                    for path in sorted(resources)
+                })
+
+
+def cache_key(*, plugin=None, opt=None, bisheng=None):
+    plugin = plugin or os.environ.get('FLAGPRISM_ASCEND_LATE_PLUGIN')
     if not plugin:
         packaged_plugin = Path(__file__).with_name(
             'lib') / 'FlagPrismAscendLateObserver.so'
@@ -471,7 +521,12 @@ def cache_key():
         json.dumps(
             {
                 'plugin':
-                hashlib.sha256(Path(plugin).read_bytes()).hexdigest(),
+                _input_identity(plugin),
+                'driver_inputs':
+                _driver_inputs(
+                    opt or os.environ.get('FLAGPRISM_ASCEND_OPT')
+                    or shutil.which('opt-15'), bisheng
+                    or shutil.which('bisheng')),
                 'trace_argument':
                 os.environ.get('FLAGPRISM_ASCEND_TRACE_ARGUMENT_INDEX'),
                 'trace_source_argument':

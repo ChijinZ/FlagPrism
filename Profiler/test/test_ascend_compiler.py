@@ -459,3 +459,37 @@ def test_timeline_handoff_rejects_inconsistent_frontend_before_driver(
     with pytest.raises(ValueError):
         m.prepare(event)
     assert not (tmp_path / 'captures').exists()
+
+
+@pytest.mark.parametrize('changed',
+                         ['opt', 'bisheng', 'resource', 'plugin_path'])
+def test_driver_cache_identity_tracks_actual_tool_and_link_bytes(
+        tmp_path, monkeypatch, changed):
+    plugin = tmp_path / 'plugin.so'
+    plugin.write_bytes(b'plugin')
+    tools = tmp_path / 'sdk/bin'
+    tools.mkdir(parents=True)
+    opt, bisheng, compiler = [
+        tools / n for n in ('opt-15', 'bisheng', 'bishengir-compile')
+    ]
+    for tool in (opt, bisheng, compiler):
+        tool.write_bytes(b'first-tool')
+        tool.chmod(0o755)
+    lib = tmp_path / 'sdk/lib/meta_op.aic.bc'
+    lib.parent.mkdir()
+    lib.write_bytes(b'first-resource')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_OPT', str(opt))
+    monkeypatch.setenv('TRITON_ASCEND_COMPILER', str(compiler))
+    monkeypatch.setattr(m.shutil, 'which',
+                        lambda name, **kw: str(tools / name))
+    first = m.cache_key()
+    if changed == 'plugin_path':
+        other = tmp_path / 'other-plugin.so'
+        other.write_bytes(plugin.read_bytes())
+        monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(other))
+    else:
+        path = dict(opt=opt, bisheng=bisheng, resource=lib)[changed]
+        path.write_bytes(b'changed-actual-bytes')
+    assert first != m.cache_key()
+    assert m.cache_key() == m.cache_key()

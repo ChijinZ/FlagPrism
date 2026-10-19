@@ -37,6 +37,13 @@ def jit_cache(request, monkeypatch):
                              if request.param == 'generic' else
                              'python/triton/spec/ascend/runtime/jit.py')
         backend_path = parent / 'third_party/ascend/backend/compiler.py'
+        identity = load(
+            'triton.backends.ascend.compiler_identity',
+            parent / 'third_party/ascend/backend/compiler_identity.py',
+            monkeypatch)
+        monkeypatch.setattr(triton.backends.ascend, 'compiler_identity',
+                            identity)
+
     else:
         jit_path = (Path(triton.__file__).parent /
                     'runtime/jit.py' if request.param == 'generic' else Path(
@@ -99,4 +106,52 @@ def test_explicit_option_is_stable_across_environment_changes(
             fn.run(7, grid=(1, ), warmup=True, enable_auto_blockify=explicit))
     assert len(compilations) == 1 and all(k is results[0] for k in results)
     assert results[0].metadata.enable_auto_blockify is explicit
+    assert not torch_npu.npu.is_initialized()
+
+
+@pytest.mark.parametrize(
+    'changed', ['plugin_bytes', 'plugin_path', 'opt', 'bisheng', 'resource'])
+def test_actual_driver_identity_precedes_in_memory_lookup(
+        jit_cache, tmp_path, monkeypatch, changed):
+    fn, compilations, torch_npu = jit_cache
+    from flagtree.profiler import ascend_compiler
+    plugin = tmp_path / 'plugin.so'
+    plugin.write_bytes(b'plugin-one')
+    tools = tmp_path / 'sdk/bin'
+    tools.mkdir(parents=True)
+    for name in ('opt-15', 'bisheng', 'bishengir-compile'):
+        path = tools / name
+        path.write_bytes(b'compiler-one')
+        path.chmod(0o755)
+    resource = tmp_path / 'sdk/lib/meta_op.aic.bc'
+    resource.parent.mkdir()
+    resource.write_bytes(b'link-one')
+    monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(plugin))
+    monkeypatch.setenv('FLAGPRISM_ASCEND_OPT', str(tools / 'opt-15'))
+    monkeypatch.setenv('TRITON_ASCEND_COMPILER',
+                       str(tools / 'bishengir-compile'))
+    original_which = ascend_compiler.shutil.which
+    monkeypatch.setattr(
+        ascend_compiler.shutil, 'which', lambda name, **kw: str(tools / name)
+        if name in
+        ('bisheng', 'opt-15', 'bishengir-compile') else original_which(
+            name, **kw))
+    first = fn.run(7, grid=(1, ), warmup=True)
+    assert fn.run(7, grid=(1, ), warmup=True) is first
+    if changed == 'plugin_path':
+        second_path = tmp_path / 'other.so'
+        second_path.write_bytes(plugin.read_bytes())
+        monkeypatch.setenv('FLAGPRISM_ASCEND_LATE_PLUGIN', str(second_path))
+    else:
+        path = {
+            'plugin_bytes': plugin,
+            'opt': tools / 'opt-15',
+            'bisheng': tools / 'bisheng',
+            'resource': resource
+        }[changed]
+        path.write_bytes(b'changed-bytes')
+    second = fn.run(7, grid=(1, ), warmup=True)
+    assert second is not first and len(compilations) == 2
+    assert second.metadata.compiler_driver_identity != first.metadata.compiler_driver_identity
+    assert second.hash != first.hash
     assert not torch_npu.npu.is_initialized()

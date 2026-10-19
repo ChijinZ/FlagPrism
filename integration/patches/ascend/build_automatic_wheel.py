@@ -30,6 +30,16 @@ def main():
     args = parser.parse_args()
     for name in vars(args):
         setattr(args, name, getattr(args, name).resolve())
+    compiler_source = (args.flagtree /
+                       'third_party/ascend/backend/compiler.py').read_text()
+    identity_source = (
+        args.flagtree /
+        'third_party/ascend/backend/compiler_identity.py').read_text()
+    if ('compiler_driver_identity' not in compiler_source
+            or 'def file_identity(' not in identity_source):
+        raise ValueError(
+            'Apply the current census-v2 parent patch with pre-JIT driver identity before assembly'
+        )
     args.output.mkdir(parents=True, exist_ok=False)
     integrated = args.flagtree / 'third_party/FlagPrism'
     if not integrated.exists():

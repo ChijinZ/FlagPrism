@@ -215,7 +215,7 @@ index ea9c0b5..b710d31 100644
              _compile_option_list += ["--enable-debug-info=true"]
  
          if _enable_print_ub_bits():
-@@ -513,16 +529,13 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
+@@ -513,16 +529,14 @@ def linalg_to_bin_enable_npu_compile_910_95(linalg: str, metadata, opt):
                  _compile_option_list += \
                      [f"--link-aicore-bitcode={bitcode}"]
  
@@ -233,6 +233,7 @@ index ea9c0b5..b710d31 100644
          npu_compiler_path, env = _get_npucompiler_path()
 -        if npu_compiler_path.endswith("bishengir-compile"):
 +        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
++        metadata["compiler_driver_identity"] = opt.compiler_driver_identity
 +        if _compiler_supports_options(npu_compiler_path, env, "--enable-hfusion-compile", "--enable-triton-kernel-compile"):
              _compile_option_list += [
                  "--enable-hfusion-compile=true",
@@ -261,7 +262,7 @@ index ea9c0b5..b710d31 100644
              _compile_option_list += ["--enable-debug-info=true"]
  
          if _enable_print_ub_bits():
-@@ -728,10 +747,12 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
+@@ -728,10 +747,13 @@ def linalg_to_bin_enable_npu_compile_A2_A3(linalg: str, metadata, opt):
              _compile_option_list += \
                  [f"--disable-size-align-for-cast={disable_size_align_for_cast}"]
  
@@ -272,6 +273,7 @@ index ea9c0b5..b710d31 100644
          npu_compiler_path, env = _get_npucompiler_path()
 -        if npu_compiler_path.endswith("bishengir-compile"):
 +        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
++        metadata["compiler_driver_identity"] = opt.compiler_driver_identity
 +        if _compiler_supports_options(npu_compiler_path, env, "--enable-hfusion-compile", "--enable-triton-kernel-compile"):
              _compile_option_list += [
                  "--enable-hfusion-compile=true",
@@ -291,16 +293,19 @@ index ea9c0b5..b710d31 100644
          except subprocess.CalledProcessError as e:
              if opt.debug:
                  _save_npuir_debug_output(e.stdout, e.stderr, tmpdir, metadata["hash"])
-@@ -883,7 +910,12 @@ class NPUOptions:
+@@ -883,7 +910,15 @@ class NPUOptions:
      # disable simt fma optimization to get high precision
      disable_fma: bool = False
  
 +    compiler_identity: str = ""
++    compiler_driver_identity: str = ""
 +
      def __post_init__(self):
 +        if not self.compiler_identity:
 +            path, _ = _get_npucompiler_path()
 +            object.__setattr__(self, "compiler_identity", compiler_identity(path))
++        if not self.compiler_driver_identity:
++            object.__setattr__(self, "compiler_driver_identity", _flagprism.compiler_driver_cache_key())
          # Parse compile_mode and set related fields
          if self.compile_mode == "simd":
              object.__setattr__(self, "parallel_mode", "simd")
@@ -313,7 +318,7 @@ index ea9c0b5..b710d31 100644
          return hashlib.sha256(key.encode("utf-8")).hexdigest()
  
  
-@@ -943,18 +975,12 @@ def ttir_to_npubin(mod, metadata, opt):
+@@ -943,18 +975,13 @@ def ttir_to_npubin(mod, metadata, opt):
                  if bisheng_options is not None:
                      _compile_option_list += [f"--append-bisheng-options={bisheng_options}"]
  
@@ -333,10 +338,11 @@ index ea9c0b5..b710d31 100644
  
          npu_compiler_path, env = _get_npucompiler_path()
 +        npu_compiler_path = bind_compiler_identity(npu_compiler_path, opt.compiler_identity, metadata)
++        metadata["compiler_driver_identity"] = opt.compiler_driver_identity
          cmd_list = ([npu_compiler_path, src_path] + _compile_option_list + ["-o", bin_file])
          ret = subprocess.run(cmd_list, env=env, capture_output=True, check=True)
          if not Path(bin_path).exists():
-@@ -978,11 +1004,27 @@ class AscendBackend(BaseBackend):
+@@ -978,11 +1004,32 @@ class AscendBackend(BaseBackend):
              # Include all binary file extensions (mlirbc is used in bytecode mode)
              self.binary_extensions = {"npubin", "mlirbc"}
  
@@ -347,6 +353,7 @@ index ea9c0b5..b710d31 100644
 +            options["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
 +        path, _ = _get_npucompiler_path()
 +        options["compiler_identity"] = compiler_identity(path)
++        options["compiler_driver_identity"] = _flagprism.compiler_driver_cache_key()
 +        return options
 +
      def parse_options(self, opts) -> Any:
@@ -359,6 +366,10 @@ index ea9c0b5..b710d31 100644
 +            if args.get("compiler_identity", identity) != identity:
 +                raise RuntimeError("Ascend compiler changed after JIT option binding; retry the launch")
 +            args["compiler_identity"] = identity
++            driver_identity = _flagprism.compiler_driver_cache_key()
++            if args.get("compiler_driver_identity", driver_identity) != driver_identity:
++                raise RuntimeError("Ascend compiler driver changed during option binding; retry the launch")
++            args["compiler_driver_identity"] = driver_identity
 +            if args.get("enable_auto_blockify") is None:
 +                args["enable_auto_blockify"] = _is_auto_map_parallel_blocks_enabled()
              options = NPUOptions(**args)
@@ -369,7 +380,7 @@ new file mode 100644
 index 0000000..fd2a298
 --- /dev/null
 +++ b/third_party/ascend/backend/compiler_identity.py
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,204 @@
 +"""Identity of the actual external Ascend compiler, shared by all launch modes."""
 +import atexit
 +import ctypes
@@ -533,8 +544,8 @@ index 0000000..fd2a298
 +    return (info.st_dev, info.st_ino, info.st_size, info.st_ctime_ns, info.st_mtime_ns)
 +
 +
-+def compiler_identity(path):
-+    path = executable_path(path)
++def file_identity(path):
++    path = os.path.realpath(path)
 +    # The stat key detects replacement; notifications also detect same-tick
 +    # in-place writes whose size, ctime and restored mtime are all unchanged.
 +    with _LOCK:
@@ -562,6 +573,10 @@ index 0000000..fd2a298
 +                _CACHE[path] = (before, token)
 +            return token
 +    raise RuntimeError("Ascend compiler changed while fingerprinting: " + path)
++
++
++def compiler_identity(path):
++    return file_identity(executable_path(path))
 +
 +
 +def bind_compiler_identity(path, expected, metadata):
