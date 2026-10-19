@@ -1,0 +1,7 @@
+# R076 registered GCU bundle budget recovery
+
+All original-six 15 and supplement-two 21 first-attempt budget failures are retained in the denominator. Current normal installed metadata compaction plus current compact HTML rendering losslessly recovers all 36 complete copies to <=64MiB; maximum 66,230,992 bytes. Source bundles remain untouched. Logical JSON restoration, raw, traces and all other evidence bytes are checked by the retained per-file ledgers. This is CPU recovery, not a device rerun or universal future workload size guarantee.
+
+v1 verifier rejected the expected metadata sidecar; v2 verifier omitted cold/warm from copy namespace. Both wrapper failures remain in the full archive. v3 correctly completed 36 metadata roundtrips but only 24 met budget: 12 still retained historical embedded HTML. v4 calls the existing installed write_timeline_page and execution_view.write_view(compact_html=True), allows changes only to the two derived HTML pages and manifest, checks the exact v3 predecessor ledger, and passes all 36. It changes no product source and cannot grant source boundary, writer, pipeline or E01 qualification.
+
+Full ledgers, generated pages, scripts, failed attempts and controller receipts are in root artifacts/timeline/run-076/preflight/gcu-budget-receipts-v4.tgz. The ledger audit checks the v3→v4 chain and original raw/trace hashes; existing identical-byte TP/UI results are reused.
