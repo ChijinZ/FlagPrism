@@ -939,6 +939,22 @@ These are instruction identities, not source-exclusive durations, collective
 participation or hardware busy measurements. Legacy captures remain readable
 with operation origins explicitly unverified.
 
+The native boundary report also includes `native_loop_sites` for supported
+source/matrix issue brackets. `native_iteration_control_checked` identifies an
+actual natural loop by binary/function/header, with its instruction PCs,
+latches and exits. After cutting all returns to that header, the checker
+requires a single-entry acyclic iteration in which both readers dominate every
+return and exit. Early breaks, endpoint bypasses, extra cycles, unknown control
+transitions and budget overruns remain unverified. A reader pair in an inner
+loop is checked against that innermost loop; another nested cycle within the
+selected iteration is not accepted.
+
+This proves the finite CFG path property for the already bounded reader pair.
+It does not identify source iteration numbers, prove source-exclusive elapsed
+cost, participation, termination, clock scale or ordinary pipeline preservation.
+Existing occurrence fields are unchanged; no `iteration_id` is synthesized
+from the nth record. Real runtime trip counts provide a separate cross-check.
+
 The same late native diagnostic also contains `relative_record_fields`:
 `native_record_fields_checked` means the actual four stores for a site's tag,
 begin, end and payload have the declared coalesced relative displacement and

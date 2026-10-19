@@ -405,3 +405,21 @@ locations, corrupt offline identities and rejection of cached qualification.
 The mutations use owned sidecar fixtures; original captures remain unchanged.
 Run the same reader with `python -O` to check validation without assertions.
 Missing debug locations stay visible and cannot become source-exclusive costs.
+
+### NVIDIA finite native loop regression
+
+Run `tests/timeline/test_nvidia_native_loops.py` with normal and optimized
+Python in the matching server Docker. Its synthetic graphs cover complete
+iterations, forward detours, multiple latches, innermost loops, early exits,
+endpoint bypasses, repeated endpoints, multiple entries and unknown control.
+They complement actual objects, rather than replacing device evidence.
+
+Run `tests/timeline/p01_nvidia_native_loops.py --timeline BUNDLE
+--expected-iterations 3,7 --output OUT` on retained runtime-K matrix captures.
+Expected counts are the original runtime arguments in capture order. For the
+registered scalar recurrence use `--kind compute_issue_bracket
+--member-count 2 --expected-iterations 3,3`; the final one-member expression
+outside the loop is not that registered group. The script rederives native
+paths and compares every interval with raw endpoint words and per-observer
+counts. It does not compile or replay the application, infer source iteration
+IDs or certify exclusive source cost.

@@ -383,37 +383,46 @@ def derive_native_boundaries(*, machine_map, sass_lines, sass_json, ptx, plan):
             result['reason'] = str(error)
         results.append(result)
     from . import timeline_nvidia_control, timeline_nvidia_late_control, timeline_nvidia_machine
+    from . import timeline_nvidia_loops, timeline_nvidia_late_values
+    source_sites = _source_issue_sites(functions=functions,
+                                       native_lines=native_lines,
+                                       lines=lines,
+                                       readers=readers,
+                                       plan=plan)
+    matrix_sites = _matrix_issue_sites(functions=functions,
+                                       native_lines=native_lines,
+                                       lines=lines,
+                                       readers=readers,
+                                       plan=plan)
+    loop_sites = timeline_nvidia_loops.inspect_native_loops(
+        functions=functions,
+        boundaries=source_sites + matrix_sites,
+        binary_id=machine_map['binary_id'])
     rules = [
         Path(__file__),
         Path(timeline_nvidia_control.__file__),
         Path(timeline_nvidia_late_control.__file__),
-        Path(timeline_nvidia_machine.__file__)
+        Path(timeline_nvidia_machine.__file__),
+        Path(timeline_nvidia_loops.__file__),
+        Path(timeline_nvidia_late_values.__file__)
     ]
-    return dict(
-        model=MODEL,
-        binary_id=machine_map['binary_id'],
-        sites=results,
-        source_issue_sites=_source_issue_sites(functions=functions,
-                                               native_lines=native_lines,
-                                               lines=lines,
-                                               readers=readers,
-                                               plan=plan),
-        matrix_issue_sites=_matrix_issue_sites(functions=functions,
-                                               native_lines=native_lines,
-                                               lines=lines,
-                                               readers=readers,
-                                               plan=plan),
-        implementation_sha256={
-            p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-            for p in rules
-        },
-        proof_scope='conditional_native_instruction_order',
-        record_value_provenance_verified=False,
-        participation_verified=False,
-        source_region_qualified=False,
-        clock_qualified=False,
-        hardware_overlap_verified=False,
-        time_flows_qualified=False)
+    return dict(model=MODEL,
+                binary_id=machine_map['binary_id'],
+                sites=results,
+                source_issue_sites=source_sites,
+                matrix_issue_sites=matrix_sites,
+                native_loop_sites=loop_sites,
+                implementation_sha256={
+                    p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+                    for p in rules
+                },
+                proof_scope='conditional_native_instruction_order',
+                record_value_provenance_verified=False,
+                participation_verified=False,
+                source_region_qualified=False,
+                clock_qualified=False,
+                hardware_overlap_verified=False,
+                time_flows_qualified=False)
 
 
 def load_native_boundary_report(directory, capture, machine_map):
