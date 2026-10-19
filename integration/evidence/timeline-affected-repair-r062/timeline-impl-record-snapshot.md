@@ -1884,3 +1884,5 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - 收据archive302357B SHA7315cf2b8ee5247a170027833f12062a05f5dbc0ef3dc738da072eba77869c02；完整SQL收据archive1088197B SHA5c98783aa9ffdd645481f1129c3fece2d4fda34bac40f4c558a7a4b8b6e0b620。本机纯stdlib核60绑定/原application rc0/首例例外/hostonce、168原SHA及每条stats；不是本机import产品/跑设备或oracle。
 - 可直接打开新样本在run062/preflight/samples：ascend-case000-counter.pftrace、ascend-case000-dependency.pftrace、ascend-case048-counter.pftrace；index.json记原traceSHA/调用/observer/SQL资格。样本为实际bytes副本，不是新UI截图或普通执行图。
 - 已准备integration/evidence/timeline-affected-repair-r062小证据：原/修复登记、product freeze、60实际数学报告/receipt audit、168SQL summary/收据、源码脚本及大archive索引。不将独立复核结果预写成通过；相关有限review随后进行。canonical尚20d370a未合/push，paper/Study未改。剩余真正缺口为有限最终源/循环边界、ordinary合法overlap证据和相应最终交付；不再报告Asc60或本轮SQL仍待运行。
+
+- T094原R2有限只读复核完成：未发现本范围具体错误，确认可关闭“原affected60重采+新SQL”缺口；逐项原/v2登记60/唯一invocation/R060437member身份核同，首项aux snapshot修复108旧文件SHA不变无math重放，59原controller0，转移SHA和168actual TP/263stats/1176flows一致，owned live[]。转录limited-runtime-review.md。只关闭此补项，不冒另一36重跑/新UI/native源边界/ordinary-overlap/整体goal通过；未要求新矩阵。

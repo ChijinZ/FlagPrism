@@ -8,4 +8,4 @@ Actual exports: 120 counter-ns traces and48 observed-dependency traces. All168 w
 
 Three copied .pftrace samples are listed in sample-index.json under the root run062/preflight/samples directory. This is new SQL evidence, not a new UI run. Source-boundary/native schedule qualification is not inferred; the Ascend installed SDK's unavailable final disassembly remains a separate limitation. No ordinary-overlap or engine-busy right is added.
 
-Receipts, exact scripts, mathematical reports and artifact hashes are included here; larger raw/view/proof/SQL files remain in the hashed local archives and persistent server runs. Related finite review is pending. No product source was changed by this qualification repair.
+Receipts, exact scripts, mathematical reports and artifact hashes are included here; larger raw/view/proof/SQL files remain in the hashed local archives and persistent server runs. The existing independent runtime reviewer completed a finite review and found no concrete error; see limited-runtime-review.md. No product source was changed by this qualification repair.
