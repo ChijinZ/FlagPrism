@@ -1,5 +1,5 @@
 {
-  "state": "checkpoint_pending_ascend_supplement_and_final_reviews",
+  "state": "collection_terminal_pending_three_fresh_code_reviews",
   "runtime_commit": "4bc92861bd8665dfd446332f9af63dca7b64eaf0",
   "files": [
     {
@@ -25,6 +25,18 @@
     {
       "file": "gcu-density-both-summary-v1.json",
       "sha256": "f440889cf6fdc0359edccffc7cb87776b463cf5f837f818ffb0c0bd7ea9ac399"
+    },
+    {
+      "file": "qualification-attempt-index.json",
+      "sha256": "4f7c40c493424f826766adfbb16dfc96dd1abee3a6cf7e0db97a97bc314e3083"
+    },
+    {
+      "file": "ascend-supplement-final-result-v1.json",
+      "sha256": "72d158bf6d26b83a8ff9997b907716c840391e20bc4def757df8ac72194f7085"
+    },
+    {
+      "file": "ascend-density-summary-v1.json",
+      "sha256": "2393b76edc946321669464adc23842f4ad935200be9e7aba874a9616f24a304e"
     }
   ],
   "gcu_refresh": {
@@ -75,5 +87,21 @@
     "source_sha256": "298743dc44abde27a6326f02be3b0204c1a046c855a8eb6f24fe5a27006cca50",
     "sdk_input_native_projection_unchanged": true,
     "scope": "SDK-input operation order, not final hardware schedule; stream spans include host gaps"
+  },
+  "ascend_density_controls": {
+    "BK": [
+      32,
+      64
+    ],
+    "logical_sites": [
+      1,
+      8
+    ],
+    "default_profile_calls_passed": 6,
+    "BK32_sparse_profile_calls_passed": 3,
+    "BK64_sparse_recorded_captures": 2,
+    "BK64_sparse_structure_failures": 1,
+    "BK64_sparse_remaining_call_not_started": true,
+    "original_failure_preserved": true
   }
 }

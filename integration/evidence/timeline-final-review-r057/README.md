@@ -6,7 +6,8 @@ READMEs describe their contemporary state; later evidence may supersede a
 specific failure, but no stage summary alone proves complete acceptance.
 
 Runtime implementation freeze: `4bc92861bd8665dfd446332f9af63dca7b64eaf0`.
-The subsequent `1831343` commit contains evidence only. The canonical
+Later commits add evidence and the controlled test driver (`7daeb7e`);
+no later runtime implementation changes have been made. The canonical
 `detailed-profiler` is still `20d370a`; the candidate is not merged or pushed.
 The working research directory's `timeline_goal_prompt.md` is the active
 contract, and `timeline_impl_record.md` is the append-only live history.
@@ -37,9 +38,11 @@ unchanged historical matrices merely for review bookkeeping.
 - Independent original six and two supplemental mathematics, original failures
   and affected-only repairs: live history T074–T080; R056 and R057 checkpoints.
   Original frozen inputs/tolerances/configurations and first failures remain
-  separate from repairs. Ascend supplemental 24-call terminal evidence is pending
-  at the time this input is prepared; reviewers must receive that result before
-  treating independent qualification as completed.
+  separate from repairs. Ascend supplemental 24-call results are terminal and indexed in R057
+  (`ascend-supplement-final-result-v1.json`). All 24 math/ns/observed-writer
+  and budget gates pass; twelve still retain two unknown reserved slots each
+  and all 24 have explicit dependency-unavailable status. See the complete
+  first-attempt and affected-repair index, not a combined passing denominator.
 - Actual work/tiling controls: maintained
   `tests/timeline/p01_controlled_workloads.py`, R056 results and the runtime
   reference's "Reading the controlled examples". These timings concern
@@ -94,3 +97,12 @@ trigger, evidence, consequence and minimal suggested validation. State what was
 and was not read. Do not modify product code or read peer review reports. Root
 must verify findings and close confirmed defects with affected-only tests before
 merge/push; majority voting does not waive a defect.
+
+
+The final finite Ascend/GCU density controls are indexed in R057. GCU both
+variants pass ordinary/sparse/default. Ascend defaults and BK32 sparse pass;
+BK64 sparse retains an actual two-interval gate failure (one positive interval),
+with the remaining sparse call not started. This advanced one-site diagnostic
+has not been counted as default qualification. Assess the scope and usability
+consequence explicitly. All device collection jobs are terminal; the review
+freeze includes the evidence-only commit adding these results.

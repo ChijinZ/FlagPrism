@@ -1,0 +1,1178 @@
+{
+  "status": "real_controlled_density_results_including_retained_sparse_failure",
+  "results": [
+    {
+      "variant": 32,
+      "density": 1,
+      "run": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-1",
+      "published_rows": [
+        {
+          "repetition": -3,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 22323984798,
+          "device_stream_span_ms": 22323.451171875,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -2,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 656259,
+          "device_stream_span_ms": 0.5452799797058105,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -1,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 572547,
+          "device_stream_span_ms": 0.46399998664855957,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": 0,
+          "binary_id": "0b134fbc16c900cc159cce9bd94551e846cc50f578de4937477d04bc4ff583d6",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 11249721944,
+          "device_stream_span_ms": 5890.1015625,
+          "positive_intervals": 5,
+          "bundle_bytes": 33528085,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 1,
+          "binary_id": "0b134fbc16c900cc159cce9bd94551e846cc50f578de4937477d04bc4ff583d6",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 5347249588,
+          "device_stream_span_ms": 186.43043518066406,
+          "positive_intervals": 3,
+          "bundle_bytes": 26552545,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 2,
+          "binary_id": "0b134fbc16c900cc159cce9bd94551e846cc50f578de4937477d04bc4ff583d6",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 5402899058,
+          "device_stream_span_ms": 192.93101501464844,
+          "positive_intervals": 5,
+          "bundle_bytes": 26625639,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        }
+      ],
+      "captures": [
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-1/32-0/capture/timeline",
+          "invocation_id": "invocation-29f2502d79e44b2389c77695306be227",
+          "events": 112,
+          "positive_intervals": 5,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "3d15be391a1114026c169ea4809958ab59324646070b7048fa5c4cf816d0e07d",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "e6576dbcbeaea0e4170f29615537257ce0ee3f54c7409c7935aa24c145f4bf28",
+              "adapted_sha256": "1680aed106b1430b259e8c45da401c2e80f5a78b42c3174d85d25eee4897ec58",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "08a537d1f1d04cc010dac73c7f2b0d5a51787429df3558001c012ab42bf5cc74",
+              "adapted_sha256": "fa38e7ec1aac09ba90ff47ad770929e6a7b73ed9a9621d0893515a7eaaec655a",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-1/32-1/capture/timeline",
+          "invocation_id": "invocation-c83488658b6a4667b2e34ada7916475a",
+          "events": 112,
+          "positive_intervals": 3,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "0a630ef061ef073a23faf0b85669a79fff64a74642f9f60539ba9ac71ff79f39",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "e6576dbcbeaea0e4170f29615537257ce0ee3f54c7409c7935aa24c145f4bf28",
+              "adapted_sha256": "1680aed106b1430b259e8c45da401c2e80f5a78b42c3174d85d25eee4897ec58",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "08a537d1f1d04cc010dac73c7f2b0d5a51787429df3558001c012ab42bf5cc74",
+              "adapted_sha256": "fa38e7ec1aac09ba90ff47ad770929e6a7b73ed9a9621d0893515a7eaaec655a",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-1/32-2/capture/timeline",
+          "invocation_id": "invocation-7586e604c7224defa97794a222e061bc",
+          "events": 112,
+          "positive_intervals": 5,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "69bfd14989378675129a7cea2b40b32fb68ea7801a42c5c75887c5c9c821f957",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "e6576dbcbeaea0e4170f29615537257ce0ee3f54c7409c7935aa24c145f4bf28",
+              "adapted_sha256": "1680aed106b1430b259e8c45da401c2e80f5a78b42c3174d85d25eee4897ec58",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "08a537d1f1d04cc010dac73c7f2b0d5a51787429df3558001c012ab42bf5cc74",
+              "adapted_sha256": "fa38e7ec1aac09ba90ff47ad770929e6a7b73ed9a9621d0893515a7eaaec655a",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        }
+      ],
+      "result_file_present": true,
+      "qualification_scope": "actual late-observer SDK input projection; not final hardware scheduling/engine-busy proof"
+    },
+    {
+      "variant": 32,
+      "density": 8,
+      "run": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-8",
+      "published_rows": [
+        {
+          "repetition": -3,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 358465427,
+          "device_stream_span_ms": 358.0078430175781,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -2,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 548097,
+          "device_stream_span_ms": 0.4628399908542633,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -1,
+          "binary_id": "444d86a0a189f1d0b1a424fce116d0e69c4dc63079a2fc741433868fb7a2ea56",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 464406,
+          "device_stream_span_ms": 0.2686600089073181,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": 0,
+          "binary_id": "127c1048ae995cd045e7ec760f8b3141deb78ee8e2af11367944c31ee16d650b",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 9679588348,
+          "device_stream_span_ms": 3864.34619140625,
+          "positive_intervals": 29,
+          "bundle_bytes": 34355714,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 1,
+          "binary_id": "127c1048ae995cd045e7ec760f8b3141deb78ee8e2af11367944c31ee16d650b",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 5859663160,
+          "device_stream_span_ms": 200.72378540039062,
+          "positive_intervals": 32,
+          "bundle_bytes": 29842958,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 2,
+          "binary_id": "127c1048ae995cd045e7ec760f8b3141deb78ee8e2af11367944c31ee16d650b",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 6078545644,
+          "device_stream_span_ms": 203.39263916015625,
+          "positive_intervals": 30,
+          "bundle_bytes": 29852496,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        }
+      ],
+      "captures": [
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-8/32-0/capture/timeline",
+          "invocation_id": "invocation-89ee5e07fa5d4eaca22dda0ed0dbac8a",
+          "events": 160,
+          "positive_intervals": 29,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "617cf28cb29a7ec76eef2c1390935e5cf982401aac6bf4ec3f657beb6d0b32fe",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "4d695c977a763ecbf64057cf6a42e9a6aef708abd83744b29c984714fd7965cc",
+              "adapted_sha256": "d1a7ef09475d9a0faffdec2b6ada410affbad4e0d4f2d9449871d99558b7ce44",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "020c41de6b9d7f5a6931c464e815c623623e223b2821ff42daa8dbe2ad19d7d3",
+              "adapted_sha256": "d66cc1ee6eb06f66c80ae42461217f2b630b3ec01f2ab01b3d40d602d40ec2d2",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-8/32-1/capture/timeline",
+          "invocation_id": "invocation-f33dcdb8f5a14151a9f96a75b6703cdd",
+          "events": 160,
+          "positive_intervals": 32,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "3eca1e5a1f994e42cb10bd30456041c1034b0fdc332d5181cb3cc894f6846d73",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "4d695c977a763ecbf64057cf6a42e9a6aef708abd83744b29c984714fd7965cc",
+              "adapted_sha256": "d1a7ef09475d9a0faffdec2b6ada410affbad4e0d4f2d9449871d99558b7ce44",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "020c41de6b9d7f5a6931c464e815c623623e223b2821ff42daa8dbe2ad19d7d3",
+              "adapted_sha256": "d66cc1ee6eb06f66c80ae42461217f2b630b3ec01f2ab01b3d40d602d40ec2d2",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-8/32-2/capture/timeline",
+          "invocation_id": "invocation-33a83a0e7e8b4564bbeb940c5c071ca9",
+          "events": 160,
+          "positive_intervals": 30,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "15c5399b4f27ef38c9e3de331922f5d5d4a750171d0c00dda94ceb4fcbe2abc0",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "4d695c977a763ecbf64057cf6a42e9a6aef708abd83744b29c984714fd7965cc",
+              "adapted_sha256": "d1a7ef09475d9a0faffdec2b6ada410affbad4e0d4f2d9449871d99558b7ce44",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "020c41de6b9d7f5a6931c464e815c623623e223b2821ff42daa8dbe2ad19d7d3",
+              "adapted_sha256": "d66cc1ee6eb06f66c80ae42461217f2b630b3ec01f2ab01b3d40d602d40ec2d2",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        }
+      ],
+      "result_file_present": true,
+      "qualification_scope": "actual late-observer SDK input projection; not final hardware scheduling/engine-busy proof"
+    },
+    {
+      "variant": 64,
+      "density": 1,
+      "run": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK64-density-1",
+      "published_rows": [
+        {
+          "repetition": -3,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 3038714255,
+          "device_stream_span_ms": 3038.29248046875,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -2,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 631438,
+          "device_stream_span_ms": 0.5378400087356567,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -1,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 516296,
+          "device_stream_span_ms": 0.6296799778938293,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": 0,
+          "binary_id": "31f2a9ce155693913e894535db6eeb06db56c326da08279ebb608a46228da20c",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 8930571066,
+          "device_stream_span_ms": 3888.780029296875,
+          "positive_intervals": 8,
+          "bundle_bytes": 29714023,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        }
+      ],
+      "captures": [
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK64-density-1/64-0/capture/timeline",
+          "invocation_id": "invocation-b6c9871feb4f4c1fb5f084a704e049d4",
+          "events": 70,
+          "positive_intervals": 8,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "fc2bcd65c207045f858047aa44110aa707a575e9ced4e5c7f3264c95da41c9b2",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "46637061b475ef2091d031a4cf061dc7b28649c16e9dc4f4efe5df400bba3c98",
+              "adapted_sha256": "65fea3e8995bce439a80cce34c4d2595ae95a787152e64472d55bb1982000a49",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "19c2e787b74b7f4b07a32380da660cdfb7f89d20671d4bd6108c6e006b515af6",
+              "adapted_sha256": "64df64e78e9ac21852edea1583cb4371accb95db3d0e2bd3f4284fd9557928fc",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK64-density-1/64-1/capture/timeline",
+          "invocation_id": "invocation-7b5a5f89f6974d18a500e5de7dae7cbc",
+          "events": 70,
+          "positive_intervals": 1,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "92076215ac5c3e21da79dce039dbbd1d8135b3356b4641b715d41ea2fcde90bc",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "46637061b475ef2091d031a4cf061dc7b28649c16e9dc4f4efe5df400bba3c98",
+              "adapted_sha256": "65fea3e8995bce439a80cce34c4d2595ae95a787152e64472d55bb1982000a49",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "19c2e787b74b7f4b07a32380da660cdfb7f89d20671d4bd6108c6e006b515af6",
+              "adapted_sha256": "64df64e78e9ac21852edea1583cb4371accb95db3d0e2bd3f4284fd9557928fc",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        }
+      ],
+      "result_file_present": false,
+      "qualification_scope": "actual late-observer SDK input projection; not final hardware scheduling/engine-busy proof"
+    },
+    {
+      "variant": 64,
+      "density": 8,
+      "run": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-default64-v1/output/BK64-density-8",
+      "published_rows": [
+        {
+          "repetition": -3,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 22283977816,
+          "device_stream_span_ms": 22283.41015625,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -2,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 900381,
+          "device_stream_span_ms": 0.7702400088310242,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": -1,
+          "binary_id": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 535927,
+          "device_stream_span_ms": 0.43799999356269836,
+          "positive_intervals": null,
+          "bundle_bytes": null
+        },
+        {
+          "repetition": 0,
+          "binary_id": "2b76cd0cfcc0de6d13a28596095764dec41f7956f37eac117a5bc8470a514c74",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 11597374043,
+          "device_stream_span_ms": 6082.87744140625,
+          "positive_intervals": 23,
+          "bundle_bytes": 35285076,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 1,
+          "binary_id": "2b76cd0cfcc0de6d13a28596095764dec41f7956f37eac117a5bc8470a514c74",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 5347693303,
+          "device_stream_span_ms": 206.5224609375,
+          "positive_intervals": 27,
+          "bundle_bytes": 28086170,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        },
+        {
+          "repetition": 2,
+          "binary_id": "2b76cd0cfcc0de6d13a28596095764dec41f7956f37eac117a5bc8470a514c74",
+          "math_passed": true,
+          "original_calls": 1,
+          "host_request_elapsed_ns": 5643313048,
+          "device_stream_span_ms": 206.61941528320312,
+          "positive_intervals": 24,
+          "bundle_bytes": 28085931,
+          "observed_writers": 6,
+          "unknown_slots": 0,
+          "counter_exports": 6,
+          "dependency_exports": 0
+        }
+      ],
+      "captures": [
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-default64-v1/output/BK64-density-8/64-0/capture/timeline",
+          "invocation_id": "invocation-57c17c5b907847fe9bd0801916e1d5c7",
+          "events": 106,
+          "positive_intervals": 23,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "d57ad660e60dbd57c14ad7ac5007db07d3db350f2ef689ac71a1cddb3d1064a8",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "c777e1ecffadf927e0981475080d91beb886850fa4ee99328b77ac53ac2083ad",
+              "adapted_sha256": "0da49020468104d5e9779c5180c19f89b7088b4032d5fbbe1440fb7046b14219",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "0047bd770859e3e5ef18f6aa9bee4f686ac48a1f2bbd53f516f717df19321c0f",
+              "adapted_sha256": "bb24d757abec68e379c99701e3b30a584251c1ccde900ba60f25e888a3f6fb40",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-default64-v1/output/BK64-density-8/64-1/capture/timeline",
+          "invocation_id": "invocation-3d13d20ec7934661be671e341a26eee8",
+          "events": 106,
+          "positive_intervals": 27,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "5c7cdd7367d2324a79d0e40cc9ae9c5c42b4b8924501cdfee47ec59792bddb2d",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "c777e1ecffadf927e0981475080d91beb886850fa4ee99328b77ac53ac2083ad",
+              "adapted_sha256": "0da49020468104d5e9779c5180c19f89b7088b4032d5fbbe1440fb7046b14219",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "0047bd770859e3e5ef18f6aa9bee4f686ac48a1f2bbd53f516f717df19321c0f",
+              "adapted_sha256": "bb24d757abec68e379c99701e3b30a584251c1ccde900ba60f25e888a3f6fb40",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        },
+        {
+          "root": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-default64-v1/output/BK64-density-8/64-2/capture/timeline",
+          "invocation_id": "invocation-0d28ca0d4f484effa3095131cb65b9b3",
+          "events": 106,
+          "positive_intervals": 24,
+          "counter_exports": 6,
+          "dependency_exports": 0,
+          "raw_sha256": "708470b3099b60d7e000c646cd835f9558b98bf9ad0cfe2befa9ed674c0bfbff",
+          "native_IR": [
+            {
+              "kind": "AIV",
+              "original_sha256": "c777e1ecffadf927e0981475080d91beb886850fa4ee99328b77ac53ac2083ad",
+              "adapted_sha256": "0da49020468104d5e9779c5180c19f89b7088b4032d5fbbe1440fb7046b14219",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            },
+            {
+              "kind": "AIC",
+              "original_sha256": "0047bd770859e3e5ef18f6aa9bee4f686ac48a1f2bbd53f516f717df19321c0f",
+              "adapted_sha256": "bb24d757abec68e379c99701e3b30a584251c1ccde900ba60f25e888a3f6fb40",
+              "original_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "adapted_native_operations": [
+                "llvm.hivm.SET.FFTS.BASE.ADDR",
+                "llvm.hivm.SET.CTRL",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM",
+                "llvm.hivm.SET.FLAG.IMM",
+                "llvm.hivm.WAIT.FLAG.IMM"
+              ],
+              "native_projection_unchanged": true
+            }
+          ]
+        }
+      ],
+      "result_file_present": true,
+      "qualification_scope": "actual late-observer SDK input projection; not final hardware scheduling/engine-busy proof"
+    }
+  ]
+}

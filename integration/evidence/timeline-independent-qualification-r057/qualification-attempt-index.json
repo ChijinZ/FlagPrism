@@ -1,0 +1,638 @@
+{
+  "status": "first_results_and_affected_repairs_not_a_new_denominator",
+  "attempts": [
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/profile-stage-v1/first-pass-summary.json",
+      "local_receipt_sha256": "d4effdc97e1208c1afc8359cb38576bcbb4c3b036cf645c09fa76b9c62d8b370",
+      "summary_path": null,
+      "summary_sha256": null,
+      "denominator": null,
+      "attempted": 72,
+      "total": null,
+      "limits": null,
+      "all_controller_terminal": null,
+      "active_owned_identities": [],
+      "original_stage_fields": {
+        "active_profile_owned_identities": [],
+        "attempted": 72,
+        "backend": "enflame",
+        "captures_with_multiple_positive_internal_intervals_and_sites": 72,
+        "cli_math_input_tail_state_host_once_passed": 72,
+        "clock_scope": "all captures have empirical enclosed-window counter-ns exports; canonical clock/boundary status unverified; no new source-cost/read-precision/global-epoch/SQL/UI claim",
+        "complete_raw_captures": 72,
+        "counter_ns_exports": 144,
+        "dependency_exports": 120,
+        "dependency_observation_gaps": 12,
+        "eligible_profile_denominator": 72,
+        "full_bundle_budget_failures": 15,
+        "full_bundle_limit_bytes": 67108864,
+        "full_qualification_pass": false,
+        "max_pftrace_bytes": 258805,
+        "maximum_bundle_path": "/tmp/chijin-timeline-r052-qualification-profile-v1/runs/profile-first-v1/q05-s1-c0-cold/capture",
+        "maximum_full_bundle_bytes": 75523050,
+        "not_started": 0,
+        "originals_preserved": true,
+        "per_call_controllers_terminal": 72,
+        "per_capture_results": "/tmp/chijin-timeline-r052-qualification-profile-v1/runs/profile-first-v1/profile-attempts.json",
+        "pftrace_count": 264,
+        "positive_internal_intervals": 6276,
+        "recorded_profile_owner_identities": 145,
+        "requested_diagnostics": "/tmp/chijin-timeline-r052-qualification-profile-v1/requested-diagnostics.json",
+        "runtime_commit": "934563029bc162d141ed333e5331fcc2af33c1bf",
+        "server_archive": "/tmp/chijin-timeline-r052-qualification-profile-v1-complete.tgz",
+        "server_archive_bytes": 158809830,
+        "server_archive_ledger_files": 5831,
+        "server_archive_sha256": "8b2457c8b0257891419e6da9b73bd555f1c3304c887560cdd1ee96023a85878d"
+      }
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/supplement-profile-v1/final-result.json",
+      "local_receipt_sha256": "2b22081e0f6cb03aa5976b3fd0830d1b88550b832c10d947e448f19607128a32",
+      "summary_path": "/tmp/chijin-timeline-r054-supplement-profile-v1/profile-first-summary.json",
+      "summary_sha256": "0bd3232bb14deb289ba3c52d58c1816efdc43b3f95173d264b4c4893596d6d04",
+      "denominator": 24,
+      "attempted": 24,
+      "total": null,
+      "limits": [
+        "No repeated UI, Trace Processor or machine-code verification",
+        "Counter-ns exports are empirical enclosed-window proofs; canonical clock/boundary status unchanged",
+        "Full 64MiB budget failure remains explicit; no qualification inferred from CLI/math success"
+      ],
+      "all_controller_terminal": null,
+      "active_owned_identities": [],
+      "original_stage_fields": {
+        "denominator": 24,
+        "attempted": 24,
+        "not_started": 0,
+        "process_passed": 24,
+        "process_failed": 0,
+        "math_passed": 24,
+        "budget_failed": 21,
+        "stop": null,
+        "product_freeze_sha256": "f01d8d3a62c294e02afc9fe1c1ba27664e4d9ea92e53458bdc9017d2d29eb094",
+        "profile_result_sha256": "63b92f7689b35f360ccfcdc3b8a2ddd88739a6ca11f4707c3e0f8d112da55fdf",
+        "all_host_once": true,
+        "all_original_input_config_matches": true,
+        "complete_captures": 24,
+        "raw_sha_matches": 24,
+        "multiple_positive_intervals": 24,
+        "multiple_positive_sites": 24,
+        "positive_intervals": 7992,
+        "counter_ns_exports": 48,
+        "dependency_exports": 48,
+        "dependency_unavailable": 0,
+        "trace_count": 96,
+        "max_full_bundle_bytes": 131872860,
+        "maximum_capture": "/tmp/chijin-timeline-r054-supplement-profile-v1/runs/profile-first-v1/q07-s1-c1-cold/capture",
+        "owner_identity_count": 49,
+        "owner_snapshots": [
+          {
+            "pid": 527958,
+            "startticks": 1022440731,
+            "same_identity_present": false
+          },
+          {
+            "pid": 527965,
+            "startticks": 1022442917,
+            "same_identity_present": false
+          },
+          {
+            "pid": 527966,
+            "startticks": 1022442921,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528339,
+            "startticks": 1022445054,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528340,
+            "startticks": 1022445057,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528578,
+            "startticks": 1022446674,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528579,
+            "startticks": 1022446677,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528818,
+            "startticks": 1022448278,
+            "same_identity_present": false
+          },
+          {
+            "pid": 528819,
+            "startticks": 1022448282,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529203,
+            "startticks": 1022450405,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529204,
+            "startticks": 1022450408,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529437,
+            "startticks": 1022452069,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529438,
+            "startticks": 1022452073,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529670,
+            "startticks": 1022453735,
+            "same_identity_present": false
+          },
+          {
+            "pid": 529671,
+            "startticks": 1022453738,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530040,
+            "startticks": 1022455820,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530041,
+            "startticks": 1022455823,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530280,
+            "startticks": 1022457434,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530281,
+            "startticks": 1022457437,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530522,
+            "startticks": 1022459013,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530523,
+            "startticks": 1022459016,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530899,
+            "startticks": 1022461148,
+            "same_identity_present": false
+          },
+          {
+            "pid": 530900,
+            "startticks": 1022461152,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531132,
+            "startticks": 1022462823,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531133,
+            "startticks": 1022462827,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531349,
+            "startticks": 1022464449,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531350,
+            "startticks": 1022464452,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531723,
+            "startticks": 1022466347,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531724,
+            "startticks": 1022466350,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531958,
+            "startticks": 1022467880,
+            "same_identity_present": false
+          },
+          {
+            "pid": 531959,
+            "startticks": 1022467883,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532189,
+            "startticks": 1022469397,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532190,
+            "startticks": 1022469400,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532573,
+            "startticks": 1022471185,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532574,
+            "startticks": 1022471188,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532801,
+            "startticks": 1022472632,
+            "same_identity_present": false
+          },
+          {
+            "pid": 532802,
+            "startticks": 1022472635,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533028,
+            "startticks": 1022474084,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533029,
+            "startticks": 1022474087,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533399,
+            "startticks": 1022475973,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533400,
+            "startticks": 1022475976,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533674,
+            "startticks": 1022477530,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533675,
+            "startticks": 1022477533,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533901,
+            "startticks": 1022479083,
+            "same_identity_present": false
+          },
+          {
+            "pid": 533902,
+            "startticks": 1022479086,
+            "same_identity_present": false
+          },
+          {
+            "pid": 534270,
+            "startticks": 1022480846,
+            "same_identity_present": false
+          },
+          {
+            "pid": 534271,
+            "startticks": 1022480849,
+            "same_identity_present": false
+          },
+          {
+            "pid": 534517,
+            "startticks": 1022482323,
+            "same_identity_present": false
+          },
+          {
+            "pid": 534518,
+            "startticks": 1022482326,
+            "same_identity_present": false
+          }
+        ],
+        "active_owned_identities": [],
+        "per_call_terminal_count": 24,
+        "end_ns": 1792407265323545892,
+        "limits": [
+          "No repeated UI, Trace Processor or machine-code verification",
+          "Counter-ns exports are empirical enclosed-window proofs; canonical clock/boundary status unchanged",
+          "Full 64MiB budget failure remains explicit; no qualification inferred from CLI/math success"
+        ]
+      }
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/gcu-affected-r055-v1/final-result.json",
+      "local_receipt_sha256": "f96ae43e1eb02b9638eec5d50f63aef52f518a39200d96ea928f750097feaf20",
+      "summary_path": "/tmp/chijin-timeline-r055-qualification-gcu-affected-v1/profile-final-summary.json",
+      "summary_sha256": "0863df841a4b0550d287642e74d25d18317905d74399d3f884d3d25fe34f2ed4",
+      "denominator": 13,
+      "attempted": 13,
+      "total": {
+        "calls": 13,
+        "process_passed": 13,
+        "math_passed": 13,
+        "host_once_passed": 13,
+        "original_input_config_matches": 13,
+        "metadata_loader_passed": 13,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 13,
+        "canonical_complete_captures": 13,
+        "observed_range_loss_free_captures": 13,
+        "unknown_reserved_slots": 0,
+        "actual_observed_writers": 26,
+        "multiple_positive_intervals": 13,
+        "multiple_positive_sites": 13,
+        "positive_intervals": 3198,
+        "counter_ns_exports": 26,
+        "dependency_exports": 26,
+        "dependency_unavailable_captures": 0,
+        "budget_passed": 13,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 64984633,
+        "trace_count": 52
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/nvidia-profile-r055-v1/final-result.json",
+      "local_receipt_sha256": "1a21adc3c927c091c1f7cd93779d125d2b9aafb31b67c7711b14d76696536b82",
+      "summary_path": "/workspace/chijin-timeline-r055-qualification-nvidia-v2/profile-final-summary.json",
+      "summary_sha256": "64dd887d2dbfe2dfed210483ff3d4f3e72ea19c6f96cbe4dfa5d28297edffae3",
+      "denominator": 72,
+      "attempted": 72,
+      "total": {
+        "calls": 72,
+        "process_passed": 72,
+        "math_passed": 72,
+        "host_once_passed": 72,
+        "original_input_config_matches": 72,
+        "metadata_loader_passed": 72,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 72,
+        "canonical_complete_captures": 63,
+        "observed_range_loss_free_captures": 63,
+        "unknown_reserved_slots": 0,
+        "actual_observed_writers": 576,
+        "multiple_positive_intervals": 72,
+        "multiple_positive_sites": 72,
+        "positive_intervals": 5708,
+        "counter_ns_exports": 480,
+        "dependency_exports": 0,
+        "no_dependency_export_captures": 72,
+        "counter_ns_available_captures": 60,
+        "counter_ns_unavailable_captures": 12,
+        "budget_passed": 72,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 29596085,
+        "trace_count": 582
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/nvidia-affected-r056-v1/final-result.json",
+      "local_receipt_sha256": "a3304ab6dd4e258e38400752e6faf722e4e6a0307f15a7f37a803b24dcd48e1b",
+      "summary_path": "/workspace/chijin-timeline-r056-qualification-nvidia-v1/profile-final-summary.json",
+      "summary_sha256": "c56bd64dbe2ceca02cc018e8fd61579b23f49cb685ee88775c93feac3121e3a4",
+      "denominator": 10,
+      "attempted": 10,
+      "total": {
+        "calls": 10,
+        "process_passed": 10,
+        "math_passed": 10,
+        "host_once_passed": 10,
+        "original_input_config_matches": 10,
+        "metadata_loader_passed": 10,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 10,
+        "canonical_complete_captures": 10,
+        "observed_range_loss_free_captures": 10,
+        "unknown_reserved_slots": 0,
+        "actual_observed_writers": 80,
+        "multiple_positive_intervals": 10,
+        "multiple_positive_sites": 10,
+        "positive_intervals": 1880,
+        "counter_ns_exports": 80,
+        "dependency_exports": 0,
+        "no_dependency_export_captures": 10,
+        "counter_ns_available_captures": 10,
+        "counter_ns_unavailable_captures": 0,
+        "budget_passed": 10,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 31909892,
+        "trace_count": 100
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/supplement-portable-r056-v1/nv-profile-final-result.json",
+      "local_receipt_sha256": "9b346cf1e5f35cbeed3e0b3a0f5ba23796ee59e102724230ed1d43abe7e4c99e",
+      "summary_path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/profile-final-summary.json",
+      "summary_sha256": "aab1e21a7d3aee1a61d25fd0ca0b2745aac6cc94a79790b5377964c62a44ab29",
+      "denominator": 24,
+      "attempted": 24,
+      "total": {
+        "calls": 24,
+        "process_passed": 24,
+        "math_passed": 24,
+        "host_once_passed": 24,
+        "original_input_config_matches": 24,
+        "metadata_loader_passed": 24,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 24,
+        "canonical_complete_captures": 12,
+        "observed_range_loss_free_captures": 12,
+        "unknown_reserved_slots": 0,
+        "actual_observed_writers": 192,
+        "multiple_positive_intervals": 24,
+        "multiple_positive_sites": 24,
+        "positive_intervals": 14632,
+        "counter_ns_exports": 192,
+        "dependency_exports": 0,
+        "no_dependency_export_captures": 24,
+        "counter_ns_available_captures": 24,
+        "counter_ns_unavailable_captures": 0,
+        "budget_passed": 24,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 49405581,
+        "trace_count": 216
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/nvidia-q08-r057-v1/final-result.json",
+      "local_receipt_sha256": "4cc2d77bc4cdf6bf571feb25252e042878b70d47e0f58f185f78e1f99844649f",
+      "summary_path": "/workspace/chijin-timeline-r057-qualification-q08-v1/profile-final-summary.json",
+      "summary_sha256": "9f81ef620ff811481cc5aa0883a5f6ec8ada3104169915efe589c0d94dcadcb0",
+      "denominator": 12,
+      "attempted": 12,
+      "total": {
+        "calls": 12,
+        "process_passed": 12,
+        "math_passed": 12,
+        "host_once_passed": 12,
+        "original_input_config_matches": 12,
+        "metadata_loader_passed": 12,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 12,
+        "canonical_complete_captures": 12,
+        "observed_range_loss_free_captures": 12,
+        "unknown_reserved_slots": 0,
+        "actual_observed_writers": 96,
+        "multiple_positive_intervals": 12,
+        "multiple_positive_sites": 12,
+        "positive_intervals": 22600,
+        "counter_ns_exports": 96,
+        "dependency_exports": 0,
+        "no_dependency_export_captures": 12,
+        "counter_ns_available_captures": 12,
+        "counter_ns_unavailable_captures": 0,
+        "budget_passed": 12,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 51868047,
+        "trace_count": 114
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/ascend-profile-r055-v1/final-result.json",
+      "local_receipt_sha256": "38e667fca8c9d0ace4c70d4dc516be1a82f0b66076aa280209d6f7859f1fee9d",
+      "summary_path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/profile-final-summary.json",
+      "summary_sha256": "38f21fe31238238e248fdeb2a175b6b73969007a0a904b55fc2b625d8f5ba9f8",
+      "denominator": 72,
+      "attempted": 72,
+      "total": {
+        "calls": 72,
+        "process_passed": 72,
+        "math_passed": 72,
+        "host_once_passed": 72,
+        "original_input_config_matches": 72,
+        "metadata_loader_passed": 72,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 72,
+        "canonical_complete_captures": 24,
+        "observed_range_loss_free_captures": 72,
+        "unknown_reserved_slots": 96,
+        "actual_observed_writers": 240,
+        "multiple_positive_intervals": 72,
+        "multiple_positive_sites": 72,
+        "positive_intervals": 2227,
+        "counter_ns_exports": 240,
+        "dependency_exports": 48,
+        "no_dependency_export_captures": 48,
+        "counter_ns_available_captures": 72,
+        "counter_ns_unavailable_captures": 0,
+        "budget_passed": 72,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 59334787,
+        "trace_count": 288
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    },
+    {
+      "local_receipt": "/home/jin-lab-pc/workspace/osdi_flagprism/.timeline-qualification-r052-private/ascend-supplement-r057-v1/final-result.json",
+      "local_receipt_sha256": "72d158bf6d26b83a8ff9997b907716c840391e20bc4def757df8ac72194f7085",
+      "summary_path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/profile-final-summary.json",
+      "summary_sha256": "8afdb006bf931df5cbf1af8ef4bf3eb9941f296a2c12d105f1f8037c44c5d1e7",
+      "denominator": 24,
+      "attempted": 24,
+      "total": {
+        "calls": 24,
+        "process_passed": 24,
+        "math_passed": 24,
+        "host_once_passed": 24,
+        "original_input_config_matches": 24,
+        "metadata_loader_passed": 24,
+        "verifier_error_count": 0,
+        "raw_sha_matches": 24,
+        "canonical_complete_captures": 12,
+        "observed_range_loss_free_captures": 24,
+        "unknown_reserved_slots": 24,
+        "actual_observed_writers": 96,
+        "multiple_positive_intervals": 24,
+        "multiple_positive_sites": 24,
+        "positive_intervals": 972,
+        "counter_ns_exports": 96,
+        "dependency_exports": 0,
+        "no_dependency_export_captures": 24,
+        "counter_ns_available_captures": 24,
+        "counter_ns_unavailable_captures": 0,
+        "budget_passed": 24,
+        "budget_failed": 0,
+        "max_full_bundle_bytes": 54282250,
+        "trace_count": 96
+      },
+      "limits": [
+        "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+        "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+        "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+        "No performance, overhead, full source-cost or exact hardware busy claim"
+      ],
+      "all_controller_terminal": true,
+      "active_owned_identities": []
+    }
+  ]
+}

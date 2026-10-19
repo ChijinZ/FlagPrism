@@ -33,9 +33,8 @@ edges. Other unknown register-control encodings remain unqualified.
 Per-capture numerical/time gates and each backend's dedicated real asynchronous
 reuse gate are distinct requirements in `timeline_testing.md` sections 4 and 5.
 The original contract does not require an arrow for every ordinary kernel.
-Dedicated asynchronous cases must still pass their full gates. Ascend's last
-two frozen supplemental kernels and the three fresh final code reviews remain
-pending at this checkpoint. Performance/overhead certification on NVIDIA is
+Dedicated asynchronous cases must still pass their full gates. Ascend's two frozen supplemental kernels are now terminal; the three fresh
+final code reviews remain pending at this checkpoint. Performance/overhead certification on NVIDIA is
 still deferred by user instruction. No paper or Study files were modified.
 
 `results.json` indexes small immutable receipts. Private SDK objects and full
@@ -75,3 +74,34 @@ optimization benefits. No exclusive-noise or throughput certification is claimed
 The two controllers returned zero and their recorded parent/child identities
 are inactive. These controls extend the original C2 evidence rather than adding
 independent mathematical cases or replaying an unchanged qualification matrix.
+
+
+## Ascend terminal supplemental and density results
+
+The last 24 frozen supplemental calls all passed numerical, input, host-once,
+raw, counter-ns, observed-writer and original size-budget checks: 972 positive
+intervals, 96 counter-ns exports, maximum complete bundle 54,282,250 bytes.
+Twelve retain two unobserved reserved slots each; full-batch completeness is
+not upgraded. All 24 dependency views remain unavailable, with no invented
+flow. The independent owner and all 49 recorded process identities are inactive.
+See `ascend-supplement-final-result-v1.json` and `qualification-attempt-index.json`.
+
+The finite C2 density controls retain an actual failure. BK32 density 1 has
+5/3/5 positive intervals across three captures; default 8 has 29/32/30. BK64
+density 1 has an initial capture with eight positive intervals and a subsequent
+capture with only one. The strict two-positive-interval check rejected that
+second capture and stopped the sparse driver. Its raw, six counter-unit exports,
+ordinary references and first failure remain intact. It is not counted as a
+successful time-structure control, renamed unsupported, or hidden by rerunning.
+The pending BK64 default setting then ran separately and passed all three calls,
+with 23/27/24 positive intervals and six counter-ns exports per capture. Neither
+BK32 nor BK64 default results are borrowed to qualify the sparse failure.
+
+All collected settings have matching ordered original/adapted native primitive
+name projections in the actual late-observer LLVM inputs. This limited projection
+is not final hardware scheduling proof; later SDK-inserted unobserved flags keep
+these dependency views unavailable. SDK stream spans remain explicitly distinct
+from pure kernel overhead. Runtime implementation is still `4bc9286`; only the
+controlled test driver was extended in `7daeb7e`. The actual data are indexed in
+`ascend-density-summary-v1.json`. Original SDK objects/full bundles remain on
+the server, with their actual input/output identities retained.
