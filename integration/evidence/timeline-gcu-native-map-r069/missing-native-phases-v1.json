@@ -1,0 +1,110 @@
+[
+  {
+    "binary": "30528ea30096f5da303f2a6e09c0d83e95c761cfaaeccc2c9e0419f65aff8c48",
+    "missing": [
+      {
+        "site": 2,
+        "columns": [
+          2,
+          4
+        ],
+        "operation": "memref_ext.slice_deslice_start",
+        "kind": 1,
+        "observed": false,
+        "event_count": 0,
+        "durations": []
+      },
+      {
+        "site": 3,
+        "columns": [
+          2,
+          4
+        ],
+        "operation": "memref_ext.slice_start",
+        "kind": 1,
+        "observed": true,
+        "event_count": 2,
+        "durations": [
+          615,
+          570
+        ]
+      },
+      {
+        "site": 7,
+        "columns": [
+          2,
+          4
+        ],
+        "operation": "memref_ext.deslice_start",
+        "kind": 1,
+        "observed": true,
+        "event_count": 2,
+        "durations": [
+          615,
+          570
+        ]
+      }
+    ],
+    "observed_sites": [
+      3,
+      5,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "fatbin_sha256": "298ab8ec5eed6d0d5961882683e0284f2996f8f29500c2ad4c3b511100f58a68",
+    "elf_sha256": "7d56f25f70633d7f0d813a78e8ded073b884a4356d940a4cb48c710794f00500",
+    "unknown_line_rows": 10
+  },
+  {
+    "binary": "937ef7652416f039d52d911636c6e8cf3a0577c4c117f1a7d96381b0c9ba3223",
+    "missing": [
+      {
+        "site": 2,
+        "columns": [
+          2,
+          4
+        ],
+        "operation": "memref_ext.slice_deslice_start",
+        "kind": 1,
+        "observed": false,
+        "event_count": 0,
+        "durations": []
+      },
+      {
+        "site": 3,
+        "columns": [
+          2,
+          4
+        ],
+        "operation": "memref_ext.slice_start",
+        "kind": 1,
+        "observed": true,
+        "event_count": 2,
+        "durations": [
+          630,
+          525
+        ]
+      }
+    ],
+    "observed_sites": [
+      3,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "fatbin_sha256": "7bd7645abd1aae051c51edd3c1788aef958b7eff95753854ea63f5c25c5dfb4d",
+    "elf_sha256": "5860432eef0a3004e35740a68b17b10bd9f33d49bf3ab7a30f8cb11be72131f6",
+    "unknown_line_rows": 25
+  }
+]

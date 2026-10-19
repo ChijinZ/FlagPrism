@@ -186,7 +186,8 @@ def main():
                  binary_id=capture['owner']['binary_id'],
                  sites=len(manifest['sites']),
                  native_location_points=len(points),
-                 native_missing_phase_sites=len(retained['missing_phase_locations']),
+                 native_missing_phase_sites=len(
+                     retained['missing_phase_locations']),
                  events=len(batch['events']),
                  observers=len(batch['observers']),
                  native_scope_output_sha256=compiler[

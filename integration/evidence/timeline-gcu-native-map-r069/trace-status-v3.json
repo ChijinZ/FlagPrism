@@ -1,0 +1,35 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 121164,
+      "ppid": 1,
+      "pgid": 121164,
+      "startticks": 30807147
+    },
+    "worker": {
+      "pid": 121165,
+      "ppid": 121164,
+      "pgid": 121165,
+      "startticks": 30807149
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v1/run_verifier_v3.py",
+      "--output",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v1/run-v3/output"
+    ],
+    "argv_sha256": "bdd231c8dc656960603fef280582772ee9f5da196252f223170db2094eb63265",
+    "script_sha256": "8fad6f7a21d9fdb22e13d71398e3af45fbb78f1ae60e0b8bdd8524261a2adf85",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 114816506
+  },
+  "logs": {
+    "stdout.log": "",
+    "stderr.log": "Traceback (most recent call last):\n  File \"/workspace/chijin-timeline-r069-nvidia/trace-check-v1/run_verifier_v3.py\", line 6, in <module>\n    runpy.run_path('/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py',run_name=\"__main__\")\n  File \"/usr/lib/python3.10/runpy.py\", line 289, in run_path\n    return _run_module_code(code, init_globals, run_name,\n  File \"/usr/lib/python3.10/runpy.py\", line 96, in _run_module_code\n    _run_code(code, mod_globals, init_globals,\n  File \"/usr/lib/python3.10/runpy.py\", line 86, in _run_code\n    exec(code, run_globals)\n  File \"/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py\", line 204, in <module>\n    main()\n  File \"/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py\", line 106, in main\n    for e in view['events'])\nKeyError: 'events'\n"
+  }
+}

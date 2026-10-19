@@ -1,0 +1,18 @@
+docker exec flagprism-enflame-dev python3 -I -c 'from pathlib import Path
+import tarfile,sys,json,hashlib,io
+r=Path('"'"'/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline'"'"');rows=[];files={};seen=set()
+for entry in json.loads((r/'"'"'index.json'"'"').read_text())['"'"'captures'"'"']:
+ c=json.loads((r/entry['"'"'capture_file'"'"']).read_text())
+ for key,val in c.items():
+  if '"'"'export'"'"' not in key or not isinstance(val,list):continue
+  for row in val:
+   if not isinstance(row,dict) or '"'"'trace_file'"'"' not in row or row['"'"'trace_file'"'"'] in seen:continue
+   seen.add(row['"'"'trace_file'"'"']);row=dict(row);v=json.loads((r/row['"'"'view_file'"'"']).read_text());parent=Path(row['"'"'receipt_file'"'"']).parent;row.update(kind='"'"'dependency'"'"' if '"'"'nodes'"'"' in v else '"'"'counter'"'"',raw_file=c['"'"'raw_file'"'"'],inputs_file=str(parent/'"'"'inputs.json'"'"'),canonical_file=str(parent/'"'"'canonical.json'"'"'));rows.append(row)
+if len(rows)!=8:raise RuntimeError('"'"'Expected8'"'"')
+for p in r.rglob('"'"'*'"'"'):
+ if p.is_file() and '"'"'captures'"'"' not in p.relative_to(r).parts:files[str(p.relative_to(r))]=p.read_bytes()
+files['"'"'manifest.json'"'"']=json.dumps(rows).encode()
+with tarfile.open(fileobj=sys.stdout.buffer,mode='"'"'w|gz'"'"') as t:
+ for name,data in files.items():
+  info=tarfile.TarInfo(name);info.size=len(data);t.addfile(info,io.BytesIO(data))
+'

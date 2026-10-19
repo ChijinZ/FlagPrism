@@ -1,0 +1,17 @@
+docker exec -i chijin-study-pro6000 python3 -I -c 'from pathlib import Path
+import tarfile,sys,json,io,subprocess
+r=Path('"'"'/workspace/chijin-timeline-r069-nvidia/trace-check-v4'"'"');r.mkdir(parents=True,exist_ok=False)
+with tarfile.open(fileobj=io.BytesIO(sys.stdin.buffer.read())) as t:
+ for m in t.getmembers():
+  if not m.isfile() or Path(m.name).is_absolute() or '"'"'..'"'"' in Path(m.name).parts:raise RuntimeError('"'"'Unsafe transfer'"'"')
+  p=r/m.name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(t.extractfile(m).read())
+rows=json.loads((r/'"'"'manifest.json'"'"').read_text())
+for row in rows:
+ for key in ['"'"'trace_file'"'"','"'"'view_file'"'"','"'"'raw_file'"'"','"'"'inputs_file'"'"','"'"'canonical_file'"'"','"'"'receipt_file'"'"']:row[key]=str(r/row[key])
+(r/'"'"'manifest.json'"'"').write_text(json.dumps(rows))
+runner="from pathlib import Path\nimport argparse,hashlib,json,subprocess,sys\np=argparse.ArgumentParser();p.add_argument('"'"'--output'"'"',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True)\nr=Path('"'"'/workspace/chijin-timeline-r069-nvidia/trace-check-v4'"'"');rows=json.loads((r/'"'"'manifest.json'"'"').read_text());source=Path('"'"'/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source'"'"');results={}\nfor kind,script,sha in [('"'"'counter'"'"','"'"'verify_perfetto_traces.py'"'"','"'"'75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618'"'"'),('"'"'dependency'"'"','"'"'verify_dependency_traces.py'"'"','"'"'0d72cf3a882ea4b9d3bd1fe6c7172066fa486f708db8d2787ae47aef15147e03'"'"')]:\n if hashlib.sha256((source/script).read_bytes()).hexdigest()!=sha:raise RuntimeError('"'"'Verifier changed'"'"')\n selected=[row for row in rows if row['"'"'kind'"'"']==kind]\n if len(selected)!=4:raise RuntimeError('"'"'Expected4 each'"'"')\n manifest=a.output/(kind+'"'"'-manifest.json'"'"');manifest.write_text(json.dumps(selected))\n with (a.output/(kind+'"'"'-stdout.log'"'"')).open('"'"'xb'"'"') as out,(a.output/(kind+'"'"'-stderr.log'"'"')).open('"'"'xb'"'"') as err:\n  result=subprocess.run([sys.executable,'"'"'-I'"'"',str(source/script),'"'"'--manifest'"'"',str(manifest),'"'"'--output'"'"',str(a.output/kind)],stdout=out,stderr=err,timeout=100)\n if result.returncode:raise RuntimeError(kind+'"'"' verifier failed: '"'"'+str(result.returncode))\n results[kind]=json.loads((a.output/kind/'"'"'result.json'"'"').read_text())\n(a.output/'"'"'result.json'"'"').write_text(json.dumps(dict(status='"'"'actual_GCU8_counter4_dependency4_TP_passed'"'"',results=results,application_replayed=False,device_executed=False),indent=2))\n"
+(r/'"'"'run.py'"'"').write_text(runner)
+py='"'"'/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python'"'"';cmd=[py,'"'"'-I'"'"','"'"'/workspace/chijin-timeline-r020-style/input/run_primitive_probe.py'"'"','"'"'--python'"'"',py,'"'"'--deadline-module'"'"','"'"'/workspace/chijin-timeline-r020-style/input/_deadline.py'"'"','"'"'--script'"'"',str(r/'"'"'run.py'"'"'),'"'"'--root'"'"',str(r/'"'"'run'"'"'),'"'"'--timeout'"'"','"'"'240'"'"']
+with (r/'"'"'launch.log'"'"').open('"'"'xb'"'"') as f:p=subprocess.Popen(cmd,stdin=subprocess.DEVNULL,stdout=f,stderr=f,start_new_session=True)
+print(json.dumps(dict(controller_pid=p.pid,argv=cmd)))
+'

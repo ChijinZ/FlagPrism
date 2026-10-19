@@ -1,0 +1,258 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 561513,
+      "ppid": 1,
+      "pgid": 561513,
+      "startticks": 1025768488
+    },
+    "worker": {
+      "pid": 561514,
+      "ppid": 561513,
+      "pgid": 561514,
+      "startticks": 1025768491
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r069-gcu/native-map-check-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output"
+    ],
+    "argv_sha256": "97b8ea6db202317ba4a2b4bcc0377b08d3bfa0ae41c29c1200f096e7a33b8e58",
+    "script_sha256": "e3ecee2783ad1a2e3418fce99e5fc1650c7eddf6827799fda4eac1727277a3a9",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 265159067
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 561513,
+      "ppid": 1,
+      "pgid": 561513,
+      "startticks": 1025768488
+    },
+    "worker": {
+      "pid": 561514,
+      "ppid": 561513,
+      "pgid": 561514,
+      "startticks": 1025768491
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r069-gcu/native-map-check-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output"
+    ],
+    "argv_sha256": "97b8ea6db202317ba4a2b4bcc0377b08d3bfa0ae41c29c1200f096e7a33b8e58",
+    "script_sha256": "e3ecee2783ad1a2e3418fce99e5fc1650c7eddf6827799fda4eac1727277a3a9",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "native_location_fixture_and_retained_GCU_passed",
+    "tool_sha256": "f4ada921c65f55e934ab30fdc820eb65b067be4501725de187931e557dad5ce7",
+    "steps": [
+      {
+        "name": "unit",
+        "argv": [
+          "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r069-gcu/native-map-check-input-v1/gcu_native_locations.py",
+          "--tool",
+          "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "actual-0",
+        "argv": [
+          "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline",
+          "--native-locations",
+          "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf",
+          "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output/0.json"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "actual-1",
+        "argv": [
+          "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline",
+          "--native-locations",
+          "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf",
+          "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output/1.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "cases": [
+      {
+        "case": 0,
+        "points": 48,
+        "sites": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "unknown_line_rows": 10,
+        "site10": [
+          {
+            "address": 15616,
+            "column": 1,
+            "phase": "begin_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15616,
+            "site_id": 10
+          },
+          {
+            "address": 15760,
+            "column": 3,
+            "phase": "begin_identity",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15760,
+            "site_id": 10
+          },
+          {
+            "address": 15984,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15984,
+            "site_id": 10
+          },
+          {
+            "address": 16096,
+            "column": 4,
+            "phase": "end_identity",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 16096,
+            "site_id": 10
+          }
+        ]
+      },
+      {
+        "case": 1,
+        "points": 62,
+        "sites": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "unknown_line_rows": 25,
+        "site10": [
+          {
+            "address": 15472,
+            "column": 1,
+            "phase": "begin_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15472,
+            "site_id": 10
+          },
+          {
+            "address": 15600,
+            "column": 1,
+            "phase": "begin_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15600,
+            "site_id": 10
+          },
+          {
+            "address": 15616,
+            "column": 3,
+            "phase": "begin_identity",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15616,
+            "site_id": 10
+          },
+          {
+            "address": 16032,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 16032,
+            "site_id": 10
+          },
+          {
+            "address": 16144,
+            "column": 4,
+            "phase": "end_identity",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 16144,
+            "site_id": 10
+          }
+        ]
+      }
+    ],
+    "device_executed": false,
+    "source_boundary_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "unit",
+      "argv": [
+        "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r069-gcu/native-map-check-input-v1/gcu_native_locations.py",
+        "--tool",
+        "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "actual-0",
+      "argv": [
+        "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline",
+        "--native-locations",
+        "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf",
+        "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output/0.json"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "actual-1",
+      "argv": [
+        "/tmp/chijin-timeline-r069-gcu/runs/native-map-build-v1/output/build/flagprism-gcu-timeline",
+        "--native-locations",
+        "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf",
+        "/tmp/chijin-timeline-r069-gcu/runs/native-map-check-v1/output/1.json"
+      ],
+      "returncode": 0
+    }
+  ],
+  "output/unit.stderr": "test_exact_site_and_phase_rows (__main__.NativeLocations.test_exact_site_and_phase_rows) ... ok\ntest_invalid_elf_is_rejected_without_output (__main__.NativeLocations.test_invalid_elf_is_rejected_without_output) ... ok\ntest_other_source_files_are_not_clock_markers (__main__.NativeLocations.test_other_source_files_are_not_clock_markers) ... ok\ntest_output_io_error_is_failure (__main__.NativeLocations.test_output_io_error_is_failure) ... ok\ntest_unknown_columns_are_not_endpoint_proofs (__main__.NativeLocations.test_unknown_columns_are_not_endpoint_proofs) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.025s\n\nOK\n"
+}

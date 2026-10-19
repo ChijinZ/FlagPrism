@@ -1,0 +1,35 @@
+BLOCK ^bb16(
+480:     ^bb16(%306: i32 loc(unknown), %307: i32 loc("x"(#loc2)), %308: i32 loc("x"(#loc2)), %309: i32 loc("x"(#loc2))):  // 3 preds: ^bb15, ^bb22, ^bb26
+481:       %310 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc122)
+482:       %311 = "llvm.trunc"(%310) <{overflowFlags = #llvm.overflow<none>}> : (i64) -> i32 loc(#loc67)
+483:       %312 = "llvm.lshr"(%310, %17) : (i64, i64) -> i64 loc(#loc67)
+484:       %313 = "llvm.trunc"(%312) <{overflowFlags = #llvm.overflow<none>}> : (i64) -> i32 loc(#loc67)
+485:       %314 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @flagprism_gcu_clock_identity_v1, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i32 loc(#loc123)
+486:       %315 = "llvm.load"(%78) <{ordering = 0 : i64}> : (!llvm.ptr) -> i32 loc(#loc67)
+487:       %316 = "llvm.icmp"(%315, %18) <{predicate = 0 : i64}> : (i32, i32) -> i1 loc(#loc67)
+488:       %317 = "llvm.add"(%315, %16) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32 loc(#loc67)
+489:       %318 = "llvm.select"(%316, %315, %317) <{fastmathFlags = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32 loc(#loc67)
+490:       "llvm.store"(%318, %78) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> () loc(#loc67)
+491:       %319 = "llvm.icmp"(%315, %19) <{predicate = 6 : i64}> : (i32, i32) -> i1 loc(#loc67)
+492:       "llvm.cond_br"(%319)[^bb17, ^bb32] <{operandSegmentSizes = array<i32: 1, 0, 0>}> : (i1) -> () loc(#loc67)
+INCOMING
+479:       "llvm.cond_br"(%97, %16, %300, %301, %302)[^bb16, ^bb32] <{operandSegmentSizes = array<i32: 1, 4, 0>}> : (i1, i32, i32, i32, i32) -> () loc(#loc67)
+628:       "llvm.cond_br"(%97, %30, %407, %408, %409)[^bb16, ^bb32] <{operandSegmentSizes = array<i32: 1, 4, 0>}> : (i1, i32, i32, i32, i32) -> () loc(#loc67)
+645:       "llvm.cond_br"(%97, %25, %418, %419, %420)[^bb16, ^bb32] <{operandSegmentSizes = array<i32: 1, 4, 0>}> : (i1, i32, i32, i32, i32) -> () loc(#loc67)
+BLOCK ^bb53(
+1099:     ^bb53(%735: i32 loc(unknown), %736: i32 loc("/tmp/chijin-timeline-r069-gcu/native-device-input-v1/run.py":40:28), %737: i32 loc("/tmp/chijin-timeline-r069-gcu/native-device-input-v1/run.py":40:28), %738: i32 loc("/tmp/chijin-timeline-r069-gcu/native-device-input-v1/run.py":40:28)):  // 2 preds: ^bb52, ^bb58
+1100:       %739 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @_ZN4tops12global_timerEv, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i64 loc(#loc142)
+1101:       %740 = "llvm.trunc"(%739) <{overflowFlags = #llvm.overflow<none>}> : (i64) -> i32 loc(#loc3)
+1102:       %741 = "llvm.lshr"(%739, %17) : (i64, i64) -> i64 loc(#loc3)
+1103:       %742 = "llvm.trunc"(%741) <{overflowFlags = #llvm.overflow<none>}> : (i64) -> i32 loc(#loc3)
+1104:       %743 = "llvm.call"() <{CConv = #llvm.cconv<ccc>, TailCallKind = #llvm.tailcallkind<none>, callee = @flagprism_gcu_clock_identity_v1, fastmathFlags = #llvm.fastmath<none>, op_bundle_sizes = array<i32>, operandSegmentSizes = array<i32: 0, 0>}> : () -> i32 loc(#loc143)
+1105:       %744 = "llvm.load"(%78) <{ordering = 0 : i64}> : (!llvm.ptr) -> i32 loc(#loc3)
+1106:       %745 = "llvm.icmp"(%744, %18) <{predicate = 0 : i64}> : (i32, i32) -> i1 loc(#loc3)
+1107:       %746 = "llvm.add"(%744, %16) <{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> i32 loc(#loc3)
+1108:       %747 = "llvm.select"(%745, %744, %746) <{fastmathFlags = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32 loc(#loc3)
+1109:       "llvm.store"(%747, %78) <{ordering = 0 : i64}> : (i32, !llvm.ptr) -> () loc(#loc3)
+1110:       %748 = "llvm.icmp"(%744, %19) <{predicate = 6 : i64}> : (i32, i32) -> i1 loc(#loc3)
+1111:       "llvm.cond_br"(%748, %717)[^bb54, ^bb59] <{operandSegmentSizes = array<i32: 1, 0, 1>}> : (i1, i32) -> () loc(#loc3)
+INCOMING
+1098:       "llvm.cond_br"(%97, %32, %727, %728, %729, %717)[^bb53, ^bb59] <{operandSegmentSizes = array<i32: 1, 4, 1>}> : (i1, i32, i32, i32, i32, i32) -> () loc(#loc3)
+1243:       "llvm.cond_br"(%97, %33, %833, %834, %835, %717)[^bb53, ^bb59] <{operandSegmentSizes = array<i32: 1, 4, 1>}> : (i1, i32, i32, i32, i32, i32) -> () loc(#loc3)

@@ -1,0 +1,37 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 121184,
+      "ppid": 1,
+      "pgid": 121184,
+      "startticks": 30814973
+    },
+    "worker": {
+      "pid": 121185,
+      "ppid": 121184,
+      "pgid": 121185,
+      "startticks": 30814976
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v4/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v4/run/output"
+    ],
+    "argv_sha256": "af078716768936f7d1d8ff8278c71f9fc02d6967b416361217360c1775dda1a6",
+    "script_sha256": "0b2cad124e297a3d3544dc9626f02f580740575d30302af3bb5107eb8cfac26a",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 240,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 164805767
+  },
+  "logs": {
+    "stdout.log": "",
+    "stderr.log": "Traceback (most recent call last):\n  File \"/workspace/chijin-timeline-r069-nvidia/trace-check-v4/run.py\", line 12, in <module>\n    if result.returncode:raise RuntimeError(kind+' verifier failed: '+str(result.returncode))\nRuntimeError: counter verifier failed: 1\n",
+    "output/counter-stdout.log": "",
+    "output/counter-stderr.log": "Traceback (most recent call last):\n  File \"/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py\", line 204, in <module>\n    main()\n  File \"/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py\", line 55, in main\n    observed = Path(item['raw_file']).read_bytes()\n  File \"/usr/lib/python3.10/pathlib.py\", line 1126, in read_bytes\n    with self.open(mode='rb') as f:\n  File \"/usr/lib/python3.10/pathlib.py\", line 1119, in open\n    return self._accessor.open(self, mode, buffering, encoding, errors,\nFileNotFoundError: [Errno 2] No such file or directory: '/workspace/chijin-timeline-r069-nvidia/trace-check-v4/captures/invocation-b62efc6fae914b0485a3fd8a1a6cdb16.raw'\n"
+  }
+}

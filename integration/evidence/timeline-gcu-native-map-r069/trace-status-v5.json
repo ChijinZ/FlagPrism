@@ -1,0 +1,42 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 121199,
+      "ppid": 1,
+      "pgid": 121199,
+      "startticks": 30819073
+    },
+    "worker": {
+      "pid": 121200,
+      "ppid": 121199,
+      "pgid": 121200,
+      "startticks": 30819076
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v4/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r069-nvidia/trace-check-v4/run-v5/output"
+    ],
+    "argv_sha256": "26799d16a9d22ff2a3d7686d036dd3ca6a30644b12f5a7f8a8c8c3c8fac5a1a9",
+    "script_sha256": "0b2cad124e297a3d3544dc9626f02f580740575d30302af3bb5107eb8cfac26a",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 240,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 8779983298
+  },
+  "status": "actual_GCU8_counter4_dependency4_TP_passed",
+  "groups": {
+    "counter": {
+      "status": "generated_protobuf_and_real_TP_exact_counter_ns_passed_not_full_P01",
+      "checks": 4
+    },
+    "dependency": {
+      "status": "actual_dependency_traces_raw_internal_intervals_protobuf_TP_flows_passed_not_full_goal",
+      "checks": 4
+    }
+  }
+}

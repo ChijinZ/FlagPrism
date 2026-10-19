@@ -1,0 +1,9 @@
+docker exec flagprism-enflame-dev python3 -I -c 'from pathlib import Path
+import tarfile,sys,json,io
+r=Path('"'"'/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline'"'"');files={}
+for entry in json.loads((r/'"'"'index.json'"'"').read_text())['"'"'captures'"'"']:
+ c=json.loads((r/entry['"'"'capture_file'"'"']).read_text());p=r/c['"'"'raw_file'"'"'];files[c['"'"'raw_file'"'"']]=p.read_bytes()
+with tarfile.open(fileobj=sys.stdout.buffer,mode='"'"'w|gz'"'"') as t:
+ for name,data in files.items():
+  info=tarfile.TarInfo(name);info.size=len(data);t.addfile(info,io.BytesIO(data))
+'

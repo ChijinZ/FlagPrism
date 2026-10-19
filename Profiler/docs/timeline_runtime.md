@@ -540,6 +540,18 @@ properties through an opaque parse. The real SDK must validate the result
 before codegen. Tool identity version 2 binds the recorder, Python bridge,
 backend compiler and direct SDK tools before compilation-cache lookup.
 
+After SDK codegen, the normal compiler hook extracts the unique GCU300 ELF
+from its offload bundle. `debug_execution_native_locations` binds the original
+fatbin and ELF digests to sectioned code addresses for the marker rows.
+`missing_phase_locations` means that no independent DWARF row was found for
+that site/column; it does not mean that a timestamp was not collected. The
+compiler can merge mutually exclusive end-recording blocks, sharing one timer
+call while passing each path's site ID and start timestamp as block arguments.
+Only one debug location may survive for this common code. The current service
+keeps missing rows explicit instead of inventing an address for each path.
+These are compiler debug positions, not necessarily the precise instruction
+that reads the timer register.
+
 The native-location test and its retained-object companion check real math and
 actual ELF line tables separately. An LLIR marker string alone is insufficient:
 a previous implementation passed that check but lost the synthetic file during

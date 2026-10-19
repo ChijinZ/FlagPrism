@@ -1,0 +1,93 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 562303,
+      "ppid": 1,
+      "pgid": 562303,
+      "startticks": 1025869770
+    },
+    "worker": {
+      "pid": 562304,
+      "ppid": 562303,
+      "pgid": 562304,
+      "startticks": 1025869773
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r069-gcu/runs/native-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r069-gcu/native-device-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output"
+    ],
+    "argv_sha256": "3d5b2eb10ab9304cf9d3721d475fb47ceff8564b2ee137bd5bb2c60aba0a54fa",
+    "script_sha256": "ab9441068b40661a977f64bc34b7606cc5f21ebd68b9040b8dad8c4427b4aaf0",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 17093867165
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 562303,
+      "ppid": 1,
+      "pgid": 562303,
+      "startticks": 1025869770
+    },
+    "worker": {
+      "pid": 562304,
+      "ppid": 562303,
+      "pgid": 562304,
+      "startticks": 1025869773
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r069-gcu/runs/native-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r069-gcu/native-device-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output"
+    ],
+    "argv_sha256": "3d5b2eb10ab9304cf9d3721d475fb47ceff8564b2ee137bd5bb2c60aba0a54fa",
+    "script_sha256": "ab9441068b40661a977f64bc34b7606cc5f21ebd68b9040b8dad8c4427b4aaf0",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "GCU_native_location_two_math_public_capture_passed",
+    "ordinary_math_calls": 2,
+    "profiled_math_calls": 2,
+    "math": true,
+    "input_unchanged": true,
+    "guards": true,
+    "host_once": true,
+    "captures": [
+      {
+        "capture_file": "captures/invocation-b62efc6fae914b0485a3fd8a1a6cdb16.json",
+        "binary_id": "30528ea30096f5da303f2a6e09c0d83e95c761cfaaeccc2c9e0419f65aff8c48",
+        "sites": 13,
+        "native_location_points": 48,
+        "native_missing_phase_sites": 3,
+        "events": 22,
+        "observers": 2,
+        "native_scope_output_sha256": "6a62ddfd681a1d89c8c35a6fbdc969bc935a8c6b888b9393686de7ee1e51cd38",
+        "final_sdk_ir_sha256": "6b8b2e1a95808ec6f924dac1324f449b44f5177e89f5d5e11de6ade3511eb593"
+      },
+      {
+        "capture_file": "captures/invocation-e1f036e3a98444e0941c5b17d1f836c3.json",
+        "binary_id": "937ef7652416f039d52d911636c6e8cf3a0577c4c117f1a7d96381b0c9ba3223",
+        "sites": 13,
+        "native_location_points": 62,
+        "native_missing_phase_sites": 2,
+        "events": 20,
+        "observers": 2,
+        "native_scope_output_sha256": "bdccaa4840289f57164ca9784654adfa95f01b9d612bd951721824f88e20dbd5",
+        "final_sdk_ir_sha256": "acdeadcb66fe11896706b9d384e3d4a7dad22c3aafe8f00bd56ac321f71068e7"
+      }
+    ],
+    "final_machine_boundary_qualified": false
+  },
+  "stderr.log": "[W1020 04:18:24.218862369 gcu_caching_allocator.cpp:2976] Warning: [GCU Allocator] Static initialization: PYTORCH_GCU_ALLOC_CONF=\"(not set, using default)\", selected_backend=native (function BackendStaticInitializer)\n/usr/local/lib/python3.12/dist-packages/torch_gcu/transfer_to_gcu.py:443: ImportWarning: \n    *************************************************************************************************************\n    The torch.Tensor.cuda and torch.nn.Module.cuda are replaced with torch.Tensor.gcu and torch.nn.Module.gcu now..\n    The backend in torch.distributed.init_process_group set to eccl now..\n    The torch.cuda.* and torch.cuda.amp.* are replaced with torch.gcu.* and torch.gcu.amp.* now..\n    The device parameters have been replaced with gcu in the function below:\n    torch.logspace, torch.randint, torch.hann_window, torch.rand, torch.full_like, torch.ones_like, torch.rand_like, torch.randperm, torch.arange, torch.frombuffer, torch.normal, torch._empty_per_channel_affine_quantized, torch.empty_strided, torch.empty_like, torch.scalar_tensor, torch.tril_indices, torch.bartlett_window, torch.ones, torch.sparse_coo_tensor, torch.randn, torch.kaiser_window, torch.tensor, torch.triu_indices, torch.as_tensor, torch.zeros, torch.randint_like, torch.full, torch.eye, torch._sparse_csr_tensor_unsafe, torch.empty, torch._sparse_coo_tensor_unsafe, torch.blackman_window, torch.zeros_like, torch.range, torch.sparse_csr_tensor, torch.randn_like, torch.from_file, torch._cudnn_init_dropout_state, torch._empty_affine_quantized, torch.linspace, torch.hamming_window, torch.empty_quantized, torch._pin_memory, torch.autocast, torch.load, torch.Tensor.new_empty, torch.Tensor.new_empty_strided, torch.Tensor.new_full, torch.Tensor.new_ones, torch.Tensor.new_tensor, torch.Tensor.new_zeros, torch.Tensor.to, torch.nn.Module.to, torch.nn.Module.to_empty\n    *************************************************************************************************************\n    \n  warnings.warn(msg, ImportWarning)\n"
+}
