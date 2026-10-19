@@ -1,0 +1,62 @@
+[
+  {
+    "name": "native-lines",
+    "returncode": 0,
+    "bytes": 3135674,
+    "sha256": "30d49d2c580d299d6412cfa04c8938bc96205a600549204e73236a7598157bcc",
+    "head": [
+      "",
+      "/tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output/1.elf:\tfile format ELF64-dtu",
+      "",
+      "",
+      "Disassembly of section .text:",
+      "",
+      "0000000000000000 __boot__:",
+      "\t\t...",
+      "       8: 00 00                                 \tc.addi4spn r8, 0x0",
+      "       a: 2b 10 80 01                           \tl.jal r0, 0x2 <0x20>",
+      "       e: 01 00                                 \tc.nop",
+      "\t\t...",
+      "      18: 00 00                                 \tc.addi4spn r8, 0x0",
+      "      1a: 2b 40 98 01                           \tl.jal r0, 0x188 <0x1890>",
+      "      1e: 01 00                                 \tc.nop",
+      "",
+      "0000000000000020 __boot_handler__:",
+      "\t\t...",
+      "      28: 00 00                                 \tc.addi4spn r8, 0x0",
+      "      2a: 33 b9 83 00                           \tl.movs r4, md27",
+      "      2e: 01 00                                 \tc.nop",
+      "\t\t...",
+      "      38: 00 00                                 \tc.addi4spn r8, 0x0",
+      "      3a: 2f 4c 00 01                           \tl.ldi16.u r9, 0x10",
+      "      3e: 01 00                                 \tc.nop"
+    ],
+    "line_annotations": [
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:5730",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:174",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:175",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:178",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:179",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:180",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:176",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:181",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:177",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:183",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:175",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:182",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:186",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:184",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:185",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:187",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:188",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:189",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:190",
+      "; /tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir:191"
+    ],
+    "stderr": "/opt/tops/llvm11/bin/llvm-objdump: warning: '/tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output/1.elf': failed to parse debug information for /tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output/1.elf\n"
+  },
+  {
+    "name": "dwarf-lines",
+    "unavailable": true
+  }
+]

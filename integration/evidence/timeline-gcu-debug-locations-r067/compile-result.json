@@ -1,0 +1,104 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 557406,
+      "ppid": 1,
+      "pgid": 557406,
+      "startticks": 1025499113
+    },
+    "worker": {
+      "pid": 557407,
+      "ppid": 557406,
+      "pgid": 557407,
+      "startticks": 1025499117
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r067-gcu/scope-codegen-input-v5/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output"
+    ],
+    "argv_sha256": "14928d88c77b721cfd2233283cd107fb9fabdae13bb2e307c9e7f64feae97271",
+    "script_sha256": "64de040d031d6b0bc7e151f692741f2cf8dfed6e49481702f1a0b71abb0d2658",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 2068436240
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 557406,
+      "ppid": 1,
+      "pgid": 557406,
+      "startticks": 1025499113
+    },
+    "worker": {
+      "pid": 557407,
+      "ppid": 557406,
+      "pgid": 557407,
+      "startticks": 1025499117
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r067-gcu/scope-codegen-input-v5/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output"
+    ],
+    "argv_sha256": "14928d88c77b721cfd2233283cd107fb9fabdae13bb2e307c9e7f64feae97271",
+    "script_sha256": "64de040d031d6b0bc7e151f692741f2cf8dfed6e49481702f1a0b71abb0d2658",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_SDK_DI_codegen_returned",
+    "compiler_returncode": 0,
+    "source_sha256": "279cfc6e5c247c83c10b7192ec71ade92bb1d415d9b4beedad34714832a75994",
+    "compiler_sha256": "1b7e13a7a2888e126a1022de6a129eec1404da5e0f0f0a0c2e702de784855e40",
+    "source_original_unchanged": true,
+    "files": [
+      {
+        "path": "compile.stderr",
+        "bytes": 508,
+        "sha256": "eccbd97e41148f6b3026288734f8dd557425036f7813792a2314dfc25ac6b8b8"
+      },
+      {
+        "path": "compile.stdout",
+        "bytes": 46,
+        "sha256": "3867d737bab03838ca856b76ab9e12d33ccb5cd35c1f599db2a3340c60bfbdaf"
+      },
+      {
+        "path": "debug.fatbin",
+        "bytes": 266430,
+        "sha256": "a9739d6c2abc1b73ef2bdc939e9bb1d64ea8f67bac5493af3dc652e8c1eb3ecb"
+      },
+      {
+        "path": "retained-input.mlir",
+        "bytes": 1417170,
+        "sha256": "279cfc6e5c247c83c10b7192ec71ade92bb1d415d9b4beedad34714832a75994"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "SDK_modified": false,
+    "original_executable_modified": false,
+    "original_execution_or_region_qualification": false,
+    "debug_scope_input_enabled": true,
+    "argv": [
+      "/opt/triton_gcu/bin/gcu-compiler-compile",
+      "--device-only",
+      "--is-triton-backend",
+      "--arch=gcu300",
+      "--toolkit-path=/opt/triton_gcu",
+      "--output=/tmp/chijin-timeline-r067-gcu/runs/scope-codegen-v5/output/debug.fatbin"
+    ]
+  },
+  "output/compile.stderr": "warning: Linking two modules of different data layouts: '/tmp/chijin-timeline-r057-gcu/runs/controlled-density-v1/tmp/flagprism-gcu-clock-0/cdcfe8107e21c16157c6232f1f8b5cac36cc789d1166c40f8bfee1c9e2cfc6bf/artifact/identity.bc' is '' whereas 'llvm-link' is 'e-m:e-p:64:64-p1:64:64-p2:32:32-p3:32:32-p4:64:64-p5:32:32-p6:32:32-p7:32:32-p8:32:32-p9:32:32-p10:32:32-p11:64:64-p12:32:32-p17:32:32-p18:32:32-p19:32:32-p20:32:32-p21:32:32-i1:8:8-i8:8:8-i16:16:16-i64:64-f64:64-v1024:1024-v8192:1024-a:0:32-n32-A5'\n\n",
+  "controller_live": null,
+  "worker_live": null
+}

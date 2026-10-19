@@ -1,0 +1,219 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 557242,
+      "ppid": 1,
+      "pgid": 557242,
+      "startticks": 1025467645
+    },
+    "worker": {
+      "pid": 557243,
+      "ppid": 557242,
+      "pgid": 557243,
+      "startticks": 1025467648
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r067-gcu/scope-bridge-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output"
+    ],
+    "argv_sha256": "feb970a2ada6373dd10959dd56a9104a4c04a059f665b25a17c1ff0442bc7de8",
+    "script_sha256": "3af1142be2485467b2a3be8a1613fd2260bc729587a36aa64c4ca2583ae72379",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 7277106632
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 557242,
+      "ppid": 1,
+      "pgid": 557242,
+      "startticks": 1025467645
+    },
+    "worker": {
+      "pid": 557243,
+      "ppid": 557242,
+      "pgid": 557243,
+      "startticks": 1025467648
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r067-gcu/scope-bridge-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output"
+    ],
+    "argv_sha256": "feb970a2ada6373dd10959dd56a9104a4c04a059f665b25a17c1ff0442bc7de8",
+    "script_sha256": "3af1142be2485467b2a3be8a1613fd2260bc729587a36aa64c4ca2583ae72379",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "CPU_vendor_DI_bridge_prototype",
+    "steps": [
+      {
+        "name": "configure",
+        "argv": [
+          "cmake",
+          "-S",
+          "/tmp/chijin-timeline-r067-gcu/scope-bridge-input-v3",
+          "-B",
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build",
+          "-G",
+          "Ninja",
+          "-DCMAKE_BUILD_TYPE=Release",
+          "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "build",
+        "argv": [
+          "cmake",
+          "--build",
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build",
+          "--parallel",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "bridge",
+        "argv": [
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build/scope-bridge",
+          "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/with-scope.mlir"
+        ],
+        "returncode": 0
+      },
+      {
+        "name": "SDK-validate",
+        "argv": [
+          "/opt/triton_gcu/bin/gcu-compiler-opt",
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/with-scope.mlir",
+          "--mlir-print-debuginfo",
+          "-o",
+          "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/SDK-roundtrip.mlir"
+        ],
+        "returncode": 1
+      }
+    ],
+    "files": [
+      {
+        "path": "SDK-validate.stderr",
+        "bytes": 349,
+        "sha256": "e9a1dfa4425f2674cb0d161c32c1530a13533746a198f7ba68ff896b386a941c"
+      },
+      {
+        "path": "SDK-validate.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "bridge.stdout",
+        "bytes": 61,
+        "sha256": "ce36b6cde9a7bc7a9d424ea5178f999c9dd9e1ee5c257028e2fa59d5e34066ec"
+      },
+      {
+        "path": "build.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "build.stdout",
+        "bytes": 109,
+        "sha256": "537c014aa9f833fce21cbd735b2cd65bf4f86381a889168b0ee61a79ab7d5c13"
+      },
+      {
+        "path": "configure.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "configure.stdout",
+        "bytes": 810,
+        "sha256": "61f3a11408d1f958176daf064601135811c240a58d9f2f57ce8fd3ea0612935d"
+      },
+      {
+        "path": "steps.json",
+        "bytes": 1254,
+        "sha256": "2e584001aba8705075e3c26ac0c913fd07cd8e52703fdf0c45fa958a62097d9f"
+      },
+      {
+        "path": "with-scope.mlir",
+        "bytes": 1571576,
+        "sha256": "7cb813129f7fcbc4838870a0d1611d95bd9c8c332eb072a5ff17525d8b93b3fa"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "product_or_SDK_modified": false,
+    "actual_native_mapping_qualified": false
+  },
+  "output/steps.json": [
+    {
+      "name": "configure",
+      "argv": [
+        "cmake",
+        "-S",
+        "/tmp/chijin-timeline-r067-gcu/scope-bridge-input-v3",
+        "-B",
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build",
+        "-G",
+        "Ninja",
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "build",
+      "argv": [
+        "cmake",
+        "--build",
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build",
+        "--parallel",
+        "2"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "bridge",
+      "argv": [
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/build/scope-bridge",
+        "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/input.llir",
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/with-scope.mlir"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "SDK-validate",
+      "argv": [
+        "/opt/triton_gcu/bin/gcu-compiler-opt",
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/with-scope.mlir",
+        "--mlir-print-debuginfo",
+        "-o",
+        "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/SDK-roundtrip.mlir"
+      ],
+      "returncode": 1
+    }
+  ],
+  "stderr.log": "Traceback (most recent call last):\n  File \"/tmp/chijin-timeline-r067-gcu/scope-bridge-input-v3/run.py\", line 34, in <module>\n    if len(steps)!=4 or any(r['returncode'] for r in steps):raise RuntimeError('DI bridge prototype is incomplete; preserve diagnostics')\n                                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: DI bridge prototype is incomplete; preserve diagnostics\n",
+  "output/build.stdout": "[1/2] Building CXX object CMakeFiles/scope-bridge.dir/bridge.cpp.o\n[2/2] Linking CXX executable scope-bridge\n",
+  "output/SDK-validate.stderr": "/tmp/chijin-timeline-r067-gcu/runs/scope-bridge-v3/output/with-scope.mlir:354:14: error: invalid properties {overflowFlags = 0 : i32} for op llvm.mul: expected 'overflowFlags' attribute to be an IntegerOverflowFlagsAttr, but got 0 : i32\n      %119 = \"llvm.mul\"(%116, %117) <{overflowFlags = 0 : i32}> : (i32, i32) -> i32 loc(#loc156)\n             ^\n",
+  "output/bridge.stdout": "non_location_IR_identical=true; SDK_validation_required=true\n",
+  "controller_live": null,
+  "worker_live": null
+}
