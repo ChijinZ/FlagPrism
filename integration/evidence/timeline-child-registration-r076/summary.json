@@ -1,0 +1,529 @@
+{
+  "nvidia": {
+    "install": {
+      "status": "normal_wheel_installed_child_registration_normal_optimized_passed",
+      "backend": "nvidia",
+      "source_commit": "61cb831290860655edf2f64eb8c3b395a4c1fc0a",
+      "source": "/workspace/chijin-timeline-r076-nvidia/native-install-input-v1/source",
+      "python": "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+      "native": "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/native",
+      "installed_members": 641,
+      "wheel": "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/wheel/dist/flagtree-0.7.0+git75174c03-cp310-cp310-linux_x86_64.whl",
+      "wheel_sha256": "a717c419929650e17701139e17b18b9f2b837654f35c2d2b94bc30e1c659ca6d",
+      "unchanged_compiler": "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+      "unchanged_recorder": "/workspace/chijin-timeline-r072-nvidia/runs/native-install-v1/output/late-native/late-timeline",
+      "steps": [
+        {
+          "name": "git-init",
+          "argv": [
+            "git",
+            "init",
+            "-q"
+          ],
+          "pid": 125050,
+          "startticks": 31704892,
+          "returncode": 0
+        },
+        {
+          "name": "git-parent",
+          "argv": [
+            "git",
+            "fetch",
+            "--update-shallow",
+            "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/FlagTree",
+            "HEAD"
+          ],
+          "pid": 125051,
+          "startticks": 31704892,
+          "returncode": 0
+        },
+        {
+          "name": "git-identity",
+          "argv": [
+            "git",
+            "reset",
+            "--mixed",
+            "FETCH_HEAD"
+          ],
+          "pid": 125207,
+          "startticks": 31704940,
+          "returncode": 0
+        },
+        {
+          "name": "assemble",
+          "argv": [
+            "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+            "-I",
+            "/workspace/chijin-timeline-r076-nvidia/native-install-input-v1/source/integration/patches/nvidia/assemble_automatic_wheel.py",
+            "--flagtree",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/FlagTree",
+            "--component",
+            "/workspace/chijin-timeline-r076-nvidia/native-install-input-v1/source",
+            "--native-python",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/native",
+            "--core-library",
+            "/workspace/chijin-timeline-r024/native-build-v1/FlagTree/build/lib.linux-x86_64-cpython-310/triton/_C/libtriton.so",
+            "--output",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/wheel",
+            "--backend-build",
+            "/workspace/chijin-timeline-r024/native-build-v1/build",
+            "--late-timeline-tool",
+            "/workspace/chijin-timeline-r072-nvidia/runs/native-install-v1/output/late-native/late-timeline"
+          ],
+          "pid": 125220,
+          "startticks": 31705043,
+          "returncode": 0
+        },
+        {
+          "name": "venv",
+          "argv": [
+            "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+            "-m",
+            "venv",
+            "--without-pip",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv"
+          ],
+          "pid": 125297,
+          "startticks": 31709906,
+          "returncode": 0
+        },
+        {
+          "name": "seed-pip",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "ensurepip",
+            "--default-pip"
+          ],
+          "pid": 125298,
+          "startticks": 31709909,
+          "returncode": 0
+        },
+        {
+          "name": "install",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pip",
+            "install",
+            "--no-index",
+            "--no-deps",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/wheel/dist/flagtree-0.7.0+git75174c03-cp310-cp310-linux_x86_64.whl"
+          ],
+          "pid": 125308,
+          "startticks": 31710105,
+          "returncode": 0
+        },
+        {
+          "name": "install-disassembler",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pip",
+            "install",
+            "--no-index",
+            "--no-deps",
+            "--ignore-installed",
+            "/workspace/chijin-timeline-r008/input-v1/wheels/nvidia_cuda_nvdisasm-13.2.86-py3-none-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+          ],
+          "pid": 125311,
+          "startticks": 31711175,
+          "returncode": 0
+        },
+        {
+          "name": "installed-import",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-c",
+            "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+          ],
+          "pid": 125314,
+          "startticks": 31711210,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-normal",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pytest",
+            "-q",
+            "/workspace/chijin-timeline-r076-nvidia/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/pytest-normal"
+          ],
+          "pid": 125315,
+          "startticks": 31711264,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-optimized",
+          "argv": [
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-O",
+            "-m",
+            "pytest",
+            "-q",
+            "/workspace/chijin-timeline-r076-nvidia/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/workspace/chijin-timeline-r076-nvidia/runs/native-install-v1/output/pytest-optimized"
+          ],
+          "pid": 125328,
+          "startticks": 31711374,
+          "returncode": 0
+        }
+      ],
+      "device_executed": false
+    },
+    "positive_smoke": {
+      "status": "actual_retained_llvm_transformed",
+      "input": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/default/profile/timeline/compiler-attempts/compile-6ee09026d54846ebb459276296d7779f/ordinary.ll",
+      "input_sha256": "8ee295464d125f8d8a14c20c86519c50fa474ec9da31b103da14bc968988e563",
+      "tool_sha256": "b442126aca9a52f6a15481283c7cf28e5a95ceef55ef0e8028aa6a6415c8dcfc",
+      "output_sha256": "3bd574e28a39efec37a6a060e230d099877a76db0bc32672ed3bea3489815cb9",
+      "sites": 43,
+      "device_executed": false,
+      "application_replayed": false
+    },
+    "archive": {
+      "archive": "artifacts/timeline/run-076/preflight/nvidia-receipts-v1.tgz",
+      "sha256": "c2db180a08d7d0f01d94f0bf4186bf89f6310cb195543f25514ac437399b4b79",
+      "members": 227,
+      "terminal_returncodes": {
+        "child-suite-v2/terminal.json": 0,
+        "native-install-v1/terminal.json": 0,
+        "positive-smoke-v1/terminal.json": 0
+      },
+      "installed_normal_optimized_logs": {
+        "native-install-v1/output/child-registration-normal.log": "............                                                             [100%]\n12 passed in 0.95s\n",
+        "native-install-v1/output/child-registration-optimized.log": "............                                                             [100%]\n=============================== warnings summary ===============================\nchijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/_pytest/config/__init__.py:1346\n  /workspace/chijin-r15-python-alignment-r2/venv/lib/python3.10/site-packages/_pytest/config/__init__.py:1346: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)\n  \n    self._warn_about_missing_assertion(mode)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 1 warning in 1.07s\n"
+      },
+      "tested_sources_matched": 5
+    }
+  },
+  "enflame": {
+    "install": {
+      "status": "normal_wheel_installed_child_registration_normal_optimized_passed",
+      "backend": "enflame",
+      "source_commit": "61cb831290860655edf2f64eb8c3b395a4c1fc0a",
+      "source": "/tmp/chijin-timeline-r076-gcu/native-install-input-v1/source",
+      "python": "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/bin/python",
+      "native": "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/native",
+      "installed_members": 497,
+      "wheel": "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+      "wheel_sha256": "f64dbad3618b5c4e6af6a312ffac21905c2c7bb42f187fec91a767526eae95c7",
+      "unchanged_compiler": "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+      "unchanged_recorder": "/tmp/chijin-timeline-r054-tests/runs/install-transfer-report-v1/output/installed/native/flagtree/debugger/_bin/gcu-timeline",
+      "steps": [
+        {
+          "name": "install-existing-wheel",
+          "argv": [
+            "/usr/bin/python3.12",
+            "-I",
+            "-m",
+            "pip",
+            "--python",
+            "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/bin/python",
+            "install",
+            "--no-index",
+            "--no-deps",
+            "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl"
+          ],
+          "pid": 566941,
+          "startticks": 1026847621,
+          "returncode": 0
+        },
+        {
+          "name": "installed-import",
+          "argv": [
+            "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-c",
+            "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+          ],
+          "pid": 566945,
+          "startticks": 1026848456,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-normal",
+          "argv": [
+            "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pytest",
+            "-q",
+            "/tmp/chijin-timeline-r076-gcu/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/tmp/chijin-timeline-r076-gcu/runs/install-resume-v1/output/pytest-normal"
+          ],
+          "pid": 566946,
+          "startticks": 1026848497,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-optimized",
+          "argv": [
+            "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-O",
+            "-m",
+            "pytest",
+            "-q",
+            "/tmp/chijin-timeline-r076-gcu/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/tmp/chijin-timeline-r076-gcu/runs/install-resume-v1/output/pytest-optimized"
+          ],
+          "pid": 566959,
+          "startticks": 1026848539,
+          "returncode": 0
+        }
+      ],
+      "device_executed": false
+    },
+    "positive_smoke": {
+      "status": "actual_retained_mlir_rewritten_and_sdk_clock_bitcode_built",
+      "input_sha256": "5394f43eb826a2a09a5266ea22cda223cdbfa8a29297b225abc52f6bce40c4a6",
+      "output_sha256": "1c3aac94b055501091c78e00240ad8dbfbf6a47c45c7ea55b533ee2ff494b9dd",
+      "sites": 13,
+      "clock": {
+        "file": "/tmp/chijin-timeline-r076-gcu/runs/positive-smoke-v1/output/identity-cache/cdcfe8107e21c16157c6232f1f8b5cac36cc789d1166c40f8bfee1c9e2cfc6bf/artifact/identity.bc",
+        "inputs": {
+          "version": 1,
+          "source": "source_filename = \"flagprism_gcu_clock_identity_v1.ll\"\ndeclare i32 @llvm.dtu.movs.sipinfo()\ndefine i32 @flagprism_gcu_clock_identity_v1() {\n %v = call i32 @llvm.dtu.movs.sipinfo()\n ret i32 %v\n}\n",
+          "tool_file": "/opt/tops/bin/opt",
+          "tool_sha256": "85a5bfa8e16d8d0d7cc52a1ff310508c1448f792826f321159acf742b1a05f8f",
+          "sdk_library_sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec"
+        },
+        "sha256": "e6ee305c0433d98b7b91b7aa39c8e29bdee30907e8deb8e56ac2cc59e3f74d95",
+        "bytes": 1512
+      },
+      "device_executed": false,
+      "application_replayed": false
+    },
+    "archive": {
+      "archive": "artifacts/timeline/run-076/preflight/enflame-receipts-v1.tgz",
+      "sha256": "34201a0c080fc5463d397fdf49d29ec3973a7842d4b61a13e045a3ac4d4b9c69",
+      "members": 164,
+      "terminal_returncodes": {
+        "native-install-v1/terminal.json": 1,
+        "install-resume-v1/terminal.json": 0,
+        "positive-smoke-v1/terminal.json": 0
+      },
+      "installed_normal_optimized_logs": {
+        "install-resume-v1/output/child-registration-normal.log": " pytest-regex selected 12 tests to run for regex: .*\n............                                                             [100%]\n12 passed in 0.22s\n",
+        "install-resume-v1/output/child-registration-optimized.log": " pytest-regex selected 12 tests to run for regex: .*\n............                                                             [100%]\n=============================== warnings summary ===============================\n../usr/local/lib/python3.12/dist-packages/_pytest/config/__init__.py:1273\n  /usr/local/lib/python3.12/dist-packages/_pytest/config/__init__.py:1273: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)\n  \n    self._warn_about_missing_assertion(mode)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 1 warning in 0.39s\n"
+      },
+      "tested_sources_matched": 5
+    }
+  },
+  "ascend": {
+    "install": {
+      "status": "normal_wheel_installed_child_registration_normal_optimized_passed",
+      "backend": "ascend",
+      "source_commit": "61cb831290860655edf2f64eb8c3b395a4c1fc0a",
+      "source": "/tmp/chijin-timeline-r076-ascend/native-install-input-v1/source",
+      "python": "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+      "native": "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/native",
+      "installed_members": 439,
+      "wheel": "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+      "wheel_sha256": "683e04aaef9079c07395fc1fd75c832204211234a18920d5ef55d26eaa7f78d8",
+      "unchanged_compiler": "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+      "unchanged_recorder": "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so",
+      "steps": [
+        {
+          "name": "git-init",
+          "argv": [
+            "git",
+            "init",
+            "-q"
+          ],
+          "pid": 294216,
+          "startticks": 344118032,
+          "returncode": 0
+        },
+        {
+          "name": "git-parent",
+          "argv": [
+            "git",
+            "fetch",
+            "--update-shallow",
+            "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/FlagTree",
+            "HEAD"
+          ],
+          "pid": 294217,
+          "startticks": 344118032,
+          "returncode": 0
+        },
+        {
+          "name": "git-identity",
+          "argv": [
+            "git",
+            "reset",
+            "--mixed",
+            "FETCH_HEAD"
+          ],
+          "pid": 294553,
+          "startticks": 344118318,
+          "returncode": 0
+        },
+        {
+          "name": "assemble",
+          "argv": [
+            "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/venv/bin/python",
+            "-I",
+            "/tmp/chijin-timeline-r076-ascend/native-install-input-v1/source/integration/patches/ascend/build_automatic_wheel.py",
+            "--flagtree",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/FlagTree",
+            "--component",
+            "/tmp/chijin-timeline-r076-ascend/native-install-input-v1/source",
+            "--native-python",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/native",
+            "--core-library",
+            "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+            "--output",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/wheel",
+            "--plugin",
+            "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so"
+          ],
+          "pid": 294561,
+          "startticks": 344118345,
+          "returncode": 0
+        },
+        {
+          "name": "venv",
+          "argv": [
+            "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/venv/bin/python",
+            "-m",
+            "venv",
+            "--without-pip",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv"
+          ],
+          "pid": 294796,
+          "startticks": 344120986,
+          "returncode": 0
+        },
+        {
+          "name": "seed-pip",
+          "argv": [
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "ensurepip",
+            "--default-pip"
+          ],
+          "pid": 294797,
+          "startticks": 344120992,
+          "returncode": 0
+        },
+        {
+          "name": "install",
+          "argv": [
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pip",
+            "install",
+            "--no-index",
+            "--no-deps",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+          ],
+          "pid": 294973,
+          "startticks": 344121526,
+          "returncode": 0
+        },
+        {
+          "name": "installed-import",
+          "argv": [
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-c",
+            "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+          ],
+          "pid": 295142,
+          "startticks": 344122267,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-normal",
+          "argv": [
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-m",
+            "pytest",
+            "-q",
+            "/tmp/chijin-timeline-r076-ascend/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/pytest-normal"
+          ],
+          "pid": 295339,
+          "startticks": 344123077,
+          "returncode": 0
+        },
+        {
+          "name": "child-registration-optimized",
+          "argv": [
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/bin/python",
+            "-I",
+            "-O",
+            "-m",
+            "pytest",
+            "-q",
+            "/tmp/chijin-timeline-r076-ascend/native-install-input-v1/source/tests/timeline/test_native_child_registration.py",
+            "--basetemp",
+            "/tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/pytest-optimized"
+          ],
+          "pid": 295473,
+          "startticks": 344124379,
+          "returncode": 0
+        }
+      ],
+      "device_executed": false
+    },
+    "positive_smoke": {
+      "status": "actual_retained_elf_dwarf_reader_passed",
+      "input": "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/machine/59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad/loaded.elf",
+      "input_sha256": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+      "tool": "/usr/bin/llvm-dwarfdump-15",
+      "tool_sha256": "6a1411ea0b4e69218cacefdb4908d6914e01315e2e62f1786a18ba5bf71149a0",
+      "output_sha256": "a08f387e9cf4617ec95b74fa5bc526d6eccc235485772af8b21f5605b58b2f98",
+      "commands": [
+        {
+          "name": "dwarf",
+          "argv": [
+            "/usr/bin/llvm-dwarfdump-15",
+            "--debug-line",
+            "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/machine/59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad/loaded.elf"
+          ],
+          "pid": 296448,
+          "state": "terminal",
+          "pgid": 296448,
+          "startticks": 344132398,
+          "returncode": 0
+        }
+      ],
+      "device_executed": false,
+      "application_replayed": false
+    },
+    "archive": {
+      "archive": "artifacts/timeline/run-076/preflight/ascend-receipts-v1.tgz",
+      "sha256": "f58a2f1cd0d47d7abb047f1af02a186e0298af9044e5b7a21177d108a0a27ea7",
+      "members": 150,
+      "terminal_returncodes": {
+        "native-install-v1/terminal.json": 0,
+        "positive-smoke-v1/terminal.json": 0
+      },
+      "installed_normal_optimized_logs": {
+        "native-install-v1/output/child-registration-optimized.log": "............                                                             [100%]\n=============================== warnings summary ===============================\n../../usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310\n  /usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)\n  \n    self._warn_about_missing_assertion(mode)\n\ntest_native_child_registration.py::test_registration_fault_reaps_direct_child[process_identity-gcu_rewrite]\n  /tmp/chijin-timeline-r076-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py:377: DeprecationWarning: invalid escape sequence '\\['\n    for m in re.finditer('\\[aicore\\]', code):\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n12 passed, 2 warnings in 11.07s\n",
+        "native-install-v1/output/child-registration-normal.log": "............                                                             [100%]\n12 passed in 10.54s\n"
+      },
+      "tested_sources_matched": 5
+    }
+  }
+}
