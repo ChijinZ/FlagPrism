@@ -90,6 +90,12 @@ issue bracket is not engine busy time; a wait return is a completion-observed
 checkpoint, not the exact hardware completion instant. Source navigation alone
 does not establish an operation's exclusive cost.
 
+Instrumentation can also change register lifetimes and compiler scheduling.
+The timeline describes the instrumented binary; it does not certify the
+uninstrumented kernel's instruction interleaving or hardware overlap. A
+qualified observed-dependency view remains tied to its captured binary and
+recorded endpoints.
+
 Use the timeline to identify repeated regions, long brackets and recorded
 waiting or dependency patterns, then change a legal kernel configuration and
 compare the same observation semantics. Confirm any speedup separately using

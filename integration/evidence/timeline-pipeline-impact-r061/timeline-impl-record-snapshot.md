@@ -1864,3 +1864,5 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - 昇腾原affected60串行队列继续运行，已实际完成41/60至q04-s0-c1/warm1，未发现新的产品/数学失败。首项仍保留whole rc1+retained verifier repair的事实，不将全部重写成初次零退出。canonical20d370a尚未合并/push；paper/Study未改，goal active。
 
 - T093 sparse新增20条counter/shared trace已实际TP通过：controller120540/worker120541 terminal0/22.154s、worker missing；注册20/实际20、锁定verifier75e1b08...，无应用重跑。archive69804B SHA55316cd59dfe8139c33bac5bd9ed8f98d334d2c44ac89f67f48263f1c68be246。不是高级dependency arrows或ordinary overlap资格。实际sparse原wholefailure、四math成功及负CPU probe均封存，完整archive4284693B；小证据integration/evidence/timeline-pipeline-impact-r061，仍留pipeline-impact open。
+
+- T093原compiler reviewer有限复核已回：确认实际native scheduling扰动，ordinary preservation在本例不能通过；尚不能量化物理overlap损失，也不能唯一归因matrix clobber。具体约束为各reader sideeffect/memory clobber与block末发布引起活跃区间变化。现有绑定actual profile binary的qualified observed dependencies仍可解释instrumented执行，不获ordinary/hardware completion资格。转录limited-compiler-review.md；quickstart明确说明寄存器/调度扰动和解释范围。无产品代码/资格门修改，不把文档说明冒充修复。
