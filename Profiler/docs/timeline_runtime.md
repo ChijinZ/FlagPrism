@@ -912,6 +912,15 @@ all participants. `record_storage_binding_verified`, full
 therefore remain false. Existing counter coordinates and original raw artifacts
 are unchanged; this diagnostic is evidence for completing the dependency path.
 
+The automatic boundary report also includes `matrix_issue_sites`. The current
+SM120 rule recognizes FP16 `mma.sync.aligned.m16n8k16` groups, matches every
+original PTX instruction line to one final `HMMA.16816.F32`, and checks that all
+issues lie between the same unconditional inline readers on a single-entry
+straight path. Extra matrix instructions, unsupported geometry, predicates,
+missing mappings or branches leave that site unverified. This is instruction
+issue placement; it does not establish matrix completion, source-exclusive
+elapsed cost, collective participation or ordinary pipeline preservation.
+
 The same late native diagnostic also contains `relative_record_fields`:
 `native_record_fields_checked` means the actual four stores for a site's tag,
 begin, end and payload have the declared coalesced relative displacement and

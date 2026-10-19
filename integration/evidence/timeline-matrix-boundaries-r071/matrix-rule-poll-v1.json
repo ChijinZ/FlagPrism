@@ -1,0 +1,232 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 122092,
+      "ppid": 1,
+      "pgid": 122092,
+      "startticks": 30967269
+    },
+    "worker": {
+      "pid": 122093,
+      "ppid": 122092,
+      "pgid": 122093,
+      "startticks": 30967272
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r070-nvidia/runs/native-install-v3/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r071-nvidia/matrix-rule-input-v1/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r071-nvidia/runs/matrix-rule-v1/output"
+    ],
+    "argv_sha256": "a03cea1cf478c859fbca38b606920d4a3d1c28a8ec01e72e850a3415e3888801",
+    "script_sha256": "b62d85398a8de8eb357357c0093db4e85d44ce6deb585ae9ce9b2ea0e951086e",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 120,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 615734957
+  },
+  "result": {
+    "status": "actual_automatic_matrix_issue_boundaries_and_raw_passed",
+    "reports": [
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "invocation_id": "invocation-22446d1692a242fc8f716890b6dde6b1",
+        "matrix_sites": [
+          {
+            "site_id": 23,
+            "kind": "matrix_issue_bracket",
+            "status": "matrix_issue_control_order_checked",
+            "source_cost_qualified": false,
+            "matrix_completion_verified": false,
+            "hardware_busy_qualified": false,
+            "function": "runtime_gemm",
+            "issues": [
+              {
+                "ptx_operation_line": 588,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r61,%r62,%r63,%r64},{%r65,%r66},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4720,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 591,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r61,%r62,%r63,%r64},{%r67,%r68},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4752,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 594,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r69,%r70,%r71,%r72},{%r73,%r74},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4784,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 597,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r69,%r70,%r71,%r72},{%r75,%r76},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4816,
+                "native_opcode": "HMMA.16816.F32"
+              }
+            ],
+            "begin_reader_pc": 4704,
+            "end_reader_pc": 4880,
+            "relation": "matrix_issues_between_inline_readers",
+            "participation_verified": false
+          }
+        ],
+        "actual_matrix_intervals": 24,
+        "raw_sha256": "8a7df103aeb128cc3aeb221b749076d520d92113a5de08e5829e075bcdd98091"
+      },
+      {
+        "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+        "invocation_id": "invocation-b3519ada23814cd28a02c30283aaf494",
+        "matrix_sites": [
+          {
+            "site_id": 23,
+            "kind": "matrix_issue_bracket",
+            "status": "matrix_issue_control_order_checked",
+            "source_cost_qualified": false,
+            "matrix_completion_verified": false,
+            "hardware_busy_qualified": false,
+            "function": "runtime_gemm",
+            "issues": [
+              {
+                "ptx_operation_line": 588,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r61,%r62,%r63,%r64},{%r65,%r66},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4720,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 591,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r61,%r62,%r63,%r64},{%r67,%r68},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4752,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 594,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r69,%r70,%r71,%r72},{%r73,%r74},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4784,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 597,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r69,%r70,%r71,%r72},{%r75,%r76},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4816,
+                "native_opcode": "HMMA.16816.F32"
+              }
+            ],
+            "begin_reader_pc": 4704,
+            "end_reader_pc": 4880,
+            "relation": "matrix_issues_between_inline_readers",
+            "participation_verified": false
+          }
+        ],
+        "actual_matrix_intervals": 56,
+        "raw_sha256": "0e8e300f1f2e8649d8162b62e55928a505603e5c8af361b198e34c0f5b52832c"
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "invocation_id": "invocation-77ddf37b7a9f4b91aa9cdf633e617dda",
+        "matrix_sites": [
+          {
+            "site_id": 23,
+            "kind": "matrix_issue_bracket",
+            "status": "matrix_issue_control_order_checked",
+            "source_cost_qualified": false,
+            "matrix_completion_verified": false,
+            "hardware_busy_qualified": false,
+            "function": "runtime_gemm",
+            "issues": [
+              {
+                "ptx_operation_line": 427,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r61,%r62,%r63,%r64},{%r65,%r66},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4128,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 430,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r61,%r62,%r63,%r64},{%r67,%r68},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4160,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 433,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r69,%r70,%r71,%r72},{%r73,%r74},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4192,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 436,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r69,%r70,%r71,%r72},{%r75,%r76},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4224,
+                "native_opcode": "HMMA.16816.F32"
+              }
+            ],
+            "begin_reader_pc": 4112,
+            "end_reader_pc": 4240,
+            "relation": "matrix_issues_between_inline_readers",
+            "participation_verified": false
+          }
+        ],
+        "actual_matrix_intervals": 24,
+        "raw_sha256": "7dcec24b63221e4873ffef8edad5a07edb7d8380c3c0b57b1a2571bb3dcbdd40"
+      },
+      {
+        "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+        "invocation_id": "invocation-6beb0af7274b462480bec5a95e4fc116",
+        "matrix_sites": [
+          {
+            "site_id": 23,
+            "kind": "matrix_issue_bracket",
+            "status": "matrix_issue_control_order_checked",
+            "source_cost_qualified": false,
+            "matrix_completion_verified": false,
+            "hardware_busy_qualified": false,
+            "function": "runtime_gemm",
+            "issues": [
+              {
+                "ptx_operation_line": 427,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r61,%r62,%r63,%r64},{%r65,%r66},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4128,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 430,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r61,%r62,%r63,%r64},{%r67,%r68},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4160,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 433,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r146,%r147,%r148,%r149},{%r69,%r70,%r71,%r72},{%r73,%r74},{%r146,%r147,%r148,%r149};",
+                "native_pc": 4192,
+                "native_opcode": "HMMA.16816.F32"
+              },
+              {
+                "ptx_operation_line": 436,
+                "ptx_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32{%r150,%r151,%r152,%r153},{%r69,%r70,%r71,%r72},{%r75,%r76},{%r150,%r151,%r152,%r153};",
+                "native_pc": 4224,
+                "native_opcode": "HMMA.16816.F32"
+              }
+            ],
+            "begin_reader_pc": 4112,
+            "end_reader_pc": 4240,
+            "relation": "matrix_issues_between_inline_readers",
+            "participation_verified": false
+          }
+        ],
+        "actual_matrix_intervals": 56,
+        "raw_sha256": "04f435d9311f0c08a8723d5b9b4f415c775bc9e0ec9936fe92da4d0420162f6b"
+      }
+    ],
+    "device_executed": false,
+    "application_replayed": false,
+    "source_exclusive_cost_qualified": false,
+    "ordinary_overlap_preservation_qualified": false
+  },
+  "logs": {
+    "stdout.log": ".............                                                            [100%]\n13 passed in 0.09s\n",
+    "stderr.log": ""
+  }
+}

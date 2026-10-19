@@ -1,0 +1,483 @@
+[
+  {
+    "case": "default-ordinary",
+    "actual_retained_disassembly_sha256": "623a7d8b35593c422b7cc0deea13657f5b47aeb0e10a05242dce162dad01cae9",
+    "instruction_fields": [
+      "opcode",
+      "operands",
+      "other-attributes",
+      "predicate"
+    ],
+    "matrix_to_next_copy": [
+      {
+        "pc": 2688,
+        "opcode": "LDSM.16.MT88.4",
+        "operands": "R8[R8+UR11]"
+      },
+      {
+        "pc": 2704,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R12,R20,R4,R12"
+      },
+      {
+        "pc": 2720,
+        "opcode": "MOV",
+        "operands": "R4,R24"
+      },
+      {
+        "pc": 2736,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R16,R20,R8,R16"
+      },
+      {
+        "pc": 2752,
+        "opcode": "LDSM.16.M88.4",
+        "operands": "R20[R26+UR12+0x1000]"
+      },
+      {
+        "pc": 2768,
+        "opcode": "MOV",
+        "operands": "R5,RZ"
+      },
+      {
+        "pc": 2784,
+        "opcode": "IADD.64",
+        "operands": "R4,R4,UR8"
+      },
+      {
+        "pc": 2800,
+        "opcode": "BAR.SYNC.DEFER_BLOCKING",
+        "operands": "0x0",
+        "other-attributes": {
+          "inter-warp-barrier": "True"
+        }
+      },
+      {
+        "pc": 2816,
+        "opcode": "ISETP.GE.AND",
+        "operands": "P1,PT,R4,UR10,PT"
+      },
+      {
+        "pc": 2832,
+        "opcode": "SEL",
+        "operands": "R4,RZ,0x10,P1"
+      },
+      {
+        "pc": 2848,
+        "opcode": "PLOP3.LUT",
+        "operands": "P1,PT,PT,PT,UP1,0x40,0x4"
+      },
+      {
+        "pc": 2864,
+        "opcode": "SEL",
+        "operands": "R4,R4,RZ,P2"
+      },
+      {
+        "pc": 2880,
+        "opcode": "SEL",
+        "operands": "R4,R4,RZ,P1"
+      },
+      {
+        "pc": 2896,
+        "opcode": "IMAD.HI",
+        "operands": "R5,R3,0x2,RZ"
+      },
+      {
+        "pc": 2912,
+        "opcode": "ISETP.NE.U32.AND",
+        "operands": "P1,PT,R4,RZ,PT"
+      },
+      {
+        "pc": 2928,
+        "opcode": "IMAD.SHL.U32",
+        "operands": "R4,R3,0x2,RZ"
+      },
+      {
+        "pc": 2944,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R12,R20,R6,R12"
+      },
+      {
+        "pc": 2960,
+        "opcode": "IADD.64",
+        "operands": "R4,R38,R4"
+      },
+      {
+        "pc": 2976,
+        "opcode": "MOV",
+        "operands": "R7,UR13"
+      },
+      {
+        "pc": 2992,
+        "opcode": "IMAD",
+        "operands": "R7,R7,0x800,R32"
+      },
+      {
+        "pc": 3008,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 3024,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 3040,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 3056,
+        "opcode": "LDGSTS.E.BYPASS.128",
+        "operands": "[R7],desc[UR20][R4.64],P1"
+      }
+    ],
+    "limits": "Instruction order/operands only; no hidden scoreboard or engine-completion qualification."
+  },
+  {
+    "case": "default-profile",
+    "actual_retained_disassembly_sha256": "abb405734a3966726da2c13cf83e6d943693d78c1b2fa908c023a544add08029",
+    "instruction_fields": [
+      "opcode",
+      "operands",
+      "other-attributes",
+      "predicate"
+    ],
+    "matrix_to_next_copy": [
+      {
+        "pc": 4704,
+        "opcode": "CS2R",
+        "operands": "R72,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 4720,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R8,R24,R16,R8"
+      },
+      {
+        "pc": 4736,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4752,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R4,R24,R20,R4"
+      },
+      {
+        "pc": 4768,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4784,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R8,R12,R18,R8"
+      },
+      {
+        "pc": 4800,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4816,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R4,R12,R22,R4"
+      },
+      {
+        "pc": 4832,
+        "opcode": "SHF.R.U32.HI",
+        "operands": "R12,RZ,0x2,R32"
+      },
+      {
+        "pc": 4848,
+        "opcode": "LOP3.LUT",
+        "operands": "R12,R12,0x1f,RZ,0xc0,!PT"
+      },
+      {
+        "pc": 4864,
+        "opcode": "LOP3.LUT",
+        "operands": "R14,R12,0x40,RZ,0xfc,!PT"
+      },
+      {
+        "pc": 4880,
+        "opcode": "CS2R",
+        "operands": "R12,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 4896,
+        "opcode": "MOV",
+        "operands": "R15,RZ"
+      },
+      {
+        "pc": 4912,
+        "opcode": "BAR.SYNC.DEFER_BLOCKING",
+        "operands": "0x0",
+        "other-attributes": {
+          "inter-warp-barrier": "True"
+        }
+      },
+      {
+        "pc": 4928,
+        "opcode": "UIADD3",
+        "operands": "UR18,UPT,UPT,UR18,0x1,URZ"
+      },
+      {
+        "pc": 4944,
+        "opcode": "MOV",
+        "operands": "R16,UR4"
+      },
+      {
+        "pc": 4960,
+        "opcode": "IADD.64",
+        "operands": "R14,R14,UR10"
+      },
+      {
+        "pc": 4976,
+        "opcode": "IMAD.HI",
+        "operands": "R15,R102,0x2,RZ"
+      },
+      {
+        "pc": 4992,
+        "opcode": "UISETP.GT.AND",
+        "operands": "UP1,UPT,UR18,0x1,UPT"
+      },
+      {
+        "pc": 5008,
+        "opcode": "ISETP.GE.AND",
+        "operands": "P0,PT,R14,UR16,PT"
+      },
+      {
+        "pc": 5024,
+        "opcode": "IMAD.SHL.U32",
+        "operands": "R14,R102,0x2,RZ"
+      },
+      {
+        "pc": 5040,
+        "opcode": "USEL",
+        "operands": "UR18,UR18,URZ,!UP1"
+      },
+      {
+        "pc": 5056,
+        "opcode": "ISETP.GT.S64.AND",
+        "operands": "P0,PT,R104,UR8,!P0"
+      },
+      {
+        "pc": 5072,
+        "opcode": "IADD.64",
+        "operands": "R14,R30,R14"
+      },
+      {
+        "pc": 5088,
+        "opcode": "ISETP.LT.U32.AND",
+        "operands": "P0,PT,R16,0x2,P0"
+      },
+      {
+        "pc": 5104,
+        "opcode": "CS2R",
+        "operands": "R18,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 5120,
+        "opcode": "MOV",
+        "operands": "R17,UR18"
+      },
+      {
+        "pc": 5136,
+        "opcode": "IMAD",
+        "operands": "R16,R17,0x800,R98"
+      },
+      {
+        "pc": 5152,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 5168,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 5184,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 5200,
+        "opcode": "LDGSTS.E.BYPASS.128",
+        "operands": "[R16],desc[UR22][R14.64],P0"
+      }
+    ],
+    "limits": "Instruction order/operands only; no hidden scoreboard or engine-completion qualification."
+  },
+  {
+    "case": "sparse-profile",
+    "actual_retained_disassembly_sha256": "a2f0d05bb5bb3263b9c47178a85a7b127a77343e050fc2e847e176509933f0a1",
+    "instruction_fields": [
+      "opcode",
+      "operands",
+      "other-attributes",
+      "predicate"
+    ],
+    "matrix_to_next_copy": [
+      {
+        "pc": 4112,
+        "opcode": "CS2R",
+        "operands": "R60,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 4128,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R40,R28,R20,R40"
+      },
+      {
+        "pc": 4144,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4160,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R36,R28,R32,R36"
+      },
+      {
+        "pc": 4176,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4192,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R40,R24,R22,R40"
+      },
+      {
+        "pc": 4208,
+        "opcode": "NOP"
+      },
+      {
+        "pc": 4224,
+        "opcode": "HMMA.16816.F32",
+        "operands": "R36,R24,R34,R36"
+      },
+      {
+        "pc": 4240,
+        "opcode": "CS2R",
+        "operands": "R26,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 4256,
+        "opcode": "MOV",
+        "operands": "R20,R4"
+      },
+      {
+        "pc": 4272,
+        "opcode": "MOV",
+        "operands": "R21,RZ"
+      },
+      {
+        "pc": 4288,
+        "opcode": "BAR.SYNC.DEFER_BLOCKING",
+        "operands": "0x0",
+        "other-attributes": {
+          "inter-warp-barrier": "True"
+        }
+      },
+      {
+        "pc": 4304,
+        "opcode": "UIADD3",
+        "operands": "UR19,UPT,UPT,UR19,0x1,URZ"
+      },
+      {
+        "pc": 4320,
+        "opcode": "MOV",
+        "operands": "R22,UR4"
+      },
+      {
+        "pc": 4336,
+        "opcode": "IADD.64",
+        "operands": "R20,R20,UR12"
+      },
+      {
+        "pc": 4352,
+        "opcode": "IMAD.HI",
+        "operands": "R21,R7,0x2,RZ"
+      },
+      {
+        "pc": 4368,
+        "opcode": "UISETP.GT.AND",
+        "operands": "UP1,UPT,UR19,0x1,UPT"
+      },
+      {
+        "pc": 4384,
+        "opcode": "ISETP.GE.AND",
+        "operands": "P4,PT,R20,UR14,PT"
+      },
+      {
+        "pc": 4400,
+        "opcode": "IMAD.SHL.U32",
+        "operands": "R20,R7,0x2,RZ"
+      },
+      {
+        "pc": 4416,
+        "opcode": "USEL",
+        "operands": "UR19,UR19,URZ,!UP1"
+      },
+      {
+        "pc": 4432,
+        "opcode": "ISETP.GT.S64.AND",
+        "operands": "P4,PT,R18,UR10,!P4"
+      },
+      {
+        "pc": 4448,
+        "opcode": "IADD.64",
+        "operands": "R20,R14,R20"
+      },
+      {
+        "pc": 4464,
+        "opcode": "ISETP.LT.U32.AND",
+        "operands": "P4,PT,R22,0x2,P4"
+      },
+      {
+        "pc": 4480,
+        "opcode": "CS2R",
+        "operands": "R24,SR_GLOBALTIMERLO"
+      },
+      {
+        "pc": 4496,
+        "opcode": "MOV",
+        "operands": "R31,UR19"
+      },
+      {
+        "pc": 4512,
+        "opcode": "IMAD",
+        "operands": "R31,R31,0x800,R64"
+      },
+      {
+        "pc": 4528,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 4544,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 4560,
+        "predicate": "@!PT",
+        "opcode": "LDS",
+        "operands": "RZ[RZ]"
+      },
+      {
+        "pc": 4576,
+        "opcode": "LDGSTS.E.BYPASS.128",
+        "operands": "[R31],desc[UR22][R20.64],P4"
+      }
+    ],
+    "limits": "Instruction order/operands only; no hidden scoreboard or engine-completion qualification."
+  }
+]
