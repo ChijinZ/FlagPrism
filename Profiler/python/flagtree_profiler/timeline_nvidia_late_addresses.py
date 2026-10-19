@@ -222,7 +222,7 @@ class _Wide:
                             'Native address inputs or carry changed between words'
                         )
                 # A counter seed applies only to this actual LEA input. Its
-                # full-function definition inventory is checked by the caller.
+                # live count definitions are checked by the caller.
                 count = self.node('published_count_epoch'
                                   ) if index == self.counter else self.pair(
                                       lo, index)
@@ -353,32 +353,14 @@ def derive_record_addresses(*, machine_map, sass_lines, sass_json, ptx, plan):
                      address_high_pc=high_pc,
                      field_store_pcs=sorted(f['pc'] for r in ordered
                                             for f in r['fields'])))
-        # Exact native count-write inventory: zero initialization, one initial
+        # Exact live count-write inventory: zero initialization, initial
         # batch assignment, and positive self-adds matching complete batches.
-        counter_regs = set(_registers(counter, 2))
-        writes = []
-        for pc, row in sorted(body.items()):
-            if not counter_regs.intersection(_destinations(row)):
-                continue
-            fields = _compact(row.get('operands', '')).split(',')
-            _need(
-                _predicate(row.get('predicate')) is True
-                and fields[0] == counter,
-                'Published count has a partial or predicated write')
-            if row['opcode'] == 'MOV.64' and fields[1] in ('RZ', 'URZ'):
-                value, mode = 0, 'initialize'
-            elif row['opcode'] == 'MOV.64' and re.fullmatch(
-                    r'0x[0-9a-fA-F]+', fields[1]):
-                value = int(fields[1], 16)
-                mode = 'initialize' if value == 0 else 'initial_batch_count'
-            elif row['opcode'] == 'IADD.64' and len(
-                    fields) == 3 and fields[1] == counter and re.fullmatch(
-                        r'0x[0-9a-fA-F]+', fields[2]):
-                value, mode = int(fields[2], 16), 'append_batch_count'
-            else:
-                raise ValueError('Unknown published native count write at ' +
-                                 hex(pc))
-            writes.append(dict(pc=pc, mode=mode, value=value))
+        count_uses = {native_count['pc']} | {
+            witness['low_pc']
+            for witness in wide.lea_witnesses.values() if witness['counter']
+        }
+        live_writes = _live_count_definitions(body, graph, counter, count_uses)
+        writes = _count_write_inventory(body, counter, live_writes)
         _need(
             sum(r['mode'] == 'initialize' for r in writes) == 1,
             'Published count lacks unique zero initialization')
@@ -412,6 +394,65 @@ def derive_record_addresses(*, machine_map, sass_lines, sass_json, ptx, plan):
                 implementation_sha256=_rule_digests())
 
 
+def _count_write_inventory(body, counter, live_writes):
+    writes = []
+    for pc in sorted(live_writes):
+        row = body[pc]
+        fields = _compact(row.get('operands', '')).split(',')
+        _need(
+            _predicate(row.get('predicate')) is True and fields[0] == counter,
+            'Published count has a partial or predicated write')
+        if row['opcode'] == 'MOV.64' and fields[1] in ('RZ', 'URZ'):
+            value, mode = 0, 'initialize'
+        elif row['opcode'] == 'MOV.64' and re.fullmatch(
+                r'0x[0-9a-fA-F]+', fields[1]):
+            value = int(fields[1], 16)
+            mode = 'initialize' if value == 0 else 'initial_batch_count'
+        elif row['opcode'] == 'IADD.64' and len(
+                fields) == 3 and fields[1] == counter and re.fullmatch(
+                    r'0x[0-9a-fA-F]+', fields[2]):
+            value, mode = int(fields[2], 16), 'append_batch_count'
+        else:
+            raise ValueError('Unknown published native count write at ' +
+                             hex(pc))
+        writes.append(dict(pc=pc, mode=mode, value=value))
+    return writes
+
+
+def _live_count_definitions(body, graph, counter, uses):
+    """Find definitions feeding count uses, including loop-carried self-adds.
+
+    Physical registers can hold unrelated temporaries before or after their
+    counter lifetime. Never identify a counter definition by register number
+    alone. Both words and all reaching paths are inspected; partial/predicated
+    writes remain in the result for the caller to reject.
+    """
+    words = _ReachingWords(body, graph)
+    registers = _registers(counter, 2)
+    work = list(uses)
+    visited, definitions = set(), set()
+    while work:
+        at = work.pop()
+        if at in visited:
+            continue
+        visited.add(at)
+        _need(
+            len(visited) <= MAX_STATES,
+            'Native count lifetime budget exceeded')
+        for register in registers:
+            for kind, pc, _ in words.definitions(at, register):
+                _need(kind == 'definition',
+                      'Native count use is uninitialized')
+                definitions.add(pc)
+                row = body[pc]
+                fields = _compact(row.get('operands', '')).split(',')
+                if (row['opcode'] == 'IADD.64' and len(fields) == 3
+                        and fields[0] == fields[1] == counter):
+                    work.append(pc)
+    _need(definitions, 'Native count has no live definitions')
+    return definitions
+
+
 def _published_header_address(wide, native_count):
     address = wide.add(
         wide.pair(native_count['pc'], native_count['address_register']),
@@ -429,7 +470,11 @@ def _check_batch_control(body, graph, counter, batches, writes):
     region still guarantees either all stores/update or none. No dynamic path
     is chosen based on observed tick values.
     """
-    words = _ReachingWords(body, graph)
+    record_stores = {
+        pc
+        for batch in batches
+        for pc in batch['field_store_pcs']
+    }
     initial = [r for r in writes if r['mode'] == 'initialize']
     _need(len(initial) == 1, 'Missing unique native count initialization')
     unused = {r['pc']: r for r in writes if r['mode'] != 'initialize'}
@@ -454,12 +499,24 @@ def _check_batch_control(body, graph, counter, batches, writes):
         )
         update = unused.pop(candidates[0])
         if wanted == 'initial_batch_count':
-            for register in _registers(counter, 2):
+            # The count register may have held an unrelated temporary before
+            # this literal assignment. What matters for a fixed zero-based
+            # batch is that it cannot overwrite earlier recorded events.
+            start = min(batch['field_store_pcs'] + [
+                batch['address_low_pc'], batch['address_high_pc'], update['pc']
+            ])
+            work, visited = list(graph[start]), set()
+            while work:
+                pc = work.pop()
+                if pc in visited:
+                    continue
+                visited.add(pc)
                 _need(
-                    words.definitions(update['pc'], register) == {
-                        ('definition', initial[0]['pc'], register)
-                    },
-                    'Initial batch does not start from the native zero count')
+                    len(visited) <= MAX_STATES,
+                    'Initial native batch path budget exceeded')
+                _need(pc not in record_stores,
+                      'Initial native batch can overwrite earlier records')
+                work.extend(graph[pc])
         else:
             _need(batch['address_high_pc'] < update['pc'],
                   'Native batch address reads an already incremented count')
