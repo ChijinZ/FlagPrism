@@ -1,0 +1,195 @@
+{
+  "status": "retained_finite_instruction_positions_audited_with_SDK_child_failure_preserved",
+  "actual_ELF_sha256": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+  "actual_binary_id": "59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad",
+  "capture_sha256": "39a5724ecf58c31d5fea78833fb0fe6e89cb8b427dc153d89d08c3771b7c8c8b",
+  "SDK_outer_returncode": 0,
+  "SDK_child_failure_status": 139,
+  "simulation_run_success_claimed": false,
+  "no_application_or_model_replay": true,
+  "no_product_change": true,
+  "hardware_durations_or_busy_claimed": false,
+  "model_durations_exported": false,
+  "text_bytes": 10916,
+  "text_load_base": "0x10d11000",
+  "SDK_reported_unique_instruction_PCs": 1728,
+  "SDK_reported_SYS_CNT_marker_PCs": 28,
+  "mapped_markers_absent_from_retained_SDK_CSV": [
+    {
+      "site_id": 1,
+      "phase": "entry",
+      "pc": 1692
+    },
+    {
+      "site_id": 1,
+      "phase": "exit",
+      "pc": 1700
+    },
+    {
+      "site_id": 2,
+      "phase": "entry",
+      "pc": 2280
+    },
+    {
+      "site_id": 2,
+      "phase": "exit",
+      "pc": 2288
+    },
+    {
+      "site_id": 7,
+      "phase": "entry",
+      "pc": 7140
+    },
+    {
+      "site_id": 7,
+      "phase": "exit",
+      "pc": 7148
+    },
+    {
+      "site_id": 8,
+      "phase": "entry",
+      "pc": 7716
+    },
+    {
+      "site_id": 8,
+      "phase": "exit",
+      "pc": 7724
+    }
+  ],
+  "source_position_checks": [
+    {
+      "site_id": 16,
+      "source_op_id": 11,
+      "source_line": 31,
+      "original_fragment_sha256": "eb6a54e7a6f3efbd958535212b708b12c568c7a9cf8b2f778726bcc1063ca4df",
+      "entry_pc": 4816,
+      "exit_pc": 4916,
+      "decoded_native_instructions": [
+        {
+          "pc": 4840,
+          "opcode": "VMULS",
+          "pipe": "VECTOR",
+          "model_call_count": 3,
+          "detail": "XD:X14=0x200,XN:X24=0,XM:X3=0x3f400000,XT:X1=0x100080800010001,Dtype:F32,Id:759"
+        },
+        {
+          "pc": 4876,
+          "opcode": "VADDS",
+          "pipe": "VECTOR",
+          "model_call_count": 3,
+          "detail": "XD:X24=0,XN:X14=0x200,XM:X15=0x3e000000,XT:X1=0x100080800010001,Dtype:F32,Id:768"
+        }
+      ],
+      "all_model_executed_control_flow_inside": [
+        {
+          "pc": 4892,
+          "opcode": "JUMPC",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 3,
+          "detail": "TargetPC:0x10d12320,cond_flag:0"
+        },
+        {
+          "pc": 4896,
+          "opcode": "JUMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 3,
+          "detail": "TargetPC:0x10d12334"
+        }
+      ],
+      "evidence_scope": "existing executed PC positions only; no unseen paths, exclusive cost or hardware completion"
+    },
+    {
+      "site_id": 17,
+      "source_op_id": 16,
+      "source_line": 32,
+      "original_fragment_sha256": "da04d14e662a5b450dcdb818d5bc339b01e16c86cba5b072cb7193d448db7cc5",
+      "entry_pc": 6020,
+      "exit_pc": 6520,
+      "decoded_native_instructions": [
+        {
+          "pc": 6516,
+          "opcode": "MOV_SRC_TO_DST_ALIGN",
+          "pipe": "MTE3",
+          "model_call_count": 1,
+          "detail": "Src:UB,Dst:OUT,XD:X1=0x11315e00,XN:X5=0,XM:X4=0x2000010,XT:X5=0,Dtype:B32,id:12"
+        }
+      ],
+      "all_model_executed_control_flow_inside": [
+        {
+          "pc": 6220,
+          "opcode": "JUMPCMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0,CMP_dtype:U64,XN:X13=0x9,Condition_op:3,FC_type:IMM,IMM:0x2cCMP_type:REG,XM:X7=0x7ff,"
+        },
+        {
+          "pc": 6392,
+          "opcode": "JUMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0x10d12944"
+        },
+        {
+          "pc": 6476,
+          "opcode": "JUMPCMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0,CMP_dtype:S64,XN:X31=0x80,Condition_op:0,FC_type:IMM,IMM:0xbCMP_type:REG,XM:X17=0,"
+        }
+      ],
+      "evidence_scope": "existing executed PC positions only; no unseen paths, exclusive cost or hardware completion"
+    },
+    {
+      "site_id": 18,
+      "source_op_id": 21,
+      "source_line": 34,
+      "original_fragment_sha256": "dd5d5a4d5a4896f638832e1e1d5bab6a27ca96e6f058dccdad7c4cd55d32a7b5",
+      "entry_pc": 10048,
+      "exit_pc": 10548,
+      "decoded_native_instructions": [
+        {
+          "pc": 10540,
+          "opcode": "MOV_SRC_TO_DST_ALIGN",
+          "pipe": "MTE3",
+          "model_call_count": 1,
+          "detail": "Src:UB,Dst:OUT,XD:X1=0x11316400,XN:X6=0x400,XM:X4=0x2000010,XT:X5=0,Dtype:B32,id:16"
+        }
+      ],
+      "all_model_executed_control_flow_inside": [
+        {
+          "pc": 10240,
+          "opcode": "JUMPCMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0,CMP_dtype:U64,XN:X7=0xe,Condition_op:3,FC_type:IMM,IMM:0x2eCMP_type:REG,XM:X8=0x7ff,"
+        },
+        {
+          "pc": 10420,
+          "opcode": "JUMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0x10d13900"
+        },
+        {
+          "pc": 10500,
+          "opcode": "JUMPCMP",
+          "pipe": "FLOWCTRL",
+          "model_call_count": 1,
+          "detail": "TargetPC:0,CMP_dtype:S64,XN:X31=0x80,Condition_op:0,FC_type:IMM,IMM:0xbCMP_type:REG,XM:X1=0,"
+        }
+      ],
+      "evidence_scope": "existing executed PC positions only; no unseen paths, exclusive cost or hardware completion"
+    }
+  ],
+  "inputs": {
+    "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/captures/invocation-ef486a8af15948359d7457a3931d08d3.json": "39a5724ecf58c31d5fea78833fb0fe6e89cb8b427dc153d89d08c3771b7c8c8b",
+    "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/machine/59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad/counter-map.json": "4f9c2f99b23c49f94f62d1c2c4786533019c8d05abbdccd70498e974da4fb3b4",
+    "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/machine/59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad/dwarf.stdout": "f976c72d9209d4bf436c609dc47c91b9d644caabb4dcfdb311563f20e27785c9",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL-output/OPPROF_20261020021844_INEHTPJJOVZJUEVU/dump/aicore_binary.o": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL-output/OPPROF_20261020021844_INEHTPJJOVZJUEVU/dump/pc_start_addr.txt": "f4d9352dece593aa3dbc34acc49adf03ccdc7f499e538b39197783eecc5ccc3a",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL-output/OPPROF_20261020021844_INEHTPJJOVZJUEVU/simulator/core0.veccore0/core0.veccore0_instr_exe.csv": "3fcd3f93b52b99d1e5fbe9369f53c5c0c31f8f8100fa2a8e991f069bc1bf5846",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/binding.json": "c093a48e349f13e9956b04d61fd4bd3dfd3e2c312ab1b73b978d05b92bc63b5a",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/steps.json": "fc01147d984c960c292b95440f587c35294103ba6d32a0c4104dbdc6dfb1fc65",
+    "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL.stdout": "009cf44b57fa81d681bcc59e7cf7eeb99d447e09a71bbdd71069ae42fb9f0788"
+  }
+}

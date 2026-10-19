@@ -1,0 +1,135 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 166535,
+      "ppid": 2511431,
+      "pgid": 166535,
+      "startticks": 342429718
+    },
+    "worker": {
+      "pid": 166569,
+      "ppid": 166535,
+      "pgid": 166569,
+      "startticks": 342429724
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r063-ascend/model-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output"
+    ],
+    "argv_sha256": "45dc9d001c70d061aea204df5d1cb2dd43450c50f6b63213d8ffc2735615be37",
+    "script_sha256": "25c8943748b50c005804a1b948930f0b5714b69ab8b89b63f738bd1b7d8ee5ab",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 7825780384
+  },
+  "output/steps.json": [
+    {
+      "name": "host-build",
+      "argv": [
+        "g++",
+        "-std=c++17",
+        "-O2",
+        "-Wall",
+        "-Wextra",
+        "-Wno-deprecated-declarations",
+        "-I/usr/local/Ascend/cann-9.0.0/pkg_inc/runtime",
+        "-I/usr/local/Ascend/cann-9.0.0/pkg_inc",
+        "-I/usr/local/Ascend/cann-9.0.0/include",
+        "-I/usr/local/Ascend/cann-9.0.0/pkg_inc/profiling",
+        "-I/usr/local/Ascend/cann-9.0.0/include/experiment",
+        "-I/usr/local/Ascend/cann-9.0.0/include/experiment/msprof",
+        "/tmp/chijin-timeline-r063-ascend/model-input-v3/host.cpp",
+        "-L/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/model-link",
+        "-Wl,-rpath,/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/model-link",
+        "-Wl,-rpath,/usr/local/Ascend/cann-9.0.0/tools/simulator/Ascend910B4/lib",
+        "-lruntime",
+        "-o",
+        "/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/model-only-host"
+      ],
+      "pid": 166571,
+      "pgid": 166571,
+      "startticks": 342429731,
+      "timeout_seconds": 45,
+      "returncode": 0
+    },
+    {
+      "name": "SDK-MODEL",
+      "argv": [
+        "/usr/local/Ascend/cann-9.0.0/tools/msopprof/bin/msopprof",
+        "simulator",
+        "--soc-version=Ascend910B4",
+        "--core-id=0",
+        "--kernel-name=recurrence",
+        "--launch-count=1",
+        "--timeout=1",
+        "--output=/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL-output",
+        "--application=/tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/model-only-host /tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/actual-recorded-vector.elf 786816 /tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/MODEL-only-result.json /usr/local/Ascend/cann-9.0.0/tools/simulator/Ascend910B4/lib"
+      ],
+      "pid": 166576,
+      "pgid": 166576,
+      "startticks": 342429877,
+      "timeout_seconds": 105,
+      "returncode": 0
+    }
+  ],
+  "output/result.json": {
+    "status": "CPU_model_probe_returned",
+    "SDK_returncode": 0,
+    "model_result": {
+      "simulation_executed": true,
+      "hardware_kernel_executed": false,
+      "requested_original_model_kernel_launches": 1,
+      "model_math_state_and_guards_passed": true,
+      "trace_bytes": 786816
+    },
+    "actual_capture_file": "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture/timeline/captures/invocation-ef486a8af15948359d7457a3931d08d3.json",
+    "actual_capture_sha256": "39a5724ecf58c31d5fea78833fb0fe6e89cb8b427dc153d89d08c3771b7c8c8b",
+    "actual_binary_id": "59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad",
+    "actual_ELF_sha256": "73c2d8d27a949359f22fce1095c56706240d065cad492e73f97653848d682b0d",
+    "host_source_sha256": "5b51f934516796e275c2f3253209ba2f2583cf449ab5f915dc63c21abbb57651",
+    "raw_bytes": 786816,
+    "grid": [
+      3,
+      1,
+      1
+    ],
+    "runtime_steps": 3,
+    "model_directory": "/usr/local/Ascend/cann-9.0.0/tools/simulator/Ascend910B4/lib",
+    "original_model_configuration_sha256": "fdd8ee46a7f7c5449ddf3f2bfca122677c7880871c9cffa2486e60b22bedff28",
+    "hardware_kernel_executed": false,
+    "product_changed": false,
+    "purpose": "SDK instruction decoding only; never hardware duration or new hardware qualification"
+  },
+  "output/MODEL-only-result.json": {
+    "simulation_executed": true,
+    "hardware_kernel_executed": false,
+    "requested_original_model_kernel_launches": 1,
+    "model_math_state_and_guards_passed": true,
+    "trace_bytes": 786816
+  },
+  "output/SDK-MODEL.stdout": "/ Soc periods: 200.0000 / 200.0000 / 105.0000\n[INFO] chip 0 die 0 device created\n>> Start ModelParsim with 24 threads for 25 thread units, mode is 0\n================================================================================\n>>>>                                                                        \n>>>>                             \" PEM MODEL \"                                \n>>>>             Total no. of 1 chip(s) Model Init Success!                \n>>>>                                                                        \n================================================================================\n[INFO] Model Start Time: 2026-10-20 02:18:44\n[DRVSTUB_LOG] driver_api.c:556 sendSwapBuf:swapbuf_base_addr:10000000\n[DRVSTUB_LOG] driver_api.c:557 sendSwapBuf:sq:0 swapbuf_addr:10000000\n[DRVSTUB_LOG] driver_api.c:556 sendSwapBuf:swapbuf_base_addr:10000000\n[DRVSTUB_LOG] driver_api.c:557 sendSwapBuf:sq:1 swapbuf_addr:10000040\n[DRVSTUB_LOG] driver_api.c:556 sendSwapBuf:swapbuf_base_addr:10000000\n[DRVSTUB_LOG] driver_api.c:557 sendSwapBuf:sq:2 swapbuf_addr:10000080\n[DRVSTUB_LOG] driver_api.c:556 sendSwapBuf:swapbuf_base_addr:10000000\n[DRVSTUB_LOG] driver_api.c:557 sendSwapBuf:sq:3 swapbuf_addr:100000c0\n[INFO] <ProfInit> Start profiling on kernel: recurrence\n2026-10-20 02:18:44 [INFO]  Extract 2730 relations from kernel\n2026-10-20 02:18:44 [INFO]  Parse 2588 addr2line relations\n2026-10-20 02:18:47 [INFO]  Core operator results run in simulator as follow:\ncore_name           duration_time(us)   running_time(us)    \ncore0.veccore0      8.17                6.24                \n2026-10-20 02:18:49 [WARN]  Child process exited with status 139\n2026-10-20 02:18:50 [WARN]  Profiling running finished. May cause generating performance files to fail.\n2026-10-20 02:18:50 [WARN]  Running task failed, data parsing start\n2026-10-20 02:18:50 [INFO]  Start parse dump file\n2026-10-20 02:18:50 [INFO]  Profiling results saved in /tmp/chijin-timeline-r063-ascend/runs/existing-vector-model-v3/output/SDK-MODEL-output/OPPROF_20261020021844_INEHTPJJOVZJUEVU\n2026-10-20 02:18:50 [INFO]  Profiling data parse finished.\n2026-10-20 02:18:50 [INFO]  Op profiling finish. Welcome to next use.\n",
+  "controller": {
+    "owner": {
+      "pid": 166535,
+      "ppid": 2511431,
+      "pgid": 166535,
+      "startticks": 342429718
+    },
+    "live": null
+  },
+  "worker": {
+    "owner": {
+      "pid": 166569,
+      "ppid": 166535,
+      "pgid": 166569,
+      "startticks": 342429724
+    },
+    "live": null
+  }
+}
