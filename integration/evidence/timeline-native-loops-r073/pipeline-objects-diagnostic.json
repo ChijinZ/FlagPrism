@@ -1,0 +1,72 @@
+{
+  "status": "ordinary_math_hash_cache_objects_and_profile_snapshots_identified",
+  "ordinary": [
+    {
+      "compiled_hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+      "metadata": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/cache/K77OMYDAZWYRX44WH2AVC6SPWHITQZR3XO2UU7ZHIWCUSFVLVU4Q/runtime_gemm.json",
+      "metadata_sha256": "1644a0f7444890b26bdebd0d8b1924f5d2b1bcd68da6c8e328a8d992d101e570",
+      "cubin": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/cache/K77OMYDAZWYRX44WH2AVC6SPWHITQZR3XO2UU7ZHIWCUSFVLVU4Q/runtime_gemm.cubin",
+      "cubin_sha256": "76d2bd463b479eeb70eae1d86c6e14f6689c2c699f7ff174f0eae4e83ceb5956",
+      "cubin_bytes": 26448
+    }
+  ],
+  "profile": [
+    {
+      "case": "default",
+      "root": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/default/profile/timeline",
+      "binary_id": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "cubin": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/default/profile/timeline/binaries/e12a684aa9f4a83f989f4ad5b2ade76238f0c97edba944a9047c19ea04b95f1a/5.cubin",
+      "cubin_sha256": "585258452a4b8c4fab16a4cc94f0e57211fc787cc51255e0e7e898f724474c72",
+      "native_json": "/workspace/chijin-timeline-r072-nvidia/runs/real-origins-v3/output/default/profile/timeline/machine/0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d/json.stdout"
+    },
+    {
+      "case": "sparse",
+      "root": "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "cubin": "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline/binaries/1f4c3d06028ea2f7fb4aa3212b6451a9ea75937e95f87ebc51d6d7f4b4a5ecf2/5.cubin",
+      "cubin_sha256": "782fc33b19c48d5280ac25de9fbc0c64bf1d1bf806ddee2ded69df6fb036cbd9",
+      "native_json": "/workspace/chijin-timeline-r072-nvidia/runs/real-sparse-origins-v1/output/sparse-one/profile/timeline/machine/0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f/json.stdout"
+    }
+  ],
+  "registered_math": [
+    {
+      "phase": "ordinary",
+      "tiles": 3,
+      "hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+      "math": true,
+      "input": true,
+      "tail": true,
+      "calls": true
+    },
+    {
+      "phase": "ordinary",
+      "tiles": 7,
+      "hash": "57fee66060cdb11bf3963e81517a4fb1d138663bbbb54a7f2745854916abad39",
+      "math": true,
+      "input": true,
+      "tail": true,
+      "calls": true
+    },
+    {
+      "phase": "profile",
+      "tiles": 3,
+      "hash": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "math": true,
+      "input": true,
+      "tail": true,
+      "calls": true
+    },
+    {
+      "phase": "profile",
+      "tiles": 7,
+      "hash": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "math": true,
+      "input": true,
+      "tail": true,
+      "calls": true
+    }
+  ],
+  "device_executed": false,
+  "application_replayed": false,
+  "schedule_preservation_qualified": false
+}

@@ -1,0 +1,158 @@
+{
+  "status": "actual_native_iteration_paths_and_runtime_counts_passed",
+  "results": [
+    {
+      "binary_id": "8f2f5badc472b9502b459591db9c856b35941d5fdf939ffd0574e885ecf3e967",
+      "invocation_id": "invocation-efd635b43f7b41728f8a325edb8fe28c",
+      "expected_runtime_iterations": 3,
+      "raw_sha256": "276ec150fae11744303569ad926e98751acf6c1a75f3d9c9cab3f4e618a7a97c",
+      "sites": [
+        {
+          "site_id": 3,
+          "native_loop": {
+            "site_id": 3,
+            "kind": "compute_issue_bracket",
+            "status": "native_iteration_control_checked",
+            "native_iteration_boundaries_verified": true,
+            "source_iteration_identity_verified": false,
+            "source_cost_qualified": false,
+            "participation_verified": false,
+            "hardware_overlap_verified": false,
+            "loop_header_pc": 1008,
+            "latch_pcs": [
+              1376
+            ],
+            "exit_edges": [
+              [
+                1376,
+                1392
+              ]
+            ],
+            "terminal_pcs": [],
+            "exit_instruction_pcs": [],
+            "instruction_pcs": [
+              1008,
+              1024,
+              1040,
+              1056,
+              1072,
+              1088,
+              1104,
+              1120,
+              1136,
+              1152,
+              1168,
+              1184,
+              1200,
+              1216,
+              1232,
+              1248,
+              1264,
+              1280,
+              1296,
+              1312,
+              1328,
+              1344,
+              1360,
+              1376
+            ],
+            "function": "recurrence",
+            "begin_reader_pc": 1008,
+            "end_reader_pc": 1040,
+            "native_loop_id": "9862987b8b2deba73fe5ec5a8aef985580aead6ff56604a662be11b5c4c5224a",
+            "relation": "one_reader_pair_per_native_CFG_iteration_or_exit"
+          },
+          "actual_intervals": 24,
+          "counts_per_observer": {
+            "observer-f3aefa05bfccbefd61170cacbc89339792777618075d9c61d79a8e9b3ddfd751": 3,
+            "observer-4031b19e8cebb695765d81666bf4752c3c02537c4342f27af9f39d175dc2afeb": 3,
+            "observer-74fc091cf6028d36d45811d748482368810a7a78ddfa6dd30cd37952a7448ff7": 3,
+            "observer-77c00b389d86263ecb695bb7fda2e7ae3b0f13757a50877b01d7e7ad597c7741": 3,
+            "observer-b16c245218d06176011ae08c51ff4b8bbaa383afc3d0850406807c79f49b5059": 3,
+            "observer-520be4c5ffec54a0a5fab79dbfd8a97fd1cceb34644ad1d0c3660c07d8d0c598": 3,
+            "observer-47729f362899823d0922bcbe91f09bbd633dca4940063cba708ddfe0affc1726": 3,
+            "observer-867f3a3524205de2a005db503dbcd6ba6b7026f92315a625bd2d71c57391945b": 3
+          }
+        }
+      ]
+    },
+    {
+      "binary_id": "8f2f5badc472b9502b459591db9c856b35941d5fdf939ffd0574e885ecf3e967",
+      "invocation_id": "invocation-f24b1ad211d1420e8037da4dcbbf9e67",
+      "expected_runtime_iterations": 3,
+      "raw_sha256": "2f955a39ca493adaac0a3c11a0068cf3f0ad92f2e7cc36d11631a39b17111439",
+      "sites": [
+        {
+          "site_id": 3,
+          "native_loop": {
+            "site_id": 3,
+            "kind": "compute_issue_bracket",
+            "status": "native_iteration_control_checked",
+            "native_iteration_boundaries_verified": true,
+            "source_iteration_identity_verified": false,
+            "source_cost_qualified": false,
+            "participation_verified": false,
+            "hardware_overlap_verified": false,
+            "loop_header_pc": 1008,
+            "latch_pcs": [
+              1376
+            ],
+            "exit_edges": [
+              [
+                1376,
+                1392
+              ]
+            ],
+            "terminal_pcs": [],
+            "exit_instruction_pcs": [],
+            "instruction_pcs": [
+              1008,
+              1024,
+              1040,
+              1056,
+              1072,
+              1088,
+              1104,
+              1120,
+              1136,
+              1152,
+              1168,
+              1184,
+              1200,
+              1216,
+              1232,
+              1248,
+              1264,
+              1280,
+              1296,
+              1312,
+              1328,
+              1344,
+              1360,
+              1376
+            ],
+            "function": "recurrence",
+            "begin_reader_pc": 1008,
+            "end_reader_pc": 1040,
+            "native_loop_id": "9862987b8b2deba73fe5ec5a8aef985580aead6ff56604a662be11b5c4c5224a",
+            "relation": "one_reader_pair_per_native_CFG_iteration_or_exit"
+          },
+          "actual_intervals": 24,
+          "counts_per_observer": {
+            "observer-3ae799f58d2c931bc15e7bd0434b228003db31e0518a554b48c1314feb07c6b0": 3,
+            "observer-6d628d8953b23de0a69d3d51151c538cf77ed7c4412389701ad2e229eb98d7b7": 3,
+            "observer-6505c6366e085fb0a9ad8dd9e3cdfdc540d5edb1ac9791bc28dfd3bf9bfd1e69": 3,
+            "observer-c9312c44f15e6ff946f445571359aca15c3d95951ea4823b11d4789df495089a": 3,
+            "observer-2c57d7e47744041a071898f89777716adb16fdeec9775d1ee178d3a4ca9c32e1": 3,
+            "observer-1880ca2911916586f677223f55eba950e844fd9fc95262fff5d80834069693d7": 3,
+            "observer-f92dd4d5c83c11e8e22760abb8b243c22eb2e60818b8e5c6c10e4a598f5c0c29": 3,
+            "observer-7b9a9cabc9bd6c5dd81e62612ccd1311589c413219c99e751409d634297d9298": 3
+          }
+        }
+      ]
+    }
+  ],
+  "device_executed": false,
+  "application_replayed": false,
+  "source_iteration_identity_verified": false
+}
