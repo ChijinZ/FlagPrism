@@ -1129,3 +1129,24 @@ def test_evidence_browser_provenance(capture, tmp_path, kernel):
             'document.documentElement.scrollWidth <= innerWidth')
         assert not errors
         browser.close()
+
+
+@pytest.mark.parametrize("detail", [None, "auto", "timeline"])
+def test_cli_timeline_uses_compact_report(capture, tmp_path, detail):
+    args = SimpleNamespace(backend="future",
+                           counters=False,
+                           name=str(tmp_path / "out"),
+                           metadata=None,
+                           detail=detail)
+
+    def execute(args, target):
+        Path(args.name).with_suffix(".vendor.json").write_text(
+            json.dumps(dict(backend="future", associations=[record()])))
+
+    capture.run_capture(args, ["workload.py"], execute)
+    output = Path(args.name)
+    page = (output / 'report/index.html').read_text()
+    assert ('Full analysis JSON' in page) == (detail == 'timeline')
+    report = json.loads((output / 'report/report.json').read_text())
+    assert len(report['events']) == 1
+    assert report['events'][0]['duration_us'] == .1

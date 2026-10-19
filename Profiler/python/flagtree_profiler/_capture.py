@@ -313,7 +313,11 @@ def run_capture(args, target_args, execute):
                     os.environ.pop(INTERNAL_ENV, None)
                 else:
                     os.environ[INTERNAL_ENV] = old
-        export_capture(base, output, counters, context)
+        export_capture(base,
+                       output,
+                       counters,
+                       context,
+                       compact_html=getattr(args, 'detail', None) == 'timeline')
     except BaseException as error:
         message = f"Capture intermediates retained at {stage}; output: {output}"
         if isinstance(error, Exception) and hasattr(error, "add_note"):
