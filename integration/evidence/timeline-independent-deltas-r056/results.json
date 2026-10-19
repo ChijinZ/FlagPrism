@@ -1,0 +1,84 @@
+{
+  "state": "work_in_progress_not_final_acceptance",
+  "mapping_commit": "841c99f",
+  "latest_capacity_commit": "fbf60c227eb38e05d99a7fa68543dcf571de23fc",
+  "original_nvidia_qualification": {
+    "calls": 72,
+    "math_passed": 72,
+    "ns_passed": 60,
+    "writer_completeness_passed": 63,
+    "original_failed_calls_retained": true
+  },
+  "retained_q04_reexport": {
+    "calls": 12,
+    "exports": 96,
+    "application_replayed": false,
+    "actual_endpoint_negative_rejected": true,
+    "original_files_unchanged": true
+  },
+  "machine_contracts": {
+    "normal_passed": 32,
+    "optimized_passed": 32
+  },
+  "gcu_affected_qualification": {
+    "calls": 13,
+    "math_raw_ns_dependencies_budget_passed": 13,
+    "maximum_bundle_bytes": 64984633
+  },
+  "gcu_controlled": {
+    "C1": {
+      "work": [
+        3,
+        7,
+        11
+      ],
+      "positive_intervals_per_call": [
+        28,
+        36,
+        44
+      ],
+      "repetitions": 3
+    },
+    "C2": {
+      "block_k": [
+        32,
+        64
+      ],
+      "positive_intervals_per_call": [
+        196,
+        106
+      ],
+      "repetitions": 3
+    },
+    "ordinary_speedup_claim": false
+  },
+  "new_ascend_mixed_view": {
+    "traces": 6,
+    "actual_trace_processor": true,
+    "actual_standard_perfetto_ui": true,
+    "cross_observer_alignment_claim": false
+  },
+  "evidence": [
+    {
+      "file": "artifacts/timeline/run-056/preflight/nvidia-delta-evidence-v1.tgz",
+      "bytes": 6849,
+      "sha256": "b144d2be546865c635d06fe58c4f1f6aa412802a0fa703043084d7c909df4985"
+    },
+    {
+      "file": "artifacts/timeline/run-056/preflight/format-evidence-v2.tgz",
+      "bytes": 48406,
+      "sha256": "72ce3c9837133277e7f19ffc841f859316523e9e5fe405b9a701be7065d40ed2"
+    },
+    {
+      "file": "artifacts/timeline/run-056/preflight/nvidia-retained-reuse-v1.jsonl",
+      "bytes": 416094,
+      "sha256": "9e7f8d5f101d394eae47ad89fab22108cfc24b3adb0624f3188e3c0e0d7d8f61"
+    }
+  ],
+  "remaining": [
+    "Latest bounded capacity wheel and original nine overflow-call regression plus one fresh default q04 capture",
+    "Ascend original independent qualification terminal",
+    "Controlled interpretation and final requirement audit",
+    "Three fresh specified independent code reviews, fixes and delivery"
+  ]
+}
