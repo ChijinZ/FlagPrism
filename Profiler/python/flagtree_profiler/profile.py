@@ -1739,6 +1739,11 @@ def start(
     bundle_output = None
     bundle_created = False
     try:
+        if timeline_collector is not None:
+            prepare_clock = getattr(timeline_collector,
+                                    'prepare_clock_calibration', None)
+            if prepare_clock is not None:
+                prepare_clock()
         if instrumentation_activated:
             _activate_instrumentation(backend,
                                       observation_request,

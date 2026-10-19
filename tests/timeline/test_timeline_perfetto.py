@@ -38,6 +38,27 @@ def proof_for(batch, **overrides):
 
 class CounterPerfettoTests(unittest.TestCase):
 
+    def test_empirical_rate_error_is_separate_from_unknown_read_precision(
+            self):
+        batch = batch_fixture()
+        proof = proof_for(batch,
+                          period_uncertainty_numerator_ns=1,
+                          period_uncertainty_denominator=10)
+        view = derive_counter_ns_views(batch, [proof])[0]
+        self.assertEqual(view['unit_proof']['period_uncertainty_numerator_ns'],
+                         1)
+        self.assertEqual(
+            max(r['conversion_scale_error_ns'] for r in view['records']), 3)
+        self.assertTrue(
+            all(e['endpoint_error_ns'] is None for e in view['events']))
+        self.assertFalse(view['time_arrows_verified'])
+        trace = encode_counter_trace(view, batch, proof=proof)
+        self.assertIn(b'endpoint_conversion_scale_error_ns', trace)
+        with self.assertRaises(ValueError):
+            proof_for(batch, period_uncertainty_numerator_ns=1)
+        with self.assertRaises(ValueError):
+            proof_for(batch, period_uncertainty_numerator_ns=True)
+
     def test_projection_keeps_raw_and_unknown_precision(self):
         batch = batch_fixture()
         original = document_sha256(batch)

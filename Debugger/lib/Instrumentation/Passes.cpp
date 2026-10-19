@@ -1153,8 +1153,8 @@ Value lastDynamicProgram(OpBuilder &builder, Location loc) {
   Value ny = builder.create<triton::GetNumProgramsOp>(loc, 1);
   Value nz = builder.create<triton::GetNumProgramsOp>(loc, 2);
   Value xy = builder.create<arith::MulIOp>(loc, nx, ny);
-  return builder.create<arith::SubIOp>(loc,
-      builder.create<arith::MulIOp>(loc, xy, nz),
+  return builder.create<arith::SubIOp>(
+      loc, builder.create<arith::MulIOp>(loc, xy, nz),
       createI32Constant(builder, loc, 1));
 }
 Value loadDynamicHeaderI32(OpBuilder &builder, Location loc, Value ptr,
@@ -1178,8 +1178,9 @@ Value selectedDynamicWriter(OpBuilder &builder, Location loc, ModuleOp module,
       createI32Constant(builder, loc,
                         dynamicOption(module, kAttrSelectedProgram, 0)));
   if (isFirstLastTimeline(module)) {
-    Value last = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::eq,
-        logicalInstanceId, lastDynamicProgram(builder, loc));
+    Value last = builder.create<arith::CmpIOp>(
+        loc, arith::CmpIPredicate::eq, logicalInstanceId,
+        lastDynamicProgram(builder, loc));
     programSelected = builder.create<arith::OrIOp>(loc, programSelected, last);
   }
   Value actor = builder.create<gpu::ThreadIdOp>(loc, gpu::Dimension::x);
@@ -1243,12 +1244,16 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
   // New storage ABI: independently published per-program rings in compact
   // first/last slots. No all-grid allocation and no shared write cursor.
   if (dynamic && isFirstLastTimeline(module)) {
-    Value notFirst = builder.create<arith::CmpIOp>(loc, arith::CmpIPredicate::ne,
-        logicalInstanceId, createI32Constant(builder, loc, 0));
-    Value offset = builder.create<arith::SelectOp>(loc, notFirst,
-        createI32Constant(builder, loc, dynamicOption(module, kAttrTimelineSlotBytes, 0) / 4),
+    Value notFirst = builder.create<arith::CmpIOp>(
+        loc, arith::CmpIPredicate::ne, logicalInstanceId,
         createI32Constant(builder, loc, 0));
-    ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr.getType(), ctrlBytePtr, offset);
+    Value offset = builder.create<arith::SelectOp>(
+        loc, notFirst,
+        createI32Constant(builder, loc,
+                          dynamicOption(module, kAttrTimelineSlotBytes, 0) / 4),
+        createI32Constant(builder, loc, 0));
+    ctrlBytePtr = builder.create<triton::AddPtrOp>(loc, ctrlBytePtr.getType(),
+                                                   ctrlBytePtr, offset);
   }
   Value selectedWriter;
   Value capacity;
@@ -1325,10 +1330,13 @@ createRecordLoweringContext(OpBuilder &builder, FunctionOpInterface func,
       auto arrived = builder.create<scf::IfOp>(loc, selectedWriter, false);
       OpBuilder::InsertionGuard arrivalGuard(builder);
       builder.setInsertionPointToStart(arrived.thenBlock());
-      Value flags = loadDynamicHeaderI32(builder, loc, ctrlBytePtr, kHeaderFlagsOffset);
-      flags = builder.create<arith::OrIOp>(loc, flags, createI32Constant(builder, loc, 32));
-      storeI32Value(builder, loc, ctrlBytePtr, createI32Constant(builder, loc, 0),
-          kHeaderFlagsOffset, flags, builder.create<arith::ConstantIntOp>(loc, 1, 1));
+      Value flags =
+          loadDynamicHeaderI32(builder, loc, ctrlBytePtr, kHeaderFlagsOffset);
+      flags = builder.create<arith::OrIOp>(loc, flags,
+                                           createI32Constant(builder, loc, 32));
+      storeI32Value(builder, loc, ctrlBytePtr,
+                    createI32Constant(builder, loc, 0), kHeaderFlagsOffset,
+                    flags, builder.create<arith::ConstantIntOp>(loc, 1, 1));
     }
 
     builder.getContext()->getOrLoadDialect<memref::MemRefDialect>();
@@ -3213,6 +3221,27 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
         borrow);
     std::pair<Value, Value> duration{low, high};
     auto opId = recordOp->getAttrOfType<IntegerAttr>("op_id");
+    Value actorOrClockIdentity =
+        createI32Constant(builder, loc, ctx.selectedActor);
+    if (isFirstLastTimeline(recordOp->getParentOfType<ModuleOp>())) {
+      // Feature clock_identity_version=1 repurposes only the compact
+      // publisher's actor word. Its selected work-item remains metadata actor
+      // zero. Keep the FULL register: masking to a local SIP index aliases
+      // distinct counter epochs observed on real hardware.
+      ModuleOp module = recordOp->getParentOfType<ModuleOp>();
+      constexpr StringLiteral symbol = "flagprism_gcu_clock_identity_v1";
+      if (!module.lookupSymbol<LLVM::LLVMFuncOp>(symbol)) {
+        OpBuilder::InsertionGuard guard(builder);
+        builder.setInsertionPointToStart(module.getBody());
+        builder.create<LLVM::LLVMFuncOp>(
+            loc, symbol, LLVM::LLVMFunctionType::get(builder.getI32Type(), {}));
+      }
+      actorOrClockIdentity =
+          builder
+              .create<LLVM::CallOp>(loc, TypeRange{builder.getI32Type()},
+                                    symbol, ValueRange{})
+              ->getResult(0);
+    }
     SmallVector<Value, kRecordWords> words = {
         createI32Constant(builder, loc, kRecordKindDynamicTimeline),
         createI32Constant(builder, loc, static_cast<uint32_t>(opId.getInt())),
@@ -3224,7 +3253,7 @@ void emitDynamicTimelineStores(OpBuilder &builder, Location loc,
         end.second,
         duration.first,
         duration.second,
-        createI32Constant(builder, loc, ctx.selectedActor),
+        actorOrClockIdentity,
         slot,
         ordinal,
         zero,
@@ -4626,10 +4655,11 @@ struct InsertInstrumentationPass
           kAttrRecordLayout,
           builder.getStringAttr(
 #ifdef FLAGPRISM_BACKEND_ENFLAME
-              isFirstLastTimeline(module) ? kRecordLayoutFirstLastTimeline :
-              isDynamicTimeline(module) ? kRecordLayoutDynamicTimeline :
+              isFirstLastTimeline(module) ? kRecordLayoutFirstLastTimeline
+              : isDynamicTimeline(module) ? kRecordLayoutDynamicTimeline
+                                          :
 #endif
-                                        kRecordLayoutDeterministicCompactV1));
+                                          kRecordLayoutDeterministicCompactV1));
       module->setAttr(
           kAttrRecordPlan,
           builder.getStringAttr(serializeRecordPlanToJson(recordPlan)));
@@ -4741,15 +4771,20 @@ llvm::Error setDebugDynamicTimelineOptions(ModuleOp module, uint32_t program,
 }
 
 llvm::Error setDebugDynamicTimelineFirstLastOptions(ModuleOp module,
-    uint32_t actor, uint32_t sampleEvery, uint32_t capacity) {
+                                                    uint32_t actor,
+                                                    uint32_t sampleEvery,
+                                                    uint32_t capacity) {
   if (!capacity || capacity > 16384)
-    return llvm::createStringError(llvm::inconvertibleErrorCode(),
+    return llvm::createStringError(
+        llvm::inconvertibleErrorCode(),
         "GCU first/last capacity must be in [1,16384]");
-  if (auto error = setDebugDynamicTimelineOptions(module, 0, actor, sampleEvery))
+  if (auto error =
+          setDebugDynamicTimelineOptions(module, 0, actor, sampleEvery))
     return error;
   OpBuilder builder(module.getContext());
   module->setAttr(kAttrFirstLastTimeline, builder.getBoolAttr(true));
-  module->setAttr(kAttrTimelineSlotBytes,
+  module->setAttr(
+      kAttrTimelineSlotBytes,
       builder.getI32IntegerAttr(kRingHeaderBytes + capacity * kRecordBytes));
   return llvm::Error::success();
 }

@@ -545,7 +545,8 @@ py::dict toPyDecodedRun(const DecodedDebugRun &run) {
 class PreparedLaunchHandle {
 public:
   PreparedLaunchHandle(const py::dict &metadata, uint64_t streamHandle,
-                       py::handle runtimeMetadataValue, bool initialize = true) {
+                       py::handle runtimeMetadataValue,
+                       bool initialize = true) {
     auto bridge = createFrontendBridge();
 
     DebugCompileRequest compileRequest;
@@ -583,7 +584,8 @@ public:
     if (isAscendCensus(runtimeMetadata.recordLayout) ||
         isAscendCensus(compiledCensusLayout)) {
       const bool aligned = compiledCensusLayout == "ascend_source_census_v3";
-      const bool compact = aligned || compiledCensusLayout == "ascend_source_census_v2";
+      const bool compact =
+          aligned || compiledCensusLayout == "ascend_source_census_v2";
       const uint32_t version = aligned ? 3 : compact ? 2 : 1;
       const uint32_t columns =
           compact ? getUInt32Or(metadata, "debug_census_columns", 0) : 128;
@@ -631,14 +633,15 @@ public:
       if (cells > std::numeric_limits<uint32_t>::max())
         throw std::invalid_argument(
             "Ascend census grid exceeds native cell index range");
-      uint64_t bytes =
-          (aligned ? 0 : 32) + checkedMulU64(cells, 8, "Ascend physical census bytes");
+      uint64_t bytes = (aligned ? 0 : 32) +
+                       checkedMulU64(cells, 8, "Ascend physical census bytes");
       if (cells > getUInt64Or(metadata, "debug_max_census_cells", 0) ||
           bytes > getUInt64Or(metadata, "debug_max_census_bytes", 0) ||
           bytes > static_cast<uint64_t>(std::numeric_limits<int32_t>::max()))
         throw std::invalid_argument("Ascend census actual grid exceeds "
                                     "physical cell/byte/index budgets");
-      compileRequest.options.recordCapacity = static_cast<uint32_t>(aligned ? cells - 4 : cells);
+      compileRequest.options.recordCapacity =
+          static_cast<uint32_t>(aligned ? cells - 4 : cells);
     }
     if (runtimeMetadata.recordLayout == "gcu_site_census_v1" ||
         compiledCensusLayout == "gcu_site_census_v1") {
@@ -699,11 +702,14 @@ public:
             "3 * per-actor capacity + 1; rebuild stale kernel metadata");
     }
     if (runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
-        getStringOr(metadata, "debug_record_layout", "") == "gcu_first_last_timeline_v2") {
+        getStringOr(metadata, "debug_record_layout", "") ==
+            "gcu_first_last_timeline_v2") {
       if (runtimeMetadata.recordLayout != "gcu_first_last_timeline_v2" ||
-          getStringOr(metadata, "debug_record_layout", "") != runtimeMetadata.recordLayout ||
+          getStringOr(metadata, "debug_record_layout", "") !=
+              runtimeMetadata.recordLayout ||
           getUInt32Or(metadata, "debug_dynamic_index_bits", 0) != 32)
-        throw std::invalid_argument("GCU first/last runtime contradicts compiler storage ABI");
+        throw std::invalid_argument(
+            "GCU first/last runtime contradicts compiler storage ABI");
     }
     if (runtimeMetadata.recordLayout == "selected_dynamic_timeline_v1" ||
         runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2" ||
@@ -719,8 +725,10 @@ public:
       // The bounded GCU writer uses signed pointer offsets and unsigned flat
       // program ids. Validate the actual launch before allocating any buffer;
       // compile-time selection alone cannot establish these runtime bounds.
-      const bool firstLast = runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
-      if ((!firstLast && runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1") ||
+      const bool firstLast =
+          runtimeMetadata.recordLayout == "gcu_first_last_timeline_v2";
+      if ((!firstLast &&
+           runtimeMetadata.recordLayout != "selected_dynamic_timeline_v1") ||
           getStringOr(metadata, "debug_clock_carrier", "") !=
               "llvm_i64_words" ||
           getUInt32Or(metadata, "debug_record_size", 0) != 64)
@@ -755,21 +763,26 @@ public:
         throw std::invalid_argument(
             "bounded dynamic trace buffer exceeds INT32_MAX pointer offsets");
       if (firstLast) {
-        if (getStringOr(metadata, "debug_dynamic_program_policy", "") != "runtime_first_last" ||
+        if (getStringOr(metadata, "debug_dynamic_program_policy", "") !=
+                "runtime_first_last" ||
             getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 2 ||
             getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) != 2 ||
-            getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) != bufferBytes ||
-            !compileRequest.options.recordCapacity || compileRequest.options.recordCapacity > 16384 ||
-            launchGridProduct(runtimeMetadata) == 0 || launchGridProduct(runtimeMetadata) > signedLimit)
-          throw std::invalid_argument("GCU first/last manifest/storage mismatch");
+            getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) !=
+                bufferBytes ||
+            !compileRequest.options.recordCapacity ||
+            compileRequest.options.recordCapacity > 16384 ||
+            launchGridProduct(runtimeMetadata) == 0 ||
+            launchGridProduct(runtimeMetadata) > signedLimit)
+          throw std::invalid_argument(
+              "GCU first/last manifest/storage mismatch");
       } else {
-      if (!lookup(metadata, "debug_dynamic_selected_program"))
-        throw std::invalid_argument(
-            "bounded dynamic indexing requires an explicit selected program");
-      if (getUInt64Or(metadata, "debug_dynamic_selected_program", 0) >
-          signedLimit)
-        throw std::invalid_argument(
-            "bounded dynamic selected program exceeds INT32_MAX");
+        if (!lookup(metadata, "debug_dynamic_selected_program"))
+          throw std::invalid_argument(
+              "bounded dynamic indexing requires an explicit selected program");
+        if (getUInt64Or(metadata, "debug_dynamic_selected_program", 0) >
+            signedLimit)
+          throw std::invalid_argument(
+              "bounded dynamic selected program exceeds INT32_MAX");
       }
       // A selected id outside the grid intentionally collects no records.
       // Do not reject that supported ablation or silently narrow the id.
@@ -859,7 +872,8 @@ public:
     ensurePrepared();
     if (initialized_)
       throw py::value_error("debugger launch initialization is not repeatable");
-    initialized_ = true; // May submit writes before throwing; owner must retain.
+    initialized_ =
+        true; // May submit writes before throwing; owner must retain.
     prepared_->transferEngine->initHeader(prepared_->request.launchContext);
   }
 
@@ -918,13 +932,16 @@ void init_flagtree_debugger_runtime(py::module &&m) {
 
   m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
   m.attr("GCU_TIMELINE_PUBLISHER_VERSION") = 2;
-  m.def("allocate_timeline_launch",
-      [](py::dict metadata, uint64_t streamHandle, py::object runtimeMetadata) {
-        if (getStringOr(metadata, "debug_record_layout", "") != "gcu_first_last_timeline_v2")
-          throw py::value_error("Deferred timeline allocation requires GCU storage v2");
-        return std::make_unique<PreparedLaunchHandle>(metadata, streamHandle,
-                                                      runtimeMetadata, false);
-      });
+  m.attr("GCU_TIMELINE_CLOCK_IDENTITY_VERSION") = 1;
+  m.def("allocate_timeline_launch", [](py::dict metadata, uint64_t streamHandle,
+                                       py::object runtimeMetadata) {
+    if (getStringOr(metadata, "debug_record_layout", "") !=
+        "gcu_first_last_timeline_v2")
+      throw py::value_error(
+          "Deferred timeline allocation requires GCU storage v2");
+    return std::make_unique<PreparedLaunchHandle>(metadata, streamHandle,
+                                                  runtimeMetadata, false);
+  });
   m.def(
       "prepare_launch",
       [](const py::dict &metadata, uint64_t streamHandle,

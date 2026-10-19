@@ -267,6 +267,17 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
                 period_denominator=view['unit_proof']['period_denominator'],
                 unit_provider=view['unit_proof']['provider'],
                 unit_evidence_ids=view['unit_proof']['evidence_ids'])
+            if 'period_uncertainty_numerator_ns' in view['unit_proof']:
+                annotations.update(
+                    scale_quality='empirical_affine_rate_for_enclosed_window',
+                    period_uncertainty_numerator_ns=view['unit_proof']
+                    ['period_uncertainty_numerator_ns'],
+                    period_uncertainty_denominator=view['unit_proof']
+                    ['period_uncertainty_denominator'],
+                    endpoint_conversion_scale_error_ns=[
+                        row['conversion_scale_error_ns'] for row in refs
+                    ],
+                    hardware_read_precision_verified=False)
             if shared is not None:
                 annotations.update(counter_domain_id=shared['domain_id'],
                                    counter_epoch_id=shared['epoch_id'],

@@ -274,16 +274,25 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
                 if (request.get("semantics") != ["source_control_interval"]
                         or request.get("programs") is not None
                         or request.get("sample_every") != 1
-                        or request.get("automatic") is not True
-                        or type(request.get("max_events_per_instance")) is not int
-                        or not 1 <= request["max_events_per_instance"] <= 16384):
-                    raise ValueError("Ascend timeline requires automatic unsampled runtime first/last intervals")
+                        or request.get("automatic") is not True or type(
+                            request.get("max_events_per_instance")) is not int
+                        or
+                        not 1 <= request["max_events_per_instance"] <= 16384):
+                    raise ValueError(
+                        "Ascend timeline requires automatic unsampled runtime first/last intervals"
+                    )
             else:
-                if request.get("semantics") != ["counter"] or request.get("programs") is not None or request.get("sample_every") != 1:
-                    raise ValueError("Ascend census requires an all-grid unsampled counter request")
+                if request.get("semantics") != [
+                        "counter"
+                ] or request.get("programs") is not None or request.get(
+                        "sample_every") != 1:
+                    raise ValueError(
+                        "Ascend census requires an all-grid unsampled counter request"
+                    )
                 for key in ("max_census_cells", "max_census_bytes"):
                     if type(request.get(key)) is not int or request[key] <= 0:
-                        raise ValueError("Ascend census requires positive " + key)
+                        raise ValueError("Ascend census requires positive " +
+                                         key)
             # Inline first: the IDs subsequently assigned name the actual final
             # TTIR operations to which the source-site markers are attached.
             inline_pm = ir.pass_manager(mod.context)
@@ -508,29 +517,40 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
         else:
             programs = request.get("programs")
             first_last = request.get("program_policy") == "runtime_first_last"
-            if not first_last and (not isinstance(programs, list) or len(programs) != 1):
+            if not first_last and (not isinstance(programs, list)
+                                   or len(programs) != 1):
                 raise ValueError(
                     "GCU selected trace requires exactly one logical program")
             if request.get("semantics") != ["source_control_interval"]:
                 raise ValueError(
                     "GCU IR trace provides source_control_interval only")
-            if not first_last and (type(programs[0]) is not int or not 0 <= programs[0] <= 0x7fffffff):
+            if not first_last and (type(programs[0]) is not int
+                                   or not 0 <= programs[0] <= 0x7fffffff):
                 raise ValueError(
                     "GCU selected program must fit validated signed 32-bit indexing"
                 )
             metadata["debug_dynamic_index_bits"] = 32
             metadata["debug_clock_carrier"] = "llvm_i64_words"
             if first_last:
-                if (getattr(fd, 'GCU_TIMELINE_STORAGE_VERSION', None) != 2 or
-                        getattr(fd, 'GCU_TIMELINE_PUBLISHER_VERSION', None) != 2 or
-                        programs is not None or not request.get('automatic')):
-                    raise ValueError('GCU first/last requires matching storage v2 compiler and automatic selection')
+                if (getattr(fd, 'GCU_TIMELINE_STORAGE_VERSION', None) != 2
+                        or getattr(fd, 'GCU_TIMELINE_PUBLISHER_VERSION',
+                                   None) != 2
+                        or getattr(fd, 'GCU_TIMELINE_CLOCK_IDENTITY_VERSION',
+                                   None) != 1 or programs is not None
+                        or not request.get('automatic')):
+                    raise ValueError(
+                        'GCU first/last requires matching storage v2 compiler and automatic selection'
+                    )
                 capacity = request['max_events_per_instance']
-                fd.set_debug_dynamic_timeline_first_last_options(mod, 0, request['sample_every'], capacity)
+                fd.set_debug_dynamic_timeline_first_last_options(
+                    mod, 0, request['sample_every'], capacity)
                 metadata['debug_dynamic_storage_version'] = 2
                 metadata['debug_dynamic_publisher_version'] = 2
+                metadata['debug_clock_identity_version'] = 1
+                metadata[
+                    'debug_clock_identity_primitive'] = 'llvm.dtu.movs.sipinfo'
                 metadata['debug_dynamic_program_policy'] = 'runtime_first_last'
-                metadata['debug_dynamic_slot_bytes'] = 32+capacity*64
+                metadata['debug_dynamic_slot_bytes'] = 32 + capacity * 64
             else:
                 fd.set_debug_dynamic_timeline_options(mod, programs[0], 0,
                                                       request["sample_every"])
@@ -628,8 +648,10 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
     metadata["debug_host_summary_bundles"] = (
         _target_backend(metadata) in {"gcu", "enflame"}
         and metadata["debug_full_dump_payload_bytes_per_instance"] > 0)
-    if (metadata["debug_records_per_instance"] <= 0 and
-            metadata["debug_record_layout"] not in {"selected_dynamic_timeline_v1", "gcu_first_last_timeline_v2"}):
+    if (metadata["debug_records_per_instance"] <= 0
+            and metadata["debug_record_layout"] not in {
+                "selected_dynamic_timeline_v1", "gcu_first_last_timeline_v2"
+            }):
         # The user may request dynamic debugger collection, but the IR pass is
         # the source of truth for whether a hidden-arg ABI was actually added.
         # Metadata-only regions must not make the launcher append

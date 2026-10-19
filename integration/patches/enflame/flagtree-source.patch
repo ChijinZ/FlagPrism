@@ -2,7 +2,7 @@ diff --git a/third_party/enflame/backend/compiler.py b/third_party/enflame/backe
 index db4c5ff..dfed6b6 100644
 --- a/third_party/enflame/backend/compiler.py
 +++ b/third_party/enflame/backend/compiler.py
-@@ -203,6 +203,32 @@ def make_ttgir(mod, metadata, options):
+@@ -203,6 +203,39 @@ def make_ttgir(mod, metadata, options):
  # FlagPrism: local collect regions can request L2 under a global L1 default.
  # The payload plan after TTIR instrumentation determines the SDK's i64 requirement.
  def _debug_codegen_options(options, metadata):
@@ -18,6 +18,13 @@ index db4c5ff..dfed6b6 100644
 +        libraries = tuple(options.extern_libs or ())
 +        if not any(path == library for _, path in libraries):
 +            libraries += (("flagprism_sdk_global_timer", library),)
++        if metadata.get("debug_clock_identity_version") == 1:
++            from flagtree.debugger.gcu_clock import identity_library
++            identity = identity_library(tops_home=toolkit.get_tops_home())
++            metadata["debug_clock_identity_library_sha256"] = identity["sha256"]
++            metadata["debug_clock_identity_tool_sha256"] = identity["inputs"]["tool_sha256"]
++            if not any(path == identity["file"] for _, path in libraries):
++                libraries += (("flagprism_clock_identity", identity["file"]),)
 +        # Dynamic counters and pointers use validated i32. The SDK clock
 +        # alone stays LLVM i64 and is split immediately into two i32 words.
 +        dynamic_words = metadata.get("debug_clock_carrier") == "llvm_i64_words"
@@ -35,7 +42,7 @@ index db4c5ff..dfed6b6 100644
      if (options.instrumentation_mode.startswith("debugger")
              and metadata.get("debug_full_dump_payload_bytes_per_instance", 0) > 0 and not options.enable_i64):
          metadata["enable_i64"] = True
-@@ -302,6 +328,10 @@ def make_gcuir(mod, metadata, options):
+@@ -302,6 +335,10 @@ def make_gcuir(mod, metadata, options):
              if metadata['tle_raw_deferred']:
                  gcu_passes.gcu400.add_tle_dslregion_inline(pm)
      gcu_passes.mlir.add_print_op_generic(pm)

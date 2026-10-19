@@ -420,6 +420,12 @@ class TimelineInstrumentationMixin:
                 TimeoutError(
                     'Timeline finalization budget exhausted; owner and acquired bytes retained'
                 ))
+        before_decode = getattr(self, '_before_timeline_decode', None)
+        if before_decode is not None:
+            try:
+                before_decode(directory, deadline)
+            except Exception as error:
+                failed(None, 'before_decode', error)
         for identity in tuple(self._timeline_pending):
             # A failed resource release remains retryable in the owner pool.
             if identity in self.timeline_pool.invocation_ids:

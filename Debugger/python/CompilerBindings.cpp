@@ -155,8 +155,10 @@ void init_flagtree_debugger_compiler(py::module_ &m) {
   });
   m.attr("GCU_TIMELINE_STORAGE_VERSION") = 2;
   m.attr("GCU_TIMELINE_PUBLISHER_VERSION") = 2;
+  m.attr("GCU_TIMELINE_CLOCK_IDENTITY_VERSION") = 1;
   m.def("set_debug_dynamic_timeline_first_last_options",
-        [](ModuleOp mod, uint32_t actor, uint32_t sampleEvery, uint32_t capacity) {
+        [](ModuleOp mod, uint32_t actor, uint32_t sampleEvery,
+           uint32_t capacity) {
           if (auto error = setDebugDynamicTimelineFirstLastOptions(
                   mod, actor, sampleEvery, capacity))
             throw py::value_error(llvm::toString(std::move(error)));

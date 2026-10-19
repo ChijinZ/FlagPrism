@@ -34,6 +34,8 @@ class CounterUnitProof:
     provider: str
     evidence_ids: tuple
     implementation_sha256: str | None = None
+    period_uncertainty_numerator_ns: int = 0
+    period_uncertainty_denominator: int = 1
 
     def __post_init__(self):
         for field in ('capture_id', 'invocation_id', 'binary_id',
@@ -45,6 +47,12 @@ class CounterUnitProof:
         for field in ('period_numerator_ns', 'period_denominator',
                       'max_elapsed_ns'):
             _integer(getattr(self, field), field, 1)
+        _integer(self.period_uncertainty_numerator_ns, 'period uncertainty')
+        _integer(self.period_uncertainty_denominator,
+                 'uncertainty denominator', 1)
+        TickScale(self.period_numerator_ns, self.period_denominator,
+                  self.period_uncertainty_numerator_ns,
+                  self.period_uncertainty_denominator)
         if (type(self.evidence_ids) is not tuple or not self.evidence_ids
                 or any(
                     type(item) is not str or not item
@@ -86,17 +94,25 @@ def derive_counter_ns_views(batch, proofs):
             continue
         origin = min(row['tick'] for row in records)
         maximum = max(row['tick'] for row in records)
-        scale = TickScale(proof.period_numerator_ns, proof.period_denominator)
+        scale = TickScale(proof.period_numerator_ns, proof.period_denominator,
+                          proof.period_uncertainty_numerator_ns,
+                          proof.period_uncertainty_denominator)
+        nominal_scale = TickScale(proof.period_numerator_ns,
+                                  proof.period_denominator)
         scale.elapsed_ticks(origin,
                             maximum,
                             bits=observer['timer_bits'],
                             max_elapsed_ns=proof.max_elapsed_ns)
         converted = {}
         for record in records:
-            ns, rounding = scale.offset(record['tick'] - origin)
+            ns, rounding = nominal_scale.offset(record['tick'] - origin)
             converted[record['id']] = dict(record,
                                            relative_ns=ns,
                                            conversion_rounding_ns=rounding)
+            if proof.period_uncertainty_numerator_ns:
+                converted[
+                    record['id']]['conversion_scale_error_ns'] = scale.offset(
+                        record['tick'] - origin)[1]
         events = []
         for event in batch['events']:
             if event['observer_id'] != proof.observer_id:
@@ -140,4 +156,13 @@ def derive_counter_ns_views(batch, proofs):
                     'Read precision is unknown; no time arrows or cross-observer comparison are granted.',
                     'Origin is local to this observer/file, without host/device clock correlation.'
                 ]))
+        if proof.period_uncertainty_numerator_ns:
+            view = views[-1]
+            view['unit_proof'].update(period_uncertainty_numerator_ns=proof.
+                                      period_uncertainty_numerator_ns,
+                                      period_uncertainty_denominator=proof.
+                                      period_uncertainty_denominator)
+            view['notes'].append(
+                'Conversion scale error includes the empirical rate interval and rounding; hardware read precision remains unknown.'
+            )
     return views

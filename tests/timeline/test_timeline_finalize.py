@@ -128,6 +128,54 @@ def read_index(base):
         Path(base).with_suffix('.timeline').joinpath('index.json').read_text())
 
 
+def test_post_readback_calibration_failure_preserves_originals_and_decode(
+        collector, tmp_path, monkeypatch):
+    hook, transport, ids = collector
+    failure = ValueError('injected calibration failure')
+    snapshots = {}
+
+    def close_clock(directory, deadline):
+        if hook.timeline_pool.invocation_ids or hook.timeline_pool.pending_bytes:
+            raise RuntimeError(
+                'Calibration ran before raw owners were salvaged')
+        for identity in ids:
+            original = directory / 'captures' / (identity + '.input.json')
+            doc = json.loads(original.read_text())
+            raw = directory / doc['raw_file']
+            if hashlib.sha256(
+                    raw.read_bytes()).hexdigest() != doc['raw_sha256']:
+                raise RuntimeError(
+                    'Calibration observed missing/corrupt original')
+            if not doc['owner'].get('host_completion_observed_ns'):
+                raise RuntimeError(
+                    'Calibration ran before completion was observed')
+            snapshots[original] = original.read_bytes()
+            snapshots[raw] = raw.read_bytes()
+        raise failure
+
+    monkeypatch.setattr(hook,
+                        '_before_timeline_decode',
+                        close_clock,
+                        raising=False)
+    base = tmp_path / 'capture'
+    with pytest.raises(ValueError) as error:
+        hook.flush_timeline(base)
+    if error.value is not failure:
+        raise RuntimeError('Calibration failure identity lost')
+    index = read_index(base)
+    if len(index['captures']
+           ) != 2 or index['pending_decode'] or index['retained_owners']:
+        raise RuntimeError(
+            'Calibration failure prevented decoding saved originals')
+    actions = list(transport.actions)
+    monkeypatch.setattr(hook, '_before_timeline_decode', lambda *args: None)
+    hook.flush_timeline(base)
+    if transport.actions != actions or any(p.read_bytes() != raw
+                                           for p, raw in snapshots.items()):
+        raise RuntimeError(
+            'Clock retry touched device transport or changed originals')
+
+
 def test_decoder_failure_saves_all_owners_and_retry_uses_only_originals(
         collector, tmp_path, monkeypatch):
     hook, transport, ids = collector

@@ -285,6 +285,22 @@ def reexport_capture(directory, original_file):
                 UnicodeError) as error:
             dependency_reason = 'Ascend observed dependencies unavailable: ' + str(
                 error)
+    elif backend == 'enflame':
+        try:
+            retain(metadata['clock_calibration_file'])
+            from .timeline_unit_enflame import load_counter_unit_proofs
+            from .timeline_perfetto import write_counter_exports
+            proofs = load_counter_unit_proofs(directory, capture, batch)
+            views = derive_counter_ns_views(batch, proofs)
+            rows = write_counter_exports(directory,
+                                         Path('captures') /
+                                         owner['invocation_id'],
+                                         views,
+                                         batch,
+                                         proofs=proofs)
+        except (ValueError, OSError, KeyError, TypeError,
+                UnicodeError) as error:
+            reason = 'GCU counter calibration unavailable: ' + str(error)
     else:
         reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
     result = dict(invocation_id=owner['invocation_id'],
