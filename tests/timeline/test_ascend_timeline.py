@@ -300,3 +300,96 @@ def test_loss_flags_must_follow_the_actual_publisher(kind):
         struct.pack_into('<Q', bad, 192 + 56, 3)
     with pytest.raises(ValueError):
         decode(meta, owner, association, bytes(bad))
+
+
+# Synthetic ABI rejection fixtures. Real LLVM/device qualification is separate.
+def native_fixture(operation):
+    meta, owner, association, raw = fixture()
+    artifact = meta['flagprism_ascend_handoff']['artifacts'][0]
+    manifest = artifact['metadata']
+    semantic = 2 if operation == 'set_flag' else 3
+    intrinsic = 'llvm.hivm.' + ('SET'
+                                if semantic == 2 else 'WAIT') + '.FLAG.IMM'
+    original_call = '  call void @' + intrinsic + '(i64 1, i64 0, i64 0), !dbg !12'
+    original = 'define void @fixture() {\n' + original_call.replace(
+        '!dbg !12', '!dbg !40') + '\nret void\n}\n'
+    artifact['llir'] = original
+    artifact['sha256'] = sha(original.encode())
+    manifest['module_sha256'] = sha(original.encode())
+    manifest['runtime_actor_binding'].update(module_sha256=sha(
+        original.encode()),
+                                             native_control_version=1)
+    manifest['dynamic_sites'][1].update(
+        semantic_code=semantic,
+        operation_class='native_control_scalar_bracket',
+        native_operation=operation,
+        intrinsic=intrinsic,
+        native_arguments=[1, 0, 0],
+        completion_status='unverified',
+        scope='scalar_issue_of_original_native_control',
+        source_binding='containing_original_block_fragment_navigation',
+        original_instructions=original_call,
+        original_instructions_sha256=sha(original_call.encode()))
+    reseal_manifest(artifact)
+    raw = bytearray(raw)
+    for slot, program in enumerate([0, 8]):
+        offset = (slot * 3 + 1) * 192 + 128
+        descriptor = 2 | semantic << 32
+        physical = 3 + slot
+        struct.pack_into('<Q', raw, offset, descriptor)
+        struct.pack_into('<Q', raw, offset + 56,
+                         COMMIT ^ descriptor ^ 1 ^ program ^ 1 ^ physical)
+    return meta, owner, association, bytes(raw)
+
+
+def reseal_manifest(artifact):
+    text = json.dumps(artifact['metadata'])
+    artifact.update(manifest_text=text, manifest_sha256=sha(text.encode()))
+
+
+@pytest.mark.parametrize('operation', ['set_flag', 'wait_flag'])
+def test_versioned_native_controls_keep_exact_raw_and_honest_semantics(
+        operation):
+    meta, owner, association, raw = native_fixture(operation)
+    batch = decode(meta, owner, association, raw)
+    native = [
+        s for s in batch['sites']
+        if s['attributes'].get('ascend.native_operation') == operation
+    ]
+    assert native
+    assert all(s['semantic'] == 'observer_region_elapsed'
+               and s['attributes']['ascend.completion_status'] == 'unverified'
+               and s['attributes']['ascend.engine_activity_verified'] is False
+               for s in native)
+    assert batch['clock_status'] == 'unverified'
+    for r in batch['records']:
+        assert struct.unpack_from('<Q', raw, r['offset'])[0] == r['tick']
+
+
+@pytest.mark.parametrize('fault', [
+    'missing_version', 'wrong_version', 'bool_version', 'arguments',
+    'intrinsic', 'completion', 'source_binding', 'raw_semantic'
+])
+def test_native_controls_reject_forged_or_unversioned_bindings(fault):
+    meta, owner, association, raw = native_fixture('wait_flag')
+    artifact = meta['flagprism_ascend_handoff']['artifacts'][0]
+    binding = artifact['metadata']['runtime_actor_binding']
+    site = artifact['metadata']['dynamic_sites'][1]
+    if fault == 'missing_version': binding.pop('native_control_version')
+    elif fault == 'wrong_version': binding['native_control_version'] = 2
+    elif fault == 'bool_version': binding['native_control_version'] = True
+    elif fault == 'arguments': site['native_arguments'] = [4, 0, 0]
+    elif fault == 'intrinsic': site['intrinsic'] = 'llvm.hivm.SET.FLAG.IMM'
+    elif fault == 'completion': site['completion_status'] = 'verified'
+    elif fault == 'source_binding': site['source_binding'] = 'guessed'
+    else:
+        raw = bytearray(raw)
+        offset = 192 + 128
+        descriptor = 2 | 1 << 32
+        struct.pack_into('<Q', raw, offset, descriptor)
+        struct.pack_into('<Q', raw, offset + 56,
+                         COMMIT ^ descriptor ^ 1 ^ 0 ^ 1 ^ 3)
+        raw = bytes(raw)
+    reseal_manifest(artifact)
+    with pytest.raises(ValueError):
+        decode(meta, owner, association, raw)

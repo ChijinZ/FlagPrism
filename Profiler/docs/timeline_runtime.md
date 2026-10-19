@@ -251,6 +251,33 @@ absolute executable. Missing tools or an unsupported machine mapping leave raw
 captures available with an explicit diagnostic. The matching new LLVM plugin
 must emit clock-marker version 1; old captures remain readable.
 
+New source-timeline compilations also declare `native_control_version=1`
+in the actor binding. The late pass automatically brackets existing
+`llvm.hivm.SET.FLAG.IMM` and `llvm.hivm.WAIT.FLAG.IMM` calls with static,
+nonnegative i64 pipe/event arguments. It adds no native flag or wait. These
+records use semantic codes 2/3 in the existing paired physical layout; source
+fragments retain code 1. The decoder requires the feature version and the exact
+original intrinsic/arguments. Old code-1-only captures remain readable.
+
+Coordinates come from the original containing fragment, or from six actual
+carrier operands that all dominate the native control. The latter binding is
+explicitly coordinate-only; it does not identify the control with the carrier's
+source operation. Native debug locations are retained separately for navigation.
+Unbound controls, unsupported primitives and nonconstant arguments have explicit
+unobserved reasons in the compiler control plan.
+
+Native track names describe **scalar control brackets**, with pipe/event
+arguments in their details. They do not certify destination-pipe completion,
+engine activity, buffer generations or dynamic dependencies. In the real r048
+runtime-K recurrence and Softmax development captures, each invocation retained
+20 native brackets. The recurrence recordings had 36/44 total intervals as K
+changed; the native count stayed 20 because additional iterations did not require
+additional flags. All 20 native brackets in this Softmax capture had equal start
+and end ticks. Zero-width brackets remain unchanged, rather than receiving an
+invented duration. The source fragments still contained multiple positive
+intervals. These finite observations do not qualify the asynchronous pipeline
+required by the three-backend goal.
+
 The Ascend unit provider binds the actual runtime model/device, loaded binary,
 SYS_CNT instruction locations, original raw records and a bounded host window.
 For the documented A2 counter, one tick is 20 ns. This does not apply to other

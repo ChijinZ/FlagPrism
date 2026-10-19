@@ -1,0 +1,52 @@
+{
+  "status": "real_ascend_native_raw_decoder_passed_not_async_qualification",
+  "captures": [
+    {
+      "invocation_id": "invocation-caf2c604e9dc4f2fb927664a1dd1fefb",
+      "native_counts": {
+        "('set_flag', 4, 1, 0)": 4,
+        "('wait_flag', 4, 1, 0)": 4,
+        "('set_flag', 1, 5, 0)": 4,
+        "('wait_flag', 1, 5, 0)": 4,
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2
+      },
+      "native_intervals": 20,
+      "zero_width_native_intervals": 17,
+      "total_intervals": 36,
+      "raw_semantic_fault_rejected": true
+    },
+    {
+      "invocation_id": "invocation-dc66e9074b74446a822f3c5a6a3d7ad4",
+      "native_counts": {
+        "('set_flag', 4, 1, 0)": 4,
+        "('wait_flag', 4, 1, 0)": 4,
+        "('set_flag', 1, 5, 0)": 4,
+        "('wait_flag', 1, 5, 0)": 4,
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2
+      },
+      "native_intervals": 20,
+      "zero_width_native_intervals": 16,
+      "total_intervals": 44,
+      "raw_semantic_fault_rejected": true
+    },
+    {
+      "invocation_id": "invocation-dbce39a88c70436792e0b2afaf52c2bf",
+      "native_counts": {
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2,
+        "('set_flag', 4, 1, 0)": 2,
+        "('wait_flag', 4, 1, 0)": 2,
+        "('set_flag', 1, 0, 0)": 4,
+        "('wait_flag', 1, 0, 0)": 4,
+        "('set_flag', 1, 5, 0)": 2,
+        "('wait_flag', 1, 5, 0)": 2
+      },
+      "native_intervals": 20,
+      "zero_width_native_intervals": 20,
+      "total_intervals": 30,
+      "raw_semantic_fault_rejected": true
+    }
+  ]
+}

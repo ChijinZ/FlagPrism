@@ -1,5 +1,6 @@
 // An actual upstream LLVM15 pass applied by the compiler driver adapter.
 // Capture post-actor lowering evidence before forwarding IR to the SDK.
+#include "AscendNativeTimeline.h"
 #include "AscendSourceCensus.h"
 #include "AscendTimeline.h"
 #include "llvm/ADT/DenseMap.h"
@@ -562,6 +563,80 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         json::Object{{"basis", "actual_selected_source_site_marker_operands"},
                      {"linear_expression", "x + grid_x * (y + grid_y * z)"},
                      {"anchors", std::move(anchorManifest)}};
+    // Bind native controls to original fragments before inserting any logger.
+    // The six actual marker operands dominate every instruction in that
+    // original basic-block fragment. No operator/shape/SSA allowlist is used.
+    json::Array nativeInventory;
+    struct NativeFragment {
+      CallInst *call;
+      CensusMarker marker;
+      std::string block;
+      std::string sourceBinding;
+    };
+    SmallVector<NativeFragment, 32> nativeFragments;
+    for (CallInst *call : selected) {
+      bool bound = false;
+      for (const auto &fragment : fragments) {
+        for (Instruction *i = fragment.marker.call->getNextNode();
+             i && i != fragment.end; i = i->getNextNode()) {
+          if (i != call)
+            continue;
+          nativeFragments.push_back(
+              {call, fragment.marker, fragment.block,
+               "containing_original_block_fragment_navigation"});
+          bound = true;
+          break;
+        }
+        if (bound)
+          break;
+      }
+      if (!bound) {
+        // A control in another block can reuse coordinates only when every
+        // actual coordinate SSA operand dominates it. This is not a claim
+        // that the carrier's source operation contains the native control.
+        for (const auto &marker : censusMarkers) {
+          bool coordinatesDominate = true;
+          for (Value *operand : marker.call->args())
+            if (auto *instruction = dyn_cast<Instruction>(operand))
+              coordinatesDominate &= dominance.dominates(instruction, call);
+          if (!coordinatesDominate)
+            continue;
+          nativeFragments.push_back({call, marker,
+                                     printValue(*call->getParent()),
+                                     "dominating_source_coordinates_only"});
+          bound = true;
+          break;
+        }
+      }
+      if (!bound) {
+        std::string original;
+        raw_string_ostream stream(original);
+        call->print(stream);
+        stream.flush();
+        nativeInventory.push_back(json::Object{
+            {"original_instruction", original},
+            {"status", "unobserved"},
+            {"reason", "no_dominating_source_coordinate_operands"}});
+      }
+    }
+    runtimeActorBinding["native_control_version"] = 1;
+    for (const auto &native : nativeFragments) {
+      auto site = flagprism_ascend::instrumentNativeTimeline(
+          *native.call, native.marker, function.getArg(argumentIndex), actor,
+          program, capacity, sites.size() + 1, native.block,
+          native.sourceBinding);
+      const auto instrumented = site.getBoolean("instrumented");
+      if (!instrumented || !*instrumented) {
+        nativeInventory.push_back(std::move(site));
+        continue;
+      }
+      attachSourceOrigin(site, *native.call);
+      site["source_op_id"] = static_cast<int64_t>(native.marker.sourceId);
+      sites.push_back(std::move(site));
+    }
+    controlPlan["native_control_version"] = 1;
+    controlPlan["selected_count"] = static_cast<int64_t>(sites.size());
+    controlPlan["unobserved"] = std::move(nativeInventory);
     for (const auto &fragment : fragments) {
       const auto &marker = fragment.marker;
       IRBuilder<> b(marker.call);
@@ -622,7 +697,6 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         "actual_frontend_carrier_nonempty_lowered_block_fragments";
     operationPlan["selected_count"] = static_cast<int64_t>(fragments.size());
     operationPlan["skipped_fragments"] = std::move(skipped);
-    controlPlan["selected_count"] = 0;
     // Coordinate calls were inserted even when every carrier fragment is empty.
     return true;
   }
@@ -1154,7 +1228,7 @@ public:
     if (sourceTimeline()) {
       manifest["dynamic_record_layout"] = "ascend_source_timeline_v1";
       manifest["effective_semantics"] = json::Array{"source_control_interval"};
-      manifest["observation_plan_version"] = 4;
+      manifest["observation_plan_version"] = 5;
       manifest["boundary_status"] = "unverified";
       manifest["frontend_marker_carrier"] = "source_census_site.v3";
       manifest["record_ordering"] = "paired_endpoints";

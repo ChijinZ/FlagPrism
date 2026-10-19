@@ -1,0 +1,226 @@
+{
+  "status": "installed_math_native_control_raw_units_offline_audit_passed_not_async_qualification",
+  "rows": [
+    {
+      "case": "recurrence",
+      "invocation": "invocation-caf2c604e9dc4f2fb927664a1dd1fefb",
+      "binary_id": "a268d23f1ee088086e5e2cf572b4bc172f9eccdbfe8dedf1ed27fb73d332b1e3",
+      "native_intervals": 20,
+      "positive_native_intervals": 3,
+      "total_intervals": 36,
+      "counts": {
+        "('set_flag', 4, 1, 0)": 4,
+        "('wait_flag', 4, 1, 0)": 4,
+        "('set_flag', 1, 5, 0)": 4,
+        "('wait_flag', 1, 5, 0)": 4,
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2
+      }
+    },
+    {
+      "case": "recurrence",
+      "invocation": "invocation-dc66e9074b74446a822f3c5a6a3d7ad4",
+      "binary_id": "a268d23f1ee088086e5e2cf572b4bc172f9eccdbfe8dedf1ed27fb73d332b1e3",
+      "native_intervals": 20,
+      "positive_native_intervals": 4,
+      "total_intervals": 44,
+      "counts": {
+        "('set_flag', 4, 1, 0)": 4,
+        "('wait_flag', 4, 1, 0)": 4,
+        "('set_flag', 1, 5, 0)": 4,
+        "('wait_flag', 1, 5, 0)": 4,
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2
+      }
+    },
+    {
+      "case": "softmax",
+      "invocation": "invocation-dbce39a88c70436792e0b2afaf52c2bf",
+      "binary_id": "26f4f8891b40c92ea62fa709f64aa7f1cb1dffe28249ccf66f26f6d02d22a3a4",
+      "native_intervals": 20,
+      "positive_native_intervals": 0,
+      "total_intervals": 30,
+      "counts": {
+        "('set_flag', 1, 4, 0)": 2,
+        "('wait_flag', 1, 4, 0)": 2,
+        "('set_flag', 4, 1, 0)": 2,
+        "('wait_flag', 4, 1, 0)": 2,
+        "('set_flag', 1, 0, 0)": 4,
+        "('wait_flag', 1, 0, 0)": 4,
+        "('set_flag', 1, 5, 0)": 2,
+        "('wait_flag', 1, 5, 0)": 2
+      }
+    }
+  ],
+  "original_raw_unchanged": true,
+  "original_install_terminal_preserved": {
+    "controller": {
+      "pid": 3686940,
+      "ppid": 2511431,
+      "pgid": 3686940,
+      "startticks": 337096178
+    },
+    "worker": {
+      "pid": 3686974,
+      "ppid": 3686940,
+      "pgid": 3686974,
+      "startticks": 337096184
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r030/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r048/install-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r048/runs/installed-v2/output"
+    ],
+    "argv_sha256": "4a91b5c700cc0405dfe899a7fe7715c25fd8f1906d343d2fe93509c32238c12e",
+    "script_sha256": "27c930c4b2670b0919741ca10959fde771a02b496a37de660ca7f935d9a40b43",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 153018775567
+  },
+  "installed_checks": [
+    {
+      "name": "wheel",
+      "argv": [
+        "/tmp/chijin-timeline-r030/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/integration/patches/ascend/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-timeline-r048/package-parent-v2",
+        "--component",
+        "/tmp/chijin-timeline-r048/install-input-v2/component",
+        "--native-python",
+        "/tmp/chijin-r13-ascend-census-v3/native-python",
+        "--core-library",
+        "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+        "--plugin",
+        "/tmp/chijin-timeline-r048/runs/native-build-v3/output/FlagPrismAscendLateObserver.so",
+        "--output",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/wheel"
+      ],
+      "pid": 3687225,
+      "startticks": 337096544,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/tmp/chijin-timeline-r030/runs/install-v1/output/venv/bin/python",
+        "-m",
+        "venv",
+        "--system-site-packages",
+        "--without-pip",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv"
+      ],
+      "pid": 3687628,
+      "startticks": 337099154,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/tmp/chijin-timeline-r030/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+      ],
+      "pid": 3687629,
+      "startticks": 337099160,
+      "returncode": 0
+    },
+    {
+      "name": "import-abi",
+      "argv": [
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import compiler_binding; from flagtree.profiler import ascend_compiler; c=compiler_binding(); print('ASCEND_SOURCE_CENSUS_VERSION',c.ASCEND_SOURCE_CENSUS_VERSION); print(ascend_compiler.__file__); exec('if c.ASCEND_SOURCE_CENSUS_VERSION != 3: raise RuntimeError(\"carrier ABI mismatch\")')"
+      ],
+      "pid": 3687634,
+      "startticks": 337099924,
+      "returncode": 0
+    },
+    {
+      "name": "cpu-normal",
+      "argv": [
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "cache_dir=/tmp/chijin-timeline-r048/runs/installed-v2/output/pytest-normal",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/test_ascend_timeline.py",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/test_ascend_timeline_legacy_rejection.py"
+      ],
+      "pid": 3688041,
+      "startticks": 337100725,
+      "returncode": 0
+    },
+    {
+      "name": "cpu-optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "-o",
+        "cache_dir=/tmp/chijin-timeline-r048/runs/installed-v2/output/pytest-optimized",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/test_ascend_timeline.py",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/test_ascend_timeline_legacy_rejection.py"
+      ],
+      "pid": 3688128,
+      "startticks": 337101928,
+      "returncode": 0
+    },
+    {
+      "name": "default-device",
+      "argv": [
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/p01_ascend_default_timeline.py",
+        "--output",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/device-probe"
+      ],
+      "pid": 3688210,
+      "startticks": 337103064,
+      "returncode": 0
+    },
+    {
+      "name": "offline-after-scratch-denial",
+      "argv": [
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r048/install-input-v2/component/tests/timeline/p01_ascend_offline.py",
+        "--expect-counter-unit",
+        "--timeline",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/device-probe/recurrence/timeline",
+        "--output",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/offline",
+        "--deny",
+        "/tmp/chijin-timeline-r048/install-input-v2",
+        "--deny",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/cache",
+        "--deny",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/tmp",
+        "--deny",
+        "/tmp/chijin-timeline-r048/runs/installed-v2/output/device-probe"
+      ],
+      "pid": 3690297,
+      "startticks": 337108933,
+      "returncode": 0
+    }
+  ]
+}

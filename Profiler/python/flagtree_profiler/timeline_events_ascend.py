@@ -3,6 +3,7 @@ import base64
 from collections import Counter
 import hashlib
 import json
+import re
 import struct
 
 from .timeline_events import stable_id, validate_raw_batch, _integer, _sha, _text
@@ -172,6 +173,11 @@ def compiler_actors(metadata):
                 and len(anchor['operands']) == 6,
                 'Carrier source/coordinate mapping mismatch')
             anchors[source, column] = True
+        native_version = binding.get('native_control_version')
+        _need(
+            native_version is None
+            or (type(native_version) is int and native_version == 1),
+            'Unsupported Ascend native control feature version')
         sites = {}
         for site in manifest.get('dynamic_sites', []):
             sid = _integer(site.get('site_id'), 'backend site', 1, 0xffffffff)
@@ -180,8 +186,12 @@ def compiler_actors(metadata):
             _need(
                 sid not in sites and (source, column) in anchors
                 and site.get('public_semantic') == 'source_control_interval'
-                and site.get('semantic_code') == 1
-                and site.get('operation_class') == 'lowered_source_fragment'
+                and type(site.get('semantic_code')) is int and
+                (site.get('semantic_code') == 1
+                 and site.get('operation_class') == 'lowered_source_fragment'
+                 or native_version == 1 and site.get('semantic_code') in (2, 3)
+                 and site.get('operation_class')
+                 == 'native_control_scalar_bracket')
                 and site.get('boundary_status') == 'unverified',
                 'Unknown or unbound actor fragment')
             _need(
@@ -189,6 +199,37 @@ def compiler_actors(metadata):
                 and _digest(site['original_instructions'].encode())
                 == site.get('original_instructions_sha256'),
                 'Original lowered fragment changed')
+            if site['semantic_code'] in (2, 3):
+                operation = 'set_flag' if site[
+                    'semantic_code'] == 2 else 'wait_flag'
+                intrinsic = 'llvm.hivm.' + ('SET' if operation == 'set_flag'
+                                            else 'WAIT') + '.FLAG.IMM'
+                arguments = site.get('native_arguments')
+                _need(
+                    site.get('native_operation') == operation
+                    and site.get('intrinsic') == intrinsic
+                    and site.get('completion_status') == 'unverified'
+                    and site.get('scope')
+                    == 'scalar_issue_of_original_native_control'
+                    and site.get('source_binding')
+                    in ('containing_original_block_fragment_navigation',
+                        'dominating_source_coordinates_only')
+                    and type(arguments) is list and len(arguments) == 3
+                    and all(
+                        type(a) is int and 0 <= a <= 0x7fffffff
+                        for a in arguments),
+                    'Invalid Ascend native control binding')
+                pattern = re.escape(
+                    '@' + intrinsic) + r'\(i64 (\d+), i64 (\d+), i64 (\d+)\)'
+                matches = re.findall(pattern, site['original_instructions'])
+                _need(
+                    len(matches) == 1
+                    and list(map(int, matches[0])) == arguments
+                    and re.sub(r', ![\w.]+ ![0-9]+', '',
+                               site['original_instructions']) in re.sub(
+                                   r', ![\w.]+ ![0-9]+', '', original),
+                    'Native control arguments differ from retained original LLVM'
+                )
             sites[sid] = dict(site,
                               origin=origins[source],
                               backend_identity=kind + ':' + original_hash +
@@ -259,14 +300,22 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
         for sid, site in actor['sites'].items():
             local = site['backend_identity']
             source = site['origin']
+            native = site['semantic_code'] in (2, 3)
+            location = source.get('sourceLoc')
+            if native and site.get('source_file'):
+                location = str(site['source_file']) + ':' + str(
+                    site.get('line')) + ':' + str(site.get('column'))
             source_id = stable_id((identity[2], ), 'source', source['opId'],
-                                  source.get('sourceLoc'))
+                                  location)
             sources[source_id] = dict(
                 id=source_id,
                 source_sha256=None,
                 relation='compiler_origin_navigation',
-                location=source.get('sourceLoc'),
-                provenance='actual_frontend_and_lowered_fragment_manifest')
+                location=location,
+                provenance=('native_debug_location_with_coordinate_carrier'
+                            if native and site.get('source_file') else
+                            'coordinate_carrier_navigation_only' if native else
+                            'actual_frontend_and_lowered_fragment_manifest'))
             site_id = stable_id((identity[2], ), 'site', local)
             sites[site_id] = dict(id=site_id,
                                   name=source.get('mlirOpName') or str(sid),
@@ -283,6 +332,32 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                                       'ascend.manifest_sha256':
                                       actor['manifest_sha256']
                                   })
+            if site['semantic_code'] in (2, 3):
+                native_arguments = site['native_arguments']
+                sites[site_id]['name'] = ('Native ' +
+                                          site['native_operation'].upper() +
+                                          ' ' + str(native_arguments) +
+                                          ' (scalar control)')
+                sites[site_id]['attributes'].update({
+                    'ascend.native_control_version':
+                    1,
+                    'ascend.native_operation':
+                    site['native_operation'],
+                    'ascend.native_source_pipe':
+                    native_arguments[0],
+                    'ascend.native_destination_pipe':
+                    native_arguments[1],
+                    'ascend.native_event_id':
+                    native_arguments[2],
+                    'ascend.native_intrinsic':
+                    site['intrinsic'],
+                    'ascend.source_binding':
+                    site['source_binding'],
+                    'ascend.completion_status':
+                    'unverified',
+                    'ascend.engine_activity_verified':
+                    False
+                })
             site_map[slot, sid] = site_id
     observers, records, events, mapping = [], [], [], {}
     complete = True
@@ -359,13 +434,13 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                 descriptor, sequence, start, end, p, a, physical, tag = struct.unpack_from(
                     '<8Q', raw, offset)
                 sid = descriptor & 0xffffffff
-                _need(
-                    descriptor >> 32 == 1 and (actor_slot, sid) in site_map
-                    and sequence == index
-                    and (p, a, physical) == (program, actor_slot, block)
-                    and start <= end and tag
-                    == (COMMIT ^ descriptor ^ sequence ^ p ^ a ^ physical),
-                    'Invalid or unbound published Ascend pair')
+                _need((actor_slot, sid) in site_map and descriptor >> 32
+                      == actor['sites'][sid]['semantic_code']
+                      and sequence == index
+                      and (p, a, physical) == (program, actor_slot, block)
+                      and start <= end and tag
+                      == (COMMIT ^ descriptor ^ sequence ^ p ^ a ^ physical),
+                      'Invalid or unbound published Ascend pair')
                 site_id = site_map[actor_slot, sid]
                 refs = []
                 for phase_index, (phase, tick,
