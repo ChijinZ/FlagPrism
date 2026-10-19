@@ -24,9 +24,10 @@ def fixture():
                 binary_id='b' * 64)
 
 
-@pytest.mark.parametrize(
-    'variant',
-    ['simple', 'forward_detour', 'two_latches', 'innermost', 'scalar'])
+@pytest.mark.parametrize('variant', [
+    'simple', 'forward_detour', 'two_latches', 'innermost', 'scalar',
+    'never_taken_exit', 'exit_after_pair'
+])
 def test_native_iteration_reader_paths(variant):
     args = fixture()
     body, boundary = args['functions']['kernel'], args['boundaries'][0]
@@ -41,6 +42,12 @@ def test_native_iteration_reader_paths(variant):
         body[80]['operands'] = '0x20'
         body[96] = dict(opcode='BRA', operands='0x10', predicate='@P1')
         body[112] = dict(opcode='EXIT')
+    elif variant == 'never_taken_exit':
+        body[16] = dict(opcode='EXIT', predicate='@!PT')
+    elif variant == 'exit_after_pair':
+        body[80] = dict(opcode='EXIT', predicate='@P1')
+        body[96] = dict(opcode='BRA', operands='0x10', predicate='@P0')
+        body[112] = dict(opcode='EXIT')
     elif variant == 'scalar':
         body[48]['opcode'] = 'FFMA'
         boundary.update(kind='compute_issue_bracket',
@@ -49,7 +56,10 @@ def test_native_iteration_reader_paths(variant):
     assert row['status'] == 'native_iteration_control_checked'
     assert row['native_iteration_boundaries_verified'] is True
     assert row['loop_header_pc'] == (32 if variant == 'innermost' else 16)
-    assert row['latch_pcs'] == ([80, 96] if variant == 'two_latches' else [80])
+    assert row['latch_pcs'] == ([80, 96] if variant == 'two_latches' else
+                                [96] if variant == 'exit_after_pair' else [80])
+    assert row['exit_instruction_pcs'] == ([80] if variant == 'exit_after_pair'
+                                           else [])
     assert row['begin_reader_pc'] == 32 and row['end_reader_pc'] == 64
     assert row['source_iteration_identity_verified'] is False
     assert row['source_cost_qualified'] is False
@@ -64,7 +74,8 @@ def test_native_iteration_reader_paths(variant):
 @pytest.mark.parametrize('mutation', [
     'exit_before_pair', 'bypass_begin', 'bypass_end', 'repeat_end',
     'multi_entry', 'no_loop', 'no_exit', 'unknown_branch', 'unverified_issue',
-    'unreachable_pair', 'same_endpoint', 'oversized_function'
+    'unreachable_pair', 'same_endpoint', 'oversized_function',
+    'conditional_exit_before_pair', 'conditional_exit_before_end'
 ])
 def test_incomplete_or_ambiguous_native_iteration(mutation):
     args = fixture()
@@ -93,6 +104,10 @@ def test_incomplete_or_ambiguous_native_iteration(mutation):
         boundary['status'] = 'unverified'
     elif mutation == 'unreachable_pair':
         body[0] = dict(opcode='BRA', operands='0x60')
+    elif mutation == 'conditional_exit_before_pair':
+        body[16] = dict(opcode='EXIT', predicate='@P1')
+    elif mutation == 'conditional_exit_before_end':
+        body[48] = dict(opcode='EXIT', predicate='@P1')
     elif mutation == 'same_endpoint':
         boundary['end_reader_pc'] = boundary['begin_reader_pc']
     else:

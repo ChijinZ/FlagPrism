@@ -56,7 +56,7 @@ def _dominators(predecessors, entry):
 
 
 def _inventory(body):
-    from .timeline_nvidia_late_values import _predecessors
+    from .timeline_nvidia_late_values import _predecessors, _predicate
     _need(body and len(body) <= MAX_NODES,
           'Native function exceeds finite loop node budget')
     predecessors = _predecessors(body)
@@ -85,10 +85,19 @@ def _inventory(body):
                   'Native cycle has a non-header entry')
             loop['nodes'].add(node)
             pending.extend(predecessors[node])
-    return predecessors, successors, loops
+    # The value-flow graph need only retain paths to later instructions;
+    # conditional EXIT has a fallthrough there but also terminates an actor.
+    # Loop boundaries must separately cover that taken termination path.
+    exit_instructions = {
+        pc
+        for pc in predecessors if body[pc]['opcode'] == 'EXIT'
+        and _predicate(body[pc].get('predicate')) is not False
+    }
+    return predecessors, successors, loops, exit_instructions
 
 
-def _iteration(predecessors, successors, header, loop, begin, end):
+def _iteration(predecessors, successors, exit_instructions, header, loop,
+               begin, end):
     """Cut the iteration's return edges, then check every resulting path."""
     nodes, latches = loop['nodes'], loop['latches']
     _need(begin != end and begin in nodes and end in nodes,
@@ -100,7 +109,9 @@ def _iteration(predecessors, successors, header, loop, begin, end):
     exits = sorted((pc, target) for pc in nodes for target in successors[pc]
                    if target not in nodes)
     terminal = {pc for pc in nodes if not successors[pc]}
-    _need(exits or terminal, 'Native loop has no inspected exit')
+    taken_exits = nodes & exit_instructions
+    _need(exits or terminal or taken_exits,
+          'Native loop has no inspected exit')
     local = {
         pc: {
             parent
@@ -145,13 +156,15 @@ def _iteration(predecessors, successors, header, loop, begin, end):
             for parent in local[pc]:
                 common &= masks[parent]
         masks[pc] = common | (1 << index[pc])
-    destinations = set(latches) | {pc for pc, _ in exits} | terminal
+    destinations = set(latches) | {pc
+                                   for pc, _ in exits} | terminal | taken_exits
     _need(all(masks[pc] & required == required for pc in destinations),
           'A native iteration return or exit bypasses an endpoint')
     return dict(loop_header_pc=header,
                 latch_pcs=sorted(latches),
                 exit_edges=[list(edge) for edge in exits],
                 terminal_pcs=sorted(terminal),
+                exit_instruction_pcs=sorted(taken_exits),
                 instruction_pcs=sorted(nodes))
 
 
@@ -183,7 +196,7 @@ def inspect_native_loops(*, functions, boundaries, binary_id):
             _need(
                 not isinstance(inventory, str), inventory if isinstance(
                     inventory, str) else 'Invalid native loop inventory')
-            predecessors, successors, loops = inventory
+            predecessors, successors, loops, exit_instructions = inventory
             begin, end = boundary['begin_reader_pc'], boundary['end_reader_pc']
             _need(begin in predecessors and end in predecessors,
                   'Native reader pair is unreachable')
@@ -195,8 +208,8 @@ def inspect_native_loops(*, functions, boundaries, binary_id):
                           if len(loop['nodes']) == smallest]
             _need(len(candidates) == 1, 'Native loop membership is ambiguous')
             header, loop = candidates[0]
-            facts = _iteration(predecessors, successors, header, loop, begin,
-                               end)
+            facts = _iteration(predecessors, successors, exit_instructions,
+                               header, loop, begin, end)
             identity = json.dumps([binary_id, function, header],
                                   separators=(',', ':'))
             result.update(

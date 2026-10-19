@@ -944,7 +944,8 @@ source/matrix issue brackets. `native_iteration_control_checked` identifies an
 actual natural loop by binary/function/header, with its instruction PCs,
 latches and exits. After cutting all returns to that header, the checker
 requires a single-entry acyclic iteration in which both readers dominate every
-return and exit. Early breaks, endpoint bypasses, extra cycles, unknown control
+return and exit, including the taken termination of a conditional `EXIT`.
+Early breaks, endpoint bypasses, extra cycles, unknown control
 transitions and budget overruns remain unverified. A reader pair in an inner
 loop is checked against that innermost loop; another nested cycle within the
 selected iteration is not accepted.
