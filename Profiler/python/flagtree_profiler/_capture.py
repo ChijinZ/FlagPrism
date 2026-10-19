@@ -291,6 +291,8 @@ def run_capture(args, target_args, execute):
                 child += ["--device", str(args.device)]
             if getattr(args, "detail", None):
                 child += ["--detail", args.detail]
+            if getattr(args, "timeline_max_sites", None) is not None:
+                child += ["--timeline-max-sites", str(args.timeline_max_sites)]
             if getattr(args, "observation_request", None):
                 child += ["--observation-request", args.observation_request]
             child += target_args

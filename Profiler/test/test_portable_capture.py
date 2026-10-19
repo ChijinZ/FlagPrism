@@ -1150,3 +1150,40 @@ def test_cli_timeline_uses_compact_report(capture, tmp_path, detail):
     report = json.loads((output / 'report/report.json').read_text())
     assert len(report['events']) == 1
     assert report['events'][0]['duration_us'] == .1
+
+
+@pytest.mark.parametrize('budget', [1, 13])
+def test_counter_wrapper_preserves_requested_timeline_density(
+        capture, tmp_path, monkeypatch, budget):
+    seen = []
+
+    class CapturedArgv(RuntimeError):
+        pass
+
+    def collect(command, *_args, **_kwargs):
+        seen.append(command)
+        raise CapturedArgv('argv captured without running an SDK')
+
+    monkeypatch.setattr(capture, 'capture_backend',
+                        lambda _: SimpleNamespace(collect_counters=collect))
+    args = SimpleNamespace(backend='enflame',
+                           counters=True,
+                           name=str(tmp_path / 'out'),
+                           metadata=None,
+                           context='shadow',
+                           data='tree',
+                           mode=None,
+                           hook=None,
+                           device=0,
+                           detail='timeline',
+                           timeline_max_sites=budget,
+                           counter_metrics=None,
+                           replay_mode='none')
+    with pytest.raises(CapturedArgv):
+        capture.run_capture(
+            args, ['kernel.py'],
+            lambda *_: pytest.fail('Unexpected direct execution'))
+    assert len(seen) == 1
+    argv = seen[0]
+    assert argv[argv.index('--timeline-max-sites') + 1] == str(budget)
+    assert argv[argv.index('--detail') + 1] == 'timeline'
