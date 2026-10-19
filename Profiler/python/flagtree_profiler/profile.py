@@ -1890,6 +1890,12 @@ def activate(session: Optional[int] = None) -> None:
             state["backend"],
             ObservationRequest.from_dict(request) if request else None,
             clear_runs=False)
+        # Debugger activation restores its default prepare hook. Collectors
+        # outside HookManager must replace it again when resuming a session.
+        collector = state.get("timeline_hook")
+        if collector is not None and not state.get(
+                "native_instrumentation_hook"):
+            collector.activate()
     HookManager.activate(session)
     profiler_native.activate_all(
     ) if session is None else profiler_native.activate(session)

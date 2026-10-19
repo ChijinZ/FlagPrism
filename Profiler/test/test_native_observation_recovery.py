@@ -436,3 +436,56 @@ def test_earlier_finalize_failure_still_durably_saves_completed_host_capture(
         [sys.executable, "-c", script, str(path)],
         text=True).strip() == original["raw_sha256"]
     assert stage.exists() and not current["bundle_output"].exists()
+
+
+@pytest.mark.parametrize('backend', ['cann', 'enflame'])
+@pytest.mark.parametrize('all_sessions', [False, True])
+def test_public_resume_restores_unmanaged_timeline_collector(
+        profile, monkeypatch, backend, all_sessions):
+    debugger = importlib.import_module('flagtree.debugger')
+    hooks = {'prepare': None}
+    recorded = []
+
+    class Collector:
+
+        def activate(self):
+            hooks['prepare'] = self.prepare
+
+        def prepare(self):
+            recorded.append('actual request')
+
+    collector = Collector()
+    collector.activate()
+    current = dict(session=7,
+                   active=True,
+                   backend=backend,
+                   instrumentation_hook=True,
+                   native_instrumentation_hook=False,
+                   observation_request=None,
+                   timeline_hook=collector)
+    profile._active_sessions[7] = current
+    monkeypatch.setattr(
+        profile, 'profiler_native',
+        SimpleNamespace(activate=lambda *_: None,
+                        deactivate=lambda *_: None,
+                        activate_all=lambda: None,
+                        deactivate_all=lambda: None))
+    monkeypatch.setattr(profile.HookManager, 'activate', lambda *_: None)
+    monkeypatch.setattr(profile.HookManager, 'deactivate', lambda *_: None)
+    monkeypatch.setattr(profile, '_set_instrumentation_mode', lambda *_: None)
+    monkeypatch.setattr(debugger, 'deactivate',
+                        lambda: hooks.update(prepare=None))
+    monkeypatch.setattr(
+        debugger, 'activate',
+        lambda **_: hooks.update(prepare=lambda: recorded.append('legacy')))
+    monkeypatch.setattr(
+        debugger, 'clear_exported_runs',
+        lambda: pytest.fail('Resume must preserve earlier captures'))
+    hooks['prepare']()
+    target = None if all_sessions else 7
+    profile.deactivate(target)
+    assert hooks['prepare'] is None
+    profile.activate(target)
+    hooks['prepare']()
+    assert recorded == ['actual request', 'actual request']
+    assert current['active'] is True
