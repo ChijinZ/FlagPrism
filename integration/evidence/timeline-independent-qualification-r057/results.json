@@ -1,0 +1,60 @@
+{
+  "state": "checkpoint_pending_ascend_supplement_and_final_reviews",
+  "runtime_commit": "4bc92861bd8665dfd446332f9af63dca7b64eaf0",
+  "files": [
+    {
+      "file": "nvidia-q08-final-summary-v1.json",
+      "sha256": "9f81ef620ff811481cc5aa0883a5f6ec8ada3104169915efe589c0d94dcadcb0"
+    },
+    {
+      "file": "nvidia-install-receipt-v1.json",
+      "sha256": "905a52e623a3ba2922e8eb93370414c8bf465e395e80f9f9f4c86e3a00328d79"
+    },
+    {
+      "file": "ascend-native-supported-v1.json",
+      "sha256": "ae9e22654d7528b4093d4d75738db64a6cd4777ab0a1cb1d4e68869d14771971"
+    },
+    {
+      "file": "ascend-offline-retained-v1.json",
+      "sha256": "2d742b318ba7e0a3692a837b16a908f309fbb50f46529552598bd6617478f9d4"
+    },
+    {
+      "file": "ascend-unmarked-inventory-v1.json",
+      "sha256": "3ccbb7b64b0076dcc63bef722d03687233a83339087dc54484b10233785ed082"
+    }
+  ],
+  "gcu_refresh": {
+    "server": "zhiyuan_suiyuan",
+    "container": "flagprism-enflame-dev",
+    "python": "/tmp/chijin-timeline-r057-gcu/runs/install-refresh-v1/output/venv/bin/python",
+    "source": "/tmp/chijin-timeline-r057-gcu/refresh-input-v1/source",
+    "installed_members": 494,
+    "wheel_sha256": "d6f84227931e4d8e520e18f2fcb4b3b1097658feed8eec8bfcbcf7cfe1df573f",
+    "controller_pid": 545014,
+    "controller_startticks": 1023134139,
+    "worker_pid": 545015,
+    "worker_startticks": 1023134142,
+    "returncode": 0,
+    "device_replayed": false
+  },
+  "ascend_implicit_reference": {
+    "archive_relative_to_workspace": "artifacts/timeline/run-057/preflight/ascend-implicit-reference-evidence-v1.tgz",
+    "archive_sha256": "0626dcc4e339703c70d95cfcb92f4386087e22754da8edde58052bba42c7d442",
+    "native_words": [
+      "0x40a40403",
+      "0x40c40403"
+    ],
+    "operations": [
+      "set_flag",
+      "wait_flag"
+    ],
+    "arguments": [
+      1,
+      0,
+      7
+    ],
+    "actual_AIC_AIV_matches": true,
+    "device_executed": false,
+    "coverage_relaxed": false
+  }
+}

@@ -1,0 +1,545 @@
+{
+  "active_owned_identities": [],
+  "all_controller_terminal": true,
+  "attempted": 12,
+  "boundary_status": {
+    "unverified": 12
+  },
+  "clock_status": {
+    "unverified": 12
+  },
+  "controller_returncodes": {
+    "0": 12
+  },
+  "counter_ns_unavailable": [],
+  "denominator": 12,
+  "end_ns": 1792413474579854779,
+  "freeze_sha256": "1035ff449fba2a7ad7ac08894f822aa5df933b42c92ec607aad71839216688f0",
+  "groups": {
+    "elementwise": {
+      "actual_observed_writers": 0,
+      "budget_failed": 0,
+      "budget_passed": 0,
+      "calls": 0,
+      "canonical_complete_captures": 0,
+      "counter_ns_available_captures": 0,
+      "counter_ns_exports": 0,
+      "counter_ns_unavailable_captures": 0,
+      "dependency_exports": 0,
+      "host_once_passed": 0,
+      "math_passed": 0,
+      "max_full_bundle_bytes": 0,
+      "metadata_loader_passed": 0,
+      "multiple_positive_intervals": 0,
+      "multiple_positive_sites": 0,
+      "no_dependency_export_captures": 0,
+      "observed_range_loss_free_captures": 0,
+      "original_input_config_matches": 0,
+      "positive_intervals": 0,
+      "process_passed": 0,
+      "raw_sha_matches": 0,
+      "trace_count": 0,
+      "unknown_reserved_slots": 0,
+      "verifier_error_count": 0
+    },
+    "matrix": {
+      "actual_observed_writers": 0,
+      "budget_failed": 0,
+      "budget_passed": 0,
+      "calls": 0,
+      "canonical_complete_captures": 0,
+      "counter_ns_available_captures": 0,
+      "counter_ns_exports": 0,
+      "counter_ns_unavailable_captures": 0,
+      "dependency_exports": 0,
+      "host_once_passed": 0,
+      "math_passed": 0,
+      "max_full_bundle_bytes": 0,
+      "metadata_loader_passed": 0,
+      "multiple_positive_intervals": 0,
+      "multiple_positive_sites": 0,
+      "no_dependency_export_captures": 0,
+      "observed_range_loss_free_captures": 0,
+      "original_input_config_matches": 0,
+      "positive_intervals": 0,
+      "process_passed": 0,
+      "raw_sha_matches": 0,
+      "trace_count": 0,
+      "unknown_reserved_slots": 0,
+      "verifier_error_count": 0
+    },
+    "reduction": {
+      "actual_observed_writers": 0,
+      "budget_failed": 0,
+      "budget_passed": 0,
+      "calls": 0,
+      "canonical_complete_captures": 0,
+      "counter_ns_available_captures": 0,
+      "counter_ns_exports": 0,
+      "counter_ns_unavailable_captures": 0,
+      "dependency_exports": 0,
+      "host_once_passed": 0,
+      "math_passed": 0,
+      "max_full_bundle_bytes": 0,
+      "metadata_loader_passed": 0,
+      "multiple_positive_intervals": 0,
+      "multiple_positive_sites": 0,
+      "no_dependency_export_captures": 0,
+      "observed_range_loss_free_captures": 0,
+      "original_input_config_matches": 0,
+      "positive_intervals": 0,
+      "process_passed": 0,
+      "raw_sha_matches": 0,
+      "trace_count": 0,
+      "unknown_reserved_slots": 0,
+      "verifier_error_count": 0
+    },
+    "supplement-q07": {
+      "actual_observed_writers": 0,
+      "budget_failed": 0,
+      "budget_passed": 0,
+      "calls": 0,
+      "canonical_complete_captures": 0,
+      "counter_ns_available_captures": 0,
+      "counter_ns_exports": 0,
+      "counter_ns_unavailable_captures": 0,
+      "dependency_exports": 0,
+      "host_once_passed": 0,
+      "math_passed": 0,
+      "max_full_bundle_bytes": 0,
+      "metadata_loader_passed": 0,
+      "multiple_positive_intervals": 0,
+      "multiple_positive_sites": 0,
+      "no_dependency_export_captures": 0,
+      "observed_range_loss_free_captures": 0,
+      "original_input_config_matches": 0,
+      "positive_intervals": 0,
+      "process_passed": 0,
+      "raw_sha_matches": 0,
+      "trace_count": 0,
+      "unknown_reserved_slots": 0,
+      "verifier_error_count": 0
+    },
+    "supplement-q08": {
+      "actual_observed_writers": 96,
+      "budget_failed": 0,
+      "budget_passed": 12,
+      "calls": 12,
+      "canonical_complete_captures": 12,
+      "counter_ns_available_captures": 12,
+      "counter_ns_exports": 96,
+      "counter_ns_unavailable_captures": 0,
+      "dependency_exports": 0,
+      "host_once_passed": 12,
+      "math_passed": 12,
+      "max_full_bundle_bytes": 51868047,
+      "metadata_loader_passed": 12,
+      "multiple_positive_intervals": 12,
+      "multiple_positive_sites": 12,
+      "no_dependency_export_captures": 12,
+      "observed_range_loss_free_captures": 12,
+      "original_input_config_matches": 12,
+      "positive_intervals": 22600,
+      "process_passed": 12,
+      "raw_sha_matches": 12,
+      "trace_count": 114,
+      "unknown_reserved_slots": 0,
+      "verifier_error_count": 0
+    }
+  },
+  "launch_sha256": "1a25c31de05018c2c70473eef9a4d2b4366bffc38d734ecc8d3b02cb7818ec39",
+  "limits": [
+    "Observed writer range only; untouched reserved slots remain unknown and batch completeness is not upgraded",
+    "Canonical clock and boundary statuses remain unchanged; counter-ns exports are empirical enclosed-window proofs",
+    "No repeated UI, SQL, SDK or machine-code verification in this collection stage",
+    "No performance, overhead, full source-cost or exact hardware busy claim"
+  ],
+  "max_raw_bytes": 1048960,
+  "max_trace_bytes": 4678164,
+  "maximum_capture": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c1-cold/capture",
+  "native_manifest_summaries": [
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 79
+        }
+      ],
+      "id": "q08-s0-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c0-cold/capture/timeline/machine/0dd972a0e14e0472afc0c94b241e71294293ac0bc3216986863f4e8c14fa87c2/counter-map.json"
+        }
+      ],
+      "phase": "cold"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 79
+        }
+      ],
+      "id": "q08-s0-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c0-warm1/capture/timeline/machine/0dd972a0e14e0472afc0c94b241e71294293ac0bc3216986863f4e8c14fa87c2/counter-map.json"
+        }
+      ],
+      "phase": "warm1"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 79
+        }
+      ],
+      "id": "q08-s0-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c0-warm2/capture/timeline/machine/0dd972a0e14e0472afc0c94b241e71294293ac0bc3216986863f4e8c14fa87c2/counter-map.json"
+        }
+      ],
+      "phase": "warm2"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 201
+        }
+      ],
+      "id": "q08-s0-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c1-cold/capture/timeline/machine/52eb26702cb4d5fa1f32a1dbccf97da58919745dbf3278209812231c238d5b72/counter-map.json"
+        }
+      ],
+      "phase": "cold"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 201
+        }
+      ],
+      "id": "q08-s0-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c1-warm1/capture/timeline/machine/52eb26702cb4d5fa1f32a1dbccf97da58919745dbf3278209812231c238d5b72/counter-map.json"
+        }
+      ],
+      "phase": "warm1"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 201
+        }
+      ],
+      "id": "q08-s0-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s0-c1-warm2/capture/timeline/machine/52eb26702cb4d5fa1f32a1dbccf97da58919745dbf3278209812231c238d5b72/counter-map.json"
+        }
+      ],
+      "phase": "warm2"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 73
+        }
+      ],
+      "id": "q08-s1-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c0-cold/capture/timeline/machine/a147f9546c144febd174adfb1981103ea4d1106d03241b9f78555b66fadb1065/counter-map.json"
+        }
+      ],
+      "phase": "cold"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 73
+        }
+      ],
+      "id": "q08-s1-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c0-warm1/capture/timeline/machine/a147f9546c144febd174adfb1981103ea4d1106d03241b9f78555b66fadb1065/counter-map.json"
+        }
+      ],
+      "phase": "warm1"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 73
+        }
+      ],
+      "id": "q08-s1-c0",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c0-warm2/capture/timeline/machine/a147f9546c144febd174adfb1981103ea4d1106d03241b9f78555b66fadb1065/counter-map.json"
+        }
+      ],
+      "phase": "warm2"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 139
+        }
+      ],
+      "id": "q08-s1-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c1-cold/capture/timeline/machine/d8e47134911b328aff2f1a08a9f72eb8bf8bc927551719257e18c62aa3710bdc/counter-map.json"
+        }
+      ],
+      "phase": "cold"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 139
+        }
+      ],
+      "id": "q08-s1-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c1-warm1/capture/timeline/machine/d8e47134911b328aff2f1a08a9f72eb8bf8bc927551719257e18c62aa3710bdc/counter-map.json"
+        }
+      ],
+      "phase": "warm1"
+    },
+    {
+      "facts": [
+        {
+          "actors": 4,
+          "capacity_per_program": 4096,
+          "requires_full_footprint": false,
+          "static_site_count": 139
+        }
+      ],
+      "id": "q08-s1-c1",
+      "not_emitted_static_site_counts": [
+        {
+          "count": 0,
+          "map": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/q08-s1-c1-warm2/capture/timeline/machine/d8e47134911b328aff2f1a08a9f72eb8bf8bc927551719257e18c62aa3710bdc/counter-map.json"
+        }
+      ],
+      "phase": "warm2"
+    }
+  ],
+  "not_started": 0,
+  "observed_dependency_status": {
+    "{\"reason\": \"Observed dependencies need a complete collective byte model: no_modeled_native_async_copy\", \"status\": \"unavailable\", \"time_arrows_verified\": false}": 12
+  },
+  "owner_identity_count": 25,
+  "owner_snapshots": [
+    {
+      "active": false,
+      "linux_wait_status": 0,
+      "pid": 112951,
+      "same_identity_present": true,
+      "startticks": 27944796,
+      "state": "Z"
+    },
+    {
+      "active": false,
+      "pid": 112959,
+      "startticks": 27946552
+    },
+    {
+      "active": false,
+      "pid": 112960,
+      "startticks": 27946555
+    },
+    {
+      "active": false,
+      "pid": 113631,
+      "startticks": 27961681
+    },
+    {
+      "active": false,
+      "pid": 113632,
+      "startticks": 27961684
+    },
+    {
+      "active": false,
+      "pid": 113127,
+      "startticks": 27949424
+    },
+    {
+      "active": false,
+      "pid": 113128,
+      "startticks": 27949427
+    },
+    {
+      "active": false,
+      "pid": 113205,
+      "startticks": 27950797
+    },
+    {
+      "active": false,
+      "pid": 113206,
+      "startticks": 27950800
+    },
+    {
+      "active": false,
+      "pid": 113806,
+      "startticks": 27965159
+    },
+    {
+      "active": false,
+      "pid": 113807,
+      "startticks": 27965162
+    },
+    {
+      "active": false,
+      "pid": 113457,
+      "startticks": 27958832
+    },
+    {
+      "active": false,
+      "pid": 113458,
+      "startticks": 27958835
+    },
+    {
+      "active": false,
+      "pid": 113049,
+      "startticks": 27948043
+    },
+    {
+      "active": false,
+      "pid": 113050,
+      "startticks": 27948045
+    },
+    {
+      "active": false,
+      "pid": 113884,
+      "startticks": 27967092
+    },
+    {
+      "active": false,
+      "pid": 113885,
+      "startticks": 27967095
+    },
+    {
+      "active": false,
+      "pid": 113379,
+      "startticks": 27956239
+    },
+    {
+      "active": false,
+      "pid": 113380,
+      "startticks": 27956242
+    },
+    {
+      "active": false,
+      "pid": 113553,
+      "startticks": 27960309
+    },
+    {
+      "active": false,
+      "pid": 113554,
+      "startticks": 27960312
+    },
+    {
+      "active": false,
+      "pid": 113709,
+      "startticks": 27963062
+    },
+    {
+      "active": false,
+      "pid": 113710,
+      "startticks": 27963065
+    },
+    {
+      "active": false,
+      "pid": 113301,
+      "startticks": 27953631
+    },
+    {
+      "active": false,
+      "pid": 113302,
+      "startticks": 27953634
+    }
+  ],
+  "per_capture_and_call_receipts": "/workspace/chijin-timeline-r057-qualification-q08-v1/runs/profile-first-v1/profile-attempts.json",
+  "profile_result_sha256": "3347c9f8763f7a74e373043a913e88278f0d7c6b9f244b47100eaf768d3145c4",
+  "raw_budget_failed": 0,
+  "real_controller_terminals": 12,
+  "stop": null,
+  "total": {
+    "actual_observed_writers": 96,
+    "budget_failed": 0,
+    "budget_passed": 12,
+    "calls": 12,
+    "canonical_complete_captures": 12,
+    "counter_ns_available_captures": 12,
+    "counter_ns_exports": 96,
+    "counter_ns_unavailable_captures": 0,
+    "dependency_exports": 0,
+    "host_once_passed": 12,
+    "math_passed": 12,
+    "max_full_bundle_bytes": 51868047,
+    "metadata_loader_passed": 12,
+    "multiple_positive_intervals": 12,
+    "multiple_positive_sites": 12,
+    "no_dependency_export_captures": 12,
+    "observed_range_loss_free_captures": 12,
+    "original_input_config_matches": 12,
+    "positive_intervals": 22600,
+    "process_passed": 12,
+    "raw_sha_matches": 12,
+    "trace_count": 114,
+    "unknown_reserved_slots": 0,
+    "verifier_error_count": 0
+  },
+  "trace_budget_failed": 0
+}
