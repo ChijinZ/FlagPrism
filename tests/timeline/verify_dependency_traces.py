@@ -7,33 +7,48 @@ from collections import Counter
 
 p = argparse.ArgumentParser()
 p.add_argument('--output', type=Path, required=True)
-p.add_argument('--timeline', type=Path, required=True)
+inputs = p.add_mutually_exclusive_group(required=True)
+inputs.add_argument('--timeline', type=Path)
+inputs.add_argument(
+    '--manifest',
+    type=Path,
+    help='SHA-bound retained trace/view/raw/canonical/proof inputs')
 a = p.parse_args()
 a.output.mkdir(parents=True)
 from perfetto.protos.perfetto.trace import perfetto_trace_pb2 as proto
 from perfetto.trace_processor import TraceProcessor, TraceProcessorConfig
 
-root = a.timeline.resolve()
-reports = []
-for item in json.loads((root / 'index.json').read_text())['captures']:
-    cap = json.loads((root / item['capture_file']).read_text())
-    if cap.get('observed_dependency_exports'):
-        reports.append(
-            dict(identity=cap['owner']['invocation_id'],
-                 exports=cap['observed_dependency_exports']))
+reports, caps = [], {}
+if a.manifest is not None:
+    root = Path('/')
+    manifest = json.loads(a.manifest.read_text())
+    if type(manifest) is not list or not manifest or len(manifest) > 2048:
+        raise RuntimeError('Expected bounded actual dependency trace manifest')
+    for item in manifest:
+        identity = item['invocation_id']
+        cap = dict(raw_file=item['raw_file'])
+        if identity in caps and caps[identity] != cap:
+            raise RuntimeError('Manifest aliases different raw captures')
+        caps[identity] = cap
+        reports.append(dict(identity=identity, exports=[item]))
+else:
+    root = a.timeline.resolve()
+    for item in json.loads((root / 'index.json').read_text())['captures']:
+        cap = json.loads((root / item['capture_file']).read_text())
+        identity = cap['owner']['invocation_id']
+        caps[identity] = cap
+        if cap.get('observed_dependency_exports'):
+            reports.append(
+                dict(identity=identity,
+                     exports=cap['observed_dependency_exports']))
 if not reports:
     raise RuntimeError('No real observed dependency exports')
-summary = dict(reports=reports)
 exe = Path('/workspace/chijin-timeline-r011/tools-input/trace_processor_shell')
 if hashlib.sha256(exe.read_bytes()).hexdigest(
 ) != '55ba613fc6d4f71df81eee2dbfc293020063655c241b3e314bff75345b802684':
     raise RuntimeError('Actual TP changed')
-caps = {}
-for item in json.loads((root / 'index.json').read_text())['captures']:
-    cap = json.loads((root / item['capture_file']).read_text())
-    caps[cap['owner']['invocation_id']] = cap
 checks = []
-for report in summary['reports']:
+for report in reports:
     cap = caps[report['identity']]
     raw = (root / cap['raw_file']).read_bytes()
     for item in report['exports']:
@@ -44,8 +59,9 @@ for report in summary['reports']:
                 data).hexdigest() != item['sha256'] or hashlib.sha256(
                     raw).hexdigest() != view['raw_artifact']['sha256']:
             raise RuntimeError('Source bytes changed')
-        inputs = json.loads((root / Path(item['receipt_file']).parent /
-                             'inputs.json').read_text())
+        inputs_file = item.get('inputs_file') or str(
+            Path(item['receipt_file']).parent / 'inputs.json')
+        inputs = json.loads((root / inputs_file).read_text())
         clock = next((r['clock'] for r in inputs['proofs']
                       if r['clock']['domain_id'] == view['domain_id']))
         for n in view['nodes']:
@@ -97,9 +113,9 @@ for report in summary['reports']:
             if any((r.source_ns > r.target_ns for r in flows)):
                 raise RuntimeError(
                     'Actual TP flow reverses observed counter order')
-            canonical = json.loads(
-                (root / Path(item['view_file']).parent.parent /
-                 'canonical.json').read_text())
+            canonical_file = item.get('canonical_file') or str(
+                Path(item['view_file']).parent.parent / 'canonical.json')
+            canonical = json.loads((root / canonical_file).read_text())
             records = {r['id']: r for r in canonical['records']}
             wanted_events = {
                 e['id']: e
@@ -141,6 +157,15 @@ for report in summary['reports']:
             ]
             if errors:
                 raise RuntimeError('Actual TP errors ' + repr(errors))
+            importer_stats = [
+                dict(name=r.name,
+                     idx=r.idx,
+                     severity=r.severity,
+                     source=r.source,
+                     value=r.value) for r in tp.query(
+                         'SELECT name,idx,severity,source,value FROM stats')
+            ]
+
         checks.append(
             dict(trace=str(path),
                  sha256=item['sha256'],
@@ -152,7 +177,8 @@ for report in summary['reports']:
                  positive_internal_intervals=positive,
                  raw_offsets_ticks_ns_exact=True,
                  protobuf_fixed64_exact=True,
-                 importer_errors=errors))
+                 importer_errors=errors,
+                 importer_stats=importer_stats))
         print(json.dumps(checks[-1]))
 (a.output / 'result.json').write_text(
     json.dumps(dict(

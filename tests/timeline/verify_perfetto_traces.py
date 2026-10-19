@@ -168,6 +168,14 @@ def main():
                 )
             ]
             need(not bad, 'Actual importer errors/data loss: ' + repr(bad))
+            importer_stats = [
+                dict(name=r.name,
+                     idx=r.idx,
+                     severity=r.severity,
+                     source=r.source,
+                     value=r.value) for r in tp.query(
+                         'SELECT name,idx,severity,source,value FROM stats')
+            ]
             flow = list(tp.query('SELECT count(*) AS n FROM flow'))[0].n
             need(flow == 0, 'Unit-only trace invented flows')
         checks.append(
@@ -178,6 +186,7 @@ def main():
                  protobuf_packets=len(timed),
                  exact_ns_and_raw_references=True,
                  importer_errors=bad,
+                 importer_stats=importer_stats,
                  flows=flow))
     (args.output / 'result.json').write_text(
         json.dumps(dict(
