@@ -238,6 +238,52 @@ class TimelineInstrumentationMixin:
         owner = self.timeline_pool.snapshot(identity)
         descriptor = self._timeline_descriptors[identity]
         metadata = descriptor['metadata']
+        if identity in self._timeline_pending:
+            # A prior release may have failed after durable publication. Its
+            # error/ledger fields are live state, not a new immutable capture.
+            from ..timeline_capture_store import load_capture
+            from ..timeline_store import json_bytes, read_artifact
+            saved = load_capture(directory, self._timeline_pending[identity])
+            for field in ('capture_id', 'invocation_id', 'binary_id',
+                          'function', 'plan', 'layout', 'device', 'stream'):
+                if json_bytes(saved['owner'].get(field)) != json_bytes(
+                        owner.get(field)):
+                    raise RuntimeError(
+                        'Retained capture owner identity changed')
+            if (json_bytes(saved['launch']) != json_bytes(descriptor['launch'])
+                    or json_bytes(saved['metadata']) != json_bytes(metadata)
+                    or saved['raw_file'] != str(
+                        Path('captures') / (identity + '.raw'))
+                    or hashlib.sha256(raw).hexdigest() != saved['raw_sha256']
+                    or read_artifact(directory, saved['raw_file']) != raw):
+                raise RuntimeError(
+                    'Retained capture original changed before release retry')
+            guard = self.timeline_pool.readback_guard(identity)
+            saved_guard = saved.get('readback_guard')
+            if saved_guard is not None:
+                if saved_guard['file'] != str(
+                        Path('captures') / (identity + '.guard.raw')):
+                    raise RuntimeError(
+                        'Retained capture guard identity changed')
+                data = read_artifact(directory, saved_guard['file'])
+                if (data != guard or len(data) != saved_guard['bytes']
+                        or hashlib.sha256(data).hexdigest()
+                        != saved_guard['sha256']):
+                    raise RuntimeError(
+                        'Retained capture guard changed before release retry')
+            elif guard:
+                raise RuntimeError(
+                    'Retained capture guard is missing before release retry')
+            for artifact in saved['metadata'].get('timeline_artifacts', []):
+                if hashlib.sha256(
+                        read_artifact(directory, artifact['retained_file'])
+                ).hexdigest() != artifact['sha256']:
+                    raise RuntimeError(
+                        'Retained compiler artifact changed before release retry'
+                    )
+            self.timeline_pool.release(identity)
+            self._timeline_descriptors.pop(identity, None)
+            return
         prefix = Path('captures') / identity
         _persist(directory / prefix.with_suffix('.raw'), raw)
         guard = self.timeline_pool.readback_guard(identity)

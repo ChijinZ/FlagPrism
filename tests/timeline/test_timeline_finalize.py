@@ -256,10 +256,57 @@ def test_release_failure_is_owned_and_not_decoded(collector, tmp_path):
     if index['pending_decode'] != [ids[0]] or len(index['captures']) != 1:
         raise RuntimeError(
             'Release failure decoded unresolved owner or blocked next owner')
+    original = tmp_path / 'capture.timeline/captures' / (ids[0] +
+                                                         '.input.json')
+    frozen = original.read_bytes()
     transport.fail_release.clear()
     hook.flush_timeline(tmp_path / 'capture')
+    if original.read_bytes() != frozen:
+        raise RuntimeError('Release recovery rewrote the immutable original')
     if hook.timeline_pool.invocation_ids:
         raise RuntimeError('Release retry still owns buffer')
+
+
+@pytest.mark.parametrize('fault', ['raw', 'object', 'metadata', 'guard'])
+def test_release_retry_rechecks_saved_inputs_before_freeing(
+        collector, tmp_path, fault):
+    hook, transport, ids = collector
+    if fault == 'object':
+        hook._timeline_descriptors[
+            ids[0]]['metadata']['large_text'] = 'saved compiler text\n' * 1000
+    if fault == 'guard':
+        transport.readbacks[ids[0]] = TimelineReadback(bytes(16),
+                                                       bytes([165]) * 128)
+    transport.fail_release.add(ids[0])
+    with pytest.raises(OSError, match='release failure'):
+        hook.flush_timeline(tmp_path / 'capture')
+    root = tmp_path / 'capture.timeline'
+    if fault == 'object':
+        target = next(root.glob('objects/capture/*'))
+    else:
+        suffix = {
+            'raw': '.raw',
+            'metadata': '.input.json',
+            'guard': '.guard.raw'
+        }[fault]
+        target = root / 'captures' / (ids[0] + suffix)
+    original = target.read_bytes()
+    if fault == 'metadata':
+        document = json.loads(original)
+        document['metadata']['compiler_metadata']['num_warps'] = 99
+        target.write_text(json.dumps(document))
+    else:
+        target.write_bytes(b'corrupt')
+    transport.fail_release.clear()
+    with pytest.raises((RuntimeError, ValueError)):
+        hook.flush_timeline(tmp_path / 'capture')
+    if hook.timeline_pool.invocation_ids != (ids[0], ):
+        raise RuntimeError('Corrupt retained input allowed resource release')
+    target.write_bytes(original)
+    hook.flush_timeline(tmp_path / 'capture')
+    if hook.timeline_pool.invocation_ids:
+        raise RuntimeError(
+            'Restored input did not allow safe release recovery')
 
 
 def test_changed_original_detected_without_device_work(collector, tmp_path,
