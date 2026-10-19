@@ -1,0 +1,67 @@
+{
+  "terminal": {
+    "controller": {
+      "pid": 557124,
+      "ppid": 1,
+      "pgid": 557124,
+      "startticks": 1025335658
+    },
+    "worker": {
+      "pid": 557125,
+      "ppid": 557124,
+      "pgid": 557125,
+      "startticks": 1025335661
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r065-gcu/llvm11-native-input-v6/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r065-gcu/runs/llvm11-native-v6/output"
+    ],
+    "argv_sha256": "18e04aaebb290ad687c5f10f46fcd205cc7c82022d6820fda2fd2fba4bb18d3c",
+    "script_sha256": "6cdc20e3877ae891d46facea0d5955f619678bb7b166eaba2ebe95a8d7a14ee0",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 1,
+    "wall_ns": 1066733996
+  },
+  "result": {
+    "status": "SDK_native_assembly_probe",
+    "assembler_returncode": 1,
+    "source_sha256": "ed13d411692a779a2664c3664da2df6d2982de76cb25b7f814cd44abaaaa4178",
+    "assembly_sha256": "1b451bc4cba3a5fd3b9c4e956f210c61a59ebc3a755f73add9a039e76a9f3cff",
+    "tool_sha256": "ec94ebe3f48964e8756d4fcae3d548e2006d3514d80f9013c8f49c28601fa4f6",
+    "argv": [
+      "/opt/tops/llvm11/bin/llvm-mc",
+      "-triple=dtu",
+      "-mcpu=gcu300",
+      "-filetype=obj",
+      "-o",
+      "/tmp/chijin-timeline-r065-gcu/runs/llvm11-native-v6/output/assembled.o",
+      "/tmp/chijin-timeline-r065-gcu/runs/llvm11-native-v6/output/SDK-native.s"
+    ],
+    "llvm11_disassembly": {
+      "argv": [
+        "/opt/tops/llvm11/bin/llvm-objdump",
+        "-d",
+        "--triple=dtu",
+        "--mcpu=gcu300",
+        "--demangle",
+        "--line-numbers",
+        "/tmp/chijin-timeline-r061-gcu/runs/final-inspect-v1/output/32-8/1.elf"
+      ],
+      "returncode": 0,
+      "tool_sha256": "e37efecc349022f96c6a0fdaee12fa2019be01c8225d63999f8ea7fafce22c50",
+      "stdout_sha256": "61fa447ccd36509ba2a97e48d794d35716f6870fb51cea9b2521e754f4b1067c",
+      "stdout_bytes": 3000060,
+      "decode_failure_count": 0,
+      "unknown_count": 0
+    },
+    "device_executed": false,
+    "application_replayed": false,
+    "original_region_qualification": false
+  }
+}
