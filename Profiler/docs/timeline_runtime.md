@@ -351,8 +351,9 @@ ring whose selected writer never arrived.
 Real API cold/warm, standard CLI and two-stream decoder-failure recovery evidence
 is indexed in [GCU owner evidence](../../integration/evidence/timeline-gcu-owner-r016/README.md).
 Those older results establish raw collection. The newer GCU300 time views
-below add a per-physical-counter empirical scale and actual Perfetto checks;
-shared epoch, final source boundaries and DTE async reuse remain unqualified.
+below add a per-physical-counter empirical scale and actual Perfetto checks.
+That stage did not qualify shared epochs, final source boundaries or DTE
+dependencies; the late execution path below separately adds observed tag relations.
 
 Build with the matching `preallocation-admission.patch` v2: it passes the actual
 launch stream before either scratch allocation and exposes admission ABI 2.
@@ -417,6 +418,49 @@ covers a clean native/source build, installed normal/optimized API cold/warm,
 20 exact raw/SQL-checked traces and all 20 actual Perfetto views. Fresh-process
 public and guarded normal/optimized re-export reproduce their original bytes.
 These finite cases do not complete GCU DTE dependency or general-kernel acceptance.
+
+### GCU late execution recorder and observed tag dependencies
+
+On matching GCU300 installations, automatic first/last requests use
+`gcu_execution_timeline_v3` and `GCU_EXECUTION_TIMELINE_VERSION=1`. The normal
+build packages the `gcu-timeline` native tool. It observes actual SDK execution
+primitives after ordinary lowering, rather than inserting a source-level DMA
+logger between the application's transfers. Selected work-item 0 retains
+128-byte records in a local ring and publishes it through one private-tag DMA
+at the original return. Legacy compact/append captures keep their readers.
+
+Records retain paired device timestamps, full physical counter identities,
+actual tag-storage/index values, and buffer descriptor addresses and IR memory
+spaces. `gcu_ptr2int_i64_v1` preserves full-width device addresses: GCU300's
+32-bit `index` is not a safe carrier for global pointers. These addresses also
+differ from a Tensor's host-side `data_ptr()`; TOPS translates the latter before
+device use. Tag-storage identities are local to the recorded issuer. They do
+not identify a globally shared hardware queue.
+
+The backend matches a submission to its same-tag wait return and advances the
+tag generation after that return. Qualified captures publish
+`observed_dependency_exports`. In Perfetto, select an observed dependency
+checkpoint to inspect tag generation, source/destination descriptor addresses,
+raw offsets and source navigation. The same file retains actual issue/wait and
+region intervals. An initially idle wait has no invented producer; ambiguous
+tag reuse, unobserved primitives or incomplete records retain a diagnostic and
+the independently available interval data.
+
+Each dependency file covers one actual observer and its own counter origin.
+The empirical period uncertainty remains visible on slices and checkpoints;
+hardware read precision is unknown. Do not align different files to infer
+parallelism. A wait-return observation is not the precise hardware completion
+instant. Descriptor write generations do not certify byte coverage, absence of
+aliasing, or readiness for an unobserved consumer. These views grant neither
+engine-busy measurements nor exact source-operation costs.
+
+The maintained `tests/timeline/p01_enflame_native_arguments.py` runs two ordinary
+runtime-K GEMMs through the public API and compares recorded global addresses
+with actual per-launch TOPS translations. The complementary
+`p01_enflame_observed_dependencies.py --timeline BUNDLE/timeline --output OUT`
+checks retained real tag generations and exports without replaying the workload.
+These development cases do not replace the independent mathematical matrix,
+controlled perturbation cases or final three-backend acceptance.
 
 ### Legacy early NVIDIA recorder and retained captures
 

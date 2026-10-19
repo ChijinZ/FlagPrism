@@ -99,6 +99,9 @@ def derive_dependency_view(canonical, proof):
                 raw_length=record['length'],
                 occurrence=event['occurrence'],
                 coverage=copy.deepcopy(event['coverage']))
+            if 'conversion_scale_error_ns' in record:
+                nodes[record_id]['conversion_scale_error_ns'] = record[
+                    'conversion_scale_error_ns']
         edges.append(
             dict(id=stable_id(
                 tuple(counter['identity'][k]
@@ -155,6 +158,11 @@ def derive_dependency_view(canonical, proof):
     if counter.get('clock_scope_kind') == 'single_observer':
         view['clock_scope_kind'] = 'single_observer'
         view['observer_epoch_alignment_verified'] = False
+    if proof.clock.period_uncertainty_numerator_ns:
+        view['unit_proof'] = copy.deepcopy(counter['unit_proof'])
+        view['notes'].append(
+            'The empirical counter scale has a retained uncertainty interval; read precision and hardware completion times remain unverified.'
+        )
     return view
 
 

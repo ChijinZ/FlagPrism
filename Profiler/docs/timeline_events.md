@@ -89,7 +89,9 @@ math or actual Perfetto SQL/UI acceptance.
 The GCU adapter `timeline_events_enflame.canonicalize_enflame_capture` consumes
 the existing `selected_dynamic_timeline_v1` native append protocol (Debugger
 protocol 2, 64-byte records), and the distinct
-`gcu_first_last_timeline_v2` compact layout used by the default GCU collector.
+`gcu_first_last_timeline_v2` legacy compact layout. Matching GCU300 installations
+now also decode the late `gcu_execution_timeline_v3` publisher through
+`timeline_events_enflame_native`, retaining the same common raw schema 2.
 The decoder remains pure. Feature-1 compact captures additionally support the
 separate empirical unit provider described in [runtime](timeline_runtime.md#gcu-per-physical-counter-time-views).
 The caller supplies the owning capture namespace, the actual compiler metadata
@@ -106,6 +108,17 @@ Each pair produces two canonical endpoint references to the actual 8-byte
 start/end fields, not two fictitious physical records. Observer attributes retain
 the physical 64-byte pair representation. Version-2 counts always count canonical
 endpoint references; GCU physical-pair counts remain separately described.
+
+The execution-v3 physical record is 128 bytes. It retains native primitive
+kind, two real clock fields, full SIPINFO at both endpoints, tag base/index,
+buffer descriptor addresses/IR spaces and commit words. Its manifest versions
+the buffer operands and address encoding separately from the common schema.
+`gcu_ptr2int_i64_v1` carries full device pointers; older index-width values remain
+explicitly unverified for buffer associations. `sdk_private_tag_index` is an
+issuer-local tag identity. The decoder returns these native command arguments
+separately from canonical timestamps; the GCU dependency mapper establishes
+observed tag relations. Neither decoding nor source navigation grants engine
+busy, consumer readiness or a shared epoch between programs.
 
 | Observer field | Version-2 meaning |
 | --- | --- |

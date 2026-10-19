@@ -30,6 +30,8 @@ class SharedCounterProof:
     implementation_sha256: str
     evidence_ids: tuple
     scope_kind: str = 'shared_observers'
+    period_uncertainty_numerator_ns: int = 0
+    period_uncertainty_denominator: int = 1
 
     def __post_init__(self):
         for field in ('capture_id', 'invocation_id', 'binary_id', 'domain_id',
@@ -41,6 +43,12 @@ class SharedCounterProof:
         for field in ('period_numerator_ns', 'period_denominator',
                       'max_elapsed_ns'):
             _integer(getattr(self, field), field, 1)
+        _integer(self.period_uncertainty_numerator_ns, 'period uncertainty')
+        _integer(self.period_uncertainty_denominator,
+                 'uncertainty denominator', 1)
+        TickScale(self.period_numerator_ns, self.period_denominator,
+                  self.period_uncertainty_numerator_ns,
+                  self.period_uncertainty_denominator)
         if self.scope_kind not in ('shared_observers', 'single_observer'):
             raise ValueError('Unknown counter scope kind')
         minimum = 2 if self.scope_kind == 'shared_observers' else 1
@@ -98,7 +106,11 @@ def derive_shared_counter_view(canonical, proof):
         )
     origin, maximum = min(r['tick'] for r in records), max(r['tick']
                                                            for r in records)
-    scale = TickScale(proof.period_numerator_ns, proof.period_denominator)
+    scale = TickScale(proof.period_numerator_ns, proof.period_denominator,
+                      proof.period_uncertainty_numerator_ns,
+                      proof.period_uncertainty_denominator)
+    nominal_scale = TickScale(proof.period_numerator_ns,
+                              proof.period_denominator)
     bits = {o['timer_bits'] for o in chosen}
     if len(bits) != 1:
         raise ValueError('Shared observers disagree on counter encoding width')
@@ -108,10 +120,14 @@ def derive_shared_counter_view(canonical, proof):
                         max_elapsed_ns=proof.max_elapsed_ns)
     projected = {}
     for record in records:
-        ns, rounding = scale.offset(record['tick'] - origin)
+        ns, rounding = nominal_scale.offset(record['tick'] - origin)
         projected[record['id']] = dict(record,
                                        relative_ns=ns,
                                        conversion_rounding_ns=rounding)
+        if proof.period_uncertainty_numerator_ns:
+            projected[
+                record['id']]['conversion_scale_error_ns'] = scale.offset(
+                    record['tick'] - origin)[1]
     events = []
     for event in batch['events']:
         if event['observer_id'] not in selected:
@@ -163,6 +179,14 @@ def derive_shared_counter_view(canonical, proof):
         view['observer_epoch_alignment_verified'] = False
         view['notes'].append(
             'One actual observer only; no inter-observer epoch alignment is authorized.'
+        )
+    if proof.period_uncertainty_numerator_ns:
+        unit.update(period_uncertainty_numerator_ns=proof.
+                    period_uncertainty_numerator_ns,
+                    period_uncertainty_denominator=proof.
+                    period_uncertainty_denominator)
+        view['notes'].append(
+            'Conversion scale error includes the empirical rate interval and rounding; hardware read precision remains unknown.'
         )
     return view
 

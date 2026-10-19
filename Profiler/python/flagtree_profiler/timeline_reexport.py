@@ -130,7 +130,27 @@ def reexport_capture(directory, original_file):
     canonical_base = 'derived/canonical/' + canonical_revision
     from .timeline_store import find_committed_canonical
     with export_lock(directory):
-        reused = find_committed_canonical(directory, batch)
+        complete_file = canonical_base + '/complete.json'
+        if bundle_path(directory, complete_file).exists():
+            # Later exports may add an earlier-sorting canonical alias. Keep
+            # this revision's first committed storage choice on every retry.
+            previous = _json(directory, complete_file)
+            if previous.get('revision_id') != canonical_revision:
+                raise ValueError(
+                    'Committed canonical revision identity changed')
+            previous_file = previous.get('canonical_file')
+            reused = None
+            if previous_file != canonical_base + '/events.json':
+                payload = read_artifact(directory, previous_file)
+                if payload != json_bytes(batch):
+                    raise ValueError(
+                        'Committed canonical alias differs from freshly decoded raw'
+                    )
+                reused = dict(file=previous_file,
+                              bytes=len(payload),
+                              sha256=sha256(payload))
+        else:
+            reused = find_committed_canonical(directory, batch)
         canonical_file = reused[
             'file'] if reused is not None else canonical_base + '/events.json'
         canonical_files = {
@@ -302,6 +322,18 @@ def reexport_capture(directory, original_file):
         except (ValueError, OSError, KeyError, TypeError,
                 UnicodeError) as error:
             reason = 'GCU counter calibration unavailable: ' + str(error)
+        try:
+            from .timeline_enflame_dependencies import load_observed_dependency_inputs
+            from .timeline_dependency_perfetto import write_dependency_exports
+            dependency_batch, dependency_proofs = load_observed_dependency_inputs(
+                directory, capture, raw, canonical=batch)
+            dependency_rows = write_dependency_exports(directory,
+                                                       dependency_batch,
+                                                       dependency_proofs)
+        except (ValueError, OSError, KeyError, TypeError,
+                UnicodeError) as error:
+            dependency_reason = 'GCU observed dependencies unavailable: ' + str(
+                error)
     else:
         reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
     result = dict(invocation_id=owner['invocation_id'],

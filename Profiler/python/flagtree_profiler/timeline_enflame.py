@@ -377,6 +377,23 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
                     UnicodeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))
+            try:
+                from .timeline_enflame_dependencies import load_observed_dependency_inputs
+                from .timeline_dependency_perfetto import write_dependency_exports
+                dependency_batch, dependency_proofs = load_observed_dependency_inputs(
+                    directory, capture, raw, canonical=canonical)
+                capture[
+                    'observed_dependency_exports'] = write_dependency_exports(
+                        directory, dependency_batch, dependency_proofs)
+                capture['observed_dependency_status'] = dict(
+                    status='observed_tag_generations',
+                    time_arrows_verified=True,
+                    read_precision_status='unverified',
+                    precise_hardware_completion_time_verified=False)
+            except (ValueError, OSError, KeyError, TypeError,
+                    UnicodeError) as error:
+                capture['observed_dependency_status'] = dict(
+                    status='unavailable', reason=str(error))
             # Feed the same normal bundle/source-presence pipeline as advanced
             # capture, after retaining the independent original above.
             from flagtree.debugger import api

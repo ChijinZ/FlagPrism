@@ -384,6 +384,10 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
             if dependencies.get('clock_scope_kind') == 'single_observer':
                 annotations['clock_scope_kind'] = 'single_observer'
                 annotations['observer_epoch_alignment_verified'] = False
+            if 'conversion_scale_error_ns' in node:
+                annotations['conversion_scale_error_ns'] = node[
+                    'conversion_scale_error_ns']
+                annotations['counter_unit_proof'] = dependencies['unit_proof']
             for name, value in annotations.items():
                 message += _annotation(name, value, annotation_intern)
             # Base slice lanes and checkpoint lanes are independent. Equal-ns
