@@ -59,8 +59,10 @@ def _constant_word(body, graph, *, store_pc, register, expected):
                 literal = 0
             elif re.fullmatch(r'-?0x[0-9a-fA-F]+', fields[1]):
                 value = int(fields[1], 16)
-                _need(not (width == 2 and 0x80000000 <= value <= 0xffffffff),
-                      'Ambiguous native wide literal sign extension')
+                _need(
+                    not (width == 2 and opcode != 'MOV.64'
+                         and 0x80000000 <= value <= 0xffffffff),
+                    'Ambiguous native wide literal sign extension')
                 literal = (value >> (32 * word)) & 0xffffffff
             if literal is not None:
                 _need(literal == expected,

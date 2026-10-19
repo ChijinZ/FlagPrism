@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 from .timeline_nvidia_control import _bound_functions, _compact, _need, _registers
-from .timeline_nvidia_late_values import _predecessors, _destinations, _predicate
+from .timeline_nvidia_late_values import _predecessors, _destinations, _predicate, _local_access
 from .timeline_nvidia_late_boundaries import _native_lines, _ptx_operation, _straight_path
 from .timeline_nvidia_late_records import derive_record_fields
 from .timeline_nvidia_machine import _lex
@@ -218,7 +218,17 @@ def _dominators(graph):
 
 class _Words:
 
-    def __init__(self, body, graph, dominators, *, operation_pc, store_pc):
+    normalize_invariants = False
+
+    def __init__(self,
+                 body,
+                 graph,
+                 dominators,
+                 *,
+                 operation_pc,
+                 store_pc,
+                 normalize_invariants=False):
+        self.normalize_invariants = normalize_invariants
         _need(operation_pc in dominators[store_pc],
               'Native operation does not dominate its payload store')
         common = dominators[operation_pc] & dominators[store_pc]
@@ -251,6 +261,70 @@ class _Words:
             for pc in self.loop
             for register in _destinations(body[pc])
         }
+
+    def local_word(self, pc, base, offset, pre):
+        """Resolve a fixed local word within the same cut/iteration contract."""
+        expressions, visited, work = set(), set(), [pc]
+        while work:
+            at = work.pop()
+            if at in visited:
+                continue
+            visited.add(at)
+            _need(
+                len(visited) <= MAX_STATES,
+                'Local payload slice budget exceeded')
+            if not pre and at == self.cut:
+                invariant = not self.loop or base not in self.mutable
+                for member in self.loop:
+                    row = self.body[member]
+                    if row['opcode'].split('.')[0] != 'STL' or _predicate(
+                            row.get('predicate')) is False:
+                        continue
+                    try:
+                        other_base, other_offset, registers = _local_access(
+                            row)
+                    except ValueError:
+                        invariant = False
+                        break
+                    if other_base != base or other_offset <= offset < other_offset + 4 * len(
+                            registers):
+                        invariant = False
+                        break
+                expressions.add(
+                    self.local_word(at, base, offset, True) if invariant else
+                    self.arena.node('local-input', self.cut, base, offset))
+                continue
+            parents = self.graph[at]
+            if pre and at == self.cut:
+                parents = parents - self.loop
+            if not parents:
+                expressions.add(
+                    self.arena.node('local-entry', at, base, offset))
+            for parent in parents:
+                _need(parent < at, 'An uncut loop can mix local memory epochs')
+                row = self.body[parent]
+                active = _predicate(row.get('predicate'))
+                if active is not False:
+                    _need(base not in _destinations(row),
+                          'Local payload base changed before its store')
+                    if row['opcode'].split('.')[0] == 'STL':
+                        other_base, other_offset, registers = _local_access(
+                            row)
+                        _need(
+                            other_base == base,
+                            'Possible alias from a different local payload base'
+                        )
+                        delta = offset - other_offset
+                        if 0 <= delta < 4 * len(registers):
+                            expressions.add(
+                                self.value(parent, registers[delta // 4], pre))
+                            if active is True:
+                                continue
+                work.append(parent)
+        _need(
+            len(expressions) == 1,
+            'Native paths disagree on a local payload word')
+        return expressions.pop()
 
     def definitions(self, pc, register, pre):
         key = pc, register, pre
@@ -355,6 +429,65 @@ class _Words:
         def opaque():
             return self.arena.node('opaque', self.cut, pre, pc, register)
 
+        if self.normalize_invariants and opcode.split('.')[0] == 'LDL':
+            base, offset, registers = _local_access(row)
+            return self.local_word(pc, base,
+                                   offset + 4 * registers.index(register), pre)
+        if self.normalize_invariants:
+            if opcode == 'P2R' and len(fields) == 4 and fields[1:3] == [
+                    'PR', 'RZ'
+            ] and re.fullmatch(r'0x[0-9a-fA-F]+', fields[3]):
+                mask = int(fields[3], 16)
+                if 0 < mask <= 0x40 and mask & (mask - 1) == 0:
+                    predicate = self.value(pc,
+                                           'P' + str(mask.bit_length() - 1),
+                                           pre)
+                    # Only zero/nonzero is certified here, not a numeric bit
+                    # packing layout for use in address or byte arithmetic.
+                    return self.arena.node('predicate-nonzero-word', predicate)
+            if opcode in ('S2R',
+                          'S2UR') and len(fields) == 2 and fields[1] in {
+                              'SR_TID.X', 'SR_TID.Y', 'SR_TID.Z', 'SR_CTAID.X',
+                              'SR_CTAID.Y', 'SR_CTAID.Z', 'SR_CgaCtaId'
+                          }:
+                return self.arena.node('immutable-native-special-register',
+                                       fields[1])
+            if opcode == 'ULEA' and len(fields) == 4 and register == fields[0]:
+                _need(
+                    re.fullmatch(r'0x[0-9a-fA-F]+', fields[3]) is not None,
+                    'Unknown uniform address shift')
+                shift = int(fields[3], 16)
+                _need(0 <= shift < 32, 'Oversized uniform address shift')
+                # Equality needs only the same pure operation/inputs, not a
+                # numerical reconstruction of its address encoding.
+                return self.arena.node('native-ulea', shift,
+                                       self.operand(fields[1], pc, pre),
+                                       self.operand(fields[2], pc, pre))
+            # Re-materializing a predicate by testing its selected nonzero
+            # integer against zero preserves that original predicate. Do not
+            # infer equivalence between arbitrary comparison instructions.
+            if opcode in ('ISETP.NE.AND', 'ISETP.EQ.AND', 'ISETP.NE.U32.AND',
+                          'ISETP.EQ.U32.AND') and len(fields) == 5 and fields[
+                              4] == 'PT' and register in fields[:2]:
+                left, right = self.operand(fields[2], pc, pre), self.operand(
+                    fields[3], pc, pre)
+                candidate = left if right == 0 else right if left == 0 else None
+                selected = self.arena.nodes.get(candidate) if type(
+                    candidate) is str else None
+                if selected and selected[0] == 'predicate-nonzero-word':
+                    predicate = selected[1]
+                    inverse = ('.EQ.' in opcode) ^ (register == fields[1])
+                    return self.arena.invert(
+                        predicate) if inverse else predicate
+                if selected and selected[0] == 'select' and all(
+                        type(x) is int for x in selected[2:]):
+                    predicate, yes, no = selected[1:]
+                    if bool(yes) != bool(no):
+                        inverse = not bool(yes)
+                        inverse ^= '.EQ.' in opcode
+                        inverse ^= register == fields[1]
+                        return self.arena.invert(
+                            predicate) if inverse else predicate
         if re.fullmatch(r'U?P\d+', register):
             return opaque()
         if opcode in ('MOV', 'MOV.64', 'UMOV', 'UMOV.64', 'CS2R', 'CS2UR'):
@@ -363,7 +496,8 @@ class _Words:
             word = _registers(fields[0], width).index(register)
             if opcode.startswith('CS2') and fields[1] != 'SRZ':
                 return opaque()
-            if width == 2 and re.fullmatch(r'0x[0-9a-fA-F]+', fields[1]):
+            if width == 2 and opcode != 'MOV.64' and re.fullmatch(
+                    r'0x[0-9a-fA-F]+', fields[1]):
                 _need(not 0x80000000 <= int(fields[1], 16) <= MASK,
                       'Ambiguous native wide literal')
             return self.operand(fields[1], pc, pre, word)
@@ -579,7 +713,8 @@ def derive_shared_payloads(*, machine_map, sass_lines, sass_json, ptx, plan):
                            graph,
                            dominators[function],
                            operation_pc=pc,
-                           store_pc=payload['pc'])
+                           store_pc=payload['pc'],
+                           normalize_invariants=True)
             registers = _registers(payload['value_register'], 2)
             actual_low = words.value(payload['pc'], registers[0])
             expected_low = words.arena.add(words.address(pc, address[0]),

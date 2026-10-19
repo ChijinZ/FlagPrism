@@ -7,7 +7,13 @@ import struct
 from pathlib import Path
 
 
-def run(timeline, output, *, units, payloads, control):
+def run(timeline,
+        output,
+        *,
+        units,
+        payloads,
+        control,
+        require_early_coalesced=True):
     output.mkdir(parents=True)
     original = {
         str(p): hashlib.sha256(p.read_bytes()).hexdigest()
@@ -57,7 +63,8 @@ def run(timeline, output, *, units, payloads, control):
                                     graph,
                                     dom,
                                     operation_pc=site['operation_pc'],
-                                    store_pc=site['payload_store_pc'])
+                                    store_pc=site['payload_store_pc'],
+                                    normalize_invariants=True)
             value = words.value(site['payload_store_pc'],
                                 site['payload_registers'][0])
             address = __import__('re').search(r'\[[^\]]+\]',
@@ -77,7 +84,8 @@ def run(timeline, output, *, units, payloads, control):
                                       graph,
                                       dom,
                                       operation_pc=site['operation_pc'],
-                                      store_pc=site['payload_store_pc'])
+                                      store_pc=site['payload_store_pc'],
+                                      normalize_invariants=True)
             # Same native address and the actual changed reaching store value
             # must not be certified equal. The fixture is never device code.
             wrong = altered.value(site['payload_store_pc'],
@@ -105,8 +113,9 @@ def run(timeline, output, *, units, payloads, control):
                     'Raw payload/native group reference differs from actual bytes'
                 )
         merged = [s for s in proof['sites'] if len(s['source_origins']) > 1]
-        if not merged or not any(s['native_operation_before_source_entry']
-                                 for s in merged):
+        early_coalesced = bool(merged) and any(
+            s['native_operation_before_source_entry'] for s in merged)
+        if require_early_coalesced and not early_coalesced:
             raise RuntimeError(
                 'Actual coalesced source mapping case not exercised')
         if any(not s['native_byte_coverage_complete'] for s in merged):
@@ -136,9 +145,13 @@ def run(timeline, output, *, units, payloads, control):
         invalid = shared_base + cap['metadata']['compiler_metadata']['shared']
         corrupt('shared_address_outside_actual_allocation', cp,
                 (cp[5] & 0xffffffff00000000) | invalid)
-        folded = next(r for r in binding['rows']
-                      if by_id[r[3]]['native_byte_suboffset'] == 4)
-        corrupt('coalesced_source_subranges_disagree', folded, folded[5] + 4)
+        folded = next((r for r in binding['rows']
+                       if by_id[r[3]]['native_byte_suboffset'] == 4), None)
+        if require_early_coalesced and folded is None:
+            raise RuntimeError('Required coalesced subrange fixture missing')
+        if folded is not None:
+            corrupt('coalesced_source_subranges_disagree', folded,
+                    folded[5] + 4)
         other = copy.deepcopy(proof)
         other['binary_id'] = '0' * 64
         reject(
@@ -160,6 +173,10 @@ def run(timeline, output, *, units, payloads, control):
                 'Native payload words granted unrelated qualification')
         reports.append(
             dict(proof=proof,
+                 mapping_fixture=dict(early_coalesced=early_coalesced,
+                                      merged_sites=len(merged),
+                                      subrange_corruption_exercised=folded
+                                      is not None),
                  raw_binding_summary=dict(
                      identity=binding['identity'],
                      rows=len(binding['rows']),
@@ -233,6 +250,12 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--timeline', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument(
+        '--general-mapping',
+        action='store_true',
+        help=
+        'Check arbitrary native mapping; run the default separately on the early-coalesced regression fixture'
+    )
     args = parser.parse_args()
     print(
         json.dumps(
@@ -240,7 +263,8 @@ def main():
                 args.output,
                 units=units,
                 payloads=payloads,
-                control=control)))
+                control=control,
+                require_early_coalesced=not args.general_mapping)))
 
 
 if __name__ == '__main__':

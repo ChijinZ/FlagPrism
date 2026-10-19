@@ -33,6 +33,7 @@ static cl::opt<unsigned> ProfileABI("flagtree-profile-abi", cl::init(0));
 static cl::opt<unsigned> LogicalBudget("max-sites", cl::init(8));
 static cl::opt<bool> BatchRecords("batch-records", cl::init(false));
 static cl::opt<unsigned> RecordCapacity("capacity", cl::init(512));
+static cl::opt<bool> AutoCapacity("auto-capacity", cl::init(false));
 static cl::opt<unsigned> ObserverActors("actors", cl::init(0));
 static cl::opt<bool> GroupMatrix("group-matrix", cl::init(false));
 static cl::opt<bool> CompactPrograms("compact-programs", cl::init(false));
@@ -238,8 +239,18 @@ int main(int argc, char **argv) {
     errs() << "Observer selection exceeds actual block\n";
     return 2;
   }
-  const uint64_t Capacity = RecordCapacity;
   const uint64_t HeaderWords = 6;
+  const uint64_t CaptureBudgetBytes =
+      requiresFullFootprint ? 2 * 1024 * 1024 : 64 * 1024;
+  uint64_t Capacity = RecordCapacity;
+  if (AutoCapacity) {
+    const uint64_t wordsPerActor = CaptureBudgetBytes / (2 * Actors * 8);
+    if (!CompactPrograms || wordsPerActor < HeaderWords + 4) {
+      errs() << "Automatic record budget cannot hold the selected actors\n";
+      return 2;
+    }
+    Capacity = std::min<uint64_t>(Capacity, (wordsPerActor - HeaderWords) / 4);
+  }
   const uint64_t SegmentWords = Actors * (HeaderWords + Capacity * 4);
   int scratchIndex = ScratchArg;
   if (scratchIndex < 0) {
@@ -655,6 +666,9 @@ int main(int argc, char **argv) {
           {"max_sites", LogicalBudget.getValue()},
           {"unselected_sites", std::move(unselected)},
           {"capacity_per_program", Capacity},
+          {"capacity_policy",
+           AutoCapacity ? "bounded-actor-bytes-v1" : "explicit-record-count"},
+          {"requires_full_footprint", requiresFullFootprint},
           {"header_words", HeaderWords},
           {"actors", Actors},
           {"observer_selection",

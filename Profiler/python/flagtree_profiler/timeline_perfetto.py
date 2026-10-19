@@ -51,7 +51,7 @@ def _text(field, value):
     return _bytes(field, data)
 
 
-def _annotation(name, value):
+def _annotation(name, value, intern=None):
     if type(value) is bool:
         payload = _uint(2, int(value))
     elif type(value) is int and 0 <= value < 1 << 63:
@@ -64,8 +64,11 @@ def _annotation(name, value):
                                ensure_ascii=False,
                                separators=(',', ':'),
                                allow_nan=False)
-        payload = _text(6, value)
-    return _bytes(4, _text(10, name) + payload)
+        payload = _uint(17, intern(
+            'string', str(value))) if intern is not None else _text(6, value)
+    key = _uint(1, intern('name', name)) if intern is not None else _text(
+        10, name)
+    return _bytes(4, key + payload)
 
 
 def validate_counter_view(view, canonical, proof):
@@ -106,6 +109,24 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
     _integer(max_bytes, 'Perfetto byte budget', 1, 64 * 1024 * 1024)
     output = bytearray()
     first = True
+    names, strings = {}, {}
+    interned_bytes = 0
+
+    def intern(kind, value):
+        nonlocal interned_bytes
+        table = names if kind == 'name' else strings
+        if value not in table:
+            encoded = str(value).encode('utf-8')
+            if len(encoded) > 65536 or len(table) >= 65536:
+                raise ValueError('Perfetto interned string budget exceeded')
+            interned_bytes += len(encoded) + 16
+            if interned_bytes > max_bytes:
+                raise ValueError(
+                    'Perfetto interned table exceeds trace budget')
+            table[value] = len(table) + 1
+        return table[value]
+
+    annotation_intern = intern if dependencies is not None else None
 
     def packet(payload, timestamp=None):
         nonlocal first
@@ -114,6 +135,8 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
             value += _uint(13, 1)  # SEQ_INCREMENTAL_STATE_CLEARED
             first = False
         if timestamp is not None:
+            if annotation_intern is not None:
+                value += _uint(13, 2)  # SEQ_NEEDS_INCREMENTAL_STATE
             _integer(timestamp, 'relative timestamp ns', 0, (1 << 63) - 1)
             value += _uint(8, timestamp) + _uint(58, TRACE_FILE_CLOCK)
         value += payload
@@ -266,7 +289,7 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
             message = _uint(9, event_type) + _uint(11, tid) + _text(
                 23, label) + _text(22, event['semantic'])
             for name, value in annotations.items():
-                message += _annotation(name, value)
+                message += _annotation(name, value, annotation_intern)
             estimate = len(message) + 128
             if len(output) + pending_bytes + estimate > max_bytes:
                 raise ValueError(
@@ -338,11 +361,24 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
                     flow_ids[n] for n in sorted(incoming.get(node['id'], []))
                 ])
             for name, value in annotations.items():
-                message += _annotation(name, value)
+                message += _annotation(name, value, annotation_intern)
             # Base slice lanes and checkpoint lanes are independent. Equal-ns
             # dependency endpoints follow their verified DAG order, not UUIDs.
             pending.append((node['time_ns'], -1, node['topological_rank'],
                             _bytes(11, message)))
+    if annotation_intern is not None:
+        # Same trusted sequence, after its initial state reset and before any
+        # referring event. These are standard Perfetto dictionaries, preserving
+        # annotation names/values exactly rather than dropping repeated fields.
+        dictionary = b''.join(
+            _bytes(3,
+                   _uint(1, iid) + _text(2, name))
+            for name, iid in names.items())
+        dictionary += b''.join(
+            _bytes(29,
+                   _uint(1, iid) + _text(2, value))
+            for value, iid in strings.items())
+        packet(_bytes(12, dictionary))
     for timestamp, _, _, payload in sorted(pending):
         packet(payload, timestamp)
     return bytes(output)

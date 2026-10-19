@@ -72,11 +72,31 @@ session trace budget still applies; revalidation records have separate bounded
 count and byte limits.
 
 Current dependency qualification has been exercised with the four-warp
-runtime-K GEMM. Its one-warp variant passes numerical and collective-byte
-checks but still fails native timestamp/payload qualification for register
-spills, a wide literal and several shared-address expressions. The failure
-remains visible with retained raw data; it is not classified as an unsupported
-ordinary kernel or counted as a successful dependency timeline.
+runtime-K GEMM. Fresh one-warp runs with three and seven reduction tiles also
+pass numerical, complete-record, collective-byte and native dependency checks.
+The earlier register-spill, wide-literal and shared-address failures remain in
+the development evidence. A lossless standard Perfetto interned-string codec
+exports all four selected observers within the session trace budget; these
+one-warp exports have passed independent raw/SQL checks and actual UI opening
+and dependency selection. The updated installed-wheel acceptance is still in
+progress; these development checks do not establish general kernel or
+three-backend qualification. The current one-warp complete retained bundle
+still exceeds the 64 MiB target because complete canonical JSON is stored in
+several places. Trace-file admission alone does not certify that bundle; this
+case remains an acceptance failure until lossless metadata retention is fixed.
+
+Default record capacity is now chosen from the actual recorded actor count.
+A complete-CTA recording targets 2 MiB for the first/last program pair; a
+sampled recording targets 64 KiB. Each actor has six header words and four
+64-bit words per record, with at most 4096 records. The compiler manifest
+records `bounded-actor-bytes-v1`, the footprint decision and the resulting
+capacity; the Python adapter independently recomputes and checks them. An
+explicit record-count request keeps its original meaning. The existing 8 MiB
+session raw, 16 MiB trace and 64 MiB bundle limits remain in force. The old
+one-warp seven-tile capture overflowed at the previous fixed 256-record limit;
+that failure is retained. Fresh runs with the actor-byte capacity policy
+record both reduction lengths without loss; this does not imply arbitrary
+loop lengths fit the bounded buffer.
 
 The recorder also preserves warp-synchronization brackets and their actual
 member masks. A full-mask synchronization can publish for the whole actual

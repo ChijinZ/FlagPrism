@@ -1,0 +1,59 @@
+{
+  "status": "WIP_not_accepted_or_merged",
+  "products": [
+    {
+      "file": "Profiler/Dialect/tools/late-timeline/late-timeline.cpp",
+      "source_sha256": "db3cc5def4c3b6d05920c16a00a39f045fbf892fecc5a9c4cc999f56d36ec06a",
+      "installed_v5_sha256": "db3cc5def4c3b6d05920c16a00a39f045fbf892fecc5a9c4cc999f56d36ec06a",
+      "matches_installed_v5": true
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_nvidia_late_compile.py",
+      "source_sha256": "d3a78c92d197fd9a8d63844c929c3981c2dd6187695f0dc610981242387903aa",
+      "installed_v5_sha256": "d3a78c92d197fd9a8d63844c929c3981c2dd6187695f0dc610981242387903aa",
+      "matches_installed_v5": true
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_nvidia_late_payloads.py",
+      "source_sha256": "c897056fe5f1297336df76d4de91f988065e3d2dd020ace957a6b3561b90038a",
+      "installed_v5_sha256": "c897056fe5f1297336df76d4de91f988065e3d2dd020ace957a6b3561b90038a",
+      "matches_installed_v5": true
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_nvidia_late_records.py",
+      "source_sha256": "67a1fae6ecf300ad31bdb330424061cb92f452c1b219a83a39e4766cee6fcea8",
+      "installed_v5_sha256": "67a1fae6ecf300ad31bdb330424061cb92f452c1b219a83a39e4766cee6fcea8",
+      "matches_installed_v5": true
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_perfetto.py",
+      "source_sha256": "4661dc8b6ab47ab0f31ad0d31a4357d869e3aa67fe7f7ba6052387e1f484093e",
+      "installed_v5_sha256": "4661dc8b6ab47ab0f31ad0d31a4357d869e3aa67fe7f7ba6052387e1f484093e",
+      "matches_installed_v5": true
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_store.py",
+      "source_sha256": "1e345a247b6aca0fbb2a872ef048c0e19458ff93b00dddf0895c735690683ad7",
+      "installed_v5_sha256": "de207e6cf1c65b1622e14f4a9da5eba88923e2912c84d315b890abceeefab1ae",
+      "matches_installed_v5": false
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/timeline_reexport.py",
+      "source_sha256": "68e7f51c3bbcb16646958e1fca4001e6520eb50f54e8edf7f2576c4dca593e35",
+      "installed_v5_sha256": "b96612c4fbc10d1660051dc800cc272c7c8322083fe8b11b121041743eccd967",
+      "matches_installed_v5": false
+    },
+    {
+      "file": "Profiler/python/flagtree_profiler/hooks/timeline_late.py",
+      "source_sha256": "bc944bdde14f1bb42180b086f989af94e2b3a757aaa222a8c641ca4b92f73bdf",
+      "installed_v5_sha256": "9e49f363597fd1268e7b984ca5919c43d76a46e376a3b725e4f4b8cdb69c3d33",
+      "matches_installed_v5": false
+    }
+  ],
+  "known_acceptance_failure": {
+    "complete_one_warp_bundle_bytes": 73061831,
+    "trace_bytes": 15338808,
+    "bundle_limit_bytes": 67108864
+  },
+  "pending": "Canonical aliases in store, late capture and offline producer require actual installed and full-bundle revalidation; latest UI search checker is in progress."
+}

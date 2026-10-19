@@ -127,20 +127,29 @@ def reexport_capture(directory, original_file):
         Path(__file__).read_bytes())
     canonical_revision = sha256(json_bytes(decoder_inputs))
     canonical_base = 'derived/canonical/' + canonical_revision
-    canonical_files = {
-        canonical_base + '/inputs.json': json_bytes(decoder_inputs),
-        canonical_base + '/events.json': json_bytes(batch)
-    }
-    receipt = dict(schema_version=1,
-                   revision_id=canonical_revision,
-                   identity=batch['identity'],
-                   files=[
-                       dict(file=name,
-                            bytes=len(payload),
-                            sha256=sha256(payload))
-                       for name, payload in sorted(canonical_files.items())
-                   ])
+    from .timeline_store import find_committed_canonical
     with export_lock(directory):
+        reused = find_committed_canonical(directory, batch)
+        canonical_file = reused[
+            'file'] if reused is not None else canonical_base + '/events.json'
+        canonical_files = {
+            canonical_base + '/inputs.json': json_bytes(decoder_inputs)
+        }
+        if reused is None:
+            canonical_files[canonical_file] = json_bytes(batch)
+        retained = [
+            dict(file=name, bytes=len(payload), sha256=sha256(payload))
+            for name, payload in sorted(canonical_files.items())
+        ]
+        if reused is not None:
+            retained.append(reused)
+        receipt = dict(schema_version=2,
+                       revision_id=canonical_revision,
+                       identity=batch['identity'],
+                       canonical_file=canonical_file,
+                       canonical_storage='committed_canonical_alias_v1'
+                       if reused else 'standalone_json_v1',
+                       files=sorted(retained, key=lambda row: row['file']))
         for name, payload in canonical_files.items():
             persist(directory, name, payload)
         persist(directory, canonical_base + '/complete.json',
@@ -268,7 +277,7 @@ def reexport_capture(directory, original_file):
         reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
     result = dict(invocation_id=owner['invocation_id'],
                   backend=backend,
-                  canonical_file=canonical_base + '/events.json',
+                  canonical_file=canonical_file,
                   canonical_revision=canonical_revision,
                   wait_control_file=control_file,
                   exports=rows,

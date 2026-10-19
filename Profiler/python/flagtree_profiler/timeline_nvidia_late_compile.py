@@ -38,7 +38,7 @@ class LateLLVMTransform:
                  artifact_root,
                  *,
                  max_sites=8,
-                 capacity=256,
+                 capacity=None,
                  timeout=120):
         self.tool = Path(tool).resolve(strict=True)
         if not self.tool.is_file() or not os.access(self.tool, os.X_OK):
@@ -47,7 +47,8 @@ class LateLLVMTransform:
         self.root = Path(artifact_root)
         self.root.mkdir(parents=True, exist_ok=True)
         self.max_sites = _integer(max_sites, 'site budget', 1, 128)
-        self.capacity = _integer(capacity, 'record capacity', 1, 4096)
+        self.capacity = None if capacity is None else _integer(
+            capacity, 'record capacity', 1, 4096)
         self.timeout = _integer(timeout, 'compile timeout', 1, 120)
 
     @property
@@ -56,6 +57,8 @@ class LateLLVMTransform:
                     tool_sha256=self.tool_sha256,
                     max_sites=self.max_sites,
                     capacity=self.capacity,
+                    capacity_policy='bounded-actor-bytes-v1'
+                    if self.capacity is None else 'explicit-record-count',
                     profile_argument_abi=1,
                     actors='native-async-matrix-footprint-else-first4',
                     compact_programs=True,
@@ -83,10 +86,12 @@ class LateLLVMTransform:
             str(self.tool),
             str(source), '--flagtree-profile-abi=1', '--batch-records',
             '--group-matrix', '--compact-programs',
-            '--max-sites=' + str(self.max_sites),
-            '--capacity=' + str(self.capacity), '--output=' + str(output),
-            '--manifest=' + str(manifest)
+            '--max-sites=' + str(self.max_sites), '--capacity=' +
+            str(self.capacity if self.capacity is not None else 4096),
+            '--output=' + str(output), '--manifest=' + str(manifest)
         ]
+        if self.capacity is None:
+            argv.append('--auto-capacity')
         receipt = dict(state='starting',
                        argv=argv,
                        cache_identity=self.cache_identity,
@@ -156,10 +161,23 @@ class LateLLVMTransform:
             if actors > product:
                 raise LateCompileError(
                     'Observer count exceeds actual block dimensions')
+            capacity = self.capacity
+            if capacity is None:
+                full = plan.get('requires_full_footprint')
+                if type(full) is not bool or plan.get(
+                        'capacity_policy') != 'bounded-actor-bytes-v1':
+                    raise LateCompileError(
+                        'Native automatic record policy differs')
+                budget = 2 * 1024 * 1024 if full else 64 * 1024
+                words = budget // (2 * actors * 8)
+                if words < 10:
+                    raise LateCompileError(
+                        'Automatic record budget lacks room for its header')
+                capacity = min(4096, (words - 6) // 4)
             if plan.get('header_words') != 6 or plan.get(
-                    'capacity_per_program') != self.capacity:
+                    'capacity_per_program') != capacity:
                 raise LateCompileError('Native record capacity/header differs')
-            stride = actors * (6 + 4 * self.capacity) * 8
+            stride = actors * (6 + 4 * capacity) * 8
             if plan.get('segment_words') != stride // 8:
                 raise LateCompileError('Native physical layout differs')
             if 2 * stride > 8 * 1024 * 1024:

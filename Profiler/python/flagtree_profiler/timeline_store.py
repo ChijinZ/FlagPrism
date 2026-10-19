@@ -201,6 +201,27 @@ def committed_exports(directory):
     return exports
 
 
+def find_committed_canonical(directory, canonical):
+    """Reuse exact serialized fresh output, never infer facts from cached JSON.
+
+    The caller holds export_lock and has decoded/validated canonical from raw.
+    Receipts authenticate candidate bytes; equality binds every identity, raw
+    reference and event field to the caller's freshly computed document.
+    """
+    expected = json_bytes(canonical)
+    candidates = sorted({
+        str(Path(row['view_file']).parent.parent / 'canonical.json')
+        for row in committed_exports(directory)
+    })
+    for relative in candidates:
+        payload = read_artifact(directory, relative)
+        if payload == expected:
+            return dict(file=relative,
+                        bytes=len(payload),
+                        sha256=sha256(payload))
+    return None
+
+
 def publish_revision(directory, inputs, files, exports):
     """Publish under an existing export_lock; a receipt is the commit point.
 

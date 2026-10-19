@@ -74,7 +74,7 @@ for report in summary['reports']:
                                 load_timeout=20)) as tp:
             ns = list(
                 tp.query(
-                    "SELECT ts,dur,extract_arg(arg_set_id,'debug.node_id') AS node_id,extract_arg(arg_set_id,'debug.raw_tick') AS raw_tick,extract_arg(arg_set_id,'debug.raw_offset') AS raw_offset FROM slice WHERE extract_arg(arg_set_id,'debug.node_id') IS NOT NULL"
+                    "SELECT ts,dur,depth,extract_arg(arg_set_id,'debug.node_id') AS node_id,extract_arg(arg_set_id,'debug.raw_tick') AS raw_tick,extract_arg(arg_set_id,'debug.raw_offset') AS raw_offset FROM slice WHERE extract_arg(arg_set_id,'debug.node_id') IS NOT NULL"
                 ))
             wanted = {n['id']: n for n in view['nodes']}
             if len(ns) != len(wanted) or len({r.node_id
@@ -145,6 +145,8 @@ for report in summary['reports']:
             dict(trace=str(path),
                  sha256=item['sha256'],
                  nodes=len(ns),
+                 node_depths={r.node_id: r.depth
+                              for r in ns},
                  flows=len(flows),
                  internal_events=len(intervals),
                  positive_internal_intervals=positive,

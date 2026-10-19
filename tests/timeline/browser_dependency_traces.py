@@ -1,7 +1,7 @@
 """Browse real dependency traces in the pinned standard Perfetto UI.
 This checker does not replace numerical, native-clock or independent qualification.
 """
-import argparse, functools, hashlib, http.server, json, os, threading, time
+import argparse, functools, hashlib, http.server, json, os, re, threading, time
 from pathlib import Path
 
 
@@ -18,6 +18,9 @@ p = argparse.ArgumentParser()
 p.add_argument('--output', type=Path, required=True)
 p.add_argument('--timeline', type=Path, required=True)
 p.add_argument('--minimum-traces', type=int, default=6)
+p.add_argument('--tp-result',
+               type=Path,
+               help='Independent verifier result with actual slice depths')
 a = p.parse_args()
 a.output.mkdir(parents=True)
 ui = Path('/workspace/chijin-timeline-r012/runs/ui-install-v1/output/ui')
@@ -31,6 +34,8 @@ need(
     sum((len(r['exports']) for r in reports)) >= a.minimum_traces,
     'Not enough real dependency traces')
 summary = dict(reports=reports)
+tp_checks = json.loads(
+    a.tp_result.read_text())['checks'] if a.tp_result else []
 before = {str(f): sha(f) for f in root.rglob('*') if f.is_file()}
 os.environ[
     'LD_LIBRARY_PATH'] = '/workspace/chijin-timeline-r017/runs/ui-offline-v2/output/libraries/usr/lib/x86_64-linux-gnu:/workspace/chijin-timeline-r017/runs/ui-offline-v2/output/libraries/lib/x86_64-linux-gnu'
@@ -130,7 +135,7 @@ try:
                             has_text=root_title).first.locator('..').locator(
                                 '.pf-track__collapse-button').click()
                         for observer in [
-                                o for o in canonical['observers']
+                                o for o in reversed(canonical['observers'])
                                 if o['id'] in clock['observer_ids']
                         ]:
                             page.locator('.pf-track__title').filter(
@@ -148,55 +153,65 @@ try:
                         page.screenshot(path=str(folder / 'full-range.png'))
                         checkpoints = page.locator('.pf-track__title').filter(
                             has_text='Observed dependency checkpoints')
-                        need(checkpoints.count() == len(clock['observer_ids']),
-                             'Actual observer checkpoint lanes missing')
-                        observer_id = clock['observer_ids'][0]
-                        nodes = sorted([
-                            n for n in view['nodes']
-                            if n['observer_id'] == observer_id
-                        ],
-                                       key=lambda n: n['time_ns'])
-
-                        def gap(index):
-                            t = nodes[index]['time_ns']
-                            return min(
-                                t -
-                                nodes[index - 1]['time_ns'] if index else t,
-                                nodes[index + 1]['time_ns'] - t if index +
-                                1 < len(nodes) else end - t)
-
-                        candidates = sorted(
-                            range(len(nodes)),
-                            key=lambda i:
-                            ('Async wait' in nodes[i]['label'] and nodes[i][
-                                'phase'] == 'exit', gap(i)),
-                            reverse=True)
-                        track = checkpoints.first.locator('xpath=../../..')
-                        track.scroll_into_view_if_needed(timeout=3000)
-                        box = track.locator('.pf-track__canvas').bounding_box()
-                        need(box and box['width'] > 0, 'No checkpoint canvas')
+                        need(
+                            0 < checkpoints.count() <= len(
+                                clock['observer_ids']),
+                            'Visible observer checkpoint lanes missing')
+                        if a.tp_result:
+                            matching = [
+                                r for r in tp_checks
+                                if r['sha256'] == row['sha256']
+                            ]
+                            need(
+                                len(matching) == 1,
+                                'Missing or ambiguous TP trace identity')
+                            need(
+                                set(matching[0]['node_depths']) == {
+                                    n['id']
+                                    for n in view['nodes']
+                                }, 'TP node set differs from view')
+                        # Use Perfetto's own search navigation. Canvas hit testing
+                        # depends on virtualized row packing and screen scale.
+                        targets = {
+                            n['id']: n
+                            for n in view['nodes'] if
+                            'Async wait' in n['label'] and n['phase'] == 'exit'
+                        }
+                        need(targets,
+                             'No real wait-return checkpoint to inspect')
+                        search = page.get_by_placeholder('Search or type',
+                                                         exact=False).first
+                        search.fill('Async wait')
+                        search.press('Enter')
+                        page.wait_for_timeout(1200)  # UI search is debounced.
                         selected = None
-                        for index in candidates[:8]:
-                            node = nodes[index]
-                            for delta in [0, -2, 2, -4, 4]:
-                                page.mouse.click(
-                                    box['x'] +
-                                    node['time_ns'] / end * box['width'] +
-                                    delta,
-                                    box['y'] + min(12, box['height'] / 2))
-                                try:
-                                    page.wait_for_function(
-                                        '(id)=>document.body.innerText.includes(id)',
-                                        arg=node['id'],
-                                        timeout=400)
-                                    selected = node
-                                    break
-                                except PlaywrightTimeoutError:
-                                    pass
-                            if selected:
+                        for _ in range(16):
+                            search.press('Enter')
+                            page.wait_for_timeout(300)
+                            try:
+                                page.wait_for_function(
+                                    r'(ids)=>{const m=document.body.innerText.match(/(?:^|\n)node_id(?:arrow_drop_down)?\s*\n(record-[0-9a-f]{64})(?:\n|$)/);return m && ids.includes(m[1]);}',
+                                    arg=list(targets),
+                                    timeout=800)
+                                text = page.locator('body').inner_text()
+                                match = re.search(
+                                    r'(?:^|\n)node_id(?:arrow_drop_down)?\s*\n(record-[0-9a-f]{64})(?:\n|$)',
+                                    text)
+                                visible = [targets[match.group(1)]
+                                           ] if match and match.group(
+                                               1) in targets else []
+                                need(
+                                    len(visible) == 1,
+                                    'Ambiguous actual UI node identity')
+                                selected = visible[0]
                                 break
-                        need(selected is not None,
-                             'Could not select actual dependency checkpoint')
+                            except PlaywrightTimeoutError:
+                                pass
+                        need(
+                            selected is not None,
+                            'Could not select real wait checkpoint through UI search'
+                        )
+                        observer_id = selected['observer_id']
                         body = page.locator('body').inner_text()
                         for field in [
                                 'source_locations', 'raw_tick', 'raw_offset',
@@ -209,13 +224,10 @@ try:
                              'No readable actual generation relation')
                         (folder / 'details.txt').write_text(body)
                         page.screenshot(path=str(folder / 'details.png'))
-                        page.keyboard.press('f')
-                        for _ in range(20):
-                            page.keyboard.press('s')
+                        # Keep the actual search-selected checkpoint stable.
+                        # Blurring the omnibox can commit a different search
+                        # result; keyboard zoom would then inspect another slice.
                         page.mouse.move(0, 0)
-                        page.evaluate(
-                            'async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)}'
-                        )
                         page.screenshot(path=str(folder /
                                                  'focus-with-flows.png'))
                         need(not errors, 'UI errors: ' + repr(errors))

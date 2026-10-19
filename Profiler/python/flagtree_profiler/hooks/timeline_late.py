@@ -259,9 +259,7 @@ class LateTimelineHook(InstrumentationHook):
                                                   metadata=capture['metadata'])
             capture['events_file'] = str(
                 prefix.with_suffix('.late-events.json'))
-            _persist(directory / capture['events_file'],
-                     (json.dumps(canonical, separators=(',', ':')) +
-                      '\n').encode())
+
             key = (str(directory), owner['binary_id'])
             if key not in self._timeline_machine:
                 self._timeline_machine[key] = inspect_late_capture_binary(
@@ -413,6 +411,19 @@ class LateTimelineHook(InstrumentationHook):
             except (ValueError, OSError, KeyError, TypeError) as error:
                 capture['shared_counter_status'] = dict(status='unavailable',
                                                         reason=str(error))
+        if owner['submission_outcome'] == 'returned':
+            from ..timeline_store import export_lock, find_committed_canonical
+            with export_lock(directory):
+                reused = find_committed_canonical(directory, canonical)
+                if reused is not None:
+                    capture['events_file'] = reused['file']
+                    capture['events_storage'] = dict(
+                        kind='committed_canonical_alias_v1', **reused)
+                else:
+                    _persist(directory / capture['events_file'],
+                             (json.dumps(canonical, separators=(',', ':')) +
+                              '\n').encode())
+                    capture['events_storage'] = dict(kind='standalone_json_v1')
         _persist(directory / prefix.with_suffix('.json'),
                  (json.dumps(capture, indent=2) + '\n').encode())
         self._timeline_rows.append(

@@ -227,9 +227,22 @@ def run(timeline, output, *, units, records, control):
             changed, graph, store_pc=16, register='R2', expected=1))
     changed = copy.deepcopy(fixture)
     changed[0]['operands'] = 'R2,0xffffffff'
+    # SM120 device cases distinguish 0xffffffff from the full 64-bit all-one
+    # literal in both the native disassembly and the stored result.
+    for register, expected in [('R2', 0xffffffff), ('R3', 0)]:
+        records._constant_word(changed,
+                               graph,
+                               store_pc=16,
+                               register=register,
+                               expected=expected)
     reject(
-        'ambiguous_wide_literal', lambda: records._constant_word(
-            changed, graph, store_pc=16, register='R3', expected=0))
+        'wrong_wide_literal_high_word', lambda: records._constant_word(
+            changed, graph, store_pc=16, register='R3', expected=0xffffffff))
+    uniform = copy.deepcopy(changed)
+    uniform[0].update(opcode='UMOV.64', operands='UR2,0xffffffff')
+    reject(
+        'unverified_uniform_wide_literal', lambda: records._constant_word(
+            uniform, graph, store_pc=16, register='UR3', expected=0))
     if originals != {
             str(p): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in timeline.rglob('*') if p.is_file()
