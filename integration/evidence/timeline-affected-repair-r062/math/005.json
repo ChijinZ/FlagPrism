@@ -1,0 +1,55 @@
+{
+  "actual_state_lowering_verified": false,
+  "asm_sha256": {
+    "bcmlir": "9aeddd3c9ecc366cc975157ab01b912b5c660b95a7e3e81b20fdb6f3e543a031",
+    "mlirbc": "a2a907ae1227f5e3d2b9c186c679dbd2fe654a98ba27012b49efe141668af6d3",
+    "npubin": "d73e1991d5446956620b490a8de8ab407fb2b3903e1f0d263e2f647b11047a13",
+    "source": "08d5bc818da326700d1fc4a221e6fc163b7c5283963c393cbb41bad8cba9d585",
+    "ttadapter": "9ad1b37b4ff5c2bdab97624b2dcc29486a3256caf98539bae66dd943e4c1a109",
+    "ttir": "d4d03970424ee7ee8bf47f12d0eaab273f4ad338d21d84548186ab053e4bbde5"
+  },
+  "backend": "ascend",
+  "binary_sha256": {},
+  "case": "q01",
+  "compiled_hash": "36f6a5b411125e8c5b5564f9c039b040c3563001292b1de597b4b9d05f8a319d",
+  "config": {
+    "B": 256,
+    "num_warps": 8
+  },
+  "config_index": 1,
+  "grid": [
+    4
+  ],
+  "guard_pass": true,
+  "host_once_marker": "/tmp/chijin-timeline-r062-ascend/runs/005/output/math.host-once.json",
+  "input_immutable": true,
+  "input_sha256": [
+    "8fe894b61bb3b827b995d5aa186ce37362d0eb6b3bebb663dbb10ed69077fdf9",
+    "5e819930f916b79e6efcdaffba17178efad8c0f431b4ffea138892e3f17bc661"
+  ],
+  "math": {
+    "count": 769,
+    "max_abs_error": 2.058021747464167e-08
+  },
+  "ordinary_elapsed_seconds": 0.7914509321562946,
+  "pid": 4187285,
+  "requested_launches": 1,
+  "runtime_K_input_sha256": "06d033ece6645de592db973644cf7357255f24536ff7b03c3b2ace10736f7636",
+  "runtime_k": 3,
+  "shape": [
+    769
+  ],
+  "shape_index": 0,
+  "source_sha256": {
+    "kernels.py": "d2c5edd0560f972316abb8b0c9a3e8cbe60756a4aa11e8486b257518217c802b",
+    "launch.py": "a63e0a262038bafcb25a9f1256d4f8d1b6d3b828b58630400aafda48acec02b4",
+    "oracle.py": "b0f314ba974bf684de65a1d4c5a4de4615a4fb24d9d2eaee8187ac237affcb4a",
+    "registry.json": "62d7e63d0c7a66de21fdd7862a9c852959ca1a87a8991c9489877b8d6fa87ee3"
+  },
+  "state_unique_logical_index_pass": true,
+  "status": "ordinary_math_pass",
+  "target": "GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0)",
+  "torch_device": "npu:4",
+  "torch_version": "2.9.0+cpu",
+  "triton_version": "3.5.1"
+}

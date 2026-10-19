@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 120612,
+    "ppid": 1,
+    "pgid": 120612,
+    "startticks": 29696813
+  },
+  "worker": {
+    "pid": 120613,
+    "ppid": 120612,
+    "pgid": 120613,
+    "startticks": 29696816
+  },
+  "argv": [
+    "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+    "-I",
+    "/workspace/chijin-timeline-r062-nvidia/tp-input-v1/run.py",
+    "--output",
+    "/workspace/chijin-timeline-r062-nvidia/runs/affected60-tp-v1/output"
+  ],
+  "argv_sha256": "4cb42c0a2586eb3935ee871291f83b82546c4b89011a6fba55ac8b659b37c13c",
+  "script_sha256": "2c6546eb57e70656ef7978ccae802f7a515e1024268413fe1117db83f2041711",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 300,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 49751545484
+}

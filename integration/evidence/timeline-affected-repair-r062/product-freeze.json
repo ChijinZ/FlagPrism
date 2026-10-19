@@ -1,0 +1,50 @@
+{
+  "backend": "ascend",
+  "cache_environment_frozen": true,
+  "components": {
+    "compiler": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/compiler.json",
+      "sha256": "0735a242dc077c68ac3f74a515a62212959fef872dc851114c2d75c414d7df39"
+    },
+    "default_planner": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/default_planner.json",
+      "sha256": "cc79a655beb496d2bfe53db2e5f4ea4a38dc9213ad478a6cd161b5fc5830d072"
+    },
+    "native": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/native.json",
+      "sha256": "d25bc3212a5bb3c6084b364f68e4621e06696f97b6d1450c261f2b2f5c173ebb"
+    },
+    "product": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/product.json",
+      "sha256": "b818419a36f38490d60095977fa8b972ad4a5241618ff327ef5d3f40cfcbbd0a"
+    },
+    "public_docs": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/public_docs.json",
+      "sha256": "7e94d7dcee20448eb988c8b295ccd816769d5fc272001e0147dc0cd1b3d02aee"
+    },
+    "sdk": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/sdk.json",
+      "sha256": "c49e2d0ab24d321d5582a69b0f4f66f89afc954504256ce480f8112f34bb4a40"
+    },
+    "target": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/target.json",
+      "sha256": "fd752376cc1469f9fed53ed0dfd3cb14d4c3ac95c83c2a62b9f4e49e13e134c1"
+    },
+    "verifier": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/verifier.json",
+      "sha256": "514b9bdd8d5d015f53b3b2c443d087650a48777f41b5fcb62018283620451543"
+    },
+    "wheel": {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/prepare-v1/output/identities/wheel.json",
+      "sha256": "9a75fe5487bfcdad3a2641fd391d02ac23cc967d56cea22cfd46844f1a05001a"
+    }
+  },
+  "environment": {
+    "FLAGTREE_BACKEND": "ascend",
+    "PATH": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin:/usr/lib/llvm-15/bin:/usr/local/Ascend/nnal/atb/latest/atb/cxx_abi_1/bin:/usr/local/Ascend/ascend-toolkit/latest/bin:/usr/local/Ascend/ascend-toolkit/latest/compiler/ccec_compiler/bin:/usr/local/Ascend/ascend-toolkit/latest/tools/ccec_compiler/bin:/usr/local/Ascend/cann-9.0.0/tools/show_kernel_debug_data:/usr/local/Ascend/cann-9.0.0/tools/msobjdump:/usr/local/Ascend/cann-9.0.0/bin:/usr/local/Ascend/cann-9.0.0/tools/ccec_compiler/bin:/usr/local/Ascend/cann-9.0.0/tools/profiler/bin:/usr/local/Ascend/cann-9.0.0/tools/ascend_system_advisor/asys:/usr/local/python3.11.15/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "TORCH_DEVICE_BACKEND_AUTOLOAD": "0",
+    "TRITON_ASCEND_COMPILER": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile"
+  },
+  "product_scope": "R060 Ascend source/installed component; unrelated subsequent NVIDIA changes are not claimed installed",
+  "status": "frozen_for_independent_qualification"
+}

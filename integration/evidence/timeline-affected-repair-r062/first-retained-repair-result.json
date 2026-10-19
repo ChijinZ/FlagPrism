@@ -1,0 +1,121 @@
+{
+  "SQL_UI_qualification_inferred": false,
+  "application_replayed": false,
+  "artifacts": {
+    "auxiliary_input_snapshots_excluded": 1,
+    "bundle_bytes": 25889055,
+    "captures": [
+      {
+        "boundary_status": "unverified",
+        "canonical_complete": true,
+        "canonical_events": 42,
+        "canonical_schema_version": 2,
+        "capture_status": "raw_complete",
+        "clock_status": "unverified",
+        "counter_ns_exports_produced": 2,
+        "counter_ns_status": {
+          "read_precision_status": "unverified",
+          "status": "counter_unit_only",
+          "time_arrows_verified": false
+        },
+        "dependency_exports_produced": 2,
+        "incomplete_or_lost_observed_writers": [],
+        "metadata": "/tmp/chijin-timeline-r062-ascend/runs/000/output/capture/timeline/captures/invocation-0ed5df0a7ef74777a28988a3b925f841.json",
+        "metadata_sha256": "e89015ee784509f946b8d1d1eb49f96870907092330755bd590a40ced9559985",
+        "missing_selected_positive_writer_programs": [],
+        "observed_dependency_status": {
+          "clock_scope_kind": "single_observer",
+          "hardware_busy_qualified": false,
+          "observer_epoch_alignment_verified": false,
+          "physical_completion_time_qualified": false,
+          "status": "observed_dynamic_dependencies"
+        },
+        "observed_range_loss_free": true,
+        "observed_writer_count": 2,
+        "positive_internal_intervals": 17,
+        "positive_interval_sites": 5,
+        "raw_sha256_matches": true,
+        "selected_required_programs": [
+          [
+            0,
+            0,
+            0
+          ],
+          [
+            6,
+            0,
+            0
+          ]
+        ],
+        "unknown_reserved_slot_count": 0
+      }
+    ],
+    "interpretation": "Observed writer qualification only; empty reserved slots remain unknown; no whole-batch completeness or SQL/UI qualification inferred",
+    "public_metadata_loader_pass": true,
+    "trace_files": [
+      {
+        "bytes": 53500,
+        "path": "/tmp/chijin-timeline-r062-ascend/runs/000/output/capture/timeline/derived/counter-ns/5c40b676ec28bd09bbeaef683092382dae2e78c3e6629116f7b5c1f48ae903a7/traces/ascend-scalar-counter-scope-1355107655bb1590f10c3c432b3d32d41dcbd7b84eab5bb9be4ba535e050c8cd.pftrace",
+        "sha256": "fe78c2367742eba7cb309a1ac43d2324cb54a50d3d115dc49695df94898253fe"
+      },
+      {
+        "bytes": 36479,
+        "path": "/tmp/chijin-timeline-r062-ascend/runs/000/output/capture/timeline/derived/counter-ns/5c40b676ec28bd09bbeaef683092382dae2e78c3e6629116f7b5c1f48ae903a7/traces/ascend-scalar-counter-scope-1c18043f45a8b3542f7234b50559aa37d296425afc45a83dcbfaf6e5eef9f90a.pftrace",
+        "sha256": "5a83661153018be67bc7f8cb980af18f1e5f8cfbcddf764750d2483b85cee8f6"
+      },
+      {
+        "bytes": 42193,
+        "path": "/tmp/chijin-timeline-r062-ascend/runs/000/output/capture/timeline/derived/counter-ns/650de1a02139bc31614840eb88f9d8d44fc4db9b83bc758d1cfb701c9d795a36/traces/observer-417db7f06453d3fc86f69d11736a4910ecf2d57dde857319c16949058c55a767.pftrace",
+        "sha256": "0ff6c377b62bab84e2122792162c2bcd89764bc637bae3b5a7d494eb029a23df"
+      },
+      {
+        "bytes": 31654,
+        "path": "/tmp/chijin-timeline-r062-ascend/runs/000/output/capture/timeline/derived/counter-ns/650de1a02139bc31614840eb88f9d8d44fc4db9b83bc758d1cfb701c9d795a36/traces/observer-8ce435847c4007247212adb54687530fd8b56fb062c4d9d8776db2def657c2cc.pftrace",
+        "sha256": "619a91fb98f65fc3d0658e6f038dadc96f23bd5cc0a53efd43abcf2257053a00"
+      }
+    ]
+  },
+  "checks": [
+    {
+      "canonical_complete": true,
+      "capture_file": "captures/invocation-0ed5df0a7ef74777a28988a3b925f841.json",
+      "capture_sha256": "e89015ee784509f946b8d1d1eb49f96870907092330755bd590a40ced9559985",
+      "invocation_id": "invocation-0ed5df0a7ef74777a28988a3b925f841",
+      "ns_exports": 2,
+      "observer_count": 2,
+      "positive_source_sites": [
+        "site-43db037165f85fe8ba5e51b93cf4f525024bb82acb074231bbd81642cc37fa2c",
+        "site-49f904ad05f6f1baa563c96ffdbb656a3a722f54feb9384ac547ab5799ee4cc0",
+        "site-a1486c63754c8a8a09811e5f9c632c500be4514b2da605e72e4cee36948629f9",
+        "site-c82c6aff5f0fdab3b1ab11d450e1123305133eefadac7d03ab686b91a6724b51",
+        "site-f9e4f6250a86bccd481ac04f81f476190714201755f15905cbc4bf86443ca185"
+      ],
+      "raw_sha256": "b97ecb78cf550b79086af4a65d734daa921de77ac71095a0910fd8835421852a"
+    }
+  ],
+  "device_executed": false,
+  "host_once": true,
+  "math_input_config_matches": true,
+  "old_partial_files_unchanged": true,
+  "original_application_returncode": 0,
+  "original_controller_returncode": 1,
+  "registered_call": {
+    "case": "q01",
+    "compile_budget": 120,
+    "config": 0,
+    "id": "q01-s0-c0",
+    "ordinary": {
+      "file": "/tmp/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.json",
+      "sha256": "f07aec4392542ab1586c57937f816fbc960824ec3d280213d4c9b46e7b8ec03c"
+    },
+    "phase": "cold",
+    "registration_file": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/registration.json",
+    "registration_sha256": "a0dc81e51bfbaaaaf0c4256950411874366ef1803f0caa4d18e330c54ef8fb76",
+    "shape": 0,
+    "source": "/tmp/chijin-timeline-r052-private/input-v2"
+  },
+  "repair": "validate only indexed capture metadata, not auxiliary input snapshots",
+  "retained_original_files": 108,
+  "source_boundary_qualified": false,
+  "status": "affected_registered_call_passed"
+}

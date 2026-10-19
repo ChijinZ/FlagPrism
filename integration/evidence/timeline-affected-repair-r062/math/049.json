@@ -1,0 +1,58 @@
+{
+  "asm_sha256": {
+    "bcmlir": "4aa96c37c7be57c8f2b5ab90c9941cec97151e7c4aa19254faef3ea11031e46c",
+    "mlirbc": "84c3c271770ca41c79991b52bf70c3d00048aa7d209d939aecf91c6b7a0634cd",
+    "npubin": "c8cad461b1bfacb23029606e7a0b6278983f99dd1e3b4b37100071712cae096c",
+    "source": "8b1d2f93e97f8881259ddba1861a2b1748d7954c8a849f0a642815efdeedad05",
+    "ttadapter": "a5c83ef29d9d44e011e26869409c8eccd8b171868e321c995ce666f7e98b5338",
+    "ttir": "4d6cc26dcea188ac55e7244bc5d57aec9d0f75fd7b54c0c611f577f747537be2"
+  },
+  "case": "q08",
+  "compiled_hash": "392fa64316b29245f16a1d866f0dd14e8e60b09868ae9e99e76bb75fad750041",
+  "config": {
+    "BK": 16,
+    "BM": 8,
+    "BN": 16,
+    "num_warps": 4
+  },
+  "config_index": 0,
+  "grid": [
+    3,
+    2
+  ],
+  "guards_passed": true,
+  "input_immutable": true,
+  "input_sha256": [
+    "672250d634bc810164d59c5d37553cb373afb2450ceb9fdc2358a9f6a19341a9",
+    "5c4f2628209157343f61a341d3600c0ef252e9eb42938dbd8404e63f3b1213fc"
+  ],
+  "math": {
+    "count": 768,
+    "max_abs_error": 1.0576123044003793e-07
+  },
+  "ordinary_elapsed_seconds": 1.1087577450089157,
+  "ordinary_gcu_ir_op_counts": {
+    "memref_ext.broadcast_start": 0,
+    "memref_ext.transpose_start": 0
+  },
+  "physical_writer_lowering_verified": false,
+  "requested_launches": 1,
+  "required_structure_present": false,
+  "shape": [
+    24,
+    32,
+    96
+  ],
+  "shape_index": 0,
+  "source_sha256": {
+    "kernels.py": "4d3109e2c97ef338112903601ed6ddb3e621a6378efe2872e27c9b8c41ec324f",
+    "launch.py": "2a74c51bd6ecafa360919b7af1c5b922f0608c8625f8a98feec8d0e554604b80",
+    "oracle.py": "eeaf9f29b7bd88b21b9b6044fe8eab8290558c3d8fb2cd3846867a8a8e6786a0",
+    "registry.json": "1e6a4da3b7b3e4900abb29e03a34bec5c17b12ba5f4e01341ae968038de33f3a"
+  },
+  "state_count_passed": true,
+  "status": "ordinary_math_pass",
+  "target": "GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0)",
+  "torch_version": "2.9.0+cpu",
+  "triton_version": "3.5.1"
+}
