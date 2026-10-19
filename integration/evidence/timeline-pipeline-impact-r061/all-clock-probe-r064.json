@@ -1,0 +1,70 @@
+{
+  "status": "negative_nonshipping_codegen_probe",
+  "changed_clock_reader_lines": 70,
+  "actual_controller_terminal": {
+    "controller": {
+      "pid": 121107,
+      "ppid": 1,
+      "pgid": 121107,
+      "startticks": 30101381
+    },
+    "worker": {
+      "pid": 121108,
+      "ppid": 121107,
+      "pgid": 121108,
+      "startticks": 30101383
+    },
+    "argv": [
+      "/workspace/chijin-timeline-r061-nvidia/runs/budget-install-v1/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r064-nvidia/all-clock-probe-input-v1/run.py",
+      "--output",
+      "/workspace/chijin-timeline-r064-nvidia/runs/all-clock-probe-v1/output"
+    ],
+    "argv_sha256": "bc2075816d2b02958ba10932b5030296141272a3019e749fd63aac8a8672c418",
+    "script_sha256": "8b8a4ccb2d229614a6585c03c5a20952dded6525ae516e1c526823751f22ac0f",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 1166624083
+  },
+  "source_LLVM_sha256": "a331175028a5c13768a14e127e8c523c1c75a3300e326e7cd08b59dd7c7db5f9",
+  "modified_LLVM_sha256": "d9aa7c736a1398d42e270fd99326504a23f203d549b96e2eccacb90855194be2",
+  "prototype_cubin_sha256": "735ee43405e8a0728b9a27604483ee706b326eed054c4aa726ab1e27998c6a80",
+  "native_critical_instruction_count": 21,
+  "critical_opcode_and_wait_projection_matches_existing_profile": true,
+  "critical_opcode_and_wait_projection_matches_existing_ordinary": false,
+  "matrix_reader_checks": [
+    {
+      "site_id": 23,
+      "begin_reader_pc": 5056,
+      "end_reader_pc": 5184,
+      "HMMA": [
+        5072,
+        5104,
+        5136,
+        5168
+      ],
+      "all_same_function_HMMA_between_readers": true
+    }
+  ],
+  "source_cost_or_schedule_qualified": false,
+  "shipping_implementation_changed": false,
+  "application_replayed": false,
+  "device_executed": false,
+  "archive": {
+    "path": "artifacts/timeline/run-064/preflight/nvidia-all-clock-probe-evidence-v1.tgz",
+    "bytes": 78964,
+    "sha256": "dc48e25b363fe115d2d26a72feeaac50d9c10f6d8b3d674747220bd3e2569a5a"
+  },
+  "artifact_sha256": {
+    "output/reference-original.ll": "a331175028a5c13768a14e127e8c523c1c75a3300e326e7cd08b59dd7c7db5f9",
+    "output/reference-modified.ll": "d9aa7c736a1398d42e270fd99326504a23f203d549b96e2eccacb90855194be2",
+    "output/modified.ptx": "6a27b53069efc4995f9241385442f435d867fd33b0d73b47b1d8c23a86eaa7b9",
+    "output/modified.cubin": "735ee43405e8a0728b9a27604483ee706b326eed054c4aa726ab1e27998c6a80",
+    "output/lines.stdout": "225beeead41caf9f36b722134e599d6d3217f52d00521b43466f15bdb832b9af",
+    "output/json.stdout": "508668d0ac1d817af1040385448dd338b2095d7a2fb9713ee786c199dc5daa9c"
+  }
+}
