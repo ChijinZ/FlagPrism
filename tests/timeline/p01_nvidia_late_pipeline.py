@@ -17,6 +17,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--kernel-module', type=Path, required=True)
     p.add_argument('--num-warps', type=int, choices=(1, 2, 4, 8), default=4)
+    p.add_argument('--site-budget', type=int)
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
     spec = importlib.util.spec_from_file_location('late_pipeline_math',
@@ -31,9 +32,11 @@ def main():
     av, bv = acpu.cuda(), bcpu.cuda()
     results = []
     for phase in ('ordinary', 'profile'):
-        session = profiler.start(
-            str(a.output /
-                'profile'), detail='timeline') if phase == 'profile' else None
+        options = {} if a.site_budget is None else dict(
+            timeline_max_sites=a.site_budget)
+        session = profiler.start(str(a.output / 'profile'),
+                                 detail='timeline',
+                                 **options) if phase == 'profile' else None
         try:
             for tiles in (3, 7):
                 k = tiles * 32
@@ -124,6 +127,7 @@ def main():
         json.dumps(dict(
             status=
             'default_api_runtime_gemm_math_raw_and_observed_dependency_exports_passed',
+            requested_site_budget=a.site_budget,
             math=results,
             captures=captures),
                    indent=2))
