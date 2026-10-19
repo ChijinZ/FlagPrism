@@ -372,3 +372,18 @@ r058 receipts retain the first test-path failure and the later startup failure;
 only the final negative/recovery attempt passes. These regressions close their
 specific defects, not the remaining source-boundary, scheduling or default
 observer-completeness gates.
+
+### GCU native location regression
+
+In the matching GCU Docker, run `tests/timeline/p01_enflame_native_locations.py
+--output OUT` using the freshly installed wheel, then
+`tests/timeline/p01_enflame_native_location_objects.py --timeline
+OUT/profile/timeline --output OBJECTS` without application replay. The two
+ordinary kernels check vector recurrence and weighted row reduction, input
+immutability, tail guards and once-only side effects before and during public
+profiling. The companion extracts the actual retained executable snapshots,
+checks their digests, and requires all manifest site IDs in the final synthetic
+file's line table. It preserves raw line programs, native output, tool exits,
+warnings and compiler line-zero rows. Missing final file/site markers fail even
+if the LLIR contains marker strings. This test does not independently prove
+phase/column mapping, reader-to-raw value flow or all-path source regions.

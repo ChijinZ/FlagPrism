@@ -1,0 +1,827 @@
+{
+  "terminal.json": {
+    "controller": {
+      "pid": 561301,
+      "ppid": 1,
+      "pgid": 561301,
+      "startticks": 1025652557
+    },
+    "worker": {
+      "pid": 561302,
+      "ppid": 561301,
+      "pgid": 561302,
+      "startticks": 1025652560
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-lines-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output"
+    ],
+    "argv_sha256": "f6d17853b5fdb81cae3df5088663b44852dde2a985081c28d12223163367018e",
+    "script_sha256": "8eefee185af80523bb52e90bdcc6938e010b94d3c158890ea768662e6d6245cd",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 214918215
+  },
+  "launch.json": {
+    "controller": {
+      "pid": 561301,
+      "ppid": 1,
+      "pgid": 561301,
+      "startticks": 1025652557
+    },
+    "worker": {
+      "pid": 561302,
+      "ppid": 561301,
+      "pgid": 561302,
+      "startticks": 1025652560
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r058-gcu/runs/canonical-refresh-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r068-gcu/native-lines-input-v2/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output"
+    ],
+    "argv_sha256": "f6d17853b5fdb81cae3df5088663b44852dde2a985081c28d12223163367018e",
+    "script_sha256": "8eefee185af80523bb52e90bdcc6938e010b94d3c158890ea768662e6d6245cd",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "running"
+  },
+  "output/result.json": {
+    "status": "actual_capture_native_location_inspection",
+    "captures": [
+      {
+        "capture_file": "captures/invocation-7471dcc624904f59ab8b7ab5f3f932ce.json",
+        "binary_id": "142ac782805380d2a1866b1afabe2fdc1faac74878c73ac08413d08d0f3a0810",
+        "fatbin_sha256": "7f317fdaf7cc26f6794ecd7fb6fef2a0ed9f8bf038c44a5dd96a82f377ec92ec",
+        "images": [
+          {
+            "target": "tops-dtu-enflame-tops--gcu300",
+            "elf_sha256": "6b69d4a8a3457fc3a99d10f8b447c29de828e3ca748932be8498bdc8cbb30faf",
+            "tools": [
+              {
+                "name": "line-rows",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=decodedline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 52468,
+                "sha256": "399dce09fbf3af6fd1be8fde847377c640098709977935457ab1473f5e05e7ac",
+                "stderr": ""
+              },
+              {
+                "name": "line-program",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=rawline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 94349,
+                "sha256": "d5e6e95263b8e5bad64f5a725a076e9547c434dd705253cea0784d2497f9461f",
+                "stderr": ""
+              },
+              {
+                "name": "native",
+                "argv": [
+                  "/opt/tops/llvm11/bin/llvm-objdump",
+                  "-d",
+                  "--triple=dtu",
+                  "--mcpu=gcu300",
+                  "--demangle",
+                  "--line-numbers",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 1706337,
+                "sha256": "7893a00ca8e3fd96b6c0b699963b18c22c80774fea5d5bd2cba3fb63ca7a52ad",
+                "stderr": "/opt/tops/llvm11/bin/llvm-objdump: warning: '/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf': failed to parse debug information for /tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/0/1.elf\n"
+              }
+            ],
+            "expected_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "sites_in_actual_line_table": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "missing_manifest_sites": [],
+            "actual_marker_rows": [
+              {
+                "site": 9,
+                "address": 13648
+              },
+              {
+                "site": 9,
+                "address": 13792
+              },
+              {
+                "site": 9,
+                "address": 14000
+              },
+              {
+                "site": 9,
+                "address": 14112
+              },
+              {
+                "site": 10,
+                "address": 15616
+              },
+              {
+                "site": 10,
+                "address": 15760
+              },
+              {
+                "site": 10,
+                "address": 15984
+              },
+              {
+                "site": 10,
+                "address": 16096
+              },
+              {
+                "site": 1,
+                "address": 17776
+              },
+              {
+                "site": 1,
+                "address": 17920
+              },
+              {
+                "site": 3,
+                "address": 18704
+              },
+              {
+                "site": 3,
+                "address": 18848
+              },
+              {
+                "site": 2,
+                "address": 19680
+              },
+              {
+                "site": 2,
+                "address": 19824
+              },
+              {
+                "site": 4,
+                "address": 20128
+              },
+              {
+                "site": 4,
+                "address": 20272
+              },
+              {
+                "site": 4,
+                "address": 38320
+              },
+              {
+                "site": 4,
+                "address": 38416
+              },
+              {
+                "site": 4,
+                "address": 38464
+              },
+              {
+                "site": 1,
+                "address": 43680
+              },
+              {
+                "site": 1,
+                "address": 43792
+              },
+              {
+                "site": 5,
+                "address": 45168
+              },
+              {
+                "site": 5,
+                "address": 45312
+              },
+              {
+                "site": 5,
+                "address": 46464
+              },
+              {
+                "site": 5,
+                "address": 46576
+              },
+              {
+                "site": 11,
+                "address": 48240
+              },
+              {
+                "site": 11,
+                "address": 48368
+              },
+              {
+                "site": 11,
+                "address": 48544
+              },
+              {
+                "site": 11,
+                "address": 48640
+              },
+              {
+                "site": 6,
+                "address": 50320
+              },
+              {
+                "site": 6,
+                "address": 50480
+              },
+              {
+                "site": 7,
+                "address": 50640
+              },
+              {
+                "site": 7,
+                "address": 50752
+              },
+              {
+                "site": 7,
+                "address": 50784
+              },
+              {
+                "site": 8,
+                "address": 58400
+              },
+              {
+                "site": 8,
+                "address": 58544
+              },
+              {
+                "site": 8,
+                "address": 59696
+              },
+              {
+                "site": 8,
+                "address": 59808
+              },
+              {
+                "site": 6,
+                "address": 65632
+              },
+              {
+                "site": 6,
+                "address": 65744
+              },
+              {
+                "site": 12,
+                "address": 71424
+              },
+              {
+                "site": 12,
+                "address": 71568
+              },
+              {
+                "site": 12,
+                "address": 71744
+              },
+              {
+                "site": 12,
+                "address": 71856
+              },
+              {
+                "site": 13,
+                "address": 74928
+              },
+              {
+                "site": 13,
+                "address": 75072
+              },
+              {
+                "site": 13,
+                "address": 75232
+              },
+              {
+                "site": 13,
+                "address": 75344
+              }
+            ],
+            "compiler_unknown_line_rows": [
+              {
+                "site": 0,
+                "address": 13808
+              },
+              {
+                "site": 0,
+                "address": 14208
+              },
+              {
+                "site": 0,
+                "address": 20336
+              },
+              {
+                "site": 0,
+                "address": 38400
+              },
+              {
+                "site": 0,
+                "address": 44000
+              },
+              {
+                "site": 0,
+                "address": 45344
+              },
+              {
+                "site": 0,
+                "address": 50528
+              },
+              {
+                "site": 0,
+                "address": 58576
+              },
+              {
+                "site": 0,
+                "address": 71584
+              },
+              {
+                "site": 0,
+                "address": 71984
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "capture_file": "captures/invocation-272be2edfd48439f8280a5c1c20287c9.json",
+        "binary_id": "cdf9ca6e7815f06a25d48efe9067cd9c1635073f0b812d5737dbcc95055ee651",
+        "fatbin_sha256": "b1f0fe3557204718d18bee330ce3da65a8f3dec8560e0b57959411f46f99f9a7",
+        "images": [
+          {
+            "target": "tops-dtu-enflame-tops--gcu300",
+            "elf_sha256": "a0c0ffc0f5e4b0d622fd545d8226f833e12f439f8f32bf0a651022e551cdcf50",
+            "tools": [
+              {
+                "name": "line-rows",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=decodedline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 52268,
+                "sha256": "a6bc7828140ff8c0894a57ac12f36fe26666cc7ace0049a60a639f57d0069eb5",
+                "stderr": ""
+              },
+              {
+                "name": "line-program",
+                "argv": [
+                  "/usr/bin/readelf",
+                  "--wide",
+                  "--debug-dump=rawline",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 92870,
+                "sha256": "b1c3eaf0e9adae24f9fa6d9d71aedd9f34f0ce497e11c354d90b445aec6c677f",
+                "stderr": ""
+              },
+              {
+                "name": "native",
+                "argv": [
+                  "/opt/tops/llvm11/bin/llvm-objdump",
+                  "-d",
+                  "--triple=dtu",
+                  "--mcpu=gcu300",
+                  "--demangle",
+                  "--line-numbers",
+                  "/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf"
+                ],
+                "returncode": 0,
+                "bytes": 1684317,
+                "sha256": "3016b9c2b698a7c3018247aee279c67f3394e089246bde1c6488036b16d74928",
+                "stderr": "/opt/tops/llvm11/bin/llvm-objdump: warning: '/tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf': failed to parse debug information for /tmp/chijin-timeline-r068-gcu/runs/native-lines-v2/output/1/1.elf\n"
+              }
+            ],
+            "expected_manifest_sites": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "sites_in_actual_line_table": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13
+            ],
+            "missing_manifest_sites": [],
+            "actual_marker_rows": [
+              {
+                "site": 9,
+                "address": 13664
+              },
+              {
+                "site": 9,
+                "address": 13792
+              },
+              {
+                "site": 9,
+                "address": 13808
+              },
+              {
+                "site": 9,
+                "address": 14000
+              },
+              {
+                "site": 9,
+                "address": 14112
+              },
+              {
+                "site": 10,
+                "address": 15472
+              },
+              {
+                "site": 10,
+                "address": 15600
+              },
+              {
+                "site": 10,
+                "address": 15616
+              },
+              {
+                "site": 10,
+                "address": 16032
+              },
+              {
+                "site": 10,
+                "address": 16144
+              },
+              {
+                "site": 1,
+                "address": 17728
+              },
+              {
+                "site": 1,
+                "address": 17856
+              },
+              {
+                "site": 1,
+                "address": 17872
+              },
+              {
+                "site": 3,
+                "address": 18160
+              },
+              {
+                "site": 3,
+                "address": 18288
+              },
+              {
+                "site": 3,
+                "address": 18304
+              },
+              {
+                "site": 2,
+                "address": 19920
+              },
+              {
+                "site": 2,
+                "address": 20048
+              },
+              {
+                "site": 2,
+                "address": 20064
+              },
+              {
+                "site": 4,
+                "address": 20368
+              },
+              {
+                "site": 4,
+                "address": 20512
+              },
+              {
+                "site": 4,
+                "address": 20528
+              },
+              {
+                "site": 4,
+                "address": 38240
+              },
+              {
+                "site": 4,
+                "address": 38336
+              },
+              {
+                "site": 4,
+                "address": 38384
+              },
+              {
+                "site": 1,
+                "address": 43600
+              },
+              {
+                "site": 1,
+                "address": 43712
+              },
+              {
+                "site": 5,
+                "address": 45120
+              },
+              {
+                "site": 5,
+                "address": 45248
+              },
+              {
+                "site": 5,
+                "address": 45264
+              },
+              {
+                "site": 5,
+                "address": 46512
+              },
+              {
+                "site": 5,
+                "address": 46624
+              },
+              {
+                "site": 11,
+                "address": 46816
+              },
+              {
+                "site": 11,
+                "address": 46928
+              },
+              {
+                "site": 11,
+                "address": 47632
+              },
+              {
+                "site": 11,
+                "address": 47744
+              },
+              {
+                "site": 6,
+                "address": 49600
+              },
+              {
+                "site": 6,
+                "address": 49728
+              },
+              {
+                "site": 6,
+                "address": 49744
+              },
+              {
+                "site": 6,
+                "address": 50336
+              },
+              {
+                "site": 6,
+                "address": 50448
+              },
+              {
+                "site": 7,
+                "address": 52224
+              },
+              {
+                "site": 7,
+                "address": 52352
+              },
+              {
+                "site": 7,
+                "address": 52368
+              },
+              {
+                "site": 11,
+                "address": 54400
+              },
+              {
+                "site": 7,
+                "address": 59120
+              },
+              {
+                "site": 7,
+                "address": 59232
+              },
+              {
+                "site": 8,
+                "address": 60640
+              },
+              {
+                "site": 8,
+                "address": 60816
+              },
+              {
+                "site": 8,
+                "address": 60832
+              },
+              {
+                "site": 8,
+                "address": 61984
+              },
+              {
+                "site": 8,
+                "address": 62096
+              },
+              {
+                "site": 12,
+                "address": 68832
+              },
+              {
+                "site": 12,
+                "address": 68960
+              },
+              {
+                "site": 12,
+                "address": 68976
+              },
+              {
+                "site": 12,
+                "address": 69072
+              },
+              {
+                "site": 12,
+                "address": 69184
+              },
+              {
+                "site": 13,
+                "address": 72224
+              },
+              {
+                "site": 13,
+                "address": 72352
+              },
+              {
+                "site": 13,
+                "address": 72368
+              },
+              {
+                "site": 13,
+                "address": 72528
+              },
+              {
+                "site": 13,
+                "address": 72640
+              }
+            ],
+            "compiler_unknown_line_rows": [
+              {
+                "site": 0,
+                "address": 13776
+              },
+              {
+                "site": 0,
+                "address": 13824
+              },
+              {
+                "site": 0,
+                "address": 14192
+              },
+              {
+                "site": 0,
+                "address": 15584
+              },
+              {
+                "site": 0,
+                "address": 17840
+              },
+              {
+                "site": 0,
+                "address": 18272
+              },
+              {
+                "site": 0,
+                "address": 20032
+              },
+              {
+                "site": 0,
+                "address": 20496
+              },
+              {
+                "site": 0,
+                "address": 20592
+              },
+              {
+                "site": 0,
+                "address": 38320
+              },
+              {
+                "site": 0,
+                "address": 44064
+              },
+              {
+                "site": 0,
+                "address": 45232
+              },
+              {
+                "site": 0,
+                "address": 45296
+              },
+              {
+                "site": 0,
+                "address": 46944
+              },
+              {
+                "site": 0,
+                "address": 49712
+              },
+              {
+                "site": 0,
+                "address": 52336
+              },
+              {
+                "site": 0,
+                "address": 52384
+              },
+              {
+                "site": 0,
+                "address": 54480
+              },
+              {
+                "site": 0,
+                "address": 60736
+              },
+              {
+                "site": 0,
+                "address": 60880
+              },
+              {
+                "site": 0,
+                "address": 68944
+              },
+              {
+                "site": 0,
+                "address": 68992
+              },
+              {
+                "site": 0,
+                "address": 69296
+              },
+              {
+                "site": 0,
+                "address": 72336
+              },
+              {
+                "site": 0,
+                "address": 72752
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "reader_to_raw_valueflow_qualified": false,
+    "all_path_region_qualified": false
+  }
+}

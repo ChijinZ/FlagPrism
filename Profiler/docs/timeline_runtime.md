@@ -530,6 +530,23 @@ checks retained real tag generations and exports without replaying the workload.
 These development cases do not replace the independent mathematical matrix,
 controlled perturbation cases or final three-backend acceptance.
 
+The GCU compiler also retains automatic native clock locations. Each execution
+manifest site has a `native_clock_marker`: synthetic file
+`__flagprism_gcu_clock_v1__`, line equal to the site ID, timer columns 1/2 for
+begin/end and physical-identity columns 3/4. User source navigation remains in
+that site's original `location`; synthetic lines are not application lines.
+The bridge adds explicit LLVM lexical file scopes and preserves vendor
+properties through an opaque parse. The real SDK must validate the result
+before codegen. Tool identity version 2 binds the recorder, Python bridge,
+backend compiler and direct SDK tools before compilation-cache lookup.
+
+The native-location test and its retained-object companion check real math and
+actual ELF line tables separately. An LLIR marker string alone is insufficient:
+a previous implementation passed that check but lost the synthetic file during
+codegen. Line-zero rows remain compiler-unknown positions. These markers do not
+by themselves certify reader-to-record value flow, all-path source boundaries,
+engine busy time or preservation of an ordinary kernel's pipeline schedule.
+
 ### Legacy early NVIDIA recorder and retained captures
 
 The earlier automatic timeline compiler requires native

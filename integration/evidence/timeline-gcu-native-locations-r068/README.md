@@ -1,4 +1,4 @@
-# GCU automatic native location integration (R068, pending final integration acceptance)
+# GCU automatic native location integration (R068, finite native-location acceptance)
 
 The initial product commit 4fbc8e8 adds a DI-only native bridge, automatic
 site/phase clock markers, a real SDK validation step, and cache identity v2.
@@ -13,7 +13,14 @@ receipts and three independent finite reviews of 4fbc8e8. The current fix adds
 explicit lexical file scopes. CPU-only compilation of retained real LLIR now
 shows all 13 site lines in the final ELF, including 48 positive-line rows and
 10 compiler line-zero rows. It does not alter or qualify the old capture.
-The fixed wheel and device/object recheck remain pending at this checkpoint.
+The fixed b4c5f81 wheel was subsequently built and installed normally. Both real
+math captures pass again. Their actual ELF line tables cover all 13 sites each,
+with 48/62 positive-site rows and 10/25 unknown line-zero rows. An actual rawline
+excerpt also retains site10 columns 1/2/3/4 at separate native addresses. The
+compiler reviewer closes the original missing-synthetic-file defect on this
+finite device chain; broader phase/valueflow/all-path rights remain ungranted.
+The maintained parameterized object checker was executed successfully on these
+same captures without workload replay.
 
 Five actual native CLI tests and SDK roundtrip checks pass. The initial
 custom-form fixture failure remains; the bridge consumes the SDK's generic
