@@ -6,6 +6,9 @@
 #include <string>
 
 namespace mlir::flagtree::debugger {
+// DI-only serialization bridge. The SDK must verify its output before codegen.
+llvm::Expected<std::string> addGcuNativeDebugScopes(llvm::StringRef input);
+
 struct GcuExecutionRewrite {
   std::string ir;
   std::string manifest;

@@ -58,6 +58,35 @@ index db4c5ff..dfed6b6 100644
 +        lowered = rewrite_execution_ir(lowered, metadata)
 +    return lowered
  
+@@ -313,7 +354,8 @@
+     passes = []
+     if toolkit.get_bool_env("MLIR_ENABLE_DUMP"):
+         passes.append('-mlir-print-ir-after-all')
+-    if not toolkit.get_bool_env("TRITON_DISABLE_LINE_INFO", True):
++    timeline = metadata.get("debug_execution_version") == 1
++    if not timeline and not toolkit.get_bool_env("TRITON_DISABLE_LINE_INFO", True):
+         passes.append('--ensure-debug-info-scope-on-llvm-func')
+     if toolkit.get_bool_env("MLIR_ENABLE_TIMING"):
+         passes.append('--mlir-timing')
+@@ -343,7 +385,17 @@
+     #    paths = [path for (name, path) in options.extern_libs]
+     #    llvm.link_extern_libs(llvm_mod, paths)
+ 
+-    return toolkit.gcu_compiler_opt(mod, *passes)
++    if timeline:
++        passes.append('--mlir-print-debuginfo')
++    lowered = toolkit.gcu_compiler_opt(mod, *passes)
++    if timeline:
++        from flagtree.debugger.gcu_timeline import preserve_native_locations
++        scoped = preserve_native_locations(lowered, metadata)
++        # The public DI bridge keeps vendor properties opaque. Only the real
++        # SDK can validate them; do not use its output without this verifier.
++        lowered = toolkit.gcu_compiler_opt(scoped, '--mlir-print-debuginfo')
++        metadata['debug_execution_native_ir_sha256'] = hashlib.sha256(lowered.encode()).hexdigest()
++    return lowered
+ 
+ 
+ # FlagPrism: the GCU300 SDK may optimize scalar L2 summary sqrt(x*x)
 diff --git a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp b/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
 index b7ba104..cd2315d 100644
 --- a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp

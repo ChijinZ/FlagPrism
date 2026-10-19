@@ -4,6 +4,28 @@
 #include <charconv>
 
 int main(int argc, char **argv) {
+  if (argc == 4 && llvm::StringRef(argv[1]) == "--debug-scopes") {
+    auto input = llvm::MemoryBuffer::getFile(argv[2]);
+    if (!input) {
+      llvm::errs() << input.getError().message() << '\n';
+      return 1;
+    }
+    auto result = mlir::flagtree::debugger::addGcuNativeDebugScopes(
+        (*input)->getBuffer());
+    if (!result) {
+      llvm::errs() << llvm::toString(result.takeError()) << '\n';
+      return 1;
+    }
+    std::error_code error;
+    llvm::raw_fd_ostream output(argv[3], error);
+    if (error) {
+      llvm::errs() << error.message() << '\n';
+      return 1;
+    }
+    output << *result;
+    output.close();
+    return output.has_error() ? 1 : 0;
+  }
   if (argc != 6 && argc != 7) {
     llvm::errs() << "Usage: flagprism-gcu-timeline INPUT OUTPUT MANIFEST "
                     "HIDDEN_INDEX CAPACITY [MAX_SOURCE_REGIONS]\n";

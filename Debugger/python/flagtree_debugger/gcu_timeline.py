@@ -45,6 +45,8 @@ def tool_identity():
         Path(__file__).with_name('gcu_clock.py'),
         Path(libtriton.__file__),
         Path('/opt/tops/bin/opt'),
+        Path('/opt/triton_gcu/bin/gcu-compiler-opt'),
+        Path('/opt/triton_gcu/bin/gcu-compiler-compile'),
         Path('/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc')
     ]
     from importlib.util import find_spec
@@ -54,7 +56,7 @@ def tool_identity():
     paths.extend(backend.glob('_triton_gcu300*.so'))
     paths.extend(backend.glob('libtriton_gcu300*.so'))
     files = {str(path.resolve()): _file_hash(path) for path in paths}
-    return dict(version=1,
+    return dict(version=2,
                 files=files,
                 clock_helper_source_sha256=hashlib.sha256(
                     IDENTITY_SOURCE.encode()).hexdigest())
@@ -229,3 +231,72 @@ def rewrite_execution_ir(text, metadata):
                     debug_execution_output_sha256=hashlib.sha256(
                         rewritten.encode()).hexdigest())
     return rewritten
+
+
+def preserve_native_locations(text, metadata):
+    """Add LLVM DI scopes without reprinting the SDK's typed properties.
+
+    The caller must validate this result using the real SDK before codegen.
+    Inputs/diagnostics remain available if either phase fails.
+    """
+    if metadata.get('debug_execution_version') != 1:
+        return text
+    expected = metadata['debug_execution_tool_identity']
+    if tool_identity() != expected:
+        raise RuntimeError('GCU toolchain changed before native debug scopes')
+    if not isinstance(text, str) or len(text.encode()) > 16 * 1024 * 1024:
+        raise ValueError('GCU native debug-scope IR exceeds its budget')
+    root = Path(tempfile.mkdtemp(prefix='flagprism-gcu-debug-scopes-'))
+    source, output = root / 'input.mlir', root / 'output.mlir'
+    source_bytes = text.encode()
+    source.write_bytes(source_bytes)
+    command = [
+        str(packaged_tool()), '--debug-scopes',
+        str(source),
+        str(output)
+    ]
+    with (root / 'stdout').open('wb') as out, (root /
+                                               'stderr').open('wb') as err:
+        child = subprocess.Popen(command,
+                                 stdout=out,
+                                 stderr=err,
+                                 start_new_session=True)
+        receipt = dict(pid=child.pid,
+                       argv=command,
+                       tool_identity=expected,
+                       source_sha256=hashlib.sha256(source_bytes).hexdigest())
+        try:
+            # This native helper has no subprocesses. Reap it even if recording
+            # launch ownership or writing its receipt fails.
+            fields = (Path('/proc') / str(child.pid) / 'stat').read_text().rsplit(
+                ')', 1)[1].split()
+            receipt.update(pgid=int(fields[2]), startticks=int(fields[19]))
+            (root / 'launch.json').write_text(json.dumps(receipt, indent=2))
+            result = child.wait(timeout=30)
+        except BaseException:
+            child.kill()
+            child.wait()
+            receipt.update(state='failed_or_timed_out',
+                           returncode=child.returncode)
+            (root / 'terminal.json').write_text(json.dumps(receipt, indent=2))
+            raise
+    receipt.update(state='terminal', returncode=result)
+    (root / 'terminal.json').write_text(json.dumps(receipt, indent=2))
+    if result:
+        raise RuntimeError('GCU native debug scopes failed; retained at ' +
+                           str(root) + ': ' +
+                           (root / 'stderr').read_text()[-8192:])
+    if output.stat().st_size > 16 * 1024 * 1024:
+        raise ValueError('GCU native debug-scope output exceeds its budget: ' +
+                         str(root))
+    if source.read_bytes() != source_bytes or tool_identity() != expected:
+        raise RuntimeError('GCU debug-scope inputs changed; retained at ' +
+                           str(root))
+    scoped = output.read_text()
+    metadata.update(debug_execution_native_marker_version=1,
+                    debug_execution_native_scope_receipt=receipt,
+                    debug_execution_native_scope_input_sha256=hashlib.sha256(
+                        source_bytes).hexdigest(),
+                    debug_execution_native_scope_output_sha256=hashlib.sha256(
+                        scoped.encode()).hexdigest())
+    return scoped

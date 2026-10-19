@@ -159,19 +159,23 @@ struct Recorder {
     Value high = b.create<LLVM::LShrOp>(loc, value, shift);
     return {low, b.create<LLVM::TruncOp>(loc, b.getI32Type(), high)};
   }
-  SmallVector<Value, 3> clock() {
+  SmallVector<Value, 3> clock(uint32_t site, bool atEnd) {
+    auto clockLoc = FileLineColLoc::get(
+        b.getContext(), "__flagprism_gcu_clock_v1__", site, atEnd ? 2 : 1);
+    auto identityLoc = FileLineColLoc::get(
+        b.getContext(), "__flagprism_gcu_clock_v1__", site, atEnd ? 4 : 3);
     auto read = b.create<scf::IfOp>(
         loc, TypeRange{b.getI32Type(), b.getI32Type(), b.getI32Type()},
         selected, true);
     OpBuilder::InsertionGuard insertion(b);
     b.setInsertionPointToStart(read.thenBlock());
     Value value =
-        b.create<LLVM::CallOp>(loc, TypeRange{b.getI64Type()},
+        b.create<LLVM::CallOp>(clockLoc, TypeRange{b.getI64Type()},
                                "_ZN4tops12global_timerEv", ValueRange{})
             ->getResult(0);
     auto words = split(value);
     Value identity =
-        b.create<LLVM::CallOp>(loc, TypeRange{b.getI32Type()},
+        b.create<LLVM::CallOp>(identityLoc, TypeRange{b.getI32Type()},
                                "flagprism_gcu_clock_identity_v1", ValueRange{})
             ->getResult(0);
     b.create<scf::YieldOp>(loc, ValueRange{words[0], words[1], identity});
@@ -447,15 +451,22 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
   for (const Site &site : sites) {
     r.loc = site.op->getLoc();
     r.b.setInsertionPoint(site.op);
-    auto begin = r.clock();
+    auto begin = r.clock(site.id, false);
     r.b.setInsertionPointAfter(site.end ? site.end : site.op);
-    auto end = r.clock();
+    auto end = r.clock(site.id, true);
     r.record(site, begin[0], begin[1], begin[2], end[0], end[1], end[2]);
     descriptors.push_back(llvm::json::Object{
         {"id", site.id},
         {"operation", site.op->getName().getStringRef().str()},
         {"kind", static_cast<uint32_t>(site.kind)},
         {"location", printed(site.op->getLoc())},
+        {"native_clock_marker",
+         llvm::json::Object{{"file", "__flagprism_gcu_clock_v1__"},
+                            {"line", site.id},
+                            {"begin_column", 1},
+                            {"end_column", 2},
+                            {"begin_identity_column", 3},
+                            {"end_identity_column", 4}}},
         {"buffer_operand_count",
          site.kind == Compute ? site.op->getNumOperands() : 0},
         {"captured_compute_buffer_operands",
