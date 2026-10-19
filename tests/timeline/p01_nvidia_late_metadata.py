@@ -17,7 +17,8 @@ def main():
     a = p.parse_args()
     a.output.mkdir(parents=True, exist_ok=False)
     row = json.loads((a.timeline / 'index.json').read_text())['captures'][0]
-    capture = json.loads((a.timeline / row['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(a.timeline / row['capture_file'])
     metadata = capture['metadata']
     group = metadata['late_metadata_group']
     key = next(key for key in group if key.endswith('json'))

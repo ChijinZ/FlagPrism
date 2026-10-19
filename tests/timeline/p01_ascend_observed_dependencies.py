@@ -45,7 +45,8 @@ def main():
         }
         for row in json.loads(
             (directory / 'index.json').read_text())['captures']:
-            capture = json.loads((directory / row['capture_file']).read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            capture = load_capture_file(directory / row['capture_file'])
             raw = (directory / capture['raw_file']).read_bytes()
             canonical, proofs = load_observed_dependency_inputs(
                 directory, capture, raw)

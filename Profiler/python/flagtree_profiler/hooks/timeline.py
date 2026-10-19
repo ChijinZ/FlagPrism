@@ -258,8 +258,9 @@ class TimelineInstrumentationMixin:
                 file=guard_file,
                 bytes=len(guard),
                 sha256=hashlib.sha256(guard).hexdigest())
-        _persist(directory / prefix.with_suffix('.input.json'),
-                 (json.dumps(capture, indent=2) + '\n').encode())
+        from ..timeline_capture_store import persist_capture
+        persist_capture(directory, str(prefix.with_suffix('.input.json')),
+                        capture)
         # Retain compiler/source objects before giving up the device owner.
         # A decoder failure must not prevent another invocation's raw salvage.
         for artifact in metadata.get('timeline_artifacts', []):
@@ -279,7 +280,9 @@ class TimelineInstrumentationMixin:
         from ..timeline_events_nvidia import canonicalize_nvidia_capture
         from ..timeline_nvidia_machine import inspect_capture_binary
         input_file = directory / self._timeline_pending[identity]
-        capture = json.loads(input_file.read_text())
+        from ..timeline_capture_store import load_capture
+        capture = load_capture(directory,
+                               str(input_file.relative_to(directory)))
         owner, metadata = capture['owner'], capture['metadata']
         raw = (directory / capture['raw_file']).read_bytes()
         if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
@@ -355,8 +358,8 @@ class TimelineInstrumentationMixin:
                     status='counter_unit_only',
                     read_precision_status='unverified',
                     time_arrows_verified=False)
-        _persist(directory / prefix.with_suffix('.json'),
-                 (json.dumps(capture, indent=2) + '\n').encode())
+        from ..timeline_capture_store import persist_capture
+        persist_capture(directory, str(prefix.with_suffix('.json')), capture)
         self._timeline_rows.append(
             dict(invocation_id=identity,
                  capture_id=owner['capture_id'],

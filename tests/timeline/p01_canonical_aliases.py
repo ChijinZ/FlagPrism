@@ -16,7 +16,8 @@ def run(timeline, output, *, require_alias):
     }
     reports = []
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         raw = store.read_artifact(timeline, capture['raw_file'])
         fresh = canonicalize_late_capture(raw,
                                           owner=capture['owner'],

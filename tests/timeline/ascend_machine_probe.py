@@ -26,8 +26,9 @@ def main():
         flagtree.profiler.__path__.insert(
             0, str(args.source_root / 'Profiler/python/flagtree_profiler'))
     from flagtree.profiler import timeline_ascend_machine as machine
+    from flagtree.profiler.timeline_capture_store import load_capture_file
     captures = [
-        json.loads(path.read_text()) for directory in args.timeline
+        load_capture_file(path) for directory in args.timeline
         for path in sorted((directory / 'captures').glob('*.input.json'))
     ]
     if len(captures) < 3:

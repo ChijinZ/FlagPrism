@@ -32,7 +32,8 @@ def main():
         for p in directory.rglob('*') if p.is_file()
     }
     row = json.loads((directory / 'index.json').read_text())['captures'][0]
-    capture = json.loads((directory / row['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(directory / row['capture_file'])
     metadata = capture['metadata']['compiler_metadata']
     binary = machine.retained_binary(metadata)
     dwarf = (directory /

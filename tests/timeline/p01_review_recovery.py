@@ -88,7 +88,8 @@ def main():
             'Expected first/resumed captures, not paused call')
         summaries = []
         for row in index['captures']:
-            capture = json.loads((root / row['capture_file']).read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            capture = load_capture_file(root / row['capture_file'])
             need(capture['owner']['binary_id'] == first,
                  'Resume capture binary mismatch')
             need(capture.get('counter_ns_exports'),
@@ -171,7 +172,8 @@ def main():
              'Corrupted guard must reject decoding')
         originals = list((retained_timeline / 'captures').glob('*.input.json'))
         need(len(originals) == 1, 'Bad guard original was not retained')
-        capture = json.loads(originals[0].read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(originals[0])
         need(capture['owner']['readback_integrity']['status'] == 'invalid',
              'Bad guard was not classified invalid')
         need((retained_timeline / capture['raw_file']).is_file(),

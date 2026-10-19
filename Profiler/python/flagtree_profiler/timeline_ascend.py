@@ -259,8 +259,8 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
 
     def _decode_timeline_original(self, identity, directory, deadline):
         from .timeline_events_ascend import attach_ascend_timeline_export
-        capture = json.loads(
-            (directory / self._timeline_pending[identity]).read_text())
+        from .timeline_capture_store import load_capture
+        capture = load_capture(directory, self._timeline_pending[identity])
         owner = capture['owner']
         raw = (directory / capture['raw_file']).read_bytes()
         _need(
@@ -281,8 +281,10 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
             capture.update(events_file=str(prefix.with_suffix('.events.json')),
                            capture_status='raw_complete'
                            if batch['complete'] else 'incomplete')
-            _persist(directory / capture['events_file'],
-                     (json.dumps(batch, indent=2) + '\n').encode())
+            _persist(
+                directory / capture['events_file'],
+                json.dumps(batch, separators=(',', ':'),
+                           allow_nan=False).encode())
             from .timeline_ascend_machine import inspect_capture_binary
             capture['machine_counter_mapping'] = inspect_capture_binary(
                 directory, metadata=capture['metadata'], deadline=deadline)
@@ -322,8 +324,8 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
                     status='unavailable', reason=str(error))
             from flagtree.debugger import api
             api._exported_runs.append(exported)
-        _persist(directory / prefix.with_suffix('.json'),
-                 (json.dumps(capture, indent=2) + '\n').encode())
+        from .timeline_capture_store import persist_capture
+        persist_capture(directory, str(prefix.with_suffix('.json')), capture)
         self._timeline_rows.append(
             dict(invocation_id=identity,
                  capture_id=owner['capture_id'],

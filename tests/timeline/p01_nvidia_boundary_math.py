@@ -143,7 +143,8 @@ def main():
         'Public path lost or replayed calls')
     events = 0
     for row in index['captures']:
-        capture = json.loads((prefix / row['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(prefix / row['capture_file'])
         plan = capture['owner']['plan']
         machine = capture['machine_counter_mapping']
         require(

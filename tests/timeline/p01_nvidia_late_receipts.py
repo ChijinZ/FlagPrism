@@ -184,7 +184,8 @@ def main():
             'Compiler artifact changed after temporary staging cleanup')
     traces = 0
     for item in index['captures']:
-        capture = json.loads((final / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(final / item['capture_file'])
         need(
             capture['capture_status'] == 'raw_complete'
             and capture['counter_ns_status']['status'] == 'counter_unit_only',

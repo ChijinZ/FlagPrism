@@ -143,7 +143,8 @@ def main():
     need(len(index['captures']) == 3, 'Wrong public capture count')
     captures = []
     for entry in index['captures']:
-        capture = json.loads((prefix / entry['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(prefix / entry['capture_file'])
         need(
             capture['machine_counter_mapping']['status'] ==
             'counter_mapping_complete_region_unverified',

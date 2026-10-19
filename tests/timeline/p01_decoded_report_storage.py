@@ -25,7 +25,8 @@ def run(timeline, output, *, reports):
            lambda: reports.read_decoded_report(output, None))
 
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         decoded = reports.read_decoded_report(timeline, capture)
         plain = json.dumps(decoded, separators=(',', ':'),
                            allow_nan=False).encode()

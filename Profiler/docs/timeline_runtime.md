@@ -1081,6 +1081,29 @@ references. Old count/native modes keep their existing plain report behavior.
 The primary offline analysis still reconstructs events from retained raw data;
 the auxiliary decoded report is a lossless convenience view.
 
+### Reading stored capture metadata
+
+Repeated compiler metadata in a multi-call session is stored once as
+content-addressed JSON objects under `timeline/objects/capture/`. Capture files
+may contain a `flagprism_capture_storage: 1` envelope. Use the public reader
+instead of assuming every capture file is expanded inline JSON:
+
+```python
+from flagtree.profiler.timeline_capture_store import load_capture
+
+capture = load_capture(timeline_directory, index_entry['capture_file'])
+```
+
+This also reads earlier inline captures. It restores the exact logical JSON
+and checks compressed and decoded hashes, extents, reference paths and bounds.
+New reference headers are bounded to 8 MiB; earlier inline captures keep
+their 64 MiB read budget. The restored document and object reads are bounded to
+64 MiB, with at most 256 objects and depth 64. Missing or corrupt objects fail
+explicitly. The offline exporter includes every referenced object in its input
+closure; moving a bundle therefore requires its `objects/` directory too.
+Raw device records, clocks, source and compiler text are retained losslessly.
+Storage sharing grants no additional timing or dependency qualification.
+
 ### Reading the controlled examples
 
 `tests/timeline/p01_controlled_workloads.py` exercises real runtime work and

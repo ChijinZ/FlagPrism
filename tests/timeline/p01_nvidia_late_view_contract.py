@@ -29,7 +29,8 @@ def main():
     captures = json.loads((a.timeline / 'index.json').read_text())['captures']
     positives, negatives = [], []
     for item in captures:
-        capture = json.loads((a.timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(a.timeline / item['capture_file'])
         raw = (a.timeline / capture['raw_file']).read_bytes()
         batch = canonicalize_late_capture(raw,
                                           owner=capture['owner'],

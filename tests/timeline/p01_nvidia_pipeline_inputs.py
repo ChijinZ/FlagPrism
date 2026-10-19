@@ -78,7 +78,16 @@ def main():
                 'Profile native bytes differ from original inventory')
         root = Path(item['root'])
         entry = json.loads(read(root / 'index.json'))['captures'][0]
-        capture = json.loads(read(root / entry['capture_file']))
+        from flagtree.profiler.timeline_capture_store import load_capture
+
+        def retain_capture(relative, *, digest, size):
+            raw = read(root / relative)
+            if len(raw) != size or hashlib.sha256(raw).hexdigest() != digest:
+                raise ValueError('Capture input changed during qualification')
+
+        capture = load_capture(root,
+                               entry['capture_file'],
+                               retain=retain_capture)
         if capture['owner']['binary_id'] != item['binary_id']:
             raise ValueError('Profile capture and object inventory differ')
         machine = load_late_machine_map(root, capture)

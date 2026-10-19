@@ -1195,7 +1195,8 @@ def write_timeline_page(output):
     links = []
     seen = set()
     for item in index['captures']:
-        capture = json.loads(read_artifact(root, item['capture_file']))
+        from .timeline_capture_store import load_capture
+        capture = load_capture(root, item['capture_file'])
         for field in ('observed_dependency_exports', 'shared_counter_exports',
                       'counter_ns_exports'):
             for row in capture.get(field, []):

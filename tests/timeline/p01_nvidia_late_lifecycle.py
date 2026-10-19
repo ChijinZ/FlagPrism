@@ -18,7 +18,8 @@ def run(timeline, output, *, model, async_model, adapter, raw_decoder):
     }
     reports = []
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        cap = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        cap = load_capture_file(timeline / item['capture_file'])
         plan, layout = cap['owner']['plan'], cap['owner']['layout']
         raw = (timeline / cap['raw_file']).read_bytes()
         decoded = raw_decoder.decode_late_raw(plan, raw, slots=layout['slots'])

@@ -18,7 +18,8 @@ def main():
     index = json.loads((a.timeline / 'index.json').read_text())
     inputs, results, negatives = {}, [], []
     for item in index['captures']:
-        capture = json.loads((a.timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(a.timeline / item['capture_file'])
         path = a.timeline / capture['raw_file']
         raw = path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()

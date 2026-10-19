@@ -45,7 +45,8 @@ def inspect_capture(bundle):
     index = json.loads((directory / 'index.json').read_text())
     results = []
     for row in index['captures']:
-        capture = json.loads((directory / row['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(directory / row['capture_file'])
         raw = (directory / capture['raw_file']).read_bytes()
         if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
             raise RuntimeError('Raw identity changed')

@@ -29,7 +29,8 @@ ui = Path('/workspace/chijin-timeline-r012/runs/ui-install-v1/output/ui')
 root = a.timeline.resolve()
 reports = []
 for item in json.loads((root / 'index.json').read_text())['captures']:
-    cap = json.loads((root / item['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    cap = load_capture_file(root / item['capture_file'])
     if cap.get('observed_dependency_exports'):
         reports.append(dict(exports=cap['observed_dependency_exports']))
 need(

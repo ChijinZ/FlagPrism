@@ -145,7 +145,8 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
     manifest = []
     prior_traces = {}
     for file in args.original_timeline.glob('captures/*.json'):
-        capture = json.loads(file.read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(file)
         for row in capture.get('counter_ns_exports', []):
             prior_traces[row['observer_id']] = row['sha256']
     for capture in first['captures']:
@@ -157,8 +158,9 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
             need(bool(capture['reason']),
                  'Raw-only export must explain missing unit evidence')
         canonical = json.loads((root / capture['canonical_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
         original_capture = next(
-            json.loads((root / row['capture_file']).read_text())
+            load_capture_file(root / row['capture_file'])
             for row in json.loads((root /
                                    'index.json').read_text())['captures']
             if row['invocation_id'] == capture['invocation_id'])

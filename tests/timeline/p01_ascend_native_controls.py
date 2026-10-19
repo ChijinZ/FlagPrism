@@ -36,11 +36,12 @@ def main():
         }
         index = json.loads((directory / 'index.json').read_text())
         for row in index['captures']:
-            exported = json.loads(
-                (directory / row['capture_file']).read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            exported = load_capture_file(directory / row['capture_file'])
             original = directory / ('captures/' + row['invocation_id'] +
                                     '.input.json')
-            capture = json.loads(original.read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            capture = load_capture_file(original)
             raw = (directory / capture['raw_file']).read_bytes()
             need(
                 hashlib.sha256(raw).hexdigest() == capture['raw_sha256'],

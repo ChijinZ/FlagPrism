@@ -28,7 +28,8 @@ def run(timeline, output, *, units, origins, raws):
            lambda: origins._grid_roots([''], {('entry', 9): [0]}, 'entry', {}))
 
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         machine = units.load_late_machine_map(timeline, capture)
         base = timeline / 'machine' / capture['owner']['binary_id']
 

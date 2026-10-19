@@ -88,7 +88,18 @@ def main():
             if not all(expected[key]
                        for key in ('math', 'input', 'tail', 'calls')):
                 raise ValueError('Original profiled math failed')
-            capture = json.loads(read(root / entry['capture_file']))
+            from flagtree.profiler.timeline_capture_store import load_capture
+
+            def retain_capture(relative, *, digest, size):
+                raw = read(root / relative)
+                if len(raw) != size or hashlib.sha256(
+                        raw).hexdigest() != digest:
+                    raise ValueError(
+                        'Capture input changed during qualification')
+
+            capture = load_capture(root,
+                                   entry['capture_file'],
+                                   retain=retain_capture)
             raw = read(root / capture['raw_file'])
             if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
                 raise ValueError('Original raw changed')

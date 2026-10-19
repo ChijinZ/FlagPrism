@@ -18,17 +18,6 @@ def _json(directory, name):
 
 
 def _original(directory, name):
-    capture = _json(directory, name)
-    owner = capture['owner']
-    invocation = owner['invocation_id']
-    if name != 'captures/' + invocation + '.input.json':
-        raise ValueError('Original capture filename/identity mismatch')
-    if owner.get('submission_outcome') != 'returned':
-        raise ValueError('Capture did not complete a returned submission: ' +
-                         invocation)
-    if owner.get('readback_integrity', {}).get('status') == 'invalid':
-        raise ValueError('Capture readback integrity is invalid: ' +
-                         invocation)
     inputs = {}
 
     def retain(relative, *, digest=None, size=None):
@@ -42,7 +31,18 @@ def _original(directory, name):
         inputs[relative] = dict(sha256=actual, bytes=len(raw))
         return raw
 
-    retain(name)
+    from .timeline_capture_store import load_capture
+    capture = load_capture(directory, name, retain=retain)
+    owner = capture['owner']
+    invocation = owner['invocation_id']
+    if name != 'captures/' + invocation + '.input.json':
+        raise ValueError('Original capture filename/identity mismatch')
+    if owner.get('submission_outcome') != 'returned':
+        raise ValueError('Capture did not complete a returned submission: ' +
+                         invocation)
+    if owner.get('readback_integrity', {}).get('status') == 'invalid':
+        raise ValueError('Capture readback integrity is invalid: ' +
+                         invocation)
     raw = retain(capture['raw_file'],
                  digest=capture['raw_sha256'],
                  size=owner['layout']['raw_bytes'])
@@ -81,6 +81,10 @@ def reexport_capture(directory, original_file):
                           })
     decoder_inputs['implementation_sha256']['timeline_reexport.py'] = sha256(
         Path(__file__).read_bytes())
+    from . import timeline_capture_store
+    decoder_inputs['implementation_sha256'][
+        'timeline_capture_store.py'] = sha256(
+            Path(timeline_capture_store.__file__).read_bytes())
     canonical_revision = sha256(json_bytes(decoder_inputs))
     canonical_base = 'derived/canonical/' + canonical_revision
     from .timeline_store import find_committed_canonical

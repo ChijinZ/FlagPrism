@@ -41,7 +41,8 @@ def run(timeline,
             raise RuntimeError('Invalid shared scope accepted: ' + label)
 
     for item in json.loads((folder / 'index.json').read_text())['captures']:
-        capture = json.loads((folder / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(folder / item['capture_file'])
         raw = (folder / capture['raw_file']).read_bytes()
         if require_default:
             need(

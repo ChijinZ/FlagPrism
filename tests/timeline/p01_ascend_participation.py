@@ -28,8 +28,8 @@ def inspect(bundle, expected_count):
     need(
         len(index['captures']) == 1,
         'Expected exactly one profiled invocation')
-    capture = json.loads(
-        (root / index['captures'][0]['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(root / index['captures'][0]['capture_file'])
     raw = (root / capture['raw_file']).read_bytes()
     need(
         hashlib.sha256(raw).hexdigest() == capture['raw_sha256'],

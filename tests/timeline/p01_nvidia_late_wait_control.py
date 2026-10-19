@@ -15,7 +15,8 @@ def run(timeline, output, *, unit, control, raw_decoder):
     index = json.loads((timeline / 'index.json').read_text())
     reports = []
     for item in index['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         machine = unit.load_late_machine_map(timeline, capture)
         base = timeline / 'machine' / capture['owner']['binary_id']
         lines, native = (base / 'lines.stdout').read_bytes(), (

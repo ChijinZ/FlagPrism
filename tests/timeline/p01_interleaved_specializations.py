@@ -51,6 +51,7 @@ def main():
     recurrence, _ = workloads.create_kernels()
     from flagtree import profiler
     from flagtree.profiler.timeline_events import validate_raw_batch
+    from flagtree.profiler.timeline_capture_store import load_capture
     (args.output / 'host-once.txt').write_text('one explicit E01 workload\n')
     rows = []
     session = profiler.start(str(args.output / 'capture'), detail='timeline')
@@ -115,7 +116,7 @@ def main():
              for r in rows}) == 2, 'Expected exactly two real specializations')
     captures = []
     for row, entry in zip(rows, index['captures']):
-        capture = json.loads((root / entry['capture_file']).read_text())
+        capture = load_capture(root, entry['capture_file'])
         need(capture['owner']['binary_id'] == row['binary_id'],
              'Capture crossed binary boundary')
         raw = root / capture['raw_file']

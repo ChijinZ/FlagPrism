@@ -43,7 +43,8 @@ def run(args):
     else:
         root = args.timeline
         for entry in json.loads((root / 'index.json').read_text())['captures']:
-            capture = json.loads((root / entry['capture_file']).read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            capture = load_capture_file(root / entry['capture_file'])
             machine = units.load_late_machine_map(root, capture)
             base = root / 'machine' / capture['owner']['binary_id']
             ptxs = [

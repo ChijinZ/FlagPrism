@@ -24,7 +24,8 @@ root = a.timeline
 index = json.loads((root / 'index.json').read_text())
 results = []
 for number, entry in enumerate(index['captures']):
-    capture = json.loads((root / entry['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(root / entry['capture_file'])
     if capture['metadata']['compiler_metadata'].get(
             'debug_execution_native_marker_version') != 1:
         raise RuntimeError('Capture predates native clock marker generation')

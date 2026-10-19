@@ -54,7 +54,8 @@ def inspect(folder, expected):
         <= 64 * 1024 * 1024, 'Default bundle exceeded 64MiB budget')
     summaries = []
     for row in index['captures']:
-        capture = json.loads((timeline / row['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / row['capture_file'])
         need(
             capture.get('counter_ns_status',
                         {}).get('status') == 'counter_unit_only'

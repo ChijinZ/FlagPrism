@@ -23,7 +23,8 @@ def run(timeline, output, *, units, values, control):
             raise RuntimeError('Timer store value negative accepted: ' + name)
 
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         machine = units.load_late_machine_map(timeline, capture)
         base = timeline / 'machine' / capture['owner']['binary_id']
         ptx_rows = [

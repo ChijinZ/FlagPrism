@@ -42,7 +42,8 @@ def run(timeline, output, *, backend, common, exporter):
                 dict(opcode='BRA.U', predicate=None, operands=operands)))
 
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        capture = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(timeline / item['capture_file'])
         raw = (timeline / capture['raw_file']).read_bytes()
         canonical, proofs = backend.load_observed_dependency_inputs(
             timeline, capture, raw)

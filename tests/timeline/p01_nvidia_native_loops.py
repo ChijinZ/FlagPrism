@@ -23,8 +23,8 @@ def run(timelines, expected, kind, member_count, output):
             raise RuntimeError(
                 'Expected counts differ from actual capture registration')
         for entry, iterations in zip(entries, expected):
-            capture = json.loads(
-                (timeline / entry['capture_file']).read_text())
+            from flagtree.profiler.timeline_capture_store import load_capture_file
+            capture = load_capture_file(timeline / entry['capture_file'])
             machine = load_late_machine_map(timeline, capture)
             native = load_native_boundary_report(timeline, capture, machine)
             # The registered scalar case has both a two-member recurrence

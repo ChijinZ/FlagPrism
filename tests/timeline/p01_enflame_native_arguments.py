@@ -114,7 +114,8 @@ checks = []
 if len(index['captures']) != 2 or len(snapshots) != 2:
     raise RuntimeError('Unexpected actual call count')
 for snapshot, item, row in zip(snapshots, index['captures'], inputs):
-    c = json.loads((root / item['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    c = load_capture_file(root / item['capture_file'])
     metadata = c['metadata']['compiler_metadata']
     batch = json.loads((root / c['events_file']).read_text())
     raw = (root / c['raw_file']).read_bytes()

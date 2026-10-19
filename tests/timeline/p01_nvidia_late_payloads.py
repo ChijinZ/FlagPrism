@@ -30,7 +30,8 @@ def run(timeline,
             raise RuntimeError('Invalid native payload accepted: ' + name)
 
     for item in json.loads((timeline / 'index.json').read_text())['captures']:
-        cap = json.loads((timeline / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        cap = load_capture_file(timeline / item['capture_file'])
         machine = units.load_late_machine_map(timeline, cap)
         base = timeline / 'machine' / cap['owner']['binary_id']
         ptx = [

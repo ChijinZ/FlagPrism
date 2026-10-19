@@ -103,7 +103,8 @@ def main():
     if not failed or len(originals) != 1 or retained_owner_statuses():
         raise RuntimeError(
             'Guard failure lost bytes or retained completed storage')
-    capture = json.loads(originals[0].read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(originals[0])
     if capture['owner']['readback_integrity']['status'] != 'invalid':
         raise RuntimeError('Injected readback integrity failure was hidden')
     if (directory / capture['readback_guard']['file']).read_bytes() == bytes(

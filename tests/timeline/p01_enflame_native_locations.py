@@ -140,7 +140,8 @@ def main():
     need(len(index['captures']) == 2, 'Expected two actual capture owners')
     summaries = []
     for entry in index['captures']:
-        capture = json.loads((root / entry['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture
+        capture = load_capture(root, entry['capture_file'])
         batch = validate_raw_batch(
             json.loads((root / capture['events_file']).read_text()))
         need(batch['complete'] and len(batch['events']) >= 2,

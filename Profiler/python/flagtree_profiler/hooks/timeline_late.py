@@ -211,8 +211,8 @@ class LateTimelineHook(InstrumentationHook):
 
     def _decode_timeline_original(self, identity, directory, deadline):
         from ..timeline_nvidia_late_raw import decode_late_raw
-        capture = json.loads(
-            (directory / self._timeline_pending[identity]).read_text())
+        from ..timeline_capture_store import load_capture
+        capture = load_capture(directory, self._timeline_pending[identity])
         owner = capture['owner']
         raw = (directory / capture['raw_file']).read_bytes()
         if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
@@ -424,8 +424,8 @@ class LateTimelineHook(InstrumentationHook):
                              (json.dumps(canonical, separators=(',', ':')) +
                               '\n').encode())
                     capture['events_storage'] = dict(kind='standalone_json_v1')
-        _persist(directory / prefix.with_suffix('.json'),
-                 (json.dumps(capture, indent=2) + '\n').encode())
+        from ..timeline_capture_store import persist_capture
+        persist_capture(directory, str(prefix.with_suffix('.json')), capture)
         self._timeline_rows.append(
             dict(invocation_id=identity,
                  capture_id=owner['capture_id'],

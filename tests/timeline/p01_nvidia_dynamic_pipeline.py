@@ -136,7 +136,8 @@ def main():
     need(len(index['captures']) == 2, 'Wrong profile invocation count')
     summaries = []
     for row in index['captures']:
-        capture = json.loads((directory / row['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        capture = load_capture_file(directory / row['capture_file'])
         facts = json.loads((directory / capture['async_file']).read_text())
         batch = json.loads((directory / capture['events_file']).read_text())
         need(batch['complete'] and facts['groups'], 'Incomplete async capture')

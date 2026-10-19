@@ -65,8 +65,8 @@ def inspect(bundle):
     root = bundle / 'timeline'
     index = json.loads((root / 'index.json').read_text())
     need(len(index['captures']) == 1, 'Expected exactly one captured call')
-    capture = json.loads(
-        (root / index['captures'][0]['capture_file']).read_text())
+    from flagtree.profiler.timeline_capture_store import load_capture_file
+    capture = load_capture_file(root / index['captures'][0]['capture_file'])
     batch = json.loads((root / capture['events_file']).read_text())
     from flagtree.profiler.timeline_events import validate_raw_batch
     validate_raw_batch(batch)

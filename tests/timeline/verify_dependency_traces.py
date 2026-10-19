@@ -34,7 +34,8 @@ if a.manifest is not None:
 else:
     root = a.timeline.resolve()
     for item in json.loads((root / 'index.json').read_text())['captures']:
-        cap = json.loads((root / item['capture_file']).read_text())
+        from flagtree.profiler.timeline_capture_store import load_capture_file
+        cap = load_capture_file(root / item['capture_file'])
         identity = cap['owner']['invocation_id']
         caps[identity] = cap
         if cap.get('observed_dependency_exports'):

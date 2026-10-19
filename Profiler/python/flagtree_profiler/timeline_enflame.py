@@ -338,7 +338,9 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
     def _decode_timeline_original(self, identity, directory, deadline):
         from .timeline_events_enflame import attach_enflame_timeline_export
         input_file = directory / self._timeline_pending[identity]
-        capture = json.loads(input_file.read_text())
+        from .timeline_capture_store import load_capture
+        capture = load_capture(directory,
+                               str(input_file.relative_to(directory)))
         owner = capture['owner']
         raw = (directory / capture['raw_file']).read_bytes()
         _need(
@@ -367,8 +369,10 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
             capture.update(events_file=str(prefix.with_suffix('.events.json')),
                            capture_status='raw_complete'
                            if canonical['complete'] else 'incomplete')
-            _persist(directory / capture['events_file'],
-                     (json.dumps(canonical, indent=2) + '\n').encode())
+            _persist(
+                directory / capture['events_file'],
+                json.dumps(canonical, separators=(',', ':'),
+                           allow_nan=False).encode())
             try:
                 from .timeline_unit_enflame import load_counter_unit_proofs
                 from .timeline_views import derive_counter_ns_views
@@ -409,8 +413,8 @@ class EnflameTimelineCollector(TimelineInstrumentationMixin):
             api._exported_runs.append(exported)
         else:
             capture['capture_status'] = 'aborted'
-        _persist(directory / prefix.with_suffix('.json'),
-                 (json.dumps(capture, indent=2) + '\n').encode())
+        from .timeline_capture_store import persist_capture
+        persist_capture(directory, str(prefix.with_suffix('.json')), capture)
         self._timeline_rows.append(
             dict(invocation_id=identity,
                  capture_id=owner['capture_id'],
