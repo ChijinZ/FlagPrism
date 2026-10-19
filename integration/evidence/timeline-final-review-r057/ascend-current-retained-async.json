@@ -1,0 +1,36 @@
+{
+  "source": "current installed R057 provider; retained R049 raw; no replay/no persistence",
+  "results": [
+    {
+      "case": "recurrence",
+      "invocation_id": "invocation-1b39996fa73242abb3ef629fa9436b64",
+      "raw_sha256": "fc5c0f1260795178ee2e837f30679da0f8600ea86bdf06cbe1c13ce7d5ba8a47",
+      "status": "current_provider_real_retained_async_inputs_qualified",
+      "observers": 2,
+      "edges": 42,
+      "generations": [
+        0,
+        1
+      ]
+    },
+    {
+      "case": "recurrence",
+      "invocation_id": "invocation-1f11324c3adf47c889055e0f925c8f1a",
+      "raw_sha256": "9d9440f1f588747e4b0a514a9ce40110f261409d5aa245079532b1536d0643ab",
+      "status": "current_provider_real_retained_async_inputs_qualified",
+      "observers": 2,
+      "edges": 42,
+      "generations": [
+        0,
+        1
+      ]
+    },
+    {
+      "case": "softmax",
+      "invocation_id": "invocation-1cd858acdb53494885e00217d988ffe3",
+      "raw_sha256": "e573a41dfdc7344cb5b4dfb1cd4a1d0a4586a83524b81d8da6fcabda55c0a979",
+      "status": "unavailable",
+      "reason": "Native instruction/getter bindings are incomplete"
+    }
+  ]
+}
