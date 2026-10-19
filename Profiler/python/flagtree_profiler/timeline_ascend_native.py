@@ -10,26 +10,55 @@ from .timeline_events_ascend import compiler_actors, NATIVE_CONTROL_FILE
 from .timeline_store import read_artifact
 from .timeline_views import document_sha256
 
-# Sixteen independent single-word insertions between real SYS_CNT readers.
-# Baseline and every object/text were checked by the actual server CPU audit.
+# Baseline and native words come from actual SDK compilations. The original
+# sixteen tuples use the first archive; twenty-four additional tuples were
+# checked as exact single-word insertions on both actual AIC and AIV job types.
+# Event-ID extension bits remain part of unknown-family detection.
 REFERENCE_ARCHIVE_SHA256 = '75d5951d83a57f8eb16017d7958ab89b4ad7ed45741e2b554ecb272a145a9302'
+ADDITIONAL_REFERENCE_ARCHIVE_SHA256 = '585e4d0fdbe7b5207a251ad87197a5ed7bdbfa97836bd58d63e115e85105a7bb'
+REFERENCE_ARCHIVES_SHA256 = (REFERENCE_ARCHIVE_SHA256,
+                             ADDITIONAL_REFERENCE_ARCHIVE_SHA256)
 WORDS = {
+    0x40a00280: ('set_flag', (0, 5, 0)),
     0x40a00400: ('set_flag', (1, 0, 0)),
     0x40a00401: ('set_flag', (1, 0, 1)),
     0x40a00600: ('set_flag', (1, 4, 0)),
     0x40a00601: ('set_flag', (1, 4, 1)),
+    0x40a00602: ('set_flag', (1, 4, 2)),
+    0x40a00603: ('set_flag', (1, 4, 3)),
     0x40a00680: ('set_flag', (1, 5, 0)),
     0x40a00681: ('set_flag', (1, 5, 1)),
+    0x40a00e00: ('set_flag', (3, 4, 0)),
+    0x40a00e01: ('set_flag', (3, 4, 1)),
+    0x40a00e02: ('set_flag', (3, 4, 2)),
+    0x40a00e03: ('set_flag', (3, 4, 3)),
     0x40a01080: ('set_flag', (4, 1, 0)),
     0x40a01081: ('set_flag', (4, 1, 1)),
+    0x40a01180: ('set_flag', (4, 3, 0)),
+    0x40a01181: ('set_flag', (4, 3, 1)),
+    0x40a01480: ('set_flag', (5, 1, 0)),
+    0x40a04900: ('set_flag', (2, 10, 0)),
+    0x40a40600: ('set_flag', (1, 4, 4)),
+    0x40a40e00: ('set_flag', (3, 4, 4)),
+    0x40c00280: ('wait_flag', (0, 5, 0)),
     0x40c00400: ('wait_flag', (1, 0, 0)),
     0x40c00401: ('wait_flag', (1, 0, 1)),
     0x40c00600: ('wait_flag', (1, 4, 0)),
     0x40c00601: ('wait_flag', (1, 4, 1)),
+    0x40c00602: ('wait_flag', (1, 4, 2)),
+    0x40c00603: ('wait_flag', (1, 4, 3)),
     0x40c00680: ('wait_flag', (1, 5, 0)),
     0x40c00681: ('wait_flag', (1, 5, 1)),
+    0x40c00e00: ('wait_flag', (3, 4, 0)),
+    0x40c00e01: ('wait_flag', (3, 4, 1)),
+    0x40c00e02: ('wait_flag', (3, 4, 2)),
+    0x40c00e03: ('wait_flag', (3, 4, 3)),
     0x40c01080: ('wait_flag', (4, 1, 0)),
     0x40c01081: ('wait_flag', (4, 1, 1)),
+    0x40c01480: ('wait_flag', (5, 1, 0)),
+    0x40c04900: ('wait_flag', (2, 10, 0)),
+    0x40c40600: ('wait_flag', (1, 4, 4)),
+    0x40c40e00: ('wait_flag', (3, 4, 4)),
 }
 
 
@@ -71,7 +100,7 @@ def native_control_map(*, binary, dwarf_lines, metadata):
                                      instruction_word=word,
                                      operation=WORDS[word][0],
                                      arguments=list(WORDS[word][1]))
-            elif word & 0xffff0000 in (0x40a00000, 0x40c00000):
+            elif word & 0xffe00000 in (0x40a00000, 0x40c00000):
                 unknown.append(dict(pc=pc, instruction_word=word))
     mapped, covered, pc_bindings = [], set(), {}
     for row in machine._dwarf_rows(dwarf_lines,
@@ -149,6 +178,7 @@ def native_control_map(*, binary, dwarf_lines, metadata):
                 dwarf_sha256=machine._sha(dwarf_lines),
                 counter_map_sha256=document_sha256(counter),
                 reference_archive_sha256=REFERENCE_ARCHIVE_SHA256,
+                reference_archives_sha256=list(REFERENCE_ARCHIVES_SHA256),
                 native_pcs=sorted(mapped,
                                   key=lambda r:
                                   (r['function'], r['site_id'], r['pc'])),
@@ -394,6 +424,8 @@ def load_observed_dependency_inputs(directory, capture, raw):
                 ('native_map_sha256:' + document_sha256(mapping),
                  'compiled_native_references_sha256:' +
                  REFERENCE_ARCHIVE_SHA256,
+                 'compiled_native_references_sha256:' +
+                 ADDITIONAL_REFERENCE_ARCHIVE_SHA256,
                  'https://www.hiascend.com/doc_center/source/en/canncommercial/800/apiref/ascendcopapi/atlasascendc_api_07_0181.html'
                  ),
                 edges=tuple(edges)))

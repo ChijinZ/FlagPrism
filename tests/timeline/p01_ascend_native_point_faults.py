@@ -83,6 +83,37 @@ def main():
     need(not incomplete['complete'] and incomplete['unbound_image_flag_words'],
          'Missing native point was hidden by a different instruction clone')
     rejected.append('missing_native_clone_is_incomplete')
+    # An uncatalogued event-extension word outside all marked points must
+    # invalidate mechanism coverage too, rather than disappearing from the scan.
+    counter = machine.counter_map(binary=binary,
+                                  dwarf_lines=dwarf,
+                                  metadata=metadata)
+    marked = {row['pc'] for row in positive['native_pcs']}
+    marked.update(row['pc'] for row in counter['counter_pcs'])
+    candidate = next((h[4] + i for h in headers if h[2] & 4
+                      for i in range(0, h[5], 4) if h[3] + i not in marked),
+                     None)
+    need(candidate is not None, 'No unmarked instruction for the CPU fixture')
+    altered = bytearray(binary)
+    unknown = 0x40a40603  # Not in the finite reference catalogue.
+    need(unknown not in native.WORDS, 'Unknown fixture became catalogued')
+    struct.pack_into('<I', altered, candidate, unknown)
+    altered = bytes(altered)
+    meta = copy.deepcopy(metadata)
+    meta['flagprism_ascend_handoff']['final_outputs']['binary'].update(
+        encoding='base64',
+        data=base64.b64encode(altered).decode(),
+        bytes=len(altered),
+        sha256=hashlib.sha256(altered).hexdigest())
+    incomplete = native.native_control_map(binary=altered,
+                                           dwarf_lines=dwarf,
+                                           metadata=meta)
+    need(
+        not incomplete['complete']
+        and any(row['instruction_word'] == unknown
+                for row in incomplete['uncatalogued_family_candidates']),
+        'Unmarked extended-event flag was not reported as incomplete')
+    rejected.append('unmarked_extended_event_is_incomplete')
     need(
         before == {
             str(p): hashlib.sha256(p.read_bytes()).hexdigest()
