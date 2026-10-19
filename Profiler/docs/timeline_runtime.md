@@ -437,6 +437,11 @@ rational rate uncertainty separately through `conversion_scale_error_ns` and
 Missing physical-domain samples or inconsistent windows preserve originals and
 an explicit unavailable-unit reason rather than a fabricated nanosecond trace.
 
+A [finite audit of an existing GCU300 ELF](../../integration/evidence/timeline-gcu-clock-helpers-r066/README.md)
+corroborates the SDK getter's 46-bit returned-value ceiling and the unmasked
+SIPINFO identity helper. It does not establish the physical counter's exact
+width, bind every inlined reader to raw records, or authorize a shared epoch.
+
 Use the normal source-build recipe and public CLI:
 
 ```bash

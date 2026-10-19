@@ -1,0 +1,98 @@
+[
+  {
+    "opt": [],
+    "returncode": 0,
+    "result": {
+      "status": "finite_original_helper_clock_shape_audited",
+      "actual_ELF_sha256": "ac6748ff87599aa31b21356701527be356ceb9908637df9b67006fa072701cba",
+      "native_disassembly_sha256": "61fa447ccd36509ba2a97e48d794d35716f6870fb51cea9b2521e754f4b1067c",
+      "symbols": {
+        "_ZN4tops12global_timerEv": {
+          "address": 227744,
+          "bytes": 208,
+          "section_address": 0,
+          "section_file_offset": 4096
+        },
+        "flagprism_gcu_clock_identity_v1": {
+          "address": 227952,
+          "bytes": 32,
+          "section_address": 0,
+          "section_file_offset": 4096
+        }
+      },
+      "returned_low_word_bits": 32,
+      "returned_upper_word_mask": 16383,
+      "maximum_returned_value_bits": 46,
+      "low_word_rollover_reread_present": true,
+      "physical_counter_identity_read": "unmasked sipinfo in helper",
+      "negative_fixtures": [
+        {
+          "name": "wrong_upper_mask",
+          "rejected": true,
+          "reason": "Unexpected upper-word mask or return"
+        },
+        {
+          "name": "missing_rollover_comparison",
+          "rejected": true,
+          "reason": "Missing low-word rollover comparison"
+        }
+      ],
+      "actual_inline_reader_to_raw_binding": false,
+      "source_region_qualified": false,
+      "shared_epoch_qualified": false,
+      "absolute_frequency_qualified": false,
+      "hardware_busy_qualified": false,
+      "application_replayed": false,
+      "SDK_or_product_changed": false
+    }
+  },
+  {
+    "opt": [
+      "-O"
+    ],
+    "returncode": 0,
+    "result": {
+      "status": "finite_original_helper_clock_shape_audited",
+      "actual_ELF_sha256": "ac6748ff87599aa31b21356701527be356ceb9908637df9b67006fa072701cba",
+      "native_disassembly_sha256": "61fa447ccd36509ba2a97e48d794d35716f6870fb51cea9b2521e754f4b1067c",
+      "symbols": {
+        "_ZN4tops12global_timerEv": {
+          "address": 227744,
+          "bytes": 208,
+          "section_address": 0,
+          "section_file_offset": 4096
+        },
+        "flagprism_gcu_clock_identity_v1": {
+          "address": 227952,
+          "bytes": 32,
+          "section_address": 0,
+          "section_file_offset": 4096
+        }
+      },
+      "returned_low_word_bits": 32,
+      "returned_upper_word_mask": 16383,
+      "maximum_returned_value_bits": 46,
+      "low_word_rollover_reread_present": true,
+      "physical_counter_identity_read": "unmasked sipinfo in helper",
+      "negative_fixtures": [
+        {
+          "name": "wrong_upper_mask",
+          "rejected": true,
+          "reason": "Unexpected upper-word mask or return"
+        },
+        {
+          "name": "missing_rollover_comparison",
+          "rejected": true,
+          "reason": "Missing low-word rollover comparison"
+        }
+      ],
+      "actual_inline_reader_to_raw_binding": false,
+      "source_region_qualified": false,
+      "shared_epoch_qualified": false,
+      "absolute_frequency_qualified": false,
+      "hardware_busy_qualified": false,
+      "application_replayed": false,
+      "SDK_or_product_changed": false
+    }
+  }
+]
