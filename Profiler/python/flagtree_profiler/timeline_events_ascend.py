@@ -539,9 +539,13 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                      attributes={
                          'ascend.writer_state':
                          'arrived' if arrived else 'unobserved',
-                         'ascend.native_pair_count': committed,
-                         'ascend.runtime_vector_count': vector_count,
-                         'ascend.function': actor['function']
+                         'ascend.native_pair_count':
+                         committed,
+                         'ascend.function':
+                         actor['function'],
+                         **({
+                             'ascend.runtime_vector_count': vector_count
+                         } if actor['runtime_participation'] else {})
                      }))
             occurrences = Counter()
             for index in range(committed):

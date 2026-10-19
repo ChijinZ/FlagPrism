@@ -171,6 +171,8 @@ def test_raw_pairs_keep_actual_coordinates_offsets_and_unknown_actors():
     assert len(batch['events']) == 4 and len(batch['records']) == 8
     assert batch['clock_status'] == batch['boundary_status'] == 'unverified'
     assert not batch['complete']
+    assert all('ascend.runtime_vector_count' not in o['attributes']
+               for o in batch['observers'])
     observed = [o for o in batch['observers'] if o['retained_records']]
     assert [o['program_coordinates'] for o in observed] == [[0, 0, 0],
                                                             [2, 2, 0]]
