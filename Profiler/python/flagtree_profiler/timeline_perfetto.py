@@ -494,8 +494,9 @@ def write_counter_exports(directory, prefix, views, canonical, *, proofs):
 
 def _write_committed_index(directory):
     """Called under the same lock as receipt publication, including retries."""
-    from .timeline_store import committed_exports, persist
-    links = []
+    from .timeline_store import committed_exports, dependency_qualification, persist
+    links, historical = [], []
+    qualifications = {}
     entries = committed_exports(directory)
     for item in entries:
         label = item['invocation_id'] + ' / program ' + str(
@@ -503,11 +504,27 @@ def _write_committed_index(directory):
                 'observed dependency timeline ' if item.get('view_kind') ==
                 'observed_dynamic_dependencies_ns' else 'shared counter group '
                 if item.get('observer_ids') else '') + item['observer_id']
-        links.append('<li><a href="' +
-                     html.escape(item['trace_file'], quote=True) + '">' +
-                     html.escape(label) + '</a>'
-                     ' <small>revision ' +
-                     html.escape(item['revision_id'][:12]) + '</small></li>')
+        status = 'current'
+        if item.get('view_kind') == 'observed_dynamic_dependencies_ns':
+            invocation = item['invocation_id']
+            if invocation not in qualifications:
+                qualifications[invocation] = dependency_qualification(
+                    directory, invocation)
+            state = qualifications[invocation]
+            if state is None:
+                status = 'historical: not revalidated by current qualification tracking'
+            elif state['status'] == 'unavailable':
+                status = 'unavailable under latest qualification: ' + str(
+                    state.get('reason') or 'no qualified dependencies')
+            elif item['trace_file'] not in state['trace_files']:
+                status = 'superseded by latest qualification'
+        target = links if status == 'current' else historical
+        target.append('<li><a href="' +
+                      html.escape(item['trace_file'], quote=True) + '">' +
+                      html.escape(label) + '</a>'
+                      ' <small>revision ' +
+                      html.escape(item['revision_id'][:12]) + ' — ' +
+                      html.escape(status) + '</small></li>')
     body = (
         '<!doctype html><html><head><meta charset="utf-8"><title>Internal timeline files</title></head>'
         '<body><h1>Internal timeline files</h1><p>Each trace has an isolated observer-relative ns axis. '
@@ -515,7 +532,9 @@ def _write_committed_index(directory):
         'not certified source costs or engine busy. Do not compare origins across files.</p>'
         '<p>Open a downloaded .pftrace in the standard <a href="https://ui.perfetto.dev/">Perfetto UI</a>. '
         'No data is uploaded by this index.</p><ul>' + ''.join(links) + '</ul>'
-        '<p><a href="index.json">Raw capture index and qualification status</a></p></body></html>'
+        '<h2>Historical files (not current recommendations)</h2><ul>' +
+        ''.join(historical) + '</ul>'
+        '<p><a href="index.json">Original raw capture index and historical qualification status</a></p></body></html>'
     )
     if any(item.get('observer_ids') for item in entries):
         body = body.replace(
@@ -526,7 +545,8 @@ def _write_committed_index(directory):
     if not links:
         body = body.replace(
             '<ul></ul>',
-            '<p>Raw observations are retained; no ns trace is available.</p>')
+            '<p>No currently qualified trace is recommended. Retained observations and historical files remain available.</p>',
+            1)
     persist(directory, 'index.html', body.encode(), replace=True)
 
 

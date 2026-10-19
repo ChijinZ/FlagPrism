@@ -201,6 +201,74 @@ def committed_exports(directory):
     return exports
 
 
+def set_dependency_qualification(directory,
+                                 invocation_id,
+                                 exports,
+                                 reason=None):
+    """Caller holds export_lock; preserve history and atomically select current.
+
+    A failed fresh qualification revokes recommendations, not historical files.
+    A later successful qualification can select those same immutable bytes.
+    """
+    if type(invocation_id) is not str or not invocation_id or len(
+            invocation_id) > 256:
+        raise ValueError('Invalid dependency qualification invocation')
+    available = {
+        row['trace_file']: row
+        for row in committed_exports(directory)
+    }
+    if type(exports) not in (list, tuple) or len(exports) > 128:
+        raise ValueError('Invalid dependency qualification exports')
+    selected = []
+    for row in exports:
+        if (available.get(row.get('trace_file')) != {
+                k: v
+                for k, v in row.items() if k != 'revalidation_file'
+        } or row.get('invocation_id') != invocation_id
+                or row.get('view_kind') != 'observed_dynamic_dependencies_ns'):
+            raise ValueError(
+                'Dependency qualification requires committed matching exports')
+        selected.append(row['trace_file'])
+    if len(set(selected)) != len(selected) or (selected
+                                               and reason is not None):
+        raise ValueError('Conflicting dependency qualification')
+    if reason is not None and (type(reason) is not str or len(reason) > 16384):
+        raise ValueError('Invalid dependency qualification reason')
+    state = dict(schema_version=1,
+                 invocation_id=invocation_id,
+                 status='current' if selected else 'unavailable',
+                 trace_files=sorted(selected),
+                 reason=reason)
+    payload = json_bytes(state)
+    key = sha256(invocation_id.encode())
+    base = 'derived/dependency-qualification/' + key
+    history = base + '/' + sha256(payload) + '.json'
+    existing = list(bundle_path(directory, base).glob('*.json'))
+    if len(existing) >= 128 and not bundle_path(directory, history).exists():
+        raise ValueError(
+            'Dependency qualification history count budget exceeded')
+    persist(directory, history, payload)
+    persist(directory, base + '/current.json', payload, replace=True)
+
+
+def dependency_qualification(directory, invocation_id):
+    key = sha256(invocation_id.encode())
+    relative = 'derived/dependency-qualification/' + key + '/current.json'
+    if not bundle_path(directory, relative).exists():
+        return None
+    state = json.loads(read_artifact(directory, relative, limit=64 * 1024))
+    if (type(state) is not dict or state.get('schema_version') != 1
+            or state.get('invocation_id') != invocation_id
+            or state.get('status') not in ('current', 'unavailable')
+            or type(state.get('trace_files')) is not list
+            or len(state['trace_files']) > 128
+            or any(type(x) is not str for x in state['trace_files'])
+            or (state['status'] == 'unavailable' and state['trace_files'])
+            or (state['status'] == 'current' and not state['trace_files'])):
+        raise ValueError('Malformed current dependency qualification')
+    return state
+
+
 def find_committed_canonical(directory, canonical):
     """Reuse exact serialized fresh output, never infer facts from cached JSON.
 

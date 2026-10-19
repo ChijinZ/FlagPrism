@@ -132,6 +132,14 @@ def reexport_capture(directory, original_file):
                 json_bytes(receipt))
     views = provider.reexport_views(directory, capture, raw, batch, sources,
                                     retain)
+    # A current provider refusal must also revoke older successful recommendations.
+    from .timeline_store import set_dependency_qualification
+    from .timeline_perfetto import _write_committed_index
+    with export_lock(directory):
+        set_dependency_qualification(directory, owner['invocation_id'],
+                                     views['observed_dependency_exports'],
+                                     views.get('observed_dependency_reason'))
+        _write_committed_index(directory)
     return dict(invocation_id=owner['invocation_id'],
                 backend=backend,
                 canonical_file=canonical_file,

@@ -90,5 +90,7 @@ def write_dependency_exports(directory, canonical, proofs):
         perfetto_schema_commit=timeline_perfetto.PERFETTO_SCHEMA_COMMIT)
     with timeline_store.export_lock(directory):
         rows = timeline_store.publish_revision(directory, inputs, files, rows)
+        timeline_store.set_dependency_qualification(
+            directory, canonical['identity']['invocation_id'], rows)
         timeline_perfetto._write_committed_index(directory)
     return rows
