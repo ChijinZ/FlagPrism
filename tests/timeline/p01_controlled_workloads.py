@@ -69,29 +69,29 @@ def inspect(bundle):
     batch = json.loads((root / capture['events_file']).read_text())
     from flagtree.profiler.timeline_events import validate_raw_batch
     validate_raw_batch(batch)
-    count_fields = (('written_records', 'retained_records', 'overwritten_records')
-                    if batch['schema_version'] == 1 else (
-                        'attempted_records', 'committed_records',
-                        'retained_records', 'dropped_records',
-                        'filtered_records', 'overwritten_records'))
+    count_fields = (('written_records', 'retained_records',
+                     'overwritten_records') if batch['schema_version'] == 1
+                    else ('attempted_records', 'committed_records',
+                          'retained_records', 'dropped_records',
+                          'filtered_records', 'overwritten_records'))
     # Unobserved reserved slots remain unknown; they are not evidence that an
     # observed writer lost data. Never accept loss from an arrived writer.
     observed = []
     unobserved = []
     for observer in batch['observers']:
-        empty_unknown = (
-            observer['physical_identity'] is None
-            and not observer['complete']
-            and all(observer[key] == 0 for key in count_fields)
-            and not observer['saturated']
-            and not any(e['observer_id'] == observer['id']
-                        for e in batch['events']))
+        empty_unknown = (observer['physical_identity'] is None
+                         and not observer['complete']
+                         and all(observer[key] == 0 for key in count_fields)
+                         and not observer['saturated']
+                         and not any(e['observer_id'] == observer['id']
+                                     for e in batch['events']))
         if empty_unknown:
             unobserved.append(observer['id'])
             continue
-        need(observer['complete'] and not observer['saturated']
-             and observer['overwritten_records'] == 0,
-             'Controlled case lost records from an observed writer')
+        need(
+            observer['complete'] and not observer['saturated']
+            and observer['overwritten_records'] == 0,
+            'Controlled case lost records from an observed writer')
         observed.append(observer['id'])
     need(observed, 'Controlled case has no observed writers')
     positive = sum(e['end_tick'] > e['start_tick'] for e in batch['events']

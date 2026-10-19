@@ -23,8 +23,7 @@ CLOCK_FILE = '__flagprism_sys_cnt_v1__'
 # rejection and a different constant-zero control. Retained in r030 evidence.
 EXECUTABLE_TARGETS = {
     0x930000: frozenset({('dav-c220-vec', 'AIV')}),
-    0x940000: frozenset({('dav-c220-cube', 'AIC'),
-                        ('dav-c220-vec', 'AIV')}),
+    0x940000: frozenset({('dav-c220-cube', 'AIC'), ('dav-c220-vec', 'AIV')}),
 }
 WORDS = {0x02808880 | (register << 17): register for register in range(32)}
 
@@ -168,8 +167,8 @@ def counter_map(*, binary, dwarf_lines, metadata):
         retained_binary(metadata) == binary,
         'Machine input differs from retained final compiler executable')
     sections, functions = _elf(binary)
-    executable_jobs = EXECUTABLE_TARGETS[
-        struct.unpack_from('<I', binary, 48)[0]]
+    executable_jobs = EXECUTABLE_TARGETS[struct.unpack_from('<I', binary,
+                                                            48)[0]]
     expected = {}
     observed_jobs = set()
     for artifact in metadata['flagprism_ascend_handoff']['artifacts']:
@@ -183,8 +182,8 @@ def counter_map(*, binary, dwarf_lines, metadata):
             'Producer lacks clock marker version 1')
         _need(
             job.get('state') == 'finished'
-            and type(job.get('exit_code')) is int and job['exit_code'] == 0
-            and (job.get('target_arch'), job.get('actor_kind')) in executable_jobs
+            and type(job.get('exit_code')) is int and job['exit_code'] == 0 and
+            (job.get('target_arch'), job.get('actor_kind')) in executable_jobs
             and job.get('compile_id') == manifest['compile_id'],
             'No validated machine rule for this actual actor compiler job')
         observed_jobs.add((job['target_arch'], job['actor_kind']))

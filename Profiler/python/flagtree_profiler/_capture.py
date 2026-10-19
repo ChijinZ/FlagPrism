@@ -228,6 +228,8 @@ def _export_capture_impl(base,
         require_automatic_records(output, automatic_request)
     if compact_html and timeline.is_dir():
         _report.write_timeline_page(output)
+        from .bundle_metadata import compact_timeline_metadata
+        compact_timeline_metadata(output)
     _report.write_manifest(output, result)
     # The source is retained if any preceding export step failed. Cleanup is
     # allowed only after the full bundle and verified SDK copy are present.
@@ -317,7 +319,8 @@ def run_capture(args, target_args, execute):
                        output,
                        counters,
                        context,
-                       compact_html=getattr(args, 'detail', None) == 'timeline')
+                       compact_html=getattr(args, 'detail',
+                                            None) == 'timeline')
     except BaseException as error:
         message = f"Capture intermediates retained at {stage}; output: {output}"
         if isinstance(error, Exception) and hasattr(error, "add_note"):

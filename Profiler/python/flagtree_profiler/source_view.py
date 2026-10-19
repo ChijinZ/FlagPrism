@@ -87,7 +87,9 @@ class SourceCatalog:
 
     def load(self, captures):
         path = self.output / 'ai/binaries.json'
-        binaries = json.loads(path.read_text()) if path.is_file() else []
+        from .bundle_metadata import load_bundle_json
+        binaries = load_bundle_json(
+            self.output, 'ai/binaries.json') if path.is_file() else []
         for binary in binaries:
             source = binary.get('source') or {}
             for snapshot in binary.get('source_snapshots', []):

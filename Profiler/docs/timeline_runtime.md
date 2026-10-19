@@ -419,8 +419,23 @@ For `detail="timeline"`, `report/index.html` provides compact links to the
 actual exported traces and their clock qualifications. `report/execution.html`
 links the retained execution JSON and source-linked view. These pages avoid
 embedding duplicate machine-readable metadata; raw data, compiler artifacts,
-JSON and Perfetto files remain retained. Other detail modes keep their existing
-embedded reports. Compact HTML reduces output size but is not, by itself, a
+JSON and Perfetto files remain retained. Exact duplicate compiler metadata in
+`ai/binaries.json` and `report/report.json` can reference the unchanged
+`ai/execution.json`. `ai/metadata_refs.json` registers the reference locations,
+file hashes and logical value hashes. A reference is not missing metadata.
+Read a complete logical view with the common, device-independent reader:
+
+```python
+from flagtree.profiler.bundle_metadata import load_bundle_json
+report = load_bundle_json("/tmp/my-timeline", "report/report.json")
+binaries = load_bundle_json("/tmp/my-timeline", "ai/binaries.json")
+```
+
+The reader checks hashes and bounded RFC 6901 pointers, rejects cycles and paths
+outside the bundle, and reads legacy views without a catalog normally. It does
+not execute the application or access its compiler cache. The catalog applies
+only to registered locations, so similarly named fields in user metadata remain
+literal values. Other detail modes keep their existing embedded reports. Compact HTML reduces output size but is not, by itself, a
 hard admission bound on an arbitrary application's complete capture bundle.
 
 Open the bundle's `timeline/index.html` to find the `.pftrace` files, then load a
