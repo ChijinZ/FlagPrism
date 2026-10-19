@@ -1,0 +1,547 @@
+{
+  "status": "partial_native_input_diagnostics",
+  "runtime_changed": false,
+  "source_sha256": {
+    "native_pipeline_relations.py": "2541b93809294d3d1f0cd23828e0a5cdb2530843c9c4a4c18eb7cd4a8b21ed6d",
+    "test_nvidia_pipeline_relations.py": "016de7d043a8cbcb228ccc95bcd68f8a6052f83a450a4afc62c335d1e77a0d67"
+  },
+  "native_input_cases": [
+    {
+      "case": "ordinary",
+      "cubin_sha256": "76d2bd463b479eeb70eae1d86c6e14f6689c2c699f7ff174f0eae4e83ceb5956",
+      "function": "runtime_gemm",
+      "copy_inputs": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 912,
+          "seed_registers": [
+            "P0",
+            "R32",
+            "R8",
+            "R9",
+            "UR20",
+            "UR21"
+          ],
+          "visited_states": 512,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1008,
+          "seed_registers": [
+            "P1",
+            "R10",
+            "R11",
+            "R32",
+            "UR20",
+            "UR21"
+          ],
+          "visited_states": 529,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 3056,
+          "seed_registers": [
+            "P1",
+            "R4",
+            "R5",
+            "R7",
+            "UR20",
+            "UR21"
+          ],
+          "visited_states": 2522,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        }
+      ],
+      "branch_predicates": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1040,
+          "seed_registers": [
+            "UP0"
+          ],
+          "visited_states": 68,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 3152,
+          "seed_registers": [
+            "UP0"
+          ],
+          "visited_states": 458,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 4176,
+          "seed_registers": [
+            "P1"
+          ],
+          "visited_states": 63,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        }
+      ]
+    },
+    {
+      "case": "default",
+      "cubin_sha256": "585258452a4b8c4fab16a4cc94f0e57211fc787cc51255e0e7e898f724474c72",
+      "function": "runtime_gemm",
+      "copy_inputs": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1024,
+          "seed_registers": [
+            "P0",
+            "R4",
+            "R5",
+            "R98",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 463,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1328,
+          "seed_registers": [
+            "P1",
+            "R4",
+            "R5",
+            "R98",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 630,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 5200,
+          "seed_registers": [
+            "P0",
+            "R14",
+            "R15",
+            "R16",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 6254,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        }
+      ],
+      "branch_predicates": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1424,
+          "seed_registers": [
+            "P2"
+          ],
+          "visited_states": 257,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 2192,
+          "seed_registers": [
+            "UP1"
+          ],
+          "visited_states": 150,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "unverified",
+          "seed_pc": 5360,
+          "reason": "Packed predicate source is not modeled"
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 7472,
+          "seed_registers": [
+            "UP1"
+          ],
+          "visited_states": 1059,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 9008,
+          "seed_registers": [
+            "P0"
+          ],
+          "visited_states": 560,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "unverified",
+          "seed_pc": 9264,
+          "reason": "Packed predicate source is not modeled"
+        },
+        {
+          "status": "unverified",
+          "seed_pc": 10976,
+          "reason": "Packed predicate source is not modeled"
+        }
+      ]
+    },
+    {
+      "case": "sparse",
+      "cubin_sha256": "782fc33b19c48d5280ac25de9fbc0c64bf1d1bf806ddee2ded69df6fb036cbd9",
+      "function": "runtime_gemm",
+      "copy_inputs": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1008,
+          "seed_registers": [
+            "P1",
+            "R64",
+            "R8",
+            "R9",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 448,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1312,
+          "seed_registers": [
+            "P2",
+            "R64",
+            "R8",
+            "R9",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 620,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 4576,
+          "seed_registers": [
+            "P4",
+            "R20",
+            "R21",
+            "R31",
+            "UR22",
+            "UR23"
+          ],
+          "visited_states": 4802,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        }
+      ],
+      "branch_predicates": [
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 1408,
+          "seed_registers": [
+            "P0"
+          ],
+          "visited_states": 256,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 2176,
+          "seed_registers": [
+            "UP1"
+          ],
+          "visited_states": 148,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 4704,
+          "seed_registers": [
+            "P6"
+          ],
+          "visited_states": 1379,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 6032,
+          "seed_registers": [
+            "UP1"
+          ],
+          "visited_states": 960,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 7488,
+          "seed_registers": [
+            "P4"
+          ],
+          "visited_states": 465,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 7632,
+          "seed_registers": [
+            "P1"
+          ],
+          "visited_states": 1754,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        },
+        {
+          "status": "no_matrix_or_clock_result_in_native_register_cone",
+          "seed_pc": 9008,
+          "seed_registers": [
+            "P0"
+          ],
+          "visited_states": 731,
+          "entry_registers": [],
+          "forbidden": [],
+          "memory_alias_analysis_verified": false,
+          "hidden_scoreboard_decoded": false
+        }
+      ]
+    }
+  ],
+  "observed_prefix_diagnostics": [
+    {
+      "case": "default",
+      "invocation_id": "invocation-8854e4fe1c2f4e04a27b0c3dd5485601",
+      "binary_id": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "raw_sha256": "fd756b88ffd175adb378493a9198da46fc7ff9f25bd5e0ce836e42d3f9caee3d",
+      "matrix_prefixes": 6,
+      "nonempty_future_group_prefixes": 4,
+      "first_prefix": {
+        "program": 0,
+        "matrix_sequence": 22,
+        "matrix_site": 23,
+        "shared_consumer_generations": [
+          "async-1",
+          "sync-15"
+        ],
+        "shared_read_sequences": [
+          18,
+          19,
+          20,
+          21
+        ],
+        "permitted_uncompleted_future_groups": [
+          {
+            "generation_id": "async-2",
+            "commit_sequence": 5,
+            "completion_observed_sequence": 36,
+            "source_valid_unique_shared_bytes": 2048,
+            "shared_ranges": [
+              [
+                2048,
+                2048
+              ]
+            ]
+          }
+        ],
+        "has_nonempty_witness": true,
+        "matrix_operand_binding_verified": false,
+        "hardware_overlap_verified": false
+      },
+      "full_drain_counterexample_rejected": true
+    },
+    {
+      "case": "default",
+      "invocation_id": "invocation-9c45934e345e417ca1afeedf8ee7c15b",
+      "binary_id": "0dc7aa816e50a2ed7ba67b59fa3468588b7eb557579ecb0a3830c14a98ea593d",
+      "raw_sha256": "62f5fb5338027c31bbcb9221f1d2bcc3876146655a06d8de6f81e6f7b381b01d",
+      "matrix_prefixes": 14,
+      "nonempty_future_group_prefixes": 12,
+      "first_prefix": {
+        "program": 0,
+        "matrix_sequence": 22,
+        "matrix_site": 23,
+        "shared_consumer_generations": [
+          "async-1",
+          "sync-15"
+        ],
+        "shared_read_sequences": [
+          18,
+          19,
+          20,
+          21
+        ],
+        "permitted_uncompleted_future_groups": [
+          {
+            "generation_id": "async-2",
+            "commit_sequence": 5,
+            "completion_observed_sequence": 36,
+            "source_valid_unique_shared_bytes": 2048,
+            "shared_ranges": [
+              [
+                2048,
+                2048
+              ]
+            ]
+          }
+        ],
+        "has_nonempty_witness": true,
+        "matrix_operand_binding_verified": false,
+        "hardware_overlap_verified": false
+      },
+      "full_drain_counterexample_rejected": true
+    },
+    {
+      "case": "sparse",
+      "invocation_id": "invocation-7531e8dc1ede49a7a44a79f980dc0137",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "raw_sha256": "d8ab61cf4e257c1f16ffe16eacbd2e8670a5e99bb8c0069333125b835dbe5fc8",
+      "matrix_prefixes": 6,
+      "nonempty_future_group_prefixes": 4,
+      "first_prefix": {
+        "program": 0,
+        "matrix_sequence": 13,
+        "matrix_site": 23,
+        "shared_consumer_generations": [
+          "async-1",
+          "sync-6"
+        ],
+        "shared_read_sequences": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "permitted_uncompleted_future_groups": [
+          {
+            "generation_id": "async-2",
+            "commit_sequence": 5,
+            "completion_observed_sequence": 18,
+            "source_valid_unique_shared_bytes": 2048,
+            "shared_ranges": [
+              [
+                2048,
+                2048
+              ]
+            ]
+          }
+        ],
+        "has_nonempty_witness": true,
+        "matrix_operand_binding_verified": false,
+        "hardware_overlap_verified": false
+      },
+      "full_drain_counterexample_rejected": true
+    },
+    {
+      "case": "sparse",
+      "invocation_id": "invocation-a69ed76b182e4590a9193aa062835a68",
+      "binary_id": "0e0272e41d4a786d97f67e0f06e16daae29b4371512e0b36145fc9b801c56c3f",
+      "raw_sha256": "31e8e0bdfa064e4de842c3c1d5f50626c2d7bcdc1ad2907e65a6413842af1300",
+      "matrix_prefixes": 14,
+      "nonempty_future_group_prefixes": 12,
+      "first_prefix": {
+        "program": 0,
+        "matrix_sequence": 13,
+        "matrix_site": 23,
+        "shared_consumer_generations": [
+          "async-1",
+          "sync-6"
+        ],
+        "shared_read_sequences": [
+          9,
+          10,
+          11,
+          12
+        ],
+        "permitted_uncompleted_future_groups": [
+          {
+            "generation_id": "async-2",
+            "commit_sequence": 5,
+            "completion_observed_sequence": 18,
+            "source_valid_unique_shared_bytes": 2048,
+            "shared_ranges": [
+              [
+                2048,
+                2048
+              ]
+            ]
+          }
+        ],
+        "has_nonempty_witness": true,
+        "matrix_operand_binding_verified": false,
+        "hardware_overlap_verified": false
+      },
+      "full_drain_counterexample_rejected": true
+    }
+  ],
+  "source_iteration_identity_verified": false,
+  "matrix_operand_binding_verified": false,
+  "memory_alias_analysis_verified": false,
+  "ordinary_preservation_verified": false,
+  "hardware_overlap_verified": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "archive_sha256": "0c2f2bea3c0afb4d975bb19c50ac9c25af521397ff2bacc934be979d04156fbb"
+}

@@ -1,0 +1,46 @@
+{
+  "status": "original_registration_read_only",
+  "files": [
+    {
+      "path": ".timeline-qualification-r052-private/prepared-v1/registry.json",
+      "sha256": "62d7e63d0c7a66de21fdd7862a9c852959ca1a87a8991c9489877b8d6fa87ee3",
+      "registered_structure": {
+        "all": [
+          "At least two distinct automatically mapped internal source regions with complete intervals, multiple positive durations",
+          "Every default-selected program/observer has committed records; no loss; no synthetic endpoint",
+          "Every slice bound to actual object/raw offsets/source/invocation/clock proof",
+          "At least two real programs; unselected programs still compute outputs and independent state correctly",
+          "No declared native-engine activity or asynchronous overlap without actual mechanism and comparable-clock proof"
+        ],
+        "elementwise": [
+          "Device-loaded runtime trip count; body occurrences >=3, k=3 vs k=7 same compiled binary per config/shape",
+          "Masked output and State writes at final program; inputs immutable"
+        ],
+        "reduction": [
+          "Per-row reduction and dependent post-reduction arithmetic",
+          "Masked column tail; every row output/state has a logical unique writer; actual lowering still requires qualification inspection"
+        ],
+        "matrix": [
+          "2D program grid; >=3 K tiles; contraction followed by store",
+          "Masked M/N/K tails for second shape",
+          "Do not infer async from stages: actual ordinary IR/ISA must establish mechanism before any async claim"
+        ]
+      }
+    },
+    {
+      "path": ".timeline-qualification-r052-private/prepared-v1/prepare_manifest.json",
+      "sha256": "095c462aee8fb05913dc55ccf67695e8f3e56944cfa1f1cad6e1985b307d6e39"
+    },
+    {
+      "path": ".timeline-qualification-r052-private/ordinary_baseline_index.json",
+      "sha256": "890436603ec66e63716bdea3407b16149131ee82303b1129be48b2f51cb050ec"
+    },
+    {
+      "path": ".timeline-qualification-r052-private/supplement-v1/retained/ordinary-bound-freeze.json",
+      "sha256": "d0e4335509071ff9d07ab33d41b1332ad893cdc1973e194e4480883f2cf43699"
+    }
+  ],
+  "independent_kernel_or_oracle_read": false,
+  "requirements_changed": false,
+  "copy_before_last_mma_requirement_found_in_registered_structure": false
+}

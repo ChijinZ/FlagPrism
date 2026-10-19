@@ -1,0 +1,31 @@
+[
+  {
+    "mode": "normal",
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "-m",
+      "pytest",
+      "-q",
+      "/workspace/chijin-timeline-r074-nvidia/native-dependencies-input-v4/test_nvidia_pipeline_relations.py"
+    ],
+    "returncode": 0
+  },
+  {
+    "mode": "normal",
+    "argv": [
+      "/workspace/chijin-timeline-r073-nvidia/runs/native-install-v2/output/venv/bin/python",
+      "-I",
+      "/workspace/chijin-timeline-r074-nvidia/native-dependencies-input-v4/p01_nvidia_pipeline_inputs.py",
+      "--inventory",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-objects-v1/output/result.json",
+      "--native-receipt",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/result.json",
+      "--ordinary-native-json",
+      "/workspace/chijin-timeline-r073-nvidia/runs/pipeline-native-v1/output/ordinary-native.stdout",
+      "--output",
+      "/workspace/chijin-timeline-r074-nvidia/runs/native-dependencies-v4/output/normal"
+    ],
+    "returncode": 1
+  }
+]
