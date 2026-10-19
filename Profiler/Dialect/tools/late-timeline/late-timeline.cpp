@@ -174,11 +174,75 @@ static Value *reg(IRBuilder<> &b, Module &m, StringRef name) {
   return b.CreateCall(
       m.getOrInsertFunction(name, FunctionType::get(b.getInt32Ty(), false)));
 }
-static Value *clock(IRBuilder<> &b, unsigned site, StringRef phase) {
+// Preserve scalar bits across an opaque tied-register compiler dependency.
+// This is not a hardware barrier or a final-machine ordering certificate.
+static Value *computeInputFence(IRBuilder<> &b, Value *value, Value *begin) {
+  Type *type = value->getType();
+  if (auto *vector = dyn_cast<FixedVectorType>(type)) {
+    Value *result = PoisonValue::get(type);
+    for (unsigned i = 0; i < vector->getNumElements(); ++i)
+      result = b.CreateInsertElement(
+          result, computeInputFence(b, b.CreateExtractElement(value, i), begin),
+          i);
+    return result;
+  }
+  if (!type->isIntegerTy() && !type->isFloatingPointTy())
+    return value;
+  unsigned bits = type->getScalarSizeInBits();
+  if (!bits || bits > 64)
+    return value;
+  unsigned width = bits <= 16 ? 16 : bits <= 32 ? 32 : 64;
+  auto *integer = b.getIntNTy(width);
+  Value *input =
+      type->isIntegerTy() ? value : b.CreateBitCast(value, b.getIntNTy(bits));
+  input = b.CreateZExtOrTrunc(input, integer);
+  std::string constraint = width == 16 ? "h" : width == 32 ? "r" : "l";
+  auto *signature =
+      FunctionType::get(integer, {integer, b.getInt64Ty()}, false);
+  auto *assembly =
+      InlineAsm::get(signature, "// flagprism_compute_input_dependency $2",
+                     "=" + constraint + ",0,l,~{memory}", true);
+  Value *result = b.CreateCall(signature, assembly, {input, begin});
+  result = b.CreateZExtOrTrunc(result, b.getIntNTy(bits));
+  return type->isIntegerTy() ? result : b.CreateBitCast(result, type);
+}
+
+static void appendComputeOutputs(IRBuilder<> &b, Value *value,
+                                 SmallVectorImpl<Value *> &outputs) {
+  Type *type = value->getType();
+  if (auto *vector = dyn_cast<FixedVectorType>(type)) {
+    for (unsigned i = 0; i < vector->getNumElements(); ++i)
+      appendComputeOutputs(b, b.CreateExtractElement(value, i), outputs);
+  } else if ((type->isIntegerTy() || type->isFloatingPointTy()) &&
+             type->getScalarSizeInBits() <= 64) {
+    unsigned bits = type->getScalarSizeInBits();
+    Value *input =
+        type->isIntegerTy() ? value : b.CreateBitCast(value, b.getIntNTy(bits));
+    outputs.push_back(
+        b.CreateZExtOrTrunc(input, b.getIntNTy(bits <= 16   ? 16
+                                               : bits <= 32 ? 32
+                                                            : 64)));
+  }
+}
+
+static Value *clock(IRBuilder<> &b, unsigned site, StringRef phase,
+                    ArrayRef<Value *> dependencies = {}) {
   std::string text = "// flagprism_late_probe_site_" + std::to_string(site) +
-                     "_" + phase.str() + "\n\tmov.u64 $0, %globaltimer;";
-  return b.CreateCall(InlineAsm::get(FunctionType::get(b.getInt64Ty(), false),
-                                     text, "=l,~{memory}", true));
+                     "_" + phase.str() + "\n";
+  SmallVector<Type *> types;
+  std::string constraints = "=l";
+  for (Value *dependency : dependencies) {
+    unsigned bits = dependency->getType()->getIntegerBitWidth();
+    types.push_back(dependency->getType());
+    constraints += bits == 16 ? ",h" : bits == 32 ? ",r" : ",l";
+    text += "// flagprism_compute_output_dependency $" +
+            std::to_string(types.size()) + "\n";
+  }
+  text += "\tmov.u64 $0, %globaltimer;";
+  constraints += ",~{memory}";
+  auto *signature = FunctionType::get(b.getInt64Ty(), types, false);
+  return b.CreateCall(InlineAsm::get(signature, text, constraints, true),
+                      dependencies);
 }
 int main(int argc, char **argv) {
   cl::ParseCommandLineOptions(argc, argv);
@@ -517,6 +581,23 @@ int main(int argc, char **argv) {
   for (Site &site : sites) {
     IRBuilder<> before(site.call);
     Value *begin = site.interval ? clock(before, site.id, "entry") : nullptr;
+    SmallPtrSet<Instruction *, 32> computeMembers;
+    if (site.kind == "compute_issue_bracket") {
+      for (Instruction *member : site.origins)
+        computeMembers.insert(member);
+      for (Instruction *member : site.origins) {
+        unsigned limit = isa<CallBase>(member)
+                             ? cast<CallBase>(member)->arg_size()
+                             : member->getNumOperands();
+        for (unsigned i = 0; i < limit; ++i) {
+          Value *input = member->getOperand(i);
+          if (isa<Constant>(input) ||
+              computeMembers.contains(dyn_cast<Instruction>(input)))
+            continue;
+          member->setOperand(i, computeInputFence(before, input, begin));
+        }
+      }
+    }
     Instruction *next = site.kind == "control_checkpoint"
                             ? site.last
                             : site.last->getNextNode();
@@ -525,7 +606,15 @@ int main(int argc, char **argv) {
       return 3;
     }
     IRBuilder<> after(next);
-    Value *end = clock(after, site.id, "exit");
+    SmallVector<Value *> computeOutputs;
+    for (Instruction *member : site.origins) {
+      if (computeMembers.contains(member) &&
+          llvm::any_of(member->users(), [&](User *user) {
+            return !computeMembers.contains(dyn_cast<Instruction>(user));
+          }))
+        appendComputeOutputs(after, member, computeOutputs);
+    }
+    Value *end = clock(after, site.id, "exit", computeOutputs);
     if (!begin)
       begin = end;
     Value *payload = after.getInt64(0);
@@ -687,6 +776,7 @@ int main(int argc, char **argv) {
            "full_cta_for_native_async_matrix_else_first_threads"},
           {"dependency_footprint_complete", Actors == blockActors},
           {"group_matrix", GroupMatrix.getValue()},
+          {"compute_operand_fence_version", 1},
           {"compact_programs", CompactPrograms.getValue()},
           {"word_layout", "program/logical_word/actor"},
           {"segment_words", SegmentWords},

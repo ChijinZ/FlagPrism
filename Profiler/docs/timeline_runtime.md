@@ -832,6 +832,24 @@ instructions through the retained object and both disassemblies. Per-site
 order relative to the inline reader, with external entry rejected. Unknown,
 predicated or ambiguous forms remain explicitly unverified.
 
+The same report's `source_issue_sites` checks a finite set of scalar global
+32-bit loads/stores and FP32/integer arithmetic. A checked entry binds an
+original PTX operation to its final SASS instruction strictly between both
+readers, with a straight path and no external entry after the first reader.
+Conditional memory issues retain their native predicate without claiming its
+identity or that every lane executed the memory operation. Unsupported or
+multi-operation forms stay unverified. In particular, adjacent readers with
+the computation hoisted or sunk outside them do not pass this check.
+
+Recorder manifests with `compute_operand_fence_version=1` add bit-preserving
+compiler dependencies from the entry reader to external compute inputs and
+from externally used compute results to the exit reader. Internal intermediate
+results are not artificially made live, preserving contraction opportunities.
+These dependencies add no device synchronization or replay and do not by
+themselves certify final-machine order. The source-issue diagnostic checks the
+actual emitted code; elapsed intervals include instrumentation and other work
+between the readers, not exclusive arithmetic latency or engine activity.
+
 This diagnostic does not establish the timer-to-record register/store value
 flow, all-participant execution, source-region cost, engine busy intervals or
 physical completion times. It does not enable dependency arrows. Each report

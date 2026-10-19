@@ -16,6 +16,103 @@ from .timeline_nvidia_machine import _lex
 MODEL = 'nvidia.late.native_boundaries.v1'
 _KINDS = frozenset(('copy_submit_after', 'commit_after', 'cta_barrier_after',
                     'shared_load_issue_bracket'))
+_SOURCE_KINDS = frozenset(
+    ('global_load_issue_bracket', 'global_store_issue_bracket',
+     'compute_issue_bracket'))
+
+
+def _source_family(kind, token):
+    """Finite scalar PTX families; unsupported lowering stays unverified."""
+    token = re.sub(r'^@!?%[\w$]+(?=(?:ld|st)\.global|(?:fma|mul|add)\.)', '',
+                   token)
+    if kind == 'global_load_issue_bracket' and re.fullmatch(
+            r'ld\.global\.b32\{?%[\w$]+\}?,\[.+\];', token):
+        return 'LDG.E'
+    if kind == 'global_store_issue_bracket' and re.fullmatch(
+            r'st\.global\.b32\[.+\],\{?%[\w$]+\}?;', token):
+        return 'STG.E'
+    if kind == 'compute_issue_bracket':
+        register = r'%[\w$]+'
+        fp_input = r'-?(?:%[\w$]+|0f[0-9a-fA-F]{8})'
+        int_input = r'(?:%[\w$]+|-?(?:0x[0-9a-fA-F]+|\d+))'
+        for prefix, opcode in (('fma.rn.f32', 'FFMA'), ('mul.rn.f32', 'FMUL'),
+                               ('add.rn.f32', 'FADD'), ('add.s32', 'IADD3')):
+            operand = int_input if opcode == 'IADD3' else fp_input
+            count = 3 if opcode == 'FFMA' else 2
+            if re.fullmatch(
+                    re.escape(prefix) + register + (',' + operand) * count +
+                    ';', token):
+                return opcode
+    return None
+
+
+def _source_issue_sites(*, functions, native_lines, lines, readers, plan):
+    """Check actual issue placement, without granting source-exclusive cost.
+
+    In particular, two adjacent readers with a hoisted/sunk computation are
+    not a verified compute interval, even if all hashes and markers agree.
+    """
+    results = []
+    for site in plan['sites']:
+        if site['kind'] not in _SOURCE_KINDS:
+            continue
+        result = dict(site_id=site['site_id'],
+                      kind=site['kind'],
+                      status='unverified',
+                      source_cost_qualified=False,
+                      byte_transfer_completion_verified=False)
+        try:
+            _need(site['record_semantics'] == 'observer_issue_bracket',
+                  'Source issue site has incompatible record semantics')
+            begin, end = [
+                readers[site['site_id'], phase] for phase in ('entry', 'exit')
+            ]
+            _need(
+                begin['function'] == end['function']
+                and begin.get('sass_predicate') is None
+                and end.get('sass_predicate') is None,
+                'Predicated or split source issue readers')
+            _need(begin['ptx_line'] < end['ptx_line'], 'Reversed PTX readers')
+            candidates = []
+            for n in range(begin['ptx_line'], end['ptx_line'] - 1):
+                token = lines[n]
+                opcode = _source_family(site['kind'], token)
+                if opcode is not None:
+                    candidates.append((n + 1, token, opcode))
+            _need(
+                len(candidates) == 1,
+                'Missing or non-single supported PTX operation inside readers')
+            line, token, opcode = candidates[0]
+            body = functions[begin['function']]
+            matching = [
+                pc for pc in native_lines.get((begin['function'], line), [])
+                if body[pc]['opcode'] == opcode
+            ]
+            _need(
+                len(matching) == 1,
+                'Missing or ambiguous exact PTX/native source issue')
+            pc = matching[0]
+            _need(begin['pc'] < pc < end['pc'],
+                  'Source issue moved outside inline readers')
+            _need(
+                token.startswith('@') or body[pc].get('predicate') is None,
+                'Native source issue introduced unbound predication')
+            _straight_path(body, begin['pc'], end['pc'])
+            result.update(status='source_issue_control_order_checked',
+                          function=begin['function'],
+                          ptx_operation_line=line,
+                          ptx_operation=token,
+                          native_pc=pc,
+                          native_opcode=opcode,
+                          native_predicate=body[pc].get('predicate'),
+                          predicate_identity_verified=False,
+                          begin_reader_pc=begin['pc'],
+                          end_reader_pc=end['pc'],
+                          relation='conditional_issue_between_inline_readers')
+        except (ValueError, KeyError, TypeError) as error:
+            result['reason'] = str(error)
+        results.append(result)
+    return results
 
 
 def _native_lines(payload, functions):
@@ -200,6 +297,12 @@ def derive_native_boundaries(*, machine_map, sass_lines, sass_json, ptx, plan):
     return dict(model=MODEL,
                 binary_id=machine_map['binary_id'],
                 sites=results,
+                source_issue_sites=_source_issue_sites(
+                    functions=functions,
+                    native_lines=native_lines,
+                    lines=lines,
+                    readers=readers,
+                    plan=plan),
                 implementation_sha256={
                     p.name: hashlib.sha256(p.read_bytes()).hexdigest()
                     for p in rules
