@@ -72,18 +72,30 @@ session trace budget still applies; revalidation records have separate bounded
 count and byte limits.
 
 Current dependency qualification has been exercised with the four-warp
-runtime-K GEMM. Fresh one-warp runs with three and seven reduction tiles also
-pass numerical, complete-record, collective-byte and native dependency checks.
-The earlier register-spill, wide-literal and shared-address failures remain in
-the development evidence. A lossless standard Perfetto interned-string codec
-exports all four selected observers within the session trace budget; these
-one-warp exports have passed independent raw/SQL checks and actual UI opening
-and dependency selection. The updated installed-wheel acceptance is still in
-progress; these development checks do not establish general kernel or
-three-backend qualification. The current one-warp complete retained bundle
-still exceeds the 64 MiB target because complete canonical JSON is stored in
-several places. Trace-file admission alone does not certify that bundle; this
-case remains an acceptance failure until lossless metadata retention is fixed.
+runtime-K GEMM and its one-warp variant, each with three and seven reduction
+tiles. Fresh runs pass numerical, complete-record, collective-byte and native
+dependency checks. All eight dependency traces pass independent raw/SQL checks
+and standard Perfetto UI opening, wait-checkpoint selection and flow details.
+These are finite development cases, not general-kernel or three-backend
+qualification. Read precision, hardware busy and physical overlap remain
+unverified.
+
+The earlier spill/literal/address, record-overflow, oversized-bundle and browser
+selection failures remain in the development evidence. Lossless interned strings
+keep rich trace annotations within the 16 MiB session trace budget. Canonical
+JSON is decoded afresh from raw; a producer can reference a committed canonical
+file only if its complete serialized bytes match. `events_file` remains the
+actual JSON path; `events_storage` identifies a verified
+`committed_canonical_alias_v1` or the `standalone_json_v1` fallback. Do not infer
+this path from an invocation-name suffix. The offline decoder keeps its own
+revision inputs and receipt, and can reuse the same exact canonical bytes.
+Historical files are not deleted or overwritten by this policy.
+
+In the exercised one-warp case, the original bundle is 63,253,653 bytes and the
+bundle after three independent offline exports is 64,928,584 bytes, both below
+64 MiB; retained traces total 15,340,117 bytes. The old 73,061,831-byte bundle
+remains an acceptance failure. These measurements establish the finite cases'
+storage bounds, not an overhead or exclusive-GPU performance certification.
 
 Default record capacity is now chosen from the actual recorded actor count.
 A complete-CTA recording targets 2 MiB for the first/last program pair; a
@@ -150,7 +162,8 @@ with the bound native executable before authorizing allocation, rather than
 trusting cached scratch dimensions alone. Raw, guard, compiler/source artifacts
 and per-invocation identity are saved before releasing completed device storage.
 
-Late captures contain `.late-decoded.json`, `.late-events.json` and
+Late captures retain the decoded report named by `decoded_file` (plain JSON or
+explicitly tagged gzip JSON), canonical JSON named by `events_file`, and
 `.late-async.json`. The canonical time view explicitly selects up to four actual
 threads per program after validating the whole captured raw. Complete CTA raw
 remains available for other views and dependency footprints; this display

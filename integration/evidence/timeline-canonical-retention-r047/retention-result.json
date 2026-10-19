@@ -1,0 +1,77 @@
+{
+  "status": "installed_v6_both_offline_rich_reexports_exact_and_budget_passed",
+  "checks": [
+    {
+      "case": "pipeline-device",
+      "three_independent_rich_results_identical": true,
+      "four_rich_traces_exact": [
+        {
+          "sha256": "da9e285919fd88468e27240abb455b171ea71bed79191e5fe20787f8cefe3e3a",
+          "bytes": 368271,
+          "observer_id": "shared-device-counter-4a71123572bae15158bc5b6e6e69b6726ea50cc7ff8ff10299b097f31f922f44"
+        },
+        {
+          "sha256": "be3f24c4457d0aeec3b58f5b0f7592661f6d9b907c6e63977c87ff6df2df2b67",
+          "bytes": 368917,
+          "observer_id": "shared-device-counter-855e63ef62759c6501993891e1a0b7f3b11f17ef0927830d79addabff678a624"
+        },
+        {
+          "sha256": "dc4437d15c3fe2ad9cf2c2f1178970d50b4b6cabdf98065b80a79eabc891838d",
+          "bytes": 690138,
+          "observer_id": "shared-device-counter-a16ebce6575473bf415afe4923ad2ec0c120514ca1cea3265561d714c5dc3a54"
+        },
+        {
+          "sha256": "39efdfd6a231c8895c4f89bfb4be8f4b76d2a65b706999adc3ffdfe994b5f199",
+          "bytes": 690890,
+          "observer_id": "shared-device-counter-be74c1e61875cd2ea54854e1c8f07f15c3806c52d803c9954c4a9921eaba0806"
+        }
+      ],
+      "budgets": {
+        "original": {
+          "bundle_bytes": 34815258,
+          "trace_bytes": 6589911
+        },
+        "offline": {
+          "bundle_bytes": 38103497,
+          "trace_bytes": 6589911
+        }
+      }
+    },
+    {
+      "case": "one-warp-device",
+      "three_independent_rich_results_identical": true,
+      "four_rich_traces_exact": [
+        {
+          "sha256": "f45473292b65662104b9b8cd7ed986a99425ad4d1a13494358d4a0d610e261e6",
+          "bytes": 878375,
+          "observer_id": "shared-device-counter-ec6cd5bd91eb37d5e5c4acde7fdb0098aa939a43d65cc5a80f067a98018eb8b9"
+        },
+        {
+          "sha256": "d6f0c2ecbe8d7525a5203580deb6bde7ccbd29b8b372eb5c668b100f6cd22942",
+          "bytes": 879928,
+          "observer_id": "shared-device-counter-737e1b4679d78b60d62f4ab680b0839fc10f7eae319658799a548ecdf6ce77ff"
+        },
+        {
+          "sha256": "5f4aa822f363655fb7b8454213bfac7da36d2cbb19bdb6ca778df27502361786",
+          "bytes": 1726378,
+          "observer_id": "shared-device-counter-a9efe40fcc438f1d9b6be6d690c5035f23f55b693e9e23afb572df470c426701"
+        },
+        {
+          "sha256": "fce2509c02d9ef269886a93911edf0b5ef4f9dd923bfb320a54a1ec22b26ddb4",
+          "bytes": 1729348,
+          "observer_id": "shared-device-counter-86407cde131407137373598d51c3ac361a27896e9ac21fb73cfbe905195aa716"
+        }
+      ],
+      "budgets": {
+        "original": {
+          "bundle_bytes": 63253653,
+          "trace_bytes": 15340117
+        },
+        "offline": {
+          "bundle_bytes": 64928584,
+          "trace_bytes": 15340117
+        }
+      }
+    }
+  ]
+}
