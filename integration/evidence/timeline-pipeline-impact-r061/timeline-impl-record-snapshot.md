@@ -1897,3 +1897,13 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - archive4669B SHA723db7a75fcb13d119e6c78b110a2473fd6847adaf85b08db286ba38071faab4；选定result/terminal/脚本补入integration/evidence/timeline-pipeline-impact-r061。只补该actual matrix source issue/loop occurrence证据，不提升source exclusive cost/engine completion/ordinary overlap，sparse高级依赖拒绝继续保留。当前没有新产品修改或native重build理由；相关finite compiler复核随后进行。
 
 - T095原compiler reviewer有限只读复核通过，未发现影响本有限结论的checker具体错误；核脚本/terminalSHA、actual machine重构和四PTX→四无条件HMMA及single-entry路径、四capture各8observer/3或7positive、原raw u64与iteration_id None。数量明确为160个interval、320次端点u64核对，不能称160个端点；JSON interval计数本来正确。root另用原result核每mode K3/K7 binary_id相同。转录limited-matrix-review-r062.md，只关闭该已运行示例有限边界/occurrence补证；其它后端finalnative源边界与ordinary-overlap仍开放，不扩成硬件busy/任意kernel保证。
+
+
+## T096 将已审阅与真机验证实现同步正式开发分支（在研目标的阶段交付）
+
+- 用户原goal已授权Git管理并push ChijinZ/FlagPrism detailed-profiler；不是新增生产部署/改main。源与功能验收通过部分先同步给用户使用，整个goal仍active，不能把本次push当所有剩余证据已满足。
+- 实际canonical FlagPrism-method detailed-profiler clean=20d370a519870ae06a114bc2b1819c89d8c0921b。SSH BatchMode fetch指定远端分支成功，FETCH_HEAD同20d370a；canonical与fetched remote均为candidate366aa9435dec109c47035411eda79605294f7696的祖先，52已记录提交可ff，未发现用户未提交变动。Git common-dir共享/FlagPrism/.git，未重建仓库。
+- canonical git merge --ff-only 366aa9435dec109c47035411eda79605294f7696成功，无重写/冲突/产品代码新编辑。实际SSH无force push精确SHA:refs/heads/detailed-profiler成功（20d370a→366aa94）；随后ls-remote精确返回366aa9435dec109c47035411eda79605294f7696，canonical status clean。fast-forward不改变已测试/已审查source字节，不为合并重复native build/数学/SQL/UI。
+- 本次交付包含三后端通用修复/normal build与实际测试证据、原三席审阅及有限修复复核、恢复/身份/guard/预算修复、新60Asc/168SQL以及finite NV matrix/occurrence证据。代码与使用文档已可在指定开发分支取得，未将partial/unverified改写成complete。源码资格/clock/source cost/ordinary-overlap权限与运行时字段保持原有保守状态。
+- 剩余：Asc最终指令不可解码（已向用户询问可用工具），GCU已知decoder/opaque helper限制；原ordinary与instrumented物理overlap保持仍无充分证据。NV已有C1 FFMA实际移动缺陷已修，matrix实际边界/循环occurrence已补证，不能再当这两项完全没做。后续只推进真实缺口，不新增已通过矩阵。
+- 将本条记录快照作为record-only更新随分支同步；后续exact HEAD/远端/clean外部收据写run062/preflight，避免要求提交包含自身SHA造成无限记录提交。paper/Study未修改；本轮owned CPU/device worker均已terminal，未启动新浏览器/设备任务。
