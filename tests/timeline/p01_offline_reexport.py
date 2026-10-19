@@ -1,4 +1,4 @@
-"""Real retained-device captures re-exported in fresh GPU-hidden processes.
+"""Real retained-device captures re-exported in fresh guarded processes.
 
 This is an offline retention/export check, not hardware clock qualification.
 The original mathematical workload is never imported or executed here.
@@ -40,6 +40,12 @@ def main():
         help=
         'For storage-only deltas, require exact bytes from the prior UI-checked capture'
     )
+    parser.add_argument(
+        '--defer-trace-processor',
+        action='store_true',
+        help=
+        'Only test fresh-process offline reconstruction; validate the emitted manifest with the independent TP tools separately'
+    )
     args = parser.parse_args()
     args.output.mkdir(exist_ok=False)
     forbidden = [
@@ -52,6 +58,10 @@ def main():
         'The denied environment roots must include the original timeline/cache'
     )
     root = args.output / 'retained-timeline'
+    need(
+        not any(root.resolve().is_relative_to(Path(p)) for p in forbidden),
+        'The copied offline bundle must be outside all denied environment roots'
+    )
     shutil.copytree(args.original_timeline, root)
     cwd = args.output / 'empty-working-directory'
     cwd.mkdir()
@@ -97,7 +107,8 @@ def main():
         str(root)
     ])
     # Prevent dependence on the old live bundle/source/cache as well as hidden
-    # subprocess-based application replay. No device is visible in these runs.
+    # subprocess-based application replay. CUDA hiding alone does not prove
+    # that non-CUDA devices are unavailable; the denied paths are explicit.
     wrapper = '''import sys,runpy,json
 def audit(event,args):
  if event=='subprocess.Popen':raise RuntimeError('Offline exporter attempted to start a child')
@@ -172,7 +183,7 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
     path.write_text(json.dumps(manifest, indent=2) + '\n')
     # The independent reader has its own tools environment and may spawn TP.
     tool_python = '/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python'
-    if manifest:
+    if manifest and not args.defer_trace_processor:
         run('TP', [
             tool_python, '-I',
             str(Path(__file__).with_name('verify_perfetto_traces.py')),
@@ -186,6 +197,10 @@ runpy.run_module('flagtree.profiler.timeline_reexport',run_name='__main__')
             'actual_retained_captures_offline_reexport_passed_not_full_P01',
             real_captures=args.expected_captures,
             real_traces=len(manifest),
+            trace_processor_verified_here=bool(manifest)
+            and not args.defer_trace_processor,
+            trace_processor_deferred=bool(manifest)
+            and args.defer_trace_processor,
             fresh_reexport_processes=3,
             original_artifacts_unchanged=len(originals) -
             int('index.html' in originals),

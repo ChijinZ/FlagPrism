@@ -32,6 +32,7 @@ def main():
     p.add_argument('--browser', type=Path, required=True)
     p.add_argument('--library-path', required=True)
     p.add_argument('--require-coverage-key')
+    p.add_argument('--all-traces', action='store_true')
     args = p.parse_args()
     args.output.mkdir(exist_ok=False)
     os.environ['LD_LIBRARY_PATH'] = args.library_path
@@ -47,16 +48,25 @@ def main():
     need(len(groups) >= 4, 'Need four actual invocations, not fixture traces')
     selected = [rows[0] for rows in list(groups.values())[:4]]
     selected.extend(rows[-1] for rows in list(groups.values())[:2])
+    if args.all_traces:
+        selected = [(row, json.loads(Path(row['view_file']).read_text()))
+                    for row in all_rows]
     need(
         len({r['trace_file']
-             for r, _ in selected}) == 6, 'Need six distinct real traces')
-    bundle = Path(all_rows[0]['trace_file'])
-    while bundle.name != 'timeline' and bundle.parent != bundle:
-        bundle = bundle.parent
-    need(bundle.name == 'timeline',
-         'Manifest must refer to a retained timeline bundle')
+             for r, _ in selected
+             }) == (len(all_rows) if args.all_traces else 6),
+        'Need distinct actual traces')
+    bundles = set()
+    for row, _ in selected:
+        bundle = Path(row['trace_file'])
+        while bundle.name != 'timeline' and bundle.parent != bundle:
+            bundle = bundle.parent
+        need(bundle.name == 'timeline',
+             'Manifest must refer to retained timeline bundles')
+        bundles.add(bundle)
     before = {
-        str(f.relative_to(bundle)): digest(f)
+        str(f): digest(f)
+        for bundle in bundles
         for f in bundle.rglob('*') if f.is_file()
     }
 
@@ -327,14 +337,15 @@ def main():
         server.server_close()
         thread.join(timeout=5)
     after = {
-        str(f.relative_to(bundle)): digest(f)
+        str(f): digest(f)
+        for bundle in bundles
         for f in bundle.rglob('*') if f.is_file()
     }
     need(before == after, 'UI inspection changed the original bundle')
     (args.output / 'result.json').write_text(
         json.dumps(dict(
             status=
-            'six_actual_counter_traces_UI_checked_not_full_timeline_qualification',
+            'actual_counter_traces_UI_checked_not_full_timeline_qualification',
             browser_version=version,
             browser_sha256=digest(args.browser),
             ui_index_sha256=digest(args.ui / 'index.html'),

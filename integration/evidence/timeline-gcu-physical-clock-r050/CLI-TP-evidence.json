@@ -1,0 +1,202 @@
+{
+  "files": {
+    "launch.json": {
+      "sha256": "16481170835ca74771f572046152bbb252e5d5f7ec917b170f68adb6e2b66480",
+      "bytes": 879,
+      "document": {
+        "controller": {
+          "pid": 96360,
+          "ppid": 1,
+          "pgid": 96360,
+          "startticks": 25958473
+        },
+        "worker": {
+          "pid": 96361,
+          "ppid": 96360,
+          "pgid": 96361,
+          "startticks": 25958476
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output"
+        ],
+        "argv_sha256": "59aa0fb0b5ecb3125622319559c966eb26521cd2a53d5b22dac903898a391d6f",
+        "script_sha256": "d73306a1f64b968e11bab6f07d6812e9a4b4861457b4e03b4a98caea0f6cace1",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "running"
+      }
+    },
+    "terminal.json": {
+      "sha256": "ca948124313c235183b6f529ffc7dbd3cf18f0eb5ccfd6f4b90c7f74a7481a5c",
+      "bytes": 924,
+      "document": {
+        "controller": {
+          "pid": 96360,
+          "ppid": 1,
+          "pgid": 96360,
+          "startticks": 25958473
+        },
+        "worker": {
+          "pid": 96361,
+          "ppid": 96360,
+          "pgid": 96361,
+          "startticks": 25958476
+        },
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/run.py",
+          "--output",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output"
+        ],
+        "argv_sha256": "59aa0fb0b5ecb3125622319559c966eb26521cd2a53d5b22dac903898a391d6f",
+        "script_sha256": "d73306a1f64b968e11bab6f07d6812e9a4b4861457b4e03b4a98caea0f6cace1",
+        "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+        "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+        "timeout_seconds": 300,
+        "state": "terminal",
+        "returncode": 0,
+        "wall_ns": 5424589411
+      }
+    },
+    "output/result.json": {
+      "sha256": "932fde39976cd9c5472fa513889ed56077d803164e2e08fbb865bb6a5ac36f64",
+      "bytes": 102,
+      "document": {
+        "status": "five_new_real_installed_GCU_CLI_traces_exact_raw_TP_passed_not_new_UI",
+        "traces": 5
+      }
+    },
+    "output/step.json": {
+      "sha256": "15df58c9bc2c24c2f8843e1a5aa36925a771041541d8d2339e9ee61979eeeac7",
+      "bytes": 481,
+      "document": {
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/verify_perfetto_traces.py",
+          "--manifest",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output/manifest.json",
+          "--output",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output/TP"
+        ],
+        "pid": 96362,
+        "pgid": 96362,
+        "startticks": 25958479,
+        "returncode": 0
+      }
+    },
+    "output/TP/result.json": {
+      "sha256": "1431f090bf3143e721c26af16349f7c3ef6d4fbfe3efdcca81c6055e47e87004",
+      "bytes": 2985,
+      "document": {
+        "status": "generated_protobuf_and_real_TP_exact_counter_ns_passed_not_full_P01",
+        "checks": [
+          {
+            "trace_file": "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/data/public-cli-v1/output/public/timeline/derived/counter-ns/5ac485658bdb82289752b706904963cd6f6a44e3384e2b521c0f70a08b2f845f/traces/observer-31174d56bbc31a02fdabfb6fc15c807633617c6fd3a4dedb45ce2b0e62937fde.pftrace",
+            "sha256": "ec772409a8a1d8eb4bc2c3128e4fa751c39cd9a2ead0d78706f2e0f86b6d664a",
+            "fixture": false,
+            "slices": 10,
+            "protobuf_packets": 20,
+            "exact_ns_and_raw_references": true,
+            "importer_errors": [],
+            "flows": 0
+          },
+          {
+            "trace_file": "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/data/public-cli-v1/output/public/timeline/derived/counter-ns/5ac485658bdb82289752b706904963cd6f6a44e3384e2b521c0f70a08b2f845f/traces/observer-d0a626c5ad738b192962c20c4599f708582b65716514bce91d6191681a70d750.pftrace",
+            "sha256": "bec0bcf7a6a5345b0f9b1f1dd5456208a0cae19fd75035f687cc9a85bdc791e7",
+            "fixture": false,
+            "slices": 10,
+            "protobuf_packets": 20,
+            "exact_ns_and_raw_references": true,
+            "importer_errors": [],
+            "flows": 0
+          },
+          {
+            "trace_file": "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/data/public-cli-v1/output/public/timeline/derived/counter-ns/1007432f41852fdd513ae86fc9bb39f7904492c21a61c81c003d8426ec6bb8a2/traces/observer-3c787ccecd3629f9ba23d71275ea5f19dea73fed4f6bd6ffc993491ce96abb1a.pftrace",
+            "sha256": "a37242742d9e25705c45a3d8e3985e24ccad13ba26b04e82e3cb5fe7cd2b1ed9",
+            "fixture": false,
+            "slices": 14,
+            "protobuf_packets": 28,
+            "exact_ns_and_raw_references": true,
+            "importer_errors": [],
+            "flows": 0
+          },
+          {
+            "trace_file": "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/data/public-cli-v1/output/public/timeline/derived/counter-ns/1007432f41852fdd513ae86fc9bb39f7904492c21a61c81c003d8426ec6bb8a2/traces/observer-e9f021f29fbc7d6eeeb21d7c73019b978fb0a40d33fba5af0d6be87ec615a695.pftrace",
+            "sha256": "d349349b83df94a3e2adfa0f2cce068c5a355157d1cd0714816a2819990cf909",
+            "fixture": false,
+            "slices": 14,
+            "protobuf_packets": 28,
+            "exact_ns_and_raw_references": true,
+            "importer_errors": [],
+            "flows": 0
+          },
+          {
+            "trace_file": "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/data/public-cli-v1/output/public/timeline/derived/counter-ns/aeda8d8912626fa1c54734914134ad4039ead17d3627b13ab61736724def177c/traces/observer-865a8e5af221d6888d39ced29ca83522c9c7c06a31a959ee76086c8c0181a18d.pftrace",
+            "sha256": "e3e5d4d7c76c250a075dfee2d56d0c59678b55ba43cc2661d584eed40d253555",
+            "fixture": false,
+            "slices": 18,
+            "protobuf_packets": 36,
+            "exact_ns_and_raw_references": true,
+            "importer_errors": [],
+            "flows": 0
+          }
+        ],
+        "clock_precision_qualified": false,
+        "source_boundaries_qualified": false,
+        "async_qualified": false,
+        "UI_qualified": false
+      }
+    }
+  },
+  "owners": [
+    {
+      "role": "controller",
+      "expected": {
+        "pid": 96360,
+        "ppid": 1,
+        "pgid": 96360,
+        "startticks": 25958473
+      },
+      "actual": {
+        "state": "Z",
+        "startticks": 25958473
+      }
+    },
+    {
+      "role": "worker",
+      "expected": {
+        "pid": 96361,
+        "ppid": 96360,
+        "pgid": 96361,
+        "startticks": 25958476
+      },
+      "actual": null
+    },
+    {
+      "role": "TP",
+      "expected": {
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/input-v1/verify_perfetto_traces.py",
+          "--manifest",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output/manifest.json",
+          "--output",
+          "/workspace/chijin-timeline-r050-gcu-cli-TP/runs/browser-v1/output/TP"
+        ],
+        "pid": 96362,
+        "pgid": 96362,
+        "startticks": 25958479,
+        "returncode": 0
+      },
+      "actual": null
+    }
+  ]
+}

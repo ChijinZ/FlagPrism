@@ -90,7 +90,8 @@ The GCU adapter `timeline_events_enflame.canonicalize_enflame_capture` consumes
 the existing `selected_dynamic_timeline_v1` native append protocol (Debugger
 protocol 2, 64-byte records), and the distinct
 `gcu_first_last_timeline_v2` compact layout used by the default GCU collector.
-The decoder remains pure; certified time/export integration is still pending.
+The decoder remains pure. Feature-1 compact captures additionally support the
+separate empirical unit provider described in [runtime](timeline_runtime.md#gcu-per-physical-counter-time-views).
 The caller supplies the owning capture namespace, the actual compiler metadata
 and a retained capture document. It must retain the originals; the adapter does
 not launch, replay, write a trace or claim ownership of device resources.
@@ -154,7 +155,9 @@ unverified, never implicitly aligned by the SDK timer name.
 
 `timeline_views.CounterUnitProof` binds capture/invocation/binary/raw/observer,
 a positive rational tick period, an independent elapsed window, provider/evidence
-identities and an optional provider implementation digest. The current NVIDIA
+identities and an optional provider implementation digest. An optional rational
+rate uncertainty produces a separate elapsed conversion-scale error; it never
+changes unknown hardware read precision into a known endpoint error. The current NVIDIA
 provider supplies that digest and revalidates actual sm_120 machine inputs. A
 codec receiving a typed proof checks projection fidelity; it is not itself a
 hardware evidence authority.
@@ -165,6 +168,12 @@ error/precision explicit. Each observer has its own file-relative coordinate.
 No cross-observer epoch, certified source cost or temporal flow is granted.
 The standard exporter receives the independently validated proof object;
 recomputing a forged view with its own changed period does not validate it.
+
+For feature-1 GCU compact records, `physical_identity` preserves full SIPINFO
+and the exact 32-bit raw identity-word offsets. The canonical observer still
+represents logical work-item 0; the physical ID does not replace logical identity
+or prove another observer shares an epoch. The new provider validates those
+raw words and a retained per-identity calibration window before granting units.
 
 Raw schemas are unchanged. Canonical reader upgrades and proof/exporter changes
 produce separate immutable revisions, while the original `.events.json` remains

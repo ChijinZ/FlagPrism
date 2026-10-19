@@ -350,8 +350,9 @@ ring whose selected writer never arrived.
 
 Real API cold/warm, standard CLI and two-stream decoder-failure recovery evidence
 is indexed in [GCU owner evidence](../../integration/evidence/timeline-gcu-owner-r016/README.md).
-This is a raw collection milestone: GCU clock scale/epoch, final source boundaries,
-allocation-guard qualification, async reuse and Perfetto remain unqualified.
+Those older results establish raw collection. The newer GCU300 time views
+below add a per-physical-counter empirical scale and actual Perfetto checks;
+shared epoch, final source boundaries and DTE async reuse remain unqualified.
 
 Build with the matching `preallocation-admission.patch` v2: it passes the actual
 launch stream before either scratch allocation and exposes admission ABI 2.
@@ -359,6 +360,63 @@ An old launcher is rejected before hook activation. Compiler and launcher/hook/
 runtime file fingerprints enter timeline JIT cache identity before lookup;
 per-capture epoch qualification is separate. Count/native modes keep their
 existing meaning.
+
+### GCU per-physical-counter time views
+
+The GCU300 default first/last publisher now requires matching runtime/compiler
+`GCU_TIMELINE_CLOCK_IDENTITY_VERSION=1`. Each compact record retains the full
+`llvm.dtu.movs.sipinfo` identity of the actual counter observer in its identity
+word. The selected logical work-item is still 0; the identity word is not its
+logical work-item number. Old append layouts and compact captures without this
+feature retain their previous decoding rules.
+
+The SDK's masked SIP identity aliases actual identities 0 and 544 on the tested
+device. Its `global_timer` getter also has different observed counter origins
+across those identities. Neither the getter name nor equal tick rates authorizes
+a shared epoch. The producer and a separate profiler-owned 64-program sampler
+link the same owned full-identity helper. The maintained source build creates
+and installs the new publisher; no user-kernel annotation is needed.
+
+Before user profiling, four independent host-enclosed samples freeze a rational
+scale interval for each observed physical identity. After all original user raw
+buffers are safely retained, four held-out samples close that session window.
+The offline provider verifies retained raw words, executable/helper/SDK digests,
+identity association, training seal, host/raw enclosure, and held-out consistency.
+It never estimates frequency from user-kernel runtime, widens the training fit to
+include a failed held-out sample, or merges identities with a similar rate.
+
+A successful capture reports
+`counter_ns_status.status=empirical_counter_unit_for_enclosed_window` and has
+standard observer-relative `counter_ns_exports`. The raw canonical clock and
+source-boundary status remain unverified: this derivative grants a finite-window
+empirical scale, not a common epoch, hardware read precision, exact source cost,
+physical engine busy, or asynchronous completion timing. The view exposes the
+rational rate uncertainty separately through `conversion_scale_error_ns` and
+`endpoint_conversion_scale_error_ns`; these are not hardware precision bounds.
+Missing physical-domain samples or inconsistent windows preserve originals and
+an explicit unavailable-unit reason rather than a fabricated nanosecond trace.
+
+Use the normal source-build recipe and public CLI:
+
+```bash
+"$FLAGPRISM_BUILD_DIR/venv/bin/python" -I -m flagtree.profiler.cli \
+  --backend enflame --detail timeline --device 0 -n /tmp/my-timeline my_script.py
+"$FLAGPRISM_BUILD_DIR/venv/bin/python" -I -m flagtree.profiler.timeline_reexport \
+  /tmp/my-timeline/timeline
+```
+
+Open the bundle's `timeline/index.html` to find the `.pftrace` files, then load a
+file in standard Perfetto. Each file has its own time origin. Do not align those
+origins to compare different programs, calls or physical identities. Raw data,
+clock anchors and original compiler evidence remain in the bundle; re-export
+requires the matching installed decoder but does not run the SDK or workload.
+Legacy captures without the retained full-identity window remain raw-only.
+
+The [run-050 evidence](../../integration/evidence/timeline-gcu-physical-clock-r050/README.md)
+covers a clean native/source build, installed normal/optimized API cold/warm,
+20 exact raw/SQL-checked traces and all 20 actual Perfetto views. Fresh-process
+public and guarded normal/optimized re-export reproduce their original bytes.
+These finite cases do not complete GCU DTE dependency or general-kernel acceptance.
 
 ### Legacy early NVIDIA recorder and retained captures
 
@@ -544,8 +602,9 @@ The installed common raw reader also supports schema 2 and the GCU
 `timeline_events_enflame` adapter for existing advanced append captures. It
 preserves atomic start/end fields, work-item identity, local-label provenance,
 sampling and dropped-pair counts. The default GCU collector now also uses the distinct compact first/last layout
-and this common reader. Neither path is yet a certified ns producer or Perfetto
-exporter. See [raw events](timeline_events.md) for the
+and this common reader. New feature-1 compact captures can additionally derive
+finite-window empirical counter-ns views as described above. The legacy append
+path still lacks that evidence. See [raw events](timeline_events.md) for the
 versioned contract and evidence boundary.
 
 ## Finalization and recovery stages
@@ -611,10 +670,11 @@ An unavailable control analysis is explicit and does not suppress otherwise
 valid counter-unit exports.
 A prior successful map must still match the fresh parse. Missing or inconsistent
 required machine evidence is an explicit error; the canonical revision and
-original capture remain. GCU currently returns `raw_only`
-with the missing-unit reason and does not invent a trace. Ascend's paired raw
-producer also supports offline canonical revisions, while its time-unit and
-Perfetto qualification remain unfinished.
+original capture remain. GCU captures with a valid retained full-identity clock
+window now return `counter_unit_only`; legacy or unqualified captures return
+`raw_only` with the missing-unit reason. Ascend paired captures can derive
+counter-ns and qualified scalar native dependency views from their retained
+getter and final-image evidence; other epochs and physical busy remain unverified.
 
 `derived/counter-ns/<revision>/` contains a canonical snapshot, inputs, views,
 traces and `complete.json`. Revision identity includes canonical/raw identity,

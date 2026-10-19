@@ -1,0 +1,28 @@
+Traceback (most recent call last):
+  File "<string>", line 11, in <module>
+  File "<frozen runpy>", line 229, in run_module
+  File "<frozen runpy>", line 88, in _run_code
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 360, in <module>
+    main()
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 354, in main
+    json.dumps(reexport_bundle(args.timeline_directory,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 337, in reexport_bundle
+    reexport_capture(directory, str(p.relative_to(directory)))
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 94, in reexport_capture
+    capture, raw, sources, retain = _original(directory, original_file)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 54, in _original
+    capture = _json(directory, name)
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_reexport.py", line 19, in _json
+    return json.loads(read_artifact(directory, name, limit=8 * 1024 * 1024))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/chijin-timeline-r050-source-build-v1/work/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_store.py", line 53, in read_artifact
+    with path.open('rb') as source:
+         ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 5, in audit
+RuntimeError: Offline exporter attempted to read the original environment: /tmp/chijin-timeline-r050-tests/runs/fresh-offline-v1/output/normal-api-cold/retained-timeline/captures/invocation-059d144433a0427c923e4069b3d1b546.input.json

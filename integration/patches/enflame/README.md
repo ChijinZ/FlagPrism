@@ -117,6 +117,26 @@ timing fields and do not establish active lanes, engine busy time or operation
 completion. Block-pointer kernels use the same default census; numeric/address
 summaries retain their existing boundaries.
 
+For the default timeline mode, the matching compiler/runtime must also expose
+`GCU_TIMELINE_CLOCK_IDENTITY_VERSION=1`. The maintained patch links a small owned
+full-SIPINFO bitcode helper compiled by the installed SDK `bin/opt`. Its cache is
+bound to helper source, compiler and SDK bytes, uses bounded locking/compilation,
+and atomically publishes the helper and its sealed receipt. Interrupted builds
+can retry; corrupted committed entries are rejected and retained. The helper is
+not required for offline re-export.
+
+```bash
+"$FLAGPRISM_BUILD_DIR/venv/bin/python" -I -m flagtree.profiler.cli \
+  --backend enflame --detail timeline --device 0 -n /tmp/my-timeline my_script.py
+```
+
+On the tested GCU300 path, independently retained clock samples provide a
+per-physical-identity empirical tick period for the captured session window.
+The output includes standard observer-relative counter-ns Perfetto traces.
+See [clock semantics and limits](../../../Profiler/docs/timeline_runtime.md#gcu-per-physical-counter-time-views).
+This does not certify a shared epoch, source-operation cost, engine busy or DTE
+completion/dependency timing. Each observer file has its own origin.
+
 Explicit advanced legacy timeline capture retains GCU 46-bit raw timer ticks
 without a calibrated nanosecond frequency. Those source-control intervals do
 not establish engine busy intervals, operation completion or comparable clocks

@@ -6,6 +6,7 @@ applications; input views retain their actual raw identities and proof limits.
 import argparse
 import hashlib
 import json
+import struct
 from pathlib import Path
 
 
@@ -50,6 +51,47 @@ def main():
                     view['unit_proof']['period_denominator'],
                     'Shared coordinate independently zeroed an observer')
         raw = path.read_bytes()
+        if item.get('raw_file'):
+            observed = Path(item['raw_file']).read_bytes()
+            need(
+                hashlib.sha256(observed).hexdigest() == view['raw_artifact']
+                ['sha256'], 'Retained raw input changed')
+            original = json.loads(Path(item['canonical_file']).read_text())
+            by_id = {row['id']: row for row in original['records']}
+            selected_ids = ({row['id']
+                             for row in view['observers']}
+                            if shared else {view['observer']['id']})
+            selected_records = [
+                row for row in original['records']
+                if row['observer_id'] in selected_ids
+            ]
+            need(
+                view['origin_tick'] == min(row['tick']
+                                           for row in selected_records),
+                'Counter view invented a different origin')
+            period = view['unit_proof']
+            for record in view['records']:
+                actual = by_id[record['id']]
+                need(
+                    struct.unpack_from('<Q', observed, actual['offset'])[0] ==
+                    actual['tick'] == record['tick'],
+                    'View record is not its actual raw counter word')
+                need(
+                    record['relative_ns'] == (actual['tick'] -
+                                              view['origin_tick']) *
+                    period['period_numerator_ns'] //
+                    period['period_denominator'],
+                    'View coordinate differs from independently converted raw ticks'
+                )
+            records = {row['id']: row for row in view['records']}
+            for event in view['events']:
+                refs = [records[key] for key in event['record_ids']]
+                expected_end = refs[-1]['relative_ns'] if event[
+                    'kind'] == 'interval' else None
+                need(
+                    event['start_ns'] == refs[0]['relative_ns']
+                    and event['end_ns'] == expected_end,
+                    'View event differs from its actual endpoint coordinates')
         need(
             hashlib.sha256(raw).hexdigest() == item['sha256'],
             'Trace changed before importer')

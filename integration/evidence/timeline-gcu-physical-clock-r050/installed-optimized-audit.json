@@ -1,0 +1,31 @@
+{
+  "status": "actual_installed_GCU_default_physical_clock_units_and_offline_passed_not_full_P01",
+  "checks": [
+    {
+      "bundle": "/tmp/chijin-timeline-r050-tests/runs/installed-clock-v1/output/optimized-device/public/api-cold/timeline",
+      "captures": 3,
+      "traces": 5,
+      "physical_identities": [
+        0,
+        552,
+        0,
+        548,
+        0
+      ],
+      "offline_byte_identical": true
+    },
+    {
+      "bundle": "/tmp/chijin-timeline-r050-tests/runs/installed-clock-v1/output/optimized-device/public/api-warm/timeline",
+      "captures": 3,
+      "traces": 5,
+      "physical_identities": [
+        0,
+        552,
+        0,
+        548,
+        0
+      ],
+      "offline_byte_identical": true
+    }
+  ]
+}

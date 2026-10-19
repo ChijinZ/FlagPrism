@@ -1,0 +1,61 @@
+{
+  "status": "real_installed_GCU_public_CLI_and_three_fresh_offline_processes_passed_TP_external",
+  "math_calls": 3,
+  "traces": 5,
+  "bundle_bytes": 40847515,
+  "trace_bytes": 140087,
+  "steps": [
+    {
+      "name": "CLI",
+      "argv": [
+        "/tmp/chijin-timeline-r050-source-build-v1/work/venv/bin/python",
+        "-I",
+        "-m",
+        "flagtree.profiler.cli",
+        "--backend",
+        "enflame",
+        "--detail",
+        "timeline",
+        "--device",
+        "0",
+        "-n",
+        "/tmp/chijin-timeline-r050-tests/runs/public-cli-v1/output/public",
+        "/tmp/chijin-timeline-r050-source-build-v1/work/FlagPrism/tests/timeline/ordinary_enflame_timeline_workload.py",
+        "--evidence",
+        "/tmp/chijin-timeline-r050-tests/runs/public-cli-v1/output/math"
+      ],
+      "pid": 482382,
+      "pgid": 482382,
+      "startticks": 1021068069,
+      "returncode": 0
+    },
+    {
+      "name": "offline",
+      "argv": [
+        "/tmp/chijin-timeline-r050-source-build-v1/work/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r050-tests/public-cli-input-v1/p01_offline_reexport.py",
+        "--original-timeline",
+        "/tmp/chijin-timeline-r050-tests/runs/public-cli-v1/output/public/timeline",
+        "--output",
+        "/tmp/chijin-timeline-r050-tests/runs/public-cli-v1/output/offline",
+        "--forbidden-root",
+        "/tmp/chijin-timeline-r050-tests/runs/public-cli-v1/output/public",
+        "--forbidden-root",
+        "/tmp/chijin-timeline-r050-source-build-v1/work/FlagPrism",
+        "--forbidden-root",
+        "/opt/tops",
+        "--expected-captures",
+        "3",
+        "--expected-traces",
+        "5",
+        "--require-original-trace-bytes",
+        "--defer-trace-processor"
+      ],
+      "pid": 482785,
+      "pgid": 482785,
+      "startticks": 1021070032,
+      "returncode": 0
+    }
+  ]
+}
