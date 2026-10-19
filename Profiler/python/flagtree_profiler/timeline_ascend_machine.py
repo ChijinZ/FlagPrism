@@ -1,4 +1,4 @@
-"""Exact final-ELF/DWARF SYS_CNT locations for the inspected c220 vector target.
+"""Exact final-ELF/DWARF SYS_CNT locations for the inspected c220 vector/mixed targets.
 
 Locations certify neither region bounds, timestamp publication nor a shared
 clock. No nearest-PC matching, application replay or device access is used.
@@ -19,8 +19,13 @@ from .timeline_store import bundle_path, read_artifact, export_lock, persist, js
 
 LIMIT = 32 * 1024 * 1024
 CLOCK_FILE = '__flagprism_sys_cnt_v1__'
-# Actual CANN c220-vector reference: all X0..X31 destinations, with X32/X64
+# Actual CANN c220 vector and cube references: all X0..X31 destinations, with X32/X64
 # rejection and a different constant-zero control. Retained in r030 evidence.
+EXECUTABLE_TARGETS = {
+    0x930000: frozenset({('dav-c220-vec', 'AIV')}),
+    0x940000: frozenset({('dav-c220-cube', 'AIC'),
+                        ('dav-c220-vec', 'AIV')}),
+}
 WORDS = {0x02808880 | (register << 17): register for register in range(32)}
 
 
@@ -40,8 +45,8 @@ def _elf(raw):
     _need(
         raw[:7] == b'\x7fELF\x02\x01\x01'
         and struct.unpack_from('<HH', raw, 16) == (2, 0x1029)
-        and struct.unpack_from('<I', raw, 48)[0] == 0x930000,
-        'Expected the inspected c220-vector final executable')
+        and struct.unpack_from('<I', raw, 48)[0] in EXECUTABLE_TARGETS,
+        'Expected an inspected c220 vector/mixed final executable')
     offset = struct.unpack_from('<Q', raw, 40)[0]
     size, count, names_index = struct.unpack_from('<HHH', raw, 58)
     _need(
@@ -163,7 +168,10 @@ def counter_map(*, binary, dwarf_lines, metadata):
         retained_binary(metadata) == binary,
         'Machine input differs from retained final compiler executable')
     sections, functions = _elf(binary)
+    executable_jobs = EXECUTABLE_TARGETS[
+        struct.unpack_from('<I', binary, 48)[0]]
     expected = {}
+    observed_jobs = set()
     for artifact in metadata['flagprism_ascend_handoff']['artifacts']:
         manifest, job = artifact['metadata'], artifact.get('driver_job') or {}
         clock = manifest.get('dynamic_clock') or {}
@@ -176,10 +184,12 @@ def counter_map(*, binary, dwarf_lines, metadata):
         _need(
             job.get('state') == 'finished'
             and type(job.get('exit_code')) is int and job['exit_code'] == 0
-            and job.get('target_arch') == 'dav-c220-vec'
-            and job.get('actor_kind') == 'AIV'
+            and (job.get('target_arch'), job.get('actor_kind')) in executable_jobs
             and job.get('compile_id') == manifest['compile_id'],
             'No validated machine rule for this actual actor compiler job')
+        observed_jobs.add((job['target_arch'], job['actor_kind']))
+    _need(observed_jobs == executable_jobs,
+          'Executable kind differs from actual actor compiler jobs')
     seen_actors = set()
     for actor in actors.values():
         identity = (actor['kind'], actor['function'])

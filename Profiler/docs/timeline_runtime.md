@@ -306,6 +306,15 @@ in `backend_evidence`. Compiler-generated instruction clones remain distinct
 candidates; they are not counted as additional dynamic executions. Historical
 feature-1 recordings remain readable through the counter-unit path.
 
+The final-image mapper distinguishes the inspected c220 vector executable
+(`e_flags=0x930000`, AIV job) from the mixed executable (`e_flags=0x940000`,
+AIC cube and AIV vector jobs). The mixed path checks both actual compiler jobs,
+actor functions and exact SYS_CNT marker locations. A small reference compiled
+with the actual cube driver command matches the vector SYS_CNT encodings;
+this does not establish a shared AIC/AIV epoch or hardware engine activity.
+Unknown executable kinds or mismatched jobs retain raw data with an explicit
+unavailable mapping reason.
+
 The Ascend unit provider binds the actual runtime model/device, loaded binary,
 SYS_CNT instruction locations, original raw records and a bounded host window.
 For the documented A2 counter, one tick is 20 ns. This does not apply to other

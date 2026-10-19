@@ -124,6 +124,17 @@ def main():
                                     dwarf_lines=dwarf,
                                     metadata=meta)
 
+        def test_executable_kind_must_match_actual_driver_job(self):
+            import struct
+            raw = bytearray(binary)
+            flags = struct.unpack_from('<I', raw, 48)[0]
+            struct.pack_into('<I', raw, 48,
+                             0x940000 if flags == 0x930000 else 0x930000)
+            with self.assertRaisesRegex(ValueError, 'actor compiler job'):
+                machine.counter_map(binary=bytes(raw),
+                                    dwarf_lines=dwarf,
+                                    metadata=sealed(bytes(raw)))
+
         def test_missing_clock_file(self):
             with self.assertRaisesRegex(ValueError, 'phases are missing'):
                 machine.counter_map(binary=binary,
