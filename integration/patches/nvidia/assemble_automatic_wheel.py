@@ -98,7 +98,10 @@ def main():
     egg_dir = args.output / 'egg'
     egg_dir.mkdir()
     egg = dist.get_command_obj('egg_info')
-    egg.egg_base = str(egg_dir)
+    # setuptools' build_py consumes egg_info's manifest and rejects absolute
+    # source entries, including the generated PKG-INFO path. Keep the actual
+    # output directory owned and isolated, but hand egg_info a relative path.
+    egg.egg_base = os.path.relpath(egg_dir, args.flagtree)
     egg.ensure_finalized()
     egg.run()
     copier = build_py(dist)
