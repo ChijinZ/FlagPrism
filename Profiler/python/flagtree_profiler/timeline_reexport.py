@@ -136,7 +136,8 @@ def reexport_capture(directory, original_file):
     from .timeline_store import set_dependency_qualification
     from .timeline_perfetto import _write_committed_index
     with export_lock(directory):
-        set_dependency_qualification(directory, owner['invocation_id'],
+        set_dependency_qualification(directory,
+                                     batch['identity']['invocation_id'],
                                      views['observed_dependency_exports'],
                                      views.get('observed_dependency_reason'))
         _write_committed_index(directory)
