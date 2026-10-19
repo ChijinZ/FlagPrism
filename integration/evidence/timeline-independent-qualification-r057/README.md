@@ -40,3 +40,38 @@ still deferred by user instruction. No paper or Study files were modified.
 
 `results.json` indexes small immutable receipts. Private SDK objects and full
 captures remain in the referenced existing server Docker filesystems.
+
+
+## Finite observation-density controls
+
+The maintained controlled runner now accepts a logical-site budget, one of its
+existing variants, repeated ordinary references, and optional SDK stream events.
+NVIDIA stream-event measurements are explicitly refused while performance work
+is deferred. Default mathematical functions, inputs and selection remain the
+same. Formatting reached a fixed point in GCU Docker and its Python AST was
+unchanged; actual executed source SHA is
+`298743dc44abde27a6326f02be3b0204c1a046c855a8eb6f24fe5a27006cca50`.
+
+GCU C2 BK32 and BK64 each ran density 1 and default 8, with three ordinary and
+three profiled calls per setting: twelve ordinary and twelve profile calls.
+Every mathematical result, input, tail and once-only side-effect check passed.
+All profile calls retain counter-ns and two dependency exports, actual writers
+are complete, and full capture sizes meet the original budget. BK32 has 194
+versus 196 positive internal intervals; BK64 has 104 versus 106. Mandatory native
+control observations remain additional to the logical source-site budget.
+
+For all four settings the ordered projection of 27 `memref_ext` primitives and
+`gcu.matmul` operations in ordinary, recorder-input and actual rewritten SDK-input
+IR is identical. Actual rewritten SHA is checked against the captured compiler
+metadata. This is an SDK-input IR observation, not a guarantee of final physical
+scheduling or engine busy intervals. Full generated IR and binaries stay on the
+server, with paths/hashes in the small result summary.
+
+`gcu-density-both-summary-v1.json` includes every actual ordinary/profile stream
+span and host-request duration. SDK event spans include host submission and
+compilation gaps; the first process call is kept separately from later calls.
+These numbers cannot be used as device-kernel overhead ratios or ordinary
+optimization benefits. No exclusive-noise or throughput certification is claimed.
+The two controllers returned zero and their recorded parent/child identities
+are inactive. These controls extend the original C2 evidence rather than adding
+independent mathematical cases or replaying an unchanged qualification matrix.

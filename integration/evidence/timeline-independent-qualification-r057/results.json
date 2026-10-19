@@ -21,6 +21,10 @@
     {
       "file": "ascend-unmarked-inventory-v1.json",
       "sha256": "3ccbb7b64b0076dcc63bef722d03687233a83339087dc54484b10233785ed082"
+    },
+    {
+      "file": "gcu-density-both-summary-v1.json",
+      "sha256": "f440889cf6fdc0359edccffc7cb87776b463cf5f837f818ffb0c0bd7ea9ac399"
     }
   ],
   "gcu_refresh": {
@@ -56,5 +60,20 @@
     "actual_AIC_AIV_matches": true,
     "device_executed": false,
     "coverage_relaxed": false
+  },
+  "gcu_density_controls": {
+    "BK": [
+      32,
+      64
+    ],
+    "logical_sites": [
+      1,
+      8
+    ],
+    "ordinary_calls": 12,
+    "profile_calls": 12,
+    "source_sha256": "298743dc44abde27a6326f02be3b0204c1a046c855a8eb6f24fe5a27006cca50",
+    "sdk_input_native_projection_unchanged": true,
+    "scope": "SDK-input operation order, not final hardware schedule; stream spans include host gaps"
   }
 }

@@ -10,6 +10,7 @@ from collections import Counter
 import json
 import os
 from pathlib import Path
+import time
 
 os.environ['TORCH_DEVICE_BACKEND_AUTOLOAD'] = '0'
 import torch
@@ -137,9 +138,27 @@ def main():
     parser.add_argument('--device', type=int, default=0)
     parser.add_argument('--case', choices=['C1', 'C2'], required=True)
     parser.add_argument('--repetitions', type=int, default=3)
+    parser.add_argument('--ordinary-repetitions', type=int, default=1)
+    parser.add_argument('--timeline-max-sites', type=int, default=8)
+    parser.add_argument('--variant',
+                        type=int,
+                        help='Run one existing work/tiling variant only')
+    parser.add_argument(
+        '--measure-device-span',
+        action='store_true',
+        help='Record SDK event span including host submission gaps')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     need(2 <= args.repetitions <= 5, 'Use two to five finite repetitions')
+    need(1 <= args.ordinary_repetitions <= 5,
+         'Use one to five finite ordinary repetitions')
+    need(1 <= args.timeline_max_sites <= 128, 'Invalid observation budget')
+    need(not args.measure_device_span or args.backend != 'nvidia',
+         'NVIDIA performance measurements remain deferred')
+    variants = [3, 7, 11] if args.case == 'C1' else [32, 64]
+    if args.variant is not None:
+        need(args.variant in variants, 'Unknown existing controlled variant')
+        variants = [args.variant]
     if args.backend == 'ascend':
         import torch_npu  # noqa: F401
         torch.npu.set_device(args.device)
@@ -155,10 +174,11 @@ def main():
     from flagtree import profiler
     args.output.mkdir(parents=True, exist_ok=False)
     rows = []
-    variants = [3, 7, 11] if args.case == 'C1' else [32, 64]
     for variant in variants:
-        for repetition in range(-1, args.repetitions):
-            label = 'ordinary' if repetition == -1 else str(repetition)
+        for repetition in range(-args.ordinary_repetitions, args.repetitions):
+            label = (
+                'ordinary' if args.ordinary_repetitions == 1 else 'ordinary' +
+                str(repetition)) if repetition < 0 else str(repetition)
             folder = args.output / (str(variant) + '-' + label)
             folder.mkdir()
             if args.case == 'C1':
@@ -199,14 +219,36 @@ def main():
                                                  num_stages=1)
                 reference = (left.float() @ right.float()).reshape(-1)
                 inputs = [(x, left), (b, right)]
-            session = profiler.start(
-                str(folder /
-                    'capture'), detail='timeline') if repetition >= 0 else None
+            event_backend = (
+                torch.npu if args.backend == 'ascend' else
+                torch.gcu if args.backend == 'enflame' else torch.cuda)
+            start_event = end_event = None
+            if args.measure_device_span:
+                need(args.backend != 'nvidia',
+                     'NVIDIA performance measurements remain deferred')
+                event_backend.synchronize()
+                start_event = event_backend.Event(enable_timing=True)
+                end_event = event_backend.Event(enable_timing=True)
+            session = profiler.start(str(folder / 'capture'),
+                                     detail='timeline',
+                                     timeline_max_sites=args.timeline_max_sites
+                                     ) if repetition >= 0 else None
+            request_start = time.perf_counter_ns()
             try:
+                if start_event is not None:
+                    start_event.record()
                 compiled = launch()
+                if end_event is not None:
+                    end_event.record()
             finally:
                 if session is not None:
                     profiler.finalize(session)
+            request_elapsed = time.perf_counter_ns() - request_start
+            device_span = None
+            if end_event is not None:
+                end_event.synchronize()
+                device_span = start_event.elapsed_time(end_event)
+                need(device_span >= 0, 'SDK reported a negative stream span')
             observed = y[:reference.numel()].cpu()
             tolerance = 2e-6 if args.case == 'C1' else 2e-3
             need(
@@ -226,8 +268,12 @@ def main():
             row = dict(variant=variant,
                        repetition=repetition,
                        math_passed=True,
-                       original_calls=1)
-            if repetition == -1:
+                       original_calls=1,
+                       requested_max_sites=args.timeline_max_sites,
+                       host_request_elapsed_ns=request_elapsed,
+                       device_stream_span_ms=device_span,
+                       stream_span_includes_host_submission_gaps=True)
+            if repetition < 0:
                 row['binary_id'] = compiled.hash
                 for kind, value in compiled.asm.items():
                     if isinstance(value, (str, bytes)):
@@ -250,10 +296,12 @@ def main():
             'controlled_real_math_and_internal_timestamps_collected_pending_interpretation',
             backend=args.backend,
             case=args.case,
+            requested_max_sites=args.timeline_max_sites,
             rows=rows,
             limits=[
                 'Instrumented execution only; no uninstrumented speedup or overhead claim.',
-                'No cross-observer alignment, physical overlap or engine busy inferred.'
+                'No cross-observer alignment, physical overlap or engine busy inferred.',
+                'SDK stream spans include host submission/compilation gaps; cold spans are not kernel overhead.'
             ]),
                    indent=2) + '\n')
 
