@@ -24,8 +24,10 @@ def decode_capture(capture, raw):
 
 
 def decoder_rules(capture):
-    from . import timeline_events_enflame, timeline_enflame_offline
-    return (timeline_events_enflame, timeline_enflame_offline)
+    from . import (timeline_events_enflame, timeline_events_enflame_native,
+                   timeline_enflame_offline)
+    return (timeline_events_enflame, timeline_events_enflame_native,
+            timeline_enflame_offline)
 
 
 backend_name = 'enflame'

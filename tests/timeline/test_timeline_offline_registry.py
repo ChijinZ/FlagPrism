@@ -26,6 +26,13 @@ class OfflineRegistryTests(unittest.TestCase):
                              'reexport_views'):
                     self.assertTrue(callable(getattr(provider, name)))
 
+    def test_gcu_rules_include_the_actual_delegated_native_decoder(self):
+        from flagtree.profiler import timeline_events_enflame_native
+        provider = offline_provider(
+            self.capture(owner=dict(native_export_metadata={})))
+        self.assertIn(timeline_events_enflame_native,
+                      provider.decoder_rules({}))
+
     def test_missing_and_malformed_identities_are_rejected(self):
         for capture in (None, [], {}, dict(owner={}, metadata=[]),
                         self.capture(), self.capture(dict(target='cuda'))):
