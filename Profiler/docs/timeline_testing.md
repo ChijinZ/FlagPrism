@@ -349,3 +349,26 @@ P01 是开发阶段的可行性检查，不是用一个样本代替独立资格�
 只有普通算子真实完成、时间正确、异步解释正确、Perfetto 真导入并可读、独立新数学通过、回归/安装/适配边界 P01–P10/三个独立最终审阅闭环、Git与进程收尾全部成立，才能完成 goal。
 
 多几个 timestamp、一个能打开的文件、一组 source count 或漂亮示意截图均不等价于这些条件。时钟未知、某后端缺内部区间、异步关系只能猜、真实 UI 没验等情况属于未完成项，不能把验收降级成旧 usability 标准。
+
+
+### Targeted review regressions
+
+`tests/timeline/p01_review_recovery.py` reuses the existing C1 kernel. On each
+backend, its three mathematical calls exercise profile → deactivate/ordinary →
+activate/the same profiled binary. The first and resumed calls must produce
+internal ns exports and positive intervals; the paused call must not become a
+timeline capture. Input, output tail and exactly-once state are checked.
+
+On GCU, the same runner additionally corrupts one byte inside its own allocated
+prefix using the real SDK after completion, checks the native readback bytes,
+requires raw retention without a derived trace, then starts a successful new
+session. `--guard-only` runs just those last two calls when only the negative
+case test has changed. It obtains the failed capture's staging path before
+finalization; an incomplete public bundle is not evidence of lost raw.
+
+Run this affected test inside the selected server Docker with its matching
+installed wheel. It has no performance measurement or overhead assertion. The
+r058 receipts retain the first test-path failure and the later startup failure;
+only the final negative/recovery attempt passes. These regressions close their
+specific defects, not the remaining source-boundary, scheduling or default
+observer-completeness gates.

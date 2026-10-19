@@ -709,8 +709,12 @@ Decoding and machine mapping follow this original-retention pass. Each original 
 `.input.json`, and required compiled/source artifact is persisted before its
 completed device owner is released. The second pass decodes these retained files;
 a decoder failure does not prevent other invocations from being saved or decoded.
-Owners with unresolved completion/readback/release remain explicit and retryable;
-they are never freed merely because another invocation failed.
+Owners with unresolved completion/readback remain explicit and can be retried
+when the transport permits it. A native SDK free error has an unknown outcome:
+the resource ledger and admission budget remain retained, repeated release fails
+explicitly without another free, and the quarantined handle cannot initialize,
+read or supply a launch pointer. Successful sub-resource frees are not repeated.
+Another invocation's failure never establishes that a resource is safe to free.
 
 `attempts/flush-NNNN.json` preserves each attempted finalization and its failures.
 The mutable `index.json` also identifies `pending_decode` and `retained_owners`;
@@ -721,8 +725,17 @@ payload, actual length, integrity errors and available `.guard.raw` are retained
 before interpretation is rejected. Safe release follows completion and durable
 raw/input retention, including corrupt captures. A later decode attempt does not
 read the device again or reinterpret a corrupt guard as valid data. This guard
-carrier is implemented by the CUDA transport; GCU allocation guard qualification
-is still separate.
+carrier is implemented by both CUDA and the current GCU timeline transport.
+GCU's native runtime allocates a 64-byte prefix and suffix, initializes them on
+the owner stream and copies the complete physical allocation back. The hidden
+argument still points at the original raw layout; the guards are separate
+128-byte evidence. Runtime binding feature
+`GCU_TIMELINE_ALLOCATION_GUARD_VERSION=1` prevents Python from silently using an
+older runtime without these guards. See the real-device prefix corruption and
+subsequent-session recovery receipts in the
+[r058 evidence](../../integration/evidence/timeline-review-fixes-r058/README.md).
+A finite intact guard does not prove the absence of every possible large-stride
+out-of-bounds access.
 JSON slot maps are rehydrated to the physical decoder's tuple contract; raw
 identity is checked again before decoding. This conversion changes no raw fields.
 

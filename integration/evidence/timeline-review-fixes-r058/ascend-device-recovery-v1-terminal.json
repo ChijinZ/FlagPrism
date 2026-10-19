@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 4092171,
+    "ppid": 2511431,
+    "pgid": 4092171,
+    "startticks": 340911013
+  },
+  "worker": {
+    "pid": 4092205,
+    "ppid": 4092171,
+    "pgid": 4092205,
+    "startticks": 340911019
+  },
+  "argv": [
+    "/tmp/chijin-timeline-r058-ascend/runs/refresh-v1/output/venv/bin/python",
+    "-I",
+    "/tmp/chijin-timeline-r058-ascend/device-recovery-input-v1/run.py",
+    "--output",
+    "/tmp/chijin-timeline-r058-ascend/runs/device-recovery-v1/output"
+  ],
+  "argv_sha256": "f29d167119dba551b3f1029c7c3512b4291029b4d7ebd00ce743743eb338a118",
+  "script_sha256": "d2dd35d7af82d3cc72b7cdeb64786b072523bf03e1d89736e6b50dd91324cfac",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 300,
+  "state": "terminal",
+  "returncode": 0,
+  "wall_ns": 49582181049
+}

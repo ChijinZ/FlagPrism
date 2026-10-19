@@ -120,6 +120,16 @@ Retained captures can be re-exported without executing the application:
 ```
 
 Derived exports preserve the original attempt and report their own revision.
+The HTML index separates current dependency recommendations from historical
+files. If the current provider rejects a previously accepted dependency view,
+its old files remain available as history with the current rejection reason.
+A later successful revalidation can restore the recommendation. The original
+capture index remains a record of its original qualification.
+
+If finalization fails, read the exception's retained-intermediates path. Raw
+and guard evidence may be in that session's staging directory rather than the
+finished public bundle. Invalid guards retain their bytes and reject decoding;
+a fresh session can still run after the completed capture is safely released.
 Large exact duplicate fields in timeline bundles use explicit metadata
 references. For the restored logical JSON view, use the public reader:
 
