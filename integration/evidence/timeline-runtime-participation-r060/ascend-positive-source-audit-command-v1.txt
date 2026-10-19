@@ -1,0 +1,7 @@
+sudo -n -u chijin docker exec chijin_v3.5.x /usr/local/python3.11.15/bin/python3.11 -I -c 'from pathlib import Path
+import json,hashlib
+r=Path('"'"'/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device'"'"');rows=[]
+for case in ['"'"'vector'"'"','"'"'mixed'"'"']:
+ root=r/case/'"'"'capture/timeline'"'"';row=json.loads((root/'"'"'index.json'"'"').read_text())['"'"'captures'"'"'][0];capture=json.loads((root/row['"'"'capture_file'"'"']).read_text());batch=json.loads((root/capture['"'"'events_file'"'"']).read_text());sites={s['"'"'id'"'"']:s for s in batch['"'"'sites'"'"']};positive={e['"'"'site_id'"'"'] for e in batch['"'"'events'"'"'] if e['"'"'end_tick'"'"']>e['"'"'start_tick'"'"'] and '"'"'ascend.native_operation'"'"' not in sites[e['"'"'site_id'"'"']]['"'"'attributes'"'"']};rows.append(dict(case=case,positive_source_sites=sorted(positive),count=len(positive)))
+print(json.dumps(rows,indent=2))
+'

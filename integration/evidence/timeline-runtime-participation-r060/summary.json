@@ -1,0 +1,540 @@
+{
+  "runtime_commit": "6a1bdc3eb09d70878b787a04da856d068080b8b4",
+  "test_assertion_commit": "1f34bb5442e55f68ec03fbafd3616232cbe6bf53",
+  "device_terminal": {
+    "controller": {
+      "pid": 4130333,
+      "ppid": 2511431,
+      "pgid": 4130333,
+      "startticks": 341313151
+    },
+    "worker": {
+      "pid": 4130367,
+      "ppid": 4130333,
+      "pgid": 4130367,
+      "startticks": 341313157
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r060-ascend/participation-device-input-v1/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output"
+    ],
+    "argv_sha256": "389df648a17e0eb45e9b5ce733f710961ca045d1af11fd25fb89b636702718f2",
+    "script_sha256": "7c7fbe720c344d738d66722467732ffbedb7615c56307cbee853fd57a9a13c97",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 300,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 61710814495
+  },
+  "device_results": {
+    "status": "actual_vector_and_mixed_runtime_participation_passed",
+    "calls": [
+      {
+        "case": "vector",
+        "profiled": false,
+        "binary_id": "534ad27576a604dc4edf58dbee6ee7fb725a202d1f78534922b55f2641933892",
+        "math_passed": true,
+        "original_calls": 1
+      },
+      {
+        "case": "vector",
+        "profiled": true,
+        "binary_id": "59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad",
+        "math_passed": true,
+        "original_calls": 1,
+        "capture": {
+          "invocation_id": "invocation-ef486a8af15948359d7457a3931d08d3",
+          "binary_id": "59c6e82cbc4eb4c265ed899ba6ec23e93c28a65d455351b1dae512d3630a6fad",
+          "raw_sha256": "e13e3c846d7f31ec2243676a55ee847279822817d26834090ad2a850e464d7ab",
+          "headers": [
+            {
+              "program": 0,
+              "actor": 1,
+              "count": 1,
+              "flags": 257,
+              "offset": 131136
+            },
+            {
+              "program": 2,
+              "actor": 1,
+              "count": 1,
+              "flags": 257,
+              "offset": 524544
+            }
+          ],
+          "observers": 2,
+          "events": 36,
+          "complete": true,
+          "ns_exports": [
+            {
+              "observer_id": "observer-f09f08ef7f4f8f782e3c4bae835c5bfc2a33acf18fd752df5e12b69fd79b4500",
+              "invocation_id": "invocation-ef486a8af15948359d7457a3931d08d3",
+              "program_coordinates": [
+                0,
+                0,
+                0
+              ],
+              "view_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/views/observer-f09f08ef7f4f8f782e3c4bae835c5bfc2a33acf18fd752df5e12b69fd79b4500.json",
+              "trace_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/traces/observer-f09f08ef7f4f8f782e3c4bae835c5bfc2a33acf18fd752df5e12b69fd79b4500.pftrace",
+              "bytes": 29261,
+              "sha256": "463e593bf1049d98ddaf5eaa75239bfc453518d4bfd0fbfedbefeaa7dc38bbb3",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe",
+              "receipt_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/complete.json"
+            },
+            {
+              "observer_id": "observer-469f8d70d14d77ca6ec495384e32008b1be966d7936e5bced63f8a012e247217",
+              "invocation_id": "invocation-ef486a8af15948359d7457a3931d08d3",
+              "program_coordinates": [
+                2,
+                0,
+                0
+              ],
+              "view_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/views/observer-469f8d70d14d77ca6ec495384e32008b1be966d7936e5bced63f8a012e247217.json",
+              "trace_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/traces/observer-469f8d70d14d77ca6ec495384e32008b1be966d7936e5bced63f8a012e247217.pftrace",
+              "bytes": 36552,
+              "sha256": "b8c8932d71ab1d366d2a2b0ce8d5bf1c5a8308c3ba4a42c1019069c11539f525",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe",
+              "receipt_file": "derived/counter-ns/36dee4e8651cce7ea118f1856dab2ac3c0d228b14442d7f5743adec0f09847fe/complete.json"
+            }
+          ],
+          "bundle": "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/vector/capture"
+        }
+      },
+      {
+        "case": "mixed",
+        "profiled": false,
+        "binary_id": "f49184e0edbe3091ea21b0c0aed8c178fadc8c82e648099950676b1af29786fe",
+        "math_passed": true,
+        "original_calls": 1
+      },
+      {
+        "case": "mixed",
+        "profiled": true,
+        "binary_id": "56ffae41247449ed0191385d372eaee85177d2b9aa033f783f6ab1cc46132c1b",
+        "math_passed": true,
+        "original_calls": 1,
+        "capture": {
+          "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+          "binary_id": "56ffae41247449ed0191385d372eaee85177d2b9aa033f783f6ab1cc46132c1b",
+          "raw_sha256": "f0dfff91a8903ffe760e24f4c4d49ac6f22bef44951d9bb6fe5ca4f80daec300",
+          "headers": [
+            {
+              "program": 0,
+              "actor": 0,
+              "count": 1,
+              "flags": 257,
+              "offset": 0
+            },
+            {
+              "program": 0,
+              "actor": 1,
+              "count": 2,
+              "flags": 513,
+              "offset": 131136
+            },
+            {
+              "program": 0,
+              "actor": 2,
+              "count": 2,
+              "flags": 513,
+              "offset": 262272
+            },
+            {
+              "program": 3,
+              "actor": 0,
+              "count": 1,
+              "flags": 257,
+              "offset": 393408
+            },
+            {
+              "program": 3,
+              "actor": 1,
+              "count": 2,
+              "flags": 513,
+              "offset": 524544
+            },
+            {
+              "program": 3,
+              "actor": 2,
+              "count": 2,
+              "flags": 513,
+              "offset": 655680
+            }
+          ],
+          "observers": 6,
+          "events": 160,
+          "complete": true,
+          "ns_exports": [
+            {
+              "observer_id": "observer-6ca5b9882a5786fed7b032f42f651f7a5f606a6d236c484692c144f83907b33c",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                0,
+                0,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-6ca5b9882a5786fed7b032f42f651f7a5f606a6d236c484692c144f83907b33c.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-6ca5b9882a5786fed7b032f42f651f7a5f606a6d236c484692c144f83907b33c.pftrace",
+              "bytes": 93361,
+              "sha256": "7716420adb4c9a63579225fb4b31480006cdedcb751785af7a9561b96340f08b",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            },
+            {
+              "observer_id": "observer-265ecf1cff98fca868071ec06c50d4e9537461ea2ba5dad4021a822606b1e470",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                0,
+                0,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-265ecf1cff98fca868071ec06c50d4e9537461ea2ba5dad4021a822606b1e470.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-265ecf1cff98fca868071ec06c50d4e9537461ea2ba5dad4021a822606b1e470.pftrace",
+              "bytes": 25531,
+              "sha256": "88ab4e5aaaec2d2cd5145d3c36d9962dfadd7e7abd0ac52f6cb407050a92945e",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            },
+            {
+              "observer_id": "observer-388b5d20696ed6757e438737b9bb1cbda4ce21fe908bdfa2d67577e1457512b8",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                0,
+                0,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-388b5d20696ed6757e438737b9bb1cbda4ce21fe908bdfa2d67577e1457512b8.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-388b5d20696ed6757e438737b9bb1cbda4ce21fe908bdfa2d67577e1457512b8.pftrace",
+              "bytes": 25552,
+              "sha256": "20bdfd763e3e190ebac74b8b5e9df85758a74b380c45917a08551e38649bcc70",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            },
+            {
+              "observer_id": "observer-f4853da1d9834d2afdc2573e958cd4aa73b3334470cdc7324553672d39131f29",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                1,
+                1,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-f4853da1d9834d2afdc2573e958cd4aa73b3334470cdc7324553672d39131f29.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-f4853da1d9834d2afdc2573e958cd4aa73b3334470cdc7324553672d39131f29.pftrace",
+              "bytes": 93544,
+              "sha256": "ceb52d7bc162042663fa31e693f92d028281ab6efd82ff02708ad85cf36855aa",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            },
+            {
+              "observer_id": "observer-ba1e75403853bb0724a6f39ff5872ba8a2e1c5a712bceb20dbefc06bc706fdfd",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                1,
+                1,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-ba1e75403853bb0724a6f39ff5872ba8a2e1c5a712bceb20dbefc06bc706fdfd.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-ba1e75403853bb0724a6f39ff5872ba8a2e1c5a712bceb20dbefc06bc706fdfd.pftrace",
+              "bytes": 25543,
+              "sha256": "71160a5ebefe942505610633210d8047d95c4f6e5f07e4b4ae36149765323ae9",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            },
+            {
+              "observer_id": "observer-fe0cb6fa0a5a8309a96b803b6c35d712cb6fd2bbaa227af6bdf3775b8fe2ff89",
+              "invocation_id": "invocation-5238df3703c84ee2a98259f94c585cd7",
+              "program_coordinates": [
+                1,
+                1,
+                0
+              ],
+              "view_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/views/observer-fe0cb6fa0a5a8309a96b803b6c35d712cb6fd2bbaa227af6bdf3775b8fe2ff89.json",
+              "trace_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/traces/observer-fe0cb6fa0a5a8309a96b803b6c35d712cb6fd2bbaa227af6bdf3775b8fe2ff89.pftrace",
+              "bytes": 25541,
+              "sha256": "0e1a89448d86afcf536aa35e4d51eebb29655d3fa798e74469d0fb34cef6762b",
+              "clock_status": "counter_unit_only",
+              "read_precision_status": "unverified",
+              "time_arrows_verified": false,
+              "revision_id": "a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a",
+              "receipt_file": "derived/counter-ns/a34226f00c9f554b8d9650ffcce5c456a305eaeacc91af3f1bda90d6bb92443a/complete.json"
+            }
+          ],
+          "bundle": "/tmp/chijin-timeline-r060-ascend/runs/participation-device-v1/output/device/mixed/capture"
+        }
+      }
+    ],
+    "performance_measured": false
+  },
+  "plugin_sha256": "250859a51115125249b926a84967ad274ffee67b0b287c0dc7c5a381d0bbed1f",
+  "wheel_sha256": "5a66bba9115e82b48e549ea3d3882582ac63bd8c10ceb9e71d2fff12289d3ee9",
+  "installed_members": 437,
+  "retained_results": {
+    "status": "actual_retained_legacy_identity_and_new_raw_faults_passed",
+    "modes": [
+      {
+        "checks": [
+          {
+            "label": "legacy-vector",
+            "complete": false,
+            "observers": 4,
+            "events": 42,
+            "files_unchanged": 31,
+            "canonical_equal": true,
+            "fault_checks": []
+          },
+          {
+            "label": "legacy-mixed",
+            "complete": true,
+            "observers": 6,
+            "events": 252,
+            "files_unchanged": 32,
+            "canonical_equal": true,
+            "fault_checks": []
+          },
+          {
+            "label": "new-vector",
+            "complete": true,
+            "observers": 2,
+            "events": 36,
+            "files_unchanged": 33,
+            "canonical_equal": true,
+            "fault_checks": [
+              "higher_expected_count_stays_incomplete",
+              "invalid_unselected_or_conflicting_raw_rejected"
+            ]
+          },
+          {
+            "label": "new-mixed",
+            "complete": true,
+            "observers": 6,
+            "events": 160,
+            "files_unchanged": 32,
+            "canonical_equal": true,
+            "fault_checks": [
+              "removed_expected_actor_stays_incomplete",
+              "invalid_unselected_or_conflicting_raw_rejected"
+            ]
+          }
+        ]
+      },
+      {
+        "checks": [
+          {
+            "label": "legacy-vector",
+            "complete": false,
+            "observers": 4,
+            "events": 42,
+            "files_unchanged": 31,
+            "canonical_equal": true,
+            "fault_checks": []
+          },
+          {
+            "label": "legacy-mixed",
+            "complete": true,
+            "observers": 6,
+            "events": 252,
+            "files_unchanged": 32,
+            "canonical_equal": true,
+            "fault_checks": []
+          },
+          {
+            "label": "new-vector",
+            "complete": true,
+            "observers": 2,
+            "events": 36,
+            "files_unchanged": 33,
+            "canonical_equal": true,
+            "fault_checks": [
+              "higher_expected_count_stays_incomplete",
+              "invalid_unselected_or_conflicting_raw_rejected"
+            ]
+          },
+          {
+            "label": "new-mixed",
+            "complete": true,
+            "observers": 6,
+            "events": 160,
+            "files_unchanged": 32,
+            "canonical_equal": true,
+            "fault_checks": [
+              "removed_expected_actor_stays_incomplete",
+              "invalid_unselected_or_conflicting_raw_rejected"
+            ]
+          }
+        ]
+      }
+    ],
+    "steps": [
+      {
+        "name": "normal",
+        "argv": [
+          "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/venv/bin/python",
+          "-I",
+          "/tmp/chijin-timeline-r060-ascend/participation-retained-input-v1/run.py",
+          "--output",
+          "/tmp/chijin-timeline-r060-ascend/runs/participation-retained-v1/output/normal",
+          "--child"
+        ],
+        "pid": 4133151,
+        "startticks": 341324632,
+        "returncode": 0
+      },
+      {
+        "name": "optimized",
+        "argv": [
+          "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/venv/bin/python",
+          "-I",
+          "-O",
+          "/tmp/chijin-timeline-r060-ascend/participation-retained-input-v1/run.py",
+          "--output",
+          "/tmp/chijin-timeline-r060-ascend/runs/participation-retained-v1/output/optimized",
+          "--child"
+        ],
+        "pid": 4133318,
+        "startticks": 341325495,
+        "returncode": 0
+      }
+    ]
+  },
+  "TP": {
+    "status": "actual_new_participation_trace_TP_passed",
+    "registered": 10,
+    "counter": 8,
+    "dependency": 2,
+    "checks": [
+      {
+        "kind": "counter",
+        "count": 8,
+        "result_file": "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/counter/result.json",
+        "sha256": "5a6d164c6f8bb47a51af6575dae344d1c4f698b8064c28756261d876a7cd6210"
+      },
+      {
+        "kind": "dependency",
+        "count": 2,
+        "result_file": "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/dependency/result.json",
+        "sha256": "57cfa2f887d526ad085a0396b14fc51015c724a4da708ae640260fd019855bb2"
+      }
+    ],
+    "application_replayed": false,
+    "device_executed": false,
+    "steps": [
+      {
+        "kind": "counter",
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_perfetto_traces.py",
+          "--manifest",
+          "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/counter.json",
+          "--output",
+          "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/counter"
+        ],
+        "pid": 118844,
+        "startticks": 28938139,
+        "returncode": 0
+      },
+      {
+        "kind": "dependency",
+        "argv": [
+          "/workspace/chijin-timeline-r003/runs/perfetto-tools-offline-v1/output/venv/bin/python",
+          "-I",
+          "/workspace/chijin-timeline-r059-nvidia/tools-smoke-input-v1/source/verify_dependency_traces.py",
+          "--manifest",
+          "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/dependency.json",
+          "--output",
+          "/workspace/chijin-timeline-r060-nvidia/runs/participation-tp-v1/output/dependency"
+        ],
+        "pid": 118853,
+        "startticks": 28939002,
+        "returncode": 0
+      }
+    ]
+  },
+  "files": {
+    "ascend-participation-evidence-v3.tgz": {
+      "sha256": "002105b1625bf601123bece6647a1fbe998f272bc93aced3524048bc9247133b",
+      "bytes": 38469
+    },
+    "ascend-positive-source-audit-command-v1.txt": {
+      "sha256": "f429cefd1364a17dae27553f08499d3612ec974ab776eb16c28ed0d945bf0351",
+      "bytes": 929
+    },
+    "ascend-positive-source-audit-v1.json": {
+      "sha256": "0c6fc68b6141244c6a80a47b64d7c53973fc0f9f2b6e41f36e6ef36c604854f7",
+      "bytes": 1116
+    },
+    "gcu-participation-cpu-evidence-v1.tgz": {
+      "sha256": "2f53d4430398809dcac1cf30d21033d4e06e02b784c546ed320f2200a469bb80",
+      "bytes": 34380
+    },
+    "gcu-participation-cpu-evidence-v2.tgz": {
+      "sha256": "09c247326c967f3d352458748bcd8ffe25c941872cc52a37d1c5d5c35bdbedcd",
+      "bytes": 19098
+    },
+    "gcu-participation-cpu-evidence-v3.tgz": {
+      "sha256": "9077e1f2a0fbac0a618ff2fed30be63fb1f5d2c47c3515536fd2ba50ffa701e6",
+      "bytes": 4790
+    },
+    "nvidia-participation-tp-evidence-v1.tgz": {
+      "sha256": "b23b2ce290f4c3358ed44a4be696ea9fce5db36d28020d940b2185b7e1e53ffd",
+      "bytes": 36925
+    },
+    "participation-device-runner-v1.py": {
+      "sha256": "7c7fbe720c344d738d66722467732ffbedb7615c56307cbee853fd57a9a13c97",
+      "bytes": 1614
+    },
+    "participation-install-runner-v1.py": {
+      "sha256": "b4603f0150a8daa889b3d6536b88a0e733c82969f9f0142037fc4f435af2db42",
+      "bytes": 7045
+    },
+    "participation-plugin-build-runner-v1.py": {
+      "sha256": "bd4ac3f86df59477cc66dc8130b1898b9391cb1c05f60170e0f7a0ebc3de6054",
+      "bytes": 2483
+    },
+    "participation-retained-runner-v1.py": {
+      "sha256": "0d1709deeca5cbe7e70d6cce5bc322258c139fbd456e009d03ee9631707dfb39",
+      "bytes": 3650
+    },
+    "participation-tp-runner-v1.py": {
+      "sha256": "3087ea3878e8aba16f1d73be1e48f6ba95e631a247087f9f1d0d6c9affbd797f",
+      "bytes": 3106
+    },
+    "subblockdim-codegen-probe-v1.py": {
+      "sha256": "e5660688ec6edd088282239f03baee073a297d6b9f11628450ed7ecd4c17a574",
+      "bytes": 2164
+    },
+    "subblockdim-codegen-probe-v2.py": {
+      "sha256": "c56b34db025a55c5309e5e1b96c263463863f8dcf4e44314d0431642726eb8d0",
+      "bytes": 1994
+    },
+    "trace-index.json": {
+      "sha256": "622123c7b14d14fa819790228f84e61d863d53fceb623aab64bf9ac6027ef52e",
+      "bytes": 32883
+    }
+  }
+}
