@@ -473,11 +473,17 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     program = entry.CreateCall(blockFunction, {});
   }
   Value *actor = entry.getInt64(0);
+  Value *actorCount = entry.getInt64(1);
   if (actorKind == "AIV") {
     auto subFunction = function.getParent()->getOrInsertFunction(
         "llvm.hivm.GET.SUBBLOCKID", coordinateType);
     actor =
         entry.CreateAdd(entry.CreateCall(subFunction, {}), entry.getInt64(1));
+    if (timeline) {
+      auto dimension = function.getParent()->getOrInsertFunction(
+          "llvm.hivm.GET.SUBBLOCKDIM", coordinateType);
+      actorCount = entry.CreateCall(dimension, {});
+    }
   } else if (actorKind != "AIC") {
     report_fatal_error(
         "FlagPrism trace needs an actual SDK cube/vector target");
@@ -557,6 +563,12 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         static_cast<int64_t>(8 + capacity * 8);
     runtimeActorBinding["max_program_slots"] = 2;
     runtimeActorBinding["selection"] = "runtime_first_last";
+    runtimeActorBinding["runtime_participation"] =
+        json::Object{{"version", 1},
+                     {"header_word", 7},
+                     {"count_shift", 8},
+                     {"basis", actorKind == "AIV" ? "llvm.hivm.GET.SUBBLOCKDIM"
+                                                  : "constant_one_cube_actor"}};
     runtimeActorBinding["value_use"] =
         "same_source_tuple_for_selection_and_pair_identity";
     runtimeActorBinding["source_program_binding"] =
@@ -623,7 +635,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
     for (const auto &native : nativeFragments) {
       auto site = flagprism_ascend::instrumentNativeTimeline(
           *native.call, native.marker, function.getArg(argumentIndex), actor,
-          program, capacity, sites.size() + 1, native.block,
+          program, actorCount, capacity, sites.size() + 1, native.block,
           native.sourceBinding);
       const auto instrumented = site.getBoolean("instrumented");
       if (!instrumented || !*instrumented) {
@@ -675,7 +687,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
           flagprism_ascend::timelineClockLocation(*marker.call, id, true);
       Value *start = flagprism_ascend::beginTimeline(
           marker.call, function.getArg(argumentIndex), logicalProgram, last,
-          actor, program, capacity, entryClock);
+          actor, program, actorCount, capacity, entryClock);
       flagprism_ascend::endTimeline(
           fragment.end, function.getArg(argumentIndex), logicalProgram, last,
           actor, program, start, capacity, id, 1, exitClock);

@@ -31,8 +31,9 @@ inline llvm::DebugLoc nativeControlLocation(llvm::Instruction &source,
 template <typename Marker>
 inline llvm::json::Object instrumentNativeTimeline(
     llvm::CallInst &call, const Marker &marker, llvm::Value *pointer,
-    llvm::Value *actor, llvm::Value *physicalBlock, uint64_t capacity,
-    uint64_t site, const std::string &block, llvm::StringRef sourceBinding) {
+    llvm::Value *actor, llvm::Value *physicalBlock, llvm::Value *actorCount,
+    uint64_t capacity, uint64_t site, const std::string &block,
+    llvm::StringRef sourceBinding) {
   using namespace llvm;
   std::string original;
   raw_string_ostream stream(original);
@@ -83,7 +84,7 @@ inline llvm::json::Object instrumentNativeTimeline(
   const auto entry = timelineClockLocation(call, site, false);
   const auto exit = timelineClockLocation(call, site, true);
   Value *start = beginTimeline(&call, pointer, program, last, actor,
-                               physicalBlock, capacity, entry);
+                               physicalBlock, actorCount, capacity, entry);
   const uint32_t semantic = wait ? 3 : 2;
   endTimeline(next, pointer, program, last, actor, physicalBlock, start,
               capacity, site, semantic, exit);

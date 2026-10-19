@@ -230,7 +230,13 @@ qualification for the broader ordinary-kernel matrix.
 
 - Header u64 words: magic, committed pairs, attempted pairs, dropped pairs,
   logical program, actor, physical block, flags. Flags are arrival=1,
-  count saturation=2, overflow=4. Counts saturate at `2^63-1`.
+  count saturation=2, overflow=4. Counts saturate at `2^63-1`. With the optional
+  manifest `runtime_participation.version=1`, bits 8–9 publish the device AIV
+  subblock count (`GET.SUBBLOCKDIM`, one or two); AIC publishes one. All other
+  flag bits remain invalid. The segment/record extents are unchanged. A missing
+  feature declaration never authorizes these bits or reclassifies legacy empty
+  slots. Consistent device cardinality may exclude AIV slot 2 only after its
+  entire segment is verified zero; absent expected publishers remain unknown.
 - Pair u64 words: descriptor (low32 site/high32 semantic), attempt sequence,
   start tick, end tick, logical program, actor, physical block, commit tag.
   The tag binds descriptor/sequence/program/actor/block; it is not a checksum of

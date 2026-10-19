@@ -346,8 +346,18 @@ must not be interpreted as another engine's activity. Separate observers have
 separate files and no verified time flows. Full pipeline qualification remains
 pending. See [Ascend counter-unit evidence](../../integration/evidence/timeline-ascend-counter-unit-r031/README.md).
 
-An unwritten admissible segment remains explicitly unobserved; it is not proof
-of execution or non-execution. Current real recurrence and Softmax probes use
+An unwritten admissible segment remains explicitly unobserved unless the new
+versioned `runtime_participation` publisher proves it was not selected. On the
+supported c220 vector target, this publisher records the actual device
+`GET.SUBBLOCKDIM` in header flags bits 8–9; cube actors publish one. A reported
+single vector participant excludes reserved AIV slot 2 only after checking the
+entire excluded segment is zero. Missing expected actors, conflicting counts,
+unsupported counts, or data in an excluded slot remain errors or incomplete
+captures. Old logs without this feature retain their original unknown slots;
+the decoder never infers participation from empty bytes or an operator name.
+This feature requires matching rebuilt late-plugin and Python decoder inputs;
+its new device qualification is recorded separately from earlier captures.
+Current real recurrence and Softmax probes use
 `enable_auto_blockify=False`; broader lowering, multi-function and exclusive
 writer coverage still require qualification. Do not infer general matrix
 support from these examples. The legacy debugger allocator rejects the new

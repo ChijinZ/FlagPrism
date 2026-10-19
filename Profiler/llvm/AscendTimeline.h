@@ -87,7 +87,8 @@ inline void timelineStore(llvm::IRBuilder<> &b, llvm::Value *pointer,
 inline llvm::Value *beginTimeline(llvm::Instruction *position,
                                   llvm::Value *pointer, llvm::Value *program,
                                   llvm::Value *lastProgram, llvm::Value *actor,
-                                  llvm::Value *physicalBlock, uint64_t capacity,
+                                  llvm::Value *physicalBlock,
+                                  llvm::Value *actorCount, uint64_t capacity,
                                   const llvm::DebugLoc &clockLocation) {
   llvm::IRBuilder<> b(position);
   auto *selected = timelineSelected(b, program, lastProgram, actor);
@@ -104,7 +105,11 @@ inline llvm::Value *beginTimeline(llvm::Instruction *position,
   timelineStore(selectedBuilder, pointer, word(5), actor);
   timelineStore(selectedBuilder, pointer, word(6), physicalBlock);
   timelineStore(selectedBuilder, pointer, word(7),
-                selectedBuilder.CreateOr(flags, selectedBuilder.getInt64(1)));
+                selectedBuilder.CreateOr(
+                    flags, selectedBuilder.CreateOr(
+                               selectedBuilder.getInt64(1),
+                               selectedBuilder.CreateShl(
+                                   actorCount, selectedBuilder.getInt64(8)))));
   timelineStore(selectedBuilder, pointer, word(0),
                 selectedBuilder.getInt64(kTimelineMagic));
   auto *tick = timelineTick(selectedBuilder, clockLocation);

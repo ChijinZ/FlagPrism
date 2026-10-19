@@ -188,6 +188,18 @@ def compiler_actors(metadata):
                 'Carrier source/coordinate mapping mismatch')
             anchors[source, column] = True
         native_version = binding.get('native_control_version')
+        participation = binding.get('runtime_participation')
+        if participation is not None:
+            _need(
+                participation == dict(version=1,
+                                      header_word=7,
+                                      count_shift=8,
+                                      basis='llvm.hivm.GET.SUBBLOCKDIM' if kind
+                                      == 'AIV' else 'constant_one_cube_actor')
+                and all(
+                    type(participation.get(key)) is int
+                    for key in ('version', 'header_word', 'count_shift')),
+                'Unsupported Ascend runtime participation binding')
         _need(
             native_version is None
             or (type(native_version) is int and native_version in (1, 2)),
@@ -265,17 +277,54 @@ def compiler_actors(metadata):
             _need(slot not in actors,
                   'Multiple actor functions alias one physical log slot')
             actors[slot] = dict(kind=kind,
+                                runtime_participation=participation
+                                is not None,
                                 native_control_version=native_version,
                                 function=binding['function'],
                                 sites=sites,
                                 manifest_sha256=artifact['manifest_sha256'])
+    _need(
+        len({a['runtime_participation']
+             for a in actors.values()}) == 1,
+        'Mixed Ascend runtime participation publisher versions')
     return actors
+
+
+def _runtime_vector_count(raw, physical_slot, stride, actors):
+    """Read device-published cardinality, never infer it from empty slots.
+
+    A missing publisher leaves the admissible slots unknown. A published
+    single-vector topology excludes slot 2 only if that whole segment is zero.
+    Older logs have no topology evidence and retain their original semantics.
+    """
+    counts = set()
+    for slot, actor in actors.items():
+        if not actor['runtime_participation']:
+            continue
+        base = (physical_slot * 3 + slot) * stride
+        header = struct.unpack_from('<8Q', raw, base)
+        if not any(header):
+            continue
+        count = header[7] >> 8
+        _need(header[0] == MAGIC and header[7] & 1 and not header[7] & ~0x307,
+              'Invalid Ascend runtime participation header')
+        if actor['kind'] == 'AIC':
+            _need(count == 1, 'Cube actor participation must be one')
+        else:
+            _need(count in (1, 2) and slot - 1 < count,
+                  'Invalid Ascend vector participation count')
+            counts.add(count)
+    _need(
+        len(counts) <= 1,
+        'Ascend vector actors disagree on runtime participation')
+    return next(iter(counts)) if counts else None
 
 
 def canonicalize_ascend_capture(raw, *, owner, metadata, association):
     """Decode actual published pairs into shared schema2, retaining empty slots.
 
-    An empty admissible actor is explicitly unobserved, never proof of execution.
+    An empty admissible actor is unobserved unless device-published topology
+    proves it was not a participant. Legacy empty slots stay unobserved.
     No hardware units, region boundary or dynamic async flow is inferred here.
     """
     _need(type(raw) is bytes, 'Immutable Ascend raw bytes are required')
@@ -414,15 +463,25 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
             site_map[slot, sid] = site_id
     observers, records, events, mapping = [], [], [], {}
     complete = True
+    participation_notes = []
     for physical_slot, program in enumerate(programs):
         coords = [
             program % grid[0], (program // grid[0]) % grid[1],
             program // (grid[0] * grid[1])
         ]
+        vector_count = _runtime_vector_count(raw, physical_slot, stride,
+                                             actors)
         for actor_slot in range(3):
             base = (physical_slot * 3 + actor_slot) * stride
             segment = raw[base:base + stride]
             actor = actors.get(actor_slot)
+            if actor_slot == 2 and vector_count == 1:
+                _need(not any(segment),
+                      'Nonparticipant vector slot contains data')
+                participation_notes.append(
+                    'Program ' + str(program) + ': reserved AIV slot 2 '
+                    'not selected; device GET.SUBBLOCKDIM reported one.')
+                continue
             if actor is None:
                 _need(not any(segment), 'Unassigned actor slot contains data')
                 continue
@@ -432,7 +491,9 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
             if arrived:
                 _need(
                     magic == MAGIC and committed <= capacity and flags & 1
-                    and not flags & ~7 and pid == program and who == actor_slot
+                    and not flags
+                    & ~(0x307 if actor['runtime_participation'] else 7)
+                    and pid == program and who == actor_slot
                     and attempted <= MAX_COUNT and dropped <= MAX_COUNT,
                     'Invalid Ascend actor header')
                 _need(
@@ -479,6 +540,7 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                          'ascend.writer_state':
                          'arrived' if arrived else 'unobserved',
                          'ascend.native_pair_count': committed,
+                         'ascend.runtime_vector_count': vector_count,
                          'ascend.function': actor['function']
                      }))
             occurrences = Counter()
@@ -546,7 +608,7 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
             events=events,
             complete=complete,
             backend_record_map={'ascend.paired.v1': mapping},
-            notes=[
+            notes=participation_notes + [
                 'Unobserved actor slots are not evidence of execution.',
                 'Physical counts are pairs; canonical counts are endpoint references.',
                 'Lowered fragments support navigation, not certified source cost or hardware busy.',

@@ -240,6 +240,96 @@ def test_empty_slot_cannot_be_relabelled_as_complete():
                 'physical_identity'] is None and not observer['complete']
 
 
+def participation_fixture(count):
+    """Synthetic protocol fixture; actual getter/device tests are separate."""
+    meta, owner, association, raw = fixture()
+    artifact = meta['flagprism_ascend_handoff']['artifacts'][0]
+    artifact['metadata']['runtime_actor_binding'][
+        'runtime_participation'] = dict(version=1,
+                                        header_word=7,
+                                        count_shift=8,
+                                        basis='llvm.hivm.GET.SUBBLOCKDIM')
+    text = json.dumps(artifact['metadata'])
+    artifact.update(manifest_text=text, manifest_sha256=sha(text.encode()))
+    raw = bytearray(raw)
+    for program_slot, program in enumerate([0, 8]):
+        first = (program_slot * 3 + 1) * 192
+        struct.pack_into('<Q', raw, first + 56, 1 | count << 8)
+        if count != 2:
+            continue
+        second = first + 192
+        raw[second:second + 192] = raw[first:first + 192]
+        struct.pack_into('<Q', raw, second + 40, 2)
+        for index in range(2):
+            offset = second + 64 + index * 64
+            descriptor, seq, start, end, pid, _, block, _ = struct.unpack_from(
+                '<8Q', raw, offset)
+            struct.pack_into('<8Q', raw, offset, descriptor, seq, start, end,
+                             pid, 2, block,
+                             COMMIT ^ descriptor ^ seq ^ pid ^ 2 ^ block)
+    return meta, owner, association, bytes(raw)
+
+
+@pytest.mark.parametrize('count,observers', [(1, 2), (2, 4)])
+def test_device_cardinality_defines_participating_vector_slots(
+        count, observers):
+    batch = decode(*participation_fixture(count))
+    assert batch['complete'] and len(batch['observers']) == observers
+    assert all(o['attributes']['ascend.runtime_vector_count'] == count
+               for o in batch['observers'])
+    assert len(batch['events']) == 2 * observers
+    assert any('not selected' in note
+               for note in batch['notes']) == (count == 1)
+
+
+@pytest.mark.parametrize('count', [1, 2])
+def test_missing_expected_publisher_is_still_incomplete(count):
+    meta, owner, association, raw = participation_fixture(count)
+    raw = bytearray(raw)
+    base = (1 if count == 1 else 2) * 192
+    raw[base:base + 192] = bytes(192)
+    batch = decode(meta, owner, association, bytes(raw))
+    assert not batch['complete']
+    assert any(o['attributes']['ascend.writer_state'] == 'unobserved'
+               for o in batch['observers'])
+
+
+@pytest.mark.parametrize(
+    'change',
+    ['zero', 'three', 'unknown_flags', 'disagree', 'nonparticipant_payload'])
+def test_participation_cannot_hide_invalid_or_conflicting_raw(change):
+    meta, owner, association, raw = participation_fixture(2 if change ==
+                                                          'disagree' else 1)
+    raw = bytearray(raw)
+    if change == 'nonparticipant_payload':
+        raw[2 * 192 + 64] = 1
+    else:
+        flags = {
+            'zero': 1,
+            'three': 1 | 3 << 8,
+            'unknown_flags': 1 | 1 << 8 | 1 << 20,
+            'disagree': 1 | 1 << 8
+        }[change]
+        struct.pack_into('<Q', raw, 192 + 56, flags)
+    with pytest.raises(ValueError, match='participation|Nonparticipant'):
+        decode(meta, owner, association, bytes(raw))
+
+
+@pytest.mark.parametrize('field,value', [('version', True), ('version', 2),
+                                         ('header_word', 6),
+                                         ('count_shift', 9),
+                                         ('basis', 'guessed_from_empty_slot')])
+def test_participation_requires_versioned_actual_getter_binding(field, value):
+    meta, _, _, _ = participation_fixture(1)
+    artifact = meta['flagprism_ascend_handoff']['artifacts'][0]
+    artifact['metadata']['runtime_actor_binding']['runtime_participation'][
+        field] = value
+    text = json.dumps(artifact['metadata'])
+    artifact.update(manifest_text=text, manifest_sha256=sha(text.encode()))
+    with pytest.raises(ValueError, match='participation'):
+        compiler_actors(meta)
+
+
 def test_reexport_from_original_requires_no_device_and_keeps_raw(tmp_path):
     from flagtree.profiler.timeline_reexport import reexport_capture
     meta, owner, association, raw = fixture()
