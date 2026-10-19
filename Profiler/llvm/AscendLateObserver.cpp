@@ -619,7 +619,7 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
             {"reason", "no_dominating_source_coordinate_operands"}});
       }
     }
-    runtimeActorBinding["native_control_version"] = 1;
+    runtimeActorBinding["native_control_version"] = 2;
     for (const auto &native : nativeFragments) {
       auto site = flagprism_ascend::instrumentNativeTimeline(
           *native.call, native.marker, function.getArg(argumentIndex), actor,
@@ -630,11 +630,25 @@ static bool instrumentActor(Function &function, uint64_t argumentIndex,
         nativeInventory.push_back(std::move(site));
         continue;
       }
+      // Retain user navigation before assigning a distinct marker to the
+      // existing primitive itself. A clock marker alone cannot prove which
+      // native control survived final scheduling or duplication.
       attachSourceOrigin(site, *native.call);
+      const uint64_t id = sites.size() + 1;
+      const auto nativeLocation =
+          flagprism_ascend::nativeControlLocation(*native.call, id);
+      native.call->setDebugLoc(nativeLocation);
+      site["native_instruction_marker"] = json::Object{
+          {"version", 1},
+          {"file", flagprism_ascend::kNativeControlFile},
+          {"line",
+           nativeLocation ? static_cast<int64_t>(nativeLocation.getLine()) : 0},
+          {"status",
+           nativeLocation ? "debug_locations_emitted" : "missing_debug_scope"}};
       site["source_op_id"] = static_cast<int64_t>(native.marker.sourceId);
       sites.push_back(std::move(site));
     }
-    controlPlan["native_control_version"] = 1;
+    controlPlan["native_control_version"] = 2;
     controlPlan["selected_count"] = static_cast<int64_t>(sites.size());
     controlPlan["unobserved"] = std::move(nativeInventory);
     for (const auto &fragment : fragments) {
@@ -1228,7 +1242,7 @@ public:
     if (sourceTimeline()) {
       manifest["dynamic_record_layout"] = "ascend_source_timeline_v1";
       manifest["effective_semantics"] = json::Array{"source_control_interval"};
-      manifest["observation_plan_version"] = 5;
+      manifest["observation_plan_version"] = 6;
       manifest["boundary_status"] = "unverified";
       manifest["frontend_marker_carrier"] = "source_census_site.v3";
       manifest["record_ordering"] = "paired_endpoints";

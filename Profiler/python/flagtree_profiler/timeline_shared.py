@@ -29,6 +29,7 @@ class SharedCounterProof:
     provider: str
     implementation_sha256: str
     evidence_ids: tuple
+    scope_kind: str = 'shared_observers'
 
     def __post_init__(self):
         for field in ('capture_id', 'invocation_id', 'binary_id', 'domain_id',
@@ -40,8 +41,12 @@ class SharedCounterProof:
         for field in ('period_numerator_ns', 'period_denominator',
                       'max_elapsed_ns'):
             _integer(getattr(self, field), field, 1)
+        if self.scope_kind not in ('shared_observers', 'single_observer'):
+            raise ValueError('Unknown counter scope kind')
+        minimum = 2 if self.scope_kind == 'shared_observers' else 1
+        maximum = 64 if self.scope_kind == 'shared_observers' else 1
         if (type(self.observer_ids) is not tuple
-                or not 2 <= len(self.observer_ids) <= 64
+                or not minimum <= len(self.observer_ids) <= maximum
                 or len(set(self.observer_ids)) != len(self.observer_ids)):
             raise ValueError(
                 'Shared counter proof requires distinct actual observers')
@@ -72,7 +77,7 @@ def derive_shared_counter_view(canonical, proof):
         raise ValueError(
             'Shared counter proof belongs to another raw/canonical invocation')
     observers = {o['id']: o for o in batch['observers']}
-    if not batch['complete']:
+    if proof.scope_kind == 'shared_observers' and not batch['complete']:
         raise ValueError(
             'Shared counter projection requires complete captured raw')
     chosen = []
@@ -125,7 +130,7 @@ def derive_shared_counter_view(canonical, proof):
                 period_numerator_ns=proof.period_numerator_ns,
                 period_denominator=proof.period_denominator,
                 max_elapsed_ns=proof.max_elapsed_ns)
-    return dict(
+    view = dict(
         schema_version=2,
         identity=copy.deepcopy(batch['identity']),
         canonical_sha256=proof.canonical_sha256,
@@ -153,6 +158,13 @@ def derive_shared_counter_view(canonical, proof):
             'Clock read precision remains unknown; counter coordinates do not certify physical overlap or source costs.',
             'Displayed actual threads are observers, not measured hardware-engine activity.'
         ])
+    if proof.scope_kind == 'single_observer':
+        view['clock_scope_kind'] = 'single_observer'
+        view['observer_epoch_alignment_verified'] = False
+        view['notes'].append(
+            'One actual observer only; no inter-observer epoch alignment is authorized.'
+        )
+    return view
 
 
 def validate_shared_counter_view(view, canonical, proof):

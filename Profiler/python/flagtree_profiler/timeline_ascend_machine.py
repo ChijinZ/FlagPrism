@@ -110,7 +110,7 @@ def _elf(raw):
     return sections, functions
 
 
-def _dwarf_rows(raw):
+def _dwarf_rows(raw, *, marker_file=CLOCK_FILE):
     _need(type(raw) is bytes and len(raw) <= LIMIT, 'Invalid DWARF output')
     rows, files, current, units = [], {}, None, set()
     unit = None
@@ -136,7 +136,7 @@ def _dwarf_rows(raw):
             files[current] = match[1]
             continue
         match = re.match(r'^(0x[0-9a-fA-F]+)\s+(\d+)\s+(\d+)\s+(\d+)\s+', line)
-        if not match or files.get(int(match[4])) != CLOCK_FILE:
+        if not match or files.get(int(match[4])) != marker_file:
             continue
         number = int(match[2])
         # DWARF line zero explicitly has no source location. It must never

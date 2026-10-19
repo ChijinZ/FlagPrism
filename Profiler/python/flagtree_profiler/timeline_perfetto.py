@@ -181,7 +181,9 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
             root = track(
                 shared['domain_id'], identity['invocation_id'] +
                 ' / program ' + str(shared['program_coordinates']) +
-                ' — shared counter ns (precision unverified)')
+                (' — single observer counter ns (precision unverified)'
+                 if shared.get('clock_scope_kind') == 'single_observer' else
+                 ' — shared counter ns (precision unverified)'))
         observer_track = track(
             namespace + ':observer',
             ('Observer ' + observer['local_id'] if dependencies is not None
@@ -193,7 +195,8 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
         records = {row['id']: row for row in view['records']}
 
         def presentation(site):
-            if shared is not None:
+            if shared is not None and shared.get(
+                    'clock_scope_kind') != 'single_observer':
                 return 'observer-order', 'Observed internal operations', False
             group = site.get('attributes', {}).get('display.track_group')
             if group is None:
@@ -360,6 +363,16 @@ def _encode_counter_views(views, *, max_bytes, shared=None, dependencies=None):
                 incoming_dependency_ids=[
                     flow_ids[n] for n in sorted(incoming.get(node['id'], []))
                 ])
+            evidence = [
+                edge['attributes']['backend_evidence']
+                for edge in incident[node['id']]
+                if 'backend_evidence' in edge['attributes']
+            ]
+            if evidence:
+                annotations['backend_evidence'] = evidence
+            if dependencies.get('clock_scope_kind') == 'single_observer':
+                annotations['clock_scope_kind'] = 'single_observer'
+                annotations['observer_epoch_alignment_verified'] = False
             for name, value in annotations.items():
                 message += _annotation(name, value, annotation_intern)
             # Base slice lanes and checkpoint lanes are independent. Equal-ns

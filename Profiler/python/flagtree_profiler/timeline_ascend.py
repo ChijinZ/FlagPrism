@@ -302,6 +302,24 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
                     UnicodeError) as error:
                 capture['counter_ns_status'] = dict(status='unavailable',
                                                     reason=str(error))
+            try:
+                from .timeline_ascend_native import load_observed_dependency_inputs
+                from .timeline_dependency_perfetto import write_dependency_exports
+                dependency_batch, dependency_proofs = load_observed_dependency_inputs(
+                    directory, capture, raw)
+                capture[
+                    'observed_dependency_exports'] = write_dependency_exports(
+                        directory, dependency_batch, dependency_proofs)
+                capture['observed_dependency_status'] = dict(
+                    status='observed_dynamic_dependencies',
+                    clock_scope_kind='single_observer',
+                    observer_epoch_alignment_verified=False,
+                    physical_completion_time_qualified=False,
+                    hardware_busy_qualified=False)
+            except (ValueError, OSError, KeyError, TypeError,
+                    UnicodeError) as error:
+                capture['observed_dependency_status'] = dict(
+                    status='unavailable', reason=str(error))
             from flagtree.debugger import api
             api._exported_runs.append(exported)
         _persist(directory / prefix.with_suffix('.json'),

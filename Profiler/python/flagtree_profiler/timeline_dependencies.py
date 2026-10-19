@@ -125,7 +125,7 @@ def derive_dependency_view(canonical, proof):
         raise ValueError('Dynamic dependencies contain a cycle')
     for rank, key in enumerate(order):
         nodes[key]['topological_rank'] = rank
-    return dict(
+    view = dict(
         schema_version=1,
         kind='observed_dynamic_dependencies_ns',
         identity=copy.deepcopy(counter['identity']),
@@ -152,6 +152,10 @@ def derive_dependency_view(canonical, proof):
             'Wait return and consumer issue observations are not physical engine completion or busy intervals.',
             'Only the selected actual observers are displayed; participation checks remain backend evidence.'
         ])
+    if counter.get('clock_scope_kind') == 'single_observer':
+        view['clock_scope_kind'] = 'single_observer'
+        view['observer_epoch_alignment_verified'] = False
+    return view
 
 
 def validate_dependency_view(view, canonical, proof):

@@ -11,6 +11,20 @@ from .timeline_events import stable_id, validate_raw_batch, _integer, _sha, _tex
 LAYOUT = 'ascend_source_timeline_v1'
 MAGIC = 0x46505441314c4f47
 COMMIT = 0x46505441434f4d31
+NATIVE_CONTROL_FILE = '__flagprism_native_control_v1__'
+PIPE_NAMES = {
+    0: 'PIPE_S',
+    1: 'PIPE_V',
+    2: 'PIPE_M',
+    3: 'PIPE_MTE1',
+    4: 'PIPE_MTE2',
+    5: 'PIPE_MTE3',
+    6: 'PIPE_ALL',
+    7: 'PIPE_MTE4',
+    8: 'PIPE_MTE5',
+    9: 'PIPE_V2',
+    10: 'PIPE_FIX'
+}
 MAX_COUNT = (1 << 63) - 1
 
 
@@ -176,7 +190,7 @@ def compiler_actors(metadata):
         native_version = binding.get('native_control_version')
         _need(
             native_version is None
-            or (type(native_version) is int and native_version == 1),
+            or (type(native_version) is int and native_version in (1, 2)),
             'Unsupported Ascend native control feature version')
         sites = {}
         for site in manifest.get('dynamic_sites', []):
@@ -189,8 +203,8 @@ def compiler_actors(metadata):
                 and type(site.get('semantic_code')) is int and
                 (site.get('semantic_code') == 1
                  and site.get('operation_class') == 'lowered_source_fragment'
-                 or native_version == 1 and site.get('semantic_code') in (2, 3)
-                 and site.get('operation_class')
+                 or native_version in (1, 2) and site.get('semantic_code') in
+                 (2, 3) and site.get('operation_class')
                  == 'native_control_scalar_bracket')
                 and site.get('boundary_status') == 'unverified',
                 'Unknown or unbound actor fragment')
@@ -230,6 +244,19 @@ def compiler_actors(metadata):
                                    r', ![\w.]+ ![0-9]+', '', original),
                     'Native control arguments differ from retained original LLVM'
                 )
+            if native_version == 2 and site['semantic_code'] in (2, 3):
+                marker = site.get('native_instruction_marker') or {}
+                _need(
+                    type(marker.get('version')) is int
+                    and marker['version'] == 1
+                    and marker.get('file') == NATIVE_CONTROL_FILE
+                    and type(marker.get('line')) is int
+                    and 0 <= marker['line'] <= 0x7fffffff
+                    and ((marker.get('status') == 'debug_locations_emitted'
+                          and marker['line'] == sid) or
+                         (marker.get('status') == 'missing_debug_scope'
+                          and marker['line'] == 0)),
+                    'Invalid native instruction marker declaration')
             sites[sid] = dict(site,
                               origin=origins[source],
                               backend_identity=kind + ':' + original_hash +
@@ -238,6 +265,7 @@ def compiler_actors(metadata):
             _need(slot not in actors,
                   'Multiple actor functions alias one physical log slot')
             actors[slot] = dict(kind=kind,
+                                native_control_version=native_version,
                                 function=binding['function'],
                                 sites=sites,
                                 manifest_sha256=artifact['manifest_sha256'])
@@ -340,7 +368,7 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                                           ' (scalar control)')
                 sites[site_id]['attributes'].update({
                     'ascend.native_control_version':
-                    1,
+                    actor['native_control_version'],
                     'ascend.native_operation':
                     site['native_operation'],
                     'ascend.native_source_pipe':
@@ -358,6 +386,31 @@ def canonicalize_ascend_capture(raw, *, owner, metadata, association):
                     'ascend.engine_activity_verified':
                     False
                 })
+            if native and actor['native_control_version'] == 2:
+                attrs = sites[site_id]['attributes']
+                attrs['ascend.coordinate_carrier_source_op_id'] = attrs.pop(
+                    'ascend.source_op_id')
+                src, dst, event = site['native_arguments']
+                src_name = PIPE_NAMES.get(src, 'pipe_id_' + str(src))
+                dst_name = PIPE_NAMES.get(dst, 'pipe_id_' + str(dst))
+                attrs.update({
+                    'ascend.native_source_pipe_name':
+                    src_name,
+                    'ascend.native_destination_pipe_name':
+                    dst_name,
+                    'ascend.pipe_name_basis':
+                    'compiler_hivm_pipe_enum',
+                    'ascend.native_instruction_marker':
+                    site['native_instruction_marker'],
+                    'display.track_group':
+                    'Native controls ' + src_name + ' -> ' + dst_name +
+                    ' (scalar observer)'
+                })
+                sites[site_id]['name'] = ('Native ' +
+                                          site['native_operation'].upper() +
+                                          ' ' + src_name + ' -> ' + dst_name +
+                                          ' (event ' + str(event) +
+                                          ', scalar control)')
             site_map[slot, sid] = site_id
     observers, records, events, mapping = [], [], [], {}
     complete = True

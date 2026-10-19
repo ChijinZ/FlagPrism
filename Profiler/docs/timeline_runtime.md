@@ -278,6 +278,34 @@ invented duration. The source fragments still contained multiple positive
 intervals. These finite observations do not qualify the asynchronous pipeline
 required by the three-backend goal.
 
+With native-control feature version 2, the producer also marks each existing
+native instruction separately from its two counter readers. The inspected
+c220-vector mapper checks the actual loaded ELF, retained DWARF, exact compiled
+flag-word references, all instruction clones and getter brackets. Unknown words,
+unmapped clones or unobserved native controls prevent dependency qualification.
+
+The public path now writes `observed_dependency_exports` when these checks and a
+complete actual scalar record stream succeed. Each file has
+`clock_scope_kind=single_observer`; other actors keep their original unobserved
+or incomplete status. The default multi-observer counter proof still requires
+at least two observers and complete captured input. No inter-observer epoch is
+granted by the single-observer path.
+
+Native flag generations follow complete scalar issuer order for the actual
+source pipe, destination pipe and event ID. SET-to-WAIT arrows describe that
+queued generation. A WAIT targeting PIPE_S supplies a scalar readiness
+observation at its exit. Other WAIT exits only observe enqueueing. These are
+not physical completion instants or engine busy intervals. Source containment
+arrows require both the compiler's original fragment binding and actual dynamic
+record/tick enclosure; they do not assert a buffer dependency or source cost.
+
+Open the resulting standard Perfetto trace from `timeline/index.json`.
+Native checkpoint details include channel/generation relations, raw offsets and
+ticks, user source navigation, final instruction candidates and getter ranges
+in `backend_evidence`. Compiler-generated instruction clones remain distinct
+candidates; they are not counted as additional dynamic executions. Historical
+feature-1 recordings remain readable through the counter-unit path.
+
 The Ascend unit provider binds the actual runtime model/device, loaded binary,
 SYS_CNT instruction locations, original raw records and a bounded host window.
 For the documented A2 counter, one tick is 20 ns. This does not apply to other

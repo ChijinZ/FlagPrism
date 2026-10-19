@@ -1,0 +1,51 @@
+{
+  "status": "all_six_public_native_dependency_traces_offline_byte_identical_normal_optimized_public",
+  "checks": [
+    {
+      "case": "recurrence",
+      "mode": "public",
+      "captures": 2,
+      "native_traces": 4
+    },
+    {
+      "case": "recurrence",
+      "mode": "normal",
+      "captures": 2,
+      "native_traces": 4
+    },
+    {
+      "case": "recurrence",
+      "mode": "optimized",
+      "captures": 2,
+      "native_traces": 4
+    },
+    {
+      "case": "recurrence",
+      "complete_bundle_bytes": 11955779,
+      "all_trace_bytes": 315935
+    },
+    {
+      "case": "softmax",
+      "mode": "public",
+      "captures": 1,
+      "native_traces": 2
+    },
+    {
+      "case": "softmax",
+      "mode": "normal",
+      "captures": 1,
+      "native_traces": 2
+    },
+    {
+      "case": "softmax",
+      "mode": "optimized",
+      "captures": 1,
+      "native_traces": 2
+    },
+    {
+      "case": "softmax",
+      "complete_bundle_bytes": 5148794,
+      "all_trace_bytes": 145956
+    }
+  ]
+}

@@ -273,6 +273,18 @@ def reexport_capture(directory, original_file):
         except (ValueError, OSError, KeyError, TypeError,
                 UnicodeError) as error:
             reason = 'Ascend counter mapping unavailable: ' + str(error)
+        try:
+            from .timeline_ascend_native import load_observed_dependency_inputs
+            from .timeline_dependency_perfetto import write_dependency_exports
+            dependency_batch, dependency_proofs = load_observed_dependency_inputs(
+                directory, capture, raw)
+            dependency_rows = write_dependency_exports(directory,
+                                                       dependency_batch,
+                                                       dependency_proofs)
+        except (ValueError, OSError, KeyError, TypeError,
+                UnicodeError) as error:
+            dependency_reason = 'Ascend observed dependencies unavailable: ' + str(
+                error)
     else:
         reason = 'No validated counter-unit provider for this target; raw canonical revision retained'
     result = dict(invocation_id=owner['invocation_id'],

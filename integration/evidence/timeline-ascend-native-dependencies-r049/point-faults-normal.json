@@ -1,0 +1,22 @@
+{
+  "status": "real_native_point_corruption_contract_passed_not_full_qualification",
+  "binary_sha256": "7fd6f05733e5a36dc5af9dedd735915f3d8d4ac9e414da9ab278cadd8d614447",
+  "target": {
+    "pc": 1664,
+    "instruction_word": 1084229120,
+    "operation": "set_flag",
+    "arguments": [
+      1,
+      4,
+      0
+    ],
+    "function": "recurrence",
+    "site_id": 1,
+    "backend_site_id": "AIV:d9dd1c64e20ad798a303cce63a5e5cd7f852c3714758b850dd168339c3dfdac5:recurrence:1"
+  },
+  "rejected": [
+    "different_native_operation",
+    "different_native_event",
+    "missing_native_clone_is_incomplete"
+  ]
+}

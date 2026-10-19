@@ -376,7 +376,7 @@ def test_native_controls_reject_forged_or_unversioned_bindings(fault):
     binding = artifact['metadata']['runtime_actor_binding']
     site = artifact['metadata']['dynamic_sites'][1]
     if fault == 'missing_version': binding.pop('native_control_version')
-    elif fault == 'wrong_version': binding['native_control_version'] = 2
+    elif fault == 'wrong_version': binding['native_control_version'] = 3
     elif fault == 'bool_version': binding['native_control_version'] = True
     elif fault == 'arguments': site['native_arguments'] = [4, 0, 0]
     elif fault == 'intrinsic': site['intrinsic'] = 'llvm.hivm.SET.FLAG.IMM'
@@ -393,3 +393,34 @@ def test_native_controls_reject_forged_or_unversioned_bindings(fault):
     reseal_manifest(artifact)
     with pytest.raises(ValueError):
         decode(meta, owner, association, raw)
+
+
+@pytest.mark.parametrize('fault',
+                         [None, 'line', 'file', 'version', 'bool_line'])
+def test_native_instruction_marker_v2_is_versioned_and_not_completion(fault):
+    meta, owner, association, raw = native_fixture('wait_flag')
+    artifact = meta['flagprism_ascend_handoff']['artifacts'][0]
+    artifact['metadata']['runtime_actor_binding']['native_control_version'] = 2
+    site = artifact['metadata']['dynamic_sites'][1]
+    marker = dict(version=1,
+                  file='__flagprism_native_control_v1__',
+                  line=2,
+                  status='debug_locations_emitted')
+    site['native_instruction_marker'] = marker
+    if fault == 'line': marker['line'] = 3
+    elif fault == 'file': marker['file'] = 'guessed'
+    elif fault == 'version': marker['version'] = 2
+    elif fault == 'bool_line': marker['line'] = True
+    reseal_manifest(artifact)
+    if fault:
+        with pytest.raises(ValueError):
+            decode(meta, owner, association, raw)
+    else:
+        batch = decode(meta, owner, association, raw)
+        native = [
+            s for s in batch['sites']
+            if s['attributes'].get('ascend.native_control_version') == 2
+        ]
+        assert native and 'PIPE_V -> PIPE_S' in native[0]['name']
+        assert native[0]['attributes'][
+            'ascend.completion_status'] == 'unverified'

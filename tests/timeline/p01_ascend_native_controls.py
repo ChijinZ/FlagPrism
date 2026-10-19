@@ -71,7 +71,7 @@ def main():
             fault_checked = False
             for event in batch['events']:
                 attrs = sites[event['site_id']]['attributes']
-                if attrs.get('ascend.native_control_version') != 1:
+                if attrs.get('ascend.native_control_version') not in (1, 2):
                     if event['end_tick'] > event['start_tick']:
                         positive_source.add(event['site_id'])
                     continue

@@ -1,0 +1,63 @@
+{
+  "status": "actual_dependency_traces_UI_passed_not_full_qualification",
+  "checks": [
+    {
+      "trace_file": "derived/counter-ns/2e253e94145a88d128bce8fc1af34e924c6d5b31b29bbcdb110666937a310107/traces/ascend-scalar-counter-scope-1800b48f0f48da0ed56b6e74df4f1c2e8acd979e70eb2d80ea67a6605b3e8f07.pftrace",
+      "trace_sha256": "d420946807e7feb0e79f7099a1e1e972280610d271ea42529ab7f874fb25cf5b",
+      "node_id": "record-1fd4165b5a5a872245ef1472cbd0dc20d0651f8dd5804134012fc7d916da9b28",
+      "observer_id": "observer-de91b74b9e11b833236d4442cd3a9d0193657e33e78330a9c573eb1607fa8d56",
+      "raw_tick": 168846753054620,
+      "raw_offset": 131352,
+      "page_errors": [],
+      "screenshots": {
+        "full-range": {
+          "file": "0/full-range.png",
+          "sha256": "edb7e43bd69856ce3220f04049952956593142af3930aaa2fa4b49732320a6fc"
+        },
+        "details": {
+          "file": "0/details.png",
+          "sha256": "d30a4d6e77a3a78d323b2696967cce091b0fdd1edbace43f1a3854a0db3a8e72"
+        },
+        "focus-with-flows": {
+          "file": "0/focus-with-flows.png",
+          "sha256": "70365283b3dfdf403e87bf6209362ae005bdaa862b56a7f6137a30a4bfa3cfc0"
+        }
+      }
+    },
+    {
+      "trace_file": "derived/counter-ns/2e253e94145a88d128bce8fc1af34e924c6d5b31b29bbcdb110666937a310107/traces/ascend-scalar-counter-scope-f52d546e7a79a51779141c353042166603fecc75929e4ae3448c35089f829a49.pftrace",
+      "trace_sha256": "6a7f938e508093c2019d476b0423e6c58e5f90c53edf81d58e4427ae99e8d407",
+      "node_id": "record-6f3e70da898b9a353603960300d3b7355d346dec7c67bf5b26544cc3236e23eb",
+      "observer_id": "observer-68d37bb34820919b49ea3ab623556f2713dd42045e5727acd7a34107aad0271b",
+      "raw_tick": 168846753054633,
+      "raw_offset": 524760,
+      "page_errors": [],
+      "screenshots": {
+        "full-range": {
+          "file": "1/full-range.png",
+          "sha256": "d8c3b2eab28de2ba3b77fce85bb3241150675516651e9ef1af7f5162669421be"
+        },
+        "details": {
+          "file": "1/details.png",
+          "sha256": "0721d788434c33d735dc82479030c75f6c56d2c87a024621b8ae16ae08928781"
+        },
+        "focus-with-flows": {
+          "file": "1/focus-with-flows.png",
+          "sha256": "33b2a101012a4c311377374f6c1c9681f1e4cb3afcd0f01feb6bd1d6d5e5f7b1"
+        }
+      }
+    }
+  ],
+  "blocked_external_requests": [
+    "http://127.0.0.1:9001/status",
+    "https://storage.cloud.google.com/perfetto-ui-internal/internal-data-v1/amalgamated.js",
+    "https://www.googletagmanager.com/gtag/js?id=G-BD89KT2P3C",
+    "https://perfetto-gae-internal.googleplex.com/extension_server_assets/manifest",
+    "http://127.0.0.1:9001/status",
+    "http://127.0.0.1:9001/status",
+    "https://storage.cloud.google.com/perfetto-ui-internal/internal-data-v1/amalgamated.js",
+    "https://www.googletagmanager.com/gtag/js?id=G-BD89KT2P3C",
+    "https://perfetto-gae-internal.googleplex.com/extension_server_assets/manifest",
+    "http://127.0.0.1:9001/status"
+  ]
+}

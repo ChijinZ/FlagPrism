@@ -18,6 +18,8 @@ p = argparse.ArgumentParser()
 p.add_argument('--output', type=Path, required=True)
 p.add_argument('--timeline', type=Path, required=True)
 p.add_argument('--minimum-traces', type=int, default=6)
+p.add_argument('--search-text', default='Async wait')
+p.add_argument('--require-backend-evidence', action='store_true')
 p.add_argument('--tp-result',
                type=Path,
                help='Independent verifier result with actual slice depths')
@@ -130,7 +132,11 @@ try:
                             cookie.first.click()
                         root_title = invocation + ' / program ' + str(
                             view['program_coordinates']
-                        ) + ' — shared counter ns (precision unverified)'
+                        ) + (
+                            ' — single observer counter ns (precision unverified)'
+                            if view.get('clock_scope_kind')
+                            == 'single_observer' else
+                            ' — shared counter ns (precision unverified)')
                         page.locator('.pf-track__title').filter(
                             has_text=root_title).first.locator('..').locator(
                                 '.pf-track__collapse-button').click()
@@ -174,14 +180,15 @@ try:
                         # depends on virtualized row packing and screen scale.
                         targets = {
                             n['id']: n
-                            for n in view['nodes'] if
-                            'Async wait' in n['label'] and n['phase'] == 'exit'
+                            for n in view['nodes']
+                            if a.search_text in n['label']
+                            and n['phase'] == 'exit'
                         }
                         need(targets,
                              'No real wait-return checkpoint to inspect')
                         search = page.get_by_placeholder('Search or type',
                                                          exact=False).first
-                        search.fill('Async wait')
+                        search.fill(a.search_text)
                         search.press('Enter')
                         page.wait_for_timeout(1200)  # UI search is debounced.
                         selected = None
@@ -220,6 +227,12 @@ try:
                         ]:
                             need(field in body,
                                  'Missing dependency details: ' + field)
+                        if a.require_backend_evidence:
+                            for field in ('backend_evidence',
+                                          'clock_scope_kind',
+                                          'observer_epoch_alignment_verified'):
+                                need(field in body,
+                                     'Missing scoped backend detail: ' + field)
                         need('outgoing:' in body or 'incoming:' in body,
                              'No readable actual generation relation')
                         (folder / 'details.txt').write_text(body)

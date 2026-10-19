@@ -1,0 +1,36 @@
+{
+  "status": "installed_native_point_faults_normal_optimized_passed",
+  "steps": [
+    {
+      "mode": "normal",
+      "argv": [
+        "/tmp/chijin-timeline-r049/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r049/native-point-faults-input-v1/p01_ascend_native_point_faults.py",
+        "--timeline",
+        "/tmp/chijin-timeline-r049/runs/installed-v2/output/device-probe/recurrence/timeline",
+        "--output",
+        "/tmp/chijin-timeline-r049/runs/native-point-faults-v1/output/normal"
+      ],
+      "pid": 3747427,
+      "startticks": 337740028,
+      "returncode": 0
+    },
+    {
+      "mode": "optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r049/runs/installed-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/tmp/chijin-timeline-r049/native-point-faults-input-v1/p01_ascend_native_point_faults.py",
+        "--timeline",
+        "/tmp/chijin-timeline-r049/runs/installed-v2/output/device-probe/recurrence/timeline",
+        "--output",
+        "/tmp/chijin-timeline-r049/runs/native-point-faults-v1/output/optimized"
+      ],
+      "pid": 3747501,
+      "startticks": 337740835,
+      "returncode": 0
+    }
+  ]
+}

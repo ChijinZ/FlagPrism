@@ -8,6 +8,26 @@
 #include "llvm/Support/SHA256.h"
 
 namespace flagprism_ascend {
+inline constexpr const char *kNativeControlFile =
+    "__flagprism_native_control_v1__";
+
+inline llvm::DebugLoc nativeControlLocation(llvm::Instruction &source,
+                                            uint32_t site) {
+  if (!site || site > UINT32_C(0x7fffffff))
+    llvm::report_fatal_error(
+        "Ascend native control marker exceeds line encoding");
+  const auto &original = source.getDebugLoc();
+  llvm::DILocalScope *scope =
+      original ? original->getScope() : source.getFunction()->getSubprogram();
+  if (!scope)
+    return {};
+  auto &context = source.getContext();
+  auto *file = llvm::DIFile::get(context, kNativeControlFile, "");
+  auto *markerScope = llvm::DILexicalBlockFile::get(context, scope, file, 0);
+  return llvm::DILocation::get(context, site, 0, markerScope,
+                               original ? original->getInlinedAt() : nullptr);
+}
+
 template <typename Marker>
 inline llvm::json::Object instrumentNativeTimeline(
     llvm::CallInst &call, const Marker &marker, llvm::Value *pointer,

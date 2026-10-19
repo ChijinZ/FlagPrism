@@ -1,0 +1,38 @@
+{
+  "status": "source_overlay_native_map_facts_checked_not_installed_dynamic_qualification",
+  "steps": [
+    {
+      "mode": "normal",
+      "argv": [
+        "/tmp/chijin-timeline-r049/runs/installed-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r049/native-map-source-input-v1/check.py",
+        "--source",
+        "/tmp/chijin-timeline-r049/native-map-source-input-v1/component/Profiler/python/flagtree_profiler",
+        "--output",
+        "/tmp/chijin-timeline-r049/runs/native-map-source-v1/output/normal"
+      ],
+      "pid": 3718870,
+      "pgid": 3718870,
+      "startticks": 337411214,
+      "returncode": 0
+    },
+    {
+      "mode": "optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r049/runs/installed-v1/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/tmp/chijin-timeline-r049/native-map-source-input-v1/check.py",
+        "--source",
+        "/tmp/chijin-timeline-r049/native-map-source-input-v1/component/Profiler/python/flagtree_profiler",
+        "--output",
+        "/tmp/chijin-timeline-r049/runs/native-map-source-v1/output/optimized"
+      ],
+      "pid": 3718942,
+      "pgid": 3718942,
+      "startticks": 337412022,
+      "returncode": 0
+    }
+  ]
+}
