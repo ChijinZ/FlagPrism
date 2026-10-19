@@ -115,6 +115,101 @@ def _source_issue_sites(*, functions, native_lines, lines, readers, plan):
     return results
 
 
+def _matrix_issue_sites(*, functions, native_lines, lines, readers, plan):
+    """Bound supported FP16 matrix issues by their actual inline readers.
+
+    This checks instruction issue placement, not tensor-engine completion or
+    source-exclusive elapsed cost. Unknown shapes remain explicit diagnostics.
+    """
+    register = r'%[\w$]+'
+
+    def group(count):
+        return r'\{' + ','.join([register] * count) + r'\}'
+
+    operation = (
+        r'mma\.sync\.aligned\.m16n8k16\.row\.col\.f32\.f16\.f16\.f32' +
+        ','.join([group(4), group(4), group(2),
+                  group(4)]) + ';')
+    results = []
+    for site in plan['sites']:
+        if site['kind'] != 'matrix_issue_bracket':
+            continue
+        result = dict(site_id=site['site_id'],
+                      kind=site['kind'],
+                      status='unverified',
+                      source_cost_qualified=False,
+                      matrix_completion_verified=False,
+                      hardware_busy_qualified=False)
+        try:
+            _need(site['record_semantics'] == 'observer_issue_bracket',
+                  'Matrix site is not an issue bracket')
+            begin, end = [
+                readers[site['site_id'], phase] for phase in ('entry', 'exit')
+            ]
+            _need(
+                begin['function'] == end['function']
+                and begin.get('sass_predicate') is None
+                and end.get('sass_predicate') is None,
+                'Predicated or split matrix readers')
+            _need(begin['ptx_line'] < end['ptx_line'],
+                  'Reversed matrix PTX readers')
+            candidates = []
+            for n in range(begin['ptx_line'], end['ptx_line'] - 1):
+                token = lines[n]
+                if re.fullmatch(operation, token):
+                    candidates.append((n + 1, token))
+                else:
+                    _need(
+                        not re.match(r'(?:@!?%[\w$]+)?(?:mma|wgmma|tcgen05)\.',
+                                     token),
+                        'Unsupported matrix issue inside bracket')
+            _need(candidates and len(candidates) == len(site['members']),
+                  'Matrix member count differs from original PTX issues')
+            body = functions[begin['function']]
+            issues = []
+            for line, token in candidates:
+                matches = [
+                    pc
+                    for pc in native_lines.get((begin['function'], line), [])
+                    if body[pc]['opcode'] == 'HMMA.16816.F32'
+                ]
+                _need(
+                    len(matches) == 1,
+                    'Matrix PTX issue lacks one exact native instruction')
+                pc = matches[0]
+                _need(
+                    begin['pc'] < pc < end['pc']
+                    and body[pc].get('predicate') is None,
+                    'Matrix issue is conditional or outside inline readers')
+                issues.append(
+                    dict(ptx_operation_line=line,
+                         ptx_operation=token,
+                         native_pc=pc,
+                         native_opcode=body[pc]['opcode']))
+            pcs = [issue['native_pc'] for issue in issues]
+            _need(len(set(pcs)) == len(pcs), 'Aliased native matrix issues')
+            actual = [
+                pc for pc, row in body.items()
+                if begin['pc'] < pc < end['pc'] and row['opcode'].startswith((
+                    'HMMA', 'IMMA', 'MMA', 'HGMMA', 'UTCMMA'))
+            ]
+            _need(
+                sorted(actual) == sorted(pcs),
+                'Unbound matrix issue inside native bracket')
+            _straight_path(body, begin['pc'], end['pc'])
+            result.update(status='matrix_issue_control_order_checked',
+                          function=begin['function'],
+                          issues=issues,
+                          begin_reader_pc=begin['pc'],
+                          end_reader_pc=end['pc'],
+                          relation='matrix_issues_between_inline_readers',
+                          participation_verified=False)
+        except (ValueError, KeyError, TypeError) as error:
+            result['reason'] = str(error)
+        results.append(result)
+    return results
+
+
 def _native_lines(payload, functions):
     """Original embedded-PTX debug line -> exact final function/PCs."""
     function, source_line = None, None
@@ -294,26 +389,31 @@ def derive_native_boundaries(*, machine_map, sass_lines, sass_json, ptx, plan):
         Path(timeline_nvidia_late_control.__file__),
         Path(timeline_nvidia_machine.__file__)
     ]
-    return dict(model=MODEL,
-                binary_id=machine_map['binary_id'],
-                sites=results,
-                source_issue_sites=_source_issue_sites(
-                    functions=functions,
-                    native_lines=native_lines,
-                    lines=lines,
-                    readers=readers,
-                    plan=plan),
-                implementation_sha256={
-                    p.name: hashlib.sha256(p.read_bytes()).hexdigest()
-                    for p in rules
-                },
-                proof_scope='conditional_native_instruction_order',
-                record_value_provenance_verified=False,
-                participation_verified=False,
-                source_region_qualified=False,
-                clock_qualified=False,
-                hardware_overlap_verified=False,
-                time_flows_qualified=False)
+    return dict(
+        model=MODEL,
+        binary_id=machine_map['binary_id'],
+        sites=results,
+        source_issue_sites=_source_issue_sites(functions=functions,
+                                               native_lines=native_lines,
+                                               lines=lines,
+                                               readers=readers,
+                                               plan=plan),
+        matrix_issue_sites=_matrix_issue_sites(functions=functions,
+                                               native_lines=native_lines,
+                                               lines=lines,
+                                               readers=readers,
+                                               plan=plan),
+        implementation_sha256={
+            p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+            for p in rules
+        },
+        proof_scope='conditional_native_instruction_order',
+        record_value_provenance_verified=False,
+        participation_verified=False,
+        source_region_qualified=False,
+        clock_qualified=False,
+        hardware_overlap_verified=False,
+        time_flows_qualified=False)
 
 
 def load_native_boundary_report(directory, capture, machine_map):
