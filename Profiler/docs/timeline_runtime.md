@@ -406,6 +406,14 @@ Use the normal source-build recipe and public CLI:
   /tmp/my-timeline/timeline
 ```
 
+For `detail="timeline"`, `report/index.html` provides compact links to the
+actual exported traces and their clock qualifications. `report/execution.html`
+links the retained execution JSON and source-linked view. These pages avoid
+embedding duplicate machine-readable metadata; raw data, compiler artifacts,
+JSON and Perfetto files remain retained. Other detail modes keep their existing
+embedded reports. Compact HTML reduces output size but is not, by itself, a
+hard admission bound on an arbitrary application's complete capture bundle.
+
 Open the bundle's `timeline/index.html` to find the `.pftrace` files, then load a
 file in standard Perfetto. Each file has its own time origin. Do not align those
 origins to compare different programs, calls or physical identities. Raw data,

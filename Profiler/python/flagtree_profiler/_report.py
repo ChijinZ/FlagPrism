@@ -826,7 +826,13 @@ def evidence_readme(overview):
     )
 
 
-def write_bundle(report, source, output, context=None, *, complete=True):
+def write_bundle(report,
+                 source,
+                 output,
+                 context=None,
+                 *,
+                 complete=True,
+                 compact_html=False):
     """Export one normalized capture for humans and machines without recapture."""
     output = Path(output)
     document = source if isinstance(source, dict) else json.loads(
@@ -1159,9 +1165,69 @@ def write_bundle(report, source, output, context=None, *, complete=True):
     write("report/report.json", report)
     if report["events"] or report.get("native_trace"):
         write("report/timeline.json", chrome_trace(report))
-    (output / "report/index.html").write_text(render(report))
+    (output / "report/index.html").write_text(
+        linked_html('FlagPrism internal timeline', [(
+            'report.json',
+            'Full analysis JSON')]) if compact_html else render(report))
     if complete:
         write_manifest(output, report)
+
+
+def linked_html(title, links, description=''):
+    """Small local navigation page; the linked machine-readable data stays full."""
+    from html import escape
+    return (
+        '<!doctype html><html lang="en"><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width,initial-scale=1">'
+        '<title>' + escape(title) + '</title><main><h1>' + escape(title) +
+        '</h1><p>' + escape(description) + '</p><ul>' +
+        ''.join('<li><a href="' + escape(href, quote=True) + '">' +
+                escape(label) + '</a></li>'
+                for href, label in links) + '</ul></main></html>')
+
+
+def write_timeline_page(output):
+    """Link actual Perfetto exports without embedding all compiler metadata."""
+    from .timeline_store import bundle_path, read_artifact
+    output = Path(output)
+    root = output / 'timeline'
+    index = json.loads(read_artifact(root, 'index.json'))
+    links = []
+    seen = set()
+    for item in index['captures']:
+        capture = json.loads(read_artifact(root, item['capture_file']))
+        for field in ('observed_dependency_exports', 'shared_counter_exports',
+                      'counter_ns_exports'):
+            for row in capture.get(field, []):
+                relative = row['trace_file']
+                if relative in seen:
+                    continue
+                path = bundle_path(root, relative)
+                if not path.is_file() or path.stat(
+                ).st_size > 16 * 1024 * 1024:
+                    raise ValueError(
+                        'Missing or oversized Perfetto trace link')
+                seen.add(relative)
+                label = (item['invocation_id'] + ' / program ' +
+                         str(row.get('program_coordinates')) + ' / ' +
+                         row.get('view_kind', field) + ' / ' +
+                         row['clock_status'])
+                links.append(('../timeline/' + relative, label))
+    for relative, label in [('report.json', 'Full analysis JSON'),
+                            ('../timeline/index.json',
+                             'Capture index and qualification'),
+                            ('observations.html', 'Detailed observations'),
+                            ('fine_grained.html', 'Source-linked records'),
+                            ('sources.html', 'Captured source'),
+                            ('execution.html', 'Compiler execution mapping')]:
+        if (output / 'report' / relative).is_file():
+            links.append((relative, label))
+    description = (
+        'Open the linked .pftrace files in Perfetto. Tracks show '
+        'instrumented observer intervals; consult each trace\'s '
+        'clock and dependency qualifications before comparing tracks.')
+    (output / 'report/index.html').write_text(
+        linked_html('FlagPrism internal timeline', links, description))
 
 
 def write_manifest(output, report):

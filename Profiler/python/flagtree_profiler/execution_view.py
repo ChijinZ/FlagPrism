@@ -147,8 +147,19 @@ def render(execution, records):
            '<p>No compiler mapping was exported.</p>') + '</html>')
 
 
-def write_view(output, records):
+def write_view(output, records, *, compact_html=False):
     output = Path(output)
     path = output / 'ai/execution.json'
     execution = json.loads(path.read_text()) if path.is_file() else {}
-    (output / 'report/execution.html').write_text(render(execution, records))
+    if compact_html:
+        from ._report import linked_html
+        page = linked_html(
+            'Compiler execution mapping',
+            [('../ai/execution.json', 'Full execution mapping JSON'),
+             ('fine_grained.html', 'Source-linked records'),
+             ('index.html', 'Internal timelines')],
+            'Compiler mapping is static; measured internal intervals are in Perfetto.'
+        )
+    else:
+        page = render(execution, records)
+    (output / 'report/execution.html').write_text(page)

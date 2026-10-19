@@ -236,7 +236,7 @@ def render(document):
     )
 
 
-def write_view(output, payload, report):
+def write_view(output, payload, report, *, compact_html=False):
     output = Path(output)
     document = reconstruct(payload, report['launches'], report['binaries'],
                            report['events'] + report['untimed_events'])
@@ -254,7 +254,7 @@ def write_view(output, payload, report):
         json.dumps(exported, separators=(',', ':'), allow_nan=False) + '\n')
     (output / 'report/observations.html').write_text(render(document))
     from .fine_grained import write_view as write_fine_grained
-    write_fine_grained(output, document, report)
+    write_fine_grained(output, document, report, compact_html=compact_html)
     overview = output / 'report/index.html'
     if overview.exists():
         text = overview.read_text()

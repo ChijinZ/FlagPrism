@@ -52,13 +52,27 @@ def capture_software(backend=None):
     }
 
 
-def export_capture(base, output, counters=None, context=None):
+def export_capture(base,
+                   output,
+                   counters=None,
+                   context=None,
+                   *,
+                   compact_html=False):
     from ._deadline import export_phase
     with export_phase():
-        return _export_capture_impl(base, output, counters, context)
+        return _export_capture_impl(base,
+                                    output,
+                                    counters,
+                                    context,
+                                    compact_html=compact_html)
 
 
-def _export_capture_impl(base, output, counters=None, context=None):
+def _export_capture_impl(base,
+                         output,
+                         counters=None,
+                         context=None,
+                         *,
+                         compact_html=False):
     export_started = time.monotonic()
     base = Path(base)
     if not any(
@@ -155,8 +169,14 @@ def _export_capture_impl(base, output, counters=None, context=None):
     timeline = base.with_suffix('.timeline')
     if timeline.is_dir():
         result.setdefault('capture_notes', []).append(
-            'Internal timestamps: timeline/index.json; clock qualification is reported there.')
-    _report.write_bundle(result, document, output, context, complete=False)
+            'Internal timestamps: timeline/index.json; clock qualification is reported there.'
+        )
+    _report.write_bundle(result,
+                         document,
+                         output,
+                         context,
+                         complete=False,
+                         compact_html=compact_html)
     raw_native = Path(output) / "raw/native"
     raw_native.mkdir(parents=True, exist_ok=False)
     for suffix in (".vendor.json", ".meta.json", ".hatchet", ".timeline.json",
@@ -191,7 +211,10 @@ def _export_capture_impl(base, output, counters=None, context=None):
         (Path(output) / 'ai/observations.json').write_text(
             json.dumps(observation_document, allow_nan=False) + '\n')
         from .reconstruction import write_view
-        write_view(output, observation_document, result)
+        write_view(output,
+                   observation_document,
+                   result,
+                   compact_html=compact_html)
     raw_sys = base.with_suffix(".cann-raw-sys.json")
     if raw_sys.exists():
         shutil.copyfile(raw_sys, Path(output) / "ai/native_task_sys.json")
@@ -203,6 +226,8 @@ def _export_capture_impl(base, output, counters=None, context=None):
     if automatic_request is not None:
         from .fine_grained import require_automatic_records
         require_automatic_records(output, automatic_request)
+    if compact_html and timeline.is_dir():
+        _report.write_timeline_page(output)
     _report.write_manifest(output, result)
     # The source is retained if any preceding export step failed. Cleanup is
     # allowed only after the full bundle and verified SDK copy are present.

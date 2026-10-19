@@ -993,7 +993,8 @@ def _export_session(state):
         from ._capture import export_capture
         export_capture(state["name"],
                        state["bundle_output"],
-                       context=state.get("metadata"))
+                       context=state.get("metadata"),
+                       compact_html=state.get('detail') == 'timeline')
 
 
 def _snapshot_cann_launch_receipts(state):

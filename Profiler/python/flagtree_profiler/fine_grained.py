@@ -430,7 +430,7 @@ def render(data):
         'apply();</script>')
 
 
-def write_view(output, document, report):
+def write_view(output, document, report, *, compact_html=False):
     output = Path(output)
     data = normalize(document)
     from .source_view import SourceCatalog
@@ -439,7 +439,7 @@ def write_view(output, document, report):
     catalog.annotate(data['records'])
     catalog.write()
     from .execution_view import write_view as write_execution
-    write_execution(output, data['records'])
+    write_execution(output, data['records'], compact_html=compact_html)
     from .export_refs import compact
     original = json.loads((output / 'ai/observations.json').read_text())
     for name, view in (('fine_grained', data), ('observation_plan',

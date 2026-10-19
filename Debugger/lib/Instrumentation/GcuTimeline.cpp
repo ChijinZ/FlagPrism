@@ -90,7 +90,9 @@ std::optional<Site> classify(Operation *op, uint32_t id) {
   if (name == "memref_ext.slice_start" ||
       name == "memref_ext.slice_pad_start" ||
       name == "memref_ext.slice_deslice_start" ||
-      name == "memref_ext.deslice_start" || name == "memref_ext.memset_start") {
+      name == "memref_ext.deslice_start" || name == "memref_ext.memset_start" ||
+      name == "memref_ext.transpose_start" ||
+      name == "memref_ext.broadcast_start") {
     unsigned count = op->getNumOperands();
     if (count < 4 || !isa<MemRefType>(op->getOperand(0).getType()) ||
         !isa<MemRefType>(op->getOperand(count - 2).getType()) ||
