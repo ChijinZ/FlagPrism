@@ -959,7 +959,7 @@ def _augment_instrumentation_artifacts(
                             'capture_id') or f'ir-capture-{index}'),
                 } for index, run in enumerate(runs)]
             },
-            indent=2) + '\n')
+            separators=(',', ':')) + '\n')
     runs = [
         run for run in runs if run.get("capture_status") != "decode_failed"
     ]
