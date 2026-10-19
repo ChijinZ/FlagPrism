@@ -1877,3 +1877,21 @@ T009 文档已提交 `32c1f7a`（detailed-profiler），正式 worktree clean。
 - 准备ascend-affected-tp-runner-v1.py，复用同字节固定verifier75e1b08...与0d72cf3...、同TP55ba613...，只在原NVIDIA工具Docker/venv进行CPU实际导入/SQL。新cohort分母由封存原60capture的实际导出确定，不重旧1740/新NV80/UI/用户数学。普通source/ordinary-overlap/UI资格不从SQL升级。
 - 已启动本机纯SSH后续编排finish_affected60_audit_v1.py，session99790、PID25150/start37877750，SHA942c8f71e0840450b2575d74eb4530ee27a06a7588cf95e2734029f25828602d，launch保留audit-orchestration-v1/launch.json。当前等待同原queue result；只接受passed60/not_completed0后启动server bounded300s CPU prepare，再传已核SHA chunk，再在/workspace/chijin-timeline-r062-nvidia/runs/affected60-tp-v1启动bounded300s SQL。SSH观察timeout只poll同root不重launch。此编排不是新设备实验或重跑应用。
 - 昇腾当前SDK实际反汇编仍全<not available>，已向用户async询问是否有能解码该设备的AI Core工具/匹配SDK路径；未把无答复视作已提供工具，不重历史无效选项。继续独立工作，goal active，未改paper/Study、未merge/push。
+
+- T094最终结果：原60登记调用全部数学/input/source/config/ref、host-once、canonical complete、多正source interval、guard128及原预算检查通过；59原controller rc0，首000原whole rc1/application rc0+无重放retained修复历史不改。原queue session35162已terminal0。新60资格修复不能补Asc最终native boundary证书，也不覆写原old partial文件。
+- CPU封存prepare实际成功，两chunk合5366260B SHA a848ca32b902bae839ad43c53543e30a373a6e9d5dfa6f1d1eea1af12bb1cd5d；60capture实际导出120counter+48dep=168，blob73662647B。全部原SHA核同跨SSH输送并在NV工具容器复核，不重应用。所有原件本地artifacts/timeline/run-062/preflight/ascend-affected-time-data-v1，原完整bundle/server路径保留。
+- actual SQL controller120612/worker120613 terminal0/49.752s，worker missing、controller Z非live工作。168注册/168 fresh actual TP成功，无旧收据复用；每条263实际importer stats，全部无正error/data_loss，48dep合1176实际flows。锁定TP/verifier同前述原SHA，没有新UI运行/未改exporter/不重旧1740。session99790编排terminal0；两个本机queue/audit任务均已结束。
+- 收据archive302357B SHA7315cf2b8ee5247a170027833f12062a05f5dbc0ef3dc738da072eba77869c02；完整SQL收据archive1088197B SHA5c98783aa9ffdd645481f1129c3fece2d4fda34bac40f4c558a7a4b8b6e0b620。本机纯stdlib核60绑定/原application rc0/首例例外/hostonce、168原SHA及每条stats；不是本机import产品/跑设备或oracle。
+- 可直接打开新样本在run062/preflight/samples：ascend-case000-counter.pftrace、ascend-case000-dependency.pftrace、ascend-case048-counter.pftrace；index.json记原traceSHA/调用/observer/SQL资格。样本为实际bytes副本，不是新UI截图或普通执行图。
+- 已准备integration/evidence/timeline-affected-repair-r062小证据：原/修复登记、product freeze、60实际数学报告/receipt audit、168SQL summary/收据、源码脚本及大archive索引。不将独立复核结果预写成通过；相关有限review随后进行。canonical尚20d370a未合/push，paper/Study未改。剩余真正缺口为有限最终源/循环边界、ordinary合法overlap证据和相应最终交付；不再报告Asc60或本轮SQL仍待运行。
+
+- T094原R2有限只读复核完成：未发现本范围具体错误，确认可关闭“原affected60重采+新SQL”缺口；逐项原/v2登记60/唯一invocation/R060437member身份核同，首项aux snapshot修复108旧文件SHA不变无math重放，59原controller0，转移SHA和168actual TP/263stats/1176flows一致，owned live[]。转录limited-runtime-review.md。只关闭此补项，不冒另一36重跑/新UI/native源边界/ordinary-overlap/整体goal通过；未要求新矩阵。
+
+
+## T095 NVIDIA 已有四capture的矩阵发射边界与runtime occurrence补证（run062）
+
+- 前一轮归类为progress：原Asc60与168实际SQL完成、R2有限确认关闭，Git e258a70，未将全goal记完成。本轮首先核candidate clean和actual原件，不重数学/SDK/SQL/UI/大矩阵。
+- 新有限retained-only CPU脚本nvidia_existing_matrix_occurrences_v1.py只在NV已有Docker/R061 budget venv运行，产品源码不改。对default与sparse各K3/K7四份原件，重新从retained cubin/PTX/SASS构造machine map（原artifact SHA/实际math hash/二进制身份核同），通过同既有_bound_functions/_native_lines/_straight_path，检查grouped FP16/F32四个PTX mma各有唯一actual HMMA，均在不带predicate的entry/exit之间，无内部控制流/额外入口。不是CPU重新编译prototype或从marker存在猜源边界。
+- CPU controller121087/worker121088 terminal0/0.415s，worker missing、controller Z不算运行中；无device/application/compiler调用。default真实reader0x1260/HMMA0x1270,1290,12b0,12d0/exit0x1310；sparse0x1010/HMMA0x1020,1040,1060,1080/exit0x1090。
+- 每份实际8个展示observer，在同一mode/binary的runtime tiles3/7下分别每observer3/7个positive矩阵issue interval（每份24/56，共160），逐端点核原raw的u64 timestamp/occurrence完整次序，iteration_id保持None，不凭次数生成loop iteration语义。大fullCTA其它actor不冒新的展示资格。原文件SHA复核无改。
+- archive4669B SHA723db7a75fcb13d119e6c78b110a2473fd6847adaf85b08db286ba38071faab4；选定result/terminal/脚本补入integration/evidence/timeline-pipeline-impact-r061。只补该actual matrix source issue/loop occurrence证据，不提升source exclusive cost/engine completion/ordinary overlap，sparse高级依赖拒绝继续保留。当前没有新产品修改或native重build理由；相关finite compiler复核随后进行。

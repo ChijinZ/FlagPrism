@@ -1,0 +1,389 @@
+{
+  "status": "actual_four_retained_matrix_issue_and_occurrence_checks_passed",
+  "application_replayed": false,
+  "device_executed": false,
+  "compiler_invoked": false,
+  "product_changed": false,
+  "source_exclusive_cost_qualified": false,
+  "engine_completion_qualified": false,
+  "ordinary_overlap_preservation_qualified": false,
+  "scope": "Finite actual FP16/F32 matrix issue placement and runtime occurrence evidence only; not an arbitrary-kernel certificate",
+  "reports": [
+    {
+      "mode": "default",
+      "tiles": 3,
+      "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+      "invocation_id": "invocation-22446d1692a242fc8f716890b6dde6b1",
+      "site_id": 23,
+      "source_members": [
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        }
+      ],
+      "begin_reader_pc": 4704,
+      "end_reader_pc": 4880,
+      "native_matrix_pcs": [
+        4720,
+        4752,
+        4784,
+        4816
+      ],
+      "native_single_entry_straight_path_checked": true,
+      "observers": [
+        {
+          "observer_id": "observer-734ee71a74150d414e844b4bc2863403f50c395c5bb9c93032c8ca20391cf55a",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-8c33677ded209c0a175e4dd6be0cd0f5361ac048a3bd727ffbab90b1e1f7e70b",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-f4733beaf83f0a7a5102c07b5702dd5e2a9d1ba0db2e9a2ecbff1623565d126d",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-d4d9f7f3d53cc24061cf5cdf91cc7046345715caf2650eec8281b4d0546c9e14",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-43412396629632b8de1b081c69476cc833a1eb86757f24021e625b1cff1d8839",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-84b252c8cf4b74e40d682197e21f2dcaaba6c277f9017671bd9c0feeb9c56934",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-171a85fc4fce6c8a591f38651fb4c896e5aec83967212bf8dcc5d3887c0cc2a3",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-e3b75ad132e625a7cf04d13b8ecae0af89460e050970466fdce6c0461b599991",
+          "occurrences": 3
+        }
+      ],
+      "positive_intervals": 24,
+      "min_duration_ticks": 32,
+      "max_duration_ticks": 64,
+      "input_seals": {
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/index.json": "a39cde0d72a37f8c85d1e234f667a5c8f10afb382b68429ed104fab3fc04bd0f",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/math.json": "1f9d86c2384c7a470faf8cdb050f25913d098b12858a1b4d3eaa8aba4b0f9a8d",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/captures/invocation-22446d1692a242fc8f716890b6dde6b1.json": "cdbf928209994adf142666d0ad6b374fd3c3c246a1480a91104ff96c824d7f5a",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/derived/counter-ns/55ef1ff735b041beac467c4f7876708c6d145f61c3c29bc28fba64ddf7629907/canonical.json": "0c08142c414ff395252be503de662960e94337f5a3e2295c59c4bd0c79e2ff8b",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/captures/invocation-22446d1692a242fc8f716890b6dde6b1.raw": "8a7df103aeb128cc3aeb221b749076d520d92113a5de08e5829e075bcdd98091",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/binaries/9a8e5aa094ebc414dedf965d73d507d7d6da8c6660fcbed864c3a2eeac2e5836/4.ptx": "cf6bb0bcc68ae1bf1a93973717bde5836be711c88d0c9493ca58638cbdce83a8",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/lines.stdout": "d448f65659103ffe3f9fc7ad94dbffe40c3a1f9ddc7c1afac6c0abb60fc30dd0",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/json.stdout": "abb405734a3966726da2c13cf83e6d943693d78c1b2fa908c023a544add08029",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/counter-map.json": "389fa265e9be1830e7d71cb99086d1c34e49f4e1b45fb23508193b77559f4937"
+      }
+    },
+    {
+      "mode": "default",
+      "tiles": 7,
+      "binary_id": "aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573",
+      "invocation_id": "invocation-b3519ada23814cd28a02c30283aaf494",
+      "site_id": 23,
+      "source_members": [
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        }
+      ],
+      "begin_reader_pc": 4704,
+      "end_reader_pc": 4880,
+      "native_matrix_pcs": [
+        4720,
+        4752,
+        4784,
+        4816
+      ],
+      "native_single_entry_straight_path_checked": true,
+      "observers": [
+        {
+          "observer_id": "observer-d3763c21a6991a290670a651e312db45834cc110a17be6a685cd48dc4da4ac54",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-5a2a46a9b07fd6255d7d92d406b14310bfa94b43b193ed7a9ba0514ea3dcc53f",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-636f24326a790e4e5e49bec371b24b1b339f0f49673ac4729e585e6c29840425",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-7668591947565134555207ba7ebe73df8b0ed1ca42f20649a3093d4aed742b62",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-7a08a9afec72d252e45311285be6502cf086b135fbc9853a0792b4da8c2c9e21",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-35faada4150d548a52530588c7c5acf486794b42c077562ab94951081bfd8025",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-415fad6f1b6dcf2f6447234a38c9f0c5454cda6da0de94ae034c905b0a1a4002",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-fde020c782de8d6bca15e02d8a977c4418a111dc03123315ff7002b6c07a4fb2",
+          "occurrences": 7
+        }
+      ],
+      "positive_intervals": 56,
+      "min_duration_ticks": 32,
+      "max_duration_ticks": 64,
+      "input_seals": {
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/index.json": "a39cde0d72a37f8c85d1e234f667a5c8f10afb382b68429ed104fab3fc04bd0f",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/math.json": "1f9d86c2384c7a470faf8cdb050f25913d098b12858a1b4d3eaa8aba4b0f9a8d",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/captures/invocation-b3519ada23814cd28a02c30283aaf494.json": "92859f6ef229c950921bed53491b6904e6fdca2402b64d640557eafcd64018a9",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/derived/counter-ns/aadfbd50c22d3f45d98a0d7bf9c2b48584e3d6872a8dda1a1f2255640a8aafa0/canonical.json": "b9d8904906b02682690b3bd98e287ff7c99b8f3fbd611305d948c82edf9a1e99",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/captures/invocation-b3519ada23814cd28a02c30283aaf494.raw": "0e8e300f1f2e8649d8162b62e55928a505603e5c8af361b198e34c0f5b52832c",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/binaries/9a8e5aa094ebc414dedf965d73d507d7d6da8c6660fcbed864c3a2eeac2e5836/4.ptx": "cf6bb0bcc68ae1bf1a93973717bde5836be711c88d0c9493ca58638cbdce83a8",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/lines.stdout": "d448f65659103ffe3f9fc7ad94dbffe40c3a1f9ddc7c1afac6c0abb60fc30dd0",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/json.stdout": "abb405734a3966726da2c13cf83e6d943693d78c1b2fa908c023a544add08029",
+        "/workspace/chijin-timeline-r061-nvidia/runs/budget-pipeline-v1/output/device/profile/timeline/machine/aae4821d20e1184955f18fd3ff24dab7f2b96401bde752c4ae91f47f23355573/counter-map.json": "389fa265e9be1830e7d71cb99086d1c34e49f4e1b45fb23508193b77559f4937"
+      }
+    },
+    {
+      "mode": "sparse",
+      "tiles": 3,
+      "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+      "invocation_id": "invocation-77ddf37b7a9f4b91aa9cdf633e617dda",
+      "site_id": 23,
+      "source_members": [
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        }
+      ],
+      "begin_reader_pc": 4112,
+      "end_reader_pc": 4240,
+      "native_matrix_pcs": [
+        4128,
+        4160,
+        4192,
+        4224
+      ],
+      "native_single_entry_straight_path_checked": true,
+      "observers": [
+        {
+          "observer_id": "observer-f3fffdf61f578c754bee2d2e9616aeb913b834a6995463ea2ded65cc655f5dc4",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-5bdb0d967e8167dcb250765914c46350828a0eb125b83f29cd7248fb0ebb5f96",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-19cc34d2f7a9dc56e8768f7958c0093126f5ba64ff0d5da14edead11a1a253d0",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-3e2e696bd089c042c497ccfacdc13dcde91c8b2a3fd14496a635eff5e99dc29f",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-58a04713c3c578a03227da8bcadc37d154809634239066c4a5a3dd3e77dfee28",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-d5360d71bcfd58559a564f80cc724a68d23ed9eebc7578a5f8aec3168bd246de",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-37f83e65de2f25c8a0d00fcc924171a4998375bda137154349fd12372cf95bc5",
+          "occurrences": 3
+        },
+        {
+          "observer_id": "observer-18c0a883e2fe41a9f5d53e8ce02d60707b42783f5033dced0c96b551cf60306d",
+          "occurrences": 3
+        }
+      ],
+      "positive_intervals": 24,
+      "min_duration_ticks": 32,
+      "max_duration_ticks": 64,
+      "input_seals": {
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/index.json": "2cf25654fe84e57d5f62c8c9a2e1b6c5ef5e82796b7fb22b620bd5e9d2c90104",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/math.json": "c59a174549ab621cd179e5a85c48860b15c7779f82eac405d55e7a0fa9780560",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/captures/invocation-77ddf37b7a9f4b91aa9cdf633e617dda.json": "86e369ff813550abcaca3fcec1ab4df3ac14840873beffecc8900b7a77078883",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/derived/counter-ns/dc1aa736bbdcbe5ef79aa3b9e25088f3adea43f2b9c9c30a0b65e0db722c25f7/canonical.json": "383ec7d4b2f0bd845561727497d71d5177af1fbb979ed120a9e7748233c38733",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/captures/invocation-77ddf37b7a9f4b91aa9cdf633e617dda.raw": "7dcec24b63221e4873ffef8edad5a07edb7d8380c3c0b57b1a2571bb3dcbdd40",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/binaries/6638a2c81eb7220911bf36b9deea9b9bc02dfd3d29fa9e86553550125a76566a/4.ptx": "4304198922b289e1fa7d7687e39de646ee878474c7f241d1e77a35ca60b15826",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/lines.stdout": "62cfbeb1042effcb4e77c7d9bc2f7f12b1e475fc915fd8cc61cf35e532620779",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/json.stdout": "a2f0d05bb5bb3263b9c47178a85a7b127a77343e050fc2e847e176509933f0a1",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/counter-map.json": "55ddbffe70e5595430cb897e6f425245a8c5624dcd7c685bad31fa9068cbc21b"
+      }
+    },
+    {
+      "mode": "sparse",
+      "tiles": 7,
+      "binary_id": "e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03",
+      "invocation_id": "invocation-6beb0af7274b462480bec5a95e4fc116",
+      "site_id": 23,
+      "source_members": [
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        },
+        {
+          "column": 26,
+          "directory": "/workspace/chijin-timeline-r061-nvidia/budget-install-input-v1/source/tests/timeline",
+          "file": "p01_nvidia_dynamic_pipeline.py",
+          "line": 38,
+          "native_operation": "mma.sync.aligned.m16n8k16.row.col.f32.f16.f16.f32 { $0, $1, $2, $3 }, { $8, $9, $10, $11 }, { $12, $13 }, { $4, $5, $6, $7 };"
+        }
+      ],
+      "begin_reader_pc": 4112,
+      "end_reader_pc": 4240,
+      "native_matrix_pcs": [
+        4128,
+        4160,
+        4192,
+        4224
+      ],
+      "native_single_entry_straight_path_checked": true,
+      "observers": [
+        {
+          "observer_id": "observer-d82fc79b0a683d0b08b098d7a859e3b8ce67147c73b39edef023cb29fbdb0e6b",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-08af3d5dc6d0e49d837cc4bd332c9da6175fcbfc3dde50ecdd4648a8ec918a73",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-154dad8941bde7f3e132acc8bd4fa2e8e588d88980c1838c2f81409d1df21b9f",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-bf154842c05d252ba4ccb11444ecfdef70ecd81a95e567ce28e09112b2cd0209",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-b29bcfd7944f98431ee25388d20a11523c57118b4af33496662149eca73a363a",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-d7bc9c08b51ef09f7ae8eb04c242bdb16ec155b4823d23747bfa16579070ab1f",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-cf61f4535d1fbd4504338f19ca7596448f0003de61373763d1890bde64f9ae4a",
+          "occurrences": 7
+        },
+        {
+          "observer_id": "observer-95b9132e111f7c282276b5440eccb57b76676b6096c5dd7164044d49f063208a",
+          "occurrences": 7
+        }
+      ],
+      "positive_intervals": 56,
+      "min_duration_ticks": 32,
+      "max_duration_ticks": 64,
+      "input_seals": {
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/index.json": "2cf25654fe84e57d5f62c8c9a2e1b6c5ef5e82796b7fb22b620bd5e9d2c90104",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/math.json": "c59a174549ab621cd179e5a85c48860b15c7779f82eac405d55e7a0fa9780560",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/captures/invocation-6beb0af7274b462480bec5a95e4fc116.json": "ab1611154d89f3cadf151ee9d4c59377935ef25310addc2296f5296110af6a87",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/derived/counter-ns/553a57ef01095069cbea2f543f41ad1578167747a6a042d7dca7392963790538/canonical.json": "10c90e2b0cb78a722184919492e09e726fdcfa92418114f034c4829a42cf5831",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/captures/invocation-6beb0af7274b462480bec5a95e4fc116.raw": "04f435d9311f0c08a8723d5b9b4f415c775bc9e0ec9936fe92da4d0420162f6b",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/binaries/6638a2c81eb7220911bf36b9deea9b9bc02dfd3d29fa9e86553550125a76566a/4.ptx": "4304198922b289e1fa7d7687e39de646ee878474c7f241d1e77a35ca60b15826",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/lines.stdout": "62cfbeb1042effcb4e77c7d9bc2f7f12b1e475fc915fd8cc61cf35e532620779",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/json.stdout": "a2f0d05bb5bb3263b9c47178a85a7b127a77343e050fc2e847e176509933f0a1",
+        "/workspace/chijin-timeline-r061-nvidia/runs/sparse-pipeline-v1/output/device/profile/timeline/machine/e4448ced7429c5c4f2a7d17c70f50b49d7ac730ab1b8b6bedf06f4214ccc5e03/counter-map.json": "55ddbffe70e5595430cb897e6f425245a8c5624dcd7c685bad31fa9068cbc21b"
+      }
+    }
+  ]
+}
