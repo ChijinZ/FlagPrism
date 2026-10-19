@@ -62,11 +62,12 @@ def tool_identity():
 
 def prepare_ttir(module, metadata, request, binding):
     from triton._C.libtriton import ir, passes
+    from .compiler import _run_pass_manager
     from .native import runtime_binding
-    target = metadata.get('target')
-    arch = target.get('arch') if isinstance(target, dict) else getattr(
-        target, 'arch', None)
-    if str(arch) != 'gcu300':
+    # GCU's generic GPUTarget arch is the driver's architecture label. The
+    # SDK execution pipeline is selected by the resolved GCUOptions.arch,
+    # which Triton copies into compilation metadata before this callback.
+    if metadata.get('arch') != 'gcu300':
         raise ValueError(
             'Late GCU timeline currently requires the actual gcu300 target')
     if getattr(runtime_binding(), 'GCU_EXECUTION_TIMELINE_VERSION', None) != 1:
@@ -93,7 +94,7 @@ def prepare_ttir(module, metadata, request, binding):
     passes.common.add_symbol_dce(manager)
     binding.add_resolve_debug_scope(manager)
     binding.add_assign_debug_op_id(manager)
-    manager.run(module)
+    _run_pass_manager(manager, module, 'FlagPrism GCU timeline preparation')
     metadata['debug_metadata_json'] = binding.get_debug_kernel_metadata_json(
         module)
     metadata['debug_tracked_table'] = json.loads(

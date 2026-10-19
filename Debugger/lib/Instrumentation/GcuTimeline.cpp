@@ -1,5 +1,6 @@
 #include "Debugger/Instrumentation/GcuTimeline.h"
 
+#include "mlir/AsmParser/AsmParser.h"
 #include "mlir/Dialect/Arith/IR/Arith.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
 #include "mlir/Dialect/GPU/IR/GPUDialect.h"
@@ -183,13 +184,34 @@ struct Recorder {
     auto element = cast<MemRefType>(memref.getType()).getElementType();
     if (!element.isIntOrFloat() || element.getIntOrFloatBitWidth() % 8)
       return {i32(0), i32(0)};
-    Value base = b.create<memref::ExtractAlignedPointerAsIndexOp>(loc, memref);
+    // Private tag storage becomes !gcu.dte during SDK lowering. Extract its
+    // index-sized local identity without creating a typed base-buffer result
+    // that would incorrectly retain the original i32 element type.
+    if (!includeOffset)
+      return split(
+          b.create<memref::ExtractAlignedPointerAsIndexOp>(loc, memref));
+    // GCU300 has 32-bit index but wider global pointers. Routing a pointer
+    // through index silently truncates it (and index_cast sign-extends it).
+    // Use the SDK's actual 64-bit pointer conversion on the zero-offset base,
+    // then add the descriptor offset without narrowing the pointer itself.
+    auto metadata = b.create<memref::ExtractStridedMetadataOp>(loc, memref);
+    Type pointerType =
+        parseType("!gcu.ptr<" + printed(element) + ">", b.getContext());
+    OperationState toPointer(loc, "gcu.memref2ptr");
+    toPointer.addOperands(metadata.getBaseBuffer());
+    toPointer.addTypes(pointerType);
+    Value pointer = b.create(toPointer)->getResult(0);
+    OperationState toInteger(loc, "gcu.ptr2int");
+    toInteger.addOperands(pointer);
+    toInteger.addTypes(b.getI64Type());
+    Value base = b.create(toInteger)->getResult(0);
     if (includeOffset) {
       auto type = cast<MemRefType>(memref.getType());
-      auto metadata = b.create<memref::ExtractStridedMetadataOp>(loc, memref);
       unsigned bytes = type.getElementType().getIntOrFloatBitWidth() / 8;
-      Value offset =
-          b.create<arith::MulIOp>(loc, metadata.getOffset(), index(bytes));
+      Value offset = b.create<arith::IndexCastOp>(loc, b.getI64Type(),
+                                                  metadata.getOffset());
+      offset = b.create<arith::MulIOp>(
+          loc, offset, b.create<arith::ConstantIntOp>(loc, bytes, 64));
       base = b.create<arith::AddIOp>(loc, base, offset);
     }
     return split(base);
@@ -513,6 +535,8 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
       {"hidden_argument_index", hiddenArgument},
       {"record_size", Words * 4},
       {"buffer_arguments_version", 2},
+      {"buffer_address_encoding", "gcu_ptr2int_i64_v1"},
+      {"queue_address_encoding", "sdk_private_tag_index"},
       {"selected_source_regions", selectedRegions},
       {"unselected_source_regions", std::move(unselectedRegions)},
       {"capacity", capacity},

@@ -63,6 +63,12 @@ def decode_execution_capture(raw, *, compiler_metadata, identity, association,
     _need(
         type(argument_version) is int and argument_version in (1, 2),
         'Unknown native buffer argument version')
+    address_encoding = manifest.get('buffer_address_encoding',
+                                    'legacy_index_width_unverified')
+    _need(
+        address_encoding
+        in ('gcu_ptr2int_i64_v1', 'legacy_index_width_unverified'),
+        'Unknown native buffer address encoding')
     capacity = _integer(manifest.get('capacity'), 'execution capacity', 1,
                         4096)
     stride = 32 + capacity * 128
@@ -231,6 +237,7 @@ def decode_execution_capture(raw, *, compiler_metadata, identity, association,
                      kind=kind,
                      raw_offset=offset,
                      raw_length=128,
+                     address_encoding=address_encoding,
                      queue=dict(base=words[10] | words[11] << 32,
                                 index=words[9]) if kind in (1, 2) else None,
                      destination=dict(address=words[12] | words[13] << 32,
