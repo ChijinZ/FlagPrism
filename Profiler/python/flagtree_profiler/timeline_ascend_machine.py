@@ -310,18 +310,19 @@ def _run(tool, flags, directory, name, deadline, commands):
                                    stdout=out,
                                    stderr=err,
                                    start_new_session=True)
-        fields = Path('/proc/' + str(process.pid) +
-                      '/stat').read_text().rsplit(')', 1)[1].split()
         row = dict(name=name,
                    argv=[str(tool), *flags],
                    pid=process.pid,
-                   pgid=int(fields[2]),
-                   startticks=int(fields[19]),
-                   state='running')
+                   state='starting')
         commands.append(row)
-        (directory / 'commands.json').write_text(json.dumps(commands,
-                                                            indent=2))
         try:
+            fields = Path('/proc/' + str(process.pid) +
+                          '/stat').read_text().rsplit(')', 1)[1].split()
+            row.update(pgid=int(fields[2]),
+                       startticks=int(fields[19]),
+                       state='running')
+            (directory / 'commands.json').write_text(
+                json.dumps(commands, indent=2))
             stop = time.monotonic() + remaining
             while process.poll() is None:
                 _need(outpath.stat().st_size + errpath.stat().st_size <= LIMIT,
@@ -334,10 +335,17 @@ def _run(tool, flags, directory, name, deadline, commands):
             _need(process.returncode == 0, 'DWARF inspection failed')
             row['state'] = 'terminal'
         finally:
-            if process.poll() is None:
-                _stop_worker(process)
-                row['state'] = 'stopped'
-            if row['state'] == 'running':
+            try:
+                if process.poll() is None:
+                    row['state'] = 'stopped'
+                    _stop_worker(process)
+            finally:
+                # An unreadable /proc cannot revoke ownership of this direct,
+                # unreaped Popen child. The packaged reader has no children.
+                if process.poll() is None:
+                    process.kill()
+                process.wait(timeout=10)
+            if row['state'] in ('starting', 'running'):
                 row['state'] = 'failed'
             row['returncode'] = process.returncode
             (directory / 'commands.json').write_text(

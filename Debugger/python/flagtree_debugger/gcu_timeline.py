@@ -168,20 +168,21 @@ def rewrite_execution_ir(text, metadata):
                                  stdout=out,
                                  stderr=err,
                                  start_new_session=True)
-        stat = Path('/proc') / str(child.pid) / 'stat'
-        fields = stat.read_text().rsplit(')', 1)[1].split()
         receipt = dict(pid=child.pid,
-                       pgid=int(fields[2]),
-                       startticks=int(fields[19]),
                        argv=command,
                        tool_identity=expected,
                        source_sha256=hashlib.sha256(text.encode()).hexdigest())
-        (root / 'launch.json').write_text(json.dumps(receipt, indent=2))
         try:
+            # Registration can fail after Popen has already started the tool.
+            stat = Path('/proc') / str(child.pid) / 'stat'
+            fields = stat.read_text().rsplit(')', 1)[1].split()
+            receipt.update(pgid=int(fields[2]), startticks=int(fields[19]))
+            (root / 'launch.json').write_text(json.dumps(receipt, indent=2))
             result = child.wait(timeout=30)
         except BaseException:
-            child.kill()
-            child.wait()
+            if child.poll() is None:
+                child.kill()
+            child.wait(timeout=10)
             (root / 'terminal.json').write_text(
                 json.dumps(dict(receipt,
                                 state='failed_or_timed_out',

@@ -89,18 +89,17 @@ def identity_library(*, tops_home='/opt/tops', cache_root=None):
                                    stdin=subprocess.DEVNULL,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
-        stat = Path('/proc') / str(process.pid) / 'stat'
-        fields = stat.read_text().rsplit(')', 1)[1].split()
-        owner = dict(pid=process.pid,
-                     pgid=int(fields[2]),
-                     startticks=int(fields[19]),
-                     argv=argv)
-        (attempt / 'launch.json').write_text(json.dumps(owner, indent=2))
+        owner = dict(pid=process.pid, argv=argv)
         try:
+            stat = Path('/proc') / str(process.pid) / 'stat'
+            fields = stat.read_text().rsplit(')', 1)[1].split()
+            owner.update(pgid=int(fields[2]), startticks=int(fields[19]))
+            (attempt / 'launch.json').write_text(json.dumps(owner, indent=2))
             stdout, stderr = process.communicate(timeout=20)
         except BaseException:
-            process.kill()
-            process.communicate()
+            if process.poll() is None:
+                process.kill()
+            process.communicate(timeout=10)
             (attempt / 'terminal.json').write_text(
                 json.dumps(
                     dict(owner,

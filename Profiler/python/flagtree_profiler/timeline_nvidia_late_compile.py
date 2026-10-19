@@ -131,8 +131,15 @@ class LateLLVMTransform:
                 except BaseException:
                     # Own process and descendants only; includes detached children.
                     from ._deadline import _stop_worker
-                    if child.poll() is None:
-                        _stop_worker(child)
+                    try:
+                        if child.poll() is None:
+                            _stop_worker(child)
+                    finally:
+                        # Retain the direct-child fallback when /proc cannot
+                        # provide the identity needed for descendant discovery.
+                        if child.poll() is None:
+                            child.kill()
+                        child.wait(timeout=10)
                     raise
                 finally:
                     receipt.update(returncode=child.returncode,
