@@ -48,6 +48,7 @@ def tool_identity():
         Path(__file__).with_name('gcu_native_control.py'),
         Path(__file__).with_name('gcu_native_image.py'),
         Path(__file__).with_name('gcu_native_values.py'),
+        Path(__file__).with_name('gcu_llvm_regions.py'),
         Path(libtriton.__file__),
         Path('/opt/tops/bin/opt'),
         Path('/opt/tops/llvm11/bin/llvm-objdump'),
@@ -346,6 +347,8 @@ def bind_execution_structure(text, metadata):
             or report.get('native_schedule_qualified') is not False):
         raise ValueError(
             'Invalid GCU execution structure index; retained at ' + str(root))
+    from .gcu_llvm_regions import analyze_regions
+    boundaries = analyze_regions(report, metadata['debug_execution_manifest'])
     metadata['debug_execution_llvm_structure'] = dict(
         schema_version=1,
         llvm_ir_sha256=digest,
@@ -354,6 +357,7 @@ def bind_execution_structure(text, metadata):
             json.dumps(metadata['debug_execution_manifest'],
                        sort_keys=True).encode()).hexdigest(),
         report=report,
+        boundary_report=boundaries,
         receipt=receipt)
 
 
@@ -561,7 +565,7 @@ def _native_shape_stage(elf, locations, manifest, *, expected, root):
     return report
 
 
-def inspect_native_execution(binary, metadata):
+def inspect_native_execution(binary, metadata, *, llvm_ir=None):
     """Reinspect immutable captured bytes with the installed analyzer.
 
     Producer metadata is not rewritten and the application is never replayed.
@@ -584,10 +588,30 @@ def inspect_native_execution(binary, metadata):
     current = dict(metadata)
     producer = current.get('debug_execution_tool_identity')
     current['debug_execution_tool_identity'] = tool_identity()
+    boundaries = dict(status='unverified',
+                      reason='captured_final_llvm_input_not_supplied')
+    legacy_fallback = metadata.get(
+        'debug_math_compat'
+    ) == 'scalar_fabs' and not metadata.get('debug_execution_codegen_ir')
+    if llvm_ir is not None:
+        if not isinstance(llvm_ir, str):
+            raise ValueError('Captured final LLVM input must be text')
+        if hashlib.sha256(llvm_ir.encode()).hexdigest() != metadata.get(
+                'debug_execution_native_ir_sha256'):
+            raise ValueError('Captured final LLVM input identity differs')
+        if legacy_fallback:
+            boundaries = dict(
+                status='unverified',
+                reason='legacy_fallback_final_input_not_retained')
+        else:
+            bind_execution_structure(llvm_ir, current)
+            boundaries = current['debug_execution_llvm_structure'][
+                'boundary_report']
     bind_native_clock_locations(binary, current)
     return dict(schema_version=1,
                 fatbin_sha256=hashlib.sha256(binary).hexdigest(),
                 producer_identity_sha256=hashlib.sha256(
                     json.dumps(producer, sort_keys=True).encode()).hexdigest(),
                 locations=current['debug_execution_native_locations'],
-                analysis=current['debug_execution_native_analysis'])
+                analysis=current['debug_execution_native_analysis'],
+                llvm_boundaries=boundaries)

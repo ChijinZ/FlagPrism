@@ -11,9 +11,16 @@ def metadata(text):
     return dict(debug_execution_version=1,
                 debug_execution_native_ir_sha256=hashlib.sha256(
                     text.encode()).hexdigest(),
-                debug_execution_manifest={'sites': [{
-                    'id': 7
-                }]})
+                debug_execution_manifest={
+                    'capacity':
+                    512,
+                    'sites': [{
+                        'id': 7,
+                        'kind': 5,
+                        'operation': 'gcu.border',
+                        'location': 'loc(unknown)'
+                    }]
+                })
 
 
 def report():
@@ -21,7 +28,19 @@ def report():
                 status='typed_sdk_llvm_structure_indexed',
                 source_region_qualified=False,
                 native_schedule_qualified=False,
-                blocks=[])
+                entry_block=0,
+                blocks=[
+                    dict(id=0,
+                         arguments=[],
+                         argument_types=[],
+                         operations=[
+                             dict(operation='llvm.return',
+                                  operands=[],
+                                  results=[],
+                                  result_types=[],
+                                  successors=[])
+                         ])
+                ])
 
 
 def test_structure_binds_exact_input_and_manifest(tmp_path):
@@ -39,6 +58,7 @@ def test_structure_binds_exact_input_and_manifest(tmp_path):
         json.dumps(state['debug_execution_manifest'],
                    sort_keys=True).encode()).hexdigest()
     assert bound['report']['source_region_qualified'] is False
+    assert bound['boundary_report']['regions'][0]['status'] == 'unverified'
     assert 'fatbin_sha256' not in bound
 
 

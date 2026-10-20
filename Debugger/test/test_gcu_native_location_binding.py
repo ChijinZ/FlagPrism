@@ -289,3 +289,68 @@ def test_structure_binary_attach_checks_actual_IR_and_manifest(
             with pytest.raises(RuntimeError, match='retained at'):
                 bridge.bind_native_clock_locations(binary, metadata)
     assert index == original
+
+
+@pytest.mark.parametrize('mode',
+                         ['missing', 'fresh', 'different', 'legacy_fallback'])
+def test_offline_boundaries_recompute_from_exact_input_and_ignore_cached_status(
+        mode):
+    elf = b'\x7fELFfake-parser-fixture'
+    binary = bundle([(TARGET, elf)])
+    text = 'fixture-retained-final-LLVM'
+    metadata = dict(debug_execution_version=1,
+                    debug_execution_tool_identity={'version': 'old'},
+                    debug_execution_native_ir_sha256=hashlib.sha256(
+                        text.encode()).hexdigest(),
+                    debug_execution_native_locations=dict(
+                        fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                        elf_sha256=hashlib.sha256(elf).hexdigest(),
+                        target=TARGET),
+                    debug_execution_llvm_structure={
+                        'boundary_report': {
+                            'status': 'cached-untrusted'
+                        }
+                    })
+    if mode == 'legacy_fallback':
+        metadata['debug_math_compat'] = 'scalar_fabs'
+    original = copy.deepcopy(metadata)
+
+    def structure(source, current):
+        assert source == text
+        current['debug_execution_llvm_structure'] = {
+            'boundary_report': {
+                'status': 'fresh-fixture'
+            }
+        }
+
+    def native(snapshot, current):
+        assert snapshot == binary
+        current['debug_execution_native_analysis'] = {
+            'status': 'fixture_unverified'
+        }
+
+    with patch.object(bridge, 'tool_identity', return_value={'version': 'new'}), \
+            patch.object(bridge, 'bind_execution_structure', side_effect=structure) as index, \
+            patch.object(bridge, 'bind_native_clock_locations', side_effect=native) as mapping:
+        if mode == 'different':
+            with pytest.raises(ValueError,
+                               match='LLVM input identity differs'):
+                bridge.inspect_native_execution(binary,
+                                                metadata,
+                                                llvm_ir=text + 'changed')
+            index.assert_not_called()
+            mapping.assert_not_called()
+        else:
+            result = bridge.inspect_native_execution(
+                binary, metadata, llvm_ir=None if mode == 'missing' else text)
+            if mode == 'fresh':
+                index.assert_called_once()
+                assert result['llvm_boundaries']['status'] == 'fresh-fixture'
+            else:
+                index.assert_not_called()
+                assert result['llvm_boundaries']['status'] == 'unverified'
+                assert result['llvm_boundaries']['reason'] == (
+                    'legacy_fallback_final_input_not_retained'
+                    if mode == 'legacy_fallback' else
+                    'captured_final_llvm_input_not_supplied')
+    assert metadata == original
