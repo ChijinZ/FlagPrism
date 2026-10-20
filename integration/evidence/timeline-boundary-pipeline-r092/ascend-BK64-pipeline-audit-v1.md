@@ -82,4 +82,3 @@
 - **Optional：无新增。** 不建议新矩阵、换调度、补同步或专用算子代码。
 
 本报告当前不支持关闭 R091 G3 的 Ascend BK64 子项；支持复用已经核实的具体 helper 语义与原 default/sparse结果身份，收到 matching 原件后只需对此有限 delta 追加。没有否定已闭 BK32，也没有把历史 sparse1失败改为default失败或要求其重跑成功。
-

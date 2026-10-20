@@ -142,4 +142,3 @@ R091 两份 inventory 已终态0、无 device/codegen，calls各96；GCU为32 di
 3. 对原 C2 的 BK64 仅核尚未直接闭合的三方关键关系/参数差异，保历史 sparse1 失败，避免将 BK32 有限结论扩大。
 
 本席支持按已证范围交付当前阶段工具能力；不支持宣布原完整三后端 goal 已完成。没有新增确认代码缺陷，也没有把完美 hardware busy、source-exclusive latency、通用 ISA、全路径形式化、精确相同 issue 顺序或所有 region 都必须正时长变成门槛。G1/G2 属真实工程接入/适用性缺口，G3 属原已登记 C2 的有限解释缺口；不能由正 duration、同指令数、单个 adapter 类或 reviewer 投票替代。
-

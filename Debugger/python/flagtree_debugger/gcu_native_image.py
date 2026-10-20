@@ -96,6 +96,8 @@ def bind_instructions(binary, native):
         'Ambiguous GCU descriptor code extent')
     entry, length = int(entries[0]), int(lengths[0])
     symbols = []
+    name_bytes = name.encode('utf-8')
+    name_budget = 2 * len(binary)
     for section in sections:
         if section[1] != 2:
             continue
@@ -108,9 +110,13 @@ def bind_instructions(binary, native):
             index, _, _, ix, value, extent = struct.unpack_from(
                 '<IBBHQQ', table, position)
             _need(index < len(strings), 'Invalid GCU symbol name offset')
-            end = strings.find(b'\0', index)
-            _need(end >= index, 'Unterminated GCU symbol name')
-            if strings[index:end].decode('utf-8') == name:
+            end = strings.find(b'\0', index,
+                               min(len(strings), index + name_budget + 1))
+            _need(
+                end >= index and end - index + 1 <= name_budget,
+                'GCU symbol-name scan exceeds byte budget or is unterminated')
+            name_budget -= end - index + 1
+            if strings[index:end] == name_bytes:
                 symbols.append((value, extent, ix))
     _need(
         len(symbols) == 1

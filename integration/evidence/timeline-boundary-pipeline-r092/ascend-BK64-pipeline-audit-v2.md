@@ -106,4 +106,3 @@ raw SHA实际为 **fc2bcd65c207045f858047aa44110aa707a575e9ced4e5c7f3264c95da41c
 **其它范围：** 未授 native source/loop 自动规则、reader→record值流/epoch及whole-goal；历史explicit sparse1失败保持。原R091 G1/G2及其它后端原范围由各自实际修复/材料判断，不随此子门通过。
 
 **Optional：** 摘要可将BK32六轮各2048B与BK64三轮各4096B、两者原MMA返回cut均存在并列解释，避免把tile变大或stages=1误述成必然overlap变化。这不是新的实现或验收门。
-

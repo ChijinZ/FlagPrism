@@ -60,6 +60,22 @@ def test_linked_sdk_code_is_bound_without_becoming_kernel_body():
     assert [r['pc'] for r in answer['instructions']] == [32]
 
 
+def test_long_symbol_suffixes_have_a_cumulative_scan_budget():
+    binary, native = fixture()
+    names = b'\0kernel\0' + b'x' * 2048 + b'\0'
+    symbols = struct.pack('<IBBHQQ', 1, 0x12, 0, 1, 0, 64)
+    symbols += b''.join(
+        struct.pack('<IBBHQQ', 8 + i, 0x12, 0, 1, 0, 0) for i in range(128))
+    binary = bytearray(binary[:384])
+    struct.pack_into('<Q', binary, 192 + 32, len(symbols))
+    struct.pack_into('<QQ', binary, 256 + 24, 384 + len(symbols), len(names))
+    binary.extend(symbols)
+    binary.extend(names)
+    with pytest.raises(ValueError,
+                       match='symbol-name scan exceeds byte budget'):
+        module.bind_instructions(bytes(binary), native)
+
+
 @pytest.mark.parametrize('fault', [
     'wrong_bytes', 'missing_bytes', 'duplicate_pc', 'overlap', 'wrong_entry',
     'wrong_symbol', 'outside_code', 'truncated_section', 'bad_symbol_offset',

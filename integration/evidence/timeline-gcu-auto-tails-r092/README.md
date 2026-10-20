@@ -65,3 +65,22 @@ terminal/results remain in workspace archive SHA256
 `30cb01526b039771e15d1c111338b849c3055986fe8287e56455ad3b83c0a7c8`.
 No normal install, new compiler/native build, device execution, public provider
 integration or source-loop qualification is claimed for these internal helpers.
+
+
+## Reviewer M1: cumulative symbol-name work (V6)
+
+The independent V5 image review identified an actual bounded-work gap: a bounded
+symbol table can repeatedly reference long strings or distinct long suffixes.
+The final V6 code gives all NUL searches and byte comparisons a cumulative
+budget of twice the ELF input bytes; searches themselves are bounded by the
+remaining budget, and no per-symbol UTF-8 decode is performed. A129-symbol
+fixture using distinct offsets into a long nonmatching name must reject with
+the explicit budget reason. The two actual images still bind successfully.
+
+V6 terminal0/2.869578943s,61 normal and61 optimized tests, Ruff/YAPF/AST passed,
+source hashes match executed bytes; archive SHA256
+`929f64a2fe89727882a0caeea3f2b0e2c51c569c6e6136eacf31988143d39ad9`.
+The independent report records M1 against V5; its closure is subject to the
+separate V6 delta review. Warning logs in Git use JSON text wrappers to retain
+raw whitespace and raw SHA without whitespace-hook modification. Original
+logs and unnormalized review files remain in the workspace receipt paths.
