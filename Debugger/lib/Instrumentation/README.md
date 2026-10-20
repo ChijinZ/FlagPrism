@@ -54,3 +54,14 @@ references, which the standard Perfetto exporter includes in `source_locations`.
 Record identities, raw offsets, ticks, occurrence order, and observer semantics
 are unchanged. Membership is navigation and producer provenance; final LLVM,
 SDK, and native boundary checks remain separate.
+
+The finite LLVM region report distinguishes runtime-bound iterations from
+literal-bound iterations. `llvm_constant_iteration_checked` requires an actual
+positive, non-wrapping `llvm.mlir.constant` trip definition and the same zero
+initialization, unit step, selected-path endpoint and record checks. It records
+`constant_trip_count` and explicitly leaves `runtime_input_qualified` false;
+it does not satisfy a same-binary runtime-input variation requirement. Computed
+constants are conservatively unverified because the typed index does not retain
+all arithmetic poison flags. Record payload pointer address-space conversions
+are accepted only as typed pointer conversions; calls, floating arithmetic,
+foreign stores, and invalid mandatory record tuples remain rejected there.

@@ -160,9 +160,10 @@ class BoundaryTests(unittest.TestCase):
                     'llvm.br ^header(%c0 : i32)')
                 text = text.replace('%again = llvm.icmp "slt" %i, %trip',
                                     '%again = llvm.icmp "slt" %i, %bound')
-            if loop in ('continued-runtime', 'nested-control-runtime'):
+            if loop in ('continued-runtime', 'nested-control-runtime',
+                        'continued-constant'):
                 text = text.replace('^latch', '^continuation')
-                if loop == 'continued-runtime':
+                if loop in ('continued-runtime', 'continued-constant'):
                     continuation = '^continuation:\nllvm.br ^latch\n^latch:'
                 else:
                     continuation = (
@@ -173,6 +174,9 @@ class BoundaryTests(unittest.TestCase):
                         '^spin:\n%jnext = llvm.add %j, %c1 : i32\n'
                         'llvm.br ^inner(%jnext : i32)\n^latch:')
                 text = text.replace('^continuation:', continuation)
+            if loop in ('constant', 'continued-constant', 'legacy-constant'):
+                text = text.replace('%again = llvm.icmp "slt" %i, %trip',
+                                    '%again = llvm.icmp "slt" %i, %c3')
             if isinstance(loop, str) and loop.startswith('legacy-'):
                 text = re.sub(r' loc\("__flagprism_gcu_clock_v1__":\d+:\d+\)',
                               '', text)
@@ -205,6 +209,140 @@ class BoundaryTests(unittest.TestCase):
         self.assertEqual(region['loop']['status'],
                          'llvm_runtime_iteration_checked', region)
         return report, manifest, region
+
+    def test_record_payload_pointer_cast_does_not_hide_effects_or_tuple_changes(
+            self):
+        text, manifest = fixture(False)
+        extra = (
+            '%converted = llvm.addrspacecast %X : !llvm.ptr to !llvm.ptr<3>\n'
+            '%payload = llvm.ptrtoint %converted : !llvm.ptr<3> to i32\n')
+        text = text.replace('%slot =', extra + '%slot =')
+        text = text.replace('llvm.store %c0, %address12 :',
+                            'llvm.store %payload, %address12 :')
+        source = self.output / 'record-address-space-cast.mlir'
+        target = source.with_suffix('.json')
+        source.write_text(text)
+        child = subprocess.run([
+            str(self.tool), '--execution-structure',
+            str(source),
+            str(target)
+        ],
+                               capture_output=True,
+                               timeout=20)
+        self.assertEqual(child.returncode, 0, child.stderr.decode())
+        report = json.loads(target.read_text())
+        region = self.checked(report, manifest)
+        self.assertEqual(region['status'], 'llvm_observer_boundary_checked',
+                         region)
+        cast = next(row for block in report['blocks']
+                    for row in block['operations']
+                    if row['operation'] == 'llvm.addrspacecast')
+        invalid = copy.deepcopy(report)
+        badcast = next(row for block in invalid['blocks']
+                       for row in block['operations']
+                       if row['operation'] == 'llvm.addrspacecast')
+        badcast['operands'] = [
+            next(row['results'][0] for block in invalid['blocks']
+                 for row in block['operations']
+                 if row.get('integer_constant') == 0)
+        ]
+        self.assertIn('typed pointer conversion',
+                      self.checked(invalid, manifest)['reason'])
+        for operation in ('llvm.call', 'llvm.fadd'):
+            invalid = copy.deepcopy(report)
+            altered = next(row for block in invalid['blocks']
+                           for row in block['operations']
+                           if cast['results'] == row['results'])
+            altered['operation'] = operation
+            self.assertIn('Unknown effect',
+                          self.checked(invalid, manifest)['reason'])
+        field = region['paths'][0]['field_refs']['1']
+        report['blocks'][field['block']]['operations'][
+            field['operation']]['operands'][0] = next(
+                row['results'][0] for block in report['blocks']
+                for row in block['operations']
+                if row.get('integer_constant') == 0)
+        self.assertIn('tuple', self.checked(report, manifest)['reason'])
+
+    def test_flagged_overflow_is_not_a_literal_iteration_bound(self):
+        text, manifest = fixture(True)
+        derived = (
+            '%minimum = llvm.mlir.constant(-2147483648 : i32) : i32\n'
+            '%another = llvm.mlir.constant(-2147483645 : i32) : i32\n'
+            '%derived = llvm.add %minimum, %another overflow<nsw> : i32\n')
+        text = text.replace('%shift =', derived + '%shift =')
+        text = text.replace('%again = llvm.icmp "slt" %i, %trip',
+                            '%again = llvm.icmp "slt" %i, %derived')
+        source = self.output / 'overflow-trip.mlir'
+        target = source.with_suffix('.json')
+        source.write_text(text)
+        child = subprocess.run([
+            str(self.tool), '--execution-structure',
+            str(source),
+            str(target)
+        ],
+                               capture_output=True,
+                               timeout=20)
+        self.assertEqual(child.returncode, 0, child.stderr.decode())
+        result = self.checked(json.loads(target.read_text()), manifest)
+        self.assertEqual(result['status'], 'llvm_observer_boundary_checked',
+                         result)
+        self.assertEqual(result['loop']['status'], 'unverified', result)
+        self.assertIn('actual literal definition', result['loop']['reason'])
+
+    def test_constant_iteration_is_separate_from_runtime_input(self):
+        for variant in ('constant', 'continued-constant', 'legacy-constant'):
+            with self.subTest(variant=variant):
+                report, manifest = self.indexed(variant)
+                region = self.checked(report, manifest)
+                self.assertEqual(region['status'],
+                                 'llvm_observer_boundary_checked', region)
+                loop = region['loop']
+                self.assertEqual(loop['status'],
+                                 'llvm_constant_iteration_checked', loop)
+                self.assertEqual(loop['constant_trip_count'], 3)
+                self.assertFalse(loop['runtime_input_qualified'])
+                self.assertNotIn('runtime_trip_value', loop)
+                self.assertFalse(loop['source_iteration_id_qualified'])
+
+    def test_constant_trip_zero_negative_and_wrapping_are_not_qualified(self):
+        for value in (0, 0x80000000, 0xffffffff):
+            report, manifest = self.indexed('constant')
+            region = self.checked(report, manifest)
+            trip = region['loop']['constant_trip_value']
+            definition = next(row for block in report['blocks']
+                              for row in block['operations']
+                              if trip in row['results'])
+            definition['integer_constant'] = value
+            result = self.checked(report, manifest)
+            self.assertEqual(result['status'],
+                             'llvm_observer_boundary_checked', result)
+            self.assertEqual(result['loop']['status'], 'unverified', result)
+            self.assertIn('positive and non-wrapping',
+                          result['loop']['reason'])
+
+    def test_constant_iteration_still_rejects_wrong_step_and_reset(self):
+        for mutation in ('step', 'reset'):
+            report, manifest = self.indexed('constant')
+            region = self.checked(report, manifest)
+            loop = region['loop']
+            literal = lambda n: next(row['results'][0]
+                                     for block in report['blocks']
+                                     for row in block['operations']
+                                     if row.get('integer_constant') == n)
+            if mutation == 'step':
+                row = report['blocks'][loop['latch']]['operations'][0]
+                self.assertEqual(row['operation'], 'llvm.add')
+                row['operands'][1] = literal(2)
+            else:
+                report['blocks'][loop['exit_block']]['operations'][-1].update(
+                    operation='llvm.br',
+                    operands=[literal(0)],
+                    successors=[
+                        dict(block=loop['header'], arguments=[literal(0)])
+                    ])
+            result = self.checked(report, manifest)
+            self.assertEqual(result['loop']['status'], 'unverified', result)
 
     def test_unmarked_typed_calls_recover_fresh_runtime_regions(self):
         report, manifest = self.indexed('legacy-runtime')

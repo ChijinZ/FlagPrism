@@ -545,9 +545,17 @@ def _record(index, block, position, env, site, capacity):
             and row['operation']
             in ('llvm.add', 'llvm.sub', 'llvm.mul', 'llvm.trunc', 'llvm.lshr',
                 'llvm.shl', 'llvm.and', 'llvm.or', 'llvm.sext', 'llvm.zext',
-                'llvm.ptrtoint', 'llvm.load', 'llvm.extractvalue',
-                'llvm.getelementptr', 'llvm.mlir.constant', 'llvm.icmp',
-                'llvm.select', 'llvm.store'), 'Unknown effect in record block')
+                'llvm.ptrtoint', 'llvm.addrspacecast', 'llvm.load',
+                'llvm.extractvalue', 'llvm.getelementptr',
+                'llvm.mlir.constant', 'llvm.icmp', 'llvm.select',
+                'llvm.store'), 'Unknown effect in record block')
+        if row['operation'] == 'llvm.addrspacecast':
+            _need(
+                len(row['operands']) == 1 and len(row['results']) == 1 and all(
+                    re.fullmatch(r'!llvm\.ptr(?:<\d+>)?', kind)
+                    for kind in (index.types[row['operands'][0]],
+                                 index.types[row['results'][0]])),
+                'Record address-space cast is not a typed pointer conversion')
         if row['operation'] == 'llvm.store':
             _need(
                 len(row['operands']) == 2
@@ -748,6 +756,25 @@ def _region(index, site, block, capacity):
     return result
 
 
+def _trip_fields(index, trip):
+    """Separate a literal iteration bound from a runtime-input witness."""
+    value = index.value(trip, {})
+    if value[2]:
+        return dict(status='llvm_runtime_iteration_checked',
+                    runtime_trip_value=trip)
+    definition = index.definitions[trip]
+    _need(
+        definition is not None
+        and definition[2]['operation'] == 'llvm.mlir.constant',
+        'Constant loop trip must be an actual literal definition')
+    _need(0 < value[1] < 1 << (value[0] - 1),
+          'Constant loop trip must be positive and non-wrapping')
+    return dict(status='llvm_constant_iteration_checked',
+                constant_trip_value=trip,
+                constant_trip_count=value[1],
+                runtime_input_qualified=False)
+
+
 def _direct_loop(index, region):
     """Check the finite header/body/record/latch family, not arbitrary loops."""
     joins = {path['join_block'] for path in region['paths']}
@@ -802,10 +829,10 @@ def _direct_loop(index, region):
     _need(induction in formals and index.bits(induction) in (32, 64),
           'Loop induction is not an integer header argument')
     trip_value = index.value(trip, {})
-    _need(trip_value[2], 'Loop trip bound is compile-time constant')
+    trip_fields = _trip_fields(index, trip)
     trip_definition = index.definitions[trip]
     _need(
-        trip in index.blocks[index.entry]['arguments']
+        not trip_value[2] or trip in index.blocks[index.entry]['arguments']
         or (trip_definition is not None and trip_definition[0] == index.entry),
         'Runtime trip bound is not entry-invariant')
     number = formals.index(induction)
@@ -874,13 +901,12 @@ def _direct_loop(index, region):
                     0] == selector and number == 1:
                 continue
             raise ValueError('External entry into the declared loop iteration')
-    return dict(status='llvm_runtime_iteration_checked',
+    return dict(trip_fields,
                 header=header,
                 latch=latch,
                 exit_block=decision['successors'][1]['block'],
                 initial_blocks=initial,
                 induction_value=induction,
-                runtime_trip_value=trip,
                 body_blocks=sorted(iteration_blocks),
                 selected_paths=paths,
                 source_iteration_id_qualified=False)
@@ -986,11 +1012,12 @@ def _structured_loop(index, region):
     _need(induction in formals and index.bits(induction) in (32, 64),
           'Runtime induction is not a header integer argument')
     trip_definition = index.definitions[trip]
+    trip_fields = _trip_fields(index, trip)
     _need(
-        index.value(trip, {})[2]
-        and (trip in index.blocks[index.entry]['arguments']
-             or trip_definition is not None and trip_definition[0] not in body
-             and trip_definition[0] in index.loop_dominators[header]),
+        not index.value(trip, {})[2]
+        or (trip in index.blocks[index.entry]['arguments']
+            or trip_definition is not None and trip_definition[0] not in body
+            and trip_definition[0] in index.loop_dominators[header]),
         'Runtime trip is not a nonconstant loop-entry-invariant value')
     true_edge, false_edge = decision['successors']
     _need(true_edge['block'] in body and false_edge['block'] not in body,
@@ -1117,14 +1144,13 @@ def _structured_loop(index, region):
         for edge, _ in index.edges(block, {selector: _literal(1, 1)}):
             pending.append((edge['block'], begun, ended))
     _need(terminal, 'Runtime iteration has no checked latch state')
-    return dict(status='llvm_runtime_iteration_checked',
+    return dict(trip_fields,
                 rule='single_header_latch_observer_state',
                 header=header,
                 latch=latch,
                 exit_block=false_edge['block'],
                 initial_blocks=initial,
                 induction_value=induction,
-                runtime_trip_value=trip,
                 body_blocks=sorted(body),
                 selected_terminal_states=len(terminal),
                 checked_states=len(visited),
@@ -1202,7 +1228,7 @@ def analyze_regions(report, manifest):
             regions.append(
                 dict(site_id=identity, status='unverified', reason=str(error)))
     return dict(schema_version=1,
-                rule_version='gcu300.selected_llvm_tuple.v2',
+                rule_version='gcu300.selected_llvm_tuple.v3',
                 semantics='selected_observer_issue_wait_or_body_elapsed',
                 regions=regions,
                 native_schedule_qualified=False,
