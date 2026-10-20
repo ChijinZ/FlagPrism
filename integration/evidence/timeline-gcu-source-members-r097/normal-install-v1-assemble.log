@@ -1,0 +1,99 @@
+no previously-included directories found matching 'python/triton/backends/*'
+no previously-included directories found matching 'python/triton/language/extra/*'
+no previously-included directories found matching 'python/triton/profiler'
+warning: no previously-included files found matching 'python/triton/spec/*'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+no previously-included directories found matching 'python/triton/backends/*'
+no previously-included directories found matching 'python/triton/language/extra/*'
+no previously-included directories found matching 'python/triton/profiler'
+warning: no previously-included files found matching 'python/triton/spec/*'
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+/usr/local/lib/python3.12/dist-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` directly.
+        Instead, use pypa/build, pypa/installer or other
+        standards-based tools.
+
+        See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+[INFO] Skipping CUDA toolkits for enflame backend in offline build.
+[1;32m[INFO] FlagtreeBackend is enflame[0m
+'triton' package not found, no need to uninstall.
+{
+  "wheel": "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+  "wheel_sha256": "8454408e755b5bf34eab8a4b7951a0a69878e8e3865a1841a324e6cf4ac746ab",
+  "files": {
+    "flagtree/debugger/_native.cpython-312-x86_64-linux-gnu.so": "6ed29b68aadf9bd2fb38dbe8f358ca024255961be8ce4133e05f3b3936a4efde",
+    "flagtree/profiler/_native.so": "13aff3d696a1033f89598956030e7aed168b369fc52ee145115c8636a9ce969b",
+    "triton/_C/libtriton.so": "da6c2b43812e35a42a6747b3b4cb8b5e402a55cffd41904080577742062e7ed9",
+    "triton/backends/enflame/_triton_gcu300.cpython-312-x86_64-linux-gnu.so": "ca75d6d033edd16622b430df94efab394b86b33c579f953ef843a9448acc918c",
+    "triton/backends/enflame/_triton_gcu400.cpython-312-x86_64-linux-gnu.so": "670d640019b06b69775b9bda4515dd3755ed1be52a8fe8c45fbb22511aa3205a",
+    "triton/backends/enflame/libtriton_gcu300_core.so": "08f2a4db162e9201af7fa07022a071c5315f1945bf11c926ef9e524773a171fe",
+    "triton/backends/enflame/libtriton_gcu400_core.so": "641499971c00572f1d93247ff7d7119c84af5b1f9055214e659aa69ef00f4832",
+    "flagtree/profiler/_cann_launch_receipt.h": "cff0c44ef69c1c329113dee8eed6d92d8315f202dee2d54acfb1a8894afdc540",
+    "triton/backends/amd/include/hipblas-common/hipblas-common.h": "9d92c7d9662b7030c579fcfd6b4f29db280ff9869820ebb152239b1afc173d3b",
+    "triton/backends/amd/include/hip/channel_descriptor.h": "d6d585e084c20182969dda448a0179a70154c249982249da5bf7df8b824ef162",
+    "triton/backends/amd/include/hip/driver_types.h": "d1f9df2221456c157e8dc0d8d154606276a74c32bed1ff1c74d849e1c713204f",
+    "triton/backends/amd/include/hip/hip_common.h": "41e51ddfbaf16220dde027e9e0e23c3ba4f019e1b5182df848e23ff5baa06545",
+    "triton/backends/amd/include/hip/hip_deprecated.h": "9334c9333f6e28a3c385b62b29d003d69ed798c3f3a6bf94ca4d6f3b7ed9b33d",
+    "triton/backends/amd/include/hip/hip_runtime.h": "a7fbe286f7cdf9d1deced6fb6d663b48950315fc32caec96435bf78599c3bafa",
+    "triton/backends/amd/include/hip/hip_runtime_api.h": "f0ed814c4f9cd8bcf8905f358acda397ffbcbb8395bb1a65973c5b547ec455c0",
+    "triton/backends/amd/include/hip/hip_texture_types.h": "02192f8c6e1c0e37ff6452e0e52b124df0675c6eb5e0f04ad5754f6bb8ab65b9",
+    "triton/backends/amd/include/hip/hip_vector_types.h": "c1585f3ee359e3036cab65ff7d65eb2e0582b7a4325ee86400614c3b92ba2041",
+    "triton/backends/amd/include/hip/hip_version.h": "f2f49e44ccd0509582566a32ff9cf1b104e45b3a5dfc2356208b8f52b7b6c3de",
+    "triton/backends/amd/include/hip/library_types.h": "d9a86ad289e11419696f78917fb96879de2fa9963c27fbd2d41416a9ff327f11",
+    "triton/backends/amd/include/hip/linker_types.h": "057aba5652e78984c2cf2a42cf4c96b9acb6b9c673ab135e93ba27965a627d7b",
+    "triton/backends/amd/include/hip/surface_types.h": "e5eddc787fc90638713bc7341e22d2ee23011051962b50dc8c33900a2c6c9f15",
+    "triton/backends/amd/include/hip/texture_types.h": "f25c81c6f2ad63540551128dd692b6ca7811bc0c12d981a0ad20ce1fa1e04d2c",
+    "triton/backends/amd/include/hsa/amd_hsa_kernel_code.h": "2f48b1fff5432fb96aa460d3c5ac0bccb2e8996adfa5ecdb508722f3911ff9d0",
+    "triton/backends/amd/include/hsa/hsa.h": "f0dc5099a15c812cb6cdf33cf67ec35f1386be222a6d0f05896cfff16916e514",
+    "triton/backends/amd/include/hsa/hsa_ext_amd.h": "b15af4e0f20b05c60b8b219d15fd949c132c9d99bae96c48535e9b4ec69eacaa",
+    "triton/backends/amd/include/hsa/hsa_ext_image.h": "0c52e6bf76790b4d2967886b2a501995e0f08d78a053b23620174ab974b7b71c",
+    "triton/backends/amd/include/hsa/hsa_ven_amd_loader.h": "73a7313c0cc0a31eeee886c5cc491065f0ae465f8aaf7f56858dbfc36dd7d51e",
+    "triton/backends/amd/include/hsa/hsa_ven_amd_pc_sampling.h": "d6342f8bdeacf78f868ce1a4b66be9aa3551b1318036e80eb15e979a031f8af9",
+    "triton/backends/amd/include/roctracer/roctracer.h": "07cb07cf60cc369acfec4a8d5881b054b635290329c6685f572e14a11f1dcf36",
+    "triton/backends/amd/include/roctracer/roctracer_ext.h": "bcb699f29780c52cb4730add11a94a9d402990ab297dad388b0d4caff65c8a8d",
+    "triton/backends/amd/include/roctracer/roctracer_hip.h": "442cd8b8dc35bcb47bc4ae2b6f4e93b4cf53539e3a51828727cdc8307999126f",
+    "triton/backends/amd/include/roctracer/roctracer_roctx.h": "8018c1939bdbd25dcf6c1490ed5f6216d68cfd1ce42032445b503f3d70628413",
+    "triton/backends/amd/include/roctracer/roctx.h": "461257517461489e4b444ff5826ec4ebe6e310cadf70504b0cbb9fdd4c40221f",
+    "triton/backends/amd/include/hip/amd_detail/amd_channel_descriptor.h": "bed3e191b56c5444d398db006f17bd66b030d31d2e7a1ca69b5e044d86b1287e",
+    "triton/backends/amd/include/hip/amd_detail/amd_device_functions.h": "4c49dd5f468aa2c8e8a3bd27570326d5fb90654be73d27a3572b5fe067e3167d",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_atomic.h": "6f3d55c6fda28ce63614e0cb43a70318a573f2b40078b6e0cef481e627685f0c",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_common.h": "b2731a9c4084dc96c297b618295dd5c9474b4ce7accd3f7352dd82b4d94b42d1",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_gl_interop.h": "566881ac455970f68f03423c6c947bd20600a6cfd892666b5b8ba1ed57944773",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_runtime.h": "e51a973fd5dd9e07300cb7c5a51fbd2059531abc33f67a45d7fe7cdef79552c8",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_runtime_pt_api.h": "be840fd08265680bcf8fc62c3c6293479e24c7cbf617b46b01a6c7ee536dd63c",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_unsafe_atomics.h": "b5eaaa01260176b641e9c8c25a0a8fc9527318dcd11cc4754e0bd1482ddedd97",
+    "triton/backends/amd/include/hip/amd_detail/amd_hip_vector_types.h": "611f2ea3338a9911e36527dff422dfa5829b6bcce685888bf18f0d9d8284a156",
+    "triton/backends/amd/include/hip/amd_detail/amd_math_functions.h": "58553025db2bf68b564bb8ea4071d3124126b60cde888c7b365560a2f4e7beff",
+    "triton/backends/amd/include/hip/amd_detail/amd_surface_functions.h": "f46860972886f789c31f40a24e6a0aedd8026c19df3ed8e4ea1dd0c98c3da3cc",
+    "triton/backends/amd/include/hip/amd_detail/amd_warp_functions.h": "a3c82e4b2205babb03d241f2f6ce7a8f489880047cf3b37460f52d007c29d75c",
+    "triton/backends/amd/include/hip/amd_detail/amd_warp_sync_functions.h": "119571e114342f7ea237f25604e8c08ceca821b1200149964ef7ce5e3f8c4a21",
+    "triton/backends/amd/include/hip/amd_detail/device_library_decls.h": "fc828035bf5b378e8c894e2db13f996375634f749142a2fde63833d729e4868e",
+    "triton/backends/amd/include/hip/amd_detail/hip_assert.h": "199906029b4ad199320d738419dbb4d32b37a5a3619e7ab2e3c3942cbb15caaa",
+    "triton/backends/amd/include/hip/amd_detail/hip_fp16_math_fwd.h": "e6ed59fc1599959e7d8d83af5db5ac82c3d63bd91018f1f48cd9622b9471b40a",
+    "triton/backends/amd/include/hip/amd_detail/hip_ldg.h": "2801196fd1f8cf80c3ae46a5a0c39e5b36a18837c8d95e9cebcbd64f78dbe5f5",
+    "triton/backends/amd/include/hip/amd_detail/hip_prof_str.h": "3f7b371e6289fc2194a010de87575b19c03a873822348c7e653c6bed67951029",
+    "triton/backends/amd/include/hip/amd_detail/hip_runtime_prof.h": "f6ee65d05b5a60210a29260b79cda355c89ed5e772eb1c8272c9a537411bd95b",
+    "triton/backends/amd/include/hip/amd_detail/host_defines.h": "c3a1f5d1dce7b303205e8ea32414c8be18ce3901b39e180dac79b947f84cbfb5",
+    "triton/backends/amd/include/hip/amd_detail/math_fwd.h": "1a059224f23fa9619f779d283c8864f799598877648eba5691347b75dc29101e",
+    "triton/backends/amd/include/hip/amd_detail/ockl_image.h": "cb313c619a66a56244b3e669380184b436039b7804a58d368595477294497f67",
+    "triton/backends/amd/include/hip/amd_detail/texture_fetch_functions.h": "c0ead499d728f9eb4fa8ee5094a9543f4f92a45c14577c3f75fc6e3ec042a655",
+    "triton/backends/amd/include/hip/amd_detail/texture_indirect_functions.h": "256b3ee718feb9bc0eccd129e90248ee4b80b2a7f12ad864c11bce2974c7dea3",
+    "triton/backends/amd/include/roctracer/ext/prof_protocol.h": "e8501cbd50fe74d33bbae945b3607e693c70e71380586cba7af743e3251a79b0",
+    "triton/tools/extra/cuda/compile.h": "9fd40a2056532f8452b225ed03104ff571929f18f269ebd043d6c1a700ecbc08",
+    "triton/tools/extra/hip/compile.h": "048461da5a3890a5d672ca2693cf432b1dec637fd72cc1a80b22791d8be5dc65",
+    "triton/backends/enflame/compiler.py": "58eb6c3d493d8e33a29aaa390e2aa88670df5fbc4130749b4eca6c102c4bf133",
+    "flagtree/debugger/_bin/gcu-timeline": "374ab5f9fd07e2c5c7e8ec32f82365fa5c98e5736fd36648b3ee96b7263bf8d4"
+  },
+  "component_python_files_verified": 132,
+  "native_provenance": "supplied matching already-built native; no rebuild",
+  "backend_build": "/tmp/chijin-timeline-r051-source-build-v1/work/build",
+  "flagtree": "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/FlagTree",
+  "component": "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source"
+}

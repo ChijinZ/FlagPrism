@@ -1,0 +1,348 @@
+[
+  {
+    "name": "git-init",
+    "argv": [
+      "git",
+      "init",
+      "-q"
+    ],
+    "pid": 602239,
+    "startticks": 1030939981,
+    "returncode": 0
+  },
+  {
+    "name": "git-parent",
+    "argv": [
+      "git",
+      "fetch",
+      "--update-shallow",
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/FlagTree",
+      "HEAD"
+    ],
+    "pid": 602240,
+    "startticks": 1030939981,
+    "returncode": 0
+  },
+  {
+    "name": "git-identity",
+    "argv": [
+      "git",
+      "reset",
+      "--mixed",
+      "FETCH_HEAD"
+    ],
+    "pid": 602438,
+    "startticks": 1030940038,
+    "returncode": 0
+  },
+  {
+    "name": "current-parent-patch",
+    "argv": [
+      "git",
+      "apply",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/integration/patches/enflame/flagtree-source.patch"
+    ],
+    "pid": 602454,
+    "startticks": 1030940071,
+    "returncode": 0
+  },
+  {
+    "name": "assemble",
+    "argv": [
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/integration/patches/enflame/build_automatic_wheel.py",
+      "--flagtree",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/FlagTree",
+      "--component",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source",
+      "--native-python",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native",
+      "--core-library",
+      "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/wheel",
+      "--backend-build",
+      "/tmp/chijin-timeline-r051-source-build-v1/work/build"
+    ],
+    "pid": 602455,
+    "startticks": 1030940080,
+    "returncode": 0
+  },
+  {
+    "name": "venv",
+    "argv": [
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv"
+    ],
+    "pid": 602544,
+    "startticks": 1030944243,
+    "returncode": 0
+  },
+  {
+    "name": "install",
+    "argv": [
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-m",
+      "pip",
+      "--python",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl"
+    ],
+    "pid": 602545,
+    "startticks": 1030944250,
+    "returncode": 0
+  },
+  {
+    "name": "guard-binding-feature",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-c",
+      "from flagtree.debugger.native import runtime_binding; m=runtime_binding(); v=getattr(m,'GCU_TIMELINE_ALLOCATION_GUARD_VERSION',None); print(v); raise SystemExit(0 if v==1 else 1)"
+    ],
+    "pid": 602549,
+    "startticks": 1030945077,
+    "returncode": 0
+  },
+  {
+    "name": "installed-import",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-c",
+      "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+    ],
+    "pid": 602550,
+    "startticks": 1030945094,
+    "returncode": 0
+  },
+  {
+    "name": "installed-observer-imports",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-c",
+      "from flagtree.debugger import gcu_native_control, gcu_native_values, gcu_native_image, gcu_native_analysis, gcu_timeline; print(gcu_timeline.packaged_tool()); print(gcu_native_analysis.__file__); raise SystemExit(0 if gcu_timeline.tool_identity()['version']==3 else 1)"
+    ],
+    "pid": 602551,
+    "startticks": 1030945110,
+    "returncode": 0
+  },
+  {
+    "name": "installed-region-import",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-c",
+      "from flagtree.debugger import gcu_llvm_regions; print(gcu_llvm_regions.__file__)"
+    ],
+    "pid": 602558,
+    "startticks": 1030945217,
+    "returncode": 0
+  },
+  {
+    "name": "installed-native-index-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_structure.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/index-fixtures-normal"
+    ],
+    "pid": 602559,
+    "startticks": 1030945233,
+    "returncode": 0
+  },
+  {
+    "name": "installed-boundary-bindings-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-m",
+      "pytest",
+      "-q",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_native_location_binding.py",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_execution_structure_binding.py",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_fallback_structure.py",
+      "--basetemp",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/pytest-normal"
+    ],
+    "pid": 602571,
+    "startticks": 1030945245,
+    "returncode": 0
+  },
+  {
+    "name": "installed-region-rule-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_llvm_regions.py",
+      "--module",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/lib/python3.12/site-packages/flagtree/debugger/gcu_llvm_regions.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/region-fixtures-normal"
+    ],
+    "pid": 602572,
+    "startticks": 1030945287,
+    "returncode": 0
+  },
+  {
+    "name": "installed-native-index-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_structure.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/index-fixtures-optimized"
+    ],
+    "pid": 602583,
+    "startticks": 1030945313,
+    "returncode": 0
+  },
+  {
+    "name": "installed-boundary-bindings-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "-m",
+      "pytest",
+      "-q",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_native_location_binding.py",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_execution_structure_binding.py",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/test_gcu_fallback_structure.py",
+      "--basetemp",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/pytest-optimized"
+    ],
+    "pid": 602595,
+    "startticks": 1030945325,
+    "returncode": 0
+  },
+  {
+    "name": "installed-region-rule-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_llvm_regions.py",
+      "--module",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/lib/python3.12/site-packages/flagtree/debugger/gcu_llvm_regions.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/region-fixtures-optimized"
+    ],
+    "pid": 602596,
+    "startticks": 1030945376,
+    "returncode": 0
+  },
+  {
+    "name": "installed-original-members-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_origins.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/original-members-normal"
+    ],
+    "pid": 602607,
+    "startticks": 1030945403,
+    "returncode": 0
+  },
+  {
+    "name": "installed-preservation-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_preservation.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline"
+    ],
+    "pid": 602625,
+    "startticks": 1030945419,
+    "returncode": 0
+  },
+  {
+    "name": "installed-source-navigation-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/tests/timeline/test_enflame_source_members.py"
+    ],
+    "pid": 602745,
+    "startticks": 1030945446,
+    "returncode": 0
+  },
+  {
+    "name": "installed-original-members-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_origins.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/original-members-optimized"
+    ],
+    "pid": 602746,
+    "startticks": 1030945463,
+    "returncode": 0
+  },
+  {
+    "name": "installed-preservation-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/Debugger/test/gcu_execution_preservation.py",
+      "--tool",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/native/flagtree/debugger/_bin/gcu-timeline"
+    ],
+    "pid": 602764,
+    "startticks": 1030945479,
+    "returncode": 0
+  },
+  {
+    "name": "installed-source-navigation-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/source/tests/timeline/test_enflame_source_members.py"
+    ],
+    "pid": 602883,
+    "startticks": 1030945506,
+    "returncode": 0
+  },
+  {
+    "name": "installed-real-source-navigation",
+    "argv": [
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r097-gcu/normal-install-input-v1/actual.py",
+      "--output",
+      "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/actual-navigation"
+    ],
+    "pid": 602884,
+    "startticks": 1030945527,
+    "returncode": 1
+  }
+]

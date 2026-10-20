@@ -1,0 +1,86 @@
+{
+  "status": "source_navigation_real_raw_and_legacy_compatibility_checked",
+  "source_sha256": "c4f72ce782e0e524551482958d9a2c093f81f25a26bdd8a6b149659f55642b9e",
+  "objects": [
+    {
+      "perfetto_traces": [
+        {
+          "path": "/tmp/chijin-timeline-r097-gcu/runs/installed-actual-v2/output/0-observer-971a42081ca0085f031973b95acb4e63ac19a90fe0ac1a30a91667492e0e09e2.pftrace",
+          "sha256": "9294eb0284d22e8e73574d14bef80a9c96c52d9770d50c7abe544f9de0e18c65",
+          "bytes": 37393
+        },
+        {
+          "path": "/tmp/chijin-timeline-r097-gcu/runs/installed-actual-v2/output/0-observer-31dc263fbf4f60f91ea079b5da070e9b3347be72aef1093485a86177e0eef082.pftrace",
+          "sha256": "6f798d222239f4402eedd8db22fc071f3e3249d33eba37503141f78463d24603",
+          "bytes": 37476
+        }
+      ],
+      "object_index": 0,
+      "body_site": 24,
+      "capture_sha256": "4c42d244eaa18c17c303e26d9f68502fad2d0e5b2fa08dca2545354718a2135d",
+      "raw_sha256": "d4126e6ef643047702405cced5a70d4d8055c2c6aac8728517329ab62d780550",
+      "source_locations": [
+        "loc(unknown)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":13:24)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":13:32)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":14:24)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":14:32)"
+      ],
+      "source_op_ids": [
+        15,
+        18
+      ],
+      "events": 34,
+      "records": 68,
+      "original_unchanged": true,
+      "timing_and_runtime_data_unchanged": true,
+      "legacy_output_equal": true
+    },
+    {
+      "perfetto_traces": [
+        {
+          "path": "/tmp/chijin-timeline-r097-gcu/runs/installed-actual-v2/output/4-observer-694fc7271519edd68f56865dc4d167f69f42e4e39edd083f9337a1b5d44ee30b.pftrace",
+          "sha256": "de1c77be262cb2908e115e7a568a8496e92b92c542767038deb978f8d9731745",
+          "bytes": 39711
+        },
+        {
+          "path": "/tmp/chijin-timeline-r097-gcu/runs/installed-actual-v2/output/4-observer-81af5c96d69131607732cf9769e114d00e9a8474ec9e5aacf148f3cc7caa7216.pftrace",
+          "sha256": "75e7af9ff19d4c3175e9618efaaa61fc103caa0336dd9d277fa6d197e129ebb3",
+          "bytes": 39792
+        }
+      ],
+      "object_index": 4,
+      "body_site": 26,
+      "capture_sha256": "e9d6af023940197cff300d156baa6046b073fa6c4c0eba9567c321d938286370",
+      "raw_sha256": "584a838a2d3bb17c1cd7266ea651171627846edb551b0d8fdcaa991c22bdb9de",
+      "source_locations": [
+        "loc(unknown)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":31:17)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":31:37)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":31:43)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":31:52)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":32:15)",
+        "loc(\"/tmp/chijin-timeline-r052-private-device-v3/input-v2/kernels.py\":32:20)"
+      ],
+      "source_op_ids": [
+        17,
+        20,
+        24,
+        25
+      ],
+      "events": 36,
+      "records": 72,
+      "original_unchanged": true,
+      "timing_and_runtime_data_unchanged": true,
+      "legacy_output_equal": true
+    }
+  ],
+  "device_executed": false,
+  "steps": [],
+  "installed_members": 503,
+  "source_commit": "726ab3176c74881c92d5098a8de490f49feb21a4",
+  "installed_module": "/tmp/chijin-timeline-r097-gcu/runs/normal-install-v1/output/venv/lib/python3.12/site-packages/flagtree/profiler/timeline_events_enflame_native.py",
+  "installed_native_sha256": "374ab5f9fd07e2c5c7e8ec32f82365fa5c98e5736fd36648b3ee96b7263bf8d4",
+  "install_controller_original_returncode": 1,
+  "install_controller_failure": "actual verification expected unescaped locations instead of JSON array; product unchanged; followup runs actual verifier only"
+}
