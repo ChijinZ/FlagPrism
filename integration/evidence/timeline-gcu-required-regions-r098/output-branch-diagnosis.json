@@ -1,0 +1,173 @@
+{
+  "full_diagnostic_sha256": "b323b51616d9a354b9757d762d26c726f81c4bec623f2e4755ac271be60e0c47",
+  "objects": [
+    {
+      "object": 20,
+      "case": "q06-s0-c0-cold",
+      "complete": true,
+      "raw_sha256": "f7e98d6fc8e1e2741e40a6da8d8718a667e926396ceffe63b4e716da7d815f75",
+      "output_candidates": [
+        {
+          "site": 40,
+          "operation": "memref_ext.slice_deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 458
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 461
+            }
+          ],
+          "events": 0
+        },
+        {
+          "site": 41,
+          "operation": "memref_ext.deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 456
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 458
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 461
+            }
+          ],
+          "events": 2
+        },
+        {
+          "site": 42,
+          "operation": "memref.dma_wait",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 465
+            }
+          ],
+          "events": 2
+        }
+      ],
+      "before_sha256": "eab637ed0eb9e84920c7b30b8db8d01b55ebeced31586871a0eeb6b9aec9d0aa",
+      "original_ir_excerpts_sha256": "b36bff3a227cbfea4eb6b9aa32e5883faa453a644290d4748b3e793f38fb9a88",
+      "output_structure": "scf.if then slice_deslice_start else nested scf.if deslice_start; same source location and output/source buffers"
+    },
+    {
+      "object": 21,
+      "case": "q06-s0-c1-cold",
+      "complete": true,
+      "raw_sha256": "561ce340b68a69c0b6141302949587eeb4e21dc92e44304674e916dfdfd36f0a",
+      "output_candidates": [
+        {
+          "site": 32,
+          "operation": "memref_ext.slice_deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 458
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 461
+            }
+          ],
+          "events": 0
+        },
+        {
+          "site": 33,
+          "operation": "memref_ext.deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 456
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 458
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 461
+            }
+          ],
+          "events": 2
+        },
+        {
+          "site": 34,
+          "operation": "memref.dma_wait",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 465
+            }
+          ],
+          "events": 2
+        }
+      ],
+      "before_sha256": "fe19bad226f842194522eb4215ab07d1437f79a31f4190a6a51a2b67b0fbd0b2",
+      "original_ir_excerpts_sha256": "9c5365ea66c4f2031fdb0e95a4c5ab28282d14eb535e7d9d933c3a962673ccdf",
+      "output_structure": "scf.if then slice_deslice_start else nested scf.if deslice_start; same source location and output/source buffers"
+    },
+    {
+      "object": 29,
+      "case": "q08-s0-c0-cold",
+      "complete": true,
+      "raw_sha256": "8766caf0a4255b4c0f8542b1f8a25a03aed6b4a57347d65ec017422992cf2f53",
+      "output_candidates": [
+        {
+          "site": 34,
+          "operation": "memref_ext.slice_deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 500
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 503
+            }
+          ],
+          "events": 0
+        },
+        {
+          "site": 35,
+          "operation": "memref_ext.deslice_start",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 498
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 500
+            },
+            {
+              "operation": "scf.if",
+              "operation_index": 503
+            }
+          ],
+          "events": 2
+        },
+        {
+          "site": 36,
+          "operation": "memref.dma_wait",
+          "controls": [
+            {
+              "operation": "scf.if",
+              "operation_index": 507
+            }
+          ],
+          "events": 2
+        }
+      ],
+      "before_sha256": "cc1571c863be28f583136c070b463dcde88064eb91bf66b66867e930d2c7cbad",
+      "original_ir_excerpts_sha256": "5e9bc0fbeadf70f2f83bafb49d5116f31192df53b7904ce5b939320846bc15cf",
+      "output_structure": "scf.if then slice_deslice_start else nested scf.if deslice_start; same source location and output/source buffers"
+    }
+  ]
+}
