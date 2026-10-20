@@ -181,6 +181,13 @@ async boundaries remain selected. A smaller budget can omit source/consumer
 detail, so inspect the actual compiler inventory and capture coverage. Changing
 density does not certify schedule preservation or low overhead.
 
+Ascend's timeline source planner reserves an aggregate in each actual repeating
+body before allocating the remaining source budget, preferring contractions to
+reductions/scans. Counter/census selection is unchanged. The independent timeline
+policy version enters the pre-lookup compile configuration. A selected source
+operation can still lower to an empty or partial fragment: selection alone does
+not certify that its complete computation lies between the recorded readers.
+
 NVIDIA's late layout is `nvidia-late-1`, not the historical Proton raw3
 layout. Default selection uses the actual first/last logical programs and the
 first four actual threads for ordinary non-async/matrix code. Native asynchronous

@@ -21,6 +21,7 @@ def _category(item):
 
 
 CENSUS_SELECTION_POLICY_VERSION = 1
+TIMELINE_SELECTION_POLICY_VERSION = 1
 
 
 def _is_data_candidate(item):
@@ -61,7 +62,7 @@ def _source_line(item):
     return (match.group(1), int(match.group(2))) if match else None
 
 
-def plan_operations(table, max_sites, *, census=False):
+def plan_operations(table, max_sites, *, census=False, timeline=False):
     if type(max_sites) is not int or not 1 <= max_sites <= 128:
         raise ValueError('automatic max_sites must be an integer in [1,128]')
     rows = list(table.values()) if isinstance(table, Mapping) else list(table)
@@ -115,6 +116,26 @@ def plan_operations(table, max_sites, *, census=False):
         item['selection_reason'] = reason
         selected_ids.add(identity)
         chosen.append(item)
+
+    # A census seeks representative activity; a timeline also needs the core
+    # computation rather than spending a small budget on its input addresses.
+    # Reserve a real aggregate in each repeating body before the old coverage
+    # allocation. Contractions precede reductions/scans; no source ID or kernel
+    # identity is special. The counter policy and its version stay unchanged.
+    if timeline:
+        for group in sorted(regions.values(), key=lambda g: _region_key(g)):
+            if not group['repeated']:
+                continue
+            candidates = [
+                by_id[identity] for identity in (
+                    group['direct_sites'] or group['eligible_sites'])
+                if _is_data_candidate(by_id[identity])
+                and _category(by_id[identity]) == 'aggregate'
+            ]
+            candidates.sort(key=lambda item: (0 if 'dot' in item[
+                'mlirOpName'] else 1, item.get('opId', item.get('op_id'))))
+            if candidates:
+                select(candidates[0], 'timeline_repeated_body_aggregate')
 
     # Census must retain actual repeating body positions before scalar context.
     # This changes only the explicit all-grid counter policy, never legacy trace.
@@ -204,7 +225,7 @@ def plan_operations(table, max_sites, *, census=False):
     for item in eligible:
         if not item['selected']:
             item['selection_reason'] = 'site_budget_excluded'
-    return {
+    result = {
         'schema_version': 1,
         'policy': 'bounded_control_flow_then_class',
         'policy_version': AUTOMATIC_PLAN_VERSION,
@@ -218,3 +239,6 @@ def plan_operations(table, max_sites, *, census=False):
         CENSUS_SELECTION_POLICY_VERSION if census else None,
         'inventory': inventory
     }
+    if timeline:
+        result['timeline_policy_version'] = TIMELINE_SELECTION_POLICY_VERSION
+    return result

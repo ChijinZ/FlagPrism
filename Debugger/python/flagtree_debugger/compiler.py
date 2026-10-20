@@ -59,6 +59,10 @@ def _gcu_publication_config(config):
             result["debug_automatic_plan_version"] = AUTOMATIC_PLAN_VERSION
             result[
                 "debug_control_flow_metadata_version"] = CONTROL_FLOW_METADATA_VERSION
+            if request.get("program_policy") == "runtime_first_last":
+                from .automatic_plan import TIMELINE_SELECTION_POLICY_VERSION
+                result["debug_timeline_selection_policy_version"] = (
+                    TIMELINE_SELECTION_POLICY_VERSION)
     if (isinstance(request, dict) and request.get('automatic') is True
             and request.get('program_policy') == 'runtime_first_last'):
         from .gcu_timeline import packaged_tool, tool_identity
@@ -327,7 +331,8 @@ def run_ttir_debug_passes_if_needed(mod, metadata: dict) -> None:
             from .automatic_plan import plan_operations
             plan = plan_operations(metadata["debug_tracked_table"],
                                    request.get("max_sites", 32),
-                                   census=True)
+                                   census=True,
+                                   timeline=timeline)
             selected = request.get("sites")
             if selected is not None:
                 raise ValueError(
