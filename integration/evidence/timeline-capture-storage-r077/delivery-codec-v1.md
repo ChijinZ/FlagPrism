@@ -75,48 +75,24 @@ Confirmed blocker：无新增。未发现其它需要额外扩门的 confirmed �
 
 只支持这个有限存储修复的推进；不授 source boundary、ordinary pipeline、性能或 whole-goal 资格。后续字节与安装到齐后，应追加上述两项的准确 closure，保留此首次 finding/失败范围。
 
-## 有限 closure 追加：最终源码、正常安装与完整原件
+## 有限 closure 追加
 
-本追加只处理上述 M1/M2 及这个存储 delta 的安装、生产、离线输入闭包和新 trace 验证，不替换首次 finding。读取的最终 candidate HEAD 为 `cf0ee96fbc6fb0147c2a9b42e819bca21d7387ec`；共同存储/reader 修复基线为 `ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c`。配置仍为请求 GPT-6.1-Sol/xhigh，实际 resolved 型号/effort 未暴露，记 unknown。没有执行产品、测试、设备或服务器操作；以下执行结果来自实际原件，本席仅用 Git/stdlib 读取并核验。
+最终源码范围为 `ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c`，另含 HEAD `cf0ee96fbc6fb0147c2a9b42e819bca21d7387ec` 的 observations JSON 空白压缩。最终 codec SHA `437fa67e7e9e13a08cba4bc8a728d2bba07aec90520bd3ed1719f638ba54f9cf`，reexport SHA `96e89ba6c79bcd17952f5827dd7eae5019d69f4632a5b1ff990ff2a48ab53835`。仍仅 Git/stdlib 读原件，没有运行产品/测试/设备；请求型号/effort 不变，实际 resolved unknown。
 
-最终 `timeline_capture_store.py` SHA 为 `437fa67e7e9e13a08cba4bc8a728d2bba07aec90520bd3ed1719f638ba54f9cf`；`timeline_reexport.py` 为 `96e89ba6c79bcd17952f5827dd7eae5019d69f4632a5b1ff990ff2a48ab53835`。`cf0ee96` 另仅将 `profile.py:962` 的 collector observations JSON 改为 compact separators；没有更改其逻辑值或 native/C++。
+- **M1 closed。** 已核共同新旧格式 reader 迁移，记录为46文件/53处读取，含原报告点名四处；正常 wheel 的 reader/legacy/offline 等 fixture 及三后端真实新包公共 reexport 均有执行收据。不冒称重跑所有维护数学脚本。
+- **M2 closed。** codec `:58–90` 在发布前核每对象及 unique 累计 decoded budget；near-limit8192、累计 envelope 开销、拒绝不发布、legacy/retry 等 fixture 均由正常安装 normal/-O 实际覆盖。
+- **安装缺口 closed。** `preflight/{nvidia-install-poll-v8,enflame-install-poll-v7,ascend-install-poll-v9}.json` 三家 native-install-v3 全 terminal0，正常 wheel members 为642/498/440，normal/-O 各55 tests+11 subtests；cf0ee96 后 `ascend-install-poll-v12.json` 同样全0。native 未变部分按身份核同复用，不冒称重建。
+- **实际生产/读取。** NV/GCU 新 E01 terminal0，整包28,846,429/41,135,845 bytes。三家公开离线 reexport 各三个新进程、含两次拒绝原应用环境，40/10/10 traces 字节相同；338/205/236原始 artifacts 不变，无数学重放。收据为 `nvidia-followup-poll-v3.json`、`enflame-followup-poll-v1.json`、`ascend-followup-poll-v3.json`/`-v4.json`。
+- **Ascend 预算 closed，保留原失败。** 原设备 E01-v2 terminal1 仅在最后67,773,556-byte 预算断言，前序数学/十调用/两 binary/raw 已过。`ascend-recover-poll-v1.json` terminal0 用正常 cf0ee96 interpreter，仅在自有副本压 observations JSON 空白并刷新 manifest，再执行维护测试原 AST 的完整 post-finalize 验收，得66,815,281 bytes（余293,583 bytes）。已核 runner 的 JSON 值相等、原包不变及副本其余原件/raw/trace SHA 不变；这是 retained recovery，不记为新设备 E01 terminal0。
+- **对象输入闭包 closed。** 直接重算30个实际 canonical revision 身份，递归核对象 compressed/decoded 长度与 SHA、`original_inputs` 实际文件和 codec SHA；NV/GCU/Asc 各10 revisions，transitive object references 20/120/210，零不符。
+- **新 TP 缺口 closed。** 已读 `nvidia-tp-poll-v2.json` 终态和 NV archive `runs/tp-v1/output/TP/result.json` 原件：60 checks（40/10/10），输入 SHA 均对应实际 `.pftrace`；60项 `exact_ns_and_raw_references=true`、`importer_errors=[]`，每项263 stats，共15,780行，无正值 error/data_loss。verifier SHA `75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618`。
 
-### 原 finding 状态
+三个最终 archive 已逐 regular member 对内置 index 核 bytes/SHA，均零不符；不是只读摘要。身份如下：
 
-- **M1 closed，限于共同 capture reader 迁移与交付。** `16ebe22` 的迁移记录覆盖46个文件、53处读取；原报告点名的四个消费者现已使用 `load_capture_file`，其余 capture/input 逻辑读取也接入同一新旧格式 reader。正常 wheel 内的新旧格式、共同 reader、offline/registry 等受影响 fixture 均实际执行；下述三后端真实新格式包还通过已安装公开 reexport 的三个独立进程读取、重复导出与原件核同。没有把这组证据说成每个维护数学脚本均重新执行。
-- **M2 closed。** 最终 codec `:58–90` 按唯一对象累计 decoded payload，并在任何发布前同时核每对象和累计 `LIMIT`。正常安装的 normal/-O fixture 实际覆盖缩小预算的 near-limit8192、累计 envelope 开销及拒绝时不发布文件，另保 legacy、publication failure/retry 和对象闭包检查。原先“writer 成功、reader 必拒绝”的不对称已有对应源修复和执行收据。
-
-本次有限补审未发现新增 confirmed blocker/major/minor。原安装失败和 Ascend 原 E01 预算失败仍保留，不用后续成功覆盖历史事实。
-
-### 正常 wheel 安装与实际使用
-
-精确安装终态见 root `preflight/nvidia-install-poll-v8.json`、`enflame-install-poll-v7.json`、`ascend-install-poll-v9.json`，以及 compact JSON 后 `ascend-install-poll-v12.json`。它们均有正常 wheel 构建、成员/安装 import 核对及实际 step 收据，不能与最初 source-loaded CPU runner 混称。
-
-| 后端/版本 | source | steps 全部0 | wheel members | 已安装 normal / -O |
-|---|---|---:|---:|---|
-| NVIDIA native-install-v3 | ea2c936 | 11 | 642 | 各55 tests + 11 subtests |
-| GCU native-install-v3 | ea2c936 | 9 | 498 | 各55 tests + 11 subtests |
-| Ascend native-install-v3 | ea2c936 | 10 | 440 | 各55 tests + 11 subtests |
-| Ascend native-install-v4 | cf0ee96 | 10 | 440 | 各55 tests + 11 subtests |
-
-native/core/recorder 源码未变的复用有身份核对；这些收据没有冒称本次重建所有 native。对应 wheel SHA 依次为 `a7ba28dafaa63884b8a7bb9cef3a1876c8f1f3380c31ee3ab4f545b138ef7956`、`b2cfb644e549d91b57fdf762c8ba0381a032fc4c87a737cdbc948a557005ab46`、`f789488c98351b80e1e5651b2d737ceb5db84979dbef46ecf7d80d2d480c2938`、`c9a5bc231bd634b4803994a8f11c2dba7a8ec96a8fe71eadbec913cb55c6a22e`。
-
-新 E01 与离线原件分别见 `nvidia-followup-poll-v3.json`、`enflame-followup-poll-v1.json`、`ascend-followup-poll-v3.json` / `-v4.json`。NV/GCU 实际一 session 十调用、两 binary 交错的数学/input/tail/State/raw 等检查及最终预算均通过，包为28,846,429 / 41,135,845 bytes。三家公共离线读取均通过三个新进程（含两次拒绝原应用环境），NV40 / GCU10 / Asc10 traces 字节核同；分别338 / 205 / 236个原始 artifacts 不变，没有数学重放。
-
-**Ascend 必须区分原设备执行与 retained recovery。** 原 E01-v2 实际 terminal1 发生于最后完整包预算断言，67,773,556 bytes；此前十调用、两 binary、数学和 raw 检查通过。`ascend-recover-poll-v1.json` 的 terminal0 使用正常 cf0ee96 interpreter，只在自有失败包副本 minify `raw/native/capture.observations.json` 并刷新 manifest，再按维护测试原 AST 执行完整 post-finalize 验收。结果66,815,281 bytes，距64MiB余293,583 bytes。已读 runner 的 JSON 值相等和 SHA ledger 检查：原失败包不变，副本除该 JSON 空白和 manifest 外所有原件/raw/trace SHA 均不变。该证据支持既有设备结果的无损存储恢复与最终预算闭环，**不记为新的设备 E01 terminal0**。
-
-### 压缩输入闭包与 TP 原始依据
-
-除已读 `_original` → `load_capture(..., retain=...)` 及 codec SHA 进入 revision 的源码外，本席直接读取三个最终 archive 中30个实际 canonical revision 的 `inputs.json`：重算 revision 身份、逐层跟随 capture/input envelope 的对象引用、核 compressed/decoded 长度与 SHA，并与每项 `original_inputs` 的实际文件 bytes/SHA 比对。NV10 revisions /20个 transitive object references、GCU10/120、Asc10/210，均无不符；每个 revision 都含最终 codec SHA。这里的 references 是各 revision 实际闭包引用数，不作为新语义资格计数。
-
-`nvidia-tp-poll-v2.json` 为实际 pinned TP terminal0。完整原件是 NVIDIA archive 内 `runs/tp-v1/output/TP/result.json`，共60 checks（NV40/GCU10/Asc10），verifier SHA `75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618`。本席核60个输入 trace SHA 均能对应实际归档 `.pftrace`，60项 `exact_ns_and_raw_references=true`、`importer_errors=[]`，每项263行完整 importer stats（共15,780行），无正值 error/data_loss。不是只依据“trace 能打开”或摘要总数；也不从 TP 通过推导 source/clock/async/UI 等其它门通过。
-
-三个 `*-receipts-v2.tgz` 均已用 stdlib 独立逐 regular member 对内置 index 核实际 bytes/SHA，零不符；archive 自身 SHA 如下。小摘要 `integration/evidence/timeline-capture-storage-r077/summary.json` 只作索引，未代替原件。
-
-| archive | regular members | archive SHA256 |
+| archive | regular members | SHA256 |
 |---|---:|---|
 | nvidia-receipts-v2.tgz | 1251 | `20a61ffc2c645ff8cb5aea134ca7982b20923cc564f437f0f806e69f37f6c90c` |
 | enflame-receipts-v2.tgz | 814 | `70aa2036d71d61066a9793bd6ee64e5c402f5c089f3c843444c431e80b2f8059` |
 | ascend-receipts-v2.tgz | 1197 | `a26f59643befa1433cce1199bc906946dfb3a01c861d3337c77210c7cc251efe` |
 
-**有限交付结论：** 原 M1/M2 及本 delta 的正常安装、新格式实际生产/离线读取、对象输入闭包、新60份 counter trace TP 缺口已闭合，可支持这一存储修复交付。本席不再为本 delta 留待安装或 TP 的 verification gap；未复核的整体合同、原 kernel writer/source boundary、pipeline、其它数学/后端资格和用户延期的性能认证不由本追加授予通过，也不需要为本次 closure 重采未变数学、旧 SQL 或 UI。
+本有限 delta 可交付，原 M1/M2 及上述安装/预算/reader/输入闭包/TP 缺口闭合，未见新增 confirmed 缺陷；原失败记录保留。whole goal 继续 open，本追加不授其它资格，也不要求重采未变数学、旧 SQL 或 UI。
