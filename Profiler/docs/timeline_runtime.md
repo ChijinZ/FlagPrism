@@ -1222,12 +1222,26 @@ summary provenance are indexed in `integration/evidence/timeline-independent-del
 
 ### Ascend observed fragment paths
 
-When the wheel contains `flagtree/profiler/lib/flagprism-ascend-structure`,
-timeline postprocessing indexes the retained original and adapted actor LLVM
-without replaying the application or calling the SDK compiler. The capture's
-`source_fragment_paths.report_file` points to a report of actual selected
-source carriers, paired SYS_CNT readers and original operation structures that
-cannot be bypassed on the relevant reader-to-reader and carrier-to-end paths.
+Default collection produces actual source-associated intervals, counter-unit
+views and applicable observed dependencies. Additional static fragment-path
+analysis is an explicit retained-capture operation. It needs the packaged
+`flagtree/profiler/lib/flagprism-ascend-structure` reader and adds indexed LLVM
+artifacts and a diagnostic report to the chosen bundle. It does not replay the
+application or call the SDK compiler:
+
+```python
+from flagtree.profiler.timeline_capture_store import load_capture
+from flagtree.profiler.timeline_ascend_fragment_store import inspect_capture_fragments
+
+capture = load_capture(timeline_directory, index_entry['capture_file'])
+analysis = inspect_capture_fragments(timeline_directory, capture)
+print(analysis)  # report_file when available; otherwise the concrete reason
+```
+
+Use an owned copy of a frozen bundle when adding analysis to experiment evidence.
+The returned `report_file` identifies actual selected source carriers, paired
+SYS_CNT readers and original operation structures that cannot be bypassed on
+the relevant reader-to-reader and carrier-to-end paths.
 Known natural-loop backedges are excluded from this path query. Remaining
 ambiguous structures, opaque indexed types and exhausted work budgets are
 reported as unverified; their original intervals remain available.
@@ -1265,3 +1279,11 @@ are explored; explicit undefined/poison guard data is rejected. This is a bounde
 LLVM control-flow check, not reconstruction of runtime source iteration IDs or
 trip counts. Unsupported operation identities, such as unencoded floating
 comparison predicates, atomic suboperations and indirect callees, remain opaque.
+
+Default collection does not generate these additional static graphs or require
+all fragment-path checks to succeed. Unknown structure types and ambiguous
+operation matches remain diagnostic limitations; the original source navigation,
+raw intervals, clock facts and applicable dependency exports remain available.
+Offline export reuses and validates an explicitly retained analysis when present;
+it does not invoke the reader to create one. This keeps optional static evidence
+from consuming the default multi-invocation capture budget.
