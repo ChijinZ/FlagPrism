@@ -1,0 +1,21 @@
+"""New scoped State sidecar from unchanged CPU receipts and independently reviewed SDK ABI."""
+import argparse,hashlib,json
+from pathlib import Path
+p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True);inputs=Path(__file__).parent
+
+def need(value,message):
+ if not value:raise ValueError(message)
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+contract=json.loads((inputs/'contract.json').read_bytes());need(sha(inputs/'ABI-review.md')==contract['review_sha256'],'Independent ABI review differs')
+for r in contract['resources']:need(sha(Path(r['path']))==r['sha256'],'Reviewed SDK/launcher resource changed')
+root=Path('/tmp/chijin-timeline-r082-gcu/runs/State-partition-v4');need(json.loads((root/'terminal.json').read_bytes())['returncode']==0,'Original partition execution failed');summary=json.loads((root/'output/result.json').read_bytes());need(summary['checked']==summary['registered']==summary['partitioned']==32,'Original registered partition scope differs')
+actual=Path('/tmp/chijin-timeline-r082-gcu/State-partition-input-v4');need(sha(actual/'gcu_state_writer_partition.py')==summary['checker_sha256'],'Executed checker changed')
+partitions=json.loads((root/'output/rows.json').read_bytes());translated=json.loads(Path('/tmp/chijin-timeline-r082-gcu/runs/translate-v3/output/rows.json').read_bytes());bound=json.loads(Path('/tmp/chijin-timeline-r081-gcu/runs/original-compile-v2/output/rows.json').read_bytes());inventory_root=Path('/tmp/chijin-timeline-r078-gcu/runs/state-inventory-v1/output');original=json.loads((inventory_root/'inventory.json').read_bytes())['rows'];need(len(partitions)==len(translated)==len(bound)==len(original)==32,'Original row denominator differs');qualified=[];writes=0;elements=0
+for row,trans,bind,reg in zip(partitions,translated,bound,original):
+ identity=(row['id'],row['variant'],row['math_sha256']);need(all(identity==(x['id'],x['variant'],x['math_sha256']) for x in (trans,bind,reg)),'Original row association differs');need(sha(Path(reg['math_file']))==reg['math_sha256'],'Original mathematical receipt changed');need(row['status']=='partition_under_explicit_SDK_transfer_model','Original partition unverified');need(bind['codegen']['exit']==0 and bind['codegen']['whole_binary_identical'],'Original byte binding failed')
+ need(row['source_sha256']==trans['source_sha256']==bind['codegen']['source_sha256'] and row['npubin_or_fatbin_sha256']==trans['whole_binary_sha256']==bind['codegen']['original_fatbin_sha256'],'Source/binary link differs');need(sha(Path(trans['LLVM_file']))==row['LLVM_sha256']==trans['LLVM_sha256'] and sha(Path(trans['translation_result']))==trans['translation_result_sha256'],'Inspected operation view changed')
+ for entry in reg['artifacts']:need(sha(inventory_root/entry['retained_file'])==entry['sha256'],'Original compiler artifact changed')
+ counts=row['partition']['element_writers'];need(len(counts)==row['elements'] and all(counts[str(i)]==1 for i in range(row['elements'])),'Physical State writers overlap or omit');need(row['physical_threads']==reg['config']['num_warps'] and row['physical_threads'] in (4,8),'Actual reviewed GCU300 thread extent differs')
+ writes+=len(row['partition']['write_instances']);elements+=row['elements'];qualified.append(dict(id=row['id'],variant=row['variant'],math_sha256=row['math_sha256'],source_sha256=row['source_sha256'],LLVM_sha256=row['LLVM_sha256'],fatbin_sha256=row['npubin_or_fatbin_sha256'],elements=row['elements'],state_writer_qualified=True))
+result=dict(status='ordinary32_actual_GCU_State_physical_writer_qualification',scope='24 original primary plus 8 runtime-K ordinary reports only',qualified=len(qualified),State_write_calls=writes,State_elements=elements,state_writer_qualified=True,supplemental_objects_qualified=False,profile_objects_qualified=False,source_region_or_native_schedule_qualified=False,whole_goal_qualified=False,device_executed=False,application_replayed=False,review_sha256=sha(inputs/'ABI-review.md'),contract_sha256=sha(inputs/'contract.json'),original_partition_rows_sha256=sha(root/'output/rows.json'),qualification_rows=qualified)
+(a.output/'result.json').write_text(json.dumps(result,indent=2))

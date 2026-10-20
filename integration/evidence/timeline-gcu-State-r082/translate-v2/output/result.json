@@ -1,0 +1,23 @@
+{
+  "status": "LLVM_dialect_input_translation_inspection",
+  "argv": [
+    "/opt/triton_gcu/bin/gcu-compiler-translate",
+    "--mlir-to-llvmir",
+    "/tmp/chijin-timeline-r082-gcu/runs/translate-v2/output/input-LLVM-functions.mlir",
+    "-o",
+    "/tmp/chijin-timeline-r082-gcu/runs/translate-v2/output/functions.ll"
+  ],
+  "exit": 0,
+  "tool_sha256": "f93024f7d86828022bc6b61d77c02522195d25df5ad76ac634d909efe74bb361",
+  "source_sha256": "fd5215bba25f9349bfefeb1b5b2e74a86f20add5455bd2ccc6013d5c9c4782f0",
+  "analysis_input_sha256": "58984288d35a08ec0ea193f1eabe34e6ab3532c6771f31d617a98d07b926359c",
+  "function_operation_lines_unchanged": true,
+  "gpu_container_removed": true,
+  "vendor_final_IR": false,
+  "vendor_final_native": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "state_writer_qualified": false,
+  "output_sha256": "d60fd8a18e426391f514ca08e3d530672dd7fe7dcff7f5244fa71def911c8fd1",
+  "output_bytes": 18382
+}
