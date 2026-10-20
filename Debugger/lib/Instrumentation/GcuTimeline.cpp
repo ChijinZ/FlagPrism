@@ -324,11 +324,15 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
                   vector::VectorDialect>();
   MLIRContext context(registry);
   context.allowUnregisteredDialects();
+  context.loadAllAvailableDialects();
   auto module = parseSourceString<ModuleOp>(input, &context);
   if (!module)
     return error("Cannot parse actual generic GCU execution IR");
   if ((*module)->hasAttr("flagprism.gcu_execution_timeline_version"))
     return error("GCU execution IR is already instrumented");
+  OwningOpRef<ModuleOp> originalModule = cast<ModuleOp>((*module)->clone());
+  SmallVector<Operation *> originalOperations;
+  module->walk([&](Operation *op) { originalOperations.push_back(op); });
   (*module)->setAttr("flagprism.gcu_execution_timeline_version",
                      IntegerAttr::get(IntegerType::get(&context, 32), 1));
   SmallVector<func::FuncOp> functions;
@@ -339,7 +343,8 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
   if (functions.size() != 1)
     return error("GCU late recorder requires one inlined execution function");
   func::FuncOp function = functions.front();
-  if (hiddenArgument + 1 != function.getNumArguments() ||
+  if (hiddenArgument >= function.getNumArguments() ||
+      hiddenArgument != function.getNumArguments() - 1 ||
       printed(function.getArgument(hiddenArgument).getType()) !=
           "!gcu.ptr<i32>")
     return error("GCU late recorder hidden argument identity/type mismatch");
@@ -442,7 +447,17 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
          {std::pair<StringRef, Type>{"_ZN4tops12global_timerEv",
                                      r.b.getI64Type()},
           {"flagprism_gcu_clock_identity_v1", r.b.getI32Type()}}) {
-      if (!SymbolTable::lookupSymbolIn(function->getParentOp(), name))
+      Operation *existing =
+          SymbolTable::lookupSymbolIn(function->getParentOp(), name);
+      if (existing) {
+        auto declaration = dyn_cast<LLVM::LLVMFuncOp>(existing);
+        if (!declaration || !declaration.isExternal() ||
+            declaration.getFunctionType().isVarArg() ||
+            !declaration.getFunctionType().getParams().empty() ||
+            declaration.getFunctionType().getReturnType() != type)
+          return error("GCU reserved clock declaration has an incompatible "
+                       "definition or signature");
+      } else
         r.b.create<LLVM::LLVMFuncOp>(loc, name,
                                      LLVM::LLVMFunctionType::get(type, {}));
     }
@@ -542,6 +557,14 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
   llvm::raw_string_ostream stream(result.ir);
   module->print(stream,
                 OpPrintingFlags().printGenericOpForm().enableDebugInfo());
+  stream.flush();
+  auto checked = checkGcuObserverTransformation(
+      *originalModule, *module, originalOperations, hiddenArgument);
+  if (!checked)
+    return checked.takeError();
+  auto preservation = llvm::json::parse(*checked);
+  if (!preservation)
+    return preservation.takeError();
   llvm::json::Object manifest{
       {"schema_version", 1},
       {"record_layout", "gcu_execution_timeline_v3"},
@@ -557,6 +580,7 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
       {"observer", "work_item_0_first_last_program"},
       {"publication",
        "local_scalar_records_then_private_tag_DMA_at_original_return"},
+      {"user_program_preservation", std::move(*preservation)},
       {"sites", std::move(descriptors)},
       {"unobserved_primitives", std::move(unknown)},
       {"physical_epoch_verified", false},

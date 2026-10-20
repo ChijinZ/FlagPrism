@@ -4,6 +4,40 @@
 #include <charconv>
 
 int main(int argc, char **argv) {
+  if (argc == 8 && llvm::StringRef(argv[1]) == "--check-preservation") {
+    uint32_t hidden = 0, capacity = 0, regions = 0;
+    for (auto [value, target] :
+         {std::pair<const char *, uint32_t *>{argv[5], &hidden},
+          {argv[6], &capacity},
+          {argv[7], &regions}}) {
+      auto length = std::char_traits<char>::length(value);
+      auto number = std::from_chars(value, value + length, *target);
+      if (number.ec != std::errc{} || number.ptr != value + length)
+        return 2;
+    }
+    auto before = llvm::MemoryBuffer::getFile(argv[2]);
+    auto after = llvm::MemoryBuffer::getFile(argv[3]);
+    if (!before || !after) {
+      llvm::errs() << "Cannot read GCU preservation inputs\n";
+      return 1;
+    }
+    auto result = mlir::flagtree::debugger::checkGcuExecutionPreservation(
+        (*before)->getBuffer(), (*after)->getBuffer(), hidden, capacity,
+        regions);
+    if (!result) {
+      llvm::errs() << llvm::toString(result.takeError()) << '\n';
+      return 1;
+    }
+    std::error_code error;
+    llvm::raw_fd_ostream output(argv[4], error);
+    if (error) {
+      llvm::errs() << error.message() << '\n';
+      return 1;
+    }
+    output << *result << '\n';
+    output.close();
+    return output.has_error() ? 1 : 0;
+  }
   if (argc == 4 && (llvm::StringRef(argv[1]) == "--debug-scopes" ||
                     llvm::StringRef(argv[1]) == "--native-locations")) {
     auto input = llvm::MemoryBuffer::getFile(argv[2]);

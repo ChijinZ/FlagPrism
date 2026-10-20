@@ -489,6 +489,22 @@ These finite cases do not complete GCU DTE dependency or general-kernel acceptan
 
 ### GCU late execution recorder and observed tag dependencies
 
+The recorder checks its transformation before returning compiler IR. Removing
+the added observer operations must restore the original program's SSA,
+control flow, types and non-location operation properties. Added memory
+accesses are restricted to fresh observer allocations; publication copies
+from those allocations to the unused hidden trace argument. New calls are
+limited to the expected external, non-variadic clock/identity declarations.
+A local definition that shadows a reserved getter is rejected.
+
+The execution manifest retains this check as `user_program_preservation`.
+It describes the transformation at the GCU IR boundary. Allocation bounds,
+SDK lowering and final native timing boundaries have separate checks; this
+certificate does not grant those properties. Retained historical before/after
+IR can be checked by deterministic reproduction of the same transformation.
+Only navigation locations may differ in that comparison, and byte equality
+is reported separately. These checks do not require changes to user kernels.
+
 On matching GCU300 installations, automatic first/last requests use
 `gcu_execution_timeline_v3` and `GCU_EXECUTION_TIMELINE_VERSION=1`. The normal
 build packages the `gcu-timeline` native tool. It observes actual SDK execution

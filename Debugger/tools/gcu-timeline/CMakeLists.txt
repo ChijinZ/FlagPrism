@@ -8,6 +8,7 @@ include(AddLLVM)
 include(AddMLIR)
 add_executable(flagprism-gcu-timeline
   main.cpp ../../lib/Instrumentation/GcuTimeline.cpp
+  ../../lib/Instrumentation/GcuExecutionPreservation.cpp
   ../../lib/Instrumentation/GcuDebugScopes.cpp
   ../../lib/Instrumentation/GcuNativeLocations.cpp)
 target_compile_features(flagprism-gcu-timeline PRIVATE cxx_std_17)
