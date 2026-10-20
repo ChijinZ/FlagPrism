@@ -11,6 +11,22 @@ also joins observed dynamic dependencies within a proved invocation/program
 counter epoch. Neither path establishes precise source costs, hardware busy
 time or physical engine completion instants.
 
+Read an internal interval as the elapsed time between its two recorded counter
+reads, for its actual observer. Source links identify where to investigate;
+they do not assign every instruction associated with that source fragment to
+the interval. For example, in the retained Ascend recurrence, the vector
+multiply/add issues lie between the readers while the scalar loop induction
+update executes before them. Its repeated intervals are real observations;
+their occurrence numbers are not proved source-loop iteration IDs.
+
+Use the interval's semantic, clock and boundary details when comparing stages.
+A submission bracket measures issuing work; a wait bracket measures the
+observed wait, and a wait-return checkpoint supplies only its documented
+readiness relation. Inspect the recorded buffer/flag generation and covered
+operations before following a dependency arrow. Keep zero-width intervals and
+missing observations visible. Do not sum nested or shared source links into
+an exclusive source cost, or interpret source navigation as an engine-busy lane.
+
 The inspected SM120 late path publishes `observed_dependency_exports` when
 its native, storage, collective-byte and clock evidence jointly qualify.
 Otherwise it attempts `shared_counter_exports` with `shared_counter_status`.
