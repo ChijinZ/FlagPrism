@@ -1,0 +1,413 @@
+{
+  "status": "automatic_relative_record_blocks_inspected",
+  "reports": [
+    {
+      "ELF_sha256": "7d56f25f70633d7f0d813a78e8ded073b884a4356d940a4cb48c710794f00500",
+      "native_sha256": "a4423a389544cde04466ad381de272754c8c79d3860eabc48dd86898a9015e8b",
+      "automatic_record_blocks": [
+        {
+          "location": {
+            "address": 14000,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 14000,
+            "site_id": 9
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 15984,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 15984,
+            "site_id": 10
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 38320,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 38320,
+            "site_id": 4
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 38416,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 38416,
+            "site_id": 4
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Missing reader identity"
+          }
+        },
+        {
+          "location": {
+            "address": 43680,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 43680,
+            "site_id": 1
+          },
+          "answer": {
+            "status": "relative_end_record_fields_checked",
+            "magic_store_pc": 44202,
+            "field_store_pcs": {
+              "6": 44522,
+              "7": 44330,
+              "8": 44426,
+              "19": 44746
+            },
+            "record_address_expression": "(32, (('entry:r14', 128), ('entry:r20', 1)))",
+            "reader_to_relative_fields_checked": true,
+            "reader_valueflow_qualified": false,
+            "source_region_qualified": false,
+            "ring_allocation_qualified": false,
+            "incoming_begin_site_qualified": false,
+            "reader": {
+              "status": "inline_reader_register_shape_checked",
+              "marker_packet": 43680,
+              "low_register": "r13",
+              "high_register": "r9",
+              "identity_register": "r5",
+              "identity_pc": 43802,
+              "sample_pcs": [
+                43690,
+                43722,
+                43738,
+                43770,
+                43786
+              ],
+              "rollover_branch": {
+                "pc": 43754,
+                "target": 43792
+              },
+              "clock_base_expression": "(0, (('entry:r16', 1),))",
+              "mmio_base_qualified": false,
+              "external_entries_qualified": false,
+              "reader_valueflow_qualified": false,
+              "source_region_qualified": false
+            },
+            "reader_outputs_inferred": true,
+            "reader_bridge_registers_preserved": true,
+            "reader_bridge_instruction_count": 31,
+            "record_path_selection_qualified": false,
+            "tail_boundaries_automatically_selected": true,
+            "tail_start_pc": 43980,
+            "tail_end_pc": 45150,
+            "tail_selection_rule": "reader_following_straight_block_v1"
+          }
+        },
+        {
+          "location": {
+            "address": 46464,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 46464,
+            "site_id": 5
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 48544,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 48544,
+            "site_id": 11
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 59696,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 59696,
+            "site_id": 8
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 65632,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 65632,
+            "site_id": 6
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 71744,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 71744,
+            "site_id": 12
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 75232,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 75232,
+            "site_id": 13
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        }
+      ]
+    },
+    {
+      "ELF_sha256": "5860432eef0a3004e35740a68b17b10bd9f33d49bf3ab7a30f8cb11be72131f6",
+      "native_sha256": "3e15c05637ef8ab999165d5496ebe07e7dff1967aa648828437c65038c063935",
+      "automatic_record_blocks": [
+        {
+          "location": {
+            "address": 14000,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 14000,
+            "site_id": 9
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 16032,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 16032,
+            "site_id": 10
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 38240,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 38240,
+            "site_id": 4
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 38336,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 38336,
+            "site_id": 4
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Missing reader identity"
+          }
+        },
+        {
+          "location": {
+            "address": 43600,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 43600,
+            "site_id": 1
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 46512,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 46512,
+            "site_id": 5
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "Counter word addresses differ"
+          }
+        },
+        {
+          "location": {
+            "address": 47632,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 47632,
+            "site_id": 11
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 50336,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 50336,
+            "site_id": 6
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 59120,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 59120,
+            "site_id": 7
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 61984,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 61984,
+            "site_id": 8
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 69072,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 69072,
+            "site_id": 12
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        },
+        {
+          "location": {
+            "address": 72528,
+            "column": 2,
+            "phase": "end_counter",
+            "section": ".text",
+            "section_index": 1,
+            "section_offset": 72528,
+            "site_id": 13
+          },
+          "answer": {
+            "status": "unverified",
+            "error": "No supported automatic native record block: Missing or ambiguous record magic; Native guard enters record tail partway"
+          }
+        }
+      ]
+    }
+  ],
+  "helper_sha256": "f9c46304eb45a37773ee3bcebc202a09d0a39d5dc307ba87286a544adab2bbc2",
+  "manual_actual_tail_selection": false,
+  "source_loop_qualified": false,
+  "default_capture_integrated": false,
+  "device_executed": false,
+  "SDK_recompiled": false,
+  "application_replayed": false
+}

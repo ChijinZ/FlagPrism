@@ -249,3 +249,53 @@ def test_fast_path_cannot_inherit_fallback_only_zero():
     ]
     with pytest.raises(ValueError, match='Reader output register'):
         module.inspect_inline_reader(rows, marker_packet=0)
+
+
+def test_record_block_is_selected_without_tail_addresses():
+    answer = module.inspect_inline_record_fields_auto(combined_fixture(),
+                                                      marker_packet=0)
+    assert answer['tail_start_pc'] == 256
+    assert answer['tail_end_pc'] == 432
+    assert answer['tail_boundaries_automatically_selected'] is True
+    assert answer['reader_to_relative_fields_checked'] is True
+    assert answer['source_region_qualified'] is False
+    assert answer['record_path_selection_qualified'] is False
+
+
+def test_forward_guard_does_not_require_manual_tail_selection():
+    rows = combined_fixture()
+    rows.insert(9, dict(pc=160, opcode='l.beq',
+                        operands='r7, r0, 0x0 <0x300>'))
+    answer = module.inspect_inline_record_fields_auto(rows, marker_packet=0)
+    assert answer['reader_to_relative_fields_checked'] is True
+    assert answer['tail_start_pc'] == 256
+
+
+@pytest.mark.parametrize('fault', [
+    'late_overwrite', 'alias', 'unknown', 'tail_entry', 'call', 'hoisted_mask',
+    'control_packet_store'
+])
+def test_automatic_tail_never_searches_for_a_passing_prefix(fault):
+    rows = combined_fixture()
+    if fault == 'late_overwrite':
+        rows.append(dict(pc=448, opcode='l.st.w', operands='r0, [r7, 0x18]'))
+    elif fault == 'alias':
+        rows.append(dict(pc=448, opcode='l.st.w', operands='r0, [r21]'))
+    elif fault == 'unknown':
+        rows.append(dict(pc=448, opcode='l.future_op', operands='r4'))
+    elif fault == 'tail_entry':
+        rows.insert(
+            9, dict(pc=160, opcode='l.beq', operands='r7, r0, 0x0 <0x120>'))
+    elif fault == 'call':
+        rows.insert(9, dict(pc=160, opcode='l.jal',
+                            operands='lr, 0x0 <0x300>'))
+    elif fault == 'hoisted_mask':
+        rows.insert(9, dict(pc=160, opcode='l.anda',
+                            operands='r9, r9, 0x3fff'))
+    else:
+        rows.extend([
+            dict(pc=448, opcode='l.st.w', operands='r0, [r7, 0x18]'),
+            dict(pc=458, opcode='l.beq', operands='r4, r0, 0x0 <0x300>')
+        ])
+    with pytest.raises(ValueError):
+        module.inspect_inline_record_fields_auto(rows, marker_packet=0)

@@ -447,3 +447,81 @@ def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
                   record_path_selection_qualified=False,
                   tail_boundaries_automatically_selected=False)
     return result
+
+
+def inspect_inline_record_fields_auto(instructions, *, marker_packet):
+    """Select a finite straight record block from the reader, without PCs.
+
+    Candidate blocks start after the reader or a direct guard, and end at
+    the next control packet. Check the *whole* block, including stores after
+    the required fields, so an early valid prefix cannot hide an overwrite.
+    This removes manual tail selection only. ELF binding, incoming begin/site,
+    selection, MMIO and source/loop qualification remain separate requirements.
+    """
+    reader = inspect_inline_reader(instructions, marker_packet=marker_packet)
+    following = [
+        r for r in instructions if r['pc'] // 16 > reader['identity_pc'] // 16
+    ]
+    _need(following, 'Missing native reader continuation')
+    controls = frozenset(('l.beq', 'l.bne', 'l.blt.u', 'l.blt.s', 'l.bge.u',
+                          'l.bge.s', 'l.jal', 'l.jalr', 'l.halt'))
+    starts = [0]
+    for index, row in enumerate(following[:64]):
+        if row['opcode'] not in controls:
+            continue
+        next_index = index + 1
+        while (next_index < len(following)
+               and following[next_index]['pc'] // 16 == row['pc'] // 16):
+            next_index += 1
+        if next_index < len(following):
+            starts.append(next_index)
+    checked, reasons = [], []
+    for start in sorted(set(starts)):
+        if start > 64:
+            continue
+        end = start
+        while end < len(
+                following) and following[end]['opcode'] not in controls:
+            end += 1
+            if end - start > 512:
+                break
+        if end == start or end - start > 512:
+            continue
+        # All instructions sharing a control packet are outside this straight
+        # block, even when the transfer is printed after scalar operations.
+        if end < len(following):
+            control_packet = following[end]['pc'] // 16
+            peers = [
+                r for r in following
+                if r['pc'] // 16 == control_packet and r is not following[end]
+            ]
+            if any(not (r['opcode'] in ('c.nop', 's.nop16', 'v.nop') or
+                        (r['opcode'] == 'c.addi4spn'
+                         and r['operands'].replace(' ', '') == 'r8,0x0'))
+                   for r in peers):
+                reasons.append('Unsupported record/control packet co-issue')
+                continue
+            while end > start and following[end -
+                                            1]['pc'] // 16 == control_packet:
+                end -= 1
+        if end == start:
+            continue
+        begin_pc, end_pc = following[start]['pc'], following[end - 1]['pc']
+        try:
+            result = inspect_inline_record_fields(instructions,
+                                                  marker_packet=marker_packet,
+                                                  tail_start_pc=begin_pc,
+                                                  tail_end_pc=end_pc)
+            checked.append((begin_pc, end_pc, result))
+        except ValueError as error:
+            reasons.append(str(error))
+    _need(
+        checked, 'No supported automatic native record block: ' +
+        '; '.join(dict.fromkeys(reasons))[:1024])
+    _need(len(checked) == 1, 'Ambiguous automatic native record blocks')
+    begin_pc, end_pc, result = checked[0]
+    result.update(tail_boundaries_automatically_selected=True,
+                  tail_start_pc=begin_pc,
+                  tail_end_pc=end_pc,
+                  tail_selection_rule='reader_following_straight_block_v1')
+    return result
