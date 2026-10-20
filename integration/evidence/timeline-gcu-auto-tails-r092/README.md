@@ -99,3 +99,9 @@ V7 terminal0/2.869633282s,63 normal and63 optimized tests, two unchanged actual
 object/body comparisons, formatter/AST/source freeze all passed. Raw archive:
 `9dc7545632b69fc2de86516612d8204c324fbef69b7591f513de832a728a2069`.
 Independent V7 closure is a separate delta report, not assumed from this text.
+
+
+The independent V7 delta review closed both M1 subitems against product
+source215acb380edc703aefc43ad8eb97964f8b153823. It found no further
+necessary item within this internal image-binding increment; public provider
+integration and original source/loop acceptance remain unfinished.

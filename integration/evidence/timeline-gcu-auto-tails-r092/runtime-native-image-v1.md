@@ -60,3 +60,15 @@ V5 明确 `product_native_image_binding=true`，但 `default_capture_integrated=
 M1 原报告明确包含的“共享字符串表被重复复制”尚未关闭：`strings = data(sections[section[6]])` 仍在每个 SHT_SYMTAB 内执行，`data()` 对关联表作完整 bytes slice，这个复制量不计入 `name_budget`。例如约 8188 个各 24 B 的小 symtab 共用 8 MiB strtab，大部分符号只引用 offset 0 空名，另保留一个正确 kernel symbol。section table、这些条目与字符串表合计约 9 MiB，条目总字节约 196 KiB、名字累计扫描仅数 KiB，仍可重复复制约 64 GiB。此结构符合当前各项 admission；这里只作静态量推导，没有执行反例。
 
 这是原 M1 复制预算的残留，不是新增 whole/ISA 门。最少补项是缓存相同字符串表的 materialized bytes，并对实际需要 materialize 的表累计 bytes 设上限，或直接在复制前限制关联字符串表总复制量；增加共享表的一个小 CPU 预算反例即可。故 V6 目前可判扫描子项已闭，**M1 整项仍为 minor / 未全闭**。其它有限正向结论与原未承诺范围保持，不要求数学、设备或旧矩阵重跑。
+
+## V7 最后子项复核：M1 整项已闭
+
+本追加仅核共享表复制子项，绑定冻结 `215acb380edc703aefc43ad8eb97964f8b153823`；核读时工作树干净。产品 SHA `4459cfe8f8cca719ac09b7c9d56452188fbee5bd7e124c2e85b02905a22a2149`、测试 SHA `04c6e870ec2220ae1915e375563b7b40e1ca06c37166da8dda4dcdbf83a3313f` 均与 V7 freeze 和执行返回字节一致。实际读取相对 V6 的两文件 diff、V7 terminal / normal / optimized / format / result / freeze 直接收据及 runner 的原 body 比较逻辑，没有执行产品、测试或设备。
+
+`data()` 先检查文件边界，再按 `(file offset, byte length)` 缓存 immutable bytes。相同 extent 再访问不复制；不同 extent 即使物理范围重叠，也必须在 slice **之前**通过独立 `2 * len(binary)` 累计复制预算并扣费，不能靠大量不同起点/长度的缓存 key 逃过限额。缓存生存期仅是本次 `bind_instructions` 调用，保留内存同样受该复制预算及 section 数量限制。V6 的名字扫描预算继续独立存在。没有发现这段修复引入本范围的具体新缺陷。
+
+两项新增 CPU fixture 分别验证八个 symtab 共享同一大 strtab 时正常绑定且 `section_bytes_copied <= len(binary)`，以及不同重叠 strtab 触发明确的 copying budget 拒绝；第二项避免仅缓存相同 extent 就误认为所有复制工作均受限。无需进一步通用 ELF/ISA 门。
+
+V7 owned runner terminal / returncode 0，2.869633282 秒；63 normal / 63 optimized，原 warning 保留。两轮 Ruff/YAPF/check-AST 全 0，AST/源码 freeze 核同；同两 actual loaded ELF/native 的产品 kernel body 仍与旧独立 QA 列表相等，原 1/23 相对 tail 结果及所有 source/reader/default/offline 未授字段保持。完整 archive SHA 已实际核同 `9dc7545632b69fc2de86516612d8204c324fbef69b7591f513de832a728a2069`。
+
+**最终有限结论：M1 名字扫描与共享/重叠字符串表复制两个子项现均已闭。** V5 finding、V6 部分修复和实际失败/成功历史保留；本次 closure 仅解决这个内部组件的已确认预算问题，不等同 whole timeline、public provider 或 source/loop 资格通过。没有本 delta 必须再补的测试、设备或数学验证。
