@@ -1,0 +1,13 @@
+warning: linking module '/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aic.ll': Linking two modules of different data layouts: '/tmp/chijin-timeline-r057-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc' is 'e-i1:8:32-i8:8:32-i16:16:32-i64:64-f16:16:32-v16:16-v32:32-n8:16:32:64-S64' whereas '/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aic.ll' is 'e-i1:8:32-i8:8:32-i16:16:32-i64:64-f16:16:32-v16:16-v32:32-n64-S64'
+ [-Wlinker-warnings]
+1 warning generated.
+warning: linking module '/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aiv.ll': Linking two modules of different data layouts: '/tmp/chijin-timeline-r057-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc' is 'e-i1:8:32-i8:8:32-i16:16:32-i64:64-f16:16:32-v16:16-v32:32-n8:16:32:64-S64' whereas '/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aiv.ll' is 'e-i1:8:32-i8:8:32-i16:16:32-i64:64-f16:16:32-v16:16-v32:32-n64-S64'
+ [-Wlinker-warnings]
+1 warning generated.
+[WARNING] Cannot find ld.lld under /tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/bin
+ld.lld: warning: -z separate-code and -z separate-loadable-segments will be ignored
+[WARNING] Cannot find ld.lld under /tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/bin
+warning: overriding the module target triple with aarch64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.
+warning: overriding the module target triple with aarch64-unknown-linux-gnu [-Woverride-module]
+1 warning generated.

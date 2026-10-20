@@ -1,0 +1,31 @@
+{
+  "argv": [
+    "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+    "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mlir",
+    "--target=Ascend910B4-1",
+    "--enable-auto-multi-buffer=False",
+    "--enable-auto-bind-sub-block=True",
+    "--link-aicore-bitcode=/tmp/chijin-timeline-r057-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+    "--enable-hfusion-compile=true",
+    "--enable-hivm-compile=true",
+    "--enable-triton-kernel-compile=true",
+    "-o",
+    "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel"
+  ],
+  "sdk": {
+    "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+    "sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e"
+  },
+  "libdevice_sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f",
+  "source_sha256": "ba28b45729536dd89c4bc13e615ac0b64409b909ab5f15bb7c2f4eacf9252302",
+  "original_compiled_hash": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d",
+  "source_row": {
+    "original_bcmlir_path": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK64-density-1/64-ordinary-1/ordinary.bcmlir",
+    "original_npubin_path": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK64-density-1/64-ordinary-1/ordinary.npubin",
+    "original_compiled_hash": "21681db4dbb5059b5954421e5b97334d670b29a5718d8f0d544af54504a6e91d"
+  },
+  "metadata_path": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/compile-cache/EFUB3NG3WUCZWWKUIIPFXFZTJVTQWKNFOGGY6DKUJL2UKBFG5EOQ/product.json",
+  "metadata_sha256": "9c9d10e405528bff59051abbd695648ee84bd623931ecdc34ec5172cd8e3289d",
+  "ordinary_options_reconstructed": true,
+  "binary_identity_required": true
+}

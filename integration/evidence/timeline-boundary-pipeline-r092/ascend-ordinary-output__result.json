@@ -1,0 +1,62 @@
+{
+  "status": "ordinary_passive_codegen_probe",
+  "exit": 0,
+  "elapsed_s": 2.970409015659243,
+  "original_sdk": {
+    "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+    "sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e"
+  },
+  "original_npubin_sha256": "7a0eb2a0f452653cb0c5a48c17f16b9b623ae2ba726a49729efd79d80b127238",
+  "original_text": {
+    "address": 0,
+    "bytes": 2508,
+    "sha256": "0a0693fb722a88debc26f56fa0f7606fa1f122f24d14d4831178d2b8ba373e44"
+  },
+  "produced": [
+    {
+      "path": "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aic.o",
+      "sha256": "67e315c129651740b306e000bea64628dd8b905217b9ee33b8b7640074ded22f",
+      "bytes": 3704,
+      "text": {
+        "address": 0,
+        "bytes": 1304,
+        "sha256": "4389448f664cdfe4d52c2fed8bcafaefdaed0068b1e53951f3dabb0b71bd2955"
+      },
+      "whole_binary_identical": false,
+      "text_identical": false
+    },
+    {
+      "path": "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.mix_aiv.o",
+      "sha256": "5555ce67dcdde47c62b81b9442e21e2748b9113b341534a917bf852a2947f40d",
+      "bytes": 6992,
+      "text": {
+        "address": 0,
+        "bytes": 1204,
+        "sha256": "86d9978615359a9fd267bd4dc048b9b0402fe6382c9dc29f9162b1ac941dbd2c"
+      },
+      "whole_binary_identical": false,
+      "text_identical": false
+    },
+    {
+      "path": "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/kernel.o",
+      "sha256": "7a0eb2a0f452653cb0c5a48c17f16b9b623ae2ba726a49729efd79d80b127238",
+      "bytes": 5624,
+      "text": {
+        "address": 0,
+        "bytes": 2508,
+        "sha256": "0a0693fb722a88debc26f56fa0f7606fa1f122f24d14d4831178d2b8ba373e44"
+      },
+      "whole_binary_identical": true,
+      "text_identical": true
+    }
+  ],
+  "codegen_receipts": [
+    "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/codegen/43640a06abbe4e7ca81fd8d2f88fb6d9/receipt.json",
+    "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/codegen/6120eaabba674849aa498eca6bf27f2d/receipt.json",
+    "/tmp/chijin-timeline-r092-ascend/runs/ordinary-BK64-codegen-v1/output/codegen/8bc5f7bb8d494b53bb4d9d09fafbab1d/receipt.json"
+  ],
+  "application_replayed": false,
+  "device_executed": false,
+  "SDK_or_original_modified": false,
+  "state_writer_qualified": false
+}
