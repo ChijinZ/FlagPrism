@@ -65,3 +65,12 @@ constants are conservatively unverified because the typed index does not retain
 all arithmetic poison flags. Record payload pointer address-space conversions
 are accepted only as typed pointer conversions; calls, floating arithmetic,
 foreign stores, and invalid mandatory record tuples remain rejected there.
+
+For unmarked retained LLVM, record discovery visits each actual begin once.
+The complete record's literal site ID routes the candidate to the producer
+manifest; kind, all mandatory tuple fields, body, selected paths and loops are
+then checked. Every selected path must succeed and refer to the same site, and
+each site's complete discovery must have exactly one begin. Incomplete discovery
+invalidates legacy uniqueness even when one candidate was already found. This
+keeps the shared analysis budget without a quadratic sites-by-readers search;
+it does not relax record or source requirements.

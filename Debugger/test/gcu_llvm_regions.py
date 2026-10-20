@@ -290,6 +290,145 @@ class BoundaryTests(unittest.TestCase):
         self.assertEqual(result['loop']['status'], 'unverified', result)
         self.assertIn('actual literal definition', result['loop']['reason'])
 
+    def legacy_shared(self):
+        report, manifest = self.indexed('legacy-shared')
+        regions = self.module.analyze_regions(report, manifest)['regions']
+        self.assertTrue(
+            all(x['status'] == 'llvm_observer_boundary_checked'
+                for x in regions), regions)
+        return report, manifest, regions
+
+    def test_legacy_record_dispatch_checks_id_kind_and_order(self):
+        report, manifest, regions = self.legacy_shared()
+        manifest['sites'].reverse()
+        manifest['sites'].insert(
+            0,
+            dict(id=99,
+                 kind=5,
+                 operation='gcu.border',
+                 location='loc("fixture.py":9:1)'))
+        found = {
+            x['site_id']: x
+            for x in self.module.analyze_regions(report, manifest)['regions']
+        }
+        self.assertEqual(found[7]['status'], 'llvm_observer_boundary_checked')
+        self.assertEqual(found[8]['status'], 'llvm_observer_boundary_checked')
+        self.assertEqual(found[99]['status'], 'unverified')
+        next(x for x in manifest['sites'] if x['id'] == 8)['kind'] = 1
+        found = {
+            x['site_id']: x
+            for x in self.module.analyze_regions(report, manifest)['regions']
+        }
+        self.assertEqual(found[7]['status'], 'llvm_observer_boundary_checked')
+        self.assertEqual(found[8]['status'], 'unverified')
+        # An unknown physical ID cannot be routed by source text or ordinal.
+        report, manifest, regions = self.legacy_shared()
+        body = report['blocks'][regions[1]['paths'][0]['body_blocks']
+                                [0]]['operations'][-1]
+        body['successors'][0]['arguments'][0] = report['blocks'][
+            report['entry_block']]['arguments'][2]
+        body['operands'][1] = body['successors'][0]['arguments'][0]
+        found = {
+            x['site_id']: x
+            for x in self.module.analyze_regions(report, manifest)['regions']
+        }
+        self.assertEqual(found[7]['status'], 'llvm_observer_boundary_checked')
+        self.assertEqual(found[8]['status'], 'unverified')
+
+    def test_unfinished_discovery_cannot_claim_a_unique_legacy_begin(self):
+        report, manifest, regions = self.legacy_shared()
+        body = report['blocks'][regions[1]['paths'][0]['body_blocks']
+                                [0]]['operations'][-1]
+        seven = next(row['results'][0] for block in report['blocks']
+                     for row in block['operations']
+                     if row.get('integer_constant') == 7)
+        body['successors'][0]['arguments'][0] = seven
+        body['operands'][1] = seven
+        original = self.module._region
+        calls = []
+
+        def interrupt_second(index, *args, **kwargs):
+            calls.append(1)
+            if len(calls) == 2:
+                index.work = 1000001
+                raise ValueError(
+                    'LLVM boundary analysis work budget exhausted')
+            return original(index, *args, **kwargs)
+
+        self.module._region = interrupt_second
+        try:
+            result = self.module.analyze_regions(report, manifest)['regions']
+        finally:
+            self.module._region = original
+        self.assertEqual(len(calls), 2)
+        self.assertTrue(all(x['status'] == 'unverified' for x in result),
+                        result)
+        self.assertTrue(all('budget exhausted' in x['reason'] for x in result),
+                        result)
+
+    def test_two_begins_claiming_one_legacy_site_are_ambiguous(self):
+        report, manifest, regions = self.legacy_shared()
+        body = report['blocks'][regions[1]['paths'][0]['body_blocks']
+                                [0]]['operations'][-1]
+        seven = next(row['results'][0] for block in report['blocks']
+                     for row in block['operations']
+                     if row.get('integer_constant') == 7)
+        body['successors'][0]['arguments'][0] = seven
+        body['operands'][1] = seven
+        result = self.module.analyze_regions(report, manifest)['regions']
+        self.assertTrue(all(x['status'] == 'unverified' for x in result),
+                        result)
+
+    def test_one_begin_cannot_hide_an_inconsistent_selected_branch(self):
+        for corrupt in (False, True):
+            report, manifest, regions = self.legacy_shared()
+            first, second = regions
+            remove = {second['begin_block'], *second['selection_guards']}
+            remove.update(b for b in second['paths'][0]['body_blocks']
+                          if b != second['paths'][0]['end_block'])
+            report['blocks'] = [
+                b for b in report['blocks'] if b['id'] not in remove
+            ]
+            blocks = {b['id']: b for b in report['blocks']}
+            entry = blocks[report['entry_block']]
+            entry['operations'][-1].update(
+                operation='llvm.br',
+                operands=[],
+                successors=[
+                    dict(block=first['selection_guards'][0], arguments=[])
+                ])
+            body = blocks[first['paths'][0]['body_blocks']
+                          [0]]['operations'][-1]
+            left = copy.deepcopy(body['successors'][0])
+            right = copy.deepcopy(left)
+            constant = lambda n: next(row['results'][0]
+                                      for block in report['blocks']
+                                      for row in block['operations']
+                                      if row.get('integer_constant') == n)
+            right['arguments'][0] = constant(8)
+            if corrupt:
+                right['arguments'][1] = constant(0)
+            which = entry['arguments'][1]
+            body.update(
+                operation='llvm.cond_br',
+                operands=[which, *left['arguments'], *right['arguments']],
+                successors=[left, right])
+            index = self.module._Index(report)
+            index.infer_legacy_phases()
+            with self.assertRaisesRegex(
+                    ValueError,
+                    'tuple' if corrupt else 'different producer sites'):
+                self.module._region(
+                    index,
+                    None,
+                    first['begin_block'],
+                    manifest['capacity'],
+                    sites={x['id']: x
+                           for x in manifest['sites']})
+            result = self.module.analyze_regions(report, manifest)['regions']
+            self.assertTrue(all(x['status'] == 'unverified' for x in result),
+                            result)
+
     def test_constant_iteration_is_separate_from_runtime_input(self):
         for variant in ('constant', 'continued-constant', 'legacy-constant'):
             with self.subTest(variant=variant):

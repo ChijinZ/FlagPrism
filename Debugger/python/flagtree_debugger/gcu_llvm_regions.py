@@ -454,7 +454,7 @@ def _body_family(site, rows, *, legacy=False):
     ]
 
 
-def _record(index, block, position, env, site, capacity):
+def _record(index, block, position, env, site, capacity, sites=None):
     rows = index.blocks[block]['operations']
     identity_seen = False
     columns = []
@@ -580,6 +580,14 @@ def _record(index, block, position, env, site, capacity):
         _need(offset < 32 and offset not in fields,
               'Overlapping or foreign record field')
         fields[offset] = (value, operation)
+    discovered = site is None
+    if discovered:
+        identity = fields[1][0]
+        _need(
+            identity[0] == 32 and not identity[2] and sites is not None
+            and identity[1] in sites,
+            'Record site is not a literal member of the producer manifest')
+        site = sites[identity[1]]
     required = {
         0: _literal(32, 0x46504733),
         1: _literal(32, site['id']),
@@ -596,14 +604,17 @@ def _record(index, block, position, env, site, capacity):
     }
     _need(all(fields[word][0] == value for word, value in required.items()),
           'Site/begin/end/identity tuple does not reach this record')
-    return dict(end_block=block,
-                record_block=tail,
-                join_block=full['block'],
-                field_refs={
-                    str(word): dict(block=tail, operation=fields[word][1])
-                    for word in required
-                },
-                sequence_value=compare['operands'][0])
+    result = dict(end_block=block,
+                  record_block=tail,
+                  join_block=full['block'],
+                  field_refs={
+                      str(word): dict(block=tail, operation=fields[word][1])
+                      for word in required
+                  },
+                  sequence_value=compare['operands'][0])
+    if discovered:
+        result['observed_site_id'] = site['id']
+    return result
 
 
 def _selection(index, begin, edge):
@@ -660,7 +671,7 @@ def _selection(index, begin, edge):
     return selector, guards
 
 
-def _region(index, site, block, capacity):
+def _region(index, site, block, capacity, sites=None):
     rows = index.blocks[block]['operations']
     _need(rows[-1]['operation'] == 'llvm.br',
           'Begin reader does not rejoin the body')
@@ -672,7 +683,8 @@ def _region(index, site, block, capacity):
         marker = index.marker(row)
         if marker:
             _need(
-                marker.get('site') in (None, site['id'])
+                marker.get('site')
+                in (None, site['id'] if site is not None else None)
                 and marker.get('column') in (1, 3),
                 'Begin marker/site differs')
             begin_columns.append(marker['column'])
@@ -689,7 +701,7 @@ def _region(index, site, block, capacity):
             _atom(32, 'begin:identity')
         ], 'Selected and zero tuples do not rejoin the same body')
     pending = [(edge['block'], index.forward(edge, env), (), [])]
-    outcomes = []
+    outcomes, observed_sites = [], set()
     while pending:
         _need(len(pending) + len(outcomes) <= 128, 'LLVM boundary path budget')
         current, state, visited, body = pending.pop()
@@ -706,9 +718,17 @@ def _region(index, site, block, capacity):
                 _need(
                     marker.get('column') == 2,
                     'Another marker interrupts selected body')
-                record = _record(index, current, position, dict(state), site,
-                                 capacity)
-                family, references = _body_family(site,
+                record = _record(index,
+                                 current,
+                                 position,
+                                 dict(state),
+                                 site,
+                                 capacity,
+                                 sites=sites)
+                actual_site = site if site is not None else sites[record.pop(
+                    'observed_site_id')]
+                observed_sites.add(actual_site['id'])
+                family, references = _body_family(actual_site,
                                                   body,
                                                   legacy=bool(
                                                       index.inferred_phases))
@@ -730,6 +750,11 @@ def _region(index, site, block, capacity):
                                 index.forward(next_edge,
                                               next_state), visited, body))
     _need(outcomes, 'Selected begin has no complete end-record path')
+    _need(
+        len(observed_sites) == 1,
+        'One begin reaches different producer sites on selected paths')
+    if site is None:
+        site = sites[next(iter(observed_sites))]
     result = dict(site_id=site['id'],
                   status='llvm_observer_boundary_checked',
                   selection_value=selector,
@@ -1197,19 +1222,33 @@ def analyze_regions(report, manifest):
                     legacy_starts.append(identity)
                 else:
                     starts.setdefault(marker.get('site'), []).append(identity)
+    # Discover each actual begin once. The physical record chooses a candidate
+    # manifest site; all tuple, source-body and path checks still run before
+    # that result is retained. This avoids a quadratic sites x begins search.
+    legacy_matches, discovery_budget = {}, None
+    if legacy:
+        for begin in legacy_starts:
+            try:
+                result = _region(index,
+                                 None,
+                                 begin,
+                                 manifest['capacity'],
+                                 sites=sites)
+                legacy_matches.setdefault(result['site_id'], []).append(result)
+            except ValueError as error:
+                if index.work > 1000000:
+                    discovery_budget = str(error)
+                    break
     regions = []
     for identity, site in sites.items():
         try:
             if legacy:
-                matches = []
-                for begin in legacy_starts:
-                    try:
-                        matches.append(
-                            _region(index, site, begin, manifest['capacity']))
-                    except ValueError:
-                        pass
+                _need(discovery_budget is None, discovery_budget
+                      or 'Incomplete legacy record discovery')
+                matches = legacy_matches.get(identity, [])
                 _need(
                     len(matches) == 1,
+                    discovery_budget if not matches and discovery_budget else
                     'Missing or ambiguous typed legacy clock/record tuple')
                 result = matches[0]
                 result['clock_binding'] = 'typed_timer_identity_call_roles'
@@ -1228,7 +1267,7 @@ def analyze_regions(report, manifest):
             regions.append(
                 dict(site_id=identity, status='unverified', reason=str(error)))
     return dict(schema_version=1,
-                rule_version='gcu300.selected_llvm_tuple.v3',
+                rule_version='gcu300.selected_llvm_tuple.v4',
                 semantics='selected_observer_issue_wait_or_body_elapsed',
                 regions=regions,
                 native_schedule_qualified=False,
