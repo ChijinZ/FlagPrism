@@ -1,8 +1,8 @@
 # R105 compiler 席最终有限收尾
 
-**当前结论：已核范围内，没有尚未处置的 confirmed compiler/source/cache/适配缺陷。最终新 q11/q12 的24份 matching aggregate/完整索引仍待本席读取，故 V1 暂不关闭，本稿不提前给最终完成票。** 后续只补这个同版收据闭合，不重启 whole 或新增静态证明门。
+**最终结论：本席原 mandatory compiler/cache/source/适配及已审关键 pipeline 必要项已闭合，没有尚未处置的 confirmed blocker / major / minor，也没有本席范围内仍需实现或执行的必要工作。** 已实际读取并核同最终 q11/q12 的8 ordinary、24 profile、8 cold actor 原件及其 State 2D family 适用连接，原 V1 关闭。支持按原 source-linked observer elapsed / issue / wait 合同交付；这不是 source-exclusive、engine busy 或完整机器码证明票，也不代替其余席的最终交付/TP/UI审阅。
 
-正式/candidate HEAD：`244bd8c1bc67071b6ddf4eee7a62221fb0152b5a`；最后产品行为改动：`6e78f136214da74254211fa19b90a3f7b7353fa2`。工作树只有 quickstart 文档修改：公共例子去掉 `-I`，首段改为说明每 capture 记录资格；没有代码 delta，也没有据此提升 source/native 权利。
+开始本轮的正式/candidate HEAD 为 `244bd8c1bc67071b6ddf4eee7a62221fb0152b5a`；最终只读核到 `891281f2a432d213e256c0ab7d61326b5cb4abd4`。最后产品行为改动仍为 `6e78f136214da74254211fa19b90a3f7b7353fa2`。期间只有证据/文档归档，quickstart 公共例子去掉 `-I`、首段说明每 capture 记录资格；没有运行时代码 delta，也没有据此提升 source/native 权利。最终 HANDOFF 文档归档、owner/Git/remote 状态由 root 另行收尾，不据进度消息冒称本席已独立核远端。
 
 这是原最终三席中的 R1 延续审阅，采用原 goal 的真实 **source-linked observer region / issue / wait** 最小语义，不要求 source-exclusive cost、native iteration ID、engine busy、完整 ISA 或所有辅助静态证书通过。请求模型/effort 为 GPT-6.1-Sol/xhigh；工具未暴露实际 resolved 型号/effort，均为 **unknown**。未读 peer 报告/预期票，未运行本机产品/import/tests、编译、SDK、模型、设备、SSH、数学、TP/UI。仅复用本人已核原件/报告与本轮只读源码、Git、JSON、size/SHA 检查；未改产品/论文。
 
@@ -14,7 +14,7 @@
 | NVIDIA movement、count 生命周期与容量 | R061 保 FMA contraction 的有界依赖与实际 FFMA bracket；R070 zero-reset-after-record/count 反例及 matching installed；full-CTA v4 物理预算保持8MiB并留guard。R071–R073 matrix/origin/native-loop及 conditional EXIT 修复已闭。未把同指令数或正 duration 当边界证明。 |
 | GCU rewrite/typed index/region 错判 | R087 identity-projection preservation 与 clock declaration 隔离、R094 lexical identity/type预算/branchforward、R095 undef/poison/reset、R097 membership复制预算、R098 literal trip及不完整discovery唯一性等 confirmed 问题，均有本人已核源码、准确反例和 matching normal install。不能继续按早期 pending 或废弃源码评价当前版本。 |
 | Ascend 新辅助 helper 错判 | R099文本预算；R102 opaque type/GEP、carrier后member、operand计费；R103 guard/loop/unknown控制与正确字段标签，均按最终格式字节、准确 CPU 及正常安装闭合。FCmp/atomicrmw/间接目标信息不足时保 opaque。 |
-| 实际数学阶段漏选 | R100 发现旧 q05 未选 dot、原 MMA 在已选 fragment 外。R101 用通用 repeated-aggregate selection intent 修复，不按 kernel/source ID/shape 特判；预算和 counter/census 默认行为不变。新实际 q05 选 dot43、包含真实 MMA，R102/R103 有实际 member/loop/raw 对应。新独立 q11/q12 最终24份复核列于 V1，未到终态前不冒通过。 |
+| 实际数学阶段漏选 | R100 发现旧 q05 未选 dot、原 MMA 在已选 fragment 外。R101 用通用 repeated-aggregate selection intent 修复，不按 kernel/source ID/shape 特判；预算和 counter/census 默认行为不变。新实际 q05 选 dot43、包含真实 MMA，R102/R103 有实际 member/loop/raw 对应。新独立 q11/q12 最终24份同版复核已闭，见下文；不回填旧漏选 capture。 |
 | 自动辅助图威胁默认预算 | R105 仅删除 Ascend 默认 readback 后3行辅助分析调用。原 source/canonical/raw/clock/ns/dependency不变，辅助 API 显式保留，offline不生成新图。正常450members安装及新公开 q11已有实际正例；没有为了静态证书增加采集负担。 |
 | 原 ABI/State/发布/恢复/SQL 索引 | 复用本人 R075/R091 及各 finite 已闭范围：三家真实唯一 writer/实际SDK与actor/transfer ABI、guard/owner恢复、R077 codec/legacy预算、实际 retained SQL 与受影响定向验收。没有因新增 optional analysis 重开这些无变化项。 |
 
@@ -34,7 +34,7 @@
 
 复用本人 `compiler-whole-v1.md`（R075）、`compiler-final-closure-v1.md`（R091）、R092 BK64 v2及R093–R105本人各有限报告中的已核 primary；没有无变化重测。当前公开链仍为 intent→实际后端lowering/ABI→record/transport→canonical→clock/mechanism→共同Perfetto，后端具体差异保留。pre-lookup身份绑定实际编译/目标/工具/SDK/cache条件；正常安装按匹配native输入复用，未冒称新C++构建。公共消费者没有新增厂商ISA解释、算子名/固定hash分支或第四芯片前置门。
 
-本轮已独立核 R105 回收的 `phase-receipts-v1-recovered` **871**、`phase-receipts-v2` **36**、`phase-receipts-v3` **30** 项index size/SHA，均一致。读取其正常安装、8ordinary、已回收的新profile、source事实及E01 primary。尚未收到的最终24 aggregate不由parent进度消息替代。
+本轮已独立核 R105 回收的 `phase-receipts-v1-recovered` **871**、`phase-receipts-v2` **36**、`phase-receipts-v3` **30**、`phase-receipts-v4` **45** 项index size/SHA，均一致；另核 `state-capture-v1/state-capture-index-v1.json` 的 **8** 份 expanded capture size/SHA。读取正常安装、8 ordinary、24 profile 的 result/terminal/math、source事实及E01 primary。后7组本地结果归档不等于全部设备原始文件均在本席重新解码；完整 fresh decode 与原始 guard/输入验收由已读 matching runner/终态承接，8 cold expanded 再独立绑定实际 actor/object。
 
 - 当前6e78正常安装terminal0 / **51.183600540s**、450members；q11首配置cold/warm各自真实捕获，七个正source origin、dot每observer四个正interval、约2.46MiB、标准counter-ns/Perfetto输出仍在，默认无辅助图。本人有限R105源码报告已闭此delta。
 - lean E01 CPU回读是**自有原10-call bundle副本**，复用不变native machine事实、显式禁止新外部工具/辅助分析，不是新设备采集。terminal0 / **17.290239931s**；前后 **66,815,281B <=67,108,864B**，raw/标准trace和已有counter/dependency exports保持。原R077失败与副本恢复不改写；它证明默认删除三行不重新消耗辅助图预算，不宣称新的machine取证。
@@ -44,11 +44,32 @@
 
 **当前均无未处置项。** 这不授予全目标全部设备/UI范围；本席只对上述compiler、真实source/record关联、缓存身份、适配/支持边界及本人已核pipeline负责。
 
-## Necessary verification gap：V1，最终新独立24份matching收据
+## 原 V1：最终24份 matching 已关闭
 
-目前仍等待 q11/q12 两kernel、两shape×两config、每组合cold/warm1/warm2全部24份最终 aggregate/完整索引。需要按实际冻结源码/安装、ordinary、每次调用/raw/math/输入/guard/host-once、源/选中dot和重复正记录、预算及缺省无辅助图核对；不能拿21/24进度替代最终24。这是已授权收据闭合，不要求额外数学或静态证明。
+实际读取 `new-matrix-aggregate-v1.json`（SHA256 `2299304d7071efe9a481d3f90962736ecaa6708def22674a0d02e1c2b0f747cd`），逐一核其8份 result 与8份 terminal 的链接/SHA、result.rows 与 aggregate.rows 完全相等。八组均 terminal0，各自确有 cold / warm1 / warm2，合计24个不同 invocation、24个不同 raw SHA；没有用21/24进度替代最终结果。八个 ordinary 的实际编译对象按 math.asm_sha256 逐文件绑定，所有24份 math 的源码、输入、shape/config 与对应 ordinary 一致，requested_launches=1、五项实际 checks 全真。已读 runner 确认独立 host-once、完整 fresh raw/guard、数学及预算均是成功前置条件，而非 summary 默认值。
 
-收到后只补 matching 结果及本席最终范围结论。任何首次失败/编排问题保原历史；未成功的调用不由其它capture补齐。
+| 实际组合 | 每组合 capture | 每个选中 dot / AIC observer 的正 occurrence | 每 capture 标准 trace |
+| --- | ---: | ---: | ---: |
+| q11，s0，c0/c1 | 各3 | 4/4 | 6 |
+| q11，s1，c0/c1 | 各3 | 6/6 | 6 |
+| q12，s0，c0/c1 | 各3 | 两个 dot 各4/4 | 6 |
+| q12，s1，c0/c1 | 各3 | 两个 dot 各6/6 | 6 |
+
+全部实际 source_commit 为6e78；每组 cold/warm 的 compiler binary ID 和 math.npubin SHA分别相同。每 capture 有 **7–8个不同正source origin**、实际保留 actor 中确有 MMA call、选中 dot 都出现在实际 observer 记录内，共 **360个正 dot/observer interval**。每份 raw **786,816B**，bundle **2,461,976–3,418,453B**，6份counter-ns导出，默认辅助图确实缺省不生成；总计144份标准trace。`native_engine_busy_qualified`、`source_exclusive_cost_qualified` 都保持 false，没有把存在/重复/正值升级为这两种权利。
+
+144份新trace的 pinned TP CPU 导入不由本席这份编译/source matching 代签；本报告只核其标准文件产生及以上编译相关事实。原数学/设备/SQL/UI无变化范围复用既有已闭证据。首次失败、QA编排错误、旧 q05/q07漏选及 BK64 sparse 历史失败全部保留，不追授旧原件成功。
+
+### 新对象 State 适用性的最小连接
+
+另外实际读8个 ordinary 的 retained `04-bcmlir`，都为 State 的同一有限形态：独立 int32 参数、按 `(pid0*BM, pid1*BN)` 的2D view、有效行列裁剪、load→`+1`→同一有效 view materialize。BM 为16/32，BN32，N64/83；grid 分别为4×2、2×2、5×3、3×3。这些不是数学报告 `logical_state_once=true` 单独推出的物理结论。
+
+进一步逐组读取8 cold expanded 中真实 original/adapted AIV/AIC，核 payload SHA=owner final binary SHA=actual math npubin SHA、raw SHA、source/formal ordinal、actor编译 object bytes/SHA及实际 executed input/resource。q11 State 对应 final formal8，q12对应9；均为 `bs_task_type=32`、simd/mix、无auto-blockify/force-simt。AIC无State使用；每份AIV中 State根只有一次实际2D GM load和一次实际2D GM store，中间为同一UB descriptor上的 `vadds ... 1`。original/adapted这三个State调用及其必要operand定义锥在忽略DI和SSA编号后相同，未混入logger输出。
+
+实际2D store wrapper 去DI后与 R081 已核原定义完全一致，使用相同 `meta_op.aiv.bc` 内容 SHA `d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0`；当前真实codegen输入也核到同一资源。GM stride为N/1，UB为32/1，load/store sizes相等。两AIV按 `H=BM/2` 切行，GM元素offset为 `(pid0*BM+s*H)*N+pid1*32`，有效rows为裁剪后的剩余行再限H、cols为剩余列再限32。`s=0/1` 的行分片及不同program tile互不重叠，partial边界对应零宽/截短搬运；没有把空slot推断成完整，也没有多出AIC writer。
+
+因此可复用旧已审 **SDK 2D State搬运/actor family**，关闭这批新8组合（以及同binary的cold/warm三次）在本席范围的适用连接；不需新的SDK/数学或逐SASS重解释。ordinary retained输入与实际profile actor来源分开核，未冒称八个ordinary npubin已逐一重新codegen或反汇编。原 math.json 的 `physical_writer_lowering_verified=false` **保持原样**：它是采集时保守字段，本报告记录独立组合证据，不改文件、不追授通用SDK/ISA资格。
+
+**Necessary verification gaps：本席当前范围无剩余项。**
 
 ## Optional 与保留限制
 
@@ -56,4 +77,4 @@
 
 quickstart去掉公共例子里的`-I`与实际普通命令一致；正常应用自己的import路径不再被示例额外隔离。首段仍只说每capture的资格状态，不宣布整目标已通过。当前文档变动不影响本席源码判断。
 
-**在最终V1收据到达前，本报告准备完成但不提前关闭；其余本席已核范围没有新的必要实现或验证工作。**
+**原 V1 和新对象 State family matching 均已闭合；本席原 mandatory compiler/cache/source/适配范围支持按合同交付，没有新的必要实现、矩阵或证明工作。** 最终全goal声明仍由root合并其余独立席及实际交付收据，不能将本席范围结论外推为未读过的新TP/UI/owner/远端状态。

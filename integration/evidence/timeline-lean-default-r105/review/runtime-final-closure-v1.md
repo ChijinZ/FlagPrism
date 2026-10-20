@@ -81,3 +81,13 @@
 直接读 `preflight/ascend-owner-v1.json`（SHA `ee9a0c65f9bb35b15bb8c64e7086630c597807d29fbc1d710253742cecc9b985`）：本轮12个Asc owned job、24个登记controller/worker，terminal均0且其SHA与原收据匹配，全部同身份已absent。TP原 `owned-final.json` 列worker absent；controller同startticks仍为 **Z**、`same_identity_running=False`。据此可称无本轮同身份运行任务，不能把Z写成“PID全部已消失/已reap”。这是已有owner检查收据的审计，本席没有自行访问服务器。
 
 至此，本席原 mandatory/E01–E12/P01–P10 中的必要 runtime 功能/受影响验证没有新增剩余；原限制、历史失败和NV性能批准暂缓照旧。只等最终source/Git/远端/clean交付事实做最后记录；不为证据或文档commit重装/重跑，不以未扩展的static资格重新开门。
+
+## Runtime 最终接受与 Git 归档收尾
+
+**本席通过原完整 mandatory runtime 范围及 E01–E12/P01–P10 的最终审阅：无未处置 confirmed blocker/major/minor，无尚需实施或补证的 runtime 工作。** 以上 V1、V2、TP 和 owned-work closure 均保持；不是“全部可选资格为true”，而是在原 timer/observer/issue/wait/适配范围内满足合同。engine busy、source-exclusive、任意跨域 epoch、未证精度/参与及NV性能批准暂缓等限制继续随交付保留。
+
+直接读取 `preflight/git-delivery-v2.json`；该阶段收据记正式 `detailed-profiler`/candidate/已核remote均为 **`891281f2a432d213e256c0ab7d61326b5cb4abd4`**、canonical clean、无force push。本席另用本地只读Git核canonical和candidate实际HEAD均为该SHA，canonical工作树确实clean；candidate仅新增 `integration/evidence/timeline-lean-default-r105/HANDOFF.md`。6e78到该提交的产品/后端patch路径无diff。remote相等是所读交付收据的事实，本席没有另行联网查询。
+
+已读当前HANDOFF：列匹配安装命令/实际trace及原UI路径，明确新144SQL为CPU导入、默认实际区间与显式静态辅助分析分开、历史失败和时钟/observer/engine限制。它没有引入产品调用或新资格。quickstart公共应用示例去`-I`与已执行真实命令一致；这是说明修正，不要求因文档再build或设备执行。
+
+**最后仅报告/HANDOFF证据归档commit由root完成常规ff、push及clean核验，并保精确Git终态收据。** 该归档不改变6e78产品行为，不需要再一轮runtime审阅、安装、数学、SQL/UI或其它验证。最终Git receipt到齐只补交付SHA记录；不能据报告归档递归制造新的产品验收门。此处接受的是本席独立runtime范围，不依据其它席投票替代事实，也不修改论文/Study。

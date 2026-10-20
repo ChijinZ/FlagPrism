@@ -1,0 +1,22 @@
+{
+  "requested_model": "gpt-6.1-sol",
+  "requested_reasoning_effort": "xhigh",
+  "requested_fork_turns": "none",
+  "resolved_model": "not exposed by orchestration tool",
+  "resolved_reasoning_effort": "not exposed by orchestration tool",
+  "independent_reviewers": [
+    {
+      "agent": "/root/timeline_final_sol61_compiler_r057",
+      "report": "compiler-final-closure-v1.md"
+    },
+    {
+      "agent": "/root/timeline_final_sol61_runtime_r057",
+      "report": "runtime-final-closure-v1.md"
+    },
+    {
+      "agent": "/root/timeline_final_sol61_delivery_r057",
+      "report": "delivery-final-closure-v1.md"
+    }
+  ],
+  "scope": "Independent whole reviews followed by finite affected-change closure; no peer reports used; root records exact final evidence-only Git after archiving reports."
+}

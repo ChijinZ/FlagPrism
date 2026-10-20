@@ -78,3 +78,19 @@ Audit preparation v1 could not dereference the current capture store; v2 had
 a generated Python quoting error. Both failed before validation. Version3
 uses the installed capture loader; the actual 24-capture/144-trace input
 archive is byte-sealed. No failure was removed from qualification history.
+
+## Final independent scope closure
+
+The compiler, runtime and delivery reviewers directly checked the new source,
+raw, mathematics and applicable original SDK transfer family. In particular,
+each new cold specialization has the same verified 2D State load/increment/store
+family, disjoint program/subactor row partitions, preserved guards and no AIC
+State writer; original/adapted partitions match. Cold/warm reuse is tied to the
+actual same compiled binary. Original conservative math fields remain unchanged.
+This finite applicability check adds no per-operator implementation, SDK run,
+or general SSA/ISA certification. Their final reports provide the exact scopes.
+
+See `HANDOFF.md` for installed three-backend commands, build/diagnostic links,
+actual openable trace and screenshot paths, controlled examples, SQL reproduction
+and restrictions. Final evidence-only Git delivery is recorded by root after
+this immutable snapshot. No additional product change or device run is needed.
