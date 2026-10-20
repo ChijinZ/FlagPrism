@@ -97,4 +97,10 @@ call = json.loads(indirect.stdout)['functions'][0]['blocks'][0][
     'instructions'][0]
 need(call.get('indirect_call') is True and 'callee' not in call,
      'Indirect call was assigned a guessed callee')
-print(json.dumps(dict(checks=4, status='passed', native_schedule_qualified=False)))
+_, long_triple = invoke('oversized-triple',
+                       'target triple = "' + 'a' * 4097 + '"\n'
+                       'define void @actor() { ret void }\n')
+need(long_triple.returncode != 0
+     and b'text budget exceeded' in long_triple.stderr,
+     'Target triple bypassed the text budget')
+print(json.dumps(dict(checks=5, status='passed', native_schedule_qualified=False)))

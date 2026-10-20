@@ -226,7 +226,7 @@ int main(int argc, char **argv) {
         {"input_sha256",
          toHex(SHA256::hash(arrayRefFromStringRef((*input)->getBuffer())),
                true)},
-        {"target_triple", module->getTargetTriple()},
+        {"target_triple", index.text(module->getTargetTriple())},
         {"functions", std::move(functions)},
         {"native_schedule_qualified", false}};
     std::string bytes;
