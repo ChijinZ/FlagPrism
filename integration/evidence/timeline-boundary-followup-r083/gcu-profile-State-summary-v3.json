@@ -1,0 +1,51 @@
+{
+  "status": "profile_State_applicability_inventory",
+  "registered": 109,
+  "checked": 109,
+  "partitioned": 0,
+  "distinct_translations": 28,
+  "distinct_partitions": 0,
+  "state_writer_qualified": false,
+  "SDK_ABI_binding_qualified": false,
+  "vendor_final_IR": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "failure_counts": {
+    "Unmodeled State instruction": 84,
+    "'state_unique_logical_index_pass'": 25
+  },
+  "necessary_instruction_kind": "trunc i64 <State-derived-address> to i32 for 84 original/affected reports; 25 supplemental reports use state_count_passed rather than state_unique_logical_index_pass",
+  "terminal": {
+    "controller": {
+      "pid": 573675,
+      "ppid": 1,
+      "pgid": 573675,
+      "startticks": 1028151388
+    },
+    "worker": {
+      "pid": 573676,
+      "ppid": 573675,
+      "pgid": 573676,
+      "startticks": 1028151391
+    },
+    "argv": [
+      "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r083-gcu/profile-State-input-v3/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r083-gcu/runs/profile-State-v3/output"
+    ],
+    "argv_sha256": "6c895ccfe96209846df3d53500d6e9038c5d84408adbf39607b799a016b1d58c",
+    "script_sha256": "75adcfdb5440b3f1cd6d5d388961584fe5d7bb9cae9fd9565babc33fbb9d0549",
+    "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+    "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+    "timeout_seconds": 180,
+    "state": "terminal",
+    "returncode": 0,
+    "wall_ns": 29961643036
+  },
+  "runner_sha256": "75adcfdb5440b3f1cd6d5d388961584fe5d7bb9cae9fd9565babc33fbb9d0549",
+  "checker_reused_unchanged": true,
+  "SDK_translation_reused_from_v2": true,
+  "whole_goal_qualified": false
+}
