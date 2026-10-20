@@ -1,0 +1,64 @@
+[
+  {
+    "capture": "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline/captures/invocation-b62efc6fae914b0485a3fd8a1a6cdb16.json",
+    "capture_sha256": "ef003113276cbc65997bb5e54f12554d81c584a71204bb7ca70ee702f85b6648",
+    "fatbin_sha256": "298ab8ec5eed6d0d5961882683e0284f2996f8f29500c2ad4c3b511100f58a68",
+    "producer_identity_sha256": "df8885bfe537cae850d535480143a1ac0ff4e92569e478fafe2dc28f66440cbb",
+    "analyzer_identity_sha256": "2e5972a2700d26a19c4ee7a9a31e3493d5f421816beb10ce49f3ae01a8fcdb20",
+    "points": 25,
+    "reader_checked": 8,
+    "relative_fields_checked": 2,
+    "original_unchanged": true,
+    "llvm_boundary_sites": 11,
+    "llvm_loop_checked": 1,
+    "decoder_receipt": {
+      "argv": [
+        "/opt/tops/llvm11/bin/llvm-objdump",
+        "-d",
+        "--triple=dtu",
+        "--mcpu=gcu300",
+        "--demangle",
+        "--line-numbers",
+        "/tmp/chijin-timeline-r095-gcu/runs/public-regions-v1/tmp/flagprism-gcu-native-locations-6wp4x5uw/analysis/input.elf"
+      ],
+      "tool_sha256": "e37efecc349022f96c6a0fdaee12fa2019be01c8225d63999f8ea7fafce22c50",
+      "elf_sha256": "7d56f25f70633d7f0d813a78e8ded073b884a4356d940a4cb48c710794f00500",
+      "pid": 596986,
+      "pgid": 596986,
+      "startticks": 1030469655,
+      "state": "terminal",
+      "returncode": 0
+    }
+  },
+  {
+    "capture": "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline/captures/invocation-e1f036e3a98444e0941c5b17d1f836c3.json",
+    "capture_sha256": "3c7a6282434a1241a4922f4a3b090130900773270d712ebd065643bc4fd538d0",
+    "fatbin_sha256": "7bd7645abd1aae051c51edd3c1788aef958b7eff95753854ea63f5c25c5dfb4d",
+    "producer_identity_sha256": "df8885bfe537cae850d535480143a1ac0ff4e92569e478fafe2dc28f66440cbb",
+    "analyzer_identity_sha256": "2e5972a2700d26a19c4ee7a9a31e3493d5f421816beb10ce49f3ae01a8fcdb20",
+    "points": 38,
+    "reader_checked": 18,
+    "relative_fields_checked": 0,
+    "original_unchanged": true,
+    "llvm_boundary_sites": 10,
+    "llvm_loop_checked": 0,
+    "decoder_receipt": {
+      "argv": [
+        "/opt/tops/llvm11/bin/llvm-objdump",
+        "-d",
+        "--triple=dtu",
+        "--mcpu=gcu300",
+        "--demangle",
+        "--line-numbers",
+        "/tmp/chijin-timeline-r095-gcu/runs/public-regions-v1/tmp/flagprism-gcu-native-locations-l9ro4ice/analysis/input.elf"
+      ],
+      "tool_sha256": "e37efecc349022f96c6a0fdaee12fa2019be01c8225d63999f8ea7fafce22c50",
+      "elf_sha256": "5860432eef0a3004e35740a68b17b10bd9f33d49bf3ab7a30f8cb11be72131f6",
+      "pid": 596989,
+      "pgid": 596989,
+      "startticks": 1030469712,
+      "state": "terminal",
+      "returncode": 0
+    }
+  }
+]

@@ -589,6 +589,25 @@ expansion. It is the structural input to finite lowering-family rules;
 constructing it alone does not qualify source-region boundaries or native
 scheduling. Unsupported structure is not converted into a successful proof.
 
+The same hook also produces `boundary_report` with finite LLVM placement and
+record-tuple checks for each supported selected observer. Shared end blocks are
+resolved through forwarded site/start arguments, rather than the surviving end
+debug location. `llvm_observer_boundary_checked` describes the local begin to
+first end and record path. Its separate `loop` field must be
+`llvm_runtime_iteration_checked` before claiming that each selected iteration
+reads a fresh pair. A continuation that repeats the body or record without a
+fresh begin is `unverified`. Unknown source/control shapes retain their reason.
+These LLVM facts alone do not establish native scheduling, source-exclusive
+cost, or source iteration IDs.
+
+Read-only `inspect_native_execution(binary, metadata, llvm_ir=actual_input)`
+recomputes these facts using the same installed rule and native indexer. Supply
+the retained final input (`debug_execution_codegen_ir` after compatibility
+linking, otherwise the captured `llir`); its digest must match the producer's
+final input digest. Omitting it leaves LLVM boundaries explicitly unverified.
+Legacy captures without the actual linked input cannot acquire this check by
+reusing cached status. The original capture and producer metadata are unchanged.
+
 After SDK codegen, the normal compiler hook extracts the unique GCU300 ELF
 from its offload bundle. `debug_execution_native_locations` binds the original
 fatbin and ELF digests to sectioned code addresses for the marker rows.
