@@ -29,6 +29,11 @@ def _atom(bits, name):
 def _scale(value, factor):
     bits, constant, terms = value
     mask = (1 << bits) - 1
+    _need(
+        not any(
+            name.startswith('ssa:') and not (coefficient * factor & mask)
+            for name, coefficient in terms),
+        'Opaque LLVM value cannot prove a constant by scaling')
     return bits, constant * factor & mask, tuple(
         (name, coefficient * factor & mask) for name, coefficient in terms
         if coefficient * factor & mask)
@@ -40,7 +45,11 @@ def _add(left, right):
     mask = (1 << bits) - 1
     terms = dict(left[2])
     for name, coefficient in right[2]:
-        terms[name] = (terms.get(name, 0) + coefficient) & mask
+        previous = terms.get(name, 0)
+        combined = (previous + coefficient) & mask
+        _need(not (name.startswith('ssa:') and previous and not combined),
+              'Opaque LLVM value cannot prove a constant by cancellation')
+        terms[name] = combined
     _need(len(terms) <= 32, 'LLVM boundary expression exceeds term budget')
     return bits, (left[1] + right[1]) & mask, tuple(
         sorted((name, coefficient) for name, coefficient in terms.items()
@@ -186,6 +195,9 @@ class _Index:
             return self.value(value, env, (*active, identity))
 
         op = row['operation']
+        _need(
+            op not in ('llvm.mlir.undef', 'llvm.mlir.poison', 'llvm.poison'),
+            'Undefined or poison value in required LLVM boundary expression')
         if op == 'llvm.mlir.constant' and type(
                 row.get('integer_constant')) is int:
             return _literal(bits, row['integer_constant'])
@@ -642,6 +654,14 @@ def _loop(index, region):
                        for edge in index.blocks[current]['operations'][-1].get(
                            'successors', []))
     if region['begin_block'] not in visited:
+        bracket = {
+            block
+            for path in region['paths']
+            for block in (*path['body_blocks'], path['end_block'],
+                          path['record_block'])
+        }
+        _need(not visited.intersection(bracket),
+              'Continuation repeats the body or record without a fresh begin')
         return dict(status='no_enclosing_runtime_loop')
     row = index.blocks[latch]['operations'][-1]
     _need(
@@ -694,6 +714,9 @@ def _loop(index, region):
         _need(
             index.value(edge['arguments'][number], {}) == _literal(bits, 0),
             'Loop entry does not initialize its induction')
+        _need(
+            predecessor not in visited,
+            'Loop continuation can reset induction through an initial entry')
         initial.append(predecessor)
     _need(initial, 'Runtime loop has no initial entry')
     selector = region['selection_value']

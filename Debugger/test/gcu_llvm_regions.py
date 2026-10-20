@@ -344,6 +344,71 @@ class BoundaryTests(unittest.TestCase):
         self.assertEqual(result['loop']['status'], 'unverified')
         self.assertIn('exit reenters', result['loop']['reason'])
 
+    def test_undefined_boundary_value_cannot_cancel_to_a_constant(self):
+        for operation in ('llvm.mlir.undef', 'llvm.mlir.poison'):
+            with self.subTest(operation=operation):
+                text, manifest = fixture(False)
+                extra = ('%undefined = ' + operation + ' : i32\n'
+                         '%cancelled = llvm.sub %undefined, %undefined : i32\n'
+                         '%fabricated = llvm.add %cancelled, %c7 : i32\n')
+                text = text.replace('%shift =', extra + '%shift =')
+                text = text.replace('llvm.store %c7, %address1 :',
+                                    'llvm.store %fabricated, %address1 :')
+                source = self.output / (operation + '.mlir')
+                target = source.with_suffix('.json')
+                source.write_text(text)
+                child = subprocess.run([
+                    str(self.tool), '--execution-structure',
+                    str(source),
+                    str(target)
+                ],
+                                       capture_output=True,
+                                       timeout=20)
+                self.assertEqual(child.returncode, 0, child.stderr.decode())
+                region = self.checked(json.loads(target.read_text()), manifest)
+                self.assertEqual(region['status'], 'unverified', region)
+                self.assertIn('Undefined or poison', region['reason'])
+
+    def test_opaque_integer_cancellation_and_zero_scaling_are_not_proofs(self):
+        value = self.module._atom(32, 'ssa:unknown')
+        with self.assertRaisesRegex(ValueError, 'cancellation'):
+            self.module._add(value, self.module._scale(value, -1))
+        with self.assertRaisesRegex(ValueError, 'scaling'):
+            self.module._scale(value, 0)
+
+    def test_loop_exit_cannot_reset_the_header_induction(self):
+        report, manifest, region = self.positive()
+        zero = next(o['results'][0] for b in report['blocks']
+                    for o in b['operations'] if o.get('integer_constant') == 0)
+        exit_block = report['blocks'][region['loop']['exit_block']]
+        exit_block['operations'][-1].update(
+            operation='llvm.br',
+            operands=[zero],
+            successors=[
+                dict(block=region['loop']['header'], arguments=[zero])
+            ])
+        result = self.checked(report, manifest)
+        self.assertEqual(result['loop']['status'], 'unverified', result)
+        self.assertIn('reset induction', result['loop']['reason'])
+
+    def test_continuation_cannot_repeat_end_without_a_fresh_begin(self):
+        report, manifest = self.indexed(False)
+        region = self.checked(report, manifest)
+        # An i1 argument may branch either way; no new native/SDK execution.
+        condition = region['selection_value']
+        latch = report['blocks'][region['paths'][0]['join_block']]
+        latch['operations'][-1].update(
+            operation='llvm.cond_br',
+            operands=[condition],
+            successors=[
+                dict(block=region['paths'][0]['end_block'], arguments=[]),
+                dict(block=latch['operations'][-1]['successors'][0]['block'],
+                     arguments=[])
+            ])
+        result = self.checked(report, manifest)
+        self.assertEqual(result['loop']['status'], 'unverified', result)
+        self.assertIn('without a fresh begin', result['loop']['reason'])
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
