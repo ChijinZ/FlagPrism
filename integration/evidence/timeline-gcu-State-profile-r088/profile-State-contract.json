@@ -1,0 +1,69 @@
+{
+  "scope": "current96 profiling calls only; reuse ABI semantics rather than ordinary32 qualification",
+  "resources": [
+    {
+      "path": "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/lib/python3.12/site-packages/triton/backends/enflame/backend.py",
+      "sha256": "ccd500895c64cf19330071a3da156c113d001391c064beb1a458b93ea82f71e8"
+    },
+    {
+      "path": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+      "sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a"
+    },
+    {
+      "path": "/opt/triton_gcu/bin/gcu-compiler-translate",
+      "sha256": "f93024f7d86828022bc6b61d77c02522195d25df5ad76ac634d909efe74bb361"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r082-gcu/runs/State-primitives-v4/output/state-primitives.ll",
+      "sha256": "2c1799b3a316d4a08bd66aa6649dfc224087e07c13f7e001250dc395bc56d566"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r082-gcu/runs/State-integers-v1/output/state-primitives.ll",
+      "sha256": "4f4c5d44622db0043895798f6acbdc9d47429200bf1a3f2395d75a5e8460cf9b"
+    },
+    {
+      "path": "/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc",
+      "sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec"
+    },
+    {
+      "path": "/opt/tops/llvm11/bin/opt",
+      "sha256": "96a7c03576a78d29dbe9e5fc3e16b0821b02dfef38c19b0de4de5c9988139598"
+    },
+    {
+      "path": "/opt/triton_gcu/bin/gcu-compiler-compile",
+      "sha256": "1b7e13a7a2888e126a1022de6a129eec1404da5e0f0f0a0c2e702de784855e40"
+    },
+    {
+      "path": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+      "sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r052-tests/runs/install-stream-fix-v3/output/installed/venv/lib/python3.12/site-packages/triton/backends/enflame/compiler.py",
+      "sha256": "f21fd9af7125a453e4b34a9c08d81664a17f81a3890e569dbca3c994f73eb95f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r052-tests/runs/install-stream-fix-v3/output/installed/venv/lib/python3.12/site-packages/triton/backends/enflame/toolkit.py",
+      "sha256": "2dc19a46d094da39b7682ad6a9b753a1c8ddb4940e562674d5ce56f6af5485d2"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r054-tests/runs/install-transfer-report-v1/output/installed/venv/lib/python3.12/site-packages/triton/backends/enflame/compiler.py",
+      "sha256": "f21fd9af7125a453e4b34a9c08d81664a17f81a3890e569dbca3c994f73eb95f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r054-tests/runs/install-transfer-report-v1/output/installed/venv/lib/python3.12/site-packages/triton/backends/enflame/toolkit.py",
+      "sha256": "2dc19a46d094da39b7682ad6a9b753a1c8ddb4940e562674d5ce56f6af5485d2"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-gcu/runs/install-v3/output/venv/lib/python3.12/site-packages/triton/backends/enflame/compiler.py",
+      "sha256": "f21fd9af7125a453e4b34a9c08d81664a17f81a3890e569dbca3c994f73eb95f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-gcu/runs/install-v3/output/venv/lib/python3.12/site-packages/triton/backends/enflame/toolkit.py",
+      "sha256": "2dc19a46d094da39b7682ad6a9b753a1c8ddb4940e562674d5ce56f6af5485d2"
+    }
+  ],
+  "application_review_sha256": "7e47d663461c0810466848f127d6b76ea92dcf459dc77a811c5387e5c8b90ac4",
+  "semantics_review_sha256": "80fc7a5215f42cd472d61108c434e32b96d539ecf59dc991728d50874d7bab17",
+  "checker_sha256": "867a00b2599c379acfa49bcad0f3295bc05449100d764c308eb1e50c08241c6d",
+  "source_commit": "f0bbe54711e78387f5390ac397b4128c1cfc8a65"
+}

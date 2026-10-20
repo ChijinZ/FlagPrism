@@ -1,0 +1,56 @@
+{
+  "status": "State_source_admission_CPU",
+  "steps": [
+    {
+      "name": "fixtures",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/test_state_source_uses.py",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/test_gcu_state_writer_partition.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "fixtures-O",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/test_state_source_uses.py",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/test_gcu_state_writer_partition.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "actual-source",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/actual.py",
+        "--output",
+        "/tmp/chijin-timeline-r088-gcu/runs/source-partition-v1/output/actual-source"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "actual-partition",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r088-gcu/source-partition-input-v1/partition.py",
+        "--output",
+        "/tmp/chijin-timeline-r088-gcu/runs/source-partition-v1/output/actual-partition",
+        "--admissions",
+        "/tmp/chijin-timeline-r088-gcu/runs/source-partition-v1/output/actual-source/rows.json"
+      ],
+      "returncode": 0
+    }
+  ],
+  "device_executed": false,
+  "application_replayed": false
+}

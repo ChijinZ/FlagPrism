@@ -1,0 +1,33 @@
+"""Reuse actual translated objects; admit only object-bound observer payloads."""
+import argparse, base64, hashlib, importlib.util, json, re, sys
+from pathlib import Path
+p=argparse.ArgumentParser();p.add_argument('--output',type=Path,required=True);p.add_argument('--admissions',type=Path,required=True);a=p.parse_args();a.output.mkdir(parents=True)
+helper=Path(__file__).with_name('gcu_state_writer_partition.py');spec=importlib.util.spec_from_file_location('gcu_state_check',helper);checker=importlib.util.module_from_spec(spec);sys.modules[spec.name]=checker;spec.loader.exec_module(checker)
+def need(ok,msg):
+ if not ok:raise ValueError(msg)
+def sha(b):return hashlib.sha256(b).hexdigest()
+registered=json.loads(a.admissions.read_bytes());need(len(registered)==109,'Actual registration changed');rows=[];cache={}
+for admission in registered:
+ row={k:admission[k] for k in ['case','stage','capture_file','capture_sha256','math_file','math_sha256','before_sha256','after_sha256','original_before_file','original_after_file']};row.update(state_writer_qualified=False,native_timing_boundary_qualified=False)
+ try:
+  need(admission.get('observer_payload_admitted') is True,'Historical transform is not preserved under the current checked producer')
+  path=Path(row['capture_file']);mathpath=Path(row['math_file']);need(sha(path.read_bytes())==row['capture_sha256'] and sha(mathpath.read_bytes())==row['math_sha256'],'Actual capture/math changed');cap=json.loads(path.read_bytes());math=json.loads(mathpath.read_bytes());snap=cap['metadata']['compiled_snapshot'];binary=base64.b64decode(snap['binary_base64'],validate=True);need(sha(binary)==admission['binary_sha256']==math['asm_sha256']['fatbin']==snap['executable']['binary_sha256'] and cap['owner']['binary_id']==math['compiled_hash'],'Actual loaded binary/math identity changed')
+  need(math['requested_launches']==1 and math['input_immutable'] is True and math.get('state_unique_logical_index_pass',math.get('state_count_passed')) is True and all(math[k] is True for k in ('state_unique_logical_index_pass','state_count_passed') if k in math),'Original numerical/host-once check failed')
+  artifacts=snap['compiler_artifacts'];llir=artifacts['llir'];ttir=artifacts['ttir'];source_sha=sha(llir.encode());ttir_sha=sha(ttir.encode());need(source_sha==math['asm_sha256']['llir']==admission['LLVM_sha256'] and ttir_sha==math['asm_sha256']['ttir']==admission['source_sha256'],'Actual profile compiler source differs')
+  need(sha(Path(row['original_before_file']).read_bytes())==row['before_sha256'] and sha(Path(row['original_after_file']).read_bytes())==row['after_sha256'],'Actual transform source changed');certificate=Path(admission['certificate_file']);need(sha(certificate.read_bytes())==admission['certificate_sha256'],'Checked preservation certificate changed');proof=json.loads(certificate.read_bytes());need(all(proof.get(k) is True for k in ('original_program_preserved','observer_memory_isolated','actual_output_program_core_identical')) and proof['boundary']=='gcu_execution_ir_before_SDK_lowering','Preservation scope differs')
+  source_uses=admission['source_uses'];need(source_uses['state_address_noescape'] is True,'Source address escape is not qualified');header=next(l for l in ttir.splitlines() if 'tt.func public' in l);names=re.findall(r'%([\w]+):\s*!tt.ptr<',header);need(names.count('State')==1,'Actual State formal missing');function=re.search(r'@([\w.$-]+)\(',header)[1];need(source_uses['function_name']==function and source_uses['state_index']==names.index('State'),'Source admission formal differs')
+  candidates=[Path('/tmp/chijin-timeline-r083-gcu/runs/profile-State-v2/output')/source_sha,Path('/tmp/chijin-timeline-r087-gcu/runs/State-fields-v1/output')/source_sha];folder=next(f for f in candidates if (f/'functions.ll').exists());need(sha((folder/'original.mlir').read_bytes())==source_sha,'Actual retained translation input differs');llvm=folder/'functions.ll';functions={m[1]:m[0] for m in re.finditer(r'^define[^\n]+@([\w.$-]+)\([^\n]*\)[^{\n]*\{\n.*?^}',llvm.read_text(),re.M|re.S)}
+  params,ops,_,_,_=checker._parse(functions[function]);need(len(ops)==2 and ops[1]['operation']=='ret void','Unsupported actual forwarding wrapper');callee,args=checker._call(ops[0]['operation']);need(args==['ptr '+v for v in params] and len(params)==len(names),'Actual user/hidden forwarding differs');internal=checker._parse(functions[callee])[0];need(len(internal)==len(params),'Actual internal ABI differs');state=list(internal)[names.index('State')]
+  warps=re.search(r'"ttg.num-warps" = (\d+) : i32',llir);need(warps and re.search(r'"ttg.threads-per-warp" = 1 : i32',llir),'Actual physical metadata absent');threads=int(warps[1]);need(threads==math['config']['num_warps'],'Actual physical launch differs');elements=math['math']['count'];grid=cap['owner']['layout']['grid'];need(tuple(grid[:len(math['grid'])])==tuple(math['grid']) and all(x==1 for x in grid[len(math['grid']):]),'Actual launch geometry differs')
+  token=checker.ObserverPayloadAdmission(ttir_sha,row['before_sha256'],row['after_sha256'],admission['certificate_sha256'],source_uses['state_index']);key=(source_sha,state,threads,tuple(grid),elements)
+  if key not in cache:cache[key]=checker.analyze(functions[callee],state_parameter=state,grid=grid,threads=threads,elements=elements,observer_admission=token)
+  answer=cache[key];counts=answer['element_writers'];need(len(counts)==elements and all(counts[i]==1 for i in range(elements)),'Actual State writer partition differs')
+  row.update(status='partition_under_frozen_SDK_model',source_sha256=source_sha,ttir_sha256=ttir_sha,LLVM_file=str(llvm),LLVM_sha256=sha(llvm.read_bytes()),binary_sha256=sha(binary),State_formal=state,threads=threads,grid=grid,elements=elements,partition=answer,admission=token.__dict__,state_writer_qualified=False)
+ except (ValueError,KeyError,StopIteration) as error:
+  detail=[];tb=error.__traceback__
+  while tb is not None:
+   if tb.tb_frame.f_code.co_filename==str(helper) and 'op' in tb.tb_frame.f_locals:detail.append(str(tb.tb_frame.f_locals['op']))
+   tb=tb.tb_next
+  row.update(status='unverified',error=str(error),necessary_instruction_context=detail[-1:])
+ rows.append(row);(a.output/'rows.json').write_text(json.dumps(rows,indent=2))
+(a.output/'result.json').write_text(json.dumps(dict(status='actual_profile_State_partition',registered=109,checked=len(rows),partitioned=sum(r['status']!='unverified' for r in rows),distinct_partitions=len(cache),failures=[r for r in rows if r['status']=='unverified'],state_writer_qualified=False,SDK_ABI_binding_qualified=False,native_timing_boundary_qualified=False,device_executed=False,application_replayed=False),indent=2))

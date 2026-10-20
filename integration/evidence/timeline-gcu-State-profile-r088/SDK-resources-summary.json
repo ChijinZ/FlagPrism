@@ -1,0 +1,38 @@
+{
+  "registered_profiles": 109,
+  "distinct_backend_cohorts": 3,
+  "profile_library_State_symbols": [],
+  "symbol_inspection": {
+    "argv": [
+      "/opt/tops/llvm11/bin/opt",
+      "-S",
+      "/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc",
+      "-o",
+      "/tmp/chijin-timeline-r088-gcu/runs/SDK-resources-v2/output/profile-library.ll"
+    ],
+    "returncode": 0
+  },
+  "resources": [
+    {
+      "path": "/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc",
+      "sha256": "1a780215d7a63e34ce9c8cba6bfb126d222db726f5dca8802f3af0161fce81ec"
+    },
+    {
+      "path": "/opt/tops/llvm11/bin/opt",
+      "sha256": "96a7c03576a78d29dbe9e5fc3e16b0821b02dfef38c19b0de4de5c9988139598"
+    },
+    {
+      "path": "/opt/triton_gcu/bin/gcu-compiler-compile",
+      "sha256": "1b7e13a7a2888e126a1022de6a129eec1404da5e0f0f0a0c2e702de784855e40"
+    },
+    {
+      "path": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+      "sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a"
+    }
+  ],
+  "State_writer_qualified": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "profile_library_defined_functions": 621,
+  "profile_library_aliases": 0
+}

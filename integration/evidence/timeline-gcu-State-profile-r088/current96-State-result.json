@@ -1,0 +1,1945 @@
+{
+  "status": "current96_actual_GCU_State_writer_under_reviewed_SDK_ABI",
+  "scope": "96 current original/supplemental profiling calls, applying original affected13 replacement registry",
+  "qualified": 96,
+  "historical_rows": 109,
+  "replaced_historical_rows": 13,
+  "replaced_historical_unverified": 12,
+  "State_write_instances": 2892,
+  "State_elements": 183048,
+  "state_writer_qualified": true,
+  "SDK_ABI_binding_qualified": true,
+  "ordinary_supplement_qualified": false,
+  "native_timing_boundary_qualified": false,
+  "pipeline_or_whole_goal_qualified": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "checker_sha256": "867a00b2599c379acfa49bcad0f3295bc05449100d764c308eb1e50c08241c6d",
+  "contract_sha256": "e0e9d3a85df7ab2aa21984e9b6517076e5dbcff8e47cae88c16bc526e608e670",
+  "application_review_sha256": "7e47d663461c0810466848f127d6b76ea92dcf459dc77a811c5387e5c8b90ac4",
+  "semantics_review_sha256": "80fc7a5215f42cd472d61108c434e32b96d539ecf59dc991728d50874d7bab17",
+  "partition_rows_sha256": "43c53a4570fcfac12fd143cc68c7998a6e84c5043e125c1dea5592aa43cbb77f",
+  "SDK_resource_report_sha256": "feeef922c0ae981411d4bba796f8fa8210461083317532776f44e32340ad2272",
+  "qualification_rows": [
+    {
+      "case": "q01-s0-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "4c42d244eaa18c17c303e26d9f68502fad2d0e5b2fa08dca2545354718a2135d",
+      "math_sha256": "d303b53cd7a31e803493fd9d72aec9aa0fb263d41810cb08a1bf6886960562c3",
+      "LLVM_sha256": "60b5ef447c78388f70dd04f91f734c609bd06022f5770079854c39e8cb02ac0e",
+      "binary_sha256": "1aca222a7d3bbd3acbdb4888ed409ada32879cae78ff8d9e2a62cf4f9d98a4ab",
+      "source_sha256": "38a200e7eac067ba7836d86cdcfe305b14ec69c76ba5a15fbf1a2b10722f6b90",
+      "TTIR_sha256": "e282cf5d9e2c34e3beedab0d4556c27dae8a6cbe73fc85f908cb6ed11f958939",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s0-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "a0f533c6664a94669ddf73045ab9596f138933c6a71c3f568ba8dd5df0f02a71",
+      "math_sha256": "d07dde1db91f8c57756296bc3c4c6d70bed666c085398ff97d5264571056b93b",
+      "LLVM_sha256": "60b5ef447c78388f70dd04f91f734c609bd06022f5770079854c39e8cb02ac0e",
+      "binary_sha256": "1aca222a7d3bbd3acbdb4888ed409ada32879cae78ff8d9e2a62cf4f9d98a4ab",
+      "source_sha256": "38a200e7eac067ba7836d86cdcfe305b14ec69c76ba5a15fbf1a2b10722f6b90",
+      "TTIR_sha256": "e282cf5d9e2c34e3beedab0d4556c27dae8a6cbe73fc85f908cb6ed11f958939",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s0-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "e93c9794dd02a38285f6709426476b19d8b068cefd0db52caa4109a873fc5dd4",
+      "math_sha256": "2893f66b660183fb7506714307e874d5295c642e67d3857499e5925c22d19ecd",
+      "LLVM_sha256": "60b5ef447c78388f70dd04f91f734c609bd06022f5770079854c39e8cb02ac0e",
+      "binary_sha256": "1aca222a7d3bbd3acbdb4888ed409ada32879cae78ff8d9e2a62cf4f9d98a4ab",
+      "source_sha256": "38a200e7eac067ba7836d86cdcfe305b14ec69c76ba5a15fbf1a2b10722f6b90",
+      "TTIR_sha256": "e282cf5d9e2c34e3beedab0d4556c27dae8a6cbe73fc85f908cb6ed11f958939",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s0-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "8fde0c166a40f625c443203bd9c07b0ab8995d1bf712779236b31234e92f766d",
+      "math_sha256": "460a367f7cfd2ee0d1a15d824814814ca7f65c186e4fb2c357389bd125f7dd9e",
+      "LLVM_sha256": "578e30d772e65809e91cafb3f8e512ce49977104e94ecc0453317a5951320031",
+      "binary_sha256": "937db0f39cd65bdc3d1610cd6db775fe11c9ce723eb22e32cfc48ecd7fad84db",
+      "source_sha256": "cc514bcd26bf459c15fe69e2b8835eecc89ff24328eae32b741880b01a13502a",
+      "TTIR_sha256": "e358bb0e737b540f348686939e09f2786ce628c1b2603a6f0ab51192006cfd9f",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s0-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "6d208b4d2529ff82cef6aa541071700cf59c567365fa88a7370a4a396efa8844",
+      "math_sha256": "374f6e61fda144c5f273880fdbb688ea26077bce5f2429cd7342da76df38b67f",
+      "LLVM_sha256": "578e30d772e65809e91cafb3f8e512ce49977104e94ecc0453317a5951320031",
+      "binary_sha256": "937db0f39cd65bdc3d1610cd6db775fe11c9ce723eb22e32cfc48ecd7fad84db",
+      "source_sha256": "cc514bcd26bf459c15fe69e2b8835eecc89ff24328eae32b741880b01a13502a",
+      "TTIR_sha256": "e358bb0e737b540f348686939e09f2786ce628c1b2603a6f0ab51192006cfd9f",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s0-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "a0c0ff81a2cd1a0ee69daddc25dc8c5c7a5d7d973a8f3e4d48042ca7b1c21b1b",
+      "math_sha256": "fe7206df5f67e2bc5856e4a14e98002bb6f4c5f82cc1c583ac65503a47f92afc",
+      "LLVM_sha256": "578e30d772e65809e91cafb3f8e512ce49977104e94ecc0453317a5951320031",
+      "binary_sha256": "937db0f39cd65bdc3d1610cd6db775fe11c9ce723eb22e32cfc48ecd7fad84db",
+      "source_sha256": "cc514bcd26bf459c15fe69e2b8835eecc89ff24328eae32b741880b01a13502a",
+      "TTIR_sha256": "e358bb0e737b540f348686939e09f2786ce628c1b2603a6f0ab51192006cfd9f",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "0cbd98957056853d69a01abc7bafe986737ea3a17552fc429cf88e3c8cfdaae4",
+      "math_sha256": "c62038699eaf0ea0ba55c8c4c359d3c4b151bca816485ce352fd963113f6b142",
+      "LLVM_sha256": "3f1c786b25e5855a79e97a9ea1da4c7648f7937d91d7fcc7570ed4708ef4d9ec",
+      "binary_sha256": "ad16d43c10116676bd0f57102b8c4d782bb0817b05ae6aaf57fc5adbe7a66635",
+      "source_sha256": "d9131cd5fc24b2a9c6f593e5d79328a27e9276f8466ac8b4958440eee17b7120",
+      "TTIR_sha256": "f9fa010dacb90a17715c72efe8d1c845e82025e4305cef7b2c02b63f0c3db681",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "07bf8c39062fceb3691ea25f5d6211f47e547219ea2073f1627a2e710b5fb3aa",
+      "math_sha256": "a7a5bede20325a26957895156c1f8b0c70e5666d6433cc51edc66ff4e24c937d",
+      "LLVM_sha256": "3f1c786b25e5855a79e97a9ea1da4c7648f7937d91d7fcc7570ed4708ef4d9ec",
+      "binary_sha256": "ad16d43c10116676bd0f57102b8c4d782bb0817b05ae6aaf57fc5adbe7a66635",
+      "source_sha256": "d9131cd5fc24b2a9c6f593e5d79328a27e9276f8466ac8b4958440eee17b7120",
+      "TTIR_sha256": "f9fa010dacb90a17715c72efe8d1c845e82025e4305cef7b2c02b63f0c3db681",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "223bc53219bd217b50c7c8ff727b0e09f71585dae8afb3d8f6d23e4b356d0f43",
+      "math_sha256": "fdb8d952be66ce3cb537c12d88a5500b38c7fe21feee76938cbfc3defc7d7ff9",
+      "LLVM_sha256": "3f1c786b25e5855a79e97a9ea1da4c7648f7937d91d7fcc7570ed4708ef4d9ec",
+      "binary_sha256": "ad16d43c10116676bd0f57102b8c4d782bb0817b05ae6aaf57fc5adbe7a66635",
+      "source_sha256": "d9131cd5fc24b2a9c6f593e5d79328a27e9276f8466ac8b4958440eee17b7120",
+      "TTIR_sha256": "f9fa010dacb90a17715c72efe8d1c845e82025e4305cef7b2c02b63f0c3db681",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "8ce4fdb9493d35d703ba14759ecc5d17466d3fae8cbdc72cc5cd71374b9b6f08",
+      "math_sha256": "cd86ed8010194dc1ba1c4dff8df91b79e929b4bef62ad3042f97732d65169d44",
+      "LLVM_sha256": "f817392ff712ec4836e9fd0335cf3889c00b81c9a15747ad6381e72be2431ab3",
+      "binary_sha256": "82652404f550babbdc9b6aa3dbdf6a3ae0d24c8eebf9e710d2665deb4222909f",
+      "source_sha256": "a5227f3a9115c59bc73aa17df78e85284d75c8de6c7a170e7dda8c2a63a3940d",
+      "TTIR_sha256": "d579426e117fe53be3384e38b33b11fa49f3a2beaecb37133828410ee0ee3ea2",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "4925fd95cd3a5275362607332eee868c63d5c0c5b863c0c007cc44b593702d23",
+      "math_sha256": "b1c6b29da3a0691fac98a138b172396f439bb47a43e5aa3a66535991ea7475d5",
+      "LLVM_sha256": "f817392ff712ec4836e9fd0335cf3889c00b81c9a15747ad6381e72be2431ab3",
+      "binary_sha256": "82652404f550babbdc9b6aa3dbdf6a3ae0d24c8eebf9e710d2665deb4222909f",
+      "source_sha256": "a5227f3a9115c59bc73aa17df78e85284d75c8de6c7a170e7dda8c2a63a3940d",
+      "TTIR_sha256": "d579426e117fe53be3384e38b33b11fa49f3a2beaecb37133828410ee0ee3ea2",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q01-s1-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "c12c48906a1c4508d528cede13eaab8873cffc26d9f7cd9f11c7be77c6ad34ba",
+      "math_sha256": "d0af2092de8dd732eb7908dbf3cef8616980915b0658f629d566097e911ef02f",
+      "LLVM_sha256": "f817392ff712ec4836e9fd0335cf3889c00b81c9a15747ad6381e72be2431ab3",
+      "binary_sha256": "82652404f550babbdc9b6aa3dbdf6a3ae0d24c8eebf9e710d2665deb4222909f",
+      "source_sha256": "a5227f3a9115c59bc73aa17df78e85284d75c8de6c7a170e7dda8c2a63a3940d",
+      "TTIR_sha256": "d579426e117fe53be3384e38b33b11fa49f3a2beaecb37133828410ee0ee3ea2",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "e9d6af023940197cff300d156baa6046b073fa6c4c0eba9567c321d938286370",
+      "math_sha256": "b9205d56faba0d24a3c87d813c8c9865dff5a909c75ee52750036a3ad1d42981",
+      "LLVM_sha256": "fca9cd03c84e40164834ee3042afd2dd073ae2e521c9302cd512216122cee262",
+      "binary_sha256": "dc9767500ae86b15dfb75a61d17a66924b70e7d4cf447d93b7771df2614c06c2",
+      "source_sha256": "9ef580aae433518fe03f878b2b18b5a58dfeb5d19a2fbeb17ce0b366abef0592",
+      "TTIR_sha256": "d7885904537331075723fe60fccf0959289ec48eed690fe87cf8373e5ab7c7a7",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "c9a6ccc06995b93211cc1c9d66b2dea266ef698dc601092bed2cb58028289e21",
+      "math_sha256": "54d14e9d170a627858dc22252b5cdf7617ed992bca4f719224016602722debc5",
+      "LLVM_sha256": "fca9cd03c84e40164834ee3042afd2dd073ae2e521c9302cd512216122cee262",
+      "binary_sha256": "dc9767500ae86b15dfb75a61d17a66924b70e7d4cf447d93b7771df2614c06c2",
+      "source_sha256": "9ef580aae433518fe03f878b2b18b5a58dfeb5d19a2fbeb17ce0b366abef0592",
+      "TTIR_sha256": "d7885904537331075723fe60fccf0959289ec48eed690fe87cf8373e5ab7c7a7",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "02cf6acd4637bac682279a5422da148d0b92236af0b8408208dc61d2daea7b33",
+      "math_sha256": "549d4c3a4f0f2434113e32514a05e5b74ef7c25c9f66499050959f24b3003ae1",
+      "LLVM_sha256": "fca9cd03c84e40164834ee3042afd2dd073ae2e521c9302cd512216122cee262",
+      "binary_sha256": "dc9767500ae86b15dfb75a61d17a66924b70e7d4cf447d93b7771df2614c06c2",
+      "source_sha256": "9ef580aae433518fe03f878b2b18b5a58dfeb5d19a2fbeb17ce0b366abef0592",
+      "TTIR_sha256": "d7885904537331075723fe60fccf0959289ec48eed690fe87cf8373e5ab7c7a7",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "961a275dedd4b604f955c8f190d383c8e7ff41e7b6d71cea5bc1a21446ed5b57",
+      "math_sha256": "3f55c4c776958e9478182d49344559c538685b914fd45f35f9edf721559baf06",
+      "LLVM_sha256": "9a7dcac9adf7fabb943713cb7e1afc0c8ce016ec04685cdabed2ccd7bf74f17d",
+      "binary_sha256": "782608802c7a44478fc15c5a2d49e28a53f2d5b62a19bc25be64528333bcdf55",
+      "source_sha256": "792f9d7a48311d46ecd51f5733ce70f14e9a24a2c112979abbb9e961e9154cda",
+      "TTIR_sha256": "f6541c49d4399827c497f66b64b5e84d316961f671ebe24c74bc7289f357d1a3",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "92f74d7bdcd9a7eb57311929c7ed92144ef5c5782f438f880834afb334d64169",
+      "math_sha256": "83733de49ba32a3af7f745de8422703889d03e9609ca0e4032bb82c7963c6100",
+      "LLVM_sha256": "9a7dcac9adf7fabb943713cb7e1afc0c8ce016ec04685cdabed2ccd7bf74f17d",
+      "binary_sha256": "782608802c7a44478fc15c5a2d49e28a53f2d5b62a19bc25be64528333bcdf55",
+      "source_sha256": "792f9d7a48311d46ecd51f5733ce70f14e9a24a2c112979abbb9e961e9154cda",
+      "TTIR_sha256": "f6541c49d4399827c497f66b64b5e84d316961f671ebe24c74bc7289f357d1a3",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s0-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "04a5ac42c08e42171205cba6ec569c11a11a3d1677793df14711f81eb0072214",
+      "math_sha256": "e796ddd6217eaed70e2707394999b814c27098f2b2b726ae32b59ebdd38123c4",
+      "LLVM_sha256": "9a7dcac9adf7fabb943713cb7e1afc0c8ce016ec04685cdabed2ccd7bf74f17d",
+      "binary_sha256": "782608802c7a44478fc15c5a2d49e28a53f2d5b62a19bc25be64528333bcdf55",
+      "source_sha256": "792f9d7a48311d46ecd51f5733ce70f14e9a24a2c112979abbb9e961e9154cda",
+      "TTIR_sha256": "f6541c49d4399827c497f66b64b5e84d316961f671ebe24c74bc7289f357d1a3",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "State_elements": 769,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "9c970ba7b9fb2a9fa3b45b0757703c925df7fa732b5f414f4eaa0215046d2972",
+      "math_sha256": "3072c126e50caf2e97a75b531e5d45b4db38f0cd308decfce56775a4b052362c",
+      "LLVM_sha256": "d986a9ffe902d849ffc3e95834847edc779617e937fb2e5574e1ac9ef30e6071",
+      "binary_sha256": "f67a21717ef3000b3a5033f78a14c89f7d0874d36527f6238974cdd9e6bb2bfc",
+      "source_sha256": "b46a712199a29cd16f3b3cdcf219c4f73e8ab7537c5d2f40eb82fbc17f2eadbd",
+      "TTIR_sha256": "0f91ca68cd76c99258b7e4051c604001f559332e6acf88ef00917122fa44e5f4",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "6e02971e1effb17849c2b4a00992018df11568971ada7d442fce7a772b763b1f",
+      "math_sha256": "cf17bb2dde579034386fc8ee68210147bb03f3411e1028ae789f25d3ceb47e68",
+      "LLVM_sha256": "d986a9ffe902d849ffc3e95834847edc779617e937fb2e5574e1ac9ef30e6071",
+      "binary_sha256": "f67a21717ef3000b3a5033f78a14c89f7d0874d36527f6238974cdd9e6bb2bfc",
+      "source_sha256": "b46a712199a29cd16f3b3cdcf219c4f73e8ab7537c5d2f40eb82fbc17f2eadbd",
+      "TTIR_sha256": "0f91ca68cd76c99258b7e4051c604001f559332e6acf88ef00917122fa44e5f4",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "85fd563090913d92294d83ec92f2ac2dd496ff1250571b6212e2981a84395cb9",
+      "math_sha256": "97fe48f827a718720ef143e5f7800cd67c96b6161940edcdb98950cf87ca031c",
+      "LLVM_sha256": "d986a9ffe902d849ffc3e95834847edc779617e937fb2e5574e1ac9ef30e6071",
+      "binary_sha256": "f67a21717ef3000b3a5033f78a14c89f7d0874d36527f6238974cdd9e6bb2bfc",
+      "source_sha256": "b46a712199a29cd16f3b3cdcf219c4f73e8ab7537c5d2f40eb82fbc17f2eadbd",
+      "TTIR_sha256": "0f91ca68cd76c99258b7e4051c604001f559332e6acf88ef00917122fa44e5f4",
+      "State_formal": "%4",
+      "physical_threads": 4,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "5d19cf28cd86ea49648640039658974a06645edf923e213b65d67d69faf52a04",
+      "math_sha256": "a9e2371cd5e6f29d5477d1b9be7ebe0120e45207508f78c546e3310ea97d6f68",
+      "LLVM_sha256": "f8951f07c007ba2774699ad690ed771ad8770af23fd6577f5b239d7302200311",
+      "binary_sha256": "567e17e6df3fa5a519ea248767b24fa32915156dc2acb7f2837624c8bc755ee0",
+      "source_sha256": "0aded7109926f6b4a4d3bd2aa5c574a3f9744e0f3b41fe75c4d81873265690ca",
+      "TTIR_sha256": "b8c2dcd36de1d3045450bde004878a024b37bf78b8fefe71813e5318d367713d",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "501e6226c72dc22342dceabcd129f806a239c9df0a4f4159f0a8fb7fab32fa8d",
+      "math_sha256": "0bce60d23fd4c0e523d6fb74155890eb3e4d139d1fb41804c25ea527cb074029",
+      "LLVM_sha256": "f8951f07c007ba2774699ad690ed771ad8770af23fd6577f5b239d7302200311",
+      "binary_sha256": "567e17e6df3fa5a519ea248767b24fa32915156dc2acb7f2837624c8bc755ee0",
+      "source_sha256": "0aded7109926f6b4a4d3bd2aa5c574a3f9744e0f3b41fe75c4d81873265690ca",
+      "TTIR_sha256": "b8c2dcd36de1d3045450bde004878a024b37bf78b8fefe71813e5318d367713d",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q02-s1-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "d360fe7d95a3f905cd72601801394efc05811015e24cf65c0c05472dfa80937b",
+      "math_sha256": "631128646c136df45a3884bedba56dc49805d8a2c595dd45e7098bb4c15b9947",
+      "LLVM_sha256": "f8951f07c007ba2774699ad690ed771ad8770af23fd6577f5b239d7302200311",
+      "binary_sha256": "567e17e6df3fa5a519ea248767b24fa32915156dc2acb7f2837624c8bc755ee0",
+      "source_sha256": "0aded7109926f6b4a4d3bd2aa5c574a3f9744e0f3b41fe75c4d81873265690ca",
+      "TTIR_sha256": "b8c2dcd36de1d3045450bde004878a024b37bf78b8fefe71813e5318d367713d",
+      "State_formal": "%4",
+      "physical_threads": 8,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "State_elements": 1031,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "09c5f2ceb6b80cf9e364a86148cebf9b4c2eead34850d6006652b45cdf710794",
+      "math_sha256": "75642186af3944cffd97946bc686894d35c7174c2874e81bcb6f3e2565eccf23",
+      "LLVM_sha256": "9e5da3810625724d65b217806fed13296b608cfbfbe8e89ddca71595324e3f6e",
+      "binary_sha256": "86faf8b227263f7d707eb2fcfeb0229df39120680b9c29b052217002bcdd9141",
+      "source_sha256": "4ad15d832b90fd319240323d4386ae19cbef0e2cb5e637a58e001bb8672f1d50",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "a50cbd236c3bfdb5b4da733750d6895ee69e1fe1942c7fef425be8bbd767a438",
+      "math_sha256": "846202798ea19becca21b0b8788199248fb4613088083ce536684c1748f60c27",
+      "LLVM_sha256": "9e5da3810625724d65b217806fed13296b608cfbfbe8e89ddca71595324e3f6e",
+      "binary_sha256": "86faf8b227263f7d707eb2fcfeb0229df39120680b9c29b052217002bcdd9141",
+      "source_sha256": "4ad15d832b90fd319240323d4386ae19cbef0e2cb5e637a58e001bb8672f1d50",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "05d455b7289a0300a3598cbc74f470253e9869e4fd8575cf4b6d3d3b85ef0fab",
+      "math_sha256": "91ac9dd46c31809a68d39ad5e92170ccc7493e395e238c5f1909df9b2963f3de",
+      "LLVM_sha256": "9e5da3810625724d65b217806fed13296b608cfbfbe8e89ddca71595324e3f6e",
+      "binary_sha256": "86faf8b227263f7d707eb2fcfeb0229df39120680b9c29b052217002bcdd9141",
+      "source_sha256": "4ad15d832b90fd319240323d4386ae19cbef0e2cb5e637a58e001bb8672f1d50",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "4a2bad163c592d07e070197e0709ccd458dab687f220a8c4f234f1601ab5ad2c",
+      "math_sha256": "04db4a85bd1185ee3ec22ddc45683d32e23cf2b86a33040b14ddc1a2c0c201dc",
+      "LLVM_sha256": "952a963c0952b85bec10607b2aea48b34850114cfaf47daf95ad4554959cb725",
+      "binary_sha256": "cdf5e61ce53b45304e8444debedd557f1b29a8812493c4f3b3906c15ed40bab1",
+      "source_sha256": "4995223e4d63da9422536bcef511cc5417518be5eb28ff3655d95085a006cb1a",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "d1c40aed4b5be4e7862df3f1714718fd0bf0f24478f9a932d413495e562a8666",
+      "math_sha256": "b7344fbe87a0a91cf5121370d756f383d621ca6749c2eb7858ddaa9ba5f56026",
+      "LLVM_sha256": "952a963c0952b85bec10607b2aea48b34850114cfaf47daf95ad4554959cb725",
+      "binary_sha256": "cdf5e61ce53b45304e8444debedd557f1b29a8812493c4f3b3906c15ed40bab1",
+      "source_sha256": "4995223e4d63da9422536bcef511cc5417518be5eb28ff3655d95085a006cb1a",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s0-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "371c829baec1e6e2d8acae8cfce43cf63b80e664b42759bd6b2f0f190ea7e268",
+      "math_sha256": "7f046651e9e1604ea994e7641c043a965ace083b3956e61228fe1d3f81a8e26d",
+      "LLVM_sha256": "952a963c0952b85bec10607b2aea48b34850114cfaf47daf95ad4554959cb725",
+      "binary_sha256": "cdf5e61ce53b45304e8444debedd557f1b29a8812493c4f3b3906c15ed40bab1",
+      "source_sha256": "4995223e4d63da9422536bcef511cc5417518be5eb28ff3655d95085a006cb1a",
+      "TTIR_sha256": "5462e1fdac847bc26a9a37398734e4a81dbba2c295e4e31009b33383c4b43f89",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "da3eeba63fa71c5e6097682785311ad00d13137d7c5229192615442492c2b295",
+      "math_sha256": "b717b9084cd3444eb05790ab5ce72f4409a823911eb59c67479ecf863ef73a98",
+      "LLVM_sha256": "8e0188524b2ad2001ef752881d622b8739ec55ec1220af84b58ebafb268cc0ce",
+      "binary_sha256": "8621772f930d9efb8e7076c44e18165db51b307588f17e5ba2d75c870ccc1954",
+      "source_sha256": "8e26e64f0eedd4083413cfbeed609632920ff45a7b32e178a88e7a21d0f70df1",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "54bc7d88fc9a96610373b3bdf99e1d7cfec39cc0631490a7b0e958b1f64afe7f",
+      "math_sha256": "6a27fe83af625bb4aeb4a27e5e28df41e2d2de2202c19bfcb0f121a3caead1c1",
+      "LLVM_sha256": "8e0188524b2ad2001ef752881d622b8739ec55ec1220af84b58ebafb268cc0ce",
+      "binary_sha256": "8621772f930d9efb8e7076c44e18165db51b307588f17e5ba2d75c870ccc1954",
+      "source_sha256": "8e26e64f0eedd4083413cfbeed609632920ff45a7b32e178a88e7a21d0f70df1",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "5de3d793a3898de132649d46bdda7411fabfca96386892bfb7d59e18a6853d6f",
+      "math_sha256": "9eb346d268d60fb5632aa08226274740c4f8a165895723085d982ede6bb73adf",
+      "LLVM_sha256": "8e0188524b2ad2001ef752881d622b8739ec55ec1220af84b58ebafb268cc0ce",
+      "binary_sha256": "8621772f930d9efb8e7076c44e18165db51b307588f17e5ba2d75c870ccc1954",
+      "source_sha256": "8e26e64f0eedd4083413cfbeed609632920ff45a7b32e178a88e7a21d0f70df1",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "738dc3f00bb4c540e0931268f0c5619afabfac934ea168d02c391a2c700a6736",
+      "math_sha256": "ce413b0dfcf05ad947a8a040ab80317cd3cb16ebbf236b1d23bc7b4f2b336e44",
+      "LLVM_sha256": "bf54a6bfbd5245080d741d74128282846a08ee16d8377c97d5766c203ce3f737",
+      "binary_sha256": "2703b900002336ae496c35dd55beb79247633d85c210a6ed71dd15346c6f8223",
+      "source_sha256": "d2f569d2f82e9ee010e0ea05fe646953403a7fb8f5604e564fda9a01daf17ea6",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "fdb2155acbaa1b2181d617a687a96e480dca53be3da998f00bb26f84d11110c6",
+      "math_sha256": "fddb723d4a68aad90372a6c1c219328a5135649ef01f54a54beebb5c7261d041",
+      "LLVM_sha256": "bf54a6bfbd5245080d741d74128282846a08ee16d8377c97d5766c203ce3f737",
+      "binary_sha256": "2703b900002336ae496c35dd55beb79247633d85c210a6ed71dd15346c6f8223",
+      "source_sha256": "d2f569d2f82e9ee010e0ea05fe646953403a7fb8f5604e564fda9a01daf17ea6",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q03-s1-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "f090b66cb3387ea7edb0cd07741653546d81dff612ff5984f7cac8e4953fc4dd",
+      "math_sha256": "50cfd8ed09ef7fb16f2fac097f936e6f4e459de78fafe710581ebf1dbfd9f9fd",
+      "LLVM_sha256": "bf54a6bfbd5245080d741d74128282846a08ee16d8377c97d5766c203ce3f737",
+      "binary_sha256": "2703b900002336ae496c35dd55beb79247633d85c210a6ed71dd15346c6f8223",
+      "source_sha256": "d2f569d2f82e9ee010e0ea05fe646953403a7fb8f5604e564fda9a01daf17ea6",
+      "TTIR_sha256": "52e4c43c2c5f114d096ae4d935cdbbf7195f8c28de809ef6264374f590a6cf02",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "23bae92f4a8941296f8fee037aa10763199e9fba9d01ed2d56af210190f2a8fa",
+      "math_sha256": "e0eb12a182c6b376a4f51b1ed61c6904316857d1e6c388e7ca347938d7eb2d3c",
+      "LLVM_sha256": "96cfd89df7e9fbe314a0b3d22481417be384c9f5e23130a1c7ead572b3f8babd",
+      "binary_sha256": "855e8b0fa0c10928d7dd6238ea9237f71bcfe17548d144588a6ebe445f5e0afe",
+      "source_sha256": "e05d650d6a0e5c8f8339b864758d185f75f84eb1deeddf5ec9c4e629ab1b10bd",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "3a916f638b7bff5f39ed22d50583ef7830dbda79f7503b8bf356b55a9f024077",
+      "math_sha256": "bc65f57398cd1757189f4130064986343dbbba6342ae416b10a2835c0fffdb3e",
+      "LLVM_sha256": "96cfd89df7e9fbe314a0b3d22481417be384c9f5e23130a1c7ead572b3f8babd",
+      "binary_sha256": "855e8b0fa0c10928d7dd6238ea9237f71bcfe17548d144588a6ebe445f5e0afe",
+      "source_sha256": "e05d650d6a0e5c8f8339b864758d185f75f84eb1deeddf5ec9c4e629ab1b10bd",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "ee4505cb9712fb50fb07d169b19ac5f15422b5f47ea09d1819e61d752ec8e085",
+      "math_sha256": "556389a09a0fdb42751a9caebc845f868298437598528c24811ef6247c447dd1",
+      "LLVM_sha256": "96cfd89df7e9fbe314a0b3d22481417be384c9f5e23130a1c7ead572b3f8babd",
+      "binary_sha256": "855e8b0fa0c10928d7dd6238ea9237f71bcfe17548d144588a6ebe445f5e0afe",
+      "source_sha256": "e05d650d6a0e5c8f8339b864758d185f75f84eb1deeddf5ec9c4e629ab1b10bd",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "9cc2496bbdc91c58b960f5f82a41b320c71f9c8e9144b114c0a082aa6aef4d5c",
+      "math_sha256": "3d838eef42a8d1dbdd84acd1d5aa07ec656b6da80520d6b8685dcbbfb36ca365",
+      "LLVM_sha256": "f85840e2f5a5c7b0245bd7b1beab00fedb245a9bb3081b7ad204901d7061f968",
+      "binary_sha256": "b0eeb342f0d574f6a922b82a3b625c55d8e72d4ab1d9ec316eac4dbd7a505d48",
+      "source_sha256": "a70445d116f860ec201dcbb2536b5c8cd677c60df38d9c72bdd528596807c81a",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "139ad254c916c1ad9cb5f67db0788e4a685bf6ef3f8d985ffdddc76876c822ab",
+      "math_sha256": "b0361ed34dc95ff5661684ec8eeedbed6d7a4b3f9c4a993a6c8790d139e70c5f",
+      "LLVM_sha256": "f85840e2f5a5c7b0245bd7b1beab00fedb245a9bb3081b7ad204901d7061f968",
+      "binary_sha256": "b0eeb342f0d574f6a922b82a3b625c55d8e72d4ab1d9ec316eac4dbd7a505d48",
+      "source_sha256": "a70445d116f860ec201dcbb2536b5c8cd677c60df38d9c72bdd528596807c81a",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s0-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "37884e76da7880de43a308f533d8ad47d1dbd4efb90ea06cbeb9c1b2c1a7e194",
+      "math_sha256": "727b492b71ffb68f2b1f1940b535449c248d43349b59d2ad9009423aa81b2727",
+      "LLVM_sha256": "f85840e2f5a5c7b0245bd7b1beab00fedb245a9bb3081b7ad204901d7061f968",
+      "binary_sha256": "b0eeb342f0d574f6a922b82a3b625c55d8e72d4ab1d9ec316eac4dbd7a505d48",
+      "source_sha256": "a70445d116f860ec201dcbb2536b5c8cd677c60df38d9c72bdd528596807c81a",
+      "TTIR_sha256": "a22a84bbc820ae84690f6e8cd18fdf673c3502575c2f05f809b7c3ecaf683f2d",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "State_elements": 17,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "35d1851b8aa3ee55a2aaf0c85ab7c49f1d2ebca643775ba2cbab5321ce91ea8e",
+      "math_sha256": "f72577ff12f1efa4a4a1b2d89adfabb5078070ff38521037099ee9998ebd70ee",
+      "LLVM_sha256": "84c1373fc3fcb98a8bf6974202a2afbb6289f72fd9ab77bc0baa287b06cd727a",
+      "binary_sha256": "00354d3b1d262ecdd9f8830f3f4325bda34a9d20bc8a204a2433d56c01a602eb",
+      "source_sha256": "eec63570966ec16c78f8cdd84f3d18f9f60fe9927d0149c3cdbabb5b7ffa76a1",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "56b53fbe5896c46190805d2cf132e6c25d43f0e5c5d36bd988252bf2b2c27f7a",
+      "math_sha256": "6a2db21215fe8c7151e0d571deb4cac5e363cb1b2431f467dbd84bda505494f8",
+      "LLVM_sha256": "84c1373fc3fcb98a8bf6974202a2afbb6289f72fd9ab77bc0baa287b06cd727a",
+      "binary_sha256": "00354d3b1d262ecdd9f8830f3f4325bda34a9d20bc8a204a2433d56c01a602eb",
+      "source_sha256": "eec63570966ec16c78f8cdd84f3d18f9f60fe9927d0149c3cdbabb5b7ffa76a1",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "4de892456c3addaa328aace1ab00ca2cd405aef4cd158525157d924f02cf882f",
+      "math_sha256": "9150f9802d810265e3b9b3967940bd4e96cd6bd62b975cd90b75279e5f5274ce",
+      "LLVM_sha256": "84c1373fc3fcb98a8bf6974202a2afbb6289f72fd9ab77bc0baa287b06cd727a",
+      "binary_sha256": "00354d3b1d262ecdd9f8830f3f4325bda34a9d20bc8a204a2433d56c01a602eb",
+      "source_sha256": "eec63570966ec16c78f8cdd84f3d18f9f60fe9927d0149c3cdbabb5b7ffa76a1",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "632ed7f7aba858b89548bba4b396189877b1eb02e63e266be0980855c6dd50b2",
+      "math_sha256": "29dd88171a9641a124295db2c3543fb6de72e7880e33b486c19b3ba7190ab7f6",
+      "LLVM_sha256": "5c46b9bab138e70994e92e7b0dee219938e1642bf0638a89e69963fe6bad2ce6",
+      "binary_sha256": "9afc64263aaa74782e1193692fe42aceacb75f504524c17c54106d8753efe3d5",
+      "source_sha256": "e8a4bc5baa96ce07d143691ae1a291346a0c1a050bd291db2b48787bc9eb42a6",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "440910ca03fdc5f73e80c910e301817ba01a6718793a34e7045c770e2fc3739e",
+      "math_sha256": "26e93c9e4bb3e22c20dec413ef786e4cc93a8d9e3a7f722b8bfd581610f02374",
+      "LLVM_sha256": "5c46b9bab138e70994e92e7b0dee219938e1642bf0638a89e69963fe6bad2ce6",
+      "binary_sha256": "9afc64263aaa74782e1193692fe42aceacb75f504524c17c54106d8753efe3d5",
+      "source_sha256": "e8a4bc5baa96ce07d143691ae1a291346a0c1a050bd291db2b48787bc9eb42a6",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q04-s1-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "c39154a16f20c5da69f527d2053e5bc143c473dfcb428070a4df12f01da18ae7",
+      "math_sha256": "c8b242b6535e61524a1315fac4f2de1345e46e7fc3f9ca88a48407cc2e3f3871",
+      "LLVM_sha256": "5c46b9bab138e70994e92e7b0dee219938e1642bf0638a89e69963fe6bad2ce6",
+      "binary_sha256": "9afc64263aaa74782e1193692fe42aceacb75f504524c17c54106d8753efe3d5",
+      "source_sha256": "e8a4bc5baa96ce07d143691ae1a291346a0c1a050bd291db2b48787bc9eb42a6",
+      "TTIR_sha256": "2fdd4017ee1bfbf013f51afddf7c11f18ac3f9a351434b536f06174e8e337428",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "State_elements": 19,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c0-cold",
+      "stage": "affected",
+      "capture_sha256": "bf112d22daf19975567573d5f3bdf7a5b8379dede8703097b7565deec6b8d60e",
+      "math_sha256": "66bdb0370dba97efd0ec31bd36f832aa0bdf25be4c13cb96c90a6c29690573ba",
+      "LLVM_sha256": "02a5901c31af38b6623a26747a59dc23f2264bbc278563d9d2cde0767cde6b54",
+      "binary_sha256": "46ca0fc31edaa4c370514773fec3dd00ffa8c5e7be1edca3bc3a16f692b65b8b",
+      "source_sha256": "cddafc423fd0e75a5746d1351312c96d76ccce7f8f1a7bc4366f5dfc59059310",
+      "TTIR_sha256": "2fdc62014a0b5a6e242e7c2a50709973e545309d490c48562119cd1622330163",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c0-warm1",
+      "stage": "affected",
+      "capture_sha256": "fd925196be5071c3834748b60dd70db84c36b377936cf8168cc06915fd58ce2f",
+      "math_sha256": "51ffb637d7cd92df90e6a731d7487a85e588e86f48ce4d920f91cb0a48afe105",
+      "LLVM_sha256": "02a5901c31af38b6623a26747a59dc23f2264bbc278563d9d2cde0767cde6b54",
+      "binary_sha256": "46ca0fc31edaa4c370514773fec3dd00ffa8c5e7be1edca3bc3a16f692b65b8b",
+      "source_sha256": "cddafc423fd0e75a5746d1351312c96d76ccce7f8f1a7bc4366f5dfc59059310",
+      "TTIR_sha256": "2fdc62014a0b5a6e242e7c2a50709973e545309d490c48562119cd1622330163",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c0-warm2",
+      "stage": "affected",
+      "capture_sha256": "39a29c9b22fd9384797662622da9f012b890d5b62aa00f500727fc446877c712",
+      "math_sha256": "6cc2e700c815b8fec60079b47792cf332d29ec813d2739d8c93d39b8873a4905",
+      "LLVM_sha256": "02a5901c31af38b6623a26747a59dc23f2264bbc278563d9d2cde0767cde6b54",
+      "binary_sha256": "46ca0fc31edaa4c370514773fec3dd00ffa8c5e7be1edca3bc3a16f692b65b8b",
+      "source_sha256": "cddafc423fd0e75a5746d1351312c96d76ccce7f8f1a7bc4366f5dfc59059310",
+      "TTIR_sha256": "2fdc62014a0b5a6e242e7c2a50709973e545309d490c48562119cd1622330163",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c1-cold",
+      "stage": "affected",
+      "capture_sha256": "287b357d4b53c4845c3c746f05b6ef887e36ec2cd10876157a006a8be7515934",
+      "math_sha256": "43db68357873b4ce4e2b28ea94849fb135ba6cf477ded0944dbc074b1d65673d",
+      "LLVM_sha256": "9fe50bd184c88cbc76bfc6c58ace7d09e93e1f0d7ed7e44748b23951de721390",
+      "binary_sha256": "22af1e073fb0619f337457c785a72d5268e83853da85bbc4f4bac2bba7d28b49",
+      "source_sha256": "72298a9f47672ab19857306b146ef77da75bb95950ff34c4cbeb1a622888f1c0",
+      "TTIR_sha256": "e156ef87909c9169409356a8a9600f920b0cc65e59812fd0009cec96cf96cb27",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c1-warm1",
+      "stage": "affected",
+      "capture_sha256": "d0b059baf0c092b459dcac0e9ae36082032ee150778f28457bdcef259480131b",
+      "math_sha256": "e83d5354152768a724f9f42069831390bfa2a966b14ec818137da42138cfbb8b",
+      "LLVM_sha256": "9fe50bd184c88cbc76bfc6c58ace7d09e93e1f0d7ed7e44748b23951de721390",
+      "binary_sha256": "22af1e073fb0619f337457c785a72d5268e83853da85bbc4f4bac2bba7d28b49",
+      "source_sha256": "72298a9f47672ab19857306b146ef77da75bb95950ff34c4cbeb1a622888f1c0",
+      "TTIR_sha256": "e156ef87909c9169409356a8a9600f920b0cc65e59812fd0009cec96cf96cb27",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s0-c1-warm2",
+      "stage": "affected",
+      "capture_sha256": "a8553b74f363bb7f13207195b3dad8ff87b955ea3fb18f14eb40f2c96c26a1bc",
+      "math_sha256": "762eae7fd5cc405bc150a0a6a24c115a958525b0a58ed95e4e65de0c77be3f6e",
+      "LLVM_sha256": "9fe50bd184c88cbc76bfc6c58ace7d09e93e1f0d7ed7e44748b23951de721390",
+      "binary_sha256": "22af1e073fb0619f337457c785a72d5268e83853da85bbc4f4bac2bba7d28b49",
+      "source_sha256": "72298a9f47672ab19857306b146ef77da75bb95950ff34c4cbeb1a622888f1c0",
+      "TTIR_sha256": "e156ef87909c9169409356a8a9600f920b0cc65e59812fd0009cec96cf96cb27",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c0-cold",
+      "stage": "affected",
+      "capture_sha256": "fc46e6e0cd46e93338cf5747c1c2c8dca862b4ddb9aa2081a6891d70bb0a8f35",
+      "math_sha256": "efb2cb118ca62a9737de882be71ce089478e3da3ec34b00bff6b63765554f6b4",
+      "LLVM_sha256": "c847fb85a17d5c8ac2b83d90d23bcafc8ed1bd98a5f6df867b99a960a2f95b2e",
+      "binary_sha256": "ddf620a0bd5a54d20528cc89f6ca36cd2eef71c8bfd4b0c73eaa4074620379ac",
+      "source_sha256": "4d50e3479631067d666970dd32d4eecd9cceb9f7b7ed1822395f1ba2143f033e",
+      "TTIR_sha256": "49f83f27f16ebed6fc1c35c7fdcaa4557c435199ee59811141badbe2b44192c2",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c0-warm1",
+      "stage": "affected",
+      "capture_sha256": "2eae90f77d4f97d52d880eea3a49c65234f0618a14f914465cb44da1335352aa",
+      "math_sha256": "6889275fc2af58e37bb079813f6b382d4d0bda766730ca68e40bf8ee3e40496b",
+      "LLVM_sha256": "c847fb85a17d5c8ac2b83d90d23bcafc8ed1bd98a5f6df867b99a960a2f95b2e",
+      "binary_sha256": "ddf620a0bd5a54d20528cc89f6ca36cd2eef71c8bfd4b0c73eaa4074620379ac",
+      "source_sha256": "4d50e3479631067d666970dd32d4eecd9cceb9f7b7ed1822395f1ba2143f033e",
+      "TTIR_sha256": "49f83f27f16ebed6fc1c35c7fdcaa4557c435199ee59811141badbe2b44192c2",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c0-warm2",
+      "stage": "affected",
+      "capture_sha256": "4533a4526d8e0a7a16bb7253be74c13327917b4c122556950e35386c3452d27d",
+      "math_sha256": "fc23e1f55ec330f04c0d5d6e51f402cb209182065c42dadbc2e2a528493903b6",
+      "LLVM_sha256": "c847fb85a17d5c8ac2b83d90d23bcafc8ed1bd98a5f6df867b99a960a2f95b2e",
+      "binary_sha256": "ddf620a0bd5a54d20528cc89f6ca36cd2eef71c8bfd4b0c73eaa4074620379ac",
+      "source_sha256": "4d50e3479631067d666970dd32d4eecd9cceb9f7b7ed1822395f1ba2143f033e",
+      "TTIR_sha256": "49f83f27f16ebed6fc1c35c7fdcaa4557c435199ee59811141badbe2b44192c2",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c1-cold",
+      "stage": "affected",
+      "capture_sha256": "8e5de00515bdfa8b40f07a9a97aafde3f31cec5ad93042795ee39d0fc42a4192",
+      "math_sha256": "bf9b4499028daf8c0b59b7cd0e1df0d451c79e05cb3f1d1489b1fd57aeb1d98f",
+      "LLVM_sha256": "4849ae6946a604ef45e3d2f1d6e906102cec994434903cca158467ebb83d83cd",
+      "binary_sha256": "a0493237ae441a153eb6c7ba9e347079266b069acbb63723b27e386f6d3a48d5",
+      "source_sha256": "b6299a5d781c9f8172d6d67d0755067110fe8ca4e200c12df55b55b9fdcedb17",
+      "TTIR_sha256": "890bcd4fcc830b4d519ad78ef5c472fc4af1eaaa1b4974108e91ff5916eb92b9",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c1-warm1",
+      "stage": "affected",
+      "capture_sha256": "8d4bd3f2f0699a8b84029eba10250b2a0b8263805e927a0ebb7e87a16027e099",
+      "math_sha256": "285bb1eda5a7e5bd2696b834c4089ab8410841593c90d7256acc3827c62bd80c",
+      "LLVM_sha256": "4849ae6946a604ef45e3d2f1d6e906102cec994434903cca158467ebb83d83cd",
+      "binary_sha256": "a0493237ae441a153eb6c7ba9e347079266b069acbb63723b27e386f6d3a48d5",
+      "source_sha256": "b6299a5d781c9f8172d6d67d0755067110fe8ca4e200c12df55b55b9fdcedb17",
+      "TTIR_sha256": "890bcd4fcc830b4d519ad78ef5c472fc4af1eaaa1b4974108e91ff5916eb92b9",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q05-s1-c1-warm2",
+      "stage": "affected",
+      "capture_sha256": "f80757a339da1830bda949978bcdcf5be8210b654bde593383a595075497b6ec",
+      "math_sha256": "b1b1377e5b4d18186c663d206fa04460757a031c8a8d56bb539de21c84946d80",
+      "LLVM_sha256": "4849ae6946a604ef45e3d2f1d6e906102cec994434903cca158467ebb83d83cd",
+      "binary_sha256": "a0493237ae441a153eb6c7ba9e347079266b069acbb63723b27e386f6d3a48d5",
+      "source_sha256": "b6299a5d781c9f8172d6d67d0755067110fe8ca4e200c12df55b55b9fdcedb17",
+      "TTIR_sha256": "890bcd4fcc830b4d519ad78ef5c472fc4af1eaaa1b4974108e91ff5916eb92b9",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "12e7d7858a4bdb44a42a6e4a0784d8a9ec75d5481c3a1c28c8849bcf3f48fc7b",
+      "math_sha256": "4adcef072bffd6c1e5abd257398d22cff75861202a17350de4d3180ab1d4cba1",
+      "LLVM_sha256": "0284cc10d583819017256bc6c14d2d28696992481aa714f19f0efac3e286ff31",
+      "binary_sha256": "cf6d87bf30fc45145855d06b782cc367a4d661f8661e1a68fcf44eebbe7d15b5",
+      "source_sha256": "f8ac43670c64759b4b45343fe50681471cedf42d72ed1a8bf7e51fa7187277c3",
+      "TTIR_sha256": "539bbfcb72ce0884f90e362f5e07d3a3d5bbaa5c33565e3fcea5b3ad4f56bf10",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "aaa9a55a84a51ac9808520053eb35ebbf06191976a65da5adc901787319b97f1",
+      "math_sha256": "382106788c155dd10f356fe13027bbbd012bc1e7973d33492342c1e6bdc25558",
+      "LLVM_sha256": "0284cc10d583819017256bc6c14d2d28696992481aa714f19f0efac3e286ff31",
+      "binary_sha256": "cf6d87bf30fc45145855d06b782cc367a4d661f8661e1a68fcf44eebbe7d15b5",
+      "source_sha256": "f8ac43670c64759b4b45343fe50681471cedf42d72ed1a8bf7e51fa7187277c3",
+      "TTIR_sha256": "539bbfcb72ce0884f90e362f5e07d3a3d5bbaa5c33565e3fcea5b3ad4f56bf10",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "84b4767906f6cd78b43b846b66f62a2ea4ca86874cc68b9d5a0fc181b2035e30",
+      "math_sha256": "20f6bc180bf1864df720bb0b83e1dc5f6b0fcdc572d20b53a14cec273dd789e0",
+      "LLVM_sha256": "0284cc10d583819017256bc6c14d2d28696992481aa714f19f0efac3e286ff31",
+      "binary_sha256": "cf6d87bf30fc45145855d06b782cc367a4d661f8661e1a68fcf44eebbe7d15b5",
+      "source_sha256": "f8ac43670c64759b4b45343fe50681471cedf42d72ed1a8bf7e51fa7187277c3",
+      "TTIR_sha256": "539bbfcb72ce0884f90e362f5e07d3a3d5bbaa5c33565e3fcea5b3ad4f56bf10",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "5b305e205c8faab63f7f28203743791ab47244f2c8b62a997dfb0ccfc35c7f64",
+      "math_sha256": "fd77280ec66b4ef743e76a7d7e7196d880707505db84d84e74f2f1c00e78dfb5",
+      "LLVM_sha256": "0bf9163a101ba184e67cf6519c20c2e96d9874b04a417c18bdc8a75031bb9962",
+      "binary_sha256": "b6ae856aca43e5f012d2b346c1c7c52bedf32224134b8575c2e5a5c1947f564f",
+      "source_sha256": "a40951626fd062d9f22bd9a21489f12e501e9d79c4a7e2e8a6fee51e3b684d1b",
+      "TTIR_sha256": "3b4cb70c94863bffe24412e5a967394e8182cc1be08f0c30188bdf33c2945d86",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "01c82110e923ef0a6dc324aa1f2656f5c4bf095682da97596ab52b49e050c0e5",
+      "math_sha256": "6920e05d031d1f8b1624c6374382e678d0daf7bd155fa7d194e12dc1c04ca1b0",
+      "LLVM_sha256": "0bf9163a101ba184e67cf6519c20c2e96d9874b04a417c18bdc8a75031bb9962",
+      "binary_sha256": "b6ae856aca43e5f012d2b346c1c7c52bedf32224134b8575c2e5a5c1947f564f",
+      "source_sha256": "a40951626fd062d9f22bd9a21489f12e501e9d79c4a7e2e8a6fee51e3b684d1b",
+      "TTIR_sha256": "3b4cb70c94863bffe24412e5a967394e8182cc1be08f0c30188bdf33c2945d86",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s0-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "06d1b6e443cb94457122b5eb1e16614497eaf91a28fb3352298897d55100ea7d",
+      "math_sha256": "63929c3467ca48177922afbe8f881cdbe19fd93426664d7291ea3b5d52806466",
+      "LLVM_sha256": "0bf9163a101ba184e67cf6519c20c2e96d9874b04a417c18bdc8a75031bb9962",
+      "binary_sha256": "b6ae856aca43e5f012d2b346c1c7c52bedf32224134b8575c2e5a5c1947f564f",
+      "source_sha256": "a40951626fd062d9f22bd9a21489f12e501e9d79c4a7e2e8a6fee51e3b684d1b",
+      "TTIR_sha256": "3b4cb70c94863bffe24412e5a967394e8182cc1be08f0c30188bdf33c2945d86",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 4096,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c0-cold",
+      "stage": "original-six",
+      "capture_sha256": "1ad241e62267dfffc97f38286beed0ff632f8cb2c3f9e61f6767fd60a16e4cf0",
+      "math_sha256": "ce3c8f419a8d13491091bc105cca197044bc69e98622364b75d655c298a7a8b4",
+      "LLVM_sha256": "ce8971efb03a8d4d4ac5d34bfd5e4c5cbeecf777b0aeaa566c1aecd125c1b857",
+      "binary_sha256": "e2c1cc04321b6fd5735c2fa565be050238decbb7c1bba791c7e23e4192b9a958",
+      "source_sha256": "6d8b16e2e0c8ee68cf0e45c9dbc856c47992a9ee5e09e027b3de7878334d1083",
+      "TTIR_sha256": "ce370feeaa1af099832fa5e99c255eebebbdaaaf3a447eb88b7bda0a5e39255c",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c0-warm1",
+      "stage": "original-six",
+      "capture_sha256": "aec7b0814afd14414052c2c95ee1dd5af09ff1b237f27c5993c3ed08c021a633",
+      "math_sha256": "4fe1248bf5665eed6c86ef3b1101cb19f7c0e46c653ff44ec3c2cd65592deb77",
+      "LLVM_sha256": "ce8971efb03a8d4d4ac5d34bfd5e4c5cbeecf777b0aeaa566c1aecd125c1b857",
+      "binary_sha256": "e2c1cc04321b6fd5735c2fa565be050238decbb7c1bba791c7e23e4192b9a958",
+      "source_sha256": "6d8b16e2e0c8ee68cf0e45c9dbc856c47992a9ee5e09e027b3de7878334d1083",
+      "TTIR_sha256": "ce370feeaa1af099832fa5e99c255eebebbdaaaf3a447eb88b7bda0a5e39255c",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c0-warm2",
+      "stage": "original-six",
+      "capture_sha256": "ab623033e34ed010a2ff73398e4d4fbda8288e394e23de4cdee8f6b0134b474a",
+      "math_sha256": "c61b4e0c7a0759443ec6536b058dd16c1c24acb6643cc9ed5f2cbef4c18bdbd6",
+      "LLVM_sha256": "ce8971efb03a8d4d4ac5d34bfd5e4c5cbeecf777b0aeaa566c1aecd125c1b857",
+      "binary_sha256": "e2c1cc04321b6fd5735c2fa565be050238decbb7c1bba791c7e23e4192b9a958",
+      "source_sha256": "6d8b16e2e0c8ee68cf0e45c9dbc856c47992a9ee5e09e027b3de7878334d1083",
+      "TTIR_sha256": "ce370feeaa1af099832fa5e99c255eebebbdaaaf3a447eb88b7bda0a5e39255c",
+      "State_formal": "%5",
+      "physical_threads": 4,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c1-cold",
+      "stage": "original-six",
+      "capture_sha256": "cc7c0dec0b57258eadf722db5c268d55206fa934b2346e96eee5aeec5cd919bb",
+      "math_sha256": "d4442e9b0ae6a1213c69ac4afcc85e066d8746621c47a2cf51e5c3ce30b26eca",
+      "LLVM_sha256": "4b4f3db559a92fdadc12f9f78b66be19b81df177ca7168c2024e1a8baee27035",
+      "binary_sha256": "9c327dcbde5fbbd9dd98290cc4d952ea590224f5f019cc07c3af402b7af91412",
+      "source_sha256": "ec827ff0208a4bc2b349a23c63961fc3ec8cbf9b15a2b8e6bc8c02fba174c50e",
+      "TTIR_sha256": "2ccc9f8f17210b24ed2465fc1a3fec1026121654db9e10dcd82cbd5666737b27",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c1-warm1",
+      "stage": "original-six",
+      "capture_sha256": "9b6126584094a2374ec806838cf4f74c5375bb7647f04b4200f68888fed69170",
+      "math_sha256": "5bd6bbfceea4a78e159e4525d2aa3fce345304b4101ca396708cf88f7447fef1",
+      "LLVM_sha256": "4b4f3db559a92fdadc12f9f78b66be19b81df177ca7168c2024e1a8baee27035",
+      "binary_sha256": "9c327dcbde5fbbd9dd98290cc4d952ea590224f5f019cc07c3af402b7af91412",
+      "source_sha256": "ec827ff0208a4bc2b349a23c63961fc3ec8cbf9b15a2b8e6bc8c02fba174c50e",
+      "TTIR_sha256": "2ccc9f8f17210b24ed2465fc1a3fec1026121654db9e10dcd82cbd5666737b27",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q06-s1-c1-warm2",
+      "stage": "original-six",
+      "capture_sha256": "0e6703aa30f9acf9d6b4c21685f36376ea911c2172e45ca5ffc6a768ba7d5146",
+      "math_sha256": "91799026457ce684b066ab98c203f04f81b26677aca1c379e4b2b5bc8830d8b9",
+      "LLVM_sha256": "4b4f3db559a92fdadc12f9f78b66be19b81df177ca7168c2024e1a8baee27035",
+      "binary_sha256": "9c327dcbde5fbbd9dd98290cc4d952ea590224f5f019cc07c3af402b7af91412",
+      "source_sha256": "ec827ff0208a4bc2b349a23c63961fc3ec8cbf9b15a2b8e6bc8c02fba174c50e",
+      "TTIR_sha256": "2ccc9f8f17210b24ed2465fc1a3fec1026121654db9e10dcd82cbd5666737b27",
+      "State_formal": "%5",
+      "physical_threads": 8,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "State_elements": 5037,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c0-cold",
+      "stage": "supplement",
+      "capture_sha256": "9afb708025903f9c80c48c2249c7aee84ab69683c5627cb315c4c343ff588534",
+      "math_sha256": "ed232d4fdc9db5a35bc5984a79618a22a83b5e35eb60fa1a1710fea6a87dbf9b",
+      "LLVM_sha256": "2d4e0133f8fed836252934c833df04d25e407749e3cc03a87e9e72a5e34d86bc",
+      "binary_sha256": "8fc688db4e2a53835d699792476dc59ffa1ca9989452cef257c6fb92419d5235",
+      "source_sha256": "f6e5d8557850148f8854dfc764197bb4bf8435c0515cd99f5f75d8c0f447543f",
+      "TTIR_sha256": "400dee6e5e659e105ad7651823148255f4ccea65856729b988cc250055696ed5",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c0-warm1",
+      "stage": "supplement",
+      "capture_sha256": "afff2aa8b26736eff6747017d51889d4bcf70342f34d0e64235895c9a4560fbe",
+      "math_sha256": "2586917da8441e24fd25da46fb43a82023d13ba93b03e3fc63eba878cd28e55c",
+      "LLVM_sha256": "2d4e0133f8fed836252934c833df04d25e407749e3cc03a87e9e72a5e34d86bc",
+      "binary_sha256": "8fc688db4e2a53835d699792476dc59ffa1ca9989452cef257c6fb92419d5235",
+      "source_sha256": "f6e5d8557850148f8854dfc764197bb4bf8435c0515cd99f5f75d8c0f447543f",
+      "TTIR_sha256": "400dee6e5e659e105ad7651823148255f4ccea65856729b988cc250055696ed5",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c0-warm2",
+      "stage": "supplement",
+      "capture_sha256": "c0e9f4e1aaa72a19bf98e5a6469f7a5a365b7b629dab7ca5d424e3f7a01201d0",
+      "math_sha256": "d71a0f7896eb155f73d3105545a8a728e0b939a3515f18dd2970877b5155d641",
+      "LLVM_sha256": "2d4e0133f8fed836252934c833df04d25e407749e3cc03a87e9e72a5e34d86bc",
+      "binary_sha256": "8fc688db4e2a53835d699792476dc59ffa1ca9989452cef257c6fb92419d5235",
+      "source_sha256": "f6e5d8557850148f8854dfc764197bb4bf8435c0515cd99f5f75d8c0f447543f",
+      "TTIR_sha256": "400dee6e5e659e105ad7651823148255f4ccea65856729b988cc250055696ed5",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c1-cold",
+      "stage": "supplement",
+      "capture_sha256": "b2d15a756e70f1cccaccb15333ff20e19df86a057e6ce1b42f0a1ecaccce1166",
+      "math_sha256": "37a3a5e5577b7c64808254ac808d4ec36274652347c500d4283cb2a8c2c5fbdb",
+      "LLVM_sha256": "517635bd7ecab745c6ddee1a86e6f984abda2a83ac86aee51c8419dc7825097b",
+      "binary_sha256": "f321e36785cd561ce2bd9b68db4bf57a10705cbf519d381613186fa1712d1094",
+      "source_sha256": "08851b55ae554851701248011876ca13bca5589f23e7ecf8d7d7d6389e58bc5a",
+      "TTIR_sha256": "b5d5289ae699c8a50b5dd642f42e3236535d5ee57fbda7887efdd4a1c224b9d2",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c1-warm1",
+      "stage": "supplement",
+      "capture_sha256": "963776c99d153d4eeef3452b2d8a04484af8a5bd7969108b61724985b34c3ea4",
+      "math_sha256": "a5b61da30a0285c13f9d836d78fdc00d347dec3c8f0d5ff9a807ca6b99d8176d",
+      "LLVM_sha256": "517635bd7ecab745c6ddee1a86e6f984abda2a83ac86aee51c8419dc7825097b",
+      "binary_sha256": "f321e36785cd561ce2bd9b68db4bf57a10705cbf519d381613186fa1712d1094",
+      "source_sha256": "08851b55ae554851701248011876ca13bca5589f23e7ecf8d7d7d6389e58bc5a",
+      "TTIR_sha256": "b5d5289ae699c8a50b5dd642f42e3236535d5ee57fbda7887efdd4a1c224b9d2",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s0-c1-warm2",
+      "stage": "supplement",
+      "capture_sha256": "4bc650e0049a754a0e328b7a000c6d9cdd7d86519fb18011cb9002580c1df905",
+      "math_sha256": "b218493d2ec832d9d14f08489c47262001f3f6377f04e6befe4a1ff6ebab1cc9",
+      "LLVM_sha256": "517635bd7ecab745c6ddee1a86e6f984abda2a83ac86aee51c8419dc7825097b",
+      "binary_sha256": "f321e36785cd561ce2bd9b68db4bf57a10705cbf519d381613186fa1712d1094",
+      "source_sha256": "08851b55ae554851701248011876ca13bca5589f23e7ecf8d7d7d6389e58bc5a",
+      "TTIR_sha256": "b5d5289ae699c8a50b5dd642f42e3236535d5ee57fbda7887efdd4a1c224b9d2",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 3072,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c0-cold",
+      "stage": "supplement",
+      "capture_sha256": "5b8f4f6a1be8e082a545614a04ce981e0ddfa9677883b889503c32c56a068a1f",
+      "math_sha256": "21c08b09ff2c59a56a845b2704586e76d0d3e8e389c6a0bdb6ad2745a0f680c1",
+      "LLVM_sha256": "9caa4dba3e8d98f9df74bd934adeac29b23fc1d1c661eb9eb895ab44c6495623",
+      "binary_sha256": "9ec71c315a3989253124d8c22c5ce5e711cb9511ace803685197effb0f538f98",
+      "source_sha256": "09a83f22880636d9518124613600e17e3fd4053029f16641d92a69ded4292c4e",
+      "TTIR_sha256": "0b90b1993c89e529f6c6d881c7cf9b07e64465f201f80773ff576a5073122462",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c0-warm1",
+      "stage": "supplement",
+      "capture_sha256": "77d001ad615ef513a533cb8a17a532884e62591296b4552d9d1bf03129ad0159",
+      "math_sha256": "fecce62b80101a43ecd064b359fbce475a5c286fae567f96b75e669237ce5693",
+      "LLVM_sha256": "9caa4dba3e8d98f9df74bd934adeac29b23fc1d1c661eb9eb895ab44c6495623",
+      "binary_sha256": "9ec71c315a3989253124d8c22c5ce5e711cb9511ace803685197effb0f538f98",
+      "source_sha256": "09a83f22880636d9518124613600e17e3fd4053029f16641d92a69ded4292c4e",
+      "TTIR_sha256": "0b90b1993c89e529f6c6d881c7cf9b07e64465f201f80773ff576a5073122462",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c0-warm2",
+      "stage": "supplement",
+      "capture_sha256": "e188e812e5114072aa9ddc46973bae63651a2e9d21a0695c1526ed47b46c8548",
+      "math_sha256": "81a4ed7a4be22c4ac6f960c017f4bf7f2fe039e55af8bf1ae111d62219ac7fc5",
+      "LLVM_sha256": "9caa4dba3e8d98f9df74bd934adeac29b23fc1d1c661eb9eb895ab44c6495623",
+      "binary_sha256": "9ec71c315a3989253124d8c22c5ce5e711cb9511ace803685197effb0f538f98",
+      "source_sha256": "09a83f22880636d9518124613600e17e3fd4053029f16641d92a69ded4292c4e",
+      "TTIR_sha256": "0b90b1993c89e529f6c6d881c7cf9b07e64465f201f80773ff576a5073122462",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c1-cold",
+      "stage": "affected",
+      "capture_sha256": "7c243ca0356c826c4a0ae10329bdf8f4f10a62f00457598eba955f6a0fa04a62",
+      "math_sha256": "a79f47205f9907307b80c81fa8fdf87fdc9e9ac3eccd36704adae836649761db",
+      "LLVM_sha256": "52e0c86a7f888f8a121cb53ec261fb0fc8470c40eefeb905a168be3920940871",
+      "binary_sha256": "14fcf0984091a53cf4f75bc87e01809dd73d81fb3219a1b3651b239d5b519534",
+      "source_sha256": "91401dbf99192a1560aa435d6c9bec2ce6f65782b5d31578e19eacbf49210188",
+      "TTIR_sha256": "74a69d2eff286ed734c59cfd7cb1ed99ae3903203b71788ae0e448f461cc2e97",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c1-warm1",
+      "stage": "supplement",
+      "capture_sha256": "2d0488dc82307ffa405a5006d536a7f6389ae44f6665bdba98058ddef7825f0b",
+      "math_sha256": "d17a252db71fa58636927d365dbd74989ee0bb673345adbd5c7563735213c933",
+      "LLVM_sha256": "52e0c86a7f888f8a121cb53ec261fb0fc8470c40eefeb905a168be3920940871",
+      "binary_sha256": "14fcf0984091a53cf4f75bc87e01809dd73d81fb3219a1b3651b239d5b519534",
+      "source_sha256": "f1080c6050ba8084d948bdb131822db604c1b1b24b0cc61a0d7cadaa01f84f1e",
+      "TTIR_sha256": "0f5a1f9601895341bd9934f45f925d3d94125fbb202e593905239dd751d6455b",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q07-s1-c1-warm2",
+      "stage": "supplement",
+      "capture_sha256": "6dd88dcaa8f831811816bc0168cb39f2a04bcca54dfc6cba3d64fc8aba97c53b",
+      "math_sha256": "b77b96448a2b05557725a268279e686690fd378027018f5a98da32386b65911d",
+      "LLVM_sha256": "52e0c86a7f888f8a121cb53ec261fb0fc8470c40eefeb905a168be3920940871",
+      "binary_sha256": "14fcf0984091a53cf4f75bc87e01809dd73d81fb3219a1b3651b239d5b519534",
+      "source_sha256": "f1080c6050ba8084d948bdb131822db604c1b1b24b0cc61a0d7cadaa01f84f1e",
+      "TTIR_sha256": "0f5a1f9601895341bd9934f45f925d3d94125fbb202e593905239dd751d6455b",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 3657,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c0-cold",
+      "stage": "supplement",
+      "capture_sha256": "063f51b6d92709b5606a608a25cac9cd49a7b6581f470ccc3a9aa5629f51b270",
+      "math_sha256": "1ce7d55165cdc354d6ea8f0bac627f66e2578cc8d8cd5c17310b02ae935a043e",
+      "LLVM_sha256": "d0b760ef87ccb63b69f433470ac38f15d7de2bc437014660488addd694fac3c2",
+      "binary_sha256": "a14ad3e13e0a11871e8c1368f00344e572e946eab9616e8686c248e0e17c4724",
+      "source_sha256": "b9dc5a8b819a075b643901396488e9af76b4f5d4d26da1854bc3ff638cd3ab0d",
+      "TTIR_sha256": "19fd73614a6abeda4dea59136268614192167dda5439fe85a3d4dff332a0772b",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c0-warm1",
+      "stage": "supplement",
+      "capture_sha256": "3071bea9fd41d35562c9fe980fc7b3252325de0984706daaa44b154ce61feaf3",
+      "math_sha256": "b73ab931bfa4c72191d330b34965abb996896733baeb548d0cead45787d348a7",
+      "LLVM_sha256": "d0b760ef87ccb63b69f433470ac38f15d7de2bc437014660488addd694fac3c2",
+      "binary_sha256": "a14ad3e13e0a11871e8c1368f00344e572e946eab9616e8686c248e0e17c4724",
+      "source_sha256": "b9dc5a8b819a075b643901396488e9af76b4f5d4d26da1854bc3ff638cd3ab0d",
+      "TTIR_sha256": "19fd73614a6abeda4dea59136268614192167dda5439fe85a3d4dff332a0772b",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c0-warm2",
+      "stage": "supplement",
+      "capture_sha256": "febd349c40cb83ca61e2498aea59a246910e187d45a8173b11641bfc88c887a4",
+      "math_sha256": "65558e80e5dce92b1b3317fdd7b750857bcc79c3f7da2b5d13a66720aff46872",
+      "LLVM_sha256": "d0b760ef87ccb63b69f433470ac38f15d7de2bc437014660488addd694fac3c2",
+      "binary_sha256": "a14ad3e13e0a11871e8c1368f00344e572e946eab9616e8686c248e0e17c4724",
+      "source_sha256": "b9dc5a8b819a075b643901396488e9af76b4f5d4d26da1854bc3ff638cd3ab0d",
+      "TTIR_sha256": "19fd73614a6abeda4dea59136268614192167dda5439fe85a3d4dff332a0772b",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c1-cold",
+      "stage": "supplement",
+      "capture_sha256": "c7c759661e5e8601a662f5beb371e6ba20eb5911401547ba09e763d9909c314f",
+      "math_sha256": "3be25bef1b233c7cc409cd4658014975c519614c396f0a7ef2185be4534ede20",
+      "LLVM_sha256": "8f0e3235add63445f32a8b34ff5eb7d5e917f07a3b059bc79764c7e5992df63c",
+      "binary_sha256": "8b410ceef02a01821dfd16d0c05e24ffcccbf55c4ee1c548466c0124f0242937",
+      "source_sha256": "81cc869e9ee1f9258153b1d134a4dec322f965c63bb1d915e7ae795910b84b4b",
+      "TTIR_sha256": "f66031c9254e400f7149d861ef8048064ede06593cb6a9f1cc0f7fc7573fadc7",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c1-warm1",
+      "stage": "supplement",
+      "capture_sha256": "21a8d8d30ffa6dc212b59f91e530cdbe7cf7e6b048d930d05b1d0e54a8988316",
+      "math_sha256": "0012a86bac08b65b31f4fa00dabc630c3aa60941321c50b5554463f19ac5e472",
+      "LLVM_sha256": "8f0e3235add63445f32a8b34ff5eb7d5e917f07a3b059bc79764c7e5992df63c",
+      "binary_sha256": "8b410ceef02a01821dfd16d0c05e24ffcccbf55c4ee1c548466c0124f0242937",
+      "source_sha256": "81cc869e9ee1f9258153b1d134a4dec322f965c63bb1d915e7ae795910b84b4b",
+      "TTIR_sha256": "f66031c9254e400f7149d861ef8048064ede06593cb6a9f1cc0f7fc7573fadc7",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s0-c1-warm2",
+      "stage": "supplement",
+      "capture_sha256": "32430ae70783115284f5404d5b7e5dbebe00490126cf0d265738a2d29943ee6b",
+      "math_sha256": "58dbcfb808f7387c2b80e42bf1a98ac3666b4478b2b5a7677194bf5ec012c68e",
+      "LLVM_sha256": "8f0e3235add63445f32a8b34ff5eb7d5e917f07a3b059bc79764c7e5992df63c",
+      "binary_sha256": "8b410ceef02a01821dfd16d0c05e24ffcccbf55c4ee1c548466c0124f0242937",
+      "source_sha256": "81cc869e9ee1f9258153b1d134a4dec322f965c63bb1d915e7ae795910b84b4b",
+      "TTIR_sha256": "f66031c9254e400f7149d861ef8048064ede06593cb6a9f1cc0f7fc7573fadc7",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "State_elements": 768,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c0-cold",
+      "stage": "supplement",
+      "capture_sha256": "4e24c609cfd684e59c204e20934567e373f7d8456906543a0fb5c6d6b161b4fc",
+      "math_sha256": "0418741cb8002f1b6b474598d2319b006766316f628e86a28afd0ce4a15d5bf4",
+      "LLVM_sha256": "61c007c3b3c4b5fb12ebbd335b69e275eb1ff4bed17d11f20725c252bb753e96",
+      "binary_sha256": "eef717e069e2b7d579d186cda3be6704e9b6f1d1e089611efa419a5d15a836e3",
+      "source_sha256": "4c5574eb018d7447ccbc5c1f37245412743fba216b9bdd3708ae7066c36faae4",
+      "TTIR_sha256": "b68e21a34cd588ab1be2334b8300f55dca56c55b51f49f05757cfadcb4901572",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c0-warm1",
+      "stage": "supplement",
+      "capture_sha256": "c83f8920ac49c4c34625c8240a806a6d4f3566f37f0fa17c4ba7d8a9d28db2a9",
+      "math_sha256": "c45af0ba57b15f7aec8ef613c33151ddac4e3d707024a2605233c06cdc61f97a",
+      "LLVM_sha256": "61c007c3b3c4b5fb12ebbd335b69e275eb1ff4bed17d11f20725c252bb753e96",
+      "binary_sha256": "eef717e069e2b7d579d186cda3be6704e9b6f1d1e089611efa419a5d15a836e3",
+      "source_sha256": "4c5574eb018d7447ccbc5c1f37245412743fba216b9bdd3708ae7066c36faae4",
+      "TTIR_sha256": "b68e21a34cd588ab1be2334b8300f55dca56c55b51f49f05757cfadcb4901572",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c0-warm2",
+      "stage": "supplement",
+      "capture_sha256": "4ba19a0df1a457d58e4a81a9a86d98666a1541ed06b038b92733a72fc6342bd8",
+      "math_sha256": "a9eacfc532b27860fece6bc9f7bea2d0c99df4d5f0516e65ed1592097f94559b",
+      "LLVM_sha256": "61c007c3b3c4b5fb12ebbd335b69e275eb1ff4bed17d11f20725c252bb753e96",
+      "binary_sha256": "eef717e069e2b7d579d186cda3be6704e9b6f1d1e089611efa419a5d15a836e3",
+      "source_sha256": "4c5574eb018d7447ccbc5c1f37245412743fba216b9bdd3708ae7066c36faae4",
+      "TTIR_sha256": "b68e21a34cd588ab1be2334b8300f55dca56c55b51f49f05757cfadcb4901572",
+      "State_formal": "%3",
+      "physical_threads": 4,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c1-cold",
+      "stage": "supplement",
+      "capture_sha256": "01c88c87b2847d8e5c0fee39113411c593844b750cb100b3ea9a1d7e5b0e55b4",
+      "math_sha256": "4cc3267deea3be397e0c38577c216960542b227334f43d4546512b935deadccd",
+      "LLVM_sha256": "4adca8a322c5c26e09209a47bdcabd858cbaccb8cff679abea61df5f599b0050",
+      "binary_sha256": "02a24de1c777e45c68313660e54307f62419154da870343838af29cca4e4e0af",
+      "source_sha256": "83ed7033ac906dda86fe3d20f2958e5eaef32f415f49ba58fd02d17e809fd896",
+      "TTIR_sha256": "0537374ac5e9f9d249f0ea17acbada0dab48a248dcb83114fa47e0548f46079c",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c1-warm1",
+      "stage": "supplement",
+      "capture_sha256": "fe420dfe53edee32fe39c91496f2fca1de00607d0fe1a58c2711ac74790f1fe7",
+      "math_sha256": "b9f02ea2d49460f7a77aa476d138b1e3f099552015d4e7ef91de5929bd6fea27",
+      "LLVM_sha256": "4adca8a322c5c26e09209a47bdcabd858cbaccb8cff679abea61df5f599b0050",
+      "binary_sha256": "02a24de1c777e45c68313660e54307f62419154da870343838af29cca4e4e0af",
+      "source_sha256": "83ed7033ac906dda86fe3d20f2958e5eaef32f415f49ba58fd02d17e809fd896",
+      "TTIR_sha256": "0537374ac5e9f9d249f0ea17acbada0dab48a248dcb83114fa47e0548f46079c",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "case": "q08-s1-c1-warm2",
+      "stage": "supplement",
+      "capture_sha256": "9240b4df2746ca8a0a40998e85b534f712e3f52b14c60457dbc878b90d3b9946",
+      "math_sha256": "7fa619068b6a12a88c53b2e5f109289bbf243fe0696c6555fc6ecb7d68d4f975",
+      "LLVM_sha256": "4adca8a322c5c26e09209a47bdcabd858cbaccb8cff679abea61df5f599b0050",
+      "binary_sha256": "02a24de1c777e45c68313660e54307f62419154da870343838af29cca4e4e0af",
+      "source_sha256": "83ed7033ac906dda86fe3d20f2958e5eaef32f415f49ba58fd02d17e809fd896",
+      "TTIR_sha256": "0537374ac5e9f9d249f0ea17acbada0dab48a248dcb83114fa47e0548f46079c",
+      "State_formal": "%3",
+      "physical_threads": 8,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "State_elements": 1073,
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    }
+  ]
+}
