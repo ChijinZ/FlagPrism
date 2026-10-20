@@ -1,0 +1,87 @@
+{
+  "source_sha256": "15eeb9e91036548d6c9324eabe4a4c8c1b6072b16c0d1141a9f7df8e5b857482",
+  "actual": [
+    {
+      "name": "q01-AIV",
+      "sites": 20,
+      "bound": 20,
+      "failures": []
+    },
+    {
+      "name": "q03-AIV",
+      "sites": 22,
+      "bound": 22,
+      "failures": []
+    },
+    {
+      "name": "q05-AIC",
+      "sites": 22,
+      "bound": 22,
+      "failures": []
+    },
+    {
+      "name": "q05-AIV",
+      "sites": 33,
+      "bound": 33,
+      "failures": []
+    }
+  ],
+  "negative": [
+    {
+      "name": "start_is_end",
+      "rejected": true,
+      "reason": "Tuple endpoint differs from actual marked SYS_CNT definition"
+    },
+    {
+      "name": "end_is_start",
+      "rejected": true,
+      "reason": "Tuple endpoint differs from actual marked SYS_CNT definition"
+    },
+    {
+      "name": "commit_is_descriptor",
+      "rejected": true,
+      "reason": "Missing or ambiguous complete actor tuple"
+    },
+    {
+      "name": "missing_actor_word",
+      "rejected": true,
+      "reason": "Tuple words are not one contiguous record"
+    },
+    {
+      "name": "one_word_targets_other_pointer",
+      "rejected": true,
+      "reason": "Tuple targets another pointer"
+    },
+    {
+      "name": "wrong_semantic",
+      "rejected": true,
+      "reason": "Tuple semantic differs from manifest"
+    },
+    {
+      "name": "two_complete_tuples",
+      "rejected": true,
+      "reason": "Missing or ambiguous complete actor tuple"
+    },
+    {
+      "name": "duplicate_with_computed_descriptor",
+      "rejected": true,
+      "reason": "Missing or ambiguous complete actor tuple"
+    },
+    {
+      "name": "duplicate_with_opaque_descriptor",
+      "rejected": true,
+      "reason": "Missing or ambiguous complete actor tuple"
+    },
+    {
+      "name": "incomplete_uniqueness_scan",
+      "rejected": true
+    },
+    {
+      "name": "shared_DAG_expansion",
+      "rejected": true,
+      "reason": "Actor expanded expression budget exceeded"
+    }
+  ],
+  "device_executed": false,
+  "source_loop_qualified": false
+}

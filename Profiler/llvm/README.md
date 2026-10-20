@@ -59,3 +59,7 @@ native scheduling remain explicitly unverified. This internal rule is not yet
 connected to normal capture/offline inspection. `ascend_record_rule_cases.py`
 contains endpoint, field, pointer, descriptor, duplicate and interrupted-scan
 faults applied to a real actor graph by the retained-input runner.
+Computed descriptors use the supported integer normalization; a marked end can
+also reveal a potential second tuple with an opaque descriptor, which stays
+unverified. Expanded expression keys are bounded to 32768 characters per
+expression and 8 MiB cumulatively before sorting or equality comparisons.
