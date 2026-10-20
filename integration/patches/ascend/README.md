@@ -151,6 +151,14 @@ Python tree/core library, the newly built plugin and a fresh output directory.
 This helper explicitly reuses those native binaries; it does not claim a new
 core build. It creates the official backend marker, packages the late plugin
 under `flagtree/profiler/lib`, verifies package bytes and records their hashes.
+Build the `flagprism-ascend-structure` target in the same LLVM15 CMake tree
+and supply `--actor-structure-tool /path/to/flagprism-ascend-structure` when
+assembling the wheel. A reader beside the supplied plugin is also discovered
+automatically. It enables default observed-fragment path analysis and is a
+read-only executable; rebuilding the SDK or late-observer plugin is unnecessary
+when only the analysis Python changes. The assembler verifies the reader's
+packaged bytes. Without a supplied/beside-plugin reader, existing installation
+remains compatible and this analysis explicitly reports unavailable.
 Install the resulting wheel into a venv (matching system Torch/SDK packages may
 be reused). The installed adapter discovers the packaged plugin and creates
 immutable compiler capture directories automatically; explicit environment

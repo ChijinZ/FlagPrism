@@ -1219,3 +1219,29 @@ These are elapsed brackets in instrumented execution, not native engine busy
 times, an uninstrumented speedup, or an overhead estimate. Re-measure ordinary
 execution before claiming an optimization benefit. The original captures and
 summary provenance are indexed in `integration/evidence/timeline-independent-deltas-r056/`.
+
+### Ascend observed fragment paths
+
+When the wheel contains `flagtree/profiler/lib/flagprism-ascend-structure`,
+timeline postprocessing indexes the retained original and adapted actor LLVM
+without replaying the application or calling the SDK compiler. The capture's
+`source_fragment_paths.report_file` points to a report of actual selected
+source carriers, paired SYS_CNT readers and original operation structures that
+cannot be bypassed on the relevant reader-to-reader and carrier-to-end paths.
+Known natural-loop backedges are excluded from this path query. Remaining
+ambiguous structures, opaque indexed types and exhausted work budgets are
+reported as unverified; their original intervals remain available.
+
+The report identifies operations inside an observed elapsed interval. It does
+not establish whole-program SSA equivalence, a source-exclusive cost, a runtime
+selection guard, source-loop iteration IDs, final native scheduling or engine
+busy time. Frontend selection and these unproved properties are separate fields.
+Immediate flag intrinsics retain their exact callee/literal operands even when
+the observer replaces their debug location with a native-instruction marker.
+
+The input closure retains both exact actor inputs, native index outputs and
+the reader hash. Offline export recomputes the operation-path report with the
+current rules, verifies the retained input hashes, and never executes the
+reader, SDK or application. Saved success annotations do not grant a result.
+An older wheel or capture without the reader/retained inputs reports this
+optional analysis as unavailable while preserving its raw timing data.

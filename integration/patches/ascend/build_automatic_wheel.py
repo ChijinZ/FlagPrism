@@ -26,10 +26,15 @@ def main():
     parser.add_argument('--native-python', type=Path, required=True)
     parser.add_argument('--core-library', type=Path, required=True)
     parser.add_argument('--plugin', type=Path, required=True)
+    parser.add_argument(
+        '--actor-structure-tool',
+        type=Path,
+        help='Matching flagprism-ascend-structure LLVM15 reader')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     for name in vars(args):
-        setattr(args, name, getattr(args, name).resolve())
+        if getattr(args, name) is not None:
+            setattr(args, name, getattr(args, name).resolve())
     compiler_source = (args.flagtree /
                        'third_party/ascend/backend/compiler.py').read_text()
     identity_source = (
@@ -138,6 +143,13 @@ def main():
     plugin_target = stage / 'flagtree/profiler/lib'
     plugin_target.mkdir()
     shutil.copy2(args.plugin, plugin_target / args.plugin.name)
+    structure_tool = args.actor_structure_tool
+    if structure_tool is None:
+        sibling = args.plugin.parent / 'flagprism-ascend-structure'
+        structure_tool = sibling if sibling.is_file() else None
+    if structure_tool is not None:
+        shutil.copy2(structure_tool,
+                     plugin_target / 'flagprism-ascend-structure')
     wheel = dist.get_command_obj('bdist_wheel')
     wheel.skip_build = True
     wheel.dist_dir = str(args.output / 'dist')
@@ -193,6 +205,12 @@ def main():
                 python_count += 1
         plugin_entry = 'flagtree/profiler/lib/' + args.plugin.name
         assert archive.read(plugin_entry) == args.plugin.read_bytes()
+        if structure_tool is not None:
+            entry = 'flagtree/profiler/lib/flagprism-ascend-structure'
+            if archive.read(entry) != structure_tool.read_bytes():
+                raise ValueError('Packaged actor structure reader differs')
+            files[entry] = hashlib.sha256(
+                structure_tool.read_bytes()).hexdigest()
     result = {
         'wheel':
         str(paths[0]),

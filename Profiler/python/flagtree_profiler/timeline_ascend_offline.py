@@ -82,4 +82,15 @@ def reexport_views(directory, capture, raw, batch, sources, retain):
                   observed_dependency_reason=dependency_reason,
                   reason=reason)
     result['machine_counter_map_file'] = machine_file
+    try:
+        from .timeline_ascend_fragment_store import load_fragment_paths
+        result['source_fragment_paths'] = load_fragment_paths(directory,
+                                                              capture,
+                                                              retain=retain)
+    except (ValueError, OSError, KeyError, TypeError, UnicodeError,
+            RecursionError) as error:
+        result['source_fragment_paths'] = dict(
+            status='fragment_paths_unavailable',
+            reason=str(error),
+            native_schedule_qualified=False)
     return result

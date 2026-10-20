@@ -288,6 +288,9 @@ class AscendTimelineCollector(TimelineInstrumentationMixin):
             from .timeline_ascend_machine import inspect_capture_binary
             capture['machine_counter_mapping'] = inspect_capture_binary(
                 directory, metadata=capture['metadata'], deadline=deadline)
+            from .timeline_ascend_fragment_store import inspect_capture_fragments
+            capture['source_fragment_paths'] = inspect_capture_fragments(
+                directory, capture, deadline=deadline)
             try:
                 from .timeline_unit_ascend import load_counter_unit_proofs
                 from .timeline_views import derive_counter_ns_views
