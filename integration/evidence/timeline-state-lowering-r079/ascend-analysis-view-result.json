@@ -1,0 +1,54 @@
+{
+  "status": "target_independent_linked_input_inspection",
+  "steps": [
+    {
+      "argv": [
+        "/usr/bin/llvm-dis-15",
+        "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v1/output/linked.bc",
+        "-o",
+        "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/linked-source.ll"
+      ],
+      "exit": 0,
+      "tool_sha256": "78ea6766e9234ef241bfb4e2332ac806cd8821bb243c44d0e68a6e3cea362650"
+    },
+    {
+      "argv": [
+        "/usr/bin/opt-15",
+        "-internalize-public-api-list=q03",
+        "-passes=internalize,globaldce,always-inline,sroa,mem2reg,early-cse,instcombine,simplifycfg,globaldce",
+        "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/analysis-input.ll",
+        "-S",
+        "-o",
+        "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/analysis.ll"
+      ],
+      "exit": 0,
+      "tool_sha256": "65ba666f03247347f5fcc329512a612954e56dd53448cc762bdd679c53d22d18"
+    }
+  ],
+  "files": [
+    {
+      "path": "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/linked-source.ll",
+      "bytes": 827281,
+      "sha256": "de69d7083fceebf5446bba46853759f64e667ac4e1c47c5b84560dac408268df"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/analysis-input.ll",
+      "bytes": 827241,
+      "sha256": "8c412f125cc6112a24af65722ce1a46d1a5b72849b91d5827e039f1f2a22b063"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r079-ascend/runs/linked-analysis-v2/output/analysis.ll",
+      "bytes": 417943,
+      "sha256": "37b7b95d715471ac6b5edf53519bc7a453fa57474c5e6795c8853208fc5a5090"
+    }
+  ],
+  "original_binary_sha256": "86d3a4b717d38cd23cf5ddf912ebdb130c0b08944a6b8a9e12beb2b8ae12c322",
+  "original_linked_input_sha256": "a921993c702b4fdf12b894a83b3bfec5c4dc7f82d7b50c5a2d8af8964bda7f2d",
+  "removed_only_target_triple": true,
+  "data_layout_preserved": true,
+  "vendor_final_IR": false,
+  "target_codegen_executed": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "state_writer_qualified": false
+}

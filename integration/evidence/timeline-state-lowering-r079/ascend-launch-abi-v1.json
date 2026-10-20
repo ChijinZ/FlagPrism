@@ -1,0 +1,678 @@
+{
+  "path": "/tmp/chijin-timeline-r049/runs/installed-v2/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py",
+  "sha256": "07ece28ddf331e61c3dc16018db104b0bc50c96621d2feefdd3419d6a8075859",
+  "lines": [
+    {
+      "line": 81,
+      "text": "        env_arch = get_ascend_arch_from_env()"
+    },
+    {
+      "line": 82,
+      "text": ""
+    },
+    {
+      "line": 83,
+      "text": "    def load_binary(self, name, kernel, shared, device, mix_mode):"
+    },
+    {
+      "line": 84,
+      "text": "        return self.npu_utils_mod.load_kernel_binary(name, kernel, shared, device, mix_mode)"
+    },
+    {
+      "line": 85,
+      "text": ""
+    },
+    {
+      "line": 86,
+      "text": "    @functools.lru_cache()"
+    },
+    {
+      "line": 87,
+      "text": "    def get_device_properties(self, device):"
+    },
+    {
+      "line": 88,
+      "text": "        # temperoarily added \"max_shared_mem\" properties to avoid triton-compiler complain"
+    },
+    {
+      "line": 151,
+      "text": "        # setup for remote run"
+    },
+    {
+      "line": 152,
+      "text": "        # TODO: use a var to pack all vars required to run on a remote machine"
+    },
+    {
+      "line": 153,
+      "text": "        self.mix_mode = metadata.mix_mode"
+    },
+    {
+      "line": 154,
+      "text": "        self.shared = metadata.shared"
+    },
+    {
+      "line": 155,
+      "text": "        # initialize launcher"
+    },
+    {
+      "line": 156,
+      "text": "        import importlib.util"
+    },
+    {
+      "line": 157,
+      "text": "        spec = importlib.util.spec_from_file_location(\"__triton_launcher\", so_launcher_path)"
+    },
+    {
+      "line": 500,
+      "text": "    lock_num = int(metadata.lock_num) \\"
+    },
+    {
+      "line": 501,
+      "text": "                          if hasattr(metadata, 'lock_num') else -1"
+    },
+    {
+      "line": 502,
+      "text": "    bs_task_type = metadata.bs_task_type if hasattr(metadata, 'bs_task_type') else 0"
+    },
+    {
+      "line": 503,
+      "text": "    mix_mode = metadata.mix_mode"
+    },
+    {
+      "line": 504,
+      "text": "    compile_on_910_95 = metadata.compile_on_910_95"
+    },
+    {
+      "line": 505,
+      "text": "    parallel_mode = metadata.parallel_mode"
+    },
+    {
+      "line": 506,
+      "text": "    enable_simt = (\"simt\" in parallel_mode) or metadata.force_simt_only"
+    },
+    {
+      "line": 507,
+      "text": ""
+    },
+    {
+      "line": 545,
+      "text": "        }[ty_to_cpp(ty)]"
+    },
+    {
+      "line": 546,
+      "text": ""
+    },
+    {
+      "line": 547,
+      "text": "    def _format_of_msprof_task_type_ratio(bs_task_type, mix_mode):"
+    },
+    {
+      "line": 548,
+      "text": "        # Default fallback based on mix_mode"
+    },
+    {
+      "line": 549,
+      "text": "        default_task_type = \"MSPROF_GE_TASK_TYPE_AIV\" if mix_mode == \"aiv\" else \"MSPROF_GE_TASK_TYPE_AI_CORE\""
+    },
+    {
+      "line": 550,
+      "text": ""
+    },
+    {
+      "line": 551,
+      "text": "        if not bs_task_type:"
+    },
+    {
+      "line": 552,
+      "text": "            return default_task_type, 0"
+    },
+    {
+      "line": 553,
+      "text": ""
+    },
+    {
+      "line": 554,
+      "text": "        task_type_num, mix_block_dim_ratio = divmod(int(bs_task_type), 10)"
+    },
+    {
+      "line": 555,
+      "text": "        task_type_map = {"
+    },
+    {
+      "line": 556,
+      "text": "            1: \"MSPROF_GE_TASK_TYPE_AIV\","
+    },
+    {
+      "line": 557,
+      "text": "            2: \"MSPROF_GE_TASK_TYPE_AI_CORE\","
+    },
+    {
+      "line": 558,
+      "text": "            3: \"MSPROF_GE_TASK_TYPE_MIX_AIC\","
+    },
+    {
+      "line": 559,
+      "text": "            4: \"MSPROF_GE_TASK_TYPE_MIX_AIV\","
+    },
+    {
+      "line": 560,
+      "text": "        }"
+    },
+    {
+      "line": 561,
+      "text": ""
+    },
+    {
+      "line": 562,
+      "text": "        task_type = task_type_map.get(task_type_num, default_task_type)"
+    },
+    {
+      "line": 563,
+      "text": "        return task_type, mix_block_dim_ratio"
+    },
+    {
+      "line": 564,
+      "text": ""
+    },
+    {
+      "line": 565,
+      "text": "    \"\"\""
+    },
+    {
+      "line": 566,
+      "text": "    args:"
+    },
+    {
+      "line": 567,
+      "text": "        int gridX, gridY, gridZ;"
+    },
+    {
+      "line": 568,
+      "text": "        rtStream_t stream;"
+    },
+    {
+      "line": 569,
+      "text": "        const void *functon;"
+    },
+    {
+      "line": 570,
+      "text": "        PyObject* packed_metadata, *launch_metadata;"
+    },
+    {
+      "line": 571,
+      "text": "        PyObject* launch_enter_hook, *launch_exit_hook;"
+    },
+    {
+      "line": 600,
+      "text": "    ]"
+    },
+    {
+      "line": 601,
+      "text": ""
+    },
+    {
+      "line": 602,
+      "text": "    grid_info = {'X': 'i32', 'Y': 'i32', 'Z': 'i32'}"
+    },
+    {
+      "line": 603,
+      "text": "    # TODO: automatically check if gather load ops are used."
+    },
+    {
+      "line": 604,
+      "text": ""
+    },
+    {
+      "line": 605,
+      "text": "    arch = get_ascend_arch_from_env()"
+    },
+    {
+      "line": 606,
+      "text": "    target_support_ffts = is_ffts_supported(arch) and (not force_disable_ffts())"
+    },
+    {
+      "line": 607,
+      "text": "    enable_device_print = os.getenv(\"TRITON_DEVICE_PRINT\", 'false').lower() in ('true', '1')"
+    },
+    {
+      "line": 608,
+      "text": "    enable_taskqueue = os.getenv(\"TRITON_ENABLE_TASKQUEUE\", 'true').lower() in ('true', '1')"
+    },
+    {
+      "line": 609,
+      "text": "    enable_grid_warn_print = os.getenv(\"TRITON_GRID_WARN_PRINT\", 'false').lower() in ('true', '1')"
+    },
+    {
+      "line": 610,
+      "text": "    # Per-kernel metadata wins; fall back to the env var when unset."
+    },
+    {
+      "line": 611,
+      "text": "    enable_auto_map_parallel_blocks = getattr(metadata, \"enable_auto_blockify\", None)"
+    },
+    {
+      "line": 612,
+      "text": "    if enable_auto_map_parallel_blocks is None:"
+    },
+    {
+      "line": 613,
+      "text": "        enable_auto_map_parallel_blocks = _is_auto_map_parallel_blocks_enabled()"
+    },
+    {
+      "line": 614,
+      "text": "    npu_utils = NPUUtils()"
+    },
+    {
+      "line": 615,
+      "text": "    num_physical_blocks = npu_utils.get_aivector_core_num() if mix_mode == \"aiv\" else npu_utils.get_aicore_num()"
+    },
+    {
+      "line": 616,
+      "text": "    task_type, mix_block_dim_ratio = _format_of_msprof_task_type_ratio(bs_task_type, mix_mode)"
+    },
+    {
+      "line": 617,
+      "text": "    is_mix_task_type = \"true\" if (\"MIX\" in task_type) else \"false\""
+    },
+    {
+      "line": 618,
+      "text": "    LINE_CHANGE_CHAR = chr(10)  # it is \\n"
+    },
+    {
+      "line": 619,
+      "text": "    alloc_success_code = 'return 1;'"
+    },
+    {
+      "line": 620,
+      "text": "    sync_lock_fail_code = 'fprintf(stderr, \"Error: syncBlockLock allocation failed\\\\n\"); return;'"
+    },
+    {
+      "line": 621,
+      "text": "    workspace_fail_code = 'fprintf(stderr, \"Error: workspace allocation failed\\\\n\"); return;'"
+    },
+    {
+      "line": 755,
+      "text": "      nodeBasicInfo.data.nodeBasicInfo.opName = opNameHashID;"
+    },
+    {
+      "line": 756,
+      "text": "      nodeBasicInfo.data.nodeBasicInfo.opType = opNameHashID;"
+    },
+    {
+      "line": 757,
+      "text": "      nodeBasicInfo.data.nodeBasicInfo.taskType = {task_type};"
+    },
+    {
+      "line": 758,
+      "text": "      nodeBasicInfo.data.nodeBasicInfo.blockDim = nodeBasicBlockDim;"
+    },
+    {
+      "line": 759,
+      "text": "      MsprofReportCompactInfo(0, static_cast<void *>(&nodeBasicInfo), sizeof(MsprofCompactInfo));"
+    },
+    {
+      "line": 760,
+      "text": ""
+    },
+    {
+      "line": 761,
+      "text": "      // 'mix' kernel need to report the ctxID"
+    },
+    {
+      "line": 762,
+      "text": "      if ({is_mix_task_type} > 0) {{"
+    },
+    {
+      "line": 763,
+      "text": "        MsprofAdditionalInfo info;"
+    },
+    {
+      "line": 764,
+      "text": "        info.level = MSPROF_REPORT_NODE_LEVEL;"
+    },
+    {
+      "line": 765,
+      "text": "        info.type = MSPROF_REPORT_NODE_CONTEXT_ID_INFO_TYPE;"
+    },
+    {
+      "line": 766,
+      "text": "        info.threadId = threadId;"
+    },
+    {
+      "line": 828,
+      "text": ""
+    },
+    {
+      "line": 829,
+      "text": "    cpp_kernel_launch = f\"\"\""
+    },
+    {
+      "line": 830,
+      "text": "    ret = rtKernelLaunch(func, blockNum, static_cast<void*>(&args), sizeof(args), NULL, stream);"
+    },
+    {
+      "line": 831,
+      "text": "\"\"\""
+    },
+    {
+      "line": 832,
+      "text": "    if compile_on_910_95 and enable_simt:"
+    },
+    {
+      "line": 833,
+      "text": "        cpp_kernel_launch = f\"\"\""
+    },
+    {
+      "line": 834,
+      "text": "    rtArgsEx_t argsInfo = {{}};"
+    },
+    {
+      "line": 837,
+      "text": "    rtTaskCfgInfo_t cfgInfo = {{}};"
+    },
+    {
+      "line": 838,
+      "text": "    cfgInfo.localMemorySize = {metadata.shared_mem_dynamic_size};"
+    },
+    {
+      "line": 839,
+      "text": "    ret = rtKernelLaunchWithFlagV2(func, blockNum, &argsInfo, NULL, stream, 0, &cfgInfo);"
+    },
+    {
+      "line": 840,
+      "text": "\"\"\""
+    },
+    {
+      "line": 841,
+      "text": ""
+    },
+    {
+      "line": 842,
+      "text": "    precompile_headers = f\"\"\""
+    },
+    {
+      "line": 843,
+      "text": "#include \"precompiled.h\""
+    },
+    {
+      "line": 849,
+      "text": "{extract_device_print_code_from_cann() if enable_device_print else ''}"
+    },
+    {
+      "line": 850,
+      "text": "#define PY_SSIZE_T_CLEAN"
+    },
+    {
+      "line": 851,
+      "text": "{'#define ENABLE_GRID_WARN_PRINT' if enable_grid_warn_print else ''}"
+    },
+    {
+      "line": 852,
+      "text": "#define TENSOR_KIND_INPUT 0"
+    },
+    {
+      "line": 853,
+      "text": "#define TENSOR_KIND_OUTPUT 1"
+    },
+    {
+      "line": 854,
+      "text": "#define TENSOR_KIND_INPUT_OUTPUT 2"
+    },
+    {
+      "line": 855,
+      "text": ""
+    },
+    {
+      "line": 860,
+      "text": ""
+    },
+    {
+      "line": 861,
+      "text": "// FlagPrism: append the optional debugger pointer to the generated launch ABI."
+    },
+    {
+      "line": 862,
+      "text": "static void _launch(const char* kernelName, const void* func, rtStream_t stream, int gridX, int gridY, int gridZ, FlagPrismReceiptSinkHandle receiptSink, std::vector<std::vector<int64_t>> &tensorShapes, std::vector<int> &tensorKinds{', ' + arg_decls if len(signature) > 0 else ''}{debug_abi.launch_declaration}) {{"
+    },
+    {
+      "line": 863,
+      "text": "  // only 1D parallelization is supported for NPU"
+    },
+    {
+      "line": 864,
+      "text": "  // Pointer type becomes flattend 1-D Memref tuple: base_ptr, data_ptr, offset, shape, stride"
+    },
+    {
+      "line": 865,
+      "text": "  // base_ptr offset shape and stride are not used, arbitrarily set for now"
+    },
+    {
+      "line": 866,
+      "text": "  std::string name = \"\";"
+    },
+    {
+      "line": 867,
+      "text": "  name.append(kernelName);"
+    },
+    {
+      "line": 868,
+      "text": "  void *workspace_addr_ptr = NULL;"
+    },
+    {
+      "line": 869,
+      "text": "  uint32_t blockNum4Workspace = gridX * gridY * gridZ;"
+    },
+    {
+      "line": 870,
+      "text": "  {get_backend_func(\"pre_launch\", True)}"
+    },
+    {
+      "line": 871,
+      "text": "  {f'''"
+    },
+    {
+      "line": 872,
+      "text": "  uint64_t totalWorkSpaceSize = {workspace_size} * blockNum4Workspace;"
+    },
+    {
+      "line": 873,
+      "text": "  {get_backend_func(\"allocate_memory\", \"totalWorkSpaceSize\", \"stream\")}"
+    },
+    {
+      "line": 875,
+      "text": "  {'auto launch_call = [=]() -> rtError_t' if enable_taskqueue else ''} {{"
+    },
+    {
+      "line": 876,
+      "text": "    {get_backend_func(\"pre_launch\", False)}"
+    },
+    {
+      "line": 877,
+      "text": "    uint32_t blockNum = gridX * gridY * gridZ;"
+    },
+    {
+      "line": 878,
+      "text": ""
+    },
+    {
+      "line": 879,
+      "text": "    #ifdef ENABLE_GRID_WARN_PRINT"
+    },
+    {
+      "line": 880,
+      "text": "      static bool warned = false;"
+    },
+    {
+      "line": 881,
+      "text": "      if (!warned && blockNum > (uint32_t){num_physical_blocks}) {{"
+    },
+    {
+      "line": 886,
+      "text": "    {'blockNum = std::min(blockNum, (uint32_t)' + str(num_physical_blocks) + ');' if enable_auto_map_parallel_blocks else ''}"
+    },
+    {
+      "line": 887,
+      "text": "    // set mixBlockNumRation for nodeBasicBlockDim for msprof report"
+    },
+    {
+      "line": 888,
+      "text": "    uint32_t mixBlockNumRation = {mix_block_dim_ratio};"
+    },
+    {
+      "line": 889,
+      "text": "    uint32_t nodeBasicBlockDim = (mixBlockNumRation << 16) + blockNum;"
+    },
+    {
+      "line": 890,
+      "text": ""
+    },
+    {
+      "line": 891,
+      "text": "    {'cce::internal::DebugTunnelData *DTData = cce::internal::DebugTunnel::Open(blockNum);' if enable_device_print else ''}"
+    },
+    {
+      "line": 892,
+      "text": "    rtError_t ret = RT_ERROR_NONE;"
+    },
+    {
+      "line": 920,
+      "text": "      // FlagPrism: optional debugger control pointer; empty in normal launches."
+    },
+    {
+      "line": 921,
+      "text": "      {debug_abi.struct_field}"
+    },
+    {
+      "line": 922,
+      "text": "      {' '.join(f'{ty_to_cpp(ty)} grid{mark} __attribute__((aligned(4)));' for mark, ty in grid_info.items())}"
+    },
+    {
+      "line": 923,
+      "text": "      {'void* DTData __attribute__((aligned(8)));' if enable_device_print else ''}"
+    },
+    {
+      "line": 924,
+      "text": "    }} args = {{"
+    },
+    {
+      "line": 925,
+      "text": "      {'static_cast<void*>(ffts_addr),' if target_support_ffts else ''}"
+    },
+    {
+      "line": 926,
+      "text": "      {('static_cast<void*>(syncBlockLock_ptr),' if lock_num > 0 else 'nullptr,') if not metadata.force_simt_only else ''}"
+    },
+    {
+      "line": 930,
+      "text": "      )}"
+    },
+    {
+      "line": 931,
+      "text": "      {debug_abi.struct_value}  // FlagPrism"
+    },
+    {
+      "line": 932,
+      "text": "      {', '.join(f'static_cast<{ty_to_cpp(ty)}>(grid{mark})' for mark, ty in grid_info.items())}"
+    },
+    {
+      "line": 933,
+      "text": "      {', static_cast<void*>(DTData)' if enable_device_print else ''}"
+    },
+    {
+      "line": 934,
+      "text": "    }};"
+    },
+    {
+      "line": 935,
+      "text": "    {cpp_msprof_call_before_launch}"
+    },
+    {
+      "line": 936,
+      "text": "    {cpp_kernel_launch}"
+    },
+    {
+      "line": 977,
+      "text": ""
+    },
+    {
+      "line": 978,
+      "text": "static PyObject* launch(PyObject* self, PyObject* args) {{"
+    },
+    {
+      "line": 979,
+      "text": "  int gridX, gridY, gridZ;"
+    },
+    {
+      "line": 980,
+      "text": "  rtStream_t stream;"
+    },
+    {
+      "line": 981,
+      "text": "  const void *function;"
+    },
+    {
+      "line": 982,
+      "text": "  PyObject *packedMetadata = NULL;"
+    },
+    {
+      "line": 983,
+      "text": "  PyObject *launch_metadata = NULL;"
+    },
+    {
+      "line": 991,
+      "text": "  if(!PyArg_ParseTuple("
+    },
+    {
+      "line": 992,
+      "text": "      args, \\\"{format}\\\","
+    },
+    {
+      "line": 993,
+      "text": "      &gridX, &gridY, &gridZ, &stream, &function,"
+    },
+    {
+      "line": 994,
+      "text": "      &packedMetadata, &launch_metadata,"
+    },
+    {
+      "line": 995,
+      "text": "      &launch_enter_hook, &launch_exit_hook{args_list})) {{"
+    },
+    {
+      "line": 996,
+      "text": "    return NULL;"
+    },
+    {
+      "line": 997,
+      "text": "  }}"
+    },
+    {
+      "line": 1034,
+      "text": "  {newline.join(ptr_decls)}"
+    },
+    {
+      "line": 1035,
+      "text": "  // FlagPrism: forward the optional pointer after all user arguments."
+    },
+    {
+      "line": 1036,
+      "text": "  _launch(kernelName, function, stream, gridX, gridY, gridZ, receiptSink, tensorShapes, tensorKinds{', ' + ', '.join(internal_args_list) if len(internal_args_list) > 0 else ''}{debug_abi.call_argument});"
+    },
+    {
+      "line": 1037,
+      "text": "  if (PyErr_Occurred()) {{"
+    },
+    {
+      "line": 1038,
+      "text": "    return NULL;"
+    },
+    {
+      "line": 1039,
+      "text": "  }}"
+    },
+    {
+      "line": 1040,
+      "text": "  if(launch_exit_hook != Py_None){{"
+    }
+  ]
+}

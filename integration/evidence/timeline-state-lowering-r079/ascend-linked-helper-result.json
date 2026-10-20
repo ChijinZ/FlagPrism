@@ -1,0 +1,27 @@
+{
+  "status": "original_actual_linked_helper_extraction",
+  "command": [
+    "/usr/bin/llvm-extract-15",
+    "--recursive",
+    "--func=_mlir_ciface_store_ubuf_to_gm_1d_int32_t",
+    "/tmp/chijin-timeline-r079-ascend/runs/ordinary-lowering-v1/output/codegen/0462008184e845b2b506949a483e200a/d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0.bc",
+    "-S",
+    "-o",
+    "/tmp/chijin-timeline-r079-ascend/runs/state-helper-v1/output/state-writeback.ll"
+  ],
+  "exit": 0,
+  "tool_sha256": "6cea798b7acf7b4121dde311007d168b60805319ad4de050a557bdd2be971364",
+  "original_binary_sha256": "86d3a4b717d38cd23cf5ddf912ebdb130c0b08944a6b8a9e12beb2b8ae12c322",
+  "original_linked_meta": {
+    "argument_index": 9,
+    "path": "/usr/local/Ascend/cann-9.0.0/tools/bishengir/lib/meta_op.aiv.bc",
+    "sha256": "d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0",
+    "bytes": 13019036,
+    "retained_file": "d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0.bc"
+  },
+  "device_executed": false,
+  "application_replayed": false,
+  "state_writer_qualified": false,
+  "bytes": 69167,
+  "sha256": "584574b4dba67e087259e89743f745e57f3ad18d67f24f983721d8ed488920cf"
+}

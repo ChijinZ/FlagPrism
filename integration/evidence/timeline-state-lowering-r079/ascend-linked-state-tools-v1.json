@@ -1,0 +1,25 @@
+{
+  "errors": {
+    "linked-llvm.stderr": "error: unsupported option '-print-after'\n"
+  },
+  "tools": {
+    "llvm-extract-15": "/usr/bin/llvm-extract-15",
+    "llvm-dis-15": "/usr/bin/llvm-dis-15",
+    "llvm-link-15": "/usr/bin/llvm-link-15",
+    "opt-15": "/usr/bin/opt-15"
+  },
+  "sdk_tools": [
+    "bisheng",
+    "bisheng-tune",
+    "cce-ld",
+    "ccec",
+    "ld.lld",
+    "lld",
+    "lld-link",
+    "llvm-ar",
+    "llvm-link",
+    "llvm-objcopy",
+    "llvm-objdump",
+    "llvm-strip"
+  ]
+}

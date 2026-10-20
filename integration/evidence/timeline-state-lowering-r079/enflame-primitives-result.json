@@ -1,0 +1,23 @@
+{
+  "input": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+  "input_bytes": 6446344,
+  "input_sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a",
+  "device_executed": false,
+  "application_replayed": false,
+  "state_writer_qualified": false,
+  "status": "SDK_builtin_selected_root_semantic_inspection",
+  "argv": [
+    "/opt/tops/llvm11/bin/opt",
+    "-internalize-public-api-list=tops_get_thread_id,tops_get_block_id,tops_memcpy_async,tops_deslice_async_1_si32,tops_slice_deslice_async_2_si32",
+    "-internalize",
+    "-globaldce",
+    "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+    "-S",
+    "-o",
+    "/tmp/chijin-timeline-r079-gcu/runs/state-primitives-v2/output/state-primitives.ll"
+  ],
+  "exit": 0,
+  "tool_sha256": "96a7c03576a78d29dbe9e5fc3e16b0821b02dfef38c19b0de4de5c9988139598",
+  "output_bytes": 89574,
+  "output_sha256": "ed5545318799081aec1c77d62ee6980cb5a3b1e1beb0deaa2a11ffede52124b9"
+}

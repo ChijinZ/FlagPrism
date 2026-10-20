@@ -1,0 +1,37 @@
+{
+  "status": "ordinary_passive_codegen_probe",
+  "exit": 0,
+  "elapsed_s": 3.319319520611316,
+  "original_sdk": {
+    "path": "/usr/local/Ascend/cann-9.0.0/tools/bishengir/bin/bishengir-compile",
+    "sha256": "4a1312e7d3aa2d21a220b3acd081e90d7b4a3d043af5da98e8cfc681c13048ef"
+  },
+  "original_npubin_sha256": "86d3a4b717d38cd23cf5ddf912ebdb130c0b08944a6b8a9e12beb2b8ae12c322",
+  "original_text": {
+    "address": 0,
+    "bytes": 1120,
+    "sha256": "b51914ed6c5b706ed3d309b1b640cdf241d8574ca3d6494b39f1ce582e8cf1e5"
+  },
+  "produced": [
+    {
+      "path": "/tmp/chijin-timeline-r079-ascend/runs/ordinary-lowering-v1/output/kernel.o",
+      "sha256": "86d3a4b717d38cd23cf5ddf912ebdb130c0b08944a6b8a9e12beb2b8ae12c322",
+      "bytes": 3648,
+      "text": {
+        "address": 0,
+        "bytes": 1120,
+        "sha256": "b51914ed6c5b706ed3d309b1b640cdf241d8574ca3d6494b39f1ce582e8cf1e5"
+      },
+      "whole_binary_identical": true,
+      "text_identical": true
+    }
+  ],
+  "codegen_receipts": [
+    "/tmp/chijin-timeline-r079-ascend/runs/ordinary-lowering-v1/output/codegen/0462008184e845b2b506949a483e200a/receipt.json",
+    "/tmp/chijin-timeline-r079-ascend/runs/ordinary-lowering-v1/output/codegen/3b3ed9da2ab243b98eaa01ec799ccf0f/receipt.json"
+  ],
+  "application_replayed": false,
+  "device_executed": false,
+  "SDK_or_original_modified": false,
+  "state_writer_qualified": false
+}

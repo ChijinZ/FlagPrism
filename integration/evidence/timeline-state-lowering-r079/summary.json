@@ -1,0 +1,43 @@
+{
+  "status": "finite_lowering_inspection_progress_not_writer_qualification",
+  "base_commit": "b508acf6e5153eac827b2dd31993bfaa4b1a90a7",
+  "product_runtime_changed": false,
+  "device_executed": false,
+  "mathematical_application_replayed": false,
+  "SDK_rebuilt": false,
+  "whole_goal_qualified": false,
+  "state_writer_qualified": {
+    "ascend": false,
+    "enflame": false
+  },
+  "ascend": {
+    "case": "q03-s0-c0 ordinary",
+    "original_sdk_sha256": "4a1312e7d3aa2d21a220b3acd081e90d7b4a3d043af5da98e8cfc681c13048ef",
+    "original_and_reproduced_complete_npubin_sha256": "86d3a4b717d38cd23cf5ddf912ebdb130c0b08944a6b8a9e12beb2b8ae12c322",
+    "complete_binary_identical": true,
+    "actual_codegen_input_LLVM_sha256": "3a56e0820276d7a7f6e487de796350db8067278a7546389e86ae4ebeb257168c",
+    "actual_linked_meta_op_sha256": "d5c10fbdcb1a976e888a2ddb2bcccd0b66febc10e959e044d141ad2760b63fa0",
+    "actual_helper_extraction_sha256": "584574b4dba67e087259e89743f745e57f3ad18d67f24f983721d8ed488920cf",
+    "analysis_view_sha256": "37b7b95d715471ac6b5edf53519bc7a453fa57474c5e6795c8853208fc5a5090",
+    "analysis_is_vendor_final_IR": false
+  },
+  "enflame": {
+    "actual_builtin_sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a",
+    "selected_primitive_LLVM_sha256": "ed5545318799081aec1c77d62ee6980cb5a3b1e1beb0deaa2a11ffede52124b9",
+    "original_math_binary_linkage_not_yet_established": true
+  },
+  "receipts": {
+    "ascend": {
+      "archive": "ascend-receipts-v1.tgz",
+      "sha256": "b2995083b5879eaa2ddd98e755ef9f8e7fd50b0e1b72c3a3434ca30f9e74b78b",
+      "ledger_entries": 81,
+      "bytes": 4004823
+    },
+    "enflame": {
+      "archive": "enflame-receipts-v1.tgz",
+      "sha256": "f2c1f1edffe12dd1f22a9d1a276b3e982ba3d683cbd273714618718ea8e6f797",
+      "ledger_entries": 15,
+      "bytes": 18069
+    }
+  }
+}
