@@ -44,3 +44,18 @@ Use a fresh output directory for the optimized Python mode as well. These
 checks exercise real LLVM parsing, invalid CFG/PHI rejection, endpoint SSA
 identity, poison, and indirect calls; they do not replace actual actor-input
 or device acceptance.
+
+The internal Python `timeline_ascend_regions.bind_record_endpoints` consumer
+associates these facts with the declared actor function and explicit trace
+argument from its compiler ABI. It checks a contiguous volatile eight-word
+record, site/semantic descriptor, actual start/end clock definitions, the
+tick-or-zero start PHI, and the commit expression over the recorded fields.
+Missing/ambiguous tuples remain unverified. Scan exhaustion aborts the result;
+it cannot certify an earlier match as unique.
+
+Its `llvm_tuple_endpoints_bound` result concerns that association only.
+Selection, source-body containment, actor-role semantics, loop paths and final
+native scheduling remain explicitly unverified. This internal rule is not yet
+connected to normal capture/offline inspection. `ascend_record_rule_cases.py`
+contains endpoint, field, pointer, descriptor, duplicate and interrupted-scan
+faults applied to a real actor graph by the retained-input runner.
