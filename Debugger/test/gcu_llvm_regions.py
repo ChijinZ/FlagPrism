@@ -344,6 +344,60 @@ class BoundaryTests(unittest.TestCase):
         result = self.checked(report, manifest)
         self.assertEqual(result['loop']['status'], 'unverified', result)
 
+    def test_original_members_resolve_an_unknown_border_without_changing_it(
+            self):
+        report, manifest = self.indexed('legacy-runtime')
+        manifest['sites'][0]['location'] = 'loc(unknown)'
+        self.assertEqual(
+            self.checked(report, manifest)['status'], 'unverified')
+        manifest['sites'][0]['source_membership'] = dict(
+            schema_version=1,
+            status='original_execution_members_indexed',
+            members=[
+                dict(operation_index=1,
+                     operation='arith.mulf',
+                     source_op_id=17,
+                     scope_id=1,
+                     file='fixture.py',
+                     line=1,
+                     column=20)
+            ],
+            enclosing_controls=[])
+        result = self.checked(report, manifest)
+        self.assertEqual(result['status'], 'llvm_observer_boundary_checked',
+                         result)
+        self.assertEqual(result['source_membership']['source_op_ids'], [17])
+        self.assertTrue(
+            result['source_membership']['producer_source_identity_required'])
+        self.assertEqual(manifest['sites'][0]['location'], 'loc(unknown)')
+
+    def test_invalid_or_placeholder_original_members_do_not_create_origins(
+            self):
+        for member in (dict(operation_index=1,
+                            source_op_id=17,
+                            scope_id=1,
+                            file='-',
+                            line=1),
+                       dict(operation_index=1,
+                            source_op_id=True,
+                            scope_id=1,
+                            file='fixture.py',
+                            line=1),
+                       dict(operation_index=-1,
+                            source_op_id=17,
+                            scope_id=1,
+                            file='fixture.py',
+                            line=1)):
+            with self.subTest(member=member):
+                report, manifest = self.indexed('legacy-runtime')
+                manifest['sites'][0]['location'] = 'loc(unknown)'
+                manifest['sites'][0]['source_membership'] = dict(
+                    schema_version=1,
+                    status='original_execution_members_indexed',
+                    members=[member])
+                self.assertEqual(
+                    self.checked(report, manifest)['status'], 'unverified')
+
     def test_fresh_tuple_and_runtime_iteration(self):
         _, _, region = self.positive()
         self.assertEqual(region['loop']['selected_paths'], 2)

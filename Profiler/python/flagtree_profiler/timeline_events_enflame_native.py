@@ -5,6 +5,7 @@ It does not report native engine busy or grant a shared counter epoch.
 """
 from collections import defaultdict
 import hashlib
+import json
 import struct
 
 from .timeline_events import stable_id, validate_raw_batch, _integer
@@ -21,6 +22,52 @@ SEMANTICS = {
 def _need(condition, message):
     if not condition:
         raise ValueError(message)
+
+
+def _member_navigation(row, budget):
+    """Retain real member coordinates, without dividing a fused duration."""
+    membership = row.get('source_membership')
+    if membership is None:
+        return [], []
+    _need(
+        type(membership) is dict
+        and type(membership.get('schema_version')) is int
+        and membership['schema_version'] == 1,
+        'Invalid execution source-membership schema')
+    if membership.get('status') != 'original_execution_members_indexed':
+        return [], []
+    members = membership.get('members')
+    _need(
+        type(members) is list and len(members) <= 8192,
+        'Execution source-member budget exceeded')
+    locations, ids, indices = set(), set(), set()
+    for member in members:
+        budget[0] += 1
+        _need(budget[0] <= 100000, 'Execution source-member budget exceeded')
+        _need(type(member) is dict, 'Invalid execution source member')
+        index = _integer(member.get('operation_index'), 'source member index')
+        _need(index not in indices, 'Duplicate execution source member')
+        indices.add(index)
+        op_id = _integer(member.get('source_op_id'), 'source operation', 0,
+                         0x7fffffff)
+        _integer(member.get('scope_id'), 'source scope', 0, 0x7fffffff)
+        if op_id:
+            ids.add(op_id)
+        path = member.get('file')
+        if path is None:
+            continue
+        _need(
+            type(path) is str and len(path) <= 4096,
+            'Invalid execution source filename')
+        line = _integer(member.get('line'), 'source line', 0, 0xffffffff)
+        column = _integer(member.get('column'), 'source column', 0, 0xffffffff)
+        budget[1] += len(path.encode('utf-8')) + 256
+        _need(budget[1] <= 4 * 1024 * 1024,
+              'Execution source-member text budget exceeded')
+        if path not in ('', '-', '<unknown>') and line > 0:
+            locations.add('loc(' + json.dumps(path, ensure_ascii=False) + ':' +
+                          str(line) + ':' + str(column) + ')')
+    return sorted(locations), sorted(ids)
 
 
 def decode_execution_capture(raw, *, compiler_metadata, identity, association,
@@ -87,6 +134,7 @@ def decode_execution_capture(raw, *, compiler_metadata, identity, association,
         type(descriptions) is list and 0 < len(descriptions) <= 512,
         'Invalid execution site table')
     descriptions_by_id, sites, sources, site_ids = {}, [], [], {}
+    source_budget = [0, 0]
     for row in descriptions:
         _need(type(row) is dict, 'Invalid execution descriptor')
         site = _integer(row.get('id'), 'execution site', 1, 0xffffffff)
@@ -107,18 +155,33 @@ def decode_execution_capture(raw, *, compiler_metadata, identity, association,
                  relation='compiler_origin_navigation',
                  location=row['location'],
                  provenance='actual_SDK_execution_IR_location'))
+        source_refs = [source]
+        member_locations, member_ids = _member_navigation(row, source_budget)
+        for location in member_locations:
+            member_source = stable_id((identity['binary_id'], ), 'source',
+                                      str(site), 'original-member', location)
+            sources.append(
+                dict(id=member_source,
+                     source_sha256=None,
+                     relation='compiler_origin_navigation',
+                     location=location,
+                     provenance='actual_original_execution_IR_member'))
+            source_refs.append(member_source)
+        attributes = {
+            'enflame.native_primitive': row['operation'],
+            'enflame.execution_kind': kind,
+            'enflame.source_cost_verified': False,
+            'enflame.engine_busy_verified': False
+        }
+        if member_locations:
+            attributes['enflame.source_member_op_ids'] = member_ids
         sites.append(
             dict(id=sid,
                  name=row['operation'],
                  semantic=SEMANTICS[kind],
                  backend_site_id=str(site),
-                 source_ids=[source],
-                 attributes={
-                     'enflame.native_primitive': row['operation'],
-                     'enflame.execution_kind': kind,
-                     'enflame.source_cost_verified': False,
-                     'enflame.engine_busy_verified': False
-                 }))
+                 source_ids=source_refs,
+                 attributes=attributes))
     observers, records, events, commands, mapping = [], [], [], [], {}
     for slot, program in enumerate(programs):
         base = slot * stride

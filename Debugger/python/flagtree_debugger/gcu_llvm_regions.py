@@ -350,6 +350,47 @@ def _origins(location):
         r'"((?:[^"\\\n]|\\.)*)":(\d+):\d+', location))
 
 
+def _membership_origins(site):
+    membership = site.get('source_membership')
+    if membership is None:
+        return set(), []
+    _need(
+        type(membership) is dict
+        and type(membership.get('schema_version')) is int
+        and membership['schema_version'] == 1,
+        'Invalid original execution source-membership schema')
+    if membership.get('status') != 'original_execution_members_indexed':
+        return set(), []
+    members = membership.get('members')
+    _need(
+        type(members) is list and len(members) <= 8192,
+        'Original execution source-member budget exceeded')
+    origins, ids, indices = set(), set(), set()
+    for member in members:
+        _need(
+            type(member) is dict and type(member.get('operation_index')) is int
+            and member['operation_index'] >= 0
+            and member['operation_index'] not in indices,
+            'Invalid or duplicate original execution member')
+        indices.add(member['operation_index'])
+        op_id = member.get('source_op_id')
+        _need(
+            type(op_id) is int and 0 <= op_id <= 0x7fffffff
+            and type(member.get('scope_id')) is int
+            and member['scope_id'] >= 0,
+            'Invalid original source operation identity')
+        if op_id:
+            ids.add(op_id)
+        path, line = member.get('file'), member.get('line')
+        if path is not None:
+            _need(
+                type(path) is str and len(path) <= 4096 and type(line) is int
+                and line >= 0, 'Invalid original source member coordinate')
+            if path not in ('', '-', '<unknown>') and line > 0:
+                origins.add((path, line))
+    return origins, sorted(ids)
+
+
 def _body_family(site, rows, *, legacy=False):
     prefix = {
         'memref_ext.slice_start': 'tops_slice_async_',
@@ -365,6 +406,8 @@ def _body_family(site, rows, *, legacy=False):
         'gpu.barrier': 'tops_syncthreads',
     }.get(site.get('operation'))
     origins = _origins(site.get('location', ''))
+    member_origins, _ = _membership_origins(site)
+    origins.update(member_origins)
     _need(
         origins and all(path not in ('', '-', '<unknown>') and line > 0
                         for path, line in origins),
@@ -689,6 +732,15 @@ def _region(index, site, block, capacity):
                   paths=outcomes,
                   native_schedule_qualified=False,
                   source_exclusive_cost_qualified=False)
+    member_origins, source_ids = _membership_origins(site)
+    if member_origins:
+        result['source_membership'] = dict(
+            source_op_ids=source_ids,
+            coordinates=[
+                dict(file=path, line=line)
+                for path, line in sorted(member_origins)
+            ],
+            producer_source_identity_required=True)
     try:
         result['loop'] = _loop(index, result)
     except ValueError as error:

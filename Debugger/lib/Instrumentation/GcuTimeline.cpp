@@ -14,6 +14,7 @@
 #include "mlir/IR/Verifier.h"
 #include "mlir/Parser/Parser.h"
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/FormatVariadic.h"
 #include "llvm/Support/JSON.h"
 #include "llvm/Support/raw_ostream.h"
@@ -131,6 +132,170 @@ std::optional<Site> classify(Operation *op, uint32_t id) {
   if (name == "gpu.barrier")
     return Site{op, id, Barrier, {}, {}, {}, {}};
   return std::nullopt;
+}
+
+void collectSites(func::FuncOp function, uint32_t maxRegions,
+                  SmallVectorImpl<Site> &sites, llvm::json::Array &unknown,
+                  llvm::json::Array &unselectedRegions,
+                  uint32_t &selectedRegions) {
+  function.walk([&](Operation *op) {
+    if (auto site = classify(op, sites.size() + 1))
+      sites.push_back(*site);
+    else {
+      StringRef name = op->getName().getStringRef();
+      if (name.starts_with("memref_ext.") || name == "memref.dma_start")
+        unknown.push_back(llvm::json::Object{
+            {"operation", name.str()}, {"location", printed(op->getLoc())}});
+    }
+  });
+  function.walk([&](Operation *op) {
+    if (op->getName().getStringRef() != "gcu.border")
+      return;
+    auto enter = op->getAttrOfType<StringAttr>("enter");
+    if (!enter || enter.getValue() != "triton_gcu.elementwise_fusion_region")
+      return;
+    unsigned depth = 1;
+    Operation *end = nullptr;
+    for (Operation *next = op->getNextNode(); next;
+         next = next->getNextNode()) {
+      if (next->getName().getStringRef() != "gcu.border")
+        continue;
+      if (auto nested = next->getAttrOfType<StringAttr>("enter"))
+        if (nested.getValue() == enter.getValue())
+          ++depth;
+      if (auto leave = next->getAttrOfType<StringAttr>("leave"))
+        if (leave.getValue() == enter.getValue() && --depth == 0) {
+          end = next;
+          break;
+        }
+    }
+    if (!end) {
+      unknown.push_back(llvm::json::Object{
+          {"operation", "unpaired_elementwise_fusion_region"},
+          {"location", printed(op->getLoc())}});
+      return;
+    }
+    if (selectedRegions == maxRegions) {
+      unselectedRegions.push_back(printed(op->getLoc()));
+      return;
+    }
+    ++selectedRegions;
+    sites.push_back(Site{op,
+                         static_cast<uint32_t>(sites.size() + 1),
+                         Region,
+                         {},
+                         {},
+                         {},
+                         {},
+                         {},
+                         {},
+                         end});
+  });
+}
+
+llvm::json::Object
+sourceMembership(const Site &site,
+                 const llvm::DenseMap<Operation *, uint32_t> &original,
+                 uint32_t &work, uint64_t &detailBytes) {
+  llvm::json::Array members, controls;
+  bool exceeded = false;
+  StringRef reason = "source_member_budget_exceeded";
+  auto escapedSize = [](StringRef value) -> uint64_t {
+    uint64_t bytes = 0;
+    for (unsigned char byte : value.bytes())
+      bytes += byte < 32 ? 6 : (byte == '"' || byte == '\\') ? 2 : 1;
+    return bytes;
+  };
+  auto describe = [&](Operation *op) {
+    if (++work > 100000 || members.size() >= 8192) {
+      exceeded = true;
+      return;
+    }
+    auto found = original.find(op);
+    if (found == original.end())
+      return;
+    StringRef operation = op->getName().getStringRef();
+    auto coordinate = op->getLoc()->findInstanceOf<FileLineColLoc>();
+    StringRef filename =
+        coordinate ? coordinate.getFilename().getValue() : StringRef();
+    if (operation.size() > 1024 || filename.size() > 4096) {
+      exceeded = true;
+      reason = "source_member_text_budget_exceeded";
+      return;
+    }
+    uint64_t estimate = 256 + escapedSize(operation) + escapedSize(filename);
+    if (estimate >
+        4 * 1024 * 1024 - std::min<uint64_t>(detailBytes, 4 * 1024 * 1024)) {
+      exceeded = true;
+      reason = "source_member_text_budget_exceeded";
+      return;
+    }
+    detailBytes += estimate;
+    auto opId = op->getAttrOfType<IntegerAttr>("flagtree.debug.op_id");
+    auto scope = op->getAttrOfType<IntegerAttr>("flagtree.debug.scope_id");
+    auto validId = [](IntegerAttr value) -> int64_t {
+      if (!value || value.getValue().getActiveBits() > 31 ||
+          value.getValue().isNegative())
+        return 0;
+      return value.getInt();
+    };
+    llvm::json::Object item{{"operation_index", found->second},
+                            {"operation", operation.str()},
+                            {"source_op_id", validId(opId)},
+                            {"scope_id", validId(scope)}};
+    // Extract one real file coordinate without recursively expanding a fused
+    // location DAG. Additional original identities remain explicit members.
+    if (coordinate) {
+      item["file"] = filename.str();
+      item["line"] = coordinate.getLine();
+      item["column"] = coordinate.getColumn();
+    }
+    members.push_back(std::move(item));
+  };
+  if (site.end) {
+    for (Operation *op = site.op->getNextNode(); op && op != site.end;
+         op = op->getNextNode()) {
+      if (exceeded)
+        break;
+      op->walk([&](Operation *member) {
+        describe(member);
+        return exceeded ? WalkResult::interrupt() : WalkResult::advance();
+      });
+    }
+  } else {
+    describe(site.op);
+  }
+  for (Operation *parent = site.op->getParentOp(); parent;
+       parent = parent->getParentOp()) {
+    if (++work > 100000) {
+      exceeded = true;
+      break;
+    }
+    StringRef name = parent->getName().getStringRef();
+    if (name != "scf.for" && name != "scf.while" && name != "scf.if")
+      continue;
+    auto ref = original.find(parent);
+    if (ref == original.end() || controls.size() >= 64) {
+      exceeded = true;
+      break;
+    }
+    if (detailBytes > 4 * 1024 * 1024 - 128) {
+      exceeded = true;
+      reason = "source_member_text_budget_exceeded";
+      break;
+    }
+    detailBytes += 128;
+    controls.push_back(llvm::json::Object{{"operation_index", ref->second},
+                                          {"operation", name.str()}});
+  }
+  return llvm::json::Object{
+      {"schema_version", 1},
+      {"status",
+       exceeded ? "unverified" : "original_execution_members_indexed"},
+      {"reason", exceeded ? reason : StringRef()},
+      {"members", std::move(members)},
+      {"enclosing_controls", std::move(controls)},
+      {"source_exclusive_cost_qualified", false}};
 }
 
 struct Recorder {
@@ -311,6 +476,61 @@ struct Recorder {
 };
 } // namespace
 
+llvm::Expected<std::string> indexGcuExecutionOrigins(StringRef input,
+                                                     uint32_t maxRegions) {
+  if (input.size() > 16 * 1024 * 1024 || maxRegions > 128)
+    return error("GCU origin input/region budget exceeded");
+  DialectRegistry registry;
+  registry.insert<arith::ArithDialect, func::FuncDialect, gpu::GPUDialect,
+                  LLVM::LLVMDialect, memref::MemRefDialect, scf::SCFDialect,
+                  vector::VectorDialect>();
+  MLIRContext context(registry);
+  context.allowUnregisteredDialects();
+  context.loadAllAvailableDialects();
+  auto module = parseSourceString<ModuleOp>(input, &context);
+  if (!module || (*module)->hasAttr("flagprism.gcu_execution_timeline_version"))
+    return error("GCU origins require original, uninstrumented execution IR");
+  SmallVector<func::FuncOp> functions;
+  llvm::DenseMap<Operation *, uint32_t> original;
+  module->walk([&](Operation *op) { original[op] = original.size(); });
+  if (original.size() > 100000)
+    return error("GCU origin operation budget exceeded");
+  module->walk([&](func::FuncOp function) {
+    if (!function.isExternal())
+      functions.push_back(function);
+  });
+  if (functions.size() != 1)
+    return error("GCU origins require one inlined execution function");
+  SmallVector<Site> sites;
+  llvm::json::Array unknown, unselected;
+  uint32_t selected = 0, work = 0;
+  uint64_t detailBytes = 0;
+  collectSites(functions.front(), maxRegions, sites, unknown, unselected,
+               selected);
+  if (sites.empty() || sites.size() > 512)
+    return error("GCU origin site budget exceeded");
+  llvm::json::Array descriptors;
+  for (const Site &site : sites)
+    descriptors.push_back(llvm::json::Object{
+        {"id", site.id},
+        {"kind", static_cast<uint32_t>(site.kind)},
+        {"operation", site.op->getName().getStringRef().str()},
+        {"location", printed(site.op->getLoc())},
+        {"source_membership",
+         sourceMembership(site, original, work, detailBytes)}});
+  llvm::json::Object report{{"schema_version", 1},
+                            {"status", "original_execution_sites_indexed"},
+                            {"selected_source_regions", selected},
+                            {"sites", std::move(descriptors)},
+                            {"native_schedule_qualified", false},
+                            {"source_exclusive_cost_qualified", false}};
+  std::string output =
+      llvm::formatv("{0}", llvm::json::Value(std::move(report))).str();
+  if (output.size() > 8 * 1024 * 1024)
+    return error("GCU origin output budget exceeded");
+  return output;
+}
+
 llvm::Expected<GcuExecutionRewrite>
 rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
                             uint32_t capacity, uint32_t maxRegions) {
@@ -349,62 +569,10 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
           "!gcu.ptr<i32>")
     return error("GCU late recorder hidden argument identity/type mismatch");
   SmallVector<Site> sites;
-  llvm::json::Array unknown;
-  function.walk([&](Operation *op) {
-    if (auto site = classify(op, sites.size() + 1))
-      sites.push_back(*site);
-    else {
-      StringRef name = op->getName().getStringRef();
-      if (name.starts_with("memref_ext.") || name == "memref.dma_start")
-        unknown.push_back(llvm::json::Object{
-            {"operation", name.str()}, {"location", printed(op->getLoc())}});
-    }
-  });
+  llvm::json::Array unknown, unselectedRegions;
   uint32_t selectedRegions = 0;
-  llvm::json::Array unselectedRegions;
-  function.walk([&](Operation *op) {
-    if (op->getName().getStringRef() != "gcu.border")
-      return;
-    auto enter = op->getAttrOfType<StringAttr>("enter");
-    if (!enter || enter.getValue() != "triton_gcu.elementwise_fusion_region")
-      return;
-    unsigned depth = 1;
-    Operation *end = nullptr;
-    for (Operation *next = op->getNextNode(); next;
-         next = next->getNextNode()) {
-      if (next->getName().getStringRef() != "gcu.border")
-        continue;
-      if (auto nested = next->getAttrOfType<StringAttr>("enter"))
-        if (nested.getValue() == enter.getValue())
-          ++depth;
-      if (auto leave = next->getAttrOfType<StringAttr>("leave"))
-        if (leave.getValue() == enter.getValue() && --depth == 0) {
-          end = next;
-          break;
-        }
-    }
-    if (!end) {
-      unknown.push_back(llvm::json::Object{
-          {"operation", "unpaired_elementwise_fusion_region"},
-          {"location", printed(op->getLoc())}});
-      return;
-    }
-    if (selectedRegions == maxRegions) {
-      unselectedRegions.push_back(printed(op->getLoc()));
-      return;
-    }
-    ++selectedRegions;
-    sites.push_back(Site{op,
-                         static_cast<uint32_t>(sites.size() + 1),
-                         Region,
-                         {},
-                         {},
-                         {},
-                         {},
-                         {},
-                         {},
-                         end});
-  });
+  collectSites(function, maxRegions, sites, unknown, unselectedRegions,
+               selectedRegions);
   if (sites.empty() || sites.size() > 512)
     return error("GCU late recorder has no observable execution sites or "
                  "exceeds site budget");
@@ -462,8 +630,19 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
                                      LLVM::LLVMFunctionType::get(type, {}));
     }
   }
+  llvm::DenseMap<Operation *, uint32_t> originalIndices;
+  for (auto [number, operation] : llvm::enumerate(originalOperations))
+    originalIndices[operation] = number;
+  uint32_t originWork = 0;
+  uint64_t originBytes = 0;
+  SmallVector<llvm::json::Object> memberships;
+  for (const Site &site : sites)
+    memberships.push_back(
+        sourceMembership(site, originalIndices, originWork, originBytes));
+  size_t sourceIndex = 0;
   llvm::json::Array descriptors;
   for (const Site &site : sites) {
+    auto membership = std::move(memberships[sourceIndex++]);
     r.loc = site.op->getLoc();
     r.b.setInsertionPoint(site.op);
     auto begin = r.clock(site.id, false);
@@ -475,6 +654,7 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
         {"operation", site.op->getName().getStringRef().str()},
         {"kind", static_cast<uint32_t>(site.kind)},
         {"location", printed(site.op->getLoc())},
+        {"source_membership", std::move(membership)},
         {"native_clock_marker",
          llvm::json::Object{{"file", "__flagprism_gcu_clock_v1__"},
                             {"line", site.id},

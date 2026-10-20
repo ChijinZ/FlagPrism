@@ -21,6 +21,11 @@ llvm::Expected<std::string> mapGcuNativeLocations(llvm::StringRef input);
 // This is an index of this input, not an independent native schedule proof.
 llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input);
 
+// Original paired execution-site members; no rewrite or invented debug
+// location.
+llvm::Expected<std::string> indexGcuExecutionOrigins(llvm::StringRef input,
+                                                     uint32_t maxRegions);
+
 // Check the actual before/after GCU IR, including SSA/CFG preservation and the
 // permitted observer memory effects. This is not a final native timing proof.
 llvm::Expected<std::string>
