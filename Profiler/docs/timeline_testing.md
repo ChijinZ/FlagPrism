@@ -423,3 +423,18 @@ outside the loop is not that registered group. The script rederives native
 paths and compares every interval with raw endpoint words and per-observer
 counts. It does not compile or replay the application, infer source iteration
 IDs or certify exclusive source cost.
+
+
+`tests/timeline/p01_ascend_fragment_observations.py` accepts a retained real
+Ascend bundle via `--directory`, `--capture`, and an owned new `--output`.
+It freshly decodes the raw bytes and checks every per-observer region summary,
+including temporal bounds and their event/record references. It requires an
+actual repeated positive-duration region with a checked selected loop bracket,
+and records the matching site/observer intersection. A CPU fixture covers
+nested intervals and equal-bound tie order. Missing events remain missing,
+wrong source identities and changed raw bytes are rejected. The sibling
+`ascend_loop_rule_cases.py` feeds valid synthetic LLVM to the packaged read-only
+indexer to test selected/constant/frozen guards and rejection of mismatched
+end guards, early exits, cycles, explicit undefined guards and opaque operation
+identities. These checks reuse a real capture and do not replay the kernel,
+invoke the SDK compiler, or claim additional native schedule qualification.

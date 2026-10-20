@@ -1233,9 +1233,8 @@ ambiguous structures, opaque indexed types and exhausted work budgets are
 reported as unverified; their original intervals remain available.
 
 The report identifies operations inside an observed elapsed interval. It does
-not establish whole-program SSA equivalence, a source-exclusive cost, a runtime
-selection guard, source-loop iteration IDs, final native scheduling or engine
-busy time. Frontend selection and these unproved properties are separate fields.
+not establish whole-program SSA equivalence, a source-exclusive cost, source-loop
+iteration IDs, final native scheduling or engine busy time. Frontend selection and these unproved properties are separate fields.
 Immediate flag intrinsics retain their exact callee/literal operands even when
 the observer replaces their debug location with a native-instruction marker.
 
@@ -1245,3 +1244,24 @@ current rules, verifies the retained input hashes, and never executes the
 reader, SDK or application. Saved success annotations do not grant a result.
 An older wheel or capture without the reader/retained inputs reports this
 optional analysis as unavailable while preserving its raw timing data.
+
+The per-invocation `ascend.fragment_path_report.v2` also joins freshly decoded
+raw intervals to each exact actor/backend site. Its `observations.observers`
+keeps separate counter domains, epochs, program coordinates and completeness.
+For each observer it reports occurrence counts, positive-duration counts,
+summed elapsed **raw counter ticks**, and first/last temporal bounds with the
+corresponding event and raw-record references. Equal bounds retain the first
+encountered event. These sums never combine different observer clocks. A
+selected region with no records remains `not_observed`; missing records do not
+become synthetic durations. Report identity includes the actual invocation and
+raw hash, while immutable compiler graphs can be shared across invocations.
+
+`adapted_loop_context` identifies the indexed natural loop enclosing a bracket.
+Separately, `selected_loop_bracket` checks that a selected start cannot reach a
+loop exit, backedge or cycle before its actual end. A necessary preceding branch
+can restrict this query only when its indexed boolean expression is proven the
+same expression (with a small set of boolean simplifications). Unknown paths
+are explored; explicit undefined/poison guard data is rejected. This is a bounded
+LLVM control-flow check, not reconstruction of runtime source iteration IDs or
+trip counts. Unsupported operation identities, such as unencoded floating
+comparison predicates, atomic suboperations and indirect callees, remain opaque.

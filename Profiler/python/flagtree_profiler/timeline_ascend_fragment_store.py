@@ -30,13 +30,99 @@ def _context(capture):
     return compiler, selected, 'analysis/ascend-fragments/' + binary
 
 
+def _attach_observations(reports, batch, compiler):
+    """Join exact backend site identities; never align different actor clocks."""
+    actors = compiler_actors(compiler)
+    backend_ids = {}
+    for actor in actors.values():
+        for sid, site in actor['sites'].items():
+            if site['semantic_code'] != 1:
+                continue
+            key = actor['function'], sid
+            identity = site['backend_identity']
+            _need(
+                backend_ids.setdefault(key, identity) == identity,
+                'Ambiguous fragment backend identity')
+    sites = {site['backend_site_id']: site for site in batch['sites']}
+    _need(
+        len(sites) == len(batch['sites']), 'Duplicate canonical backend sites')
+    observers = {row['id']: row for row in batch['observers']}
+    observations = {}
+    for event in batch['events']:
+        if event['kind'] != 'interval':
+            continue
+        key = event['site_id'], event['observer_id']
+        observer = observers[event['observer_id']]
+        _need(event['end_tick'] >= event['start_tick'],
+              'Fragment interval has reversed endpoints')
+        row = observations.setdefault(
+            key,
+            dict(observer_id=observer['id'],
+                 program_coordinates=observer['program_coordinates'],
+                 clock_domain_id=observer['clock_domain_id'],
+                 epoch_id=observer['epoch_id'],
+                 timer_bits=observer['timer_bits'],
+                 time_unit='raw_counter_ticks',
+                 complete=observer['complete'],
+                 dropped_records=observer['dropped_records'],
+                 interval_count=0,
+                 positive_interval_count=0,
+                 elapsed_ticks_sum=0,
+                 first_tick=event['start_tick'],
+                 last_tick=event['end_tick'],
+                 first_event_id=event['id'],
+                 last_event_id=event['id'],
+                 first_record_ids=event['record_ids'],
+                 last_record_ids=event['record_ids'],
+                 occurrence_basis=event['occurrence_basis'],
+                 source_iteration_ids_verified=False))
+        row['interval_count'] += 1
+        row['positive_interval_count'] += event['end_tick'] > event[
+            'start_tick']
+        row['elapsed_ticks_sum'] += event['end_tick'] - event['start_tick']
+        if event['start_tick'] < row['first_tick']:
+            row['first_tick'] = event['start_tick']
+            row['first_event_id'] = event['id']
+            row['first_record_ids'] = event['record_ids']
+        if event['end_tick'] > row['last_tick']:
+            row['last_tick'] = event['end_tick']
+            row['last_event_id'] = event['id']
+            row['last_record_ids'] = event['record_ids']
+    for report in reports:
+        for region in report['regions']:
+            backend_id = backend_ids[report['function'], region['site_id']]
+            site = sites[backend_id]
+            _need(
+                site['attributes'].get(
+                    'ascend.source_op_id') == region['source_op_id'],
+                'Canonical source operation differs from actor fragment')
+            rows = [
+                value for (site_id, _), value in observations.items()
+                if site_id == site['id']
+            ]
+            _need(
+                all(observers[row['observer_id']]['attributes'].get(
+                    'ascend.function') == report['function'] for row in rows),
+                'Recorded observer differs from fragment actor')
+            region['observations'] = dict(
+                status='recorded_intervals' if rows else 'not_observed',
+                canonical_site_id=site['id'],
+                backend_site_id=backend_id,
+                capture_complete=batch['complete'],
+                raw_sha256=batch['raw_artifact']['sha256'],
+                interval_count=sum(row['interval_count'] for row in rows),
+                positive_interval_count=sum(row['positive_interval_count']
+                                            for row in rows),
+                observers=sorted(rows, key=lambda row: row['observer_id']))
+
+
 def load_fragment_paths(directory, capture, *, retain=None):
     """Recompute facts from retained indexed inputs; never execute an SDK/tool.
 
     Saved analysis status/member selections are not authority. The lossless
     input closure binds both actual actor inputs, index outputs and tool hash.
     """
-    from . import timeline_ascend_fragments, timeline_ascend_regions
+    from . import timeline_ascend_fragments, timeline_ascend_regions, timeline_events_ascend, timeline_ascend_loops
     compiler, selected, prefix = _context(capture)
 
     def read(name, *, digest=None, limit=32 * 1024 * 1024):
@@ -96,13 +182,23 @@ def load_fragment_paths(directory, capture, *, retain=None):
                     original_input_sha256=artifact['original_input']['sha256'],
                     adapted_input_sha256=artifact['adapted']['sha256'],
                     selected_source_ids=selected))
+    raw = read(capture['raw_file'], digest=capture['raw_sha256'])
+    from .timeline_ascend_offline import decode_capture
+    batch = decode_capture(capture, raw)
+    _attach_observations(reports, batch, compiler)
     rules = {
         module.__name__: sha256(Path(module.__file__).read_bytes())
-        for module in (timeline_ascend_fragments, timeline_ascend_regions)
+        for module in (timeline_ascend_fragments, timeline_ascend_regions,
+                       timeline_events_ascend, timeline_ascend_loops)
     }
-    result = dict(schema_version=1,
-                  model='ascend.fragment_path_report.v1',
+    rules[__name__] = sha256(Path(__file__).read_bytes())
+    result = dict(schema_version=2,
+                  model='ascend.fragment_path_report.v2',
                   binary_id=capture['owner']['binary_id'],
+                  invocation_id=capture['owner']['invocation_id'],
+                  capture_id=capture['owner']['capture_id'],
+                  raw_sha256=sha256(raw),
+                  capture_complete=batch['complete'],
                   actors=reports,
                   rules_sha256=rules,
                   tool_sha256=header['tool_sha256'],
@@ -119,6 +215,8 @@ def load_fragment_paths(directory, capture, *, retain=None):
                     r['status'] == 'llvm_observed_fragment_operations_bound'
                     for a in reports for r in a['regions']),
                 total_regions=sum(len(a['regions']) for a in reports),
+                observed_regions=sum(r['observations']['interval_count'] > 0
+                                     for a in reports for r in a['regions']),
                 native_schedule_qualified=False,
                 source_value_equivalence_verified=False)
 

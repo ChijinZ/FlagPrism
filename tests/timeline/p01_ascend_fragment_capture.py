@@ -31,6 +31,9 @@ def check_optional_failures(clone, capture, raw_file, raw_sha):
         shutil.rmtree(prefix)
         with mock.patch.object(machine, '_run', return_value=raw):
             result = store.inspect_capture_fragments(clone, capture)
+        if 'returned a non-object' not in result.get('reason', ''):
+            raise RuntimeError(
+                'Reader-output fault failed for an unrelated reason')
         check('non_object_reader_' + name, result)
 
     shutil.rmtree(prefix)
@@ -52,6 +55,10 @@ def check_optional_failures(clone, capture, raw_file, raw_sha):
                            changed_read), mock.patch.object(
                                machine, '_run', completed_stage):
         result = store.inspect_capture_fragments(clone, capture)
+    if not state['changed'] or 'changed during execution' not in result.get(
+            'reason', ''):
+        raise RuntimeError(
+            'Reader identity fault did not reach its real stage')
     check('reader_hash_changes_during_stage', result)
     return rows
 

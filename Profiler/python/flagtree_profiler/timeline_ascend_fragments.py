@@ -27,6 +27,12 @@ def _complete_type(value):
 
 def _signature(instruction, index):
     """A structural operation identity, never an inferred value equivalence."""
+    if instruction['opcode'] in (
+            'fcmp', 'atomicrmw') or instruction.get('indirect_call'):
+        return None
+    if instruction['opcode'] == 'call' and instruction.get(
+            'callee') is None and instruction.get('assembly') is None:
+        return None
     operands = []
     if not _complete_type(instruction['type']):
         return None
@@ -106,6 +112,33 @@ class _Paths:
                                      self.forward,
                                      stop=end,
                                      avoid=member)
+
+
+def _loop_context(index, function, instruction_ids):
+    """Locate an indexed natural loop without assigning dynamic iterations."""
+    blocks = {index.block[key] for key in instruction_ids}
+    enclosing = []
+    for loop in function['loops']:
+        for _ in loop['blocks']:
+            index.charge()
+        if blocks <= set(loop['blocks']):
+            enclosing.append(loop)
+    if not enclosing:
+        return dict(status='outside_indexed_natural_loops')
+    enclosing.sort(key=lambda loop: len(loop['blocks']))
+    if len(enclosing) > 1 and len(enclosing[0]['blocks']) == len(
+            enclosing[1]['blocks']):
+        return dict(status='ambiguous_indexed_loop_context')
+    loop = enclosing[0]
+    return dict(status='indexed_natural_loop_context',
+                header_block_id=loop['header'],
+                latch_block_ids=loop['latches'],
+                parent_header_block_id=loop['parent_header'],
+                enclosing_header_block_ids=[
+                    row['header'] for row in reversed(enclosing)
+                ],
+                source_iteration_ids_verified=False,
+                trip_count_verified=False)
 
 
 def bind_fragment_paths(original_graph, adapted_graph, *, manifest, function,
@@ -241,14 +274,29 @@ def bind_fragment_paths(original_graph, adapted_graph, *, manifest, function,
                          adapted_id=member,
                          opcode=operation['opcode'],
                          callee=operation.get('callee')))
-            row.update(status='llvm_observed_fragment_operations_bound',
-                       begin_id=begin,
-                       end_id=end,
-                       original_carrier_id=original_marker['id'],
-                       adapted_carrier_id=marker,
-                       members=members,
-                       frontend_selection_verified=True,
-                       observed_endpoint_path_verified=True)
+            row.update(
+                status='llvm_observed_fragment_operations_bound',
+                begin_id=begin,
+                end_id=end,
+                original_carrier_id=original_marker['id'],
+                adapted_carrier_id=marker,
+                members=members,
+                original_loop_context=_loop_context(before, original[0], [
+                    original_marker['id'],
+                    *[m['original_id'] for m in members]
+                ]),
+                adapted_loop_context=_loop_context(
+                    after, adapted[0],
+                    [begin, marker, end, *[m['adapted_id'] for m in members]]),
+                frontend_selection_verified=True,
+                observed_endpoint_path_verified=True)
+            from .timeline_ascend_loops import selected_loop_bracket
+            row['selected_loop_bracket'] = selected_loop_bracket(
+                after,
+                adapted[0],
+                begin_id=begin,
+                end_id=end,
+                context=row['adapted_loop_context'])
         except (ValueError, KeyError, TypeError) as error:
             # This per-region result never grants module-wide uniqueness or a
             # property of an unvisited region. Budget exhaustion stays visible.
