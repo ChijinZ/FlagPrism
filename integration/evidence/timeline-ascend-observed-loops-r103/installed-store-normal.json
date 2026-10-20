@@ -1,0 +1,42 @@
+{
+  "status": "installed_automatic_and_offline_fragment_analysis_passed",
+  "automatic": {
+    "status": "fragment_paths_recomputed",
+    "report_file": "derived/ascend-fragments/5107b9d50189a2f6666dc6344b69cc0c7b520418b414076a4f615de4e293f0a0/report.json",
+    "checked_regions": 11,
+    "total_regions": 15,
+    "observed_regions": 15,
+    "native_schedule_qualified": false,
+    "source_value_equivalence_verified": false
+  },
+  "input_closure_members": 10,
+  "offline_tool_execution": false,
+  "ignored_cached_status": true,
+  "changed_graph_rejected": true,
+  "changed_compiler_rejected": true,
+  "optional_faults": [
+    {
+      "name": "non_object_reader_array",
+      "status": "fragment_paths_unavailable",
+      "reason": "Actor structure reader returned a non-object"
+    },
+    {
+      "name": "non_object_reader_null",
+      "status": "fragment_paths_unavailable",
+      "reason": "Actor structure reader returned a non-object"
+    },
+    {
+      "name": "non_object_reader_string",
+      "status": "fragment_paths_unavailable",
+      "reason": "Actor structure reader returned a non-object"
+    },
+    {
+      "name": "reader_hash_changes_during_stage",
+      "status": "fragment_paths_unavailable",
+      "reason": "Actor structure reader changed during execution"
+    }
+  ],
+  "raw_unchanged": true,
+  "device_executed": false,
+  "native_schedule_qualified": false
+}

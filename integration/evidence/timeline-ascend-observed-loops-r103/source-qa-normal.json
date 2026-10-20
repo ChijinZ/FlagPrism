@@ -1,0 +1,210 @@
+{
+  "status": "real_raw_fragment_observations_checked",
+  "raw_sha256": "8bc1d954e65efd2d3a2d03e53f6fe0f3d2ddfe6b11cc052b502a543b1572941c",
+  "checked_observer_summaries": 46,
+  "loop_regions": 4,
+  "repeated_positive_loop_regions": 2,
+  "selected_loop_brackets": 4,
+  "repeated_checked_regions": [
+    {
+      "function": "q05_mix_aic",
+      "site_id": 21,
+      "observer_ids": [
+        "observer-4847f1ce3ae0bd91f6a4581080d12f8dc276cd223694db427be0fd2a44a5a4a8",
+        "observer-8e00aa1cea1e60337bb7b36f25680efd037681ce5a990e27b7c16c98c7dd79f1"
+      ]
+    },
+    {
+      "function": "q05_mix_aiv",
+      "site_id": 31,
+      "observer_ids": [
+        "observer-08aad702f7b5189512265ed9ad3f309b5bf4c9af0933ba94fa86bca28a989c62",
+        "observer-a190dd8b917122fa55fb3fbcf437c68e150b7424672ef011d9c9605fddd2e489",
+        "observer-b88ba9eb63d1cef780fded8bc0027c0164d43ecbff3cc1535718d97262f1f276",
+        "observer-b92a5edb39074f0e6fa95253a5f6e1434bfc7a46996ac9f2a6ca4edc69882ac6"
+      ]
+    }
+  ],
+  "nested_interval_references_checked": true,
+  "native_loop_cases": [
+    {
+      "name": "selected_pair",
+      "expected_checked": true,
+      "result": {
+        "status": "selected_llvm_bracket_within_iteration",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "header_block_id": 5,
+        "latch_block_ids": [
+          10
+        ],
+        "exit_block_ids": [
+          13
+        ],
+        "begin_id": 17,
+        "end_id": 25,
+        "selection_guard_witnesses": [
+          {
+            "block_id": 14,
+            "predicate_id": 1,
+            "taken_successor": 16
+          }
+        ],
+        "checked_path_nodes": 4,
+        "loop_backedge_or_exit_before_end": false
+      }
+    },
+    {
+      "name": "constant_pair",
+      "expected_checked": true,
+      "result": {
+        "status": "selected_llvm_bracket_within_iteration",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "header_block_id": 35,
+        "latch_block_ids": [
+          39
+        ],
+        "exit_block_ids": [
+          42
+        ],
+        "begin_id": 47,
+        "end_id": 53,
+        "selection_guard_witnesses": [
+          {
+            "block_id": 43,
+            "predicate_id": 45,
+            "taken_successor": 46
+          }
+        ],
+        "checked_path_nodes": 4,
+        "loop_backedge_or_exit_before_end": false
+      }
+    },
+    {
+      "name": "frozen_pair",
+      "expected_checked": true,
+      "result": {
+        "status": "selected_llvm_bracket_within_iteration",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "header_block_id": 63,
+        "latch_block_ids": [
+          67
+        ],
+        "exit_block_ids": [
+          70
+        ],
+        "begin_id": 74,
+        "end_id": 80,
+        "selection_guard_witnesses": [
+          {
+            "block_id": 71,
+            "predicate_id": 60,
+            "taken_successor": 73
+          }
+        ],
+        "checked_path_nodes": 4,
+        "loop_backedge_or_exit_before_end": false
+      }
+    },
+    {
+      "name": "different_end_guard",
+      "expected_checked": false,
+      "result": {
+        "status": "unverified",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "reason": "Selected bracket crosses a backedge before end"
+      }
+    },
+    {
+      "name": "inverted_end_guard",
+      "expected_checked": false,
+      "result": {
+        "status": "unverified",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "reason": "Selected bracket crosses a backedge before end"
+      }
+    },
+    {
+      "name": "exit_before_end",
+      "expected_checked": false,
+      "result": {
+        "status": "unverified",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "reason": "Selected bracket exits its loop before end"
+      }
+    },
+    {
+      "name": "cycle_before_end",
+      "expected_checked": false,
+      "result": {
+        "status": "unverified",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "reason": "Selected bracket can cycle before its end"
+      }
+    },
+    {
+      "name": "undefined_guard",
+      "expected_checked": false,
+      "result": {
+        "status": "unverified",
+        "source_iteration_ids_verified": false,
+        "trip_count_verified": false,
+        "native_schedule_qualified": false,
+        "reason": "Loop guard depends on explicit undefined/poison data"
+      }
+    },
+    {
+      "name": "float_less",
+      "expected_checked": false,
+      "result": {
+        "status": "opaque_operation_structure"
+      }
+    },
+    {
+      "name": "float_greater",
+      "expected_checked": false,
+      "result": {
+        "status": "opaque_operation_structure"
+      }
+    },
+    {
+      "name": "atomic_add",
+      "expected_checked": false,
+      "result": {
+        "status": "opaque_operation_structure"
+      }
+    },
+    {
+      "name": "atomic_xor",
+      "expected_checked": false,
+      "result": {
+        "status": "opaque_operation_structure"
+      }
+    },
+    {
+      "name": "indirect_target",
+      "expected_checked": false,
+      "result": {
+        "status": "opaque_operation_structure"
+      }
+    }
+  ],
+  "not_observed_preserved": true,
+  "wrong_site_rejected": true,
+  "changed_raw_rejected": true,
+  "source_iteration_ids_verified": false,
+  "device_executed": false
+}
