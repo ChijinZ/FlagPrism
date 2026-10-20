@@ -135,6 +135,7 @@ def inspect_capture_fragments(directory, capture, *, deadline=None):
         tool = Path(__file__).parent / 'lib/flagprism-ascend-structure'
         _need(tool.is_file(),
               'Packaged Ascend actor structure reader is unavailable')
+        tool_digest = sha256(tool.read_bytes())
         from .timeline_ascend_machine import _run
         target = bundle_path(directory, prefix)
         target.mkdir(parents=True, exist_ok=True)
@@ -156,9 +157,18 @@ def inspect_capture_fragments(directory, capture, *, deadline=None):
                 relative = prefix + '/' + name + '.ll'
                 with export_lock(directory):
                     persist(directory, relative, raw)
+                _need(
+                    sha256(tool.read_bytes()) == tool_digest,
+                    'Actor structure reader changed before execution')
                 graph_raw = _run(tool, [str(bundle_path(directory, relative))],
                                  target, name, stop, commands)
+                _need(
+                    sha256(tool.read_bytes()) == tool_digest,
+                    'Actor structure reader changed during execution')
                 graph = json.loads(graph_raw)
+                _need(
+                    type(graph) is dict,
+                    'Actor structure reader returned a non-object')
                 _need(
                     graph.get('input_sha256') == spec['sha256'],
                     'Actor index input hash differs')
@@ -169,7 +179,7 @@ def inspect_capture_fragments(directory, capture, *, deadline=None):
                       model='ascend.retained_actor_indices.v1',
                       binary_id=capture['owner']['binary_id'],
                       artifacts=indexed,
-                      tool_sha256=sha256(tool.read_bytes()))
+                      tool_sha256=tool_digest)
         with export_lock(directory):
             persist(directory, prefix + '/inputs.json', json_bytes(header))
         return load_fragment_paths(directory, capture)

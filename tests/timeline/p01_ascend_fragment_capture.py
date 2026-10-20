@@ -7,6 +7,53 @@ from pathlib import Path
 import shutil
 import subprocess
 import time
+from unittest import mock
+
+
+def check_optional_failures(clone, capture, raw_file, raw_sha):
+    from flagtree.profiler import timeline_ascend_fragment_store as store
+    from flagtree.profiler import timeline_ascend_machine as machine
+    prefix = clone / 'analysis/ascend-fragments' / capture['owner']['binary_id']
+    rows = []
+
+    def check(name, result):
+        if result['status'] != 'fragment_paths_unavailable' or (
+                prefix / 'inputs.json').exists():
+            raise RuntimeError('Failed reader published a valid index: ' +
+                               name)
+        if hashlib.sha256(raw_file.read_bytes()).hexdigest() != raw_sha:
+            raise RuntimeError('Optional reader failure changed raw: ' + name)
+        rows.append(
+            dict(name=name, status=result['status'], reason=result['reason']))
+
+    for name, raw in [('array', b'[]'), ('null', b'null'),
+                      ('string', b'"non-object"')]:
+        shutil.rmtree(prefix)
+        with mock.patch.object(machine, '_run', return_value=raw):
+            result = store.inspect_capture_fragments(clone, capture)
+        check('non_object_reader_' + name, result)
+
+    shutil.rmtree(prefix)
+    tool = Path(store.__file__).parent / 'lib/flagprism-ascend-structure'
+    original_read, original_run = Path.read_bytes, machine._run
+    state = dict(changed=False)
+
+    def changed_read(path):
+        raw = original_read(path)
+        return raw + b'changed-reader-hash' if path == tool and state[
+            'changed'] else raw
+
+    def completed_stage(*args, **kwargs):
+        result = original_run(*args, **kwargs)
+        state['changed'] = True
+        return result
+
+    with mock.patch.object(Path, 'read_bytes',
+                           changed_read), mock.patch.object(
+                               machine, '_run', completed_stage):
+        result = store.inspect_capture_fragments(clone, capture)
+    check('reader_hash_changes_during_stage', result)
+    return rows
 
 
 def main():
@@ -77,6 +124,8 @@ def main():
         raise RuntimeError('Different compiler input accepted')
     if hashlib.sha256(raw_file.read_bytes()).hexdigest() != raw_sha:
         raise RuntimeError('Analysis changed retained raw')
+    optional_faults = check_optional_failures(clone, capture, raw_file,
+                                              raw_sha)
     (args.output / 'result.json').write_text(
         json.dumps(dict(
             status='installed_automatic_and_offline_fragment_analysis_passed',
@@ -86,6 +135,7 @@ def main():
             ignored_cached_status=True,
             changed_graph_rejected=changed_graph_rejected,
             changed_compiler_rejected=changed_compiler_rejected,
+            optional_faults=optional_faults,
             raw_unchanged=True,
             device_executed=False,
             native_schedule_qualified=False),
