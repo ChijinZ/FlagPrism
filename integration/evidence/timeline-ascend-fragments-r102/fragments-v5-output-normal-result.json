@@ -1,0 +1,107 @@
+{
+  "status": "actual_actor_fragment_paths_checked",
+  "actors": [
+    {
+      "function": "q05_mix_aic",
+      "checked": 5,
+      "total": 7
+    },
+    {
+      "function": "q05_mix_aiv",
+      "checked": 6,
+      "total": 8
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "different_original_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "different_adapted_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "source_not_selected",
+      "rejected": true,
+      "reason": "Fragment is outside actual selected source operations"
+    },
+    {
+      "name": "different_actual_call",
+      "rejected": true,
+      "reason": "Missing or ambiguous original operation structure: 70 call llvm.hivm.SET.FLAG.IMM; candidates=0"
+    },
+    {
+      "name": "missing_actual_source_carrier",
+      "rejected": true,
+      "reason": "Missing or ambiguous original/adapted source carrier"
+    },
+    {
+      "name": "bypass_source_body_between_endpoints",
+      "rejected": true,
+      "reason": "Source carrier can be bypassed between endpoints"
+    },
+    {
+      "name": "different_declared_body_extent",
+      "rejected": true,
+      "reason": "Original body does not match declared fragment extent"
+    },
+    {
+      "name": "different_original_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "different_adapted_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "source_not_selected",
+      "rejected": true,
+      "reason": "Fragment is outside actual selected source operations"
+    },
+    {
+      "name": "different_actual_call",
+      "rejected": true,
+      "reason": "Missing or ambiguous original operation structure: 745 call llvm.hivm.SET.FLAG.IMM; candidates=0"
+    },
+    {
+      "name": "missing_actual_source_carrier",
+      "rejected": true,
+      "reason": "Missing or ambiguous original/adapted source carrier"
+    },
+    {
+      "name": "bypass_source_body_between_endpoints",
+      "rejected": true,
+      "reason": "Source carrier can be bypassed between endpoints"
+    },
+    {
+      "name": "different_declared_body_extent",
+      "rejected": true,
+      "reason": "Original body does not match declared fragment extent"
+    },
+    {
+      "name": "irreducible_carrier_after_body",
+      "rejected": true
+    },
+    {
+      "name": "opaque_vector_shape_and_element_type",
+      "rejected": true
+    },
+    {
+      "name": "opaque_gep_element_type",
+      "rejected": true
+    },
+    {
+      "name": "high_arity_signature_work",
+      "rejected": true
+    }
+  ],
+  "rules_sha256": "c55720ccf49a3342c84b4dacfc22a3f60d8ebc5f056b526a9bf97d9afc466f6a",
+  "source_value_equivalence_verified": false,
+  "native_schedule_qualified": false,
+  "device_executed": false
+}

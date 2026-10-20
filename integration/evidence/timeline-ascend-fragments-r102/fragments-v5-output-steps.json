@@ -1,0 +1,25 @@
+[
+  {
+    "mode": "normal",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r102-ascend/fragments-input-v5/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r102-ascend/runs/fragments-v5/output/normal"
+    ],
+    "returncode": 0
+  },
+  {
+    "mode": "optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r102-ascend/fragments-input-v5/run.py",
+      "--output",
+      "/tmp/chijin-timeline-r102-ascend/runs/fragments-v5/output/optimized"
+    ],
+    "returncode": 0
+  }
+]

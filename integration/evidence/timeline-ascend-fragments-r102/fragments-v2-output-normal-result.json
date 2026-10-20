@@ -1,0 +1,91 @@
+{
+  "status": "actual_actor_fragment_paths_checked",
+  "actors": [
+    {
+      "function": "q05_mix_aic",
+      "checked": 4,
+      "total": 7
+    },
+    {
+      "function": "q05_mix_aiv",
+      "checked": 4,
+      "total": 8
+    }
+  ],
+  "negative_cases": [
+    {
+      "name": "different_original_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "different_adapted_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "source_not_selected",
+      "rejected": true,
+      "reason": "Fragment is outside actual selected source operations"
+    },
+    {
+      "name": "different_actual_call",
+      "rejected": true,
+      "reason": "Missing or ambiguous original operation structure: 200 call mma_tile_half_to_float; candidates=0"
+    },
+    {
+      "name": "missing_actual_source_carrier",
+      "rejected": true,
+      "reason": "Missing or ambiguous original/adapted source carrier"
+    },
+    {
+      "name": "bypass_source_body_between_endpoints",
+      "rejected": true,
+      "reason": "Source carrier can be bypassed between endpoints"
+    },
+    {
+      "name": "different_declared_body_extent",
+      "rejected": true,
+      "reason": "Original body does not match declared fragment extent"
+    },
+    {
+      "name": "different_original_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "different_adapted_input",
+      "rejected": true,
+      "reason": "Actor index differs from actual compiler input"
+    },
+    {
+      "name": "source_not_selected",
+      "rejected": true,
+      "reason": "Fragment is outside actual selected source operations"
+    },
+    {
+      "name": "different_actual_call",
+      "rejected": true,
+      "reason": "Missing or ambiguous original operation structure: 819 call llvm.hivm.WAIT.FLAG.IMM; candidates=0"
+    },
+    {
+      "name": "missing_actual_source_carrier",
+      "rejected": true,
+      "reason": "Missing or ambiguous original/adapted source carrier"
+    },
+    {
+      "name": "bypass_source_body_between_endpoints",
+      "rejected": true,
+      "reason": "Source carrier can be bypassed between endpoints"
+    },
+    {
+      "name": "different_declared_body_extent",
+      "rejected": true,
+      "reason": "Original body does not match declared fragment extent"
+    }
+  ],
+  "rules_sha256": "e68e6f803cbe01e9fd08b78322ca0903f1ec68b632b2cc9e86f72f4b18048726",
+  "source_value_equivalence_verified": false,
+  "native_schedule_qualified": false,
+  "device_executed": false
+}

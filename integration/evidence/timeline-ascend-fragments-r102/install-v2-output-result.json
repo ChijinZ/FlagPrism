@@ -1,0 +1,167 @@
+{
+  "status": "timeline_fragment_analysis_normally_installed_and_checked",
+  "backend": "ascend",
+  "source_commit": "51f90cb0310207ce3dc7ffb1040dc4ae7e8aa474",
+  "source": "/tmp/chijin-timeline-r102-ascend/install-input-v2/source",
+  "python": "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+  "native": "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/native",
+  "installed_members": 449,
+  "wheel": "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+  "wheel_sha256": "1fe73f7d44a7f72b1afcbe7d33416cc56f20f4917d0f3dee5da6e4b6e92c1e96",
+  "unchanged_compiler": "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+  "unchanged_recorder": "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so",
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "pid": 709483,
+      "startticks": 349189678,
+      "returncode": 0
+    },
+    {
+      "name": "git-parent",
+      "argv": [
+        "git",
+        "fetch",
+        "--update-shallow",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v1/output/FlagTree",
+        "HEAD"
+      ],
+      "pid": 709484,
+      "startticks": 349189678,
+      "returncode": 0
+    },
+    {
+      "name": "git-identity",
+      "argv": [
+        "git",
+        "reset",
+        "--mixed",
+        "FETCH_HEAD"
+      ],
+      "pid": 709705,
+      "startticks": 349189961,
+      "returncode": 0
+    },
+    {
+      "name": "assemble",
+      "argv": [
+        "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r102-ascend/install-input-v2/source/integration/patches/ascend/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/FlagTree",
+        "--component",
+        "/tmp/chijin-timeline-r102-ascend/install-input-v2/source",
+        "--native-python",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/native",
+        "--core-library",
+        "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+        "--output",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/wheel",
+        "--plugin",
+        "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so",
+        "--actor-structure-tool",
+        "/tmp/chijin-timeline-r100-ascend/runs/structure-v1/output/build/flagprism-ascend-structure"
+      ],
+      "pid": 709713,
+      "startticks": 349189986,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv"
+      ],
+      "pid": 710002,
+      "startticks": 349192630,
+      "returncode": 0
+    },
+    {
+      "name": "seed-pip",
+      "argv": [
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "ensurepip",
+        "--default-pip"
+      ],
+      "pid": 710003,
+      "startticks": 349192637,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+      ],
+      "pid": 710035,
+      "startticks": 349193184,
+      "returncode": 0
+    },
+    {
+      "name": "installed-import",
+      "argv": [
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+      ],
+      "pid": 710075,
+      "startticks": 349193938,
+      "returncode": 0
+    },
+    {
+      "name": "installed-fragment-store-normal",
+      "argv": [
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r102-ascend/install-input-v2/source/tests/timeline/p01_ascend_fragment_capture.py",
+        "--directory",
+        "/tmp/chijin-timeline-r101-ascend/runs/public-q05-v1/output/capture/timeline",
+        "--capture",
+        "captures/invocation-51a551c4ded7467e8ff486a14e32012d.json",
+        "--output",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/fragment-store-normal"
+      ],
+      "pid": 710147,
+      "startticks": 349194737,
+      "returncode": 0
+    },
+    {
+      "name": "installed-fragment-store-optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/venv/bin/python",
+        "-I",
+        "-O",
+        "/tmp/chijin-timeline-r102-ascend/install-input-v2/source/tests/timeline/p01_ascend_fragment_capture.py",
+        "--directory",
+        "/tmp/chijin-timeline-r101-ascend/runs/public-q05-v1/output/capture/timeline",
+        "--capture",
+        "captures/invocation-51a551c4ded7467e8ff486a14e32012d.json",
+        "--output",
+        "/tmp/chijin-timeline-r102-ascend/runs/install-v2/output/fragment-store-optimized"
+      ],
+      "pid": 710373,
+      "startticks": 349195740,
+      "returncode": 0
+    }
+  ],
+  "device_executed": false,
+  "installed_actor_reader_sha256": "d0e82b1fdc5fc322c322bc80c44a9e5e552afc5918174e2ba0f9504cc7a99d61"
+}

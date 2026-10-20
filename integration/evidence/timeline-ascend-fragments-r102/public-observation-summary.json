@@ -1,0 +1,587 @@
+{
+  "binary_id": "b28e6765ebf515bc285a57fe813b4fc035f0b0649fa7327e6f96c85fd6171b8f",
+  "raw_sha256": "8bc1d954e65efd2d3a2d03e53f6fe0f3d2ddfe6b11cc052b502a543b1572941c",
+  "complete": true,
+  "matched_regions": [
+    {
+      "function": "q05_mix_aic",
+      "source_op_id": 1,
+      "backend_site_id": 17,
+      "members": [
+        {
+          "adapted_id": 93,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 38
+        }
+      ],
+      "intervals": 2,
+      "positive_intervals": 0,
+      "observed_actor_count": 2
+    },
+    {
+      "function": "q05_mix_aic",
+      "source_op_id": 6,
+      "backend_site_id": 18,
+      "members": [
+        {
+          "adapted_id": 235,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 42
+        },
+        {
+          "adapted_id": 237,
+          "callee": null,
+          "opcode": "sext",
+          "original_id": 44
+        },
+        {
+          "adapted_id": 238,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 45
+        },
+        {
+          "adapted_id": 240,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 47
+        },
+        {
+          "adapted_id": 241,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 48
+        },
+        {
+          "adapted_id": 243,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 50
+        },
+        {
+          "adapted_id": 244,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 51
+        },
+        {
+          "adapted_id": 245,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 52
+        },
+        {
+          "adapted_id": 247,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 54
+        },
+        {
+          "adapted_id": 248,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 55
+        },
+        {
+          "adapted_id": 249,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 56
+        },
+        {
+          "adapted_id": 250,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 57
+        },
+        {
+          "adapted_id": 251,
+          "callee": null,
+          "opcode": "sext",
+          "original_id": 58
+        },
+        {
+          "adapted_id": 252,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 59
+        },
+        {
+          "adapted_id": 253,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 60
+        },
+        {
+          "adapted_id": 254,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 61
+        },
+        {
+          "adapted_id": 256,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 63
+        },
+        {
+          "adapted_id": 257,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 64
+        },
+        {
+          "adapted_id": 258,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 65
+        },
+        {
+          "adapted_id": 259,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 66
+        },
+        {
+          "adapted_id": 260,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 67
+        },
+        {
+          "adapted_id": 261,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 68
+        },
+        {
+          "adapted_id": 262,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 69
+        },
+        {
+          "adapted_id": 304,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 70
+        },
+        {
+          "adapted_id": 440,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 75
+        },
+        {
+          "adapted_id": 575,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 77
+        },
+        {
+          "adapted_id": 710,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 78
+        }
+      ],
+      "intervals": 2,
+      "positive_intervals": 2,
+      "observed_actor_count": 2
+    },
+    {
+      "function": "q05_mix_aic",
+      "source_op_id": 43,
+      "backend_site_id": 21,
+      "members": [
+        {
+          "adapted_id": 2129,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 199
+        },
+        {
+          "adapted_id": 2130,
+          "callee": "mma_tile_half_to_float",
+          "opcode": "call",
+          "original_id": 200
+        }
+      ],
+      "intervals": 6,
+      "positive_intervals": 6,
+      "observed_actor_count": 2
+    },
+    {
+      "function": "q05_mix_aic",
+      "source_op_id": 46,
+      "backend_site_id": 22,
+      "members": [
+        {
+          "adapted_id": 900,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 83
+        }
+      ],
+      "intervals": 6,
+      "positive_intervals": 0,
+      "observed_actor_count": 2
+    },
+    {
+      "function": "q05_mix_aic",
+      "source_op_id": 78,
+      "backend_site_id": 23,
+      "members": [
+        {
+          "adapted_id": 3229,
+          "callee": "llvm.hivm.BARRIER",
+          "opcode": "call",
+          "original_id": 229
+        }
+      ],
+      "intervals": 2,
+      "positive_intervals": 2,
+      "observed_actor_count": 2
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 1,
+      "backend_site_id": 27,
+      "members": [
+        {
+          "adapted_id": 775,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 715
+        }
+      ],
+      "intervals": 4,
+      "positive_intervals": 0,
+      "observed_actor_count": 4
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 6,
+      "backend_site_id": 28,
+      "members": [
+        {
+          "adapted_id": 920,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 719
+        },
+        {
+          "adapted_id": 922,
+          "callee": null,
+          "opcode": "sext",
+          "original_id": 721
+        },
+        {
+          "adapted_id": 923,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 722
+        },
+        {
+          "adapted_id": 925,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 724
+        },
+        {
+          "adapted_id": 926,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 725
+        },
+        {
+          "adapted_id": 927,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 726
+        },
+        {
+          "adapted_id": 928,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 727
+        },
+        {
+          "adapted_id": 929,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 728
+        },
+        {
+          "adapted_id": 931,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 730
+        },
+        {
+          "adapted_id": 932,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 731
+        },
+        {
+          "adapted_id": 933,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 732
+        },
+        {
+          "adapted_id": 934,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 733
+        },
+        {
+          "adapted_id": 935,
+          "callee": null,
+          "opcode": "sext",
+          "original_id": 734
+        },
+        {
+          "adapted_id": 936,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 735
+        },
+        {
+          "adapted_id": 937,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 736
+        },
+        {
+          "adapted_id": 938,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 737
+        },
+        {
+          "adapted_id": 939,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 738
+        },
+        {
+          "adapted_id": 940,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 739
+        },
+        {
+          "adapted_id": 941,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 740
+        },
+        {
+          "adapted_id": 942,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 741
+        },
+        {
+          "adapted_id": 943,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 742
+        },
+        {
+          "adapted_id": 944,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 743
+        },
+        {
+          "adapted_id": 945,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 744
+        },
+        {
+          "adapted_id": 990,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 745
+        },
+        {
+          "adapted_id": 1130,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 748
+        }
+      ],
+      "intervals": 4,
+      "positive_intervals": 4,
+      "observed_actor_count": 4
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 33,
+      "backend_site_id": 29,
+      "members": [
+        {
+          "adapted_id": 1385,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 773
+        },
+        {
+          "adapted_id": 1386,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 774
+        },
+        {
+          "adapted_id": 1387,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 775
+        },
+        {
+          "adapted_id": 1388,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 776
+        },
+        {
+          "adapted_id": 1389,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 777
+        },
+        {
+          "adapted_id": 1390,
+          "callee": null,
+          "opcode": "mul",
+          "original_id": 778
+        },
+        {
+          "adapted_id": 1391,
+          "callee": null,
+          "opcode": "add",
+          "original_id": 779
+        },
+        {
+          "adapted_id": 1392,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 780
+        },
+        {
+          "adapted_id": 1393,
+          "callee": null,
+          "opcode": "select",
+          "original_id": 781
+        },
+        {
+          "adapted_id": 1394,
+          "callee": null,
+          "opcode": "icmp",
+          "original_id": 782
+        },
+        {
+          "adapted_id": 1395,
+          "callee": null,
+          "opcode": "or",
+          "original_id": 783
+        }
+      ],
+      "intervals": 12,
+      "positive_intervals": 0,
+      "observed_actor_count": 4
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 43,
+      "backend_site_id": 31,
+      "members": [
+        {
+          "adapted_id": 2856,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 819
+        },
+        {
+          "adapted_id": 2951,
+          "callee": "vcast_half_to_float_1d_with_mode",
+          "opcode": "call",
+          "original_id": 820
+        },
+        {
+          "adapted_id": 2998,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 823
+        },
+        {
+          "adapted_id": 3093,
+          "callee": "llvm.hivm.BARRIER",
+          "opcode": "call",
+          "original_id": 824
+        },
+        {
+          "adapted_id": 3095,
+          "callee": "vmul_1d_float",
+          "opcode": "call",
+          "original_id": 826
+        }
+      ],
+      "intervals": 12,
+      "positive_intervals": 12,
+      "observed_actor_count": 4
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 77,
+      "backend_site_id": 33,
+      "members": [
+        {
+          "adapted_id": 5023,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 920
+        },
+        {
+          "adapted_id": 5118,
+          "callee": "vadds_vs_1d_int32_t",
+          "opcode": "call",
+          "original_id": 921
+        },
+        {
+          "adapted_id": 5164,
+          "callee": "llvm.hivm.SET.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 923
+        }
+      ],
+      "intervals": 4,
+      "positive_intervals": 4,
+      "observed_actor_count": 4
+    },
+    {
+      "function": "q05_mix_aiv",
+      "source_op_id": 78,
+      "backend_site_id": 34,
+      "members": [
+        {
+          "adapted_id": 5443,
+          "callee": "llvm.hivm.WAIT.FLAG.IMM",
+          "opcode": "call",
+          "original_id": 926
+        }
+      ],
+      "intervals": 4,
+      "positive_intervals": 4,
+      "observed_actor_count": 4
+    }
+  ],
+  "source_value_equivalence_verified": false,
+  "native_schedule_qualified": false
+}
