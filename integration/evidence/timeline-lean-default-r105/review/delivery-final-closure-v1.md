@@ -52,3 +52,24 @@ quickstart所列collector `cupti/cann/enflame`、compiler环境变量、逻辑de
 Confirmed blocker/major/minor：无新增；未发现必须新增实现才能解决的默认体验、安装、错误时间线/flow或原件破坏问题。必要verification gaps仅V1–V3所列实际收据；optional无新增工作要求。旧R075-V1 State、旧预算和旧pipeline不再开放。
 
 原goal §8的1/3/5/6在已述真实范围可接受，4的原展示层已闭但新增资格bytes受V2约束，2待V1，7/8待V3最终处置/精确交付。**本版仍不签whole complete；V1–V3直接收据齐备且无新实质代码变化后，可仅作最后有限追加，不再启动新框架/旧矩阵/可选证书扩展。**
+
+
+## 5. 最终追加：V1/V2/V3 已按实际范围闭合
+
+本节更新前文编写时的pending状态，以已完成的有限审阅为准；中断没有重开审阅。**本席接受本轮原合同范围的delivery；无未处置confirmed blocker/major/minor，无仍需新增产品实现、实验或必要补证的事项。** 请求GPT-6.1-Sol/xhigh，实际resolved仍为unknown；不代签其它独立席，不增加所有static证书全绿的门。
+
+**V1闭合。** `new-matrix-aggregate-v1.json` SHA `2299304d7071efe9a481d3f90962736ecaa6708def22674a0d02e1c2b0f747cd` 的8组result/terminal摘要及rows已逐项核同：8 ordinary、24个unique cold/warm profile全过，实际144份标准trace，受测产品均为6e78；math/input/guard/host-once全真，最多raw786816B、bundle3418453B，至少7个positive source origins，每matrix observer至少4个positive occurrence。旧24份MMA未观察历史不改写，新泛化没有替换旧raw。
+
+新8 State最小SDK桥也已实际核完：`state-capture-v1`的8份cold实际original/adapted AIV均为同`d5c10fbd…` meta_op.aiv.bc、`9142883f…` libdevice、Ascend910B4/task32/auto_blockify=false。q11 State为formal8，q12为formal9；State指针直用于既审2D int32 load/store形态，source为32B对齐AS6常量、offset0、stride[32,1]、与destination相同R/C，atomic0。按实际整数地址cone与原launch grid的两subactor核：
+
+`offset=(pm*BM+s*BM/2)*N+pn*32`
+
+`R=min(BM/2,max(min(BM,M-pm*BM)-s*BM/2,0))`，`C=min(32,N-pn*32)`。
+
+原/插桩分片相同，64×64及79×83全元素各一writer且无tail/guard写；BM32尾行的三个零维主体按既审SDK no-op处理。普通8的保留BCMLIR具同State窗口/shape，连接各自对象摘要、同SDK lowering规则复用；cold/warm按aggregate同binary复用。这是既审SDK2D shape/ABI/offset分片适用桥，不是新whole-binary重现或新SDK/device执行。原math.json的保守false保持不改，闭环由本节的范围化组合记录表达；原40+96没有重做。
+
+**V2闭合。** `tp-receipts-v2/runs/new-matrix-tp-v1/output/result.json` SHA `282131afb4fd8c65bb8b89983e116ce875d5173bbbca84b2c7bc13c27d8995d1`，原pinned verifier SHA `75e1b08b1dd71256dd442f6ad3bfbffe745ba900026e8f6493e6ef208931a618`。已独立逐144份verified result核summary/result/manifest trace SHA、实际returncode和SQL结果：144unique，24组合/repetition各6份，4488 slices，144×263=37872完整stats；exact_ns_and_raw_references全部true，importer_errors全部空，error/data_loss没有正值。archive SHA `b9a28cd306ffa8a08b4d628b2fa9a450e02f8bdfb817e3f2282cff117460aa5e`。该TP成功只关闭新增导出bytes的SQL门，没有替代State/source/native或授busy/completion/exclusive；原UI按未变编码/既有覆盖复用，无新设备或browser重放。
+
+**V3闭合。** 新数学/安装/E01等Asc本轮owned jobs已有实际终态，`ascend-owner-v1.json`记录12个job、同身份live为0；TP实际terminal0，worker已absent、controller为Z非运行。没有遗留本轮自有设备工作，也没有新增browser工作。`git-delivery-v2.json`已证canonical/remote精确`891281f2a432d213e256c0ab7d61326b5cb4abd4`、正确detailed-profiler、非force，产品行为仍为6e78；当时candidate只留待归档HANDOFF，不冒称该未跟踪文件已经push。
+
+最后由root将三席最终报告、HANDOFF及必要小证据正常归档，常规ff/push并核最终exact remote HEAD与clean即可；这是最终交付记录动作，不需要再次代码审阅、旧矩阵/SDK/native重建或新增测试。本席原V1/V2/V3在上述实际范围均已关闭，原goal剩余不再另加可选证书工程。原NV性能认证延期、历史partial/失败及所有未授更强时间语义继续如实保留。

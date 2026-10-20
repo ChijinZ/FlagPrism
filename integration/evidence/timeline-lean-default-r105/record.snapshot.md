@@ -1,3 +1,9 @@
+## 最终收尾（T142 / run105）
+
+- 三独立最终审阅均完成：compiler `fff38d74192593f4895d7b98b9a33288e0fde8d11a5a1a52c0ee7b4dc5ca1379`；runtime `b1f73895f5ee717695ce28b3f89665f43ee29296d6233d166038139e21bd46a9`；delivery `b038dc6a7e5a26a58f64b42a84373d06028df20275a5f864372184ebab1be7a4`。各原mandatory范围没有未处置confirmed或必要实现/验证；最终新State2D family连接、24profile、144TP、owner全部闭合。请求配置GPT-6.1-Sol/xhigh/forknone，工具不暴露resolved实际型号/深度，已如实记未知。
+- 本次补充8ordinary+24profile/144新trace全过；原始首次失败、旧24未timed MMA历史、raw保守资格位与后续有限sidecar审阅分开，不洗历史。不做附加vector/struct/SSA/ISA证明、未知跨域对齐、sourceexclusive或enginebusy。NV独占性能实验仍依用户授权暂缓。
+- HANDOFF.md包含三Docker/实际installed Python与公开CLI、sourcebuild/diagnostic链接、可打开新trace和原真实UI截图、两受控例子、SQL复现及限制。原scope所有UI/旧TP/State/clock/预算等无变化复用；最终不再有设备/测试/编译任务。最后仅正常归档ff/push/远端HEAD/clean核，exact收据位于run105/preflight/git-delivery-final.json；本快照不自引用其最终commit。未写/构建论文/Study。
+
 ## 最新进展（T142 / run105：24新数学profile与144新trace SQL全部通过）
 
 - 新独立q11/q12两shape×两config，8普通+24cold/warm全部原门通过；最终q12-s1-c1 terminal0/129.524523324s。phase4新增45成员逐size/SHA核同，archive e2e69c0b5a4b9565f266723fe4d3227e28c86cba4134d41150ab9ec6efd1e954。全部真实数值/input/canary/logicalState/hostonce、raw完整性、4/6实际重复矩阵正区间、源关联、预算和标准导出通过，没有重采原旧24。
