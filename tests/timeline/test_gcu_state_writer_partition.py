@@ -46,7 +46,48 @@ def run(text, **kwargs):
                            state_parameter='%state',
                            grid=kwargs.get('grid', (3, )),
                            threads=kwargs.get('threads', 4),
-                           elements=kwargs.get('elements', 3))
+                           elements=kwargs.get('elements', 3),
+                           observer_admission=kwargs.get('observer_admission'))
+
+
+def observer_admission():
+    # Synthetic admission for unit fixtures only. Real profiles use independently
+    # checked source/certificate/object hashes, as documented by the runner.
+    return checker.ObserverPayloadAdmission('1' * 64, '2' * 64, '3' * 64,
+                                            '4' * 64, 0)
+
+
+def test_admitted_observer_integer_words_keep_actual_partition():
+    body = '''  %bits = trunc i64 %base to i32
+  %upper = lshr i64 %base, 32
+  %high = trunc i64 %upper to i32
+  store i32 %bits, ptr %local, align 4
+  store i32 %high, ptr %local, align 4'''
+    answer = run(sample(body=body), observer_admission=observer_admission())
+    if answer['element_writers'] != {0: 1, 1: 1, 2: 1}:
+        raise AssertionError(answer)
+    with pytest.raises(ValueError, match='Unmodeled State instruction'):
+        run(sample(body=body))
+
+
+@pytest.mark.parametrize('use', [
+    '  %alias = inttoptr i32 %bits to ptr',
+    '  %alias = getelementptr i8, ptr %tag, i32 %bits',
+    '  call void @unknown(i32 %bits)',
+    '  store i32 %bits, ptr %tag, align 4',
+    '  %changed = add i32 %bits, 1',
+    '  %global = getelementptr i32, ptr @external_global, i64 0\n'
+    '  store i32 %bits, ptr %global, align 4',
+])
+def test_admission_does_not_make_address_words_into_addresses(use):
+    with pytest.raises(ValueError, match='Observer address payload'):
+        run(sample(body='  %bits = trunc i64 %base to i32\n' + use),
+            observer_admission=observer_admission())
+
+
+def test_unbound_boolean_is_not_an_observer_admission():
+    with pytest.raises(ValueError, match='Object-bound observer admission'):
+        run(sample(), observer_admission=True)
 
 
 def test_scalar_physical_thread_zero():

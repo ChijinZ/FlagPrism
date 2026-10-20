@@ -15,6 +15,31 @@ class Pointer:
     byte_offset: int = 0
 
 
+@dataclass(frozen=True)
+class ObserverPayloadAdmission:
+    """Object-bound source/certificate admission supplied by the QA caller.
+
+    The caller must check these hashes against the actual capture, source-use
+    audit and checked before/after certificate. This record is not a signature,
+    a substitute for those checks, or permission to ignore State transfers.
+    """
+    source_sha256: str
+    before_sha256: str
+    after_sha256: str
+    certificate_sha256: str
+    state_index: int
+
+    def __post_init__(self):
+        for digest in (self.source_sha256, self.before_sha256,
+                       self.after_sha256, self.certificate_sha256):
+            _need(
+                type(digest) is str and re.fullmatch(r'[0-9a-f]{64}', digest),
+                'Observer admission requires actual object hashes')
+        _need(
+            type(self.state_index) is int and self.state_index >= 0,
+            'Observer admission State index')
+
+
 def _need(condition, message):
     if not condition:
         raise ValueError(message)
@@ -134,7 +159,13 @@ def _parse(text):
     return parameters, instructions, definitions, graph, branches
 
 
-def analyze(function_ir, *, state_parameter, grid, threads, elements):
+def analyze(function_ir,
+            *,
+            state_parameter,
+            grid,
+            threads,
+            elements,
+            observer_admission=None):
     _need(type(elements) is int and 0 < elements <= 1 << 20, 'State extent')
     _need(type(threads) is int and 0 < threads <= 64, 'Physical thread extent')
     _need(
@@ -146,6 +177,12 @@ def analyze(function_ir, *, state_parameter, grid, threads, elements):
           'Enumeration bound')
     params, rows, defs, graph, branches = _parse(function_ir)
     _need(params.get(state_parameter) == 'ptr', 'Actual State formal ABI')
+    if observer_admission is not None:
+        _need(
+            isinstance(observer_admission, ObserverPayloadAdmission)
+            and observer_admission.state_index
+            == list(params).index(state_parameter),
+            'Object-bound observer admission State formal differs')
 
     def reach(edges, start=0, stop=None):
         seen, todo = set(), [start]
@@ -192,6 +229,56 @@ def analyze(function_ir, *, state_parameter, grid, threads, elements):
         return any(state_parameter in roots(x)
                    for x in re.findall(r'%[\w.$-]+', operand))
 
+    # Only the two address-word projections emitted by the checked observer
+    # are data. Direct SSA uses may only produce the next word projection or
+    # enter a positively identified private store. This is not memory taint:
+    # subsequent ring loads/uses are covered by the independently bound whole
+    # high-IR observer isolation certificate, not by this LLVM use check.
+    # The source audit separately excludes original user address payloads.
+    projections = set()
+    if observer_admission is not None:
+        for row in rows:
+            op = row['operation']
+            match = re.fullmatch(
+                r'(?:trunc i64 (%[\w.$-]+) to i32|'
+                r'lshr i64 (%[\w.$-]+), 32)', op)
+            if match and state_parameter in roots(match[1] or match[2]):
+                projections.add(row['result'])
+
+    private_cache = {}
+
+    def private_destination(value, active=None):
+        if value in private_cache:
+            return private_cache[value]
+        active = set() if active is None else active
+        if value not in defs or value in active:
+            return False
+        active.add(value)
+        op = rows[defs[value]]['operation']
+        result = bool(
+            re.fullmatch(r'call ptr @tops_get_(?:local|shared)_memory\(\)',
+                         op))
+        result |= op.startswith('alloca ')
+        base = None
+        if op.startswith('getelementptr '):
+            args = _split(
+                op.removeprefix('getelementptr ').removeprefix('inbounds '))
+            match = re.fullmatch(r'ptr(?: addrspace\(\d+\))? (%[\w.$-]+)',
+                                 args[1]) if len(args) >= 2 else None
+            if match:
+                base = match[1]
+        else:
+            match = re.fullmatch(
+                r'(?:addrspacecast|bitcast) ptr(?: addrspace\(\d+\))? '
+                r'(%[\w.$-]+) to ptr(?: addrspace\(\d+\))?', op)
+            if match:
+                base = match[1]
+        if base is not None:
+            result = private_destination(base, active)
+        active.remove(value)
+        private_cache[value] = result
+        return result
+
     calls, writers = {}, []
     transfer_abi = {
         'tops_memcpy_async': (4, 2),
@@ -206,6 +293,18 @@ def analyze(function_ir, *, state_parameter, grid, threads, elements):
     }
     for at in reachable:
         op = rows[at]['operation']
+        projected = projections & set(re.findall(r'%[\w.$-]+', op))
+        if rows[at]['result'] in projections:
+            continue
+        if projected:
+            store = re.fullmatch(
+                r'store i32 (%[\w.$-]+), '
+                r'ptr (%[\w.$-]+)(?:, align \d+)?', op)
+            _need(
+                store and store[1] in projections and not roots(store[2])
+                and private_destination(store[2]),
+                'Observer address payload used outside private data store')
+            continue
         if op.startswith('load '):
             operands = _split(op.removeprefix('load '))
             if re.search(r'\bptr\b', operands[0]):
