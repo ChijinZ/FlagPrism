@@ -150,9 +150,35 @@ class BoundaryTests(unittest.TestCase):
     @classmethod
     def indexed(cls, loop=True):
         if loop not in cls.cache:
-            text, manifest = shared_fixture() if loop == 'shared' else fixture(
-                loop)
-            name = 'shared' if loop == 'shared' else 'runtime' if loop else 'straight'
+            shared = loop in ('shared', 'legacy-shared')
+            text, manifest = shared_fixture() if shared else fixture(loop)
+            if loop == 'preheader-runtime':
+                text = text.replace(
+                    'llvm.br ^header(%c0 : i32)',
+                    'llvm.br ^preheader\n^preheader:\n'
+                    '%bound = llvm.add %trip, %c0 : i32\n'
+                    'llvm.br ^header(%c0 : i32)')
+                text = text.replace('%again = llvm.icmp "slt" %i, %trip',
+                                    '%again = llvm.icmp "slt" %i, %bound')
+            if loop in ('continued-runtime', 'nested-control-runtime'):
+                text = text.replace('^latch', '^continuation')
+                if loop == 'continued-runtime':
+                    continuation = '^continuation:\nllvm.br ^latch\n^latch:'
+                else:
+                    continuation = (
+                        '^continuation:\nllvm.br ^inner(%c0 : i32)\n'
+                        '^inner(%j: i32):\n'
+                        '%more = llvm.icmp "slt" %j, %c2 : i32\n'
+                        'llvm.cond_br %more, ^spin, ^latch\n'
+                        '^spin:\n%jnext = llvm.add %j, %c1 : i32\n'
+                        'llvm.br ^inner(%jnext : i32)\n^latch:')
+                text = text.replace('^continuation:', continuation)
+            if isinstance(loop, str) and loop.startswith('legacy-'):
+                text = re.sub(r' loc\("__flagprism_gcu_clock_v1__":\d+:\d+\)',
+                              '', text)
+                text = text.replace('loc("fixture.py":', 'loc("-":')
+            name = str(loop) if isinstance(
+                loop, str) else 'runtime' if loop else 'straight'
             source, target = cls.output / (name + '.mlir'), cls.output / (
                 name + '.json')
             source.write_text(text)
@@ -179,6 +205,139 @@ class BoundaryTests(unittest.TestCase):
         self.assertEqual(region['loop']['status'],
                          'llvm_runtime_iteration_checked', region)
         return report, manifest, region
+
+    def test_unmarked_typed_calls_recover_fresh_runtime_regions(self):
+        report, manifest = self.indexed('legacy-runtime')
+        self.assertFalse(
+            any('clock_marker' in row for b in report['blocks']
+                for row in b['operations']))
+        original = copy.deepcopy(report)
+        result = self.checked(report, manifest)
+        self.assertEqual(result['status'], 'llvm_observer_boundary_checked',
+                         result)
+        self.assertEqual(result['loop']['status'],
+                         'llvm_runtime_iteration_checked')
+        self.assertEqual(result['clock_binding'],
+                         'typed_timer_identity_call_roles')
+        self.assertEqual(report, original)
+        field = result['paths'][0]['field_refs']['1']
+        zero = next(o['results'][0] for b in report['blocks']
+                    for o in b['operations'] if o.get('integer_constant') == 0)
+        report['blocks'][field['block']]['operations'][
+            field['operation']]['operands'][0] = zero
+        self.assertEqual(
+            self.checked(report, manifest)['status'], 'unverified')
+
+    def test_unmarked_body_does_not_invent_unknown_source_origin(self):
+        report, manifest = self.indexed('legacy-runtime')
+        manifest['sites'][0]['location'] = 'loc(unknown)'
+        self.assertEqual(
+            self.checked(report, manifest)['status'], 'unverified')
+
+    def test_unmarked_source_origin_cannot_be_a_parser_placeholder(self):
+        for location in ('loc("-":1:1)', 'loc("":1:1)',
+                         'loc("fixture.py":0:1)'):
+            with self.subTest(location=location):
+                report, manifest = self.indexed('legacy-runtime')
+                manifest['sites'][0]['location'] = location
+                self.assertEqual(
+                    self.checked(report, manifest)['status'], 'unverified')
+
+    def test_unmarked_barrier_or_getter_is_not_a_fusion_compute_body(self):
+        for callee in ('tops_syncthreads', 'tops_get_thread_idx'):
+            with self.subTest(callee=callee):
+                report, manifest = self.indexed('legacy-runtime')
+                # Preserve well-typed CFG and complete tuple but replace just
+                # the candidate body by a non-compute SDK call.
+                for block in report['blocks']:
+                    for row in block['operations']:
+                        if row['operation'] in (
+                                'llvm.load', 'llvm.fmul',
+                                'llvm.store') and 'fixture.py' not in row.get(
+                                    'location', '') and row.get(
+                                        'location', '').startswith('loc("-":'):
+                            row['operation'] = 'llvm.call'
+                            row['callee'] = callee
+                self.assertEqual(
+                    self.checked(report, manifest)['status'], 'unverified')
+
+    def test_unmarked_shared_end_uses_forwarded_site_tuple(self):
+        report, manifest = self.indexed('legacy-shared')
+        regions = self.module.analyze_regions(report, manifest)['regions']
+        self.assertEqual(len(regions), 2)
+        self.assertTrue(
+            all(x['status'] == 'llvm_observer_boundary_checked'
+                for x in regions), regions)
+        self.assertEqual(regions[0]['paths'][0]['end_block'],
+                         regions[1]['paths'][0]['end_block'])
+
+    def test_runtime_loop_can_continue_through_a_separate_latch(self):
+        for shape in ('continued-runtime', 'nested-control-runtime',
+                      'preheader-runtime'):
+            with self.subTest(shape=shape):
+                report, manifest = self.indexed(shape)
+                result = self.checked(report, manifest)
+                self.assertEqual(result['status'],
+                                 'llvm_observer_boundary_checked', result)
+                self.assertEqual(result['loop']['status'],
+                                 'llvm_runtime_iteration_checked', result)
+                self.assertEqual(result['loop']['rule'],
+                                 'single_header_latch_observer_state')
+                self.assertFalse(result['loop']['termination_qualified'])
+                header = report['blocks'][result['loop']
+                                          ['header']]['operations'][-1]
+                # Enter the body after the begin reader. Every record still
+                # has valid local tuples, but iteration freshness must fail.
+                begin = result['begin_block']
+                edge = report['blocks'][begin]['operations'][-1]['successors'][
+                    0]
+                header['successors'][0] = copy.deepcopy(edge)
+                header['operands'] = [header['operands'][0]
+                                      ] + edge['arguments']
+                changed = self.checked(report, manifest)
+                self.assertNotEqual(
+                    changed.get('loop', {}).get('status'),
+                    'llvm_runtime_iteration_checked')
+
+    def test_continuation_cycle_cannot_repeat_a_record_before_the_latch(self):
+        report, manifest = self.indexed('continued-runtime')
+        region = self.checked(report, manifest)
+        join = report['blocks'][region['paths'][0]['join_block']]
+        terminal = join['operations'][-1]
+        original_edge = copy.deepcopy(terminal['successors'][0])
+        condition = max(v for b in report['blocks'] for row in b['operations']
+                        for v in row['results']) + 1
+        entry = report['blocks'][report['entry_block']]
+        entry['arguments'].append(condition)
+        entry['argument_types'].append('i1')
+        terminal.update(operation='llvm.cond_br',
+                        operands=[condition],
+                        successors=[
+                            dict(block=region['paths'][0]['record_block'],
+                                 arguments=[]), original_edge
+                        ])
+        result = self.checked(report, manifest)
+        self.assertEqual(result['loop']['status'], 'unverified', result)
+
+    def test_external_entry_does_not_hide_an_exit_reset_backedge(self):
+        report, manifest = self.indexed('continued-runtime')
+        region = self.checked(report, manifest)
+        entry = report['blocks'][report['entry_block']]['operations'][-1]
+        initial = copy.deepcopy(entry['successors'][0])
+        entry.update(operation='llvm.cond_br',
+                     operands=[region['selection_value']] +
+                     initial['arguments'],
+                     successors=[
+                         initial,
+                         dict(block=region['loop']['exit_block'], arguments=[])
+                     ])
+        exit_block = report['blocks'][region['loop']['exit_block']]
+        exit_block['operations'][-1].update(operation='llvm.br',
+                                            operands=list(
+                                                initial['arguments']),
+                                            successors=[initial])
+        result = self.checked(report, manifest)
+        self.assertEqual(result['loop']['status'], 'unverified', result)
 
     def test_fresh_tuple_and_runtime_iteration(self):
         _, _, region = self.positive()

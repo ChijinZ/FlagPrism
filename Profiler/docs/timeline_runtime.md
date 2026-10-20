@@ -608,6 +608,27 @@ final input digest. Omitting it leaves LLVM boundaries explicitly unverified.
 Legacy captures without the actual linked input cannot acquire this check by
 reusing cached status. The original capture and producer metadata are unchanged.
 
+For retained LLVM predating clock debug markers, the index may select the unique
+function directly calling both exact timer and identity primitives. Multiple
+owners remain ambiguous. The region analyzer infers call roles in separate
+analysis state; it never inserts debug locations into the retained graph. Site
+ownership still requires the complete forwarded record tuple. Its
+`clock_binding="typed_timer_identity_call_roles"` and
+`source_binding="producer_site_and_typed_record"` are intermediate facts: the
+producer/source identity and program-preservation evidence must be bound by the
+outer qualification before claiming source coverage. Empty, unknown, parser
+placeholder, and line-zero manifest origins do not acquire source facts. A
+barrier or thread-index getter cannot stand in for a fusion compute body.
+
+The finite loop rule also permits intervening observer diamonds and a separate
+latch. It checks a single header/backedge, a nonconstant loop-entry-invariant
+trip value, zero initialization and a unit induction update. With the outer
+latch cut, a selected strongly connected component cannot contain this region's
+body, readers or record; all paths reaching the latch must pass a fresh begin
+and end. An unrelated inner control cycle does not acquire a termination proof.
+An exit that can return to an initial/reset predecessor remains unverified.
+These rules do not turn constant-bound loops into runtime-argument evidence.
+
 After SDK codegen, the normal compiler hook extracts the unique GCU300 ELF
 from its offload bundle. `debug_execution_native_locations` binds the original
 fatbin and ELF digests to sectioned code addresses for the marker rows.

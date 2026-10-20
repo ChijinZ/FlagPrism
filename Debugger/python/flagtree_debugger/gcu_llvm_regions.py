@@ -105,6 +105,7 @@ class _Index:
             type(self.entry) is int and self.entry in self.blocks,
             'Missing LLVM entry block')
         self.false_reachable = {}
+        self.inferred_phases = {}
         for identity, block in self.blocks.items():
             for position, row in enumerate(block['operations']):
                 _need(
@@ -158,6 +159,36 @@ class _Index:
                     'Invalid conditional LLVM branch')
         _need(not self.pred[self.entry],
               'LLVM entry block has incoming control')
+
+    def infer_legacy_phases(self):
+        """Recognize call roles without inventing debug locations or site IDs."""
+        if any(
+                row.get('clock_marker') is not None
+                for block in self.blocks.values()
+                for row in block['operations']):
+            return False
+        for block in self.blocks.values():
+            rows = block['operations']
+            timers = [row for row in rows if row.get('callee') == _CLOCK]
+            identities = [
+                row for row in rows if row.get('callee') == _IDENTITY
+            ]
+            if len(timers) != 1 or len(identities) != 1:
+                continue
+            if rows.index(timers[0]) >= rows.index(identities[0]):
+                continue
+            terminal = rows[-1]['operation']
+            if terminal not in ('llvm.br', 'llvm.cond_br'):
+                continue
+            column = 1 if terminal == 'llvm.br' else 2
+            self.inferred_phases[id(timers[0])] = dict(site=None,
+                                                       column=column)
+            self.inferred_phases[id(identities[0])] = dict(site=None,
+                                                           column=column + 2)
+        return True
+
+    def marker(self, row):
+        return row.get('clock_marker') or self.inferred_phases.get(id(row))
 
     def define(self, value, kind, definition):
         _need(
@@ -319,7 +350,7 @@ def _origins(location):
         r'"((?:[^"\\\n]|\\.)*)":(\d+):\d+', location))
 
 
-def _body_family(site, rows):
+def _body_family(site, rows, *, legacy=False):
     prefix = {
         'memref_ext.slice_start': 'tops_slice_async_',
         'memref_ext.slice_pad_start': 'tops_slice_pad_async_',
@@ -334,8 +365,15 @@ def _body_family(site, rows):
         'gpu.barrier': 'tops_syncthreads',
     }.get(site.get('operation'))
     origins = _origins(site.get('location', ''))
-    matching = [(block, position, row) for block, position, row in rows
-                if origins & _origins(row.get('location', ''))]
+    _need(
+        origins and all(path not in ('', '-', '<unknown>') and line > 0
+                        for path, line in origins),
+        'No original source origin for selected observer')
+    matching = list(rows) if legacy else [(block, position, row)
+                                          for block, position, row in rows
+                                          if origins
+                                          & _origins(row.get('location', ''))]
+
     if prefix:
         matching = [(b, p, r) for b, p, r in matching
                     if r.get('callee', '').startswith(prefix)]
@@ -345,6 +383,20 @@ def _body_family(site, rows):
             'llvm.load', 'llvm.store', 'llvm.fadd', 'llvm.fsub', 'llvm.fmul',
             'llvm.fdiv', 'llvm.call') and r.get('callee') not in (_CLOCK,
                                                                   _IDENTITY)]
+        if legacy:
+            sdk_calls = [
+                item for item in matching if re.fullmatch(
+                    r'tops_(?:mac|floordivf|remsi|vector_step|cvt|select|broadcast|sqrt|extf|truncf|add)_[A-Za-z0-9_]+',
+                    item[2].get('callee', ''))
+            ]
+            direct_math = any(
+                item[2]['operation'] in ('llvm.fadd', 'llvm.fsub', 'llvm.fmul',
+                                         'llvm.fdiv') for item in matching)
+            memory = {item[2]['operation'] for item in matching}
+            _need(
+                sdk_calls
+                or (direct_math and {'llvm.load', 'llvm.store'} <= memory),
+                'Legacy fusion bracket has no typed compute body')
         family = 'paired_fusion_observer_body'
     else:
         raise ValueError(
@@ -364,7 +416,7 @@ def _record(index, block, position, env, site, capacity):
     identity_seen = False
     columns = []
     for row in rows[position:]:
-        marker = row.get('clock_marker')
+        marker = index.marker(row)
         if marker:
             _need(marker['column'] in (2, 4),
                   'Another begin enters end-record path')
@@ -446,7 +498,7 @@ def _record(index, block, position, env, site, capacity):
     for offset, row in enumerate(tail_rows[:-1]):
         index.tick()
         _need(
-            not row.get('successors') and not row.get('clock_marker')
+            not row.get('successors') and not index.marker(row)
             and row['operation']
             in ('llvm.add', 'llvm.sub', 'llvm.mul', 'llvm.trunc', 'llvm.lshr',
                 'llvm.shl', 'llvm.and', 'llvm.or', 'llvm.sext', 'llvm.zext',
@@ -566,10 +618,10 @@ def _region(index, site, block, capacity):
     env = {selector: _literal(1, 1)}
     begin_columns = []
     for row in rows[:-1]:
-        marker = row.get('clock_marker')
+        marker = index.marker(row)
         if marker:
             _need(
-                marker.get('site') == site['id']
+                marker.get('site') in (None, site['id'])
                 and marker.get('column') in (1, 3),
                 'Begin marker/site differs')
             begin_columns.append(marker['column'])
@@ -598,14 +650,17 @@ def _region(index, site, block, capacity):
         found = False
         for position, row in enumerate(index.blocks[current]['operations']):
             index.tick()
-            marker = row.get('clock_marker')
+            marker = index.marker(row)
             if marker:
                 _need(
                     marker.get('column') == 2,
                     'Another marker interrupts selected body')
                 record = _record(index, current, position, dict(state), site,
                                  capacity)
-                family, references = _body_family(site, body)
+                family, references = _body_family(site,
+                                                  body,
+                                                  legacy=bool(
+                                                      index.inferred_phases))
                 outcomes.append(
                     dict(**record,
                          family=family,
@@ -613,6 +668,9 @@ def _region(index, site, block, capacity):
                          body_blocks=list(visited)))
                 found = True
                 break
+            _need(
+                row.get('callee') not in (_CLOCK, _IDENTITY),
+                'Unclassified clock interrupts selected body')
             if row['operation'] not in ('llvm.br', 'llvm.cond_br'):
                 body.append((current, position, row))
         if not found:
@@ -638,7 +696,7 @@ def _region(index, site, block, capacity):
     return result
 
 
-def _loop(index, region):
+def _direct_loop(index, region):
     """Check the finite header/body/record/latch family, not arbitrary loops."""
     joins = {path['join_block'] for path in region['paths']}
     _need(len(joins) == 1, 'Region has multiple loop/continuation joins')
@@ -776,6 +834,262 @@ def _loop(index, region):
                 source_iteration_id_qualified=False)
 
 
+def _natural_loops(index):
+    if hasattr(index, 'natural_loop_cache'):
+        return index.natural_loop_cache
+    successors = {
+        block: [
+            edge['block']
+            for edge in rows['operations'][-1].get('successors', [])
+        ]
+        for block, rows in index.blocks.items()
+    }
+    reachable, pending = set(), [index.entry]
+    while pending:
+        current = pending.pop()
+        if current in reachable:
+            continue
+        index.tick()
+        reachable.add(current)
+        pending.extend(successors[current])
+    _need(
+        len(reachable) * len(reachable) <= 2097152,
+        'Runtime loop dominance set budget exceeded')
+    dominators = {
+        block: {block} if block == index.entry else set(reachable)
+        for block in reachable
+    }
+    changed = True
+    while changed:
+        changed = False
+        for block in sorted(reachable):
+            if block == index.entry:
+                continue
+            index.tick()
+            incoming = [
+                dominators[p] for p, _ in index.pred[block] if p in reachable
+            ]
+            value = {block
+                     } | (set.intersection(*incoming) if incoming else set())
+            if value != dominators[block]:
+                dominators[block] = value
+                changed = True
+    loops = {}
+    for latch in sorted(reachable):
+        for header in successors[latch]:
+            if header not in dominators[latch]:
+                continue
+            body, pending = {header}, [latch]
+            while pending:
+                current = pending.pop()
+                if current in body:
+                    continue
+                index.tick()
+                body.add(current)
+                pending.extend(p for p, _ in index.pred[current]
+                               if p in reachable)
+            item = loops.setdefault(
+                header, dict(header=header, latches=set(), blocks=set()))
+            item['latches'].add(latch)
+            item['blocks'].update(body)
+    index.loop_dominators = dominators
+    index.natural_loop_cache = list(loops.values())
+    return index.natural_loop_cache
+
+
+def _structured_loop(index, region):
+    """Finite single-header/latch iteration with intervening observer diamonds.
+
+    State propagation merges equivalent (block, begun, ended) states. Inner
+    control cycles may not repeat either endpoint; this does not prove liveness
+    or recover source iteration IDs.
+    """
+    begin = region['begin_block']
+    ends = {path['end_block'] for path in region['paths']}
+    candidates = [
+        item for item in _natural_loops(index)
+        if begin in item['blocks'] and ends <= item['blocks']
+    ]
+    _need(candidates, 'No finite runtime loop contains this complete bracket')
+    candidate = min(candidates, key=lambda item: len(item['blocks']))
+    header, body = candidate['header'], candidate['blocks']
+    _need(
+        len(candidate['latches']) == 1,
+        'Runtime loop has multiple/reset induction backedges')
+    latch = next(iter(candidate['latches']))
+    decision = index.blocks[header]['operations'][-1]
+    _need(decision['operation'] == 'llvm.cond_br',
+          'Runtime loop header has no conditional trip guard')
+    comparison = index.definitions[decision['operands'][0]]
+    _need(comparison is not None and comparison[0] == header,
+          'Runtime loop comparison is not in its header')
+    compare = comparison[2]
+    _need(
+        compare['operation'] == 'llvm.icmp'
+        and compare.get('predicate') in ('slt', 'ult')
+        and len(compare['operands']) == 2,
+        'Runtime loop trip comparison is outside the finite family')
+    induction, trip = compare['operands']
+    formals = index.blocks[header]['arguments']
+    _need(induction in formals and index.bits(induction) in (32, 64),
+          'Runtime induction is not a header integer argument')
+    trip_definition = index.definitions[trip]
+    _need(
+        index.value(trip, {})[2]
+        and (trip in index.blocks[index.entry]['arguments']
+             or trip_definition is not None and trip_definition[0] not in body
+             and trip_definition[0] in index.loop_dominators[header]),
+        'Runtime trip is not a nonconstant loop-entry-invariant value')
+    true_edge, false_edge = decision['successors']
+    _need(true_edge['block'] in body and false_edge['block'] not in body,
+          'Runtime loop exit reenters the declared iteration')
+    back = index.blocks[latch]['operations'][-1]
+    _need(
+        back['operation'] == 'llvm.br'
+        and back['successors'][0]['block'] == header,
+        'Runtime latch is not a direct header backedge')
+    bits, number = index.bits(induction), formals.index(induction)
+    token = _atom(bits, 'loop:iteration')
+    _need(
+        index.value(back['successors'][0]['arguments'][number],
+                    {induction: token}) == _add(token, _literal(bits, 1)),
+        'Runtime latch does not advance induction exactly once')
+    initial = []
+    for predecessor, edge_number in index.pred[header]:
+        if predecessor == latch:
+            continue
+        _need(predecessor not in body,
+              'Runtime loop can reset induction internally')
+        edge = index.blocks[predecessor]['operations'][-1]['successors'][
+            edge_number]
+        _need(
+            index.value(edge['arguments'][number], {}) == _literal(bits, 0),
+            'Runtime initial induction is not zero')
+        initial.append(predecessor)
+    _need(initial, 'Runtime loop has no initial entry')
+    reachable, pending = set(), [header]
+    while pending:
+        current = pending.pop()
+        if current in reachable:
+            continue
+        index.tick()
+        reachable.add(current)
+        pending.extend(edge['block']
+                       for edge in index.blocks[current]['operations'][-1].get(
+                           'successors', []))
+    _need(
+        not reachable.intersection(initial),
+        'Runtime loop continuation can reset induction through initial entry')
+    for block in body - {header}:
+        _need(all(predecessor in body for predecessor, _ in index.pred[block]),
+              'External entry into runtime loop body')
+    selector = region['selection_value']
+    protected = {begin} | {
+        block
+        for path in region['paths']
+        for block in (*path['body_blocks'], path['record_block'])
+    }
+    adjacency, reverse = {}, {}
+    pending = [true_edge['block']]
+    while pending:
+        block = pending.pop()
+        if block in adjacency:
+            continue
+        index.tick()
+        _need(block in body and block != header,
+              'Selected iteration bypasses the declared latch')
+        edges = [] if block == latch else [
+            edge['block']
+            for edge, _ in index.edges(block, {selector: _literal(1, 1)})
+        ]
+        adjacency[block] = edges
+        for target in edges:
+            reverse.setdefault(target, []).append(block)
+        pending.extend(edges)
+    # Two finite DFS passes identify actual strongly connected components;
+    # merely checking DFS backedges can miss a protected node in the same SCC.
+    seen, order, pending = set(), [], [(true_edge['block'], False)]
+    while pending:
+        block, leaving = pending.pop()
+        index.tick()
+        if leaving:
+            order.append(block)
+            continue
+        if block in seen:
+            continue
+        seen.add(block)
+        pending.append((block, True))
+        pending.extend((target, False) for target in adjacency[block])
+    seen = set()
+    for root in reversed(order):
+        if root in seen:
+            continue
+        component, pending = set(), [root]
+        while pending:
+            block = pending.pop()
+            if block in seen:
+                continue
+            index.tick()
+            seen.add(block)
+            component.add(block)
+            pending.extend(reverse.get(block, []))
+        cyclic = len(component) > 1 or root in adjacency[root]
+        _need(not (cyclic and protected.intersection(component)),
+              'Runtime control repeats a bracket or record before its latch')
+
+    visited, pending, terminal = set(), [(true_edge['block'], False, False)
+                                         ], set()
+    while pending:
+        block, begun, ended = pending.pop()
+        index.tick()
+        state = (block, begun, ended)
+        if state in visited:
+            continue
+        _need(len(visited) < 32768, 'Runtime loop state budget exceeded')
+        visited.add(state)
+        _need(block in body and block != header,
+              'Selected iteration bypasses the declared latch')
+        if block == begin:
+            _need(not begun and not ended,
+                  'Runtime loop repeats a begin before its latch')
+            begun = True
+        if block in ends:
+            _need(begun and not ended,
+                  'Runtime end is not paired with a fresh begin')
+            ended = True
+        if block == latch:
+            _need(begun and ended,
+                  'Selected runtime path bypasses begin or end')
+            terminal.add((block, begun, ended))
+            continue
+        for edge, _ in index.edges(block, {selector: _literal(1, 1)}):
+            pending.append((edge['block'], begun, ended))
+    _need(terminal, 'Runtime iteration has no checked latch state')
+    return dict(status='llvm_runtime_iteration_checked',
+                rule='single_header_latch_observer_state',
+                header=header,
+                latch=latch,
+                exit_block=false_edge['block'],
+                initial_blocks=initial,
+                induction_value=induction,
+                runtime_trip_value=trip,
+                body_blocks=sorted(body),
+                selected_terminal_states=len(terminal),
+                checked_states=len(visited),
+                source_iteration_id_qualified=False,
+                termination_qualified=False)
+
+
+def _loop(index, region):
+    try:
+        return _direct_loop(index, region)
+    except ValueError as original:
+        try:
+            return _structured_loop(index, region)
+        except ValueError:
+            raise original
+
+
 def analyze_regions(report, manifest):
     """Check every selected site independently; no cached qualification is read."""
     index = _Index(report)
@@ -784,7 +1098,8 @@ def analyze_regions(report, manifest):
         and 0 < len(manifest['sites']) <= 512
         and type(manifest.get('capacity')) is int
         and 0 < manifest['capacity'] <= 1048576, 'Invalid GCU region manifest')
-    sites, starts = {}, {}
+    legacy = index.infer_legacy_phases()
+    sites, starts, legacy_starts = {}, {}, []
     for site in manifest['sites']:
         _need(
             type(site) is dict and type(site.get('id')) is int
@@ -794,25 +1109,48 @@ def analyze_regions(report, manifest):
         sites[site['id']] = site
     for identity, block in index.blocks.items():
         for row in block['operations']:
-            marker = row.get('clock_marker')
-            _need(marker is None or marker['site'] in sites,
-                  'LLVM clock marker does not belong to the manifest')
+            marker = index.marker(row)
+            _need(
+                marker is None or marker['site'] is None
+                or marker['site'] in sites,
+                'LLVM clock marker does not belong to the manifest')
             if marker and marker.get('column') == 1:
-                starts.setdefault(marker.get('site'), []).append(identity)
+                if legacy:
+                    legacy_starts.append(identity)
+                else:
+                    starts.setdefault(marker.get('site'), []).append(identity)
     regions = []
     for identity, site in sites.items():
         try:
-            _need(
-                len(starts.get(identity, [])) == 1,
-                'Missing or ambiguous selected begin marker')
-            regions.append(
-                _region(index, site, starts[identity][0],
-                        manifest['capacity']))
+            if legacy:
+                matches = []
+                for begin in legacy_starts:
+                    try:
+                        matches.append(
+                            _region(index, site, begin, manifest['capacity']))
+                    except ValueError:
+                        pass
+                _need(
+                    len(matches) == 1,
+                    'Missing or ambiguous typed legacy clock/record tuple')
+                result = matches[0]
+                result['clock_binding'] = 'typed_timer_identity_call_roles'
+                result['source_binding'] = 'producer_site_and_typed_record'
+                result['producer_source_identity_required'] = True
+                regions.append(result)
+            else:
+                _need(
+                    len(starts.get(identity, [])) == 1,
+                    'Missing or ambiguous selected begin marker')
+                result = _region(index, site, starts[identity][0],
+                                 manifest['capacity'])
+                result['clock_binding'] = 'explicit_debug_markers'
+                regions.append(result)
         except ValueError as error:
             regions.append(
                 dict(site_id=identity, status='unverified', reason=str(error)))
     return dict(schema_version=1,
-                rule_version='gcu300.selected_llvm_tuple.v1',
+                rule_version='gcu300.selected_llvm_tuple.v2',
                 semantics='selected_observer_issue_wait_or_body_elapsed',
                 regions=regions,
                 native_schedule_qualified=False,

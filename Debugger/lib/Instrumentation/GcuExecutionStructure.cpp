@@ -25,26 +25,31 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
       parseSourceString<ModuleOp>(input, ParserConfig(&context, false));
   if (!module)
     return reject("Cannot parse final GCU LLVM structure");
-  SmallVector<LLVM::LLVMFuncOp> functions, markedFunctions;
+  SmallVector<LLVM::LLVMFuncOp> functions, markedFunctions, clockFunctions;
   module->walk([&](LLVM::LLVMFuncOp function) {
     if (!function.isExternal()) {
       functions.push_back(function);
-      bool hasMarker = false;
+      bool hasMarker = false, hasTimer = false, hasIdentity = false;
       function.walk([&](Operation *op) {
+        if (auto call = dyn_cast<LLVM::CallOp>(op)) {
+          hasTimer |= call.getCallee() == "_ZN4tops12global_timerEv";
+          hasIdentity |= call.getCallee() == "flagprism_gcu_clock_identity_v1";
+        }
         auto location = op->getLoc()->findInstanceOf<FileLineColLoc>();
         hasMarker |=
             location && location.getFilename() == "__flagprism_gcu_clock_v1__";
       });
       if (hasMarker)
         markedFunctions.push_back(function);
+      if (hasTimer && hasIdentity)
+        clockFunctions.push_back(function);
     }
   });
-  if (markedFunctions.size() > 1 ||
-      (markedFunctions.empty() && functions.size() != 1))
+  auto &candidates = markedFunctions.empty() ? clockFunctions : markedFunctions;
+  if (candidates.size() > 1 || (candidates.empty() && functions.size() != 1))
     return reject(
         "GCU structure requires one unambiguous LLVM observation body");
-  auto function =
-      markedFunctions.empty() ? functions.front() : markedFunctions.front();
+  auto function = candidates.empty() ? functions.front() : candidates.front();
   for (auto candidate : functions)
     if (candidate->getParentOp() != function->getParentOp())
       return reject("GCU structure definitions require one lexical container");

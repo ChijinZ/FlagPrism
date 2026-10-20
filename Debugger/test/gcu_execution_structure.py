@@ -91,6 +91,36 @@ class StructureTests(unittest.TestCase):
         self.assertEqual(report['function'], 'anonymous')
         self.assertEqual(report['defined_callers'], ['wrapper'])
 
+    def test_unique_clock_owner_without_markers_is_selected(self):
+        source = SOURCE.replace(
+            'llvm.func @timer() -> i64',
+            'llvm.func @_ZN4tops12global_timerEv() -> i64\n'
+            'llvm.func @flagprism_gcu_clock_identity_v1() -> i32')
+        source = source.replace('@timer()', '@_ZN4tops12global_timerEv()')
+        source = source.replace(' loc("__flagprism_gcu_clock_v1__":7:1)', '')
+        source = source.replace(' loc("__flagprism_gcu_clock_v1__":7:2)', '')
+        source = source.replace(
+            '%one =',
+            '%owner = llvm.call @flagprism_gcu_clock_identity_v1() : () -> i32\n%one ='
+        )
+        source = source.replace(
+            '\n}\n', '\n llvm.func @wrapper() { llvm.return }\n}\n')
+        child, report = self.inspect(source, 'legacy-clock-owner')
+        self.assertEqual(child.returncode, 0, child.stderr.decode())
+        self.assertEqual(report['function'], 'anonymous')
+        self.assertFalse(
+            any('clock_marker' in row for block in report['blocks']
+                for row in block['operations']))
+        # Two genuine reader owners are ambiguous, even in one lexical scope.
+        duplicate = source.replace(
+            '\n}\n', '\n llvm.func @other() { '
+            '%x = llvm.call @_ZN4tops12global_timerEv() : () -> i64 '
+            '%y = llvm.call @flagprism_gcu_clock_identity_v1() : () -> i32 '
+            'llvm.return }\n}\n')
+        child, _ = self.inspect(duplicate, 'legacy-clock-ambiguous')
+        self.assertNotEqual(child.returncode, 0)
+        self.assertIn('unambiguous', child.stderr.decode())
+
     def test_multiple_bodies_are_rejected(self):
         text = 'module { llvm.func @a() { llvm.return } llvm.func @b() { llvm.return } }'
         child, report = self.inspect(text, 'multiple')
