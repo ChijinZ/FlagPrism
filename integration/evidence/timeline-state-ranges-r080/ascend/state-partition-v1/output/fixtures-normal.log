@@ -1,0 +1,864 @@
+FFFFFFF.FFF.F......F.F.F                                                 [100%]
+=================================== FAILURES ===================================
+____________________________ test_scalar_partition _____________________________
+
+    def test_scalar_partition():
+>       assert run(sample())['element_writers'] == {0: 1, 1: 1, 2: 1}
+               ^^^^^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:34: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+_____________________________ test_selected_actor ______________________________
+
+    def test_selected_actor():
+>       assert run(sample(predicate='%only'), actors=2)['element_writers'] == {0: 1, 1: 1, 2: 1}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:317: in analyze
+    _need(not (returns & reach(edges, stop=index)), 'State writer may be bypassed')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'State writer may be bypassed'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: State writer may be bypassed
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+_______________________ test_two_actor_disjoint_offsets ________________________
+
+    def test_two_actor_disjoint_offsets():
+        text = sample(offset='%offset', body='  %start = mul i64 %id, 2\n  %offset = add i64 %start, %sub')
+>       assert run(text, actors=2, elements=6)['element_writers'] == {n: 1 for n in range(6)}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:279: in operation
+    kind, flags, ty, x, y = match.groups();bits = int(ty[1:]);left = integer(ty + ' ' + x, use);right = integer(ty + ' ' + y, use)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:279: in operation
+    kind, flags, ty, x, y = match.groups();bits = int(ty[1:]);left = integer(ty + ' ' + x, use);right = integer(ty + ' ' + y, use)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+__________________________ test_integer_signed_widths __________________________
+
+    def test_integer_signed_widths():
+        text = sample(offset='%offset', body='  %negative = sext i8 -1 to i64\n  %one = sub i64 0, %negative\n  %offset = mul i64 %id, %one')
+>       assert run(text)['element_writers'] == {0: 1, 1: 1, 2: 1}
+               ^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:279: in operation
+    kind, flags, ty, x, y = match.groups();bits = int(ty[1:]);left = integer(ty + ' ' + x, use);right = integer(ty + ' ' + y, use)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+__________________ test_unrelated_loop_does_not_repeat_state ___________________
+
+    def test_unrelated_loop_does_not_repeat_state():
+        text = sample().replace('  br i1 true, label %write, label %done', '''  br label %loop
+    loop:
+      %n = phi i32 [ 0, %0 ], [ %next, %loop ]
+      %next = add i32 %n, 1
+      %again = icmp slt i32 %next, 7
+      br i1 %again, label %loop, label %write''')
+>       assert run(text)['element_writers'] == {0: 1, 1: 1, 2: 1}
+               ^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-2-3-Overlapping] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 2, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 2, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Overlapping'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %sub, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Overlapping] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %sub, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %sub, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Overlapping'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 2, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 2, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Overlapping] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 2, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 2, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Overlapping'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Overlapping'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 0, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-stride] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 0, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'stride'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm... addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 0, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'stride'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'stride'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 -1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 -1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-extent] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 -1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'extent'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 -1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'extent'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'extent'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %write\ndone:\n  ret void\n}-1-3-No reachable] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %write\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'No reachable'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:318: in analyze
+    _need(all(index not in reach(edges, start=t) for t in edges[index]), 'State writer repeats in a loop')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'State writer repeats in a loop'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: State writer repeats in a loop
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %write\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'No reachable'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'No reachable'
+E         Actual message: 'State writer repeats in a loop'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+_ test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n  %bad = call i64 @unknown()\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %bad, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Unmodeled integer] _
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %bad, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Unmodeled integer'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+        with pytest.raises(ValueError, match=reason):
+>           run(text, actors=actors, elements=elements)
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+
+During handling of the above exception, another exception occurred:
+
+text = 'define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm...addrspace(1) %state, ptr addrspace(1) %state, i64 %bad, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}'
+actors = 1, elements = 3, reason = 'Unmodeled integer'
+
+    @pytest.mark.parametrize('text,actors,elements,reason', [
+        (sample(), 2, 3, 'Overlapping'),
+        (sample(offset='%sub'), 1, 3, 'Overlapping'),
+        (sample(offset='3'), 1, 3, 'exceeds'),
+        (sample(size='2'), 1, 3, 'Overlapping'),
+        (sample(stride='0'), 1, 3, 'stride'),
+        (sample(size='-1'), 1, 3, 'extent'),
+        (sample(body='  %unknown = load i1, ptr addrspace(1) %state', predicate='%unknown'), 1, 3, 'bypassed'),
+        (sample().replace('  br label %done\ndone:', '  br label %write\ndone:'), 1, 3, 'No reachable'),
+        (sample().replace('i32 0)', 'i32 1)'), 1, 3, 'mode'),
+        (sample(body='  call void @unknown(ptr addrspace(1) %state)'), 1, 3, 'Unmodeled call'),
+        (sample(body='  %bad = load ptr addrspace(1), ptr addrspace(1) %state'), 1, 3, 'pointer'),
+        (sample(body='  %bad = inttoptr i64 42 to ptr addrspace(1)'), 1, 3, 'pointer'),
+        (sample(offset='%bad', body='  %bad = add nsw i8 127, 1'), 1, 3, 'poison'),
+        (sample(offset='%bad', body='  %bad = sdiv i64 1, 0'), 1, 3, 'division'),
+        (sample(offset='%bad', body='  %bad = call i64 @unknown()'), 1, 3, 'Unmodeled integer'),
+        (sample(offset='%bad', body='  %bad = mul i64 %undefined, 2'), 1, 3, 'Unknown'),
+    ])
+    def test_reject(text, actors, elements, reason):
+>       with pytest.raises(ValueError, match=reason):
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'Unmodeled integer'
+E         Actual message: 'Unknown integer helper arguments'
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:80: AssertionError
+___________________ test_two_dimensional_strides_and_actors ____________________
+
+    def test_two_dimensional_strides_and_actors():
+        text = '''define dso_local void @matrix_range(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {
+      %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()
+      %offset = mul i64 %sub, 4
+      call void @store_ubuf_to_gm_2d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 2, i64 2, i64 2, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %offset, i64 2, i64 2, i64 2, i64 1, i32 0)
+      ret void
+    }'''
+>       assert run(text, grid=(1,), actors=2, elements=8)['element_writers'] == {n: 1 for n in range(8)}
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:279: in operation
+    kind, flags, ty, x, y = match.groups();bits = int(ty[1:]);left = integer(ty + ' ' + x, use);right = integer(ty + ' ' + y, use)
+                                                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+___________________________ test_pointer_gep_origin ____________________________
+
+    def test_pointer_gep_origin():
+        text = sample(body='  %alias = getelementptr i32, ptr addrspace(1) %state, i64 0')
+        text = text.replace('ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id', 'ptr addrspace(1) %alias, ptr addrspace(1) %alias, i64 %id')
+>       assert run(text)['element_writers'] == {0: 1, 1: 1, 2: 1}
+               ^^^^^^^^^
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py:30: in run
+    return checker.analyze(text, state_parameter='%state', grid_parameters=('%gx', '%gy', '%gz'), grid=grid, subblocks=actors, elements=elements)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:321: in analyze
+    offset_bits, _ = _value(arguments[base + 2]);offset = _signed(integer(arguments[base + 2], index), offset_bits) + aligned.byte_offset // 4
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:220: in integer
+    result = evaluate(token, use)
+             ^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:238: in evaluate
+    result = operation(rows[index]['operation'], index)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:254: in operation
+    _need(not arguments, 'Unknown integer helper arguments')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, message = 'Unknown integer helper arguments'
+
+    def _need(condition, message):
+        if not condition:
+>           raise ValueError(message)
+E           ValueError: Unknown integer helper arguments
+
+/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/ascend_state_writer_partition.py:22: ValueError
+=========================== short test summary info ============================
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_scalar_partition
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_selected_actor
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_two_actor_disjoint_offsets
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_integer_signed_widths
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_unrelated_loop_does_not_repeat_state
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-2-3-Overlapping]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %sub, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Overlapping]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 2, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 2, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Overlapping]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 0, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-stride]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 -1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 -1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-extent]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %id, i64 1, i64 1, i32 0)\n\n  br label %write\ndone:\n  ret void\n}-1-3-No reachable]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_reject[define dso_local void @independent(ptr addrspace(1) %state, i32 %gx, i32 %gy, i32 %gz) {\n  %id = call i64 @llvm.hivm.GET.BLOCK.IDX()\n  %sub = call i64 @llvm.hivm.GET.SUBBLOCKID()\n  %only = icmp eq i64 %sub, 0\n  %bad = call i64 @unknown()\n  br i1 true, label %write, label %done\nwrite:\n  call void @store_ubuf_to_gm_1d_int32_t(ptr addrspace(6) null, ptr addrspace(6) null, i64 0, i64 1, i64 1, ptr addrspace(1) %state, ptr addrspace(1) %state, i64 %bad, i64 1, i64 1, i32 0)\n\n  br label %done\ndone:\n  ret void\n}-1-3-Unmodeled integer]
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_two_dimensional_strides_and_actors
+FAILED ../../tmp/chijin-timeline-r080-ascend/state-partition-input-v1/test_ascend_state_writer_partition.py::test_pointer_gep_origin
+14 failed, 10 passed in 0.84s

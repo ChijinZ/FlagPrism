@@ -1,0 +1,29 @@
+{
+  "controller": {
+    "pid": 377936,
+    "ppid": 2511431,
+    "pgid": 377936,
+    "startticks": 344988304
+  },
+  "worker": {
+    "pid": 377970,
+    "ppid": 377936,
+    "pgid": 377970,
+    "startticks": 344988310
+  },
+  "argv": [
+    "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+    "-I",
+    "/tmp/chijin-timeline-r080-ascend/state-partition-input-v1/run.py",
+    "--output",
+    "/tmp/chijin-timeline-r080-ascend/runs/state-partition-v1/output"
+  ],
+  "argv_sha256": "144649c15e976de5471003f65b94fb370f84aad85e62738d1817ea5c69bd9185",
+  "script_sha256": "7d71301014d36e3320d3a3f68d1632230d1c8ca9ce8a9a1182b1b069a8b379d2",
+  "controller_sha256": "5c10e9c1c8bec2fea55e5fe6c417917b9d5b86624fc9d2e4289f12dc1667d3f4",
+  "cleanup_sha256": "8c70cb153e6b30cf2f03491e62e408009ba364a01c0b9777a20466c75357df29",
+  "timeout_seconds": 120,
+  "state": "terminal",
+  "returncode": 1,
+  "wall_ns": 1317309742
+}
