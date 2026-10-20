@@ -1,0 +1,10 @@
+{
+  "normal.log": {
+    "stdout": " pytest-regex selected 37 tests to run for regex: .*\n.....................................                                    [100%]\n37 passed in 0.04s\n",
+    "sha256": "ada009650f47c9859741d8457c96ad72e852986ccfbe1e3e507ab2bf2a536707"
+  },
+  "optimized.log": {
+    "stdout": " pytest-regex selected 37 tests to run for regex: .*\n.....................................                                    [100%]\n=============================== warnings summary ===============================\n../usr/local/lib/python3.12/dist-packages/_pytest/config/__init__.py:1273\n  /usr/local/lib/python3.12/dist-packages/_pytest/config/__init__.py:1273: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)\n  \n    self._warn_about_missing_assertion(mode)\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n37 passed, 1 warning in 0.04s\n",
+    "sha256": "6906c75ca4d521b40dccaf94499c7b3e7ba6f59a19d12cdcf2ad31700ca8e099"
+  }
+}
