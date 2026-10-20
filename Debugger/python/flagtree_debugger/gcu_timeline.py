@@ -44,8 +44,13 @@ def tool_identity():
         Path(__file__),
         Path(__file__).with_name('compiler.py'),
         Path(__file__).with_name('gcu_clock.py'),
+        Path(__file__).with_name('gcu_native_analysis.py'),
+        Path(__file__).with_name('gcu_native_control.py'),
+        Path(__file__).with_name('gcu_native_image.py'),
+        Path(__file__).with_name('gcu_native_values.py'),
         Path(libtriton.__file__),
         Path('/opt/tops/bin/opt'),
+        Path('/opt/tops/llvm11/bin/llvm-objdump'),
         Path('/opt/triton_gcu/bin/gcu-compiler-opt'),
         Path('/opt/triton_gcu/bin/gcu-compiler-compile'),
         Path('/opt/tops/llvm11/lib/krt/gcu300_api_profile.bc')
@@ -57,7 +62,7 @@ def tool_identity():
     paths.extend(backend.glob('_triton_gcu300*.so'))
     paths.extend(backend.glob('libtriton_gcu300*.so'))
     files = {str(path.resolve()): _file_hash(path) for path in paths}
-    return dict(version=2,
+    return dict(version=3,
                 files=files,
                 clock_helper_source_sha256=hashlib.sha256(
                     IDENTITY_SOURCE.encode()).hexdigest())
@@ -408,6 +413,106 @@ def bind_native_clock_locations(binary, metadata):
             debug_execution_native_locations_receipt=receipt,
             debug_execution_native_locations_output_sha256=hashlib.sha256(
                 output).hexdigest())
+        metadata['debug_execution_native_analysis'] = _native_shape_stage(
+            elf,
+            report,
+            metadata['debug_execution_manifest'],
+            expected=metadata['debug_execution_tool_identity'],
+            root=root / 'analysis')
     except Exception as error:
         raise RuntimeError('GCU native location binding failed; retained at ' +
                            str(root)) from error
+
+
+def _native_shape_stage(elf, locations, manifest, *, expected, root):
+    """Run the actual SDK decoder; unsupported shapes preserve raw capture."""
+    if tool_identity() != expected:
+        raise RuntimeError('GCU toolchain changed before shape inspection')
+    root.mkdir()
+    source = root / 'input.elf'
+    source.write_bytes(elf)
+    tool = Path('/opt/tops/llvm11/bin/llvm-objdump')
+    command = [
+        str(tool), '-d', '--triple=dtu', '--mcpu=gcu300', '--demangle',
+        '--line-numbers',
+        str(source)
+    ]
+    receipt = dict(argv=command,
+                   tool_sha256=_file_hash(tool),
+                   elf_sha256=hashlib.sha256(elf).hexdigest())
+    try:
+        with (root / 'stdout').open('wb') as out, (root /
+                                                   'stderr').open('wb') as err:
+            child = subprocess.Popen(command,
+                                     stdin=subprocess.DEVNULL,
+                                     stdout=out,
+                                     stderr=err,
+                                     start_new_session=True)
+            try:
+                fields = (Path('/proc') / str(child.pid) /
+                          'stat').read_text().rsplit(')', 1)[1].split()
+                receipt.update(pid=child.pid,
+                               pgid=int(fields[2]),
+                               startticks=int(fields[19]))
+                (root / 'launch.json').write_text(json.dumps(receipt,
+                                                             indent=2))
+                result = child.wait(timeout=20)
+            except BaseException:
+                if child.poll() is None:
+                    child.kill()
+                child.wait()
+                receipt.update(state='failed_or_timed_out',
+                               returncode=child.returncode)
+                (root / 'terminal.json').write_text(
+                    json.dumps(receipt, indent=2))
+                raise
+        receipt.update(state='terminal', returncode=result)
+        (root / 'terminal.json').write_text(json.dumps(receipt, indent=2))
+        if result or (root / 'stdout').stat().st_size > 16 * 1024 * 1024:
+            raise ValueError(
+                'SDK native decoder failed or exceeded output budget')
+        from .gcu_native_analysis import analyze_native
+        report = analyze_native(elf, (root / 'stdout').read_bytes(),
+                                locations=locations,
+                                manifest=manifest)
+        encoded = json.dumps(report, sort_keys=True).encode()
+        if len(encoded) > 256 * 1024:
+            raise ValueError('Native diagnostic report exceeds byte budget')
+        (root / 'analysis.json').write_bytes(encoded)
+        report['analysis_sha256'] = hashlib.sha256(encoded).hexdigest()
+    except Exception as error:
+        report = dict(schema_version=1,
+                      status='unavailable',
+                      reason=str(error)[:1024],
+                      source_region_qualified=False,
+                      reader_valueflow_qualified=False,
+                      external_entries_qualified=False,
+                      hardware_busy_qualified=False)
+    if source.read_bytes() != elf or tool_identity() != expected:
+        raise RuntimeError('GCU shape inspection inputs/toolchain changed')
+    report.update(elf_sha256=hashlib.sha256(elf).hexdigest(),
+                  decoder_receipt=receipt,
+                  analyzer_identity_sha256=hashlib.sha256(
+                      json.dumps(expected,
+                                 sort_keys=True).encode()).hexdigest())
+    return report
+
+
+def inspect_native_execution(binary, metadata):
+    """Reinspect immutable captured bytes with the installed analyzer.
+
+    Producer metadata is not rewritten and the application is never replayed.
+    The returned supplement has its own analyzer identity and qualification.
+    """
+    if metadata.get('debug_execution_version') != 1:
+        raise ValueError('Not a GCU execution capture')
+    current = dict(metadata)
+    producer = current.get('debug_execution_tool_identity')
+    current['debug_execution_tool_identity'] = tool_identity()
+    bind_native_clock_locations(binary, current)
+    return dict(schema_version=1,
+                fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                producer_identity_sha256=hashlib.sha256(
+                    json.dumps(producer, sort_keys=True).encode()).hexdigest(),
+                locations=current['debug_execution_native_locations'],
+                analysis=current['debug_execution_native_analysis'])

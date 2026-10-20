@@ -109,15 +109,22 @@ def test_native_report_cannot_escalate_or_change_manifest(mutation):
 
 def test_missing_phases_remain_explicit_without_timing_rights():
     metadata = dict(debug_execution_version=1,
+                    debug_execution_tool_identity={},
                     debug_execution_manifest=dict(sites=[dict(id=7)]))
     binary = bundle([(TARGET, b'\x7fELFfake-parser-fixture')])
     with tempfile.TemporaryDirectory() as tmp:
-        with patch.object(bridge.tempfile, 'mkdtemp',
-                          return_value=tmp), patch.object(
-                              bridge,
-                              '_native_file_stage',
-                              return_value=(json.dumps(report()).encode(),
-                                            {})):
+        with patch.object(bridge,
+                          '_native_shape_stage',
+                          return_value={
+                              'status': 'fixture_unverified',
+                              'source_region_qualified': False
+                          }), patch.object(bridge.tempfile,
+                                           'mkdtemp',
+                                           return_value=tmp), patch.object(
+                                               bridge,
+                                               '_native_file_stage',
+                                               return_value=(json.dumps(
+                                                   report()).encode(), {})):
             bridge.bind_native_clock_locations(binary, metadata)
     mapped = metadata['debug_execution_native_locations']
     assert mapped['missing_phase_locations'] == [
@@ -125,6 +132,26 @@ def test_missing_phases_remain_explicit_without_timing_rights():
     ]
     assert mapped['report']['source_region_qualified'] is False
     assert mapped['report']['reader_valueflow_qualified'] is False
+    assert metadata['debug_execution_native_analysis'][
+        'source_region_qualified'] is False
+
+
+def test_reinspection_retains_producer_metadata_and_uses_current_analyzer():
+    metadata = dict(debug_execution_version=1,
+                    debug_execution_tool_identity={'version': 'old'})
+    original = copy.deepcopy(metadata)
+
+    def inspect(binary, current):
+        assert current['debug_execution_tool_identity'] == {'version': 'new'}
+        current.update(
+            debug_execution_native_locations={'status': 'fixture'},
+            debug_execution_native_analysis={'status': 'fixture_unverified'})
+
+    with patch.object(bridge, 'tool_identity', return_value={'version': 'new'}), \
+            patch.object(bridge, 'bind_native_clock_locations', side_effect=inspect):
+        result = bridge.inspect_native_execution(b'captured bytes', metadata)
+    assert metadata == original
+    assert result['analysis']['status'] == 'fixture_unverified'
 
 
 def test_ordinary_path_does_not_inspect_binary():

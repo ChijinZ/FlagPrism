@@ -35,8 +35,12 @@ def _scale(value, count):
     return _linear(value[0] * count, ((s, c * count) for s, c in value[1]))
 
 
-def check_record_tail(instructions, *, low_register, high_register,
-                      identity_register):
+def check_record_tail(instructions,
+                      *,
+                      low_register,
+                      high_register,
+                      identity_register,
+                      entry_constants=None):
     """Check end-low/high and identity fields on one bounded straight path.
 
     The register inputs denote values *at this tail's entry*. The upper word
@@ -55,6 +59,17 @@ def check_record_tail(instructions, *, low_register, high_register,
             for r in roots), 'Ambiguous native reader registers')
     low, high, identity = map(_symbol, ('end_low', 'end_high_raw', 'identity'))
     values = dict(zip(roots, (low, high, identity)))
+    if entry_constants is not None:
+        _need(
+            type(entry_constants) is dict and len(entry_constants) <= 28,
+            'Invalid record entry constants')
+        for register, constant in entry_constants.items():
+            _need(
+                isinstance(register, str)
+                and re.fullmatch(r'r(?:[1-9]|[12]\d|3[01])', register)
+                and register not in roots and type(constant) is int
+                and 0 <= constant <= _MASK, 'Invalid record entry constant')
+            values[register] = _linear(constant)
     values['r0'] = _linear()
     stores, pcs = [], set()
     packet, packet_writes = None, set()
@@ -202,7 +217,153 @@ def check_record_tail(instructions, *, low_register, high_register,
                 incoming_begin_site_qualified=False)
 
 
-def inspect_inline_reader(instructions, *, marker_packet):
+def reader_entry_context(instructions, control, *, marker_packet, registers):
+    """Resolve finite affine live-ins along the indexed direct predecessors.
+
+    This is conditional on that index, not a proof of external entries. Every
+    reaching definition must agree; loops without a definition add no value,
+    while unknown control, clobbers or recursive value definitions reject.
+    The caller must bind the complete instructions/index to the same image.
+    """
+    _need(
+        control['start_packet'] <= marker_packet < control['end_packet']
+        and marker_packet % 16 == 0, 'Context marker outside control extent')
+    _need(
+        isinstance(instructions, list) and len(instructions) <= 100000,
+        'Native context instruction bound')
+    packets = {}
+    by_pc = {}
+    previous = -1
+    for row in instructions:
+        pc = row['pc']
+        _need(
+            type(pc) is int and pc > previous,
+            'Unordered context instructions')
+        previous = pc
+        packets.setdefault(pc & ~15, []).append(row)
+        by_pc[pc] = row
+    unknown = {r['packet'] for r in control['unknown_controls']}
+    memo, pending = {}, set()
+    remaining = 250000
+    readonly = frozenset(
+        ('l.st.w', 'l.st.b', 'l.st.h', 'l.beq', 'l.bne', 'l.blt.u', 'l.blt.s',
+         'l.bge.u', 'l.bge.s', 'l.jal', 'l.jalr', 'l.halt'))
+
+    def arguments(row):
+        return [
+            x.strip() for x in re.split(r',\s*(?![^\[]*\])', row['operands'])
+        ]
+
+    def padding(row):
+        return row['opcode'] in ('c.nop', 's.nop16', 'v.nop') or (
+            row['opcode'] == 'c.addi4spn'
+            and row['operands'].replace(' ', '') == 'r8,0x0')
+
+    def resolve(packet, register):
+        nonlocal remaining
+        if register == 'r0':
+            return _linear()
+        key = (packet, register)
+        if key in memo:
+            return memo[key]
+        _need(key not in pending and len(pending) < 64,
+              'Recursive or excessive native context value chain')
+        pending.add(key)
+        queue = [packet]
+        visited, definitions = set(), set()
+        reaches_entry = False
+        while queue:
+            node = queue.pop()
+            if node in visited:
+                continue
+            visited.add(node)
+            remaining -= 1
+            _need(remaining >= 0, 'Native context traversal exceeds budget')
+            if node == control['start_packet']:
+                reaches_entry = True
+            for edge in control['predecessors'][node]:
+                parent = edge['source']
+                _need(parent not in unknown,
+                      'Unknown control on native context path')
+                writes = [
+                    r for r in packets.get(parent, [])
+                    if not padding(r) and r['opcode'] not in readonly
+                    and arguments(r)[0] == register
+                ]
+                _need(
+                    len(writes) <= 1,
+                    'Multiple context register writes in packet')
+                if writes:
+                    definitions.add(writes[0]['pc'])
+                else:
+                    queue.append(parent)
+        _need(definitions or reaches_entry,
+              'Context has no reaching definition')
+        answers = []
+        if reaches_entry:
+            answers.append(_symbol('entry:' + register))
+
+        def immediate(text):
+            _need(re.fullmatch(r'-?(?:0x[\da-f]+|\d+)', text),
+                  'Unknown native context operand')
+            return int(text, 16 if 'x' in text else 10)
+
+        for pc in sorted(definitions):
+            row = by_pc[pc]
+            op, args = row['opcode'], arguments(row)
+            point = pc & ~15
+
+            def read(text):
+                if re.fullmatch(r'r(?:\d|[12]\d|3[01])', text):
+                    _need(
+                        not any(other['pc'] != pc and not padding(other)
+                                and other['opcode'] not in readonly
+                                and arguments(other)[0] == text
+                                for other in packets.get(point, [])),
+                        'Unsupported same-packet context forwarding')
+                    return resolve(point, text)
+                return _linear(immediate(text))
+
+            if op in ('c.li', 'l.ldi16.s', 'l.ldi16.u'):
+                _need(len(args) == 2, 'Invalid context immediate')
+                value = immediate(args[1])
+                lo, hi = (-32, 31) if op == 'c.li' else ((
+                    -32768, 32767) if op == 'l.ldi16.s' else (0, 65535))
+                _need(lo <= value <= hi, 'Context immediate range')
+                answer = _linear(value)
+            elif op in ('c.mv', 'l.mov'):
+                _need(len(args) == 2, 'Invalid context move')
+                answer = read(args[1])
+            elif op in ('l.adda.u', 'l.adda.s', 'l.addia.u', 'l.addia.s'):
+                _need(len(args) == 3, 'Invalid context addition')
+                answer = _add(read(args[1]), read(args[2]))
+            elif op in ('c.add', 'c.addi'):
+                _need(len(args) == 2, 'Invalid context addition')
+                answer = _add(read(args[0]), read(args[1]))
+            elif op == 'l.ldi_hi':
+                _need(len(args) == 2, 'Invalid context high immediate')
+                old, high = read(args[0]), immediate(args[1])
+                _need(not old[1] and 0 <= high <= 65535,
+                      'Unknown context high-immediate input')
+                answer = _linear((old[0] & 65535) | high << 16)
+            else:
+                raise ValueError('Unsupported reaching native definition: ' +
+                                 op)
+            answers.append(answer)
+        _need(all(v == answers[0] for v in answers),
+              'Native context reaching values disagree')
+        pending.remove(key)
+        memo[key] = answers[0]
+        return memo[key]
+
+    _need(
+        len(registers) <= 31 and all(
+            re.fullmatch(r'r(?:[1-9]|[12]\d|3[01])', r) for r in registers),
+        'Invalid context live-in registers')
+    return {r: resolve(marker_packet, r) for r in registers}
+
+
+def inspect_inline_reader(instructions, *, marker_packet, control=None):
     """Infer registers from a finite low/high/low rollover reader shape.
 
     A marker denotes a 16-byte packet, not an instruction PC. This recognizes
@@ -210,6 +371,13 @@ def inspect_inline_reader(instructions, *, marker_packet):
     it does not establish the physical MMIO base or external CFG entries.
     The supplied decoded list must be complete and bound to the same ELF.
     """
+    if control is not None:
+        try:
+            return inspect_inline_reader(instructions,
+                                         marker_packet=marker_packet)
+        except ValueError as error:
+            if str(error) != 'Counter word addresses differ':
+                raise
     _need(
         type(marker_packet) is int and marker_packet >= 0
         and marker_packet % 16 == 0, 'Invalid reader marker packet')
@@ -237,6 +405,25 @@ def inspect_inline_reader(instructions, *, marker_packet):
     _need(rows and rows[0]['pc'] // 16 == marker_packet // 16,
           'No effective instruction in reader marker packet')
     values, loads = {}, []
+    context_registers = set()
+    if control is not None:
+        written_here = set()
+        for row in rows:
+            args = [
+                x.strip()
+                for x in re.split(r',\s*(?![^\[]*\])', row['operands'])
+            ]
+            if row['opcode'] == 'l.ld.w':
+                context_registers.update(
+                    r for r in re.findall(r'\br\d+\b', args[1])
+                    if r not in written_here and r != 'r0')
+            if row['opcode'] != 'l.bge.u':
+                written_here.add(args[0])
+        values.update(
+            reader_entry_context(instructions,
+                                 control,
+                                 marker_packet=marker_packet,
+                                 registers=context_registers))
     branch, identity = None, None
     fast_values = None
     merged = False
@@ -373,14 +560,19 @@ def inspect_inline_reader(instructions, *, marker_packet):
                 sample_pcs=[x['pc'] for x in loads],
                 rollover_branch=branch,
                 clock_base_expression=repr(loads[0]['address']),
+                conditional_entry_context_checked=control is not None,
                 mmio_base_qualified=False,
                 external_entries_qualified=False,
                 reader_valueflow_qualified=False,
                 source_region_qualified=False)
 
 
-def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
-                                 tail_end_pc):
+def inspect_inline_record_fields(instructions,
+                                 *,
+                                 marker_packet,
+                                 tail_start_pc,
+                                 tail_end_pc,
+                                 control=None):
     """Connect inferred reader outputs to a caller-selected non-full tail.
 
     Tail boundaries and full instruction/ELF binding are still caller inputs.
@@ -388,7 +580,9 @@ def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
     This does not qualify its selection predicate, external CFG entries,
     physical clock address, actual ring allocation or incoming begin/site.
     """
-    reader = inspect_inline_reader(instructions, marker_packet=marker_packet)
+    reader = inspect_inline_reader(instructions,
+                                   marker_packet=marker_packet,
+                                   control=control)
     _need(
         type(tail_start_pc) is int and type(tail_end_pc) is int
         and reader['identity_pc'] < tail_start_pc <= tail_end_pc,
@@ -402,7 +596,9 @@ def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
         if reader['identity_pc'] < row['pc'] < tail_start_pc
     ]
     _need(len(bridge) <= 64, 'Native reader-to-record bridge bound')
-    control = {'l.beq', 'l.bne', 'l.blt.u', 'l.blt.s', 'l.bge.u', 'l.bge.s'}
+    control_opcodes = {
+        'l.beq', 'l.bne', 'l.blt.u', 'l.blt.s', 'l.bge.u', 'l.bge.s'
+    }
     scalar = {
         'l.ld.w', 'c.li', 'l.ldi16.s', 'l.ldi16.u', 'l.ldi_hi', 'l.addia.u',
         'l.addia.s', 'l.adda.u', 'l.adda.s', 'c.mv', 'l.mov'
@@ -413,18 +609,21 @@ def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
                   'v.nop') or (op == 'c.addi4spn'
                                and args.replace(' ', '') == 'r8,0x0'):
             continue
-        _need(op in control | scalar | {'l.st.w'},
+        _need(op in control_opcodes | scalar | {'l.st.w'},
               'Unknown reader-to-record guard instruction')
         if op in scalar:
             _need(
                 args.split(',', 1)[0].strip() not in outputs,
                 'Reader output overwritten before record tail')
-        if op in control:
+        if op in control_opcodes:
             m = re.search(r'<0x([\da-f]+)>', args)
             _need(m is not None, 'Unknown native guard target')
             target = int(m[1], 16)
-            _need(target % 16 == 0 and target >= (row['pc'] & ~15) + 16,
-                  'Unsupported cyclic reader-to-record guard')
+            _need(
+                target % 16 == 0
+                and (target >= (row['pc'] & ~15) + 16 or
+                     (control is not None and target < marker_packet)),
+                'Unsupported cyclic reader-to-record guard')
             _need(not tail_start_pc // 16 <= target // 16 <= tail_end_pc // 16,
                   'Native guard enters record tail partway')
     tail = [
@@ -435,21 +634,54 @@ def inspect_inline_record_fields(instructions, *, marker_packet, tail_start_pc,
         tail and tail[0]['pc'] == tail_start_pc
         and tail[-1]['pc'] == tail_end_pc,
         'Native record tail endpoints missing')
-    result = check_record_tail(
-        tail, **{
-            k: reader[k]
-            for k in ('low_register', 'high_register', 'identity_register')
-        })
+    entry_constants = {}
+    if control is not None:
+        written = set()
+        needed = set()
+        for row in tail:
+            op = row['opcode']
+            args = [
+                x.strip()
+                for x in re.split(r',\s*(?![^\[]*\])', row['operands'])
+            ]
+            if op == 'l.st.w':
+                if args[0] not in written | outputs | {'r0'}:
+                    needed.add(args[0])
+            elif op not in ('c.nop', 's.nop16', 'v.nop', 'c.addi4spn'):
+                written.add(args[0])
+        for register in needed:
+            if not re.fullmatch(r'r(?:[1-9]|[12]\d|3[01])', register):
+                continue
+            try:
+                value = reader_entry_context(instructions,
+                                             control,
+                                             marker_packet=tail_start_pc & ~15,
+                                             registers=[register])[register]
+            except ValueError:
+                continue
+            if not value[1]:
+                entry_constants[register] = value[0]
+    result = check_record_tail(tail,
+                               entry_constants=entry_constants,
+                               **{
+                                   k: reader[k]
+                                   for k in ('low_register', 'high_register',
+                                             'identity_register')
+                               })
     result.update(reader=reader,
                   reader_outputs_inferred=True,
                   reader_bridge_registers_preserved=True,
                   reader_bridge_instruction_count=len(bridge),
+                  conditional_entry_constants=entry_constants,
                   record_path_selection_qualified=False,
                   tail_boundaries_automatically_selected=False)
     return result
 
 
-def inspect_inline_record_fields_auto(instructions, *, marker_packet):
+def inspect_inline_record_fields_auto(instructions,
+                                      *,
+                                      marker_packet,
+                                      control=None):
     """Select a finite straight record block from the reader, without PCs.
 
     Candidate blocks start after the reader or a direct guard, and end at
@@ -458,7 +690,9 @@ def inspect_inline_record_fields_auto(instructions, *, marker_packet):
     This removes manual tail selection only. ELF binding, incoming begin/site,
     selection, MMIO and source/loop qualification remain separate requirements.
     """
-    reader = inspect_inline_reader(instructions, marker_packet=marker_packet)
+    reader = inspect_inline_reader(instructions,
+                                   marker_packet=marker_packet,
+                                   control=control)
     following = [
         r for r in instructions if r['pc'] // 16 > reader['identity_pc'] // 16
     ]
@@ -511,7 +745,8 @@ def inspect_inline_record_fields_auto(instructions, *, marker_packet):
             result = inspect_inline_record_fields(instructions,
                                                   marker_packet=marker_packet,
                                                   tail_start_pc=begin_pc,
-                                                  tail_end_pc=end_pc)
+                                                  tail_end_pc=end_pc,
+                                                  control=control)
             checked.append((begin_pc, end_pc, result))
         except ValueError as error:
             reasons.append(str(error))

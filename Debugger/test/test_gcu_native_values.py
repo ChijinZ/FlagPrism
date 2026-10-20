@@ -9,6 +9,12 @@ spec = importlib.util.spec_from_file_location(
     'gcu_native_values.py')
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
+control_spec = importlib.util.spec_from_file_location(
+    'gcu_values_control',
+    Path(__file__).parents[1] /
+    'python/flagtree_debugger/gcu_native_control.py')
+control_module = importlib.util.module_from_spec(control_spec)
+control_spec.loader.exec_module(control_module)
 
 
 def fixture():
@@ -51,6 +57,33 @@ def test_relative_fields_with_delayed_mask():
     assert answer['reader_valueflow_qualified'] is False
     assert answer['source_region_qualified'] is False
     assert answer['incoming_begin_site_qualified'] is False
+
+
+def test_record_magic_can_be_supplied_by_checked_entry_context():
+    rows = fixture()
+    rows = [r for r in rows if r['pc'] not in (48, 64)]
+    answer = module.check_record_tail(rows,
+                                      low_register='r13',
+                                      high_register='r9',
+                                      identity_register='r5',
+                                      entry_constants={'r8': 0x46504733})
+    assert answer['reader_to_relative_fields_checked'] is True
+    assert answer['reader_valueflow_qualified'] is False
+    with pytest.raises(ValueError):
+        module.check_record_tail(rows,
+                                 low_register='r13',
+                                 high_register='r9',
+                                 identity_register='r5',
+                                 entry_constants={'r8': 0x46504732})
+
+
+def test_record_entry_constants_cannot_replace_reader_outputs():
+    with pytest.raises(ValueError, match='Invalid record entry constant'):
+        module.check_record_tail(fixture(),
+                                 low_register='r13',
+                                 high_register='r9',
+                                 identity_register='r5',
+                                 entry_constants={'r13': 0})
 
 
 @pytest.mark.parametrize('fault', [
@@ -249,6 +282,82 @@ def test_fast_path_cannot_inherit_fallback_only_zero():
     ]
     with pytest.raises(ValueError, match='Reader output register'):
         module.inspect_inline_reader(rows, marker_packet=0)
+
+
+def context_fixture():
+    ops = [(0, 'l.ldi16.u', 'r16, 0x10'), (16, 'l.ldi_hi', 'r16, 0x4243'),
+           (32, 'c.li', 'r7, 0x4'), (48, 'l.adda.u', 'r9, r16, r7'),
+           (64, 'l.beq', 'r4, r0, 0x0 <0x70>'), (80, 'c.li', 'r20, 0x1'),
+           (96, 'l.jal', 'r0, 0x0 <0x70>'), (112, 'c.nop', ''),
+           (128, 'l.ld.w', 'r7, [r16]'), (144, 'l.ld.w', 'r25, [r9]'),
+           (160, 'l.ld.w', 'r19, [r16]'),
+           (176, 'l.bge.u', 'r19, r7, 0x0 <0xe0>'),
+           (192, 'l.ld.w', 'r25, [r9]'), (208, 'l.ld.w', 'r19, [r16]'),
+           (224, 'l.movs', 'r18, sipinfo'),
+           (240, 'l.beq', 'r22, r0, 0x0 <0x70>'),
+           (256, 'l.jalr', 'r0, lr, 0x0')]
+    return [dict(pc=pc + 10, opcode=op, operands=args) for pc, op, args in ops]
+
+
+def context_reader(rows):
+    graph = control_module.index_direct_control(rows,
+                                                start_packet=0,
+                                                end_packet=272)
+    return module.inspect_inline_reader(rows, marker_packet=128, control=graph)
+
+
+def test_hoisted_clock_address_resolves_through_join_and_loop():
+    rows = context_fixture()
+    with pytest.raises(ValueError, match='Counter word addresses differ'):
+        module.inspect_inline_reader(rows, marker_packet=128)
+    answer = context_reader(rows)
+    assert answer['conditional_entry_context_checked'] is True
+    assert answer['clock_base_expression'] == repr(module._linear(0x42430010))
+    assert answer['mmio_base_qualified'] is False
+    assert answer['external_entries_qualified'] is False
+
+
+def test_contextual_reader_connects_automatically_through_external_skip():
+    rows = context_fixture()[:15]
+    rows.append(dict(pc=250, opcode='l.beq', operands='r22, r0, 0x0 <0x70>'))
+    for item in fixture():
+        rows.append(
+            dict(pc=256 + item['pc'],
+                 opcode=item['opcode'],
+                 operands=item['operands'].replace('r13', 'r19').replace(
+                     'r9', 'r25').replace('r5', 'r18')))
+    rows.append(dict(pc=458, opcode='l.jalr', operands='r0, lr, 0x0'))
+    graph = control_module.index_direct_control(rows,
+                                                start_packet=0,
+                                                end_packet=464)
+    answer = module.inspect_inline_record_fields_auto(rows,
+                                                      marker_packet=128,
+                                                      control=graph)
+    assert answer['reader_to_relative_fields_checked'] is True
+    assert answer['tail_boundaries_automatically_selected'] is True
+    assert answer['record_path_selection_qualified'] is False
+
+
+@pytest.mark.parametrize('fault', [
+    'wrong_offset', 'disagree', 'load_clobber', 'unknown_control',
+    'loop_carried_value', 'packet_forwarding'
+])
+def test_unproven_reaching_clock_addresses_are_rejected(fault):
+    rows = context_fixture()
+    if fault == 'wrong_offset':
+        rows[2]['operands'] = 'r7, 0x5'
+    elif fault == 'disagree':
+        rows[5]['operands'] = 'r9, 0x0'
+    elif fault == 'load_clobber':
+        rows[5].update(opcode='l.ld.w', operands='r9, [r21]')
+    elif fault == 'unknown_control':
+        rows[5].update(opcode='l.future_control', operands='r20')
+    elif fault == 'loop_carried_value':
+        rows[7].update(opcode='c.addi', operands='r9, 0x1')
+    else:
+        rows.insert(4, dict(pc=62, opcode='c.li', operands='r7, 0x4'))
+    with pytest.raises(ValueError):
+        context_reader(rows)
 
 
 def test_record_block_is_selected_without_tail_addresses():
