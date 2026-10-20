@@ -79,6 +79,33 @@ def check_negative_records(rules, graph, *, manifest, function,
     block['instructions'][-1:-1] = duplicates
     rejected('two_complete_tuples', changed)
 
+    for flagged in (False, True):
+        computed = copy.deepcopy(changed)
+        actor = next(f for f in computed['functions'] if f['name'] == function)
+        target = next(b for b in actor['blocks']
+                      if b['id'] == witness['block_id'])
+        second = next(i for i in target['instructions'] if i['id'] == fresh)
+        descriptor_operand = copy.deepcopy(second['operands'][0])
+        definition = dict(id=fresh + 200,
+                          opcode='add',
+                          type=descriptor_operand['type'],
+                          nsw=flagged,
+                          nuw=False,
+                          operands=[
+                              descriptor_operand,
+                              dict(id=fresh + 201,
+                                   integer_bits=64,
+                                   integer_hex='0',
+                                   type=descriptor_operand['type'])
+                          ])
+        target['instructions'].insert(target['instructions'].index(second),
+                                      definition)
+        second['operands'][0] = dict(id=definition['id'],
+                                     type=definition['type'])
+        rejected(
+            'duplicate_with_' + ('opaque' if flagged else 'computed') +
+            '_descriptor', computed)
+
     # Interrupt discovery only when the later duplicate descriptor is read:
     # the first complete tuple has already been processed. Exhaustion must
     # abort, rather than return that earlier candidate as uniquely checked.
@@ -103,4 +130,40 @@ def check_negative_records(rules, graph, *, manifest, function,
             raise RuntimeError('Budget exhaustion returned partial uniqueness')
     finally:
         rules._Index.literal = old_literal
+
+    # Linear SSA can represent an exponentially expanded expression DAG.
+    # Reject by the predicted expanded size before repr/sorting expands it.
+    changed, actor, block, fields = context()
+    argument = next(a for a in actor['arguments']
+                    if a['type'].get('integer_bits') == 64)
+    previous = argument['id']
+    chain = []
+    for n in range(24):
+        value = dict(id=previous, type=argument['type'])
+        instruction = dict(
+            id=fresh + 300 + n,
+            opcode='add' if n % 2 == 0 else 'mul',
+            operands=[copy.deepcopy(value),
+                      copy.deepcopy(value)],
+            type=argument['type'],
+            nsw=False,
+            nuw=False)
+        chain.append(instruction)
+        previous = instruction['id']
+    gep = next(i for i in block['instructions']
+               if i['id'] == fields[0]['operands'][1]['id'])
+    block['instructions'][block['instructions'].
+                          index(gep):block['instructions'].index(gep)] = chain
+    gep['operands'][1] = dict(id=previous, type=argument['type'])
+    try:
+        rules.bind_record_endpoints(changed, **options)
+    except rules._BudgetExceeded as error:
+        if 'expanded expression' not in str(error):
+            raise RuntimeError(
+                'DAG expansion did not hit its early size budget') from error
+        results.append(
+            dict(name='shared_DAG_expansion', rejected=True,
+                 reason=str(error)))
+    else:
+        raise RuntimeError('Exponentially expanded expression was not bounded')
     return results

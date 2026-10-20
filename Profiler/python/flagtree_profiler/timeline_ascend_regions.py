@@ -27,6 +27,8 @@ class _Index:
         self.blocks = {}
         self.constants = {}
         self.cache = {}
+        self.expression_sizes = {}
+        self.key_bytes = 0
         self.work = 0
         _need(len(function['blocks']) <= 8192, 'Excessive actor blocks')
         for block in function['blocks']:
@@ -66,6 +68,23 @@ class _Index:
     def literal(self, key):
         return self.constants.get(key)
 
+    def sort_terms(self, terms):
+        # Nested tuples form a shared DAG, but repr/equality expand that DAG.
+        # Bound the expanded size before invoking either operation. All leaf
+        # forms contain bounded integer IDs/literals and fit in 64 characters.
+        size = 16
+        for term in terms:
+            self.charge()
+            size += self.expression_sizes.get(id(term), 64)
+            if size > 32768:
+                raise _BudgetExceeded(
+                    'Actor expanded expression budget exceeded')
+        self.key_bytes += size
+        if self.key_bytes > 8 * 1024 * 1024:
+            raise _BudgetExceeded('Actor expression key budget exceeded')
+        terms.sort(key=repr)
+        return size
+
     def expr(self, key, depth=0):
         self.charge()
         _need(depth <= 64, 'Actor expression depth exceeded')
@@ -104,8 +123,10 @@ class _Index:
                 neutral = 1 if opcode == 'mul' else 0
                 if total != neutral or not terms:
                     terms.append(('constant', 64, total))
-                terms.sort(key=repr)
+                size = self.sort_terms(terms)
                 expression = terms[0] if len(terms) == 1 else (opcode, *terms)
+                if len(terms) > 1:
+                    self.expression_sizes[id(expression)] = size
             # Other instructions retain their actual SSA identity. In
             # particular, no exact/division/cast semantics are inferred.
         self.cache[key] = expression
@@ -193,17 +214,35 @@ def bind_record_endpoints(graph, *, manifest, function, trace_argument_index):
         stores = [i for i in block['instructions'] if i['opcode'] == 'store']
         for position, store in enumerate(stores):
             index.charge()
-            value = index.literal(store['operands'][0]['id'])
-            if not value or value[0] != 64:
+            value = index.expr(store['operands'][0]['id'])
+            descriptor = value[2] if value[:2] == ('constant', 64) else None
+            sid = descriptor & 0xffffffff if descriptor is not None else None
+            semantic = descriptor >> 32 if descriptor is not None else None
+            fields = stores[position:position + 8]
+            # An opaque/computed descriptor must not hide a second physical
+            # tuple whose marked end already identifies this same site.
+            hint = None
+            if len(fields) >= 4:
+                endpoint = index.instructions.get(
+                    fields[3]['operands'][0]['id'], {})
+                location = endpoint.get('location', {})
+                line = location.get('line')
+                if (endpoint.get('assembly') == 'MOV $0, SYS_CNT'
+                        and location.get('file') == CLOCK and type(line) is int
+                        and line > 0 and line % 2 == 0):
+                    hint = line // 2
+            recognized = sid in sites and semantic in (1, 2, 3)
+            if not recognized and hint not in sites:
                 continue
-            descriptor = value[1]
-            sid, semantic = descriptor & 0xffffffff, descriptor >> 32
-            if sid not in sites or semantic not in (1, 2, 3):
+            if not recognized and hint in sites:
+                sid = hint
+            if sid not in sites:
                 continue
             try:
                 _need(semantic == sites[sid]['semantic_code'],
                       'Tuple semantic differs from manifest')
-                fields = stores[position:position + 8]
+                _need(descriptor == sid | (semantic << 32),
+                      'Tuple descriptor is not the declared literal value')
                 _need(len(fields) == 8, 'Incomplete eight-word tuple')
                 base = None
                 for n, field in enumerate(fields):
@@ -238,7 +277,7 @@ def bind_record_endpoints(graph, *, manifest, function, trace_argument_index):
                         terms.append(part)
                 if constant or not terms:
                     terms.append(('constant', 64, constant))
-                terms.sort(key=repr)
+                index.sort_terms(terms)
                 expected = terms[0] if len(terms) == 1 else ('xor', *terms)
                 _need(
                     index.expr(ids[7]) == expected,
