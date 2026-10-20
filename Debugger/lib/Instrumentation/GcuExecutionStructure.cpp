@@ -4,8 +4,12 @@
 #include "mlir/Interfaces/ControlFlowInterfaces.h"
 #include "mlir/Parser/Parser.h"
 #include "llvm/ADT/DenseMap.h"
+#include "llvm/ADT/DenseSet.h"
+#include "llvm/ADT/STLExtras.h"
 #include "llvm/Support/JSON.h"
 #include "llvm/Support/raw_ostream.h"
+#include <algorithm>
+#include <functional>
 
 namespace mlir::flagtree::debugger {
 llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
@@ -41,6 +45,9 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
         "GCU structure requires one unambiguous LLVM observation body");
   auto function =
       markedFunctions.empty() ? functions.front() : markedFunctions.front();
+  for (auto candidate : functions)
+    if (candidate->getParentOp() != function->getParentOp())
+      return reject("GCU structure definitions require one lexical container");
   llvm::json::Array callers;
   for (auto caller : functions) {
     caller.walk([&](LLVM::CallOp call) {
@@ -64,11 +71,63 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
         valueIds[result] = nextValue++;
     }
   }
-  auto typeText = [](Type type) {
+  llvm::DenseMap<Type, size_t> typeCosts;
+  llvm::DenseSet<Type> pendingTypes;
+  std::function<size_t(Type, unsigned)> typeCost = [&](Type type,
+                                                       unsigned depth) {
+    constexpr size_t limit = 8192;
+    if (depth > 32 || pendingTypes.contains(type))
+      return limit;
+    auto saved = typeCosts.find(type);
+    if (saved != typeCosts.end())
+      return saved->second;
+    // Bound expansion before invoking the recursive MLIR printer. The SDK
+    // scalar/vector/descriptor type families have bounded local syntax.
+    size_t cost = 128;
+    SmallVector<Type> children;
+    if (auto structure = dyn_cast<LLVM::LLVMStructType>(type)) {
+      if (structure.isIdentified())
+        cost += structure.getName().size();
+      if (!structure.isOpaque())
+        llvm::append_range(children, structure.getBody());
+    } else if (auto array = dyn_cast<LLVM::LLVMArrayType>(type)) {
+      children.push_back(array.getElementType());
+    } else if (auto vector = dyn_cast<VectorType>(type)) {
+      cost += vector.getRank() * 32;
+      children.push_back(vector.getElementType());
+    } else if (!isa<IntegerType, FloatType, LLVM::LLVMPointerType>(type)) {
+      return limit;
+    }
+    pendingTypes.insert(type);
+    for (Type child : children) {
+      cost += typeCost(child, depth + 1);
+      if (cost >= limit)
+        break;
+    }
+    pendingTypes.erase(type);
+    return typeCosts[type] = std::min(cost, limit);
+  };
+  llvm::DenseMap<Type, std::string> typeTexts;
+  size_t typeBytes = 0;
+  bool typeBudgetExceeded = false;
+  auto typeText = [&](Type type) {
+    if (typeCost(type, 0) >= 8192) {
+      typeBudgetExceeded = true;
+      return std::string();
+    }
+    auto saved = typeTexts.find(type);
+    if (saved != typeTexts.end()) {
+      typeBytes += saved->second.size();
+      typeBudgetExceeded |= typeBytes > 8 * 1024 * 1024;
+      return typeBudgetExceeded ? std::string() : saved->second;
+    }
     std::string text;
     llvm::raw_string_ostream stream(text);
     type.print(stream);
     stream.flush();
+    typeBytes += text.size();
+    typeBudgetExceeded |= typeBytes > 8 * 1024 * 1024;
+    typeTexts[type] = text;
     return text;
   };
   size_t locationBytes = 0;
@@ -78,6 +137,8 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
     for (auto argument : block.getArguments()) {
       arguments.push_back(valueIds.lookup(argument));
       argumentTypes.push_back(typeText(argument.getType()));
+      if (typeBudgetExceeded)
+        return reject("GCU structure type expansion budget exceeded");
     }
     for (Operation &op : block) {
       llvm::json::Array operands, results, resultTypes, successors;
@@ -90,6 +151,8 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
       for (Value result : op.getResults()) {
         results.push_back(valueIds.lookup(result));
         resultTypes.push_back(typeText(result.getType()));
+        if (typeBudgetExceeded)
+          return reject("GCU structure type expansion budget exceeded");
       }
       auto branch = dyn_cast<BranchOpInterface>(&op);
       if (op.getNumSuccessors() && !branch)
@@ -104,8 +167,12 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
             incoming.size() != target->getNumArguments())
           return reject("GCU structure successor arguments are not forwarded");
         llvm::json::Array forwarded;
-        for (Value value : incoming.getForwardedOperands())
+        for (auto [index, value] :
+             llvm::enumerate(incoming.getForwardedOperands())) {
+          if (value.getType() != target->getArgument(index).getType())
+            return reject("GCU structure successor argument type differs");
           forwarded.push_back(valueIds.lookup(value));
+        }
         successors.push_back(llvm::json::Object{
             {"block", found->second}, {"arguments", std::move(forwarded)}});
       }
@@ -130,6 +197,8 @@ llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input) {
       }
       if (auto element = op.getAttrOfType<TypeAttr>("elem_type"))
         row["element_type"] = typeText(element.getValue());
+      if (typeBudgetExceeded)
+        return reject("GCU structure type expansion budget exceeded");
       if (auto value = op.getAttrOfType<IntegerAttr>("value")) {
         if (value.getValue().getBitWidth() <= 64) {
           row["integer_constant"] = value.getValue().getSExtValue();

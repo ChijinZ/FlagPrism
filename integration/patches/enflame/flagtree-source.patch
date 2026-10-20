@@ -1,8 +1,7 @@
 diff --git a/third_party/enflame/backend/compiler.py b/third_party/enflame/backend/compiler.py
-index db4c5ff..dfed6b6 100644
 --- a/third_party/enflame/backend/compiler.py
 +++ b/third_party/enflame/backend/compiler.py
-@@ -203,6 +203,39 @@ def make_ttgir(mod, metadata, options):
+@@ -203,6 +203,39 @@
  # FlagPrism: local collect regions can request L2 under a global L1 default.
  # The payload plan after TTIR instrumentation determines the SDK's i64 requirement.
  def _debug_codegen_options(options, metadata):
@@ -42,22 +41,25 @@ index db4c5ff..dfed6b6 100644
      if (options.instrumentation_mode.startswith("debugger")
              and metadata.get("debug_full_dump_payload_bytes_per_instance", 0) > 0 and not options.enable_i64):
          metadata["enable_i64"] = True
-@@ -302,6 +335,14 @@ def make_gcuir(mod, metadata, options):
+@@ -302,8 +335,16 @@
              if metadata['tle_raw_deferred']:
                  gcu_passes.gcu400.add_tle_dslregion_inline(pm)
      gcu_passes.mlir.add_print_op_generic(pm)
+-
+-    return pm.run(patched_mod)
 +    # Preserve actual lowering locations for origin candidates. This changes
 +    # serialization, not the pass pipeline or source mathematical operations.
 +    pm.add_pass("mlir-print-debuginfo")
 +    metadata["gcu_source_location_provenance"] = "compiler_location_chain"
- 
--    return pm.run(patched_mod)
++
 +    lowered = pm.run(patched_mod)
 +    if metadata.get("debug_execution_version") == 1:
 +        from flagtree.debugger.gcu_timeline import rewrite_execution_ir
 +        lowered = rewrite_execution_ir(lowered, metadata)
 +    return lowered
  
+ 
+ def make_llir(mod, metadata, options):
 @@ -313,7 +354,8 @@
      passes = []
      if toolkit.get_bool_env("MLIR_ENABLE_DUMP"):
@@ -89,8 +91,29 @@ index db4c5ff..dfed6b6 100644
  
  
  # FlagPrism: the GCU300 SDK may optimize scalar L2 summary sqrt(x*x)
-@@ -432,6 +486,10 @@
-                 _compile_with_debugger_fabs(mod, options, tmpdir, compile_args)
+@@ -377,6 +431,7 @@
+     linked = toolkit.gcu_compiler_opt(unattached,
+                                       '--gcu-attach-target=arch=gcu300' + ''.join(f' l={path}' for path in libraries))
+     toolkit.compile(linked, *compile_args)
++    return linked
+ 
+ 
+ def make_fatbin(mod, metadata, options):
+@@ -429,10 +484,23 @@
+                 if not (options.arch == "gcu300" and options.instrumentation_mode.startswith("debugger")
+                         and "ld.lld: error: relocation" in str(error) and "fabs(float)" in str(error)):
+                     raise
+-                _compile_with_debugger_fabs(mod, options, tmpdir, compile_args)
++                linked = _compile_with_debugger_fabs(mod, options, tmpdir, compile_args)
++                if metadata.get("debug_execution_version") == 1:
++                    from flagtree.debugger.gcu_timeline import bind_execution_structure
++                    metadata['debug_execution_pre_fallback_ir_sha256'] = metadata['debug_execution_native_ir_sha256']
++                    metadata['debug_execution_codegen_ir'] = linked
++                    metadata['debug_execution_codegen_input_transform'] = 'fabs_compat_target_attachment'
++                    metadata['debug_execution_native_ir_sha256'] = hashlib.sha256(linked.encode()).hexdigest()
++                    with open(os.path.join(tmpdir, "debugger_fabs.ll"), "rb") as compat:
++                        metadata['debug_execution_math_compat_sha256'] = hashlib.sha256(compat.read()).hexdigest()
++                    bind_execution_structure(linked, metadata)
                  metadata['debug_math_compat'] = 'scalar_fabs'
              with open(bin, "rb") as f:
 -                return f.read()
@@ -101,6 +124,7 @@ index db4c5ff..dfed6b6 100644
 +            return binary
  
  
+ def _make_fatbin_gcu500(src_str, metadata, options):
 diff --git a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp b/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp
 index b7ba104..cd2315d 100644
 --- a/third_party/enflame/triton_gcu/triton_gcu300/lib/triton_gcu300_core.cpp

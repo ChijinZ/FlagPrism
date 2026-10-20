@@ -254,3 +254,38 @@ def test_ordinary_path_does_not_inspect_binary():
     with patch.object(bridge, '_native_file_stage') as child:
         bridge.bind_native_clock_locations(b'ordinary-not-a-timeline', {})
     child.assert_not_called()
+
+
+@pytest.mark.parametrize('fault', ['none', 'IR', 'manifest'])
+def test_structure_binary_attach_checks_actual_IR_and_manifest(
+        tmp_path, fault):
+    manifest = dict(sites=[dict(id=7)])
+    index = dict(llvm_ir_sha256='a' * 64,
+                 manifest_sha256=hashlib.sha256(
+                     json.dumps(manifest,
+                                sort_keys=True).encode()).hexdigest())
+    original = copy.deepcopy(index)
+    metadata = dict(debug_execution_version=1,
+                    debug_execution_tool_identity={},
+                    debug_execution_manifest=manifest,
+                    debug_execution_native_ir_sha256='a' * 64,
+                    debug_execution_llvm_structure=index)
+    if fault == 'IR':
+        metadata['debug_execution_native_ir_sha256'] = 'b' * 64
+    elif fault == 'manifest':
+        metadata['debug_execution_manifest']['new_property'] = True
+    elf = b'\x7fELFfake-parser-fixture'
+    binary = bundle([(TARGET, elf)])
+    with patch.object(bridge.tempfile, 'mkdtemp', return_value=str(tmp_path)), \
+            patch.object(bridge, '_native_file_stage', return_value=(json.dumps(report()).encode(), {})), \
+            patch.object(bridge, '_native_shape_stage', return_value={'status': 'fixture_unverified'}):
+        if fault == 'none':
+            bridge.bind_native_clock_locations(binary, metadata)
+            bound = metadata['debug_execution_llvm_structure']
+            assert bound['fatbin_sha256'] == hashlib.sha256(binary).hexdigest()
+            assert bound['elf_sha256'] == hashlib.sha256(elf).hexdigest()
+            assert bound['target'] == TARGET
+        else:
+            with pytest.raises(RuntimeError, match='retained at'):
+                bridge.bind_native_clock_locations(binary, metadata)
+    assert index == original

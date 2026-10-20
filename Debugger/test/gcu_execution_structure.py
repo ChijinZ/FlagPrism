@@ -97,6 +97,35 @@ class StructureTests(unittest.TestCase):
         self.assertNotEqual(child.returncode, 0)
         self.assertIsNone(report)
 
+    def test_nested_symbol_container_cannot_alias_the_marked_caller(self):
+        nested = '''
+  module @other {
+    llvm.func @anonymous(%selected: i1, %limit: i32) { llvm.return }
+    llvm.func @wrapper(%selected: i1, %limit: i32) {
+      llvm.call @anonymous(%selected, %limit) : (i1, i32) -> ()
+      llvm.return
+    }
+  }
+'''
+        child, report = self.inspect(SOURCE.replace('\n}\n', nested + '\n}\n'),
+                                     'nested-symbols')
+        self.assertNotEqual(child.returncode, 0)
+        self.assertIn(b'lexical container', child.stderr)
+        self.assertIsNone(report)
+
+    def test_shared_type_alias_expansion_is_rejected_before_printing(self):
+        aliases = ['!t0 = !llvm.struct<(i32)>']
+        aliases += [
+            f'!t{i} = !llvm.struct<(!t{i-1}, !t{i-1})>' for i in range(1, 17)
+        ]
+        text = '\n'.join(
+            aliases
+        ) + '\nmodule { llvm.func @a() { %x = llvm.mlir.undef : !t16 llvm.return } }'
+        child, report = self.inspect(text, 'type-expansion')
+        self.assertNotEqual(child.returncode, 0)
+        self.assertIn(b'type expansion budget', child.stderr)
+        self.assertIsNone(report)
+
     def test_unknown_nested_regions_are_not_flattened(self):
         text = 'module { llvm.func @a() { "unknown.region"() ({ "unknown.end"() : () -> () }) : () -> () llvm.return } }'
         child, report = self.inspect(text, 'nested')
@@ -107,6 +136,12 @@ class StructureTests(unittest.TestCase):
         child, report = self.inspect(' ' * (16 * 1024 * 1024 + 1), 'oversized')
         self.assertNotEqual(child.returncode, 0)
         self.assertIn(b'byte budget', child.stderr)
+        self.assertIsNone(report)
+
+    def test_successor_argument_type_mismatch_is_rejected(self):
+        text = 'module { llvm.func @a(%x: i32) { llvm.br ^next(%x : i32) ^next(%y: i64): llvm.return } }'
+        child, report = self.inspect(text, 'wrong-forwarded-type')
+        self.assertNotEqual(child.returncode, 0)
         self.assertIsNone(report)
 
 
