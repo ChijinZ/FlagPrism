@@ -1,0 +1,93 @@
+{
+  "status": "ordinary_supplementary8_actual_State_writer_under_reviewed_SDK_ABI",
+  "backend": "ascend",
+  "qualified": 8,
+  "scope": "q07/q08 x two shapes x two configurations; retained ordinary calls only",
+  "State_write_instances": 66,
+  "State_elements": 17140,
+  "state_writer_qualified": true,
+  "SDK_ABI_binding_qualified": true,
+  "profile_objects_qualified": false,
+  "native_timing_boundary_qualified": false,
+  "pipeline_or_whole_goal_qualified": false,
+  "device_executed": false,
+  "application_replayed": false,
+  "contract_sha256": "85df24da285ea9c5355763d9e7e2d62c79011f816bdc783d8cb19683a77ad6cc",
+  "application_review_sha256": "e97cea87d2a0c9433b8aa4c75790b6814c03cb8fcc9a24ff1f686e7ee5c704e9",
+  "semantics_review_sha256": "c0b5eafc6628e73c62af66c99ec9377ee84aae6e9d4c3d9418f04bb03671f917",
+  "partition_rows_sha256": "9bea159d18e1e96b277914ee2b23ef447215cf0d04a14f293dd2506db4170fe9",
+  "qualification_rows": [
+    {
+      "id": "q07-s0-c0",
+      "math_sha256": "ffcc57ef27f7827d4de486798c1dde31434b5768a7561bce0734a293a62dcf2c",
+      "binary_sha256": "3e38e681d02f61f6635137eda6e7ca2afd19f272d0ed7585dd307af1b1410d88",
+      "elements": 3072,
+      "metadata_sha256": "97bf8eb802991f578d6985c3a999ffe627d72f42b5593a0ed3191e2a248b01f6",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q07-s0-c1",
+      "math_sha256": "038ce1e185a21e62ef56a2e0a30877cdd7a64ac677b6b5d2b073ac4e8f2a1a35",
+      "binary_sha256": "8b768fe1b51bd449f5799fc93e60ca849c3d25164a9382cacb56a68050f0104a",
+      "elements": 3072,
+      "metadata_sha256": "bd83df977213206ffe512ff9946845e090d5672fcb6884e4926e9aea64c140eb",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q07-s1-c0",
+      "math_sha256": "fcb7180e4c8a67be61706d4478fdcdfe16ba0baaa50bb3e91b962f183093d623",
+      "binary_sha256": "ad4b6635a7edb9eb185f7ab068b503aff7d538bb1b175fe5813b2c83df4f0cb4",
+      "elements": 3657,
+      "metadata_sha256": "8460ae8b2fffcbefdfbc1c4c547e6387b1c60dc4b3c12b500fbe171cc51a9b50",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q07-s1-c1",
+      "math_sha256": "954ba0ae8f19d3328ff4187231919f908dec1d05760a8781707fbe12e5ff524b",
+      "binary_sha256": "6c50d1c4cce2e546611f1d962c202a728295888f46482f098c05c816a10b7098",
+      "elements": 3657,
+      "metadata_sha256": "2459b241c2fe5704a0dd225a7921caab711a59fbc4aaa7ca25db460a0e8339c1",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q08-s0-c0",
+      "math_sha256": "2f47023a8566f0fa3e20a95426bee86f8d4d767150f4fca2aec71f3e9969ecf4",
+      "binary_sha256": "092f36071289a96aa4f0893425c3a22a30283a73b7d0ac5db53e657d6d0b9ae2",
+      "elements": 768,
+      "metadata_sha256": "ccaf911c1399f41f230d2e2edb186482ecd0d7994149491ccd9f737899ce6c98",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q08-s0-c1",
+      "math_sha256": "2574fc8bff33c9a7aeeb3b11fafaa55af25ada2b685a442f487f6ab9b547517a",
+      "binary_sha256": "b4e40d8bb62aff8d8ffe08b3ab26d3d94ed1981ceae92a099da95d2037cbe3d1",
+      "elements": 768,
+      "metadata_sha256": "7f8d33a66ec336d7875004f3e70bd8a711e2fcfc9890fb697024196d28fa5c65",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q08-s1-c0",
+      "math_sha256": "c2ab1ed6b8d1ec3faac8496b95c6f8465c57bef506677b24a2c66916e9250694",
+      "binary_sha256": "56f5b54d273a59ae9f412769f903e6aa447c5cd585dabe67d1b128058f0fafe0",
+      "elements": 1073,
+      "metadata_sha256": "5b49857f642669bfa584746cf29b4704c5879a2101fa9a3b0a8f73ca9bb6e2ea",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    },
+    {
+      "id": "q08-s1-c1",
+      "math_sha256": "ba086af04ef1ef8956000136fc58115a88a97d40caaf6308d286fd5e4f648cee",
+      "binary_sha256": "bce2b9cf442b87fb0f4a551bcb1d42d09d77d5f0f2044b5f34e5787432f41468",
+      "elements": 1073,
+      "metadata_sha256": "1e1b8865b3dc3440ffbec39c58c1ec938c83ed0621a38dbeae7ba198d0f75302",
+      "state_writer_qualified": true,
+      "native_timing_boundary_qualified": false
+    }
+  ]
+}

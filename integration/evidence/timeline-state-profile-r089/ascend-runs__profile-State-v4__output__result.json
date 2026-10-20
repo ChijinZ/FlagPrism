@@ -1,0 +1,44 @@
+{
+  "status": "Ascend_profile_State_CPU_checks",
+  "steps": [
+    {
+      "name": "fixtures",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/test_ascend_state_writer_partition.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "fixtures-O",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/test_ascend_state_writer_partition.py"
+      ],
+      "returncode": 0
+    },
+    {
+      "name": "actual-profile",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/actual.py",
+        "--output",
+        "/tmp/chijin-timeline-r089-ascend/runs/profile-State-v4/output/actual-profile"
+      ],
+      "returncode": 0
+    }
+  ],
+  "SDK_recompiled": false,
+  "device_executed": false,
+  "application_replayed": false
+}

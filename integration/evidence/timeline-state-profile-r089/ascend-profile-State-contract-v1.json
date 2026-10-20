@@ -1,0 +1,267 @@
+{
+  "backend": "ascend",
+  "scope": "current96 actual profiling calls only; historical156 retains original replacement history",
+  "partition_root": "/tmp/chijin-timeline-r089-ascend/runs/profile-State-v4",
+  "checker_sha256": "be21ab003a5d1a4604698fbb495c977b91b5a836b21647f544b9a4bd28793030",
+  "application_review_sha256": "4bf6c941f2a963dfcaac523d72940c2f92d61258d5b1498c544c90cd4dfde324",
+  "semantics_review_sha256": "c0b5eafc6628e73c62af66c99ec9377ee84aae6e9d4c3d9418f04bb03671f917",
+  "resources": [
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/aarch64-linux/asc/impl/basic_api/dav_c220/kernel_operator_data_copy_impl.h",
+      "sha256": "efb584d2ca41a9d3a316eef039d4fce469477b81b4ee8ec5ac9123cdcd76703b"
+    },
+    {
+      "path": "/usr/local/Ascend/cann-9.0.0/aarch64-linux/asc/impl/basic_api/kernel_utils_base.h",
+      "sha256": "806176189df399f1ea84c87f0f5b91cdd9332092e12fbb82adfaae31530ec288"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r080-ascend/runs/state-helpers-v2/output/state-writeback.ll",
+      "sha256": "baeb0d48d5a3c80b1e00622282722e4f28b3eee47efc8585999a21c85306a6e2"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r049/runs/installed-v2/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py",
+      "sha256": "07ece28ddf331e61c3dc16018db104b0bc50c96621d2feefdd3419d6a8075859"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/runs/State-closure-v1/output/state-writeback.ll",
+      "sha256": "f0a994d665633b4179388b24f297bccf80a2bf8bfcd89c555b3e45ddf8f8f8e6"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/000/output/tmp/flagprism-ascend-compiler-h3mwud06/f0af0224-df62-4718-8463-3f7bde42718b/jobs/659ebbc1-ed31-47b3-b402-41ec4dfd5b17/adapted-0.ll",
+      "sha256": "e038de7de9c753fbf67c641928018be0164c58063006184850d8e9898fdf113c"
+    },
+    {
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.aiv.bc",
+      "sha256": "c816c724c8d0455ff1a85cd08b1f6097131f67809dfc0fbe31209d66139d04a6"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r060-ascend/runs/participation-install-v2/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/003/output/tmp/flagprism-ascend-compiler-insim469/fe358f51-7032-43e9-998c-56f39b5bf49e/jobs/d49d6521-6847-4362-807b-740c69fcbb97/adapted-0.ll",
+      "sha256": "2300212405b7a66f30309db02ba562d14b2e8797d5dbb8ab813a83a04251588e"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/006/output/tmp/flagprism-ascend-compiler-cljsheo1/263ec5e8-29f5-4bb9-87da-dd19b066b78a/jobs/1c352fb2-1962-43f0-aeba-fa78774b1139/adapted-0.ll",
+      "sha256": "158146ba9f0ee303cdd05c085c96b2b5dbac3777dc72020941a9fae2c7096584"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/009/output/tmp/flagprism-ascend-compiler-k3b5yeyv/5ac91ceb-90c7-4def-bf2a-9008d803e99b/jobs/b6b2175c-a51b-45ea-9268-d7170812897b/adapted-0.ll",
+      "sha256": "d71e380b972c51f5932c5e23f9613a1359a731149cc43ba3690289d216d78644"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/012/output/tmp/flagprism-ascend-compiler-1dthhytv/02d9e922-51a4-4f5c-bd5b-87225d128702/jobs/cdf26d93-7743-4d01-afed-614ef11400d4/adapted-0.ll",
+      "sha256": "73650ac559324d3660d2ffb4f727f3088a3ee5855f406979281a84c91cedc542"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/015/output/tmp/flagprism-ascend-compiler-4ru1z28f/1004472e-2c24-489b-8226-b1f1281f85fe/jobs/55a45470-2b64-4d96-8f06-9dffcb42c387/adapted-0.ll",
+      "sha256": "e5d398c893b5873575d43fd4de5ca46bc06358caea5c723639e8ad1a980775f9"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/018/output/tmp/flagprism-ascend-compiler-msnocvch/8569172a-5fb5-4980-96df-d7cfb89b6b89/jobs/74689e16-93a2-4196-b7ea-fd4edfbb177d/adapted-0.ll",
+      "sha256": "2ce88eef75f2233fba25217e43ce82d6fc9128d76ce492500e4de9636f665aee"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/021/output/tmp/flagprism-ascend-compiler-rq7yfpmb/39d2c3b6-8f84-437d-a134-7b8c9ce7b5b6/jobs/26279b39-2166-45e1-a89e-40c32904835d/adapted-0.ll",
+      "sha256": "dfccc64866937d10ba8835898e964f8e2c30f6181e7028d31139161b9bf7b277"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/024/output/tmp/flagprism-ascend-compiler-ynlcd_6c/e12e8dbb-5cfd-43c5-b119-8089451dd343/jobs/8fe8abf2-ffa1-4977-bcef-a6e8e5d4645c/adapted-0.ll",
+      "sha256": "5d53e73a5ba3542e6bbf8dfe03c87891c7c3b44ddfdf6083fc2543b3abec02f7"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/027/output/tmp/flagprism-ascend-compiler-kqiseetv/631cfc0a-30cc-4a06-a66f-58d9250bf993/jobs/c582b3e5-8372-4462-bbf8-e5facc528a11/adapted-0.ll",
+      "sha256": "6c1b3b75c3ec2a97047cf586970e319a60fbf1c23b4057b41453c72665a98c2b"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/030/output/tmp/flagprism-ascend-compiler-23vsxu1g/bbeff844-ea7a-4ff6-9978-1fd0d720292b/jobs/a1c24a1b-0bea-4a55-b44a-6b86cebc53a7/adapted-0.ll",
+      "sha256": "888f1080b43b251b3fb13eb911534f75c3a750f02191c6ecc9a6d1e96d0c1e73"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/033/output/tmp/flagprism-ascend-compiler-p2giipxq/f9b0d676-f97e-4dbe-aafa-89dd2ab32647/jobs/fadefef9-81b8-4a2b-8de4-0bf0ce819df2/adapted-0.ll",
+      "sha256": "7c2f09d0606151e3aa41fdf21547d72c327293d78161bd0e768a14f32ef797b3"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/036/output/tmp/flagprism-ascend-compiler-d6xnyz4v/73f417dc-a93e-4dbc-82c9-b85e2dabd141/jobs/bc390d7b-1eff-4a6d-b6bf-133f62d58009/adapted-0.ll",
+      "sha256": "798447877c7990381d717b3f6bee4df8503c1e8b22c592bcfb98414f2c514045"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/039/output/tmp/flagprism-ascend-compiler-dchp2a9p/c23e6fb4-cf5a-42bd-a414-1d73f209c5bb/jobs/1cfb3dd3-e331-4ced-aa28-7da7a72327db/adapted-0.ll",
+      "sha256": "6d03ce69902079ef5657a9977430141f022322f64a91081cc2f56f8be0c779ae"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/042/output/tmp/flagprism-ascend-compiler-gpd7f42j/9f6f218c-8bff-4699-be3a-2fa3a617921b/jobs/cfaa18b4-2844-47f0-85b0-2f89720ee6ff/adapted-0.ll",
+      "sha256": "135e010fd0463be8a3decea63f2d01f47483b81e2268c019fad267fd8fa5b5e3"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/045/output/tmp/flagprism-ascend-compiler-c43_yert/612a5695-2ab2-4367-90aa-e36721b72d70/jobs/d09959b7-9dd2-4c4d-be7c-c2734a27b233/adapted-0.ll",
+      "sha256": "b1dcc8e679c6d1606336c4d13e4628266e2e8da72db682a0957229dcd3c7cd5e"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-jdhwohq2/c325e14e-e27c-4e8f-8018-ccf5c6aea669/jobs/11282d51-0bf9-4ec9-8724-be68c3aaf48d/adapted-0.ll",
+      "sha256": "6dc0d6d9da7f6fb0588b07f794c04a35b1a2ccf1574af507587b64f93c85e1f2"
+    },
+    {
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/lib/meta_op.aic.bc",
+      "sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-jdhwohq2/c325e14e-e27c-4e8f-8018-ccf5c6aea669/jobs/4b0ab88a-3d2a-4de5-93aa-39b8ba331135/adapted-0.ll",
+      "sha256": "3600b78bd8cddf93d37eece7648e3b8be5b1b99bdbf9d68f609a5b3989f687e8"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-7buvam9h/7800be03-db36-4bc8-aa01-299b6354e66d/jobs/31c50cbf-52c3-4332-a2cf-ba3b8487aa08/adapted-0.ll",
+      "sha256": "bd74e7e976d5320733951c3e499da2c90bccb6750b72aeac0e00ec5dedb5690b"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-7buvam9h/7800be03-db36-4bc8-aa01-299b6354e66d/jobs/360eaeea-1202-4044-82b3-bd04b6e5f23b/adapted-0.ll",
+      "sha256": "bcc7b5ec808b07066c7b4944fa2bbf3b70ae50acc8d1a3da7090ed832a725406"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-zxrwa38o/552f2654-542e-425a-86f8-6b9752553bcb/jobs/05b6fc6f-88f1-46f4-8135-c93166299f89/adapted-0.ll",
+      "sha256": "26db0147a9179ea6917ef0b205b636c866c9c3040f08e8c701783bdc939e2624"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-zxrwa38o/552f2654-542e-425a-86f8-6b9752553bcb/jobs/e346c397-dfd7-40ef-8f9f-431f9f9d6501/adapted-0.ll",
+      "sha256": "3a8931684cba80aaab95f311134916c773dea702d4a8e92b8ff62f617cc23f76"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-1vahvmac/adeadbc5-edc4-4870-8f07-0a5fbdb75cc0/jobs/9abfeae1-2214-4959-98b3-38a5962252cb/adapted-0.ll",
+      "sha256": "40e5a339cb07ac223cfa9292a6256ef4d775144870a50dafcaf61fcd5162fd6b"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-1vahvmac/adeadbc5-edc4-4870-8f07-0a5fbdb75cc0/jobs/e703dc1b-dfae-4986-b4d5-9aff324aebd1/adapted-0.ll",
+      "sha256": "fc84c5c0d4574c3b992dceb7c4311142c8a4ef82d39d1b8ef39e58415ba6cb7d"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-d_hpfx12/f75746ae-c434-488b-91f2-cf47af3302c9/jobs/7a22e9b0-2732-42a7-9724-db16709c6287/adapted-0.ll",
+      "sha256": "8823f3f1197506189d5e75f0bacc7c5bace749ad90648d1f9899b826fc6558d5"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-d_hpfx12/f75746ae-c434-488b-91f2-cf47af3302c9/jobs/82eb486f-0a80-4a7b-b9d7-7a5a9d4d25fc/adapted-0.ll",
+      "sha256": "8d53c8c0ed76182bdb70eb66325df4f083ec9972ddfb6f52d38e1754459dada2"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-7wglu1it/ad440779-7662-4252-abfd-1ae713429498/jobs/9397fe33-2cf0-465f-90a5-b84b5aaf0528/adapted-0.ll",
+      "sha256": "198f258f6bba3a9bcefcee4a927df2853e5e37a721ae2d21eeb2bead6bf3e578"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-7wglu1it/ad440779-7662-4252-abfd-1ae713429498/jobs/eb827656-15e1-4a9a-ac72-8d0489880e6a/adapted-0.ll",
+      "sha256": "ec00e174e8a7f6788049f94dd20f6fe25f624818b64085246f748a17d6600dc4"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-d8984h27/e504b5e1-57b2-40bf-a60d-9a569e9afada/jobs/62749a53-bee3-46f2-b588-e607271490e7/adapted-0.ll",
+      "sha256": "9ba76bb8e70481acb63b810da1025f219e8a35382caabc026c3c676567d62ee8"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-d8984h27/e504b5e1-57b2-40bf-a60d-9a569e9afada/jobs/720d411e-337d-4524-9bf6-3779e8f35d1c/adapted-0.ll",
+      "sha256": "90556ce96a019f94ea7e8f5fe1b20f3ccdbbc4fd6c2e3962bdb51443a0b0f9b0"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-piqv8p9v/f1664b1e-a1d8-4aad-a06b-fe405608ca5b/jobs/3fd63109-043e-4daf-bc02-066fca4f0bed/adapted-0.ll",
+      "sha256": "a3bde7d5c9f99363561bd542889057605d4163459296c3db49d4672f131de59a"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q06-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-piqv8p9v/f1664b1e-a1d8-4aad-a06b-fe405608ca5b/jobs/ede2c0a8-4f86-44da-8076-3bc461c85062/adapted-0.ll",
+      "sha256": "b53789a4c3453e7d773a97cf31051faf6cca813916af5ce2513aeb18f32b5f65"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-sqf2v8tr/738d3f6b-da00-4942-9c05-59361853ae0e/jobs/67eecdce-67b8-4ed2-8206-e5a3f7ea4f3c/adapted-0.ll",
+      "sha256": "fcc717e0bc5abdfbee2c654e535c44dcada69ace7f28ab0f46574f0f3895e8d5"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/triton/backends/ascend/lib/libdevice.10.bc",
+      "sha256": "9142883f2a38a17980b83c5d1e777744d823ddd4af370674015364dfc7eee11f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-sqf2v8tr/738d3f6b-da00-4942-9c05-59361853ae0e/jobs/9a88080a-8d5d-463e-84e3-eed562ff5da4/adapted-0.ll",
+      "sha256": "e8a2b205050f92dd2045d2dc1cf81c0e42d4a4812994fcaf855a5049f491c1ae"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-wicczz9x/b3621872-9799-49c3-ab30-e4115e5142d6/jobs/5d2d80cc-aa05-425c-a72e-df3035dde22a/adapted-0.ll",
+      "sha256": "00a15455f3bd91af60bdb5b16da8176356d9a257d2a8d3323b0c443d596d5af3"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s0-c1-cold/controlled/tmp/flagprism-ascend-compiler-wicczz9x/b3621872-9799-49c3-ab30-e4115e5142d6/jobs/e302ff26-5040-40e5-bd44-e9413bffc21e/adapted-0.ll",
+      "sha256": "b7f999900bf9fe4848330cd90eacf04e1763ebf099f87aed0e9775210b6453f0"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-tkftkc00/4d62b874-af65-46e3-a4af-8a84e62d6d9f/jobs/9401abad-d6f8-472c-801d-79ebfa3ce34a/adapted-0.ll",
+      "sha256": "04037954732d7b0fae5fe0a4637d3704f8de53f23941ed121297e7b6ef29598d"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s1-c0-cold/controlled/tmp/flagprism-ascend-compiler-tkftkc00/4d62b874-af65-46e3-a4af-8a84e62d6d9f/jobs/c9a78316-526d-400a-ba98-d32a189239a3/adapted-0.ll",
+      "sha256": "48d42660fe4adae49ee28d15a3d3f807ab427cf071fb364c5f99c9376111139d"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-omdw5nzb/cf212fc0-5a73-40b6-a720-7fde4f60df89/jobs/24655e78-4344-4f05-a596-5d1e4e0bc9bc/adapted-0.ll",
+      "sha256": "ebcf79a9cf27119eb55d59c421a85f64629a787bbe468c910b3c257e56a1ad75"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r057-qualification-supplement-ascend-v1/runs/profile-first-v1/q07-s1-c1-cold/controlled/tmp/flagprism-ascend-compiler-omdw5nzb/cf212fc0-5a73-40b6-a720-7fde4f60df89/jobs/b70cc2d9-6e23-41d4-9ca6-9ecf24977546/adapted-0.ll",
+      "sha256": "f18114b54ab073ba7c999f57f02c029f6fe1eb19e1a86035e153aaa3c0b00bcb"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/048/output/tmp/flagprism-ascend-compiler-6x9ie4ai/d6c48466-ad0d-4be0-af0e-390abe1cf3b0/jobs/9989dbb6-1e50-4414-828f-48ed5e3da848/adapted-0.ll",
+      "sha256": "e15857a0f8f3ad365616a3dcc272bda843448871939f4f852c5aa0064a853b48"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/051/output/tmp/flagprism-ascend-compiler-udzs7ayv/b4ab2839-6c97-47aa-a0eb-bf6884b4b838/jobs/b3acbcf4-27dc-4997-9f9d-eecc890fb53c/adapted-0.ll",
+      "sha256": "4dbd0f461655a02be2d87dae3bbfcf4fa34737caeefc1d0e6d950d706703d011"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/054/output/tmp/flagprism-ascend-compiler-l6egve7d/2c92e1d9-f817-4441-ab05-e4891207038a/jobs/d8ff3d22-e578-4c3f-8c51-865896c787d5/adapted-0.ll",
+      "sha256": "c17f4f73ffc07ef324ac86cbf89d14016d98b61241289d6fce750c5a7cc815e2"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r062-ascend/runs/057/output/tmp/flagprism-ascend-compiler-6uz84y4s/5b5a443e-0ada-49f1-87b9-f7eebc056f45/jobs/10e93163-1363-4737-b84f-d26cf346d36e/adapted-0.ll",
+      "sha256": "6c39cd8eb8bf55200b2c216e9b78ecd8e43a043d97d4c5028e3bcd7ea8935703"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/run.py",
+      "sha256": "8cc28cd1c6b3bfa57953a135e5acb558a5549f8a9f69a8d84be24a1a79624baf"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/actual.py",
+      "sha256": "908b68a3660460d7ed4bffd84cca27a089ba599fc24b9cbc85809364d7691994"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/ascend_state_writer_partition.py",
+      "sha256": "be21ab003a5d1a4604698fbb495c977b91b5a836b21647f544b9a4bd28793030"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/profile-State-input-v4/test_ascend_state_writer_partition.py",
+      "sha256": "96f7a80400a343e44201855ea21bc3415e3ea9ce33608332661606356761aaf1"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/runs/profile-State-v4/terminal.json",
+      "sha256": "cba0b630547875be828d02c3917b483197e03f73e06bfa15aa58f030088f4505"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/runs/profile-State-v4/output/actual-profile/rows.json",
+      "sha256": "44f641feeefdb5c6ced3b4e9d54af9bda4c528bd24c3c48b661087252df7f46f"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/runs/profile-State-v4/output/actual-profile/result.json",
+      "sha256": "1495e0af961f3480e49f48b64e038ac6581a544ae4ec99b814a57efc0909f454"
+    },
+    {
+      "path": "/tmp/chijin-timeline-r089-ascend/runs/profile-inventory-v1/output/current-rows.json",
+      "sha256": "88a1cac1606f9bbb6093c3a10f21ccd03209ba68723d71d595f565ae1c44846e"
+    },
+    {
+      "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+      "sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e"
+    }
+  ],
+  "compiler_review_sha256": "b411b0f9f4200d0ce2ae56a4ac6ece9a3196787881d098bbd56e6a3a4c6b85ba",
+  "compiler_identity": {
+    "path": "/tmp/chijin-r15-sdk-scalar-legality/install-fixed/bin/bishengir-compile",
+    "sha256": "1f5cc5054402e901add18af133b3495b861775d68e2113bb8ba94667eef6cf9e"
+  }
+}
