@@ -1,0 +1,61 @@
+{
+  "actual_state_lowering_verified": false,
+  "asm_sha256": {
+    "bcmlir": "0cccd94051e974db8aa2ca86b6702baa18d369fec98d1e5dba0cc3b52cef368b",
+    "mlirbc": "8124b522052f5005f4846a6a0f9895789ed039f8f5bceee92015b06ff128ff5d",
+    "npubin": "6f5279b45cdf2e1627729224d2d1c3650174822ebc82eb1110e022ac03f42179",
+    "source": "4dbd6d127a885a9b0eaf12ad30314a066b80ddd37e45b64fefed0b3d684c1f77",
+    "ttadapter": "b47f7fbbeebf68e7a7644b4e51c0070567e57799ab7dbb8b5514ef296fe623d4",
+    "ttir": "46067c4017d757b6c1137bbbc2b7d8e2b759df926b67bdcfa63fcd5ca1fd8974"
+  },
+  "backend": "ascend",
+  "binary_sha256": {},
+  "case": "q05",
+  "compiled_hash": "8ad3c9385e653229e7a3892b58d89badfb1b2dea643ed57a2e41978be4242de2",
+  "config": {
+    "BK": 32,
+    "BM": 16,
+    "BN": 32,
+    "num_stages": 2,
+    "num_warps": 4
+  },
+  "config_index": 0,
+  "grid": [
+    4,
+    2
+  ],
+  "guard_pass": true,
+  "host_once_marker": "/tmp/chijin-timeline-r101-ascend/runs/public-q05-v1/output/math.host-once.json",
+  "input_immutable": true,
+  "input_sha256": [
+    "23e3d93058d6b831dc2c74862150d840087afa9866b799327e75b6425ed3ae07",
+    "dc6126f754baeed3de298e12d8f91cb5dc0f8e0ed5d186d108837e0d310d0a81"
+  ],
+  "math": {
+    "count": 4096,
+    "max_abs_error": 0.0
+  },
+  "ordinary_elapsed_seconds": 27.87581499479711,
+  "pid": 689120,
+  "requested_launches": 1,
+  "runtime_K_input_sha256": "06d033ece6645de592db973644cf7357255f24536ff7b03c3b2ace10736f7636",
+  "runtime_k": 3,
+  "shape": [
+    64,
+    64,
+    96
+  ],
+  "shape_index": 0,
+  "source_sha256": {
+    "kernels.py": "d2c5edd0560f972316abb8b0c9a3e8cbe60756a4aa11e8486b257518217c802b",
+    "launch.py": "a63e0a262038bafcb25a9f1256d4f8d1b6d3b828b58630400aafda48acec02b4",
+    "oracle.py": "b0f314ba974bf684de65a1d4c5a4de4615a4fb24d9d2eaee8187ac237affcb4a",
+    "registry.json": "62d7e63d0c7a66de21fdd7862a9c852959ca1a87a8991c9489877b8d6fa87ee3"
+  },
+  "state_unique_logical_index_pass": true,
+  "status": "ordinary_math_pass",
+  "target": "GPUTarget(backend='npu', arch='Ascend910B4-1', warp_size=0)",
+  "torch_device": "npu:4",
+  "torch_version": "2.9.0+cpu",
+  "triton_version": "3.5.1"
+}

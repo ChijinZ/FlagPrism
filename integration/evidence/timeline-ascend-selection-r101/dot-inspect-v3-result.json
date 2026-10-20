@@ -1,0 +1,170 @@
+{
+  "status": "selected_dot_actual_actor_inspected",
+  "selected_ids": [
+    1,
+    6,
+    33,
+    42,
+    43,
+    46,
+    77,
+    78
+  ],
+  "selected_dot_ids": [
+    43
+  ],
+  "policy_version": 1,
+  "rows": [
+    {
+      "actor": "q05_mix_aic",
+      "actor_kind": "AIC",
+      "site_id": 21,
+      "source_op_id": 43,
+      "fragments": [
+        {
+          "block": 85,
+          "carrier_id": 197,
+          "body_ids": [
+            199,
+            200
+          ],
+          "calls": [
+            {
+              "id": 200,
+              "callee": "mma_tile_half_to_float"
+            }
+          ]
+        }
+      ],
+      "manifest_body_sha256": "d85f5e4fb84d3a45238ff488e9c9add0b8f54dc470a9c8761c6e13ff6254cb27",
+      "manifest_body_bytes": 527,
+      "tuple": {
+        "site_id": 21,
+        "status": "llvm_tuple_endpoints_bound",
+        "block_id": 2170,
+        "begin_id": 2124,
+        "end_id": 2141,
+        "start_value_id": 2126,
+        "field_value_ids": [
+          2182,
+          2149,
+          2126,
+          2141,
+          2089,
+          46,
+          12,
+          2178
+        ],
+        "store_ids": [
+          2181,
+          2185,
+          2188,
+          2191,
+          2194,
+          2197,
+          2200,
+          2203
+        ],
+        "selection_verified": false,
+        "source_body_verified": false,
+        "actor_identity_verified": false,
+        "loop_verified": false,
+        "native_schedule_qualified": false
+      },
+      "actual_events": 0,
+      "positive_events": 0,
+      "observer_count": 0,
+      "adapted_calls": [
+        {
+          "block": 2098,
+          "id": 2130,
+          "callee": "mma_tile_half_to_float"
+        }
+      ]
+    },
+    {
+      "actor": "q05_mix_aiv",
+      "actor_kind": "AIV",
+      "site_id": 31,
+      "source_op_id": 43,
+      "fragments": [
+        {
+          "block": 756,
+          "carrier_id": 817,
+          "body_ids": [
+            819,
+            820,
+            823,
+            824,
+            826
+          ],
+          "calls": [
+            {
+              "id": 819,
+              "callee": "llvm.hivm.WAIT.FLAG.IMM"
+            },
+            {
+              "id": 820,
+              "callee": "vcast_half_to_float_1d_with_mode"
+            },
+            {
+              "id": 823,
+              "callee": "llvm.hivm.SET.FLAG.IMM"
+            },
+            {
+              "id": 824,
+              "callee": "llvm.hivm.BARRIER"
+            },
+            {
+              "id": 826,
+              "callee": "vmul_1d_float"
+            }
+          ]
+        }
+      ],
+      "manifest_body_sha256": "81d3847f2ec594c9a4ef3b6f3ade8aaf6c3e9752af689b55d8c24bab8e93c11e",
+      "manifest_body_bytes": 975,
+      "tuple": {
+        "site_id": 31,
+        "status": "llvm_tuple_endpoints_bound",
+        "block_id": 3134,
+        "begin_id": 2807,
+        "end_id": 3105,
+        "start_value_id": 2809,
+        "field_value_ids": [
+          3146,
+          3113,
+          2809,
+          3105,
+          2769,
+          684,
+          680,
+          3142
+        ],
+        "store_ids": [
+          3145,
+          3149,
+          3152,
+          3155,
+          3158,
+          3161,
+          3164,
+          3167
+        ],
+        "selection_verified": false,
+        "source_body_verified": false,
+        "actor_identity_verified": false,
+        "loop_verified": false,
+        "native_schedule_qualified": false
+      },
+      "actual_events": 0,
+      "positive_events": 0,
+      "observer_count": 0,
+      "adapted_calls": []
+    }
+  ],
+  "source_boundary_qualified": false,
+  "native_schedule_qualified": false,
+  "device_executed": false,
+  "SDK_recompiled": false
+}

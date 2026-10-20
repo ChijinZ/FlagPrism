@@ -1,0 +1,158 @@
+[
+  {
+    "name": "git-init",
+    "argv": [
+      "git",
+      "init",
+      "-q"
+    ],
+    "pid": 683954,
+    "startticks": 348941402,
+    "returncode": 0
+  },
+  {
+    "name": "git-parent",
+    "argv": [
+      "git",
+      "fetch",
+      "--update-shallow",
+      "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/FlagTree",
+      "HEAD"
+    ],
+    "pid": 683955,
+    "startticks": 348941402,
+    "returncode": 0
+  },
+  {
+    "name": "git-identity",
+    "argv": [
+      "git",
+      "reset",
+      "--mixed",
+      "FETCH_HEAD"
+    ],
+    "pid": 684314,
+    "startticks": 348941686,
+    "returncode": 0
+  },
+  {
+    "name": "assemble",
+    "argv": [
+      "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/source/integration/patches/ascend/build_automatic_wheel.py",
+      "--flagtree",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/FlagTree",
+      "--component",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/source",
+      "--native-python",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/native",
+      "--core-library",
+      "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+      "--output",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/wheel",
+      "--plugin",
+      "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so"
+    ],
+    "pid": 684335,
+    "startticks": 348941712,
+    "returncode": 0
+  },
+  {
+    "name": "venv",
+    "argv": [
+      "/tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/bin/python",
+      "-m",
+      "venv",
+      "--without-pip",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv"
+    ],
+    "pid": 684445,
+    "startticks": 348944352,
+    "returncode": 0
+  },
+  {
+    "name": "seed-pip",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "-m",
+      "ensurepip",
+      "--default-pip"
+    ],
+    "pid": 684446,
+    "startticks": 348944358,
+    "returncode": 0
+  },
+  {
+    "name": "install",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "-m",
+      "pip",
+      "install",
+      "--no-index",
+      "--no-deps",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+    ],
+    "pid": 684494,
+    "startticks": 348944903,
+    "returncode": 0
+  },
+  {
+    "name": "installed-import",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "-c",
+      "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+    ],
+    "pid": 684662,
+    "startticks": 348945654,
+    "returncode": 0
+  },
+  {
+    "name": "installed-selection-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/source/tests/timeline/p01_ascend_timeline_selection.py",
+      "--plan",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/flagtree/debugger/automatic_plan.py",
+      "--compiler",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/flagtree/debugger/compiler.py",
+      "--baseline-plan",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/baseline-plan.py",
+      "--capture",
+      "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/capture/timeline/captures/invocation-3b08df6b57264d9cb77750632a244dcb.json",
+      "--output",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/selection-normal"
+    ],
+    "pid": 684736,
+    "startticks": 348946453,
+    "returncode": 0
+  },
+  {
+    "name": "installed-selection-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/source/tests/timeline/p01_ascend_timeline_selection.py",
+      "--plan",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/flagtree/debugger/automatic_plan.py",
+      "--compiler",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/venv/lib/python3.11/site-packages/flagtree/debugger/compiler.py",
+      "--baseline-plan",
+      "/tmp/chijin-timeline-r101-ascend/install-input-v1/baseline-plan.py",
+      "--capture",
+      "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/capture/timeline/captures/invocation-3b08df6b57264d9cb77750632a244dcb.json",
+      "--output",
+      "/tmp/chijin-timeline-r101-ascend/runs/install-v1/output/selection-optimized"
+    ],
+    "pid": 684808,
+    "startticks": 348947243,
+    "returncode": 0
+  }
+]
