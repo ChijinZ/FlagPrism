@@ -1,0 +1,78 @@
+[
+  {
+    "name": "configure",
+    "argv": [
+      "cmake",
+      "-S",
+      "/tmp/chijin-timeline-r094-gcu/structure-input-v4/source/Debugger/tools/gcu-timeline",
+      "-B",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON",
+      "-DMLIR_DIR=/opt/flagtree-llvm/llvm-fc83c68-gcc9-x64/lib/cmake/mlir"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "build",
+    "argv": [
+      "cmake",
+      "--build",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build",
+      "--target",
+      "flagprism-gcu-timeline",
+      "--parallel",
+      "2"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "cli-fixtures-normal",
+    "argv": [
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "/tmp/chijin-timeline-r094-gcu/structure-input-v4/source/Debugger/test/gcu_execution_structure.py",
+      "--tool",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build/flagprism-gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/fixtures-normal"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "cli-fixtures-optimized",
+    "argv": [
+      "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+      "-I",
+      "-O",
+      "/tmp/chijin-timeline-r094-gcu/structure-input-v4/source/Debugger/test/gcu_execution_structure.py",
+      "--tool",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build/flagprism-gcu-timeline",
+      "--output",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/fixtures-optimized"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "actual-0",
+    "argv": [
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build/flagprism-gcu-timeline",
+      "--execution-structure",
+      "/tmp/chijin-timeline-r083-gcu/matching-loaded/0.llir",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/0.structure.json"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "actual-1",
+    "argv": [
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/build/flagprism-gcu-timeline",
+      "--execution-structure",
+      "/tmp/chijin-timeline-r083-gcu/matching-loaded/1.llir",
+      "/tmp/chijin-timeline-r094-gcu/runs/structure-v4/output/1.structure.json"
+    ],
+    "returncode": 0
+  }
+]

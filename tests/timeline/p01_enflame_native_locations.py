@@ -170,6 +170,21 @@ def main():
             'Final SDK LLVM serialization lost clock locations/scopes')
         retained = compiler['debug_execution_native_locations']
         fatbin = base64.b64decode(snapshot['binary_base64'], validate=True)
+        structure = compiler['debug_execution_llvm_structure']
+        actual_input = compiler.get('debug_execution_codegen_ir', llir)
+        need(
+            structure['llvm_ir_sha256'] ==
+            compiler['debug_execution_native_ir_sha256'] == hashlib.sha256(
+                actual_input.encode()).hexdigest(),
+            'Typed structure does not describe the actual SDK codegen input')
+        need(
+            structure['fatbin_sha256'] == hashlib.sha256(fatbin).hexdigest()
+            and structure['elf_sha256'] == retained['elf_sha256'],
+            'Typed structure belongs to another executable')
+        need(
+            structure['report']['status'] == 'typed_sdk_llvm_structure_indexed'
+            and structure['report']['source_region_qualified'] is False,
+            'Typed LLVM index missing or granted source-region rights')
         need(
             retained['fatbin_sha256'] == hashlib.sha256(fatbin).hexdigest() ==
             snapshot['executable']['binary_sha256'],

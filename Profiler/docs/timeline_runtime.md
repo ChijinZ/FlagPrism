@@ -569,8 +569,25 @@ begin/end and physical-identity columns 3/4. User source navigation remains in
 that site's original `location`; synthetic lines are not application lines.
 The bridge adds explicit LLVM lexical file scopes and preserves vendor
 properties through an opaque parse. The real SDK must validate the result
-before codegen. Tool identity version 2 binds the recorder, Python bridge,
-backend compiler and direct SDK tools before compilation-cache lookup.
+before codegen. Tool identity version 3 binds the recorder, Python bridge,
+native analyzers, backend compiler and direct SDK tools before
+compilation-cache lookup.
+
+After the SDK verifier, the compiler retains
+`debug_execution_llvm_structure`: the exact LLVM input digest, manifest digest
+and a typed block/SSA index. It includes successor arguments, calls, original
+locations and clock markers. The later binary hook binds this index to the
+actual fatbin and ELF. The GCU300 `fabs` link compatibility path reindexes its
+actual relinked input, retaining the previous digest, new input and compatibility
+library digest. This prevents a pre-link index from being attached to a
+different codegen input.
+
+The index selects the unique marked observation body within one lexical
+definition container and records its defined wrappers. It rejects ambiguous
+containers, forwarded argument type mismatches and excessive type/location
+expansion. It is the structural input to finite lowering-family rules;
+constructing it alone does not qualify source-region boundaries or native
+scheduling. Unsupported structure is not converted into a successful proof.
 
 After SDK codegen, the normal compiler hook extracts the unique GCU300 ELF
 from its offload bundle. `debug_execution_native_locations` binds the original
