@@ -508,6 +508,9 @@ def inspect_native_execution(binary, metadata):
     Producer metadata is not rewritten and the application is never replayed.
     The returned supplement has its own analyzer identity and qualification.
     """
+    if not isinstance(binary, (bytes, bytearray)):
+        raise ValueError('Captured native image must be bytes')
+    binary = bytes(binary)
     if (type(metadata.get('debug_execution_version')) is not int
             or metadata.get('debug_execution_version') != 1):
         raise ValueError('Not a GCU execution capture')

@@ -162,6 +162,32 @@ def test_reinspection_retains_producer_metadata_and_uses_current_analyzer():
     assert result['analysis']['status'] == 'fixture_unverified'
 
 
+def test_reinspection_snapshots_mutable_bytes_before_identity_check():
+    elf = b'\x7fELFfake-parser-fixture'
+    binary = bundle([(TARGET, elf)])
+    mutable = bytearray(binary)
+    metadata = dict(debug_execution_version=1,
+                    debug_execution_native_locations=dict(
+                        fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                        elf_sha256=hashlib.sha256(elf).hexdigest(),
+                        target=TARGET))
+
+    def identity():
+        mutable[-1] ^= 1
+        return {}
+
+    def inspect(snapshot, current):
+        assert type(snapshot) is bytes and snapshot == binary
+        current['debug_execution_native_analysis'] = {
+            'status': 'fixture_unverified'
+        }
+    with patch.object(bridge, 'tool_identity', side_effect=identity), \
+            patch.object(bridge, 'bind_native_clock_locations', side_effect=inspect):
+        result = bridge.inspect_native_execution(mutable, metadata)
+    assert bytes(mutable) != binary
+    assert result['fatbin_sha256'] == hashlib.sha256(binary).hexdigest()
+
+
 @pytest.mark.parametrize(
     'fault', ['missing', 'fatbin', 'elf', 'target', 'bool_version'])
 def test_reinspection_rejects_unbound_capture_before_running_tools(fault):
