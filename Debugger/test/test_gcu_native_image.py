@@ -76,6 +76,54 @@ def test_long_symbol_suffixes_have_a_cumulative_scan_budget():
         module.bind_instructions(bytes(binary), native)
 
 
+def shared_string_tables(distinct_extents=False):
+    """Small tables reference a much larger shared or overlapping strtab."""
+    _, native = fixture()
+    tables = 8
+    string_count = tables if distinct_extents else 1
+    count = 2 + tables + string_count
+    payload = 64 + count * 64
+    text = bytearray(64)
+    text[32:36] = b'abcd'
+    names = bytearray(b'\0kernel\0' + b'x' * 16384 + b'\0')
+    for i in range(1, tables):
+        names[i * 256] = 0
+    kernel = struct.pack('<IBBHQQ', 1, 0x12, 0, 1, 0, 64)
+    null = bytes(24)
+    names_offset = payload + 64 + 48
+    headers = [
+        bytes(64),
+        struct.pack('<IIQQQQIIQQ', 0, 1, 4, 0, payload, 64, 0, 0, 16, 0)
+    ]
+    for i in range(tables):
+        headers.append(
+            struct.pack('<IIQQQQIIQQ', 0, 2, 0, 0,
+                        payload + 64 + (24 if i else 0), 24,
+                        2 + tables + (i if distinct_extents else 0), 0, 8, 24))
+    for i in range(string_count):
+        start = i * 256
+        headers.append(
+            struct.pack('<IIQQQQIIQQ', 0, 3, 0, 0, names_offset + start,
+                        len(names) - start, 0, 0, 1, 0))
+    header = struct.pack('<16sHHIQQQIHHHHHH',
+                         b'\x7fELF\x02\x01\x01' + b'\0' * 9, 2, 0, 1, 0, 0, 64,
+                         0, 64, 0, 0, 64, count, 0)
+    return header + b''.join(headers) + text + kernel + null + names, native
+
+
+def test_shared_string_table_is_copied_once():
+    binary, native = shared_string_tables()
+    answer = module.bind_instructions(binary, native)
+    assert answer['section_bytes_copied'] <= len(binary)
+    assert answer['kernel_symbol'] == 'kernel'
+
+
+def test_distinct_overlapping_string_tables_have_a_copy_budget():
+    with pytest.raises(ValueError,
+                       match='section copying exceeds byte budget'):
+        module.bind_instructions(*shared_string_tables(distinct_extents=True))
+
+
 @pytest.mark.parametrize('fault', [
     'wrong_bytes', 'missing_bytes', 'duplicate_pc', 'overlap', 'wrong_entry',
     'wrong_symbol', 'outside_code', 'truncated_section', 'bad_symbol_offset',

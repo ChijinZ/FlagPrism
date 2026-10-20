@@ -39,12 +39,22 @@ def bind_instructions(binary, native):
         sum(s[5] for s in sections if s[1] == 2) <= len(binary),
         'GCU symbol lookup exceeds input byte budget')
 
+    section_cache = {}
+    section_budget = 2 * len(binary)
+
     def data(section):
+        nonlocal section_budget
         _need(
             section[4] <= len(binary)
             and section[5] <= len(binary) - section[4],
             'Truncated GCU ELF section')
-        return binary[section[4]:section[4] + section[5]]
+        extent = (section[4], section[5])
+        if extent not in section_cache:
+            _need(section[5] <= section_budget,
+                  'GCU section copying exceeds byte budget')
+            section_budget -= section[5]
+            section_cache[extent] = binary[section[4]:section[4] + section[5]]
+        return section_cache[extent]
 
     executable = [(i, s) for i, s in enumerate(sections) if s[2] & 4 and s[5]]
     _need(len(executable) == 1, 'Expected one GCU executable section')
@@ -139,6 +149,7 @@ def bind_instructions(binary, native):
                 end_packet=base + entry + length,
                 kernel_symbol=name,
                 other_decoded_instruction_count=len(instructions) - len(body),
+                section_bytes_copied=2 * len(binary) - section_budget,
                 elf_sha256=hashlib.sha256(binary).hexdigest(),
                 disassembly_sha256=hashlib.sha256(native).hexdigest(),
                 source_region_qualified=False,

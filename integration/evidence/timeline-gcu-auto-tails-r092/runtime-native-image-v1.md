@@ -48,3 +48,15 @@ V5 明确 `product_native_image_binding=true`，但 `default_capture_integrated=
 必要补项只有 M1 的有限修复和相应 CPU 预算反例；没有根据本 delta 提出新设备/math/TP/UI 矩阵或通用 ELF/ISA 要求。正常安装、public provider 接入和完整 source/loop 适用性均未在本增量承诺中，保留原范围，不冒充完成。
 
 本次不另列 optional 工程要求。没有重审旧 whole、其它 backend 或未冻结实现。
+
+## V6 有限复核追加：名字扫描子项已闭，M1 尚有原已列复制残留
+
+本追加绑定冻结 `7f208ca484ce79aaba078d1b73a402f846ed989e`（核读时工作树干净）。产品 SHA `9e71998ce150b7c568885c12b28608fe65650a3de3c9f6f2c0d03b2a36a76001`、测试 SHA `7d0503d1c9ab525903147516fb41dcb1e43f427bc6e231b9f55e9837146292a1`，均核同 V6 source freeze / 返回源码。只读取本 M1 的代码 diff、fixture 与直接收据，未执行产品或测试。
+
+逐名字处理的修复成立：所有 symbol table 共享 `2 * len(binary)` 的 `name_budget`；每次 `find` 的搜索上界先由剩余预算限定，成功后按包括 NUL 的 span 扣费，不再逐符号 UTF-8 decode。后续名字 slice / bytes 比较的长度也受这些已扣 span 约束。预算为零时至多再搜索一个字节便拒绝；没有先完成任意长扫描再检查限额。129 个符号、128 个不同长后缀 offset 的新 fixture 使原放大路径显式报预算错误，不只验证重复同一 offset 的缓存。
+
+实际读取 V6 terminal、normal / optimized 原日志、format/result 和 source freeze。terminal returncode 0，2.869578943 秒，61 normal / 61 optimized；两轮格式/AST 检查通过，优化 warning 保留；image helper SHA 精确对应本冻结。runner 仍对同两份实际 loaded ELF/native 要求产品 body 等于独立旧 QA body，原 1/23 relative tail 和所有未授资格字段保持。完整 receipts archive SHA 核同 `929f64a2fe89727882a0caeea3f2b0e2c51c569c6e6136eacf31988143d39ad9`。这些收据足以关闭 **长名字 NUL scan / 名字 slice / 重复 decode 子项**。
+
+M1 原报告明确包含的“共享字符串表被重复复制”尚未关闭：`strings = data(sections[section[6]])` 仍在每个 SHT_SYMTAB 内执行，`data()` 对关联表作完整 bytes slice，这个复制量不计入 `name_budget`。例如约 8188 个各 24 B 的小 symtab 共用 8 MiB strtab，大部分符号只引用 offset 0 空名，另保留一个正确 kernel symbol。section table、这些条目与字符串表合计约 9 MiB，条目总字节约 196 KiB、名字累计扫描仅数 KiB，仍可重复复制约 64 GiB。此结构符合当前各项 admission；这里只作静态量推导，没有执行反例。
+
+这是原 M1 复制预算的残留，不是新增 whole/ISA 门。最少补项是缓存相同字符串表的 materialized bytes，并对实际需要 materialize 的表累计 bytes 设上限，或直接在复制前限制关联字符串表总复制量；增加共享表的一个小 CPU 预算反例即可。故 V6 目前可判扫描子项已闭，**M1 整项仍为 minor / 未全闭**。其它有限正向结论与原未承诺范围保持，不要求数学、设备或旧矩阵重跑。

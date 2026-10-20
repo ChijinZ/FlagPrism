@@ -84,3 +84,18 @@ The independent report records M1 against V5; its closure is subject to the
 separate V6 delta review. Warning logs in Git use JSON text wrappers to retain
 raw whitespace and raw SHA without whitespace-hook modification. Original
 logs and unnormalized review files remain in the workspace receipt paths.
+
+
+## M1 shared string-table copying (V7)
+
+The V6 delta review closed long-name scanning but correctly retained repeated
+whole-strtab copying. V7 caches immutable section slices by file extent and
+limits total unique copied bytes to twice the ELF input size. A shared-table
+positive bounds copied bytes by input length; a distinct-overlapping-table
+negative exhausts the explicit cumulative copy budget. The name-scan budget
+continues to apply independently. No ISA or device behavior changed.
+
+V7 terminal0/2.869633282s,63 normal and63 optimized tests, two unchanged actual
+object/body comparisons, formatter/AST/source freeze all passed. Raw archive:
+`9dc7545632b69fc2de86516612d8204c324fbef69b7591f513de832a728a2069`.
+Independent V7 closure is a separate delta report, not assumed from this text.
