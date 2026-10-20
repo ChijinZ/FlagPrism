@@ -214,6 +214,28 @@ def analyze(function_ir, *, state_parameter, grid_parameters, grid, subblocks,
     writers, calls = [], {}
     for index in full_reachable:
         op = rows[index]['operation']
+        # The existing Ascend timing primitive reads one scalar register. No
+        # operands, memory clobbers or additional assembly are admitted. A
+        # clock-dependent State address/guard remains an unknown scalar cone.
+        if op == 'call i64 asm sideeffect "MOV $0, SYS_CNT", "=l"()':
+            continue
+        marker = re.fullmatch(
+            r'call void asm sideeffect "/\* flagprism\.source_census_site\.v3:'
+            r'\d+:\d+:\d+ \*/", "l,l,l,l,l,l"\((.*)\)', op)
+        if marker:
+            arguments = _split(marker[1])
+            _need(
+                len(arguments) == 6
+                and all(_value(arg)[0] == 64 for arg in arguments),
+                'Source marker operand ABI')
+            _need(state_parameter not in operand_roots(op),
+                  'Source marker receives State address')
+            # This entire template is an assembly comment with six input-only
+            # constraints. It contains no machine operation or memory clobber.
+            # State pointer projections remain subject to the strict rules.
+            continue
+        _need(not re.search(r'\bcall\b.*\basm\b', op),
+              'Unsupported indirect call (inline assembly)')
         _need(
             not re.search(
                 r'\bload (?:volatile )?ptr\b|\binttoptr\s+(?:\(\s*)?i\d+\s+[^()]+?\s+to ptr addrspace\(1\)|\bcall ptr\b',
@@ -315,6 +337,8 @@ def analyze(function_ir, *, state_parameter, grid_parameters, grid, subblocks,
 
             def operation(op, use):
                 if re.search(r'\bcall\b', op):
+                    if use not in calls:
+                        raise UnknownCone('Unmodeled scalar call result')
                     name, arguments = calls[use]
                     if arguments:
                         raise UnknownCone('Unknown integer helper arguments')

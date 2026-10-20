@@ -47,6 +47,56 @@ def test_scalar_partition():
     assert run(sample())['element_writers'] == {0: 1, 1: 1, 2: 1}
 
 
+def test_readonly_counter_preserves_state_partition():
+    answer = run(
+        sample(body='  %tick = call i64 asm sideeffect '
+               '"MOV $0, SYS_CNT", "=l"()'))
+    if answer['element_writers'] != {0: 1, 1: 1, 2: 1}:
+        raise AssertionError(answer)
+
+
+@pytest.mark.parametrize('assembly', [
+    '"MOV $0, SYS_CNT", "=l,~{memory}"()',
+    '"MOV $0, SYS_CNT; ST x0, [x1]", "=l"()',
+    '"MOV $0, SYS_CNT", "=l,l"(i64 0)',
+])
+def test_counter_does_not_admit_other_assembly(assembly):
+    with pytest.raises(ValueError, match='Unsupported indirect call'):
+        run(sample(body='  %tick = call i64 asm sideeffect ' + assembly))
+
+
+def test_clock_does_not_become_a_known_state_offset():
+    with pytest.raises(ValueError, match='Unmodeled scalar call result'):
+        run(
+            sample(body='  %tick = call i64 asm sideeffect '
+                   '"MOV $0, SYS_CNT", "=l"()',
+                   offset='%tick'))
+
+
+def test_assembly_comment_cannot_impersonate_a_direct_call():
+    with pytest.raises(ValueError, match='Unsupported indirect call'):
+        run(
+            sample(body='  call void asm sideeffect "/* @fake() */", '
+                   '"l"(ptr addrspace(1) %state)'))
+
+
+def test_exact_empty_source_marker_preserves_partition():
+    text = ('  call void asm sideeffect '
+            '"/* flagprism.source_census_site.v3:7:2:8 */", '
+            '"l,l,l,l,l,l"(i64 0, i64 0, i64 0, i64 0, i64 0, i64 0)')
+    answer = run(sample(body=text))
+    if answer['element_writers'] != {0: 1, 1: 1, 2: 1}:
+        raise AssertionError(answer)
+    for changed in [
+            text.replace(' */', ' */ MOV x0, x1'),
+            text.replace('"l,l,l,l,l,l"', '"l,l,l,l,l,l,~{memory}"'),
+    ]:
+        with pytest.raises(ValueError, match='Unsupported indirect call'):
+            run(sample(body=changed))
+    with pytest.raises(ValueError, match='Source marker operand ABI'):
+        run(sample(body=text.replace('i64 0, i64 0)', 'i64 0)')))
+
+
 def test_selected_actor():
     assert run(sample(predicate='%only'), actors=2)['element_writers'] == {
         0: 1,
