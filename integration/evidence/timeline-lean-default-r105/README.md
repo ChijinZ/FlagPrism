@@ -54,3 +54,27 @@ full archive hash. No experiment was replayed for that transport failure.
 Whole-goal acceptance remains pending new-math completion, the minimal Ascend
 facts/legacy coverage declaration and final reviewer/Git/owner closure.
 No paper or Study file is changed.
+
+## Final capture and SQL update
+
+All eight ordinary combinations and all 24 registered cold/warm captures now
+pass. `new-matrix-aggregate.json` links the exact per-group original receipts;
+no originally eligible run is omitted. All 144 new counter-ns traces were
+imported by the unchanged pinned Trace Processor and maintained verifier,
+checking actual raw words, exact ns endpoints, event/observer identity, SQL
+and full importer stats. All pass with no positive error/data-loss stats.
+The 874-member TP receipt archive SHA is
+`b9a28cd306ffa8a08b4d628b2fa9a450e02f8bdfb817e3f2282cff117460aa5e`.
+The full SQL outputs/stats and exact input manifests are retained outside Git
+at root `artifacts/timeline/run-105/preflight/tp-receipts-v2/`.
+No application or device was replayed for this CPU-only validation.
+
+All current Ascend owned jobs have terminal0 and their registered process
+identities are absent. The TP worker is absent; its terminated controller is
+a zombie waiting for container PID1 reaping, not a running task. No process
+was killed by name. Original backend/browser task closure is reused unchanged.
+
+Audit preparation v1 could not dereference the current capture store; v2 had
+a generated Python quoting error. Both failed before validation. Version3
+uses the installed capture loader; the actual 24-capture/144-trace input
+archive is byte-sealed. No failure was removed from qualification history.

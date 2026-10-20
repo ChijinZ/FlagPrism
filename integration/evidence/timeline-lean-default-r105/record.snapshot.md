@@ -1,3 +1,10 @@
+## 最新进展（T142 / run105：24新数学profile与144新trace SQL全部通过）
+
+- 新独立q11/q12两shape×两config，8普通+24cold/warm全部原门通过；最终q12-s1-c1 terminal0/129.524523324s。phase4新增45成员逐size/SHA核同，archive e2e69c0b5a4b9565f266723fe4d3227e28c86cba4134d41150ab9ec6efd1e954。全部真实数值/input/canary/logicalState/hostonce、raw完整性、4/6实际重复矩阵正区间、源关联、预算和标准导出通过，没有重采原旧24。
+- 依据原testing §7仅对新增144trace复用原pinned TP与原verifier作CPU实际导入：144/144、4488slices、每份263完整stats、error/data_loss无正值，逐raw/ns/track/identity一致。874收据文件size/SHA全核；archive b9a28cd306ffa8a08b4d628b2fa9a450e02f8bdfb817e3f2282cff117460aa5e；root preflight/tp-receipts-v2。无新UI/设备重放。
+- 输入准备v1 inline owner假设KeyError、v2嵌入字符串SyntaxError保留，v3用installed capture loader正常；TP收尾v1错把terminal controller zombie当仍运行，v2按实际/proc Z区分，无进程kill。Asc12jobs/24ids terminal0且同身份全absent，TPworker absent/controller Z待容器PID1回收，无运行任务。上述编排失败不冒设备失败或删历史。
+- 三原指定独立reviewer已确认目前无新的代码缺陷；runtime已闭新数学/144TP/owner，delivery已闭24/144TP。最后仅对新8实际State尾部与已审同SDK2D lowering family做适用索引，保原math false不重写。8 cold完整expanded已从服务器取回逐size/SHA核同到preflight/state-capture-v1，只读复用，禁止新ISA/SSA/SDK/旧矩阵门。余为最终3报告及Git交付。产品freeze6e78不变，quickstart公共应用例子去-I；离线仍-I。未写/构建论文。
+
 ## 最新进展（T141 / run105：按用户要求收敛证据范围，默认轻量化与新矩阵泛化在跑）
 
 - 前轮R104是有效progress：原96只读重算终态0/69.053s，8文件核同，正式/candidate/remote9c14353；whole仍active。用户最新明确担心minor后端证书细节占据工程，已停止vector/struct/order/常量证明扩展，没有实现这些新机制。原compiler复核纠正：q01 opaque实际是struct extractvalue(原source14/17)，不是vector；现原raw/source导航/interval完整（每region6interval、5/6positive、每observer3次），q03/q04多candidate亦是附加static analysis未证而非采集/Perfetto故障。对应run104/review/finite-type-order-scope-v1.md。
@@ -17,6 +24,8 @@
 - T141预算V2已由runtime独立matching闭合（phase2全部36index/安装子集17核同），无新必要问题；code6e78已compiler有限closed。q11-s0c1 controller0/125.328940914s、q11-s1c0 0/125.318591824s、q11-s1c1 0/125.394631436s；q11四配置12profile均过，actual matrix每observer4/6positive、默认无图/原math与预算过。当前唯一live NPUworker为q12-s0-c0-v1，恢复poll相应文件，不并行下一NPU实验；之后q12-s0-c1、s1-c0、s1-c1三组输入已备。
 
 - T141继续：q12-s0-c0三profile **terminal0/124.572657117s**，新双通道矩阵同样通用选区/真实MMA/数值/clock/ns/标准Perfetto/预算通过，当前新泛化15/24已完成，分母仍24，未完成9不预判。phase3 30files全部size/SHA核同，archive **3feb355cdba759e14696355c71f111167e5d527c09292ef83785b138bc858e38**，只收metadata结果，完整原raw/数字/IR仍server/root既有阶段。当前live为q12-s0-c1，之后s1-c0/s1-c1，三组依次poll终态再启动，不能重复或并发NPU。
+
+- T141阶段Git交付：fetch祖先核、正式ff、正常push与ls-remote核同 **244bd8c1bc67071b6ddf4eee7a62221fb0152b5a**，两tree clean，git-delivery-v1.json。产品freeze6e78行为未再变；该阶段证据如实只写15/24进度，后续新终态另追加，不为证据变更重装/重测。q12-s0-c1三profile 0/123.918932335s，现18/24全通过；当前live q12-s1-c0，之后仅q12-s1-c1。全部setup/source/numeric/预算首过，无新的产品问题或环境blocker。
 
 ## 最新进展（T140 / run104：原96昇腾记录只读盘点完成，暴露具体源码关联缺项）
 

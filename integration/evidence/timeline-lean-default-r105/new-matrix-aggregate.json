@@ -1,0 +1,1342 @@
+{
+  "status": "eight_ordinary_and_twentyfour_new_matrix_profiles_passed_SQL_pending",
+  "groups": [
+    {
+      "combination": "q11-s0-c0",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v1-recovered/runs/profile-q11-s0-c0-v1/output/result.json",
+      "sha256": "41a2a9a6c0ef0ca084f88dc1335ae2fc0d7ef80d913f48580882c6bfc45649f7",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v1-recovered/runs/profile-q11-s0-c0-v1/terminal.json",
+      "terminal_sha256": "46bb43098a6b996615885d1e166a78a69e534a89cacfd38f3d9fb8701321ae1c",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-9990eab1dea048a492e7183d3f510eed.json",
+          "capture_raw_sha256": "678bdfe9bb0052e32d569ddee340d08a23cf69530271f10ea22773582b14445e",
+          "binary_id": "c0ea73807219a2142059cec2f0e9bb7bd0e8fcf89e281c1ce213c58cd6eb89d0",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2463517,
+          "positive_intervals": 35,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-08c38ee824d3f560bf3431fdedd2fb4e5d457d49cc437b9114e8157da69be0d6",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-9d23e27e34370c15e49d035a7eec98bbb40e9d0d0dd652b4d73579b120208a9d",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-1fc3824c916d4f23a24434d40166451f.json",
+          "capture_raw_sha256": "6a97bc4c72674ac720a8c041bcd73726a28d53c06ed414e254d0e088c5058a29",
+          "binary_id": "c0ea73807219a2142059cec2f0e9bb7bd0e8fcf89e281c1ce213c58cd6eb89d0",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2463544,
+          "positive_intervals": 37,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-7f2e8c74eb0cc486676b51e541f3f61dadf0e21a7b3c663113a0e7472b1fc4dc",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-0ce3dbbb109b9332dcb7c10f855136490022b7f693f0d677ccc6a0f846a83bda",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-b6d0fe32ee0d48d690e5bc0f67478f2b.json",
+          "capture_raw_sha256": "9192019731b8f5824d05bd7cbd120c2b78c5fbab30ebeacd60926b6c078440e6",
+          "binary_id": "c0ea73807219a2142059cec2f0e9bb7bd0e8fcf89e281c1ce213c58cd6eb89d0",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2463534,
+          "positive_intervals": 36,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-8dad0538d50b9084548de7fd13544ae307bcacd5a60a073cfa6d4dfec1d6bf66",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-4b4a56dac82621e0d3185957afcbdd132bc5f92e209d5b881c07c640f1d94e95",
+              "observer_id": "observer-6a94ad9595ff17d75d630bf60b919d3d236af56482ac71cfedf73e1c6cbfefea",
+              "source_op_id": 44,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q11-s0-c1",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v2/runs/profile-q11-s0-c1-v1/output/result.json",
+      "sha256": "f1ddf8198b2f3c869aac212059ea519ce3fa16fdfc9708b057da238f70433daa",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v2/runs/profile-q11-s0-c1-v1/terminal.json",
+      "terminal_sha256": "d82ad54558b5ec4074bbcb117921cc8da2b183f00969f6db41f30243844d7a2a",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-7bcff7d20dd74c2ca67563b238831ce8.json",
+          "capture_raw_sha256": "fa9b5368d3765e858bb4ebab24d01de0ad6456f6a14501c97ce6e26d7e60e831",
+          "binary_id": "ac81f1d2e3b7c8cb266ab45f1cce862dc2b23f14b9704fe563cf02b6633bfed6",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2461996,
+          "positive_intervals": 36,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-b5bc75063485378c1a6bc05616b1e5eb543f9009383f36453df216d03f10a481",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-0972b0fc5579d1cf9425957e267d7ca00b27f757ce32591a287c838737bef5ba",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-e1fec743ad6f4cf3ae1fbee2c6e2c8b8.json",
+          "capture_raw_sha256": "be77a91b6bcd25f112eb6cbbab8af2269cf01445142d7397c6ef665386d0d763",
+          "binary_id": "ac81f1d2e3b7c8cb266ab45f1cce862dc2b23f14b9704fe563cf02b6633bfed6",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2462031,
+          "positive_intervals": 36,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-13ac3995936b93f7cacf7f662b4075552755d09f67c34ec9351cb262943ff986",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-63c7e2366ec6f5cff0c7a9bb3d187270a94087771fc7a1f1015e692745648ac9",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-702cc30899c0499fbe40f508eaa98bc1.json",
+          "capture_raw_sha256": "5cfd33c6c929b39f25fc8381b9b96d2ab04f499f8352ea0044190a7b0366847d",
+          "binary_id": "ac81f1d2e3b7c8cb266ab45f1cce862dc2b23f14b9704fe563cf02b6633bfed6",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2461976,
+          "positive_intervals": 36,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-068054165b23fda3755c00df99f1bdf7adea59ab6ad907301c516f12455d1701",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f7253155c19134fda7a30b66e4e66a5c1c664c0057e209e94a60c1941893cd87",
+              "observer_id": "observer-c889cedcf0346a5539a29d93ae79232f79b5837feb38c6dfbda4b1f7594efb90",
+              "source_op_id": 43,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q11-s1-c0",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v2/runs/profile-q11-s1-c0-v1/output/result.json",
+      "sha256": "526795bb2aa75825676e6212f4d10e60674beff4ddabfefdb5c772161b6029ed",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v2/runs/profile-q11-s1-c0-v1/terminal.json",
+      "terminal_sha256": "fd00e17b19df6b6adb56ba519808096922f1f42514687fb9a08ab64548ce4a0c",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-a50ce78e36894916a4e8019c20e2b865.json",
+          "capture_raw_sha256": "fc9bdb2ba79a1705e3a5b308a581b280771b076eb2a23bec3f81919a43b154f3",
+          "binary_id": "622f520bb9dd1f591b4a4cd7a2fec2727a131b7c9520627dd512fecb00bf7562",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2866184,
+          "positive_intervals": 44,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-8008dbeb28e9d66b8e6b3439a18e2950642b2c752d8b8e54cfbdf4d745dc28df",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-b6445dcd448043ba22cd637d393566e6d0dcc49fd11b6d3b8c631f1a860f4502",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-451a8cca7440487c94c6f6908e7ce683.json",
+          "capture_raw_sha256": "b771d94acc04db676c6564e850d1676a0ca58ef248aafdc3371da62aead54c2c",
+          "binary_id": "622f520bb9dd1f591b4a4cd7a2fec2727a131b7c9520627dd512fecb00bf7562",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2866038,
+          "positive_intervals": 44,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-9a614570091e4df8b2ef788eb99964e4b0b05c226f64b8cb978b626bfc955c2e",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-bd2133dcbb0366866fe671db51807146c2db36175b7a2cbe663fae39472affa1",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-553eff90817447248389bcbfbc406c15.json",
+          "capture_raw_sha256": "c2358c14cbe67ab14751d481bc0b2c62fc956780bd992df3e0836bd648ecdc4b",
+          "binary_id": "622f520bb9dd1f591b4a4cd7a2fec2727a131b7c9520627dd512fecb00bf7562",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2866347,
+          "positive_intervals": 45,
+          "positive_source_origins": [
+            2,
+            12,
+            34,
+            43,
+            44,
+            82,
+            84
+          ],
+          "selected_dot_source_ids": [
+            44
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-236444295967a94168545f28b049851cd372859f1ddf860480a6cc77d036d293",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-06f53e67b557b7b9df5f0f7f2d3b9de299eddcb1135a46d99160907989d6e467",
+              "observer_id": "observer-e913ce1251608839b6a5a3ae2e845310176125e5a4e7793d79bd66fae22b2b97",
+              "source_op_id": 44,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q11-s1-c1",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v3/runs/profile-q11-s1-c1-v1/output/result.json",
+      "sha256": "6f067ff600d3f2bd96edd32c1e09154a0bc54bdb8a50f1b9902c5902cead2bbf",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v3/runs/profile-q11-s1-c1-v1/terminal.json",
+      "terminal_sha256": "2f7d652b1c08a94ef454a15088426ad0ef96a9e953722ba4497f0459491aa9b7",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-8ce8fba00a5a41e5bd555ca40b98e142.json",
+          "capture_raw_sha256": "72ebc360fc917dd795911e94da9920bdbf5101b60dc1f1cf5b5c9dc506ded8b6",
+          "binary_id": "92e36a5b1414497b25eb0593e088dfe20a110a24ec501c0136fac086316c762a",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2864524,
+          "positive_intervals": 41,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-e5da4d62ab987053106dfaa4aa0bdde4319ac2f619fb07a7aeb1f7d849ceda2d",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-72407e67eed9f3c126ac3023c19926ce724f9a86a4ac6f9f37e4ea76ea4a3a1d",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-551dcb8268814263a070a0e3dbc369f9.json",
+          "capture_raw_sha256": "d0048607a65395b7fe6bf6f50ebc5286925f71648c1a5db372bf470075bd8ce8",
+          "binary_id": "92e36a5b1414497b25eb0593e088dfe20a110a24ec501c0136fac086316c762a",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2864571,
+          "positive_intervals": 47,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-e811d4078764dd08747a2d4b18c610ae104cb10a924ff86741b876491d547fb8",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-5581e04cedb10d84bac46c407c1d69c0b6a48558536667dd53bff7ea85bba9bd",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-39295297e78b4254b736a5961d06efcc.json",
+          "capture_raw_sha256": "24a00775033f4ac1ecaba74a9d29e5fd7e3b81d388cf78e4eb667415dd674bb8",
+          "binary_id": "92e36a5b1414497b25eb0593e088dfe20a110a24ec501c0136fac086316c762a",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2864516,
+          "positive_intervals": 48,
+          "positive_source_origins": [
+            2,
+            11,
+            33,
+            42,
+            43,
+            81,
+            83
+          ],
+          "selected_dot_source_ids": [
+            43
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-b3fd6233874975ead5f6b0f35335c8314077342bec74b1bde1a94499d1db8a9f",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-48d8faf98430a2aa3d23cc49e15d7b6c33787e1c87f8ad3171e073d65817cfdf",
+              "observer_id": "observer-fe54ee735444ed3121c25884b54620415050f7ef2754c16cb6246b0b389b5e70",
+              "source_op_id": 43,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 2,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q12-s0-c0",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v3/runs/profile-q12-s0-c0-v1/output/result.json",
+      "sha256": "14ea84536c20991760b803f96d8dcada1e129f601abe406fcbcfc89320ee1727",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v3/runs/profile-q12-s0-c0-v1/terminal.json",
+      "terminal_sha256": "5e4ad1d3ee8aa7e5dbd54ee30f09d33597b8733e6d3d7ba73dd36989785dd7e1",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-6396e55c1bfc429d9fffc480393250ea.json",
+          "capture_raw_sha256": "c96e9189f0eb44130ee8fe4ec851f72115d9fdb7881edb6e20655711c9b18f1c",
+          "binary_id": "e913856b245217e6872446057922793ebaeb1b15366145ff535c3160fb5f2464",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2787796,
+          "positive_intervals": 45,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-df219c632b3e5aaf72f55c3a96b55f39b72e1a0a58ab81ed5c86beced98d3893",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-df219c632b3e5aaf72f55c3a96b55f39b72e1a0a58ab81ed5c86beced98d3893",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-60d133aa0d536861f048ed1d1d4e786cb3babc175f9db574186d2d6f5935e3e6",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-60d133aa0d536861f048ed1d1d4e786cb3babc175f9db574186d2d6f5935e3e6",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-3ebd895901d64fa7ab3b9a187b605739.json",
+          "capture_raw_sha256": "57be7e9e5d24d99bedebc45d07f94da6fd694456291305fae8ee834b3969791f",
+          "binary_id": "e913856b245217e6872446057922793ebaeb1b15366145ff535c3160fb5f2464",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2787841,
+          "positive_intervals": 41,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-bf49d021d180214fbf546d36e908dc05706bbb83fe459eccec140b2afb6bbe0e",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-bf49d021d180214fbf546d36e908dc05706bbb83fe459eccec140b2afb6bbe0e",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-47296f4cefc1f77d9c9fdce24601f1b6747ef10701354098fea1b0af6344ca97",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-47296f4cefc1f77d9c9fdce24601f1b6747ef10701354098fea1b0af6344ca97",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-daed4eb24e7c46eea58182ded6e59bfc.json",
+          "capture_raw_sha256": "68b5dc30fd60308e8da0285ad7fd72a11ac58e8f4bbf4dcb5798c6fb443845ba",
+          "binary_id": "e913856b245217e6872446057922793ebaeb1b15366145ff535c3160fb5f2464",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2787796,
+          "positive_intervals": 46,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-3b9387b01d31b1af8aaf9d9a5c79f4db11957c037fed56d8f48d564d82775233",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-3b9387b01d31b1af8aaf9d9a5c79f4db11957c037fed56d8f48d564d82775233",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-3687ec3763fcf4362392f373a13af006953e24902713347f4ba76b795ac0aff1",
+              "observer_id": "observer-02188cfe10cbe12d30eb547e81700142c8dd08736f2bb7e9569378bac27d0efb",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-5dca52d7f9038c804155094355474321b7073c358fdc4598af99a10522a2f748",
+              "observer_id": "observer-02188cfe10cbe12d30eb547e81700142c8dd08736f2bb7e9569378bac27d0efb",
+              "source_op_id": 55,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q12-s1-c1",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s1-c1-v1/output/result.json",
+      "sha256": "f480ad19afd8651a2ab2332dba7e63ee0d29631e136d6596fd7fb4632fa077f0",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s1-c1-v1/terminal.json",
+      "terminal_sha256": "7c13b41db60a67c4ea0aecadfa7652e71be14e373d85535b1b1b5ec053d6a221",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-037167e691a443c89d18e62d3e901017.json",
+          "capture_raw_sha256": "d36b96507c99101c096192a5c0a9095361b4a7327dc5d50cf5cd1b09348c0f78",
+          "binary_id": "853d864f57f7cfc9e0812322a5871d867ec8cfbc87ae6d13e4361c4d0f76778d",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3414846,
+          "positive_intervals": 61,
+          "positive_source_origins": [
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-60244bfdb1d2cfd083259ac286cb837a457bc45626b5d3b6b6753949f186a798",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-60244bfdb1d2cfd083259ac286cb837a457bc45626b5d3b6b6753949f186a798",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-c841951001feca76026598cce23c627039d464fd2b5fa6a642d2352c768240a7",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-c841951001feca76026598cce23c627039d464fd2b5fa6a642d2352c768240a7",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-47aee49028c74a258462b59129cbb432.json",
+          "capture_raw_sha256": "058d1a104cfe980aa870b35e2e091dee71efed615b85a59b88b720471ec7e33d",
+          "binary_id": "853d864f57f7cfc9e0812322a5871d867ec8cfbc87ae6d13e4361c4d0f76778d",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3414879,
+          "positive_intervals": 65,
+          "positive_source_origins": [
+            1,
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-98e677950e1a5ad161ff0835473e08b7153648ff387f8590006652584597a6c7",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-98e677950e1a5ad161ff0835473e08b7153648ff387f8590006652584597a6c7",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-e7ff73da5454608371fd8c8a235aca1039c61cdabc8c7a89c7ca44d88d6418af",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-e7ff73da5454608371fd8c8a235aca1039c61cdabc8c7a89c7ca44d88d6418af",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-b368357180ca4828abdb23d9d1c1c623.json",
+          "capture_raw_sha256": "a0a9ab5fdadbe2a446b73352a1a65132fe5a315240896d50bd3e3225520c4351",
+          "binary_id": "853d864f57f7cfc9e0812322a5871d867ec8cfbc87ae6d13e4361c4d0f76778d",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3414805,
+          "positive_intervals": 65,
+          "positive_source_origins": [
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-c8fd19cf002a6d5a751804568e61f4416b49e8c14c6d96f55f42b756cf5449ba",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-c8fd19cf002a6d5a751804568e61f4416b49e8c14c6d96f55f42b756cf5449ba",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-205d259895f624ba648e45ee35afeb6209dc25714d1a2e98142ce5921975af69",
+              "observer_id": "observer-32b3e3d23a5f28c89ff1437e3ad9085c0f7ce9ff6788fa4e7b85fc0a58fd1b3e",
+              "source_op_id": 53,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-18a2f345dc265c87180e330253ea41c9a116f572419414e8d7b1e547ca1b23b8",
+              "observer_id": "observer-32b3e3d23a5f28c89ff1437e3ad9085c0f7ce9ff6788fa4e7b85fc0a58fd1b3e",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q12-s1-c0",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s1-c0-v1/output/result.json",
+      "sha256": "74f24f73e022a99a791e375ec417471a4e88f9b5085c52656a6929037c19dec2",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s1-c0-v1/terminal.json",
+      "terminal_sha256": "c81e9c57be5dbf44133bb42ab24695787c3fbce3f8f9414257f1d8110a6b70b9",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-6ba6e07224bd4e26aa8ad3d7a95ab74e.json",
+          "capture_raw_sha256": "b227b5c4203fbd275c44c4ed03c0190d852836c124c82db49ba126832a4b9248",
+          "binary_id": "b29e5ef22d8f2bd63dfecbc7a99157cc56dd2bdc9efad410b5a907310f7757fb",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3418453,
+          "positive_intervals": 66,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-fe6e1fd0a23932018f4ea1baad027f7326b58eed258492071f545fc6899decad",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-fe6e1fd0a23932018f4ea1baad027f7326b58eed258492071f545fc6899decad",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-37b6ee70584e425e09b564fecf1bf0917e6c6346f8e7c98283b8d3a4daeebdc5",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-37b6ee70584e425e09b564fecf1bf0917e6c6346f8e7c98283b8d3a4daeebdc5",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-c76b03ba59ac4ec883280a3855c4c411.json",
+          "capture_raw_sha256": "56d3cd3ff448026c14e736fe378daaf1a39476e4a4d35a9da854f7893ea00360",
+          "binary_id": "b29e5ef22d8f2bd63dfecbc7a99157cc56dd2bdc9efad410b5a907310f7757fb",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3418205,
+          "positive_intervals": 60,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-b260af1d9a2f3616856f1ffdda2009ec9f6dfce66746eb3a7c69c67f96a79b4f",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-b260af1d9a2f3616856f1ffdda2009ec9f6dfce66746eb3a7c69c67f96a79b4f",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-8cdd57fc8831b04965958d8cbb05595a36e3b6cbb730021e5092b6acfaa29fd1",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-8cdd57fc8831b04965958d8cbb05595a36e3b6cbb730021e5092b6acfaa29fd1",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-92f8b260063b4eb3bfca6f6d935a3edf.json",
+          "capture_raw_sha256": "9e289bdbe1f965e8ae30372ef05752844f9d470c3fb6cb83cb05b1a3df87400f",
+          "binary_id": "b29e5ef22d8f2bd63dfecbc7a99157cc56dd2bdc9efad410b5a907310f7757fb",
+          "raw_bytes": 786816,
+          "bundle_bytes": 3418151,
+          "positive_intervals": 66,
+          "positive_source_origins": [
+            12,
+            42,
+            47,
+            54,
+            55,
+            88,
+            89
+          ],
+          "selected_dot_source_ids": [
+            54,
+            55
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-5d3c705e4d2f0885bc1bf0870fc2fb78cb76c5859c741b5e21c0d02c7fbfbaab",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-5d3c705e4d2f0885bc1bf0870fc2fb78cb76c5859c741b5e21c0d02c7fbfbaab",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-9ccbed1ec1cde38e766e65f25f22920a8afb0a5baf6ec28f731b2f7cfa9576f6",
+              "observer_id": "observer-62ff77a9163c25bc2e4539f97d3a118c6c48a323ad2bce1874c852872a646be5",
+              "source_op_id": 54,
+              "occurrences": 6,
+              "positive": 6
+            },
+            {
+              "site_id": "site-3f10be7f4263d874dd29c0f75306526e0152f748f60522a1ac5b11c004a382b4",
+              "observer_id": "observer-62ff77a9163c25bc2e4539f97d3a118c6c48a323ad2bce1874c852872a646be5",
+              "source_op_id": 55,
+              "occurrences": 6,
+              "positive": 6
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    },
+    {
+      "combination": "q12-s0-c1",
+      "result_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s0-c1-v1/output/result.json",
+      "sha256": "16e8af3e8e45c165d8379005b1c1c43b0e31b5407d630a44d33e677ccd458af2",
+      "terminal_file": "artifacts/timeline/run-105/preflight/phase-receipts-v4/runs/profile-q12-s0-c1-v1/terminal.json",
+      "terminal_sha256": "c46728d4e176582c4c16342799a26567b189b86435075b3d5ff01339efaf7a88",
+      "rows": [
+        {
+          "repetition": "cold",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-36546a67d8894771a802a1c175483b54.json",
+          "capture_raw_sha256": "42198f3d679203a50b0b474a4396bd9e7d46fed45bb04a225d7218b59dab0d30",
+          "binary_id": "f11ccff2999d70160ab1810d3dbf4100671a365c15e0e1c7bf1fc150b6675d75",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2786723,
+          "positive_intervals": 48,
+          "positive_source_origins": [
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-2ec0173496baed24984c6d7f23db652c1bdbdade45e3f878eac94e33d623e325",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-2ec0173496baed24984c6d7f23db652c1bdbdade45e3f878eac94e33d623e325",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-d537ce35b02d3167e70852760ef6d7d7371f56dd8728f94eac7137c1a3654441",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-d537ce35b02d3167e70852760ef6d7d7371f56dd8728f94eac7137c1a3654441",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm1",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-cbc6f90b82f84f1d95b572439e06323f.json",
+          "capture_raw_sha256": "6be8e77f212f29637e55ba5e2f95d3eb79b17fff4bc8f53919871c98c20c3364",
+          "binary_id": "f11ccff2999d70160ab1810d3dbf4100671a365c15e0e1c7bf1fc150b6675d75",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2786783,
+          "positive_intervals": 43,
+          "positive_source_origins": [
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-e43e609999ae0731ac81817b8f31570424da49d8fc8077eae74e0cc4f660e856",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-e43e609999ae0731ac81817b8f31570424da49d8fc8077eae74e0cc4f660e856",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-47e8ab8fdba5c15750c28254da76be84282b8152cae00fa4024579408bddd6ec",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-47e8ab8fdba5c15750c28254da76be84282b8152cae00fa4024579408bddd6ec",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        },
+        {
+          "repetition": "warm2",
+          "source_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+          "capture_file": "captures/invocation-7d89a555d9b1447682c17f59211dd00f.json",
+          "capture_raw_sha256": "d39346613032a3fa1e0fcf08b7867ace720c146d582037ab792f11765ef62862",
+          "binary_id": "f11ccff2999d70160ab1810d3dbf4100671a365c15e0e1c7bf1fc150b6675d75",
+          "raw_bytes": 786816,
+          "bundle_bytes": 2786847,
+          "positive_intervals": 44,
+          "positive_source_origins": [
+            11,
+            41,
+            46,
+            53,
+            54,
+            87,
+            88
+          ],
+          "selected_dot_source_ids": [
+            53,
+            54
+          ],
+          "matrix_observer_intervals": [
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-910198674cd9ede1219dbfaae5434f97169011a58cfc7b6bd605a047139f93b8",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-910198674cd9ede1219dbfaae5434f97169011a58cfc7b6bd605a047139f93b8",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-f82e544e2b89a6274659d2fe19dcd842c32b3f66078af6dad9a558b2c37979f4",
+              "observer_id": "observer-b30138e44980135979d293c2293c949270b2698a4459790dc6f1ed1a20e1d713",
+              "source_op_id": 53,
+              "occurrences": 4,
+              "positive": 4
+            },
+            {
+              "site_id": "site-b11054576693803fced8fcc6737eb6e01e424fce11cf80c3c62c0b24ab398972",
+              "observer_id": "observer-b30138e44980135979d293c2293c949270b2698a4459790dc6f1ed1a20e1d713",
+              "source_op_id": 54,
+              "occurrences": 4,
+              "positive": 4
+            }
+          ],
+          "actual_retained_mma_calls": 3,
+          "default_auxiliary_graphs_absent": true,
+          "counter_ns_exports": 6,
+          "standard_perfetto_files": 6,
+          "original_math_input_guard_and_hostonce_passed": true,
+          "native_engine_busy_qualified": false,
+          "source_exclusive_cost_qualified": false
+        }
+      ]
+    }
+  ],
+  "profile_runs": 24,
+  "standard_perfetto_files": 144,
+  "product_behavior_commit": "6e78f136214da74254211fa19b90a3f7b7353fa2",
+  "optional_static_analysis_required": false
+}

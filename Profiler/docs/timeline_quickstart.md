@@ -3,8 +3,7 @@
 Use a matching integrated FlagTree/FlagPrism wheel in your existing development
 environment. Keep your kernel and its ordinary launch script unchanged. The
 compiler selects internal observation sites; you do not supply scopes, site IDs
-or scratch arguments. This guide describes the implemented capture path, not
-final three-backend qualification or an overhead guarantee.
+or scratch arguments. Timing and dependency qualifications are recorded with each capture.
 
 ## Install the matching integration
 
@@ -38,17 +37,17 @@ particular, `--backend ascend` is not a valid CLI collector selection.
 
 ```bash
 # NVIDIA example; replace the Python and application paths.
-/path/to/runtime/bin/python -I -m flagtree.profiler.cli \
+/path/to/runtime/bin/python -m flagtree.profiler.cli \
   --backend cupti --device 0 --detail timeline \
   -n /tmp/my-timeline /path/to/my_script.py
 
 # Ascend example, after activating the matching SDK environment.
-FLAGTREE_BACKEND=ascend /path/to/runtime/bin/python -I \
+FLAGTREE_BACKEND=ascend /path/to/runtime/bin/python \
   -m flagtree.profiler.cli --backend cann --device 4 --detail timeline \
   -n /tmp/my-npu-timeline /path/to/my_script.py
 
 # Enflame example, after activating the matching SDK environment.
-FLAGTREE_BACKEND=enflame /path/to/runtime/bin/python -I \
+FLAGTREE_BACKEND=enflame /path/to/runtime/bin/python \
   -m flagtree.profiler.cli --backend enflame --device 0 --detail timeline \
   -n /tmp/my-gcu-timeline /path/to/my_script.py
 ```
