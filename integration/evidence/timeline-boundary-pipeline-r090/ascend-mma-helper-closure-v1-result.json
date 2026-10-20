@@ -1,0 +1,41 @@
+{
+  "status": "actual_BK32_MMA_SDK_helper_closure",
+  "library_sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f",
+  "helper_sha256": "7f4e64f840da5f1c581754e8e57cfa3f9510ddff57b422fc2f3f05824d70c7e9",
+  "tool_sha256": "6cea798b7acf7b4121dde311007d168b60805319ad4de050a557bdd2be971364",
+  "command": [
+    "/usr/bin/llvm-extract-15",
+    "--recursive",
+    "--rfunc=^_mlir_ciface_mma_tile_half_to_float$",
+    "/tmp/chijin-timeline-r0120-ascend/runs/ordinary-BK32-codegen-v1/output/objects/94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f.bc",
+    "-S",
+    "-o",
+    "/tmp/chijin-timeline-r090-ascend/runs/mma-helper-closure-v1/output/mma-helper.ll"
+  ],
+  "returncode": 0,
+  "bindings": [
+    {
+      "mode": "ordinary",
+      "receipt": "/tmp/chijin-timeline-r0120-ascend/runs/ordinary-BK32-codegen-v1/output/codegen/45b39cb6b7f846dca248588fdbeeadf4/receipt.json",
+      "receipt_sha256": "65407478b0f61423ea98b55988bdda17bd985bf35bd380cfd54b6f0f271485e9",
+      "library_sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f"
+    },
+    {
+      "mode": "density-1",
+      "capture": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-1/32-0/capture/timeline/captures/invocation-29f2502d79e44b2389c77695306be227.json",
+      "capture_sha256": "fe8edd6976185419c484e4f40838d5c229faffaec4f5edf8e76e7b0b57145a77",
+      "library_sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f"
+    },
+    {
+      "mode": "density-8",
+      "capture": "/tmp/chijin-timeline-r057-ascend/runs/controlled-density-v1/output/BK32-density-8/32-0/capture/timeline/captures/invocation-89ee5e07fa5d4eaca22dda0ed0dbac8a.json",
+      "capture_sha256": "f6ce2bf6e2e98ced39edf19e7602345a10e1724796d5dcf9a71de857abca866f",
+      "library_sha256": "94c9885a52c9e4cfdfbc239ad104f0a4d14cd330cff9c51d141eb08e88f9ef4f"
+    }
+  ],
+  "device_executed": false,
+  "SDK_recompiled": false,
+  "model_executed": false,
+  "application_replayed": false,
+  "pipeline_qualified": false
+}

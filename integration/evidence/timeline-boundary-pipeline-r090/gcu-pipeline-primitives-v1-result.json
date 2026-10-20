@@ -1,0 +1,35 @@
+{
+  "status": "actual_C2_linked_SDK_primitive_definitions",
+  "source": "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+  "source_sha256": "fa9d850080258f7cfd3acbdccfdb3485007b9b87c3c5ed34ab187dacbb52944a",
+  "tool_sha256": "96a7c03576a78d29dbe9e5fc3e16b0821b02dfef38c19b0de4de5c9988139598",
+  "roots": [
+    "tops_private_dte_ctr",
+    "tops_wait_dte",
+    "tops_syncthreads",
+    "tops_addmm_fp16_fp32",
+    "tops_slice_async_2_fp16",
+    "tops_slice_pad_async_2_fp16",
+    "tops_deslice_async_2_fp16",
+    "tops_slice_deslice_async_2_fp16",
+    "tops_memset_async_fp16",
+    "tops_memcpy_async"
+  ],
+  "output_sha256": "f09d690912c6b0c357a140e01b2e24a2986fd46633ac6c3bba59f9ba330cd870",
+  "output_bytes": 235277,
+  "command": [
+    "/opt/tops/llvm11/bin/opt",
+    "-internalize-public-api-list=tops_private_dte_ctr,tops_wait_dte,tops_syncthreads,tops_addmm_fp16_fp32,tops_slice_async_2_fp16,tops_slice_pad_async_2_fp16,tops_deslice_async_2_fp16,tops_slice_deslice_async_2_fp16,tops_memset_async_fp16,tops_memcpy_async",
+    "-internalize",
+    "-globaldce",
+    "/opt/triton_gcu/lib/kurama/gcu300_tops_builtins.bc",
+    "-S",
+    "-o",
+    "/tmp/chijin-timeline-r090-gcu/runs/pipeline-primitives-v1/output/pipeline-primitives.ll"
+  ],
+  "returncode": 0,
+  "device_executed": false,
+  "application_replayed": false,
+  "SDK_recompiled": false,
+  "pipeline_qualified": false
+}
