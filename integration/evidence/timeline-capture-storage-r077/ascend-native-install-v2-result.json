@@ -1,0 +1,128 @@
+{
+  "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+  "backend": "ascend",
+  "source_commit": "c42ba7e5cdf319fbc409d1b1b2132531837c8a03",
+  "source": "/tmp/chijin-timeline-r077-ascend/native-install-input-v2/source",
+  "python": "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/venv/bin/python",
+  "native": "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/native",
+  "installed_members": 440,
+  "wheel": "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl",
+  "wheel_sha256": "c7350d12d1ffb96ec7a721b0dc49b14979ef1027426eacaf2bb0a04c346d587e",
+  "unchanged_compiler": "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+  "unchanged_recorder": "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so",
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "pid": 319867,
+      "startticks": 344388387,
+      "returncode": 0
+    },
+    {
+      "name": "git-parent",
+      "argv": [
+        "git",
+        "fetch",
+        "--update-shallow",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/FlagTree",
+        "HEAD"
+      ],
+      "pid": 319868,
+      "startticks": 344388387,
+      "returncode": 0
+    },
+    {
+      "name": "git-identity",
+      "argv": [
+        "git",
+        "reset",
+        "--mixed",
+        "FETCH_HEAD"
+      ],
+      "pid": 320089,
+      "startticks": 344388671,
+      "returncode": 0
+    },
+    {
+      "name": "assemble",
+      "argv": [
+        "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r077-ascend/native-install-input-v2/source/integration/patches/ascend/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/FlagTree",
+        "--component",
+        "/tmp/chijin-timeline-r077-ascend/native-install-input-v2/source",
+        "--native-python",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/native",
+        "--core-library",
+        "/tmp/chijin-r13-ascend-census-v3/core-build/libtriton.so",
+        "--output",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/wheel",
+        "--plugin",
+        "/tmp/chijin-timeline-r060-ascend/runs/participation-plugin-v1/output/build/FlagPrismAscendLateObserver.so"
+      ],
+      "pid": 320097,
+      "startticks": 344388698,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/tmp/chijin-timeline-r058-ascend/runs/canonical-refresh-v1/output/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/venv"
+      ],
+      "pid": 320413,
+      "startticks": 344391360,
+      "returncode": 0
+    },
+    {
+      "name": "seed-pip",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "ensurepip",
+        "--default-pip"
+      ],
+      "pid": 320414,
+      "startticks": 344391366,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/wheel/dist/flagtree-0.6.0+ascend.git0364ed4b-cp311-cp311-linux_aarch64.whl"
+      ],
+      "pid": 320419,
+      "startticks": 344391918,
+      "returncode": 0
+    },
+    {
+      "name": "installed-import",
+      "argv": [
+        "/tmp/chijin-timeline-r077-ascend/runs/native-install-v2/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+      ],
+      "pid": 320424,
+      "startticks": 344392664,
+      "returncode": 0
+    }
+  ]
+}

@@ -1,0 +1,92 @@
+ pytest-regex selected 53 tests to run for regex: .*
+..............................F......................         [100%]
+=================================== FAILURES ===================================
+________ test_release_retry_rechecks_saved_inputs_before_freeing[guard] ________
+
+collector = (<flagtree.profiler.hooks.timeline.TimelineInstrumentationMixin object at 0x779217ee8f20>, <test_timeline_finalize.Tra...ect at 0x779217ee96d0>, ('invocation-e196b28239244e67a19b0a4ef608bb9f', 'invocation-5575f1e6586144cc84670f651269339a'))
+tmp_path = PosixPath('/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/pytest-normal/test_release_retry_rechecks_sa3')
+fault = 'guard'
+
+    @pytest.mark.parametrize('fault', ['raw', 'object', 'metadata', 'guard'])
+    def test_release_retry_rechecks_saved_inputs_before_freeing(
+            collector, tmp_path, fault):
+        hook, transport, ids = collector
+        if fault == 'object':
+            hook._timeline_descriptors[
+                ids[0]]['metadata']['large_text'] = 'saved compiler text\n' * 1000
+        if fault == 'guard':
+            transport.readbacks[ids[0]] = TimelineReadback(bytes(16),
+                                                           bytes([165]) * 128)
+        transport.fail_release.add(ids[0])
+        with pytest.raises(OSError, match='release failure'):
+            hook.flush_timeline(tmp_path / 'capture')
+        root = tmp_path / 'capture.timeline'
+        if fault == 'object':
+            target = next(root.glob('objects/capture/*'))
+        else:
+            suffix = {
+                'raw': '.raw',
+                'metadata': '.input.json',
+                'guard': '.guard.raw'
+            }[fault]
+            target = root / 'captures' / (ids[0] + suffix)
+        original = target.read_bytes()
+        if fault == 'metadata':
+            document = json.loads(original)
+            document['metadata']['compiler_metadata']['num_warps'] = 99
+            target.write_text(json.dumps(document))
+        else:
+            target.write_bytes(b'corrupt')
+        transport.fail_release.clear()
+        with pytest.raises((RuntimeError, ValueError)):
+            hook.flush_timeline(tmp_path / 'capture')
+        if hook.timeline_pool.invocation_ids != (ids[0], ):
+            raise RuntimeError('Corrupt retained input allowed resource release')
+        target.write_bytes(original)
+>       hook.flush_timeline(tmp_path / 'capture')
+
+/tmp/chijin-timeline-r077-gcu/native-install-input-v2/source/tests/timeline/test_timeline_finalize.py:306: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/venv/lib/python3.12/site-packages/flagtree/profiler/hooks/timeline.py:530: in flush_timeline
+    raise first
+/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/venv/lib/python3.12/site-packages/flagtree/profiler/hooks/timeline.py:483: in flush_timeline
+    self._decode_timeline_original(identity, directory, deadline)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <flagtree.profiler.hooks.timeline.TimelineInstrumentationMixin object at 0x779217ee8f20>
+identity = 'invocation-e196b28239244e67a19b0a4ef608bb9f'
+directory = PosixPath('/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/pytest-normal/test_release_retry_rechecks_sa3/capture.timeline')
+deadline = 10271220.606565991
+
+    def _decode_timeline_original(self, identity, directory, deadline):
+        from ..timeline_nvidia import decode_timeline_ring
+        from ..timeline_nvidia_async import derive_cp_async_facts
+        from ..timeline_events_nvidia import canonicalize_nvidia_capture
+        from ..timeline_nvidia_machine import inspect_capture_binary
+        input_file = directory / self._timeline_pending[identity]
+        from ..timeline_capture_store import load_capture
+        capture = load_capture(directory,
+                               str(input_file.relative_to(directory)))
+        owner, metadata = capture['owner'], capture['metadata']
+        raw = (directory / capture['raw_file']).read_bytes()
+        if hashlib.sha256(raw).hexdigest() != capture['raw_sha256']:
+            raise RuntimeError('Retained timeline raw changed before decoding')
+        guard = capture.get('readback_guard')
+        if guard is not None:
+            payload = (directory / guard['file']).read_bytes()
+            if len(payload) != guard['bytes'] or hashlib.sha256(
+                    payload).hexdigest() != guard['sha256']:
+                raise RuntimeError(
+                    'Retained timeline guard changed before decoding')
+        integrity = owner.get('readback_integrity', {})
+        if integrity.get('status') == 'invalid':
+>           raise ValueError('Timeline readback integrity failed: ' +
+                             repr(integrity['errors']))
+E           ValueError: Timeline readback integrity failed: ['guard_extent_differs_from_admission']
+E           Timeline finalization failures: [{'invocation_id': 'invocation-e196b28239244e67a19b0a4ef608bb9f', 'stage': 'decode_export', 'error_type': 'ValueError', 'error': "Timeline readback integrity failed: ['guard_extent_differs_from_admission']"}]
+E           Timeline originals retained at /tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/pytest-normal/test_release_retry_rechecks_sa3/capture.timeline
+
+/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/venv/lib/python3.12/site-packages/flagtree/profiler/hooks/timeline.py:345: ValueError
+=========================== short test summary info ============================
+FAILED ../tmp/chijin-timeline-r077-gcu/native-install-input-v2/source/tests/timeline/test_timeline_finalize.py::test_release_retry_rechecks_saved_inputs_before_freeing[guard]
+1 failed, 52 passed, 11 subtests passed in 1.72s

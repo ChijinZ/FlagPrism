@@ -1,0 +1,157 @@
+{
+  "status": "normal_wheel_capture_store_and_affected_common_regressions_passed",
+  "backend": "enflame",
+  "source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+  "source": "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source",
+  "python": "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+  "native": "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/native",
+  "installed_members": 498,
+  "wheel": "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+  "wheel_sha256": "b2cfb644e549d91b57fdf762c8ba0381a032fc4c87a737cdbc948a557005ab46",
+  "unchanged_compiler": "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+  "unchanged_recorder": "/tmp/chijin-timeline-r076-gcu/runs/native-install-v1/output/venv/lib/python3.12/site-packages/flagtree/debugger/_bin/gcu-timeline",
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "pid": 568641,
+      "startticks": 1027134666,
+      "returncode": 0
+    },
+    {
+      "name": "git-parent",
+      "argv": [
+        "git",
+        "fetch",
+        "--update-shallow",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v2/output/FlagTree",
+        "HEAD"
+      ],
+      "pid": 568642,
+      "startticks": 1027134667,
+      "returncode": 0
+    },
+    {
+      "name": "git-identity",
+      "argv": [
+        "git",
+        "reset",
+        "--mixed",
+        "FETCH_HEAD"
+      ],
+      "pid": 568840,
+      "startticks": 1027134721,
+      "returncode": 0
+    },
+    {
+      "name": "assemble",
+      "argv": [
+        "/usr/bin/python3.12",
+        "-I",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/integration/patches/enflame/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/FlagTree",
+        "--component",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source",
+        "--native-python",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/native",
+        "--core-library",
+        "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+        "--output",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/wheel",
+        "--backend-build",
+        "/tmp/chijin-timeline-r051-source-build-v1/work/build"
+      ],
+      "pid": 568853,
+      "startticks": 1027134753,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/usr/bin/python3.12",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv"
+      ],
+      "pid": 568948,
+      "startticks": 1027138934,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/usr/bin/python3.12",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl"
+      ],
+      "pid": 568949,
+      "startticks": 1027138938,
+      "returncode": 0
+    },
+    {
+      "name": "installed-import",
+      "argv": [
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+      ],
+      "pid": 568953,
+      "startticks": 1027139761,
+      "returncode": 0
+    },
+    {
+      "name": "capture-store-normal",
+      "argv": [
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_capture_object_store.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_finalize.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_store.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_offline_registry.py",
+        "--basetemp",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/pytest-normal"
+      ],
+      "pid": 568954,
+      "startticks": 1027139802,
+      "returncode": 0
+    },
+    {
+      "name": "capture-store-optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_capture_object_store.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_finalize.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_store.py",
+        "/tmp/chijin-timeline-r077-gcu/native-install-input-v3/source/tests/timeline/test_timeline_offline_registry.py",
+        "--basetemp",
+        "/tmp/chijin-timeline-r077-gcu/runs/native-install-v3/output/pytest-optimized"
+      ],
+      "pid": 568958,
+      "startticks": 1027140004,
+      "returncode": 0
+    }
+  ],
+  "device_executed": false
+}

@@ -1,0 +1,13 @@
+.......................................................       [100%]
+=============================== warnings summary ===============================
+../../usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310
+  /usr/local/python3.11.15/lib/python3.11/site-packages/_pytest/config/__init__.py:1310: PytestConfigWarning: assertions not in test modules or plugins will be ignored because assert statements are not executed by the underlying Python interpreter (are you using python -O?)
+  
+    self._warn_about_missing_assertion(mode)
+
+../../tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py:377
+  /tmp/chijin-timeline-r077-ascend/runs/native-install-v4/output/venv/lib/python3.11/site-packages/triton/backends/ascend/driver.py:377: DeprecationWarning: invalid escape sequence '\['
+    for m in re.finditer('\[aicore\]', code):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+55 passed, 2 warnings, 11 subtests passed in 23.34s

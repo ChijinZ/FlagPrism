@@ -1,0 +1,65 @@
+..........................F......................             [100%]
+=================================== FAILURES ===================================
+________________ test_release_failure_is_owned_and_not_decoded _________________
+
+collector = (<flagtree.profiler.hooks.timeline.TimelineInstrumentationMixin object at 0xfffc5cb97e10>, <test_timeline_finalize.Tra...ect at 0xfffc5cada650>, ('invocation-9d3e0caeb11b4bac80cb123ddd2f673a', 'invocation-a2f71ea850b445a6838df2e629e58000'))
+tmp_path = PosixPath('/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/pytest-normal/test_release_failure_is_owned_0')
+
+    def test_release_failure_is_owned_and_not_decoded(collector, tmp_path):
+        hook, transport, ids = collector
+        transport.fail_release.add(ids[0])
+        with pytest.raises(OSError, match='release failure'):
+            hook.flush_timeline(tmp_path / 'capture')
+        if hook.timeline_pool.invocation_ids != (ids[0], ):
+            raise RuntimeError('Release error lost ownership')
+        index = read_index(tmp_path / 'capture')
+        if index['pending_decode'] != [ids[0]] or len(index['captures']) != 1:
+            raise RuntimeError(
+                'Release failure decoded unresolved owner or blocked next owner')
+        transport.fail_release.clear()
+>       hook.flush_timeline(tmp_path / 'capture')
+
+/tmp/chijin-timeline-r077-ascend/native-install-input-v1/source/tests/timeline/test_timeline_finalize.py:260: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/flagtree/profiler/hooks/timeline.py:484: in flush_timeline
+    raise first
+/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/flagtree/profiler/hooks/timeline.py:411: in flush_timeline
+    self._retain_timeline_original(identity, directory,
+/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/flagtree/profiler/hooks/timeline.py:262: in _retain_timeline_original
+    persist_capture(directory, str(prefix.with_suffix('.input.json')),
+/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/flagtree/profiler/timeline_capture_store.py:111: in persist_capture
+    persist(directory, relative, payload)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+directory = PosixPath('/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/pytest-normal/test_release_failure_is_owned_0/capture.timeline')
+relative = 'captures/invocation-9d3e0caeb11b4bac80cb123ddd2f673a.input.json'
+payload = b'{"capture_status":"raw_persisted_pending_decode","clock_status":"unverified","launch":{"invocation_id":"invocation-9...3a.raw","raw_sha256":"374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb","time_arrow_verified":false}\n'
+
+    def persist(directory, relative, payload, *, replace=False):
+        """Call while holding export_lock. Never overwrite immutable evidence."""
+        if type(payload) is not bytes:
+            raise TypeError('Artifact payload must be bytes')
+        path = bundle_path(directory, relative)
+        # Persist the parent links as well as file contents: fsync of only the leaf
+        # directory would leave a just-created revision undiscoverable after crash.
+        current = Path(directory).resolve()
+        for part in Path(relative).parts[:-1]:
+            parent, current = current, current / part
+            if not current.exists():
+                current.mkdir()
+                _sync_directory(parent)
+        if path.exists():
+            if read_artifact(directory, relative) == payload:
+                return
+            if not replace:
+>               raise ValueError(
+                    'Refusing to overwrite different timeline evidence: ' +
+                    relative)
+E               ValueError: Refusing to overwrite different timeline evidence: captures/invocation-9d3e0caeb11b4bac80cb123ddd2f673a.input.json
+E               Timeline finalization failures: [{'invocation_id': 'invocation-9d3e0caeb11b4bac80cb123ddd2f673a', 'stage': 'retain_original', 'error_type': 'ValueError', 'error': 'Refusing to overwrite different timeline evidence: captures/invocation-9d3e0caeb11b4bac80cb123ddd2f673a.input.json'}]
+E               Timeline originals retained at /tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/pytest-normal/test_release_failure_is_owned_0/capture.timeline
+
+/tmp/chijin-timeline-r077-ascend/runs/native-install-v1/output/venv/lib/python3.11/site-packages/flagtree/profiler/timeline_store.py:116: ValueError
+=========================== short test summary info ============================
+FAILED ../../tmp/chijin-timeline-r077-ascend/native-install-input-v1/source/tests/timeline/test_timeline_finalize.py::test_release_failure_is_owned_and_not_decoded
+1 failed, 48 passed, 11 subtests passed in 23.59s

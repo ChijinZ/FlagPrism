@@ -1,0 +1,200 @@
+{
+  "scope": "lossless_capture_CAS_storage_and_release_recovery",
+  "runtime_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+  "ascend_json_whitespace_commit": "cf0ee96fbc6fb0147c2a9b42e819bca21d7387ec",
+  "whole_goal_complete": false,
+  "backends": {
+    "nvidia": {
+      "native-install-v1": {
+        "returncode": 1,
+        "wall_ns": 68134226995,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "16ebe2288be73a3aa992e151a56a4e4196898417",
+        "installed_members": 642
+      },
+      "native-install-v2": {
+        "returncode": 1,
+        "wall_ns": 69237357995,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "c42ba7e5cdf319fbc409d1b1b2132531837c8a03",
+        "installed_members": 642
+      },
+      "native-install-v3": {
+        "returncode": 0,
+        "wall_ns": 73539285474,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "normal_wheel_capture_store_and_affected_common_regressions_passed",
+        "source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "installed_members": 642
+      },
+      "e01-v1": {
+        "returncode": 0,
+        "wall_ns": 16592972889,
+        "script_sha256": "24e117cf07c3dfa2bc0b00aa37e7efd4b63a63a9568cf02c5f30bf7856e851e6",
+        "status": "real_one_session_ten_interleaved_specializations_passed",
+        "runtime_source_commit": "61cb831290860655edf2f64eb8c3b395a4c1fc0a",
+        "bundle_bytes": 29613231
+      },
+      "e01-v2": {
+        "returncode": 0,
+        "wall_ns": 17143331679,
+        "script_sha256": "cac8bebc49bfac00a8b4ca51e0561f96f698a715e15a24b654d233f7f3982355",
+        "status": "real_one_session_ten_interleaved_specializations_passed",
+        "runtime_source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "bundle_bytes": 28846429
+      },
+      "offline-v1": {
+        "returncode": 0,
+        "wall_ns": 23804297904,
+        "script_sha256": "dd49741666e84fac9fa624718c5f216d27bca8ea27f118d4e729450b38110361",
+        "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+        "runtime_source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "real_captures": 10,
+        "real_traces": 40
+      }
+    },
+    "enflame": {
+      "native-install-v1": {
+        "returncode": 1,
+        "wall_ns": 54350741712,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "16ebe2288be73a3aa992e151a56a4e4196898417",
+        "installed_members": 498
+      },
+      "native-install-v2": {
+        "returncode": 1,
+        "wall_ns": 54795178685,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "c42ba7e5cdf319fbc409d1b1b2132531837c8a03",
+        "installed_members": 498
+      },
+      "native-install-v3": {
+        "returncode": 0,
+        "wall_ns": 56295011957,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "normal_wheel_capture_store_and_affected_common_regressions_passed",
+        "source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "installed_members": 498
+      },
+      "e01-v1": {
+        "returncode": 1,
+        "wall_ns": 20600103079,
+        "script_sha256": "24e117cf07c3dfa2bc0b00aa37e7efd4b63a63a9568cf02c5f30bf7856e851e6"
+      },
+      "e01-v2": {
+        "returncode": 0,
+        "wall_ns": 23451201180,
+        "script_sha256": "cac8bebc49bfac00a8b4ca51e0561f96f698a715e15a24b654d233f7f3982355",
+        "status": "real_one_session_ten_interleaved_specializations_passed",
+        "runtime_source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "bundle_bytes": 41135845
+      },
+      "offline-v1": {
+        "returncode": 0,
+        "wall_ns": 11984323721,
+        "script_sha256": "dd49741666e84fac9fa624718c5f216d27bca8ea27f118d4e729450b38110361",
+        "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+        "runtime_source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "real_captures": 10,
+        "real_traces": 10
+      }
+    },
+    "ascend": {
+      "native-install-v1": {
+        "returncode": 1,
+        "wall_ns": 77310989079,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "16ebe2288be73a3aa992e151a56a4e4196898417",
+        "installed_members": 440
+      },
+      "native-install-v2": {
+        "returncode": 1,
+        "wall_ns": 77657591086,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "wheel_installed_python_only_native_sources_checked_and_reused",
+        "source_commit": "c42ba7e5cdf319fbc409d1b1b2132531837c8a03",
+        "installed_members": 440
+      },
+      "native-install-v3": {
+        "returncode": 0,
+        "wall_ns": 103504483739,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "normal_wheel_capture_store_and_affected_common_regressions_passed",
+        "source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "installed_members": 440
+      },
+      "native-install-v4": {
+        "returncode": 0,
+        "wall_ns": 103093767273,
+        "script_sha256": "3197d2e45214177eabc4466f68d19846385758ea980a318ad60cf3fa6d82b47e",
+        "status": "normal_wheel_capture_store_and_affected_common_regressions_passed",
+        "source_commit": "cf0ee96fbc6fb0147c2a9b42e819bca21d7387ec",
+        "installed_members": 440
+      },
+      "e01-v1": {
+        "returncode": 1,
+        "wall_ns": 57688372690,
+        "script_sha256": "24e117cf07c3dfa2bc0b00aa37e7efd4b63a63a9568cf02c5f30bf7856e851e6"
+      },
+      "e01-v2": {
+        "returncode": 1,
+        "wall_ns": 65698195890,
+        "script_sha256": "cac8bebc49bfac00a8b4ca51e0561f96f698a715e15a24b654d233f7f3982355"
+      },
+      "offline-v1": {
+        "returncode": 0,
+        "wall_ns": 63548248896,
+        "script_sha256": "dd49741666e84fac9fa624718c5f216d27bca8ea27f118d4e729450b38110361",
+        "status": "actual_retained_captures_offline_reexport_passed_not_full_P01",
+        "runtime_source_commit": "ea2c936edc3a5bbd695cb46a3758bfd2a6d1196c",
+        "real_captures": 10,
+        "real_traces": 10
+      },
+      "recover-v1": {
+        "returncode": 0,
+        "wall_ns": 10030284409,
+        "script_sha256": "d145d4eb3fe3ded583adfb80040d3b8c4e6d9db08652c9b04ce991118ad9aaac",
+        "status": "real_session_retained_acceptance_after_lossless_json_whitespace_repack",
+        "runtime_source_commit": "cf0ee96fbc6fb0147c2a9b42e819bca21d7387ec",
+        "bundle_bytes": 66815281
+      }
+    }
+  },
+  "archives": {
+    "nvidia": {
+      "path": "artifacts/timeline/run-077/preflight/nvidia-receipts-v2.tgz",
+      "sha256": "20a61ffc2c645ff8cb5aea134ca7982b20923cc564f437f0f806e69f37f6c90c",
+      "members": 1251
+    },
+    "enflame": {
+      "path": "artifacts/timeline/run-077/preflight/enflame-receipts-v2.tgz",
+      "sha256": "70aa2036d71d61066a9793bd6ee64e5c402f5c089f3c843444c431e80b2f8059",
+      "members": 814
+    },
+    "ascend": {
+      "path": "artifacts/timeline/run-077/preflight/ascend-receipts-v2.tgz",
+      "sha256": "a26f59643befa1433cce1199bc906946dfb3a01c861d3337c77210c7cc251efe",
+      "members": 1197
+    }
+  },
+  "trace_processor": {
+    "returncode": 0,
+    "traces": 60,
+    "statistics_per_trace": 263,
+    "total_statistic_rows": 15780,
+    "positive_error_or_data_loss": 0,
+    "result_sha256": "1e32bb994371aa64e388625b746243236dc2ebb5510794df9c08101804e1d0fd",
+    "by_backend": {
+      "nvidia": 40,
+      "enflame": 10,
+      "ascend": 10
+    },
+    "UI_rerun": false,
+    "previous_UI_evidence_reused": true
+  }
+}
