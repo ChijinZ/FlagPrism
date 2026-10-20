@@ -247,17 +247,22 @@ class BoundaryTests(unittest.TestCase):
         for callee in ('tops_syncthreads', 'tops_get_thread_idx'):
             with self.subTest(callee=callee):
                 report, manifest = self.indexed('legacy-runtime')
-                # Preserve well-typed CFG and complete tuple but replace just
-                # the candidate body by a non-compute SDK call.
-                for block in report['blocks']:
-                    for row in block['operations']:
-                        if row['operation'] in (
-                                'llvm.load', 'llvm.fmul',
-                                'llvm.store') and 'fixture.py' not in row.get(
-                                    'location', '') and row.get(
-                                        'location', '').startswith('loc("-":'):
-                            row['operation'] = 'llvm.call'
-                            row['callee'] = callee
+                region = self.checked(report, manifest)
+                self.assertEqual(region['status'],
+                                 'llvm_observer_boundary_checked')
+                body = []
+                for ref in region['paths'][0]['body_refs']:
+                    row = report['blocks'][ref['block']]['operations'][
+                        ref['operation']]
+                    row['operation'] = 'llvm.call'
+                    row['callee'] = callee
+                    body.append((ref['block'], ref['operation'], row))
+                # Check the intended failure directly, so a record/count
+                # protocol failure cannot make this body-family test pass.
+                with self.assertRaisesRegex(ValueError, 'typed compute body'):
+                    self.module._body_family(manifest['sites'][0],
+                                             body,
+                                             legacy=True)
                 self.assertEqual(
                     self.checked(report, manifest)['status'], 'unverified')
 
