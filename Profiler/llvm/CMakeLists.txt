@@ -11,3 +11,11 @@ target_compile_features(FlagPrismAscendLateObserver PRIVATE cxx_std_17)
 target_compile_options(FlagPrismAscendLateObserver PRIVATE -fno-rtti)
 # Resolve LLVM ABI from opt15; the vendor bisheng fork never loads this plugin.
 set_target_properties(FlagPrismAscendLateObserver PROPERTIES PREFIX "" SUFFIX ".so")
+
+# A read-only, out-of-process indexer; never loaded into the vendor SDK.
+add_executable(flagprism-ascend-structure AscendExecutionStructure.cpp)
+target_include_directories(flagprism-ascend-structure SYSTEM PRIVATE ${LLVM_INCLUDE_DIRS})
+target_compile_definitions(flagprism-ascend-structure PRIVATE ${LLVM_DEFINITIONS})
+target_compile_features(flagprism-ascend-structure PRIVATE cxx_std_17)
+target_compile_options(flagprism-ascend-structure PRIVATE -fno-rtti)
+target_link_libraries(flagprism-ascend-structure PRIVATE LLVM)

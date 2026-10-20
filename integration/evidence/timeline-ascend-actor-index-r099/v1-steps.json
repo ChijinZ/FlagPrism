@@ -1,0 +1,71 @@
+[
+  {
+    "name": "format",
+    "argv": [
+      "/usr/local/python3.11.15/bin/clang-format",
+      "-i",
+      "/tmp/chijin-timeline-r099-ascend/structure-input-v1/source/AscendExecutionStructure.cpp"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "configure",
+    "argv": [
+      "cmake",
+      "-S",
+      "/tmp/chijin-timeline-r099-ascend/structure-input-v1/source",
+      "-B",
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build",
+      "-G",
+      "Ninja",
+      "-DLLVM_DIR=/usr/lib/llvm-15/lib/cmake/llvm",
+      "-DCMAKE_BUILD_TYPE=Release"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "build",
+    "argv": [
+      "cmake",
+      "--build",
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build",
+      "--target",
+      "flagprism-ascend-structure",
+      "-j",
+      "2"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "q01-AIV",
+    "argv": [
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build/flagprism-ascend-structure",
+      "/tmp/chijin-timeline-r062-ascend/runs/000/output/tmp/flagprism-ascend-compiler-h3mwud06/f0af0224-df62-4718-8463-3f7bde42718b/jobs/659ebbc1-ed31-47b3-b402-41ec4dfd5b17/adapted-0.ll"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "q03-AIV",
+    "argv": [
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build/flagprism-ascend-structure",
+      "/tmp/chijin-timeline-r062-ascend/runs/024/output/tmp/flagprism-ascend-compiler-ynlcd_6c/e12e8dbb-5cfd-43c5-b119-8089451dd343/jobs/8fe8abf2-ffa1-4977-bcef-a6e8e5d4645c/adapted-0.ll"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "q05-AIC",
+    "argv": [
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build/flagprism-ascend-structure",
+      "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-jdhwohq2/c325e14e-e27c-4e8f-8018-ccf5c6aea669/jobs/11282d51-0bf9-4ec9-8724-be68c3aaf48d/adapted-0.ll"
+    ],
+    "returncode": 0
+  },
+  {
+    "name": "q05-AIV",
+    "argv": [
+      "/tmp/chijin-timeline-r099-ascend/runs/structure-v1/output/build/flagprism-ascend-structure",
+      "/tmp/chijin-timeline-r055-qualification-ascend-v2/runs/profile-first-v1/q05-s0-c0-cold/controlled/tmp/flagprism-ascend-compiler-jdhwohq2/c325e14e-e27c-4e8f-8018-ccf5c6aea669/jobs/4b0ab88a-3d2a-4de5-93aa-39b8ba331135/adapted-0.ll"
+    ],
+    "returncode": 0
+  }
+]
