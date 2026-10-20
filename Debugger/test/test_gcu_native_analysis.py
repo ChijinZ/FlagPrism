@@ -73,3 +73,19 @@ def test_analysis_budget_keeps_a_visible_unverified_point():
     assert report['points'][0]['reader'][
         'reason'] == 'native_analysis_budget_exhausted'
     assert report['source_region_qualified'] is False
+
+
+def test_expired_reader_budget_does_not_start_record_analysis():
+    binary, native, locations, manifest = inputs()
+    with patch.object(analysis, 'time', SimpleNamespace(monotonic=Mock(side_effect=[0, 0, 11]))), \
+            patch.object(analysis, 'inspect_inline_reader', return_value={'status': 'conditional_fixture'}), \
+            patch.object(analysis, 'inspect_inline_record_fields_auto') as record:
+        report = analysis.analyze_native(binary,
+                                         native,
+                                         locations=locations,
+                                         manifest=manifest)
+    record.assert_not_called()
+    assert report['points'][0]['reader']['status'] == 'conditional_fixture'
+    assert report['points'][0]['relative_record_fields'][
+        'reason'] == 'native_analysis_budget_exhausted'
+    assert report['budget_kind'] == 'cooperative_between_checks'

@@ -1,10 +1,12 @@
 """Bundle and qualification guards for automatic native location retention."""
 import copy
+import hashlib
 import json
+import os
 from pathlib import Path
 import struct
 import tempfile
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import pytest
 from flagtree.debugger import gcu_timeline as bridge
@@ -137,7 +139,13 @@ def test_missing_phases_remain_explicit_without_timing_rights():
 
 
 def test_reinspection_retains_producer_metadata_and_uses_current_analyzer():
+    elf = b'\x7fELFfake-parser-fixture'
+    binary = bundle([(TARGET, elf)])
     metadata = dict(debug_execution_version=1,
+                    debug_execution_native_locations=dict(
+                        fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                        elf_sha256=hashlib.sha256(elf).hexdigest(),
+                        target=TARGET),
                     debug_execution_tool_identity={'version': 'old'})
     original = copy.deepcopy(metadata)
 
@@ -149,9 +157,71 @@ def test_reinspection_retains_producer_metadata_and_uses_current_analyzer():
 
     with patch.object(bridge, 'tool_identity', return_value={'version': 'new'}), \
             patch.object(bridge, 'bind_native_clock_locations', side_effect=inspect):
-        result = bridge.inspect_native_execution(b'captured bytes', metadata)
+        result = bridge.inspect_native_execution(binary, metadata)
     assert metadata == original
     assert result['analysis']['status'] == 'fixture_unverified'
+
+
+@pytest.mark.parametrize(
+    'fault', ['missing', 'fatbin', 'elf', 'target', 'bool_version'])
+def test_reinspection_rejects_unbound_capture_before_running_tools(fault):
+    elf = b'\x7fELFfake-parser-fixture'
+    binary = bundle([(TARGET, elf)])
+    captured = dict(fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                    elf_sha256=hashlib.sha256(elf).hexdigest(),
+                    target=TARGET)
+    metadata = dict(debug_execution_version=1,
+                    debug_execution_native_locations=captured)
+    if fault == 'missing':
+        metadata.pop('debug_execution_native_locations')
+    elif fault == 'fatbin':
+        binary = bundle([(TARGET, elf + b'different-valid-image')])
+    elif fault == 'elf':
+        captured['elf_sha256'] = '0' * 64
+    elif fault == 'target':
+        captured['target'] = 'other-target'
+    else:
+        metadata['debug_execution_version'] = True
+    with patch.object(bridge, 'bind_native_clock_locations') as bind:
+        with pytest.raises(ValueError):
+            bridge.inspect_native_execution(binary, metadata)
+    bind.assert_not_called()
+
+
+@pytest.mark.parametrize('fault', ['registration', 'timeout'])
+def test_native_decoder_cleanup_is_bounded_and_retains_pid(tmp_path, fault):
+    child = Mock(pid=os.getpid(), returncode=None)
+    child.poll.return_value = None
+    expired = bridge.subprocess.TimeoutExpired('fixture-decoder', 20)
+    child.wait.side_effect = [expired, expired
+                              ] if fault == 'timeout' else [expired]
+    root = tmp_path / 'analysis'
+    with patch.object(bridge, 'tool_identity', return_value={}), \
+            patch.object(bridge, '_file_hash', return_value='fixture'), \
+            patch.object(bridge.subprocess, 'Popen', return_value=child):
+        if fault == 'registration':
+            original = Path.read_text
+
+            def read(path, *args, **kwargs):
+                if str(path).startswith('/proc/'):
+                    raise OSError('fixture registration failed')
+                return original(path, *args, **kwargs)
+
+            with patch.object(Path, 'read_text', read):
+                report = bridge._native_shape_stage(b'fixture', {}, {},
+                                                    expected={},
+                                                    root=root)
+        else:
+            report = bridge._native_shape_stage(b'fixture', {}, {},
+                                                expected={},
+                                                root=root)
+    child.kill.assert_called_once_with()
+    assert [call.kwargs['timeout'] for call in child.wait.call_args_list
+            ] == ([20, 3] if fault == 'timeout' else [3])
+    assert report['status'] == 'unavailable'
+    assert report['decoder_receipt']['pid'] == child.pid
+    assert report['decoder_receipt']['state'] == 'termination_pending'
+    assert json.loads((root / 'terminal.json').read_text())['pid'] == child.pid
 
 
 def test_ordinary_path_does_not_inspect_binary():

@@ -73,16 +73,23 @@ def analyze_native(binary, native, *, locations, manifest):
         row['reader'] = readers[pc]
         if column == 2 and readers[pc]['status'] != 'unverified':
             if pc not in records:
-                try:
-                    records[pc] = inspect_inline_record_fields_auto(
-                        instructions, marker_packet=pc, control=graph)
-                except ValueError as error:
-                    records[pc] = dict(status='unverified', reason=str(error))
+                if time.monotonic() > deadline:
+                    records[pc] = dict(
+                        status='unverified',
+                        reason='native_analysis_budget_exhausted')
+                else:
+                    try:
+                        records[pc] = inspect_inline_record_fields_auto(
+                            instructions, marker_packet=pc, control=graph)
+                    except ValueError as error:
+                        records[pc] = dict(status='unverified',
+                                           reason=str(error))
             row['relative_record_fields'] = records[pc]
         rows.append(row)
     return dict(schema_version=1,
                 status='finite_native_diagnostics',
                 semantics='conditional_reader_and_relative_record_checks',
+                budget_kind='cooperative_between_checks',
                 elf_sha256=program['elf_sha256'],
                 disassembly_sha256=hashlib.sha256(native).hexdigest(),
                 kernel_symbol=program['kernel_symbol'],

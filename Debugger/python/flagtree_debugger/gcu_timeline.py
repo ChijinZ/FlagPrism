@@ -449,6 +449,7 @@ def _native_shape_stage(elf, locations, manifest, *, expected, root):
                                      stderr=err,
                                      start_new_session=True)
             try:
+                receipt['pid'] = child.pid
                 fields = (Path('/proc') / str(child.pid) /
                           'stat').read_text().rsplit(')', 1)[1].split()
                 receipt.update(pid=child.pid,
@@ -460,9 +461,12 @@ def _native_shape_stage(elf, locations, manifest, *, expected, root):
             except BaseException:
                 if child.poll() is None:
                     child.kill()
-                child.wait()
-                receipt.update(state='failed_or_timed_out',
-                               returncode=child.returncode)
+                state = 'failed_or_timed_out'
+                try:
+                    child.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    state = 'termination_pending'
+                receipt.update(state=state, returncode=child.returncode)
                 (root / 'terminal.json').write_text(
                     json.dumps(receipt, indent=2))
                 raise
@@ -504,8 +508,17 @@ def inspect_native_execution(binary, metadata):
     Producer metadata is not rewritten and the application is never replayed.
     The returned supplement has its own analyzer identity and qualification.
     """
-    if metadata.get('debug_execution_version') != 1:
+    if (type(metadata.get('debug_execution_version')) is not int
+            or metadata.get('debug_execution_version') != 1):
         raise ValueError('Not a GCU execution capture')
+    elf, target = _gcu300_bundle_image(binary)
+    captured = metadata.get('debug_execution_native_locations')
+    if (type(captured) is not dict or captured.get('fatbin_sha256')
+            != hashlib.sha256(binary).hexdigest()
+            or captured.get('elf_sha256') != hashlib.sha256(elf).hexdigest()
+            or captured.get('target') != target):
+        raise ValueError(
+            'Captured native image identity is missing or differs')
     current = dict(metadata)
     producer = current.get('debug_execution_tool_identity')
     current['debug_execution_tool_identity'] = tool_identity()
