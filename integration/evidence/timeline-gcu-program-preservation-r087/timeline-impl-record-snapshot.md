@@ -15,4 +15,3 @@
 - 原compiler有限审查run087/review/gcu-transform-preservation-v1.md已匹配最终v5源码/normal-O实际、97/12范围，正常wheel与tool同byte追加待/见最终report。三席whole最终签字仍未完成。没有新增需用户处理的环境阻碍。
 - 全九组owned job旧失败+正常安装日志/源输入manifest+37/109 row/cert等555项归档，SHA60f9dbdc4f906a82d24c6bd2de4b0527c22cb5d95d09a4ba4204b242e870250d，7513106B，regular/path/index逐hash全核同。完整private LLVM/GCU IR只root/server，不入Git；小证据integration/evidence/timeline-gcu-program-preservation-r087待整理。根目录不是Git，后续操作请用明确workdir，别在root执行git。
 - **继续工作优先级**：先用上述certificate + actual before/ordinary State cone + profile真实LLVM State writer模型连接（仅例外新增observer）解决97，旧12检查真实core差异/原producer保持证据，不盲目新数学/新SDK/重复矩阵。再GCU/Asc final source-region/runtime-loop边界及ordinary/default/true-sparse stage/tag/flag/cut/consumer/buffer generation保持；Asc/GCU补二ordinary与全部current profile State适用性仍需完成。最后原三席whole闭合+Git交付。NV实际pipeline/ordinary32State/SDK/预算/E01/math/1740及其它TP/UI已闭不重开。本轮程序保留证书不能替代reader→raw或native source边界。
-
