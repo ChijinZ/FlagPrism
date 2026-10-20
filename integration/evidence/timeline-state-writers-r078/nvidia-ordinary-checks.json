@@ -1,0 +1,3152 @@
+[
+  {
+    "status": "pass",
+    "id": "q01-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.json",
+    "math_sha256": "47630090ebeca7f61bf10cc7560a42ce491c0b665a97efd30cdce0144df600d2",
+    "compiled_hash": "7fde39d4e3d95b29842ede87e657ec16c290b4cd644888a2b4f91dfdedcce325",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/05-cubin",
+        "sha256": "727f018fcda5b73c36fb0a553032939d67f3015ea9dbf6f6019ec17f98a01130",
+        "bytes": 12064,
+        "retained_file": "objects/727f018fcda5b73c36fb0a553032939d67f3015ea9dbf6f6019ec17f98a01130.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/03-llir",
+        "sha256": "679a69cfaca7ed4df1f97576eb984e49c864fb8cf744c7cebb11e443dd6024a1",
+        "bytes": 6292,
+        "retained_file": "objects/679a69cfaca7ed4df1f97576eb984e49c864fb8cf744c7cebb11e443dd6024a1.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/04-ptx",
+        "sha256": "039185711746085ac5cb24ab4e778dd6423aae45013cc4125cca4132bfeab58c",
+        "bytes": 6733,
+        "retained_file": "objects/039185711746085ac5cb24ab4e778dd6423aae45013cc4125cca4132bfeab58c.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/00-source",
+        "sha256": "b3cf8185713d831473401deb03c0413f6058e62d573c6569e6d2372895ac4eee",
+        "bytes": 11791,
+        "retained_file": "objects/b3cf8185713d831473401deb03c0413f6058e62d573c6569e6d2372895ac4eee.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/02-ttgir",
+        "sha256": "59e77873d756a1f9b85bc4239f7b89e85e758b648bb8bf9d52431ad300aac1b3",
+        "bytes": 7772,
+        "retained_file": "objects/59e77873d756a1f9b85bc4239f7b89e85e758b648bb8bf9d52431ad300aac1b3.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.objects/01-ttir",
+        "sha256": "ecf7a3a7fb5033eb5b5890dade6a9078fff9928a84da6dc38a90f87950205f0c",
+        "bytes": 7092,
+        "retained_file": "objects/ecf7a3a7fb5033eb5b5890dade6a9078fff9928a84da6dc38a90f87950205f0c.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0/math.host-once.json",
+      "sha256": "3db6cde2a9b18c4219e9bafb20423e76cfc4648e87da840fd681a88ace29b881"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 128,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s0-c0",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.json",
+    "math_sha256": "799ac1f26f33772fb05109db2e684b50b8493e0894fd60eb111595ee14f4bec5",
+    "compiled_hash": "7fde39d4e3d95b29842ede87e657ec16c290b4cd644888a2b4f91dfdedcce325",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/05-cubin",
+        "sha256": "727f018fcda5b73c36fb0a553032939d67f3015ea9dbf6f6019ec17f98a01130",
+        "bytes": 12064,
+        "retained_file": "objects/727f018fcda5b73c36fb0a553032939d67f3015ea9dbf6f6019ec17f98a01130.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/03-llir",
+        "sha256": "679a69cfaca7ed4df1f97576eb984e49c864fb8cf744c7cebb11e443dd6024a1",
+        "bytes": 6292,
+        "retained_file": "objects/679a69cfaca7ed4df1f97576eb984e49c864fb8cf744c7cebb11e443dd6024a1.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/04-ptx",
+        "sha256": "039185711746085ac5cb24ab4e778dd6423aae45013cc4125cca4132bfeab58c",
+        "bytes": 6733,
+        "retained_file": "objects/039185711746085ac5cb24ab4e778dd6423aae45013cc4125cca4132bfeab58c.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/00-source",
+        "sha256": "b3cf8185713d831473401deb03c0413f6058e62d573c6569e6d2372895ac4eee",
+        "bytes": 11791,
+        "retained_file": "objects/b3cf8185713d831473401deb03c0413f6058e62d573c6569e6d2372895ac4eee.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/02-ttgir",
+        "sha256": "59e77873d756a1f9b85bc4239f7b89e85e758b648bb8bf9d52431ad300aac1b3",
+        "bytes": 7772,
+        "retained_file": "objects/59e77873d756a1f9b85bc4239f7b89e85e758b648bb8bf9d52431ad300aac1b3.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.objects/01-ttir",
+        "sha256": "ecf7a3a7fb5033eb5b5890dade6a9078fff9928a84da6dc38a90f87950205f0c",
+        "bytes": 7092,
+        "retained_file": "objects/ecf7a3a7fb5033eb5b5890dade6a9078fff9928a84da6dc38a90f87950205f0c.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c0-K7/math.host-once.json",
+      "sha256": "651d6c7eb3fc6871580c57eda7729cc1738e966c675a770c851b815121aedbb7"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 128,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.json",
+    "math_sha256": "2004bd960d4412b7d484b4f7f1a2c1b8e8181c3d86f29a02951a629a38887e84",
+    "compiled_hash": "14d76231beb901a8ca4b4ed4fc61e3de5c347f288d6748224fb81a85b527a2b5",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/05-cubin",
+        "sha256": "1a91bb1b69104b460393c950d6bc9afcb6fe2fef5bc26d4b5d4a69b9dab6aef4",
+        "bytes": 12064,
+        "retained_file": "objects/1a91bb1b69104b460393c950d6bc9afcb6fe2fef5bc26d4b5d4a69b9dab6aef4.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/03-llir",
+        "sha256": "11fdd0823773e9767e5913ab9ed19f7fa63e5d00ea7937bc892134fb84af497a",
+        "bytes": 6292,
+        "retained_file": "objects/11fdd0823773e9767e5913ab9ed19f7fa63e5d00ea7937bc892134fb84af497a.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/04-ptx",
+        "sha256": "25a4c9d436ece315762e1463925ba204d3d5ea8bdd453124b7f61e80c12079b2",
+        "bytes": 6733,
+        "retained_file": "objects/25a4c9d436ece315762e1463925ba204d3d5ea8bdd453124b7f61e80c12079b2.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/00-source",
+        "sha256": "1c6ef921714d515adb0099e8b0d0bd9f9aaa3db94e2635f2fc45ddb136b01298",
+        "bytes": 11791,
+        "retained_file": "objects/1c6ef921714d515adb0099e8b0d0bd9f9aaa3db94e2635f2fc45ddb136b01298.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/02-ttgir",
+        "sha256": "7be2714199d8a70745574aadd18cff86f991701c571d52d924c730eeab5112a8",
+        "bytes": 7772,
+        "retained_file": "objects/7be2714199d8a70745574aadd18cff86f991701c571d52d924c730eeab5112a8.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.objects/01-ttir",
+        "sha256": "1811a1b6e2c49cf2de22eb890b2ff97d99c6699eab12b046615ff07610a1d7f9",
+        "bytes": 7092,
+        "retained_file": "objects/1811a1b6e2c49cf2de22eb890b2ff97d99c6699eab12b046615ff07610a1d7f9.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1/math.host-once.json",
+      "sha256": "3deaa95fc662da3911d362fba2b1f769fce7d56af15a05cb1160ce4a4bf64817"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 256,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s0-c1",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.json",
+    "math_sha256": "a209dde71387e9ac84d078d9bf4d5521e65ecff47d5eb4c1240cdef9a673c381",
+    "compiled_hash": "14d76231beb901a8ca4b4ed4fc61e3de5c347f288d6748224fb81a85b527a2b5",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/05-cubin",
+        "sha256": "1a91bb1b69104b460393c950d6bc9afcb6fe2fef5bc26d4b5d4a69b9dab6aef4",
+        "bytes": 12064,
+        "retained_file": "objects/1a91bb1b69104b460393c950d6bc9afcb6fe2fef5bc26d4b5d4a69b9dab6aef4.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/03-llir",
+        "sha256": "11fdd0823773e9767e5913ab9ed19f7fa63e5d00ea7937bc892134fb84af497a",
+        "bytes": 6292,
+        "retained_file": "objects/11fdd0823773e9767e5913ab9ed19f7fa63e5d00ea7937bc892134fb84af497a.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/04-ptx",
+        "sha256": "25a4c9d436ece315762e1463925ba204d3d5ea8bdd453124b7f61e80c12079b2",
+        "bytes": 6733,
+        "retained_file": "objects/25a4c9d436ece315762e1463925ba204d3d5ea8bdd453124b7f61e80c12079b2.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/00-source",
+        "sha256": "1c6ef921714d515adb0099e8b0d0bd9f9aaa3db94e2635f2fc45ddb136b01298",
+        "bytes": 11791,
+        "retained_file": "objects/1c6ef921714d515adb0099e8b0d0bd9f9aaa3db94e2635f2fc45ddb136b01298.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/02-ttgir",
+        "sha256": "7be2714199d8a70745574aadd18cff86f991701c571d52d924c730eeab5112a8",
+        "bytes": 7772,
+        "retained_file": "objects/7be2714199d8a70745574aadd18cff86f991701c571d52d924c730eeab5112a8.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.objects/01-ttir",
+        "sha256": "1811a1b6e2c49cf2de22eb890b2ff97d99c6699eab12b046615ff07610a1d7f9",
+        "bytes": 7092,
+        "retained_file": "objects/1811a1b6e2c49cf2de22eb890b2ff97d99c6699eab12b046615ff07610a1d7f9.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s0-c1-K7/math.host-once.json",
+      "sha256": "81170d053998abb3c155f08168448ea022367605e4e1a88a75d091a4105aa7b1"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 256,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.json",
+    "math_sha256": "c33e08271d56fead9f7ebf68c19e7c9357061c4bdef7454ba8b577ef7d1b3963",
+    "compiled_hash": "4cffb656e67369d48bc17c510ca89ff244b19e420d89630ba8eab955f317eae8",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/05-cubin",
+        "sha256": "8f656d93bbe0a94fab0dda56af6fc862883d0165041d5af86c1fe268aff788f5",
+        "bytes": 12064,
+        "retained_file": "objects/8f656d93bbe0a94fab0dda56af6fc862883d0165041d5af86c1fe268aff788f5.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/03-llir",
+        "sha256": "b5d2f632f33d193e709f3645052ecb99a9c4941fa982bf71e354a5da758b110e",
+        "bytes": 6293,
+        "retained_file": "objects/b5d2f632f33d193e709f3645052ecb99a9c4941fa982bf71e354a5da758b110e.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/04-ptx",
+        "sha256": "3a9519bdb0df143dd028c02b5e583bf6d8a3c3235222a3b3da81e81c076c8f50",
+        "bytes": 6735,
+        "retained_file": "objects/3a9519bdb0df143dd028c02b5e583bf6d8a3c3235222a3b3da81e81c076c8f50.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/00-source",
+        "sha256": "dc1272415acda7f7691553eeb293f0717b7f8c98cd5d3ba5fd349cb9438ef1a2",
+        "bytes": 11803,
+        "retained_file": "objects/dc1272415acda7f7691553eeb293f0717b7f8c98cd5d3ba5fd349cb9438ef1a2.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/02-ttgir",
+        "sha256": "3706c83a23c4058400e1faa312c7555348641c1a539091eedb21e5f035ec5af9",
+        "bytes": 7773,
+        "retained_file": "objects/3706c83a23c4058400e1faa312c7555348641c1a539091eedb21e5f035ec5af9.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.objects/01-ttir",
+        "sha256": "53ed2f6cd3df8eff6f4e3df1a49b247c6176b76cd5f82ed2d5ea53deccfc9161",
+        "bytes": 7093,
+        "retained_file": "objects/53ed2f6cd3df8eff6f4e3df1a49b247c6176b76cd5f82ed2d5ea53deccfc9161.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0/math.host-once.json",
+      "sha256": "688481afa7dec8c140e2e1892477a537e9d96abf4421b60e8975441fa0a713e1"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 128,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s1-c0",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.json",
+    "math_sha256": "0f6f500944c3776c405689bf058014e5f6048442f32aace43b220811b6e22cf4",
+    "compiled_hash": "4cffb656e67369d48bc17c510ca89ff244b19e420d89630ba8eab955f317eae8",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/05-cubin",
+        "sha256": "8f656d93bbe0a94fab0dda56af6fc862883d0165041d5af86c1fe268aff788f5",
+        "bytes": 12064,
+        "retained_file": "objects/8f656d93bbe0a94fab0dda56af6fc862883d0165041d5af86c1fe268aff788f5.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/03-llir",
+        "sha256": "b5d2f632f33d193e709f3645052ecb99a9c4941fa982bf71e354a5da758b110e",
+        "bytes": 6293,
+        "retained_file": "objects/b5d2f632f33d193e709f3645052ecb99a9c4941fa982bf71e354a5da758b110e.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/04-ptx",
+        "sha256": "3a9519bdb0df143dd028c02b5e583bf6d8a3c3235222a3b3da81e81c076c8f50",
+        "bytes": 6735,
+        "retained_file": "objects/3a9519bdb0df143dd028c02b5e583bf6d8a3c3235222a3b3da81e81c076c8f50.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/00-source",
+        "sha256": "dc1272415acda7f7691553eeb293f0717b7f8c98cd5d3ba5fd349cb9438ef1a2",
+        "bytes": 11803,
+        "retained_file": "objects/dc1272415acda7f7691553eeb293f0717b7f8c98cd5d3ba5fd349cb9438ef1a2.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/02-ttgir",
+        "sha256": "3706c83a23c4058400e1faa312c7555348641c1a539091eedb21e5f035ec5af9",
+        "bytes": 7773,
+        "retained_file": "objects/3706c83a23c4058400e1faa312c7555348641c1a539091eedb21e5f035ec5af9.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.objects/01-ttir",
+        "sha256": "53ed2f6cd3df8eff6f4e3df1a49b247c6176b76cd5f82ed2d5ea53deccfc9161",
+        "bytes": 7093,
+        "retained_file": "objects/53ed2f6cd3df8eff6f4e3df1a49b247c6176b76cd5f82ed2d5ea53deccfc9161.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c0-K7/math.host-once.json",
+      "sha256": "7fb78791daa5340f6dc3b83d7dd9b2039b6b56f3b0330a5ac976c128a35d05ed"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 128,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.json",
+    "math_sha256": "5001cbbcae883ba9638fc9b8012dbd32db59422b03df3944c5ff09e3844d4aaa",
+    "compiled_hash": "33b0f5418a10c4aa6038bbdd00e46fb42d23443f01329e74153b1462572cc32d",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/05-cubin",
+        "sha256": "078258d769f8795e9a76a389b509dfc27c9c5217b901d041daf57e2015a36f8e",
+        "bytes": 12064,
+        "retained_file": "objects/078258d769f8795e9a76a389b509dfc27c9c5217b901d041daf57e2015a36f8e.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/03-llir",
+        "sha256": "1c2cd407a0bca262c146d64e377395c77f81e71021d1517336a3f101b92de6c0",
+        "bytes": 6293,
+        "retained_file": "objects/1c2cd407a0bca262c146d64e377395c77f81e71021d1517336a3f101b92de6c0.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/04-ptx",
+        "sha256": "3e52fd8c8388140916644ff34b0cd8bcc44066d6e3b5b1da440d1cb8a24d2705",
+        "bytes": 6735,
+        "retained_file": "objects/3e52fd8c8388140916644ff34b0cd8bcc44066d6e3b5b1da440d1cb8a24d2705.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/00-source",
+        "sha256": "b48f01d2da5c85629c8a625d945f25d6304863dbca37f1c6d94098812f5332e1",
+        "bytes": 11803,
+        "retained_file": "objects/b48f01d2da5c85629c8a625d945f25d6304863dbca37f1c6d94098812f5332e1.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/02-ttgir",
+        "sha256": "c7ec5cc68c5938e87ce70d7a1f42a2e05cedd7438877248bf629d4187d2d0f78",
+        "bytes": 7773,
+        "retained_file": "objects/c7ec5cc68c5938e87ce70d7a1f42a2e05cedd7438877248bf629d4187d2d0f78.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.objects/01-ttir",
+        "sha256": "5ee5aeb1556dd77c726f5b5000c704c1e6704c2f8f745610f4aff508de2c5a04",
+        "bytes": 7093,
+        "retained_file": "objects/5ee5aeb1556dd77c726f5b5000c704c1e6704c2f8f745610f4aff508de2c5a04.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1/math.host-once.json",
+      "sha256": "6597e3e2a450d53b0485e238fe197025768f923201468b43a5fdbf1eff98969e"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 256,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q01-s1-c1",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.json",
+    "math_sha256": "71e5858eb624a49b5fc3fe0124c9f6066f8afb1305d293f36104ad28b7739e23",
+    "compiled_hash": "33b0f5418a10c4aa6038bbdd00e46fb42d23443f01329e74153b1462572cc32d",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/05-cubin",
+        "sha256": "078258d769f8795e9a76a389b509dfc27c9c5217b901d041daf57e2015a36f8e",
+        "bytes": 12064,
+        "retained_file": "objects/078258d769f8795e9a76a389b509dfc27c9c5217b901d041daf57e2015a36f8e.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/03-llir",
+        "sha256": "1c2cd407a0bca262c146d64e377395c77f81e71021d1517336a3f101b92de6c0",
+        "bytes": 6293,
+        "retained_file": "objects/1c2cd407a0bca262c146d64e377395c77f81e71021d1517336a3f101b92de6c0.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/04-ptx",
+        "sha256": "3e52fd8c8388140916644ff34b0cd8bcc44066d6e3b5b1da440d1cb8a24d2705",
+        "bytes": 6735,
+        "retained_file": "objects/3e52fd8c8388140916644ff34b0cd8bcc44066d6e3b5b1da440d1cb8a24d2705.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/00-source",
+        "sha256": "b48f01d2da5c85629c8a625d945f25d6304863dbca37f1c6d94098812f5332e1",
+        "bytes": 11803,
+        "retained_file": "objects/b48f01d2da5c85629c8a625d945f25d6304863dbca37f1c6d94098812f5332e1.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/02-ttgir",
+        "sha256": "c7ec5cc68c5938e87ce70d7a1f42a2e05cedd7438877248bf629d4187d2d0f78",
+        "bytes": 7773,
+        "retained_file": "objects/c7ec5cc68c5938e87ce70d7a1f42a2e05cedd7438877248bf629d4187d2d0f78.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.objects/01-ttir",
+        "sha256": "5ee5aeb1556dd77c726f5b5000c704c1e6704c2f8f745610f4aff508de2c5a04",
+        "bytes": 7093,
+        "retained_file": "objects/5ee5aeb1556dd77c726f5b5000c704c1e6704c2f8f745610f4aff508de2c5a04.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q01-s1-c1-K7/math.host-once.json",
+      "sha256": "9ed4a4d1b36f8239b2afeeb2223b82c6a2092caed9b03652ead869095aca0308"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 256,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 47,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.json",
+    "math_sha256": "f6a2153b21047d9bd8f49fd3913ae4b0f8fc0e0c3465e7951146d3bb8e815e8d",
+    "compiled_hash": "6992f77d14ee6719683a88541b4de264cda892ced4a2c5e50ac30de1ceb1b825",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/05-cubin",
+        "sha256": "e50f9eb6576f5ceb18fad28c434b142c61378a3265bd9dbd5387fd777a21ad3f",
+        "bytes": 11040,
+        "retained_file": "objects/e50f9eb6576f5ceb18fad28c434b142c61378a3265bd9dbd5387fd777a21ad3f.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/03-llir",
+        "sha256": "7e73928e229c7de3c2608c18334546cffceaf847d7969e34583fdac8cfb5ec0e",
+        "bytes": 6295,
+        "retained_file": "objects/7e73928e229c7de3c2608c18334546cffceaf847d7969e34583fdac8cfb5ec0e.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/04-ptx",
+        "sha256": "c53e7c90bb206c1860db46d150002aac5e15bcd0fc55e79e7e734f3f31a58b29",
+        "bytes": 6695,
+        "retained_file": "objects/c53e7c90bb206c1860db46d150002aac5e15bcd0fc55e79e7e734f3f31a58b29.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/00-source",
+        "sha256": "a1e295663bb2a10bb77f52cc693a40fe768f623716f02f27126e7685c674326d",
+        "bytes": 11576,
+        "retained_file": "objects/a1e295663bb2a10bb77f52cc693a40fe768f623716f02f27126e7685c674326d.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/02-ttgir",
+        "sha256": "ca27eaa3297021f3a2d58d181ccb250812a9d6d7f3584d7ca45a911a28610b29",
+        "bytes": 7620,
+        "retained_file": "objects/ca27eaa3297021f3a2d58d181ccb250812a9d6d7f3584d7ca45a911a28610b29.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.objects/01-ttir",
+        "sha256": "ddf9f83882fcbca9890bc6ac2f7c3be071d38bebe68d41ab82b5d0b6cd253cd5",
+        "bytes": 6961,
+        "retained_file": "objects/ddf9f83882fcbca9890bc6ac2f7c3be071d38bebe68d41ab82b5d0b6cd253cd5.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0/math.host-once.json",
+      "sha256": "08f89b4be9d07c19f6fd380e579486e9674a2cda5696535525ff9029bdcb6ef8"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 128,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s0-c0",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.json",
+    "math_sha256": "467a7871cb311588d10a884b557b7eb19fffde3f1f88a64ad002728d31c8f39b",
+    "compiled_hash": "6992f77d14ee6719683a88541b4de264cda892ced4a2c5e50ac30de1ceb1b825",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/05-cubin",
+        "sha256": "e50f9eb6576f5ceb18fad28c434b142c61378a3265bd9dbd5387fd777a21ad3f",
+        "bytes": 11040,
+        "retained_file": "objects/e50f9eb6576f5ceb18fad28c434b142c61378a3265bd9dbd5387fd777a21ad3f.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/03-llir",
+        "sha256": "7e73928e229c7de3c2608c18334546cffceaf847d7969e34583fdac8cfb5ec0e",
+        "bytes": 6295,
+        "retained_file": "objects/7e73928e229c7de3c2608c18334546cffceaf847d7969e34583fdac8cfb5ec0e.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/04-ptx",
+        "sha256": "c53e7c90bb206c1860db46d150002aac5e15bcd0fc55e79e7e734f3f31a58b29",
+        "bytes": 6695,
+        "retained_file": "objects/c53e7c90bb206c1860db46d150002aac5e15bcd0fc55e79e7e734f3f31a58b29.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/00-source",
+        "sha256": "a1e295663bb2a10bb77f52cc693a40fe768f623716f02f27126e7685c674326d",
+        "bytes": 11576,
+        "retained_file": "objects/a1e295663bb2a10bb77f52cc693a40fe768f623716f02f27126e7685c674326d.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/02-ttgir",
+        "sha256": "ca27eaa3297021f3a2d58d181ccb250812a9d6d7f3584d7ca45a911a28610b29",
+        "bytes": 7620,
+        "retained_file": "objects/ca27eaa3297021f3a2d58d181ccb250812a9d6d7f3584d7ca45a911a28610b29.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.objects/01-ttir",
+        "sha256": "ddf9f83882fcbca9890bc6ac2f7c3be071d38bebe68d41ab82b5d0b6cd253cd5",
+        "bytes": 6961,
+        "retained_file": "objects/ddf9f83882fcbca9890bc6ac2f7c3be071d38bebe68d41ab82b5d0b6cd253cd5.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c0-K7/math.host-once.json",
+      "sha256": "3e04f7ceaee599251215b1c30709ecf71cec5844757746951cf6a5a2ba1f4686"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 128,
+      "grid": [
+        7,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.json",
+    "math_sha256": "f24f1d0a0f1cc7430a643d3bd1addef414b584158fa65298d422cb3590f46fae",
+    "compiled_hash": "5f86a8fdb33c96381062f2658322fce0d8c1634905bd817153ff9738a06b1f1b",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/05-cubin",
+        "sha256": "f63e8705826d4490df38820d193a9f0e7c7c7e2f4a5f64c3c6db39f069340e0e",
+        "bytes": 11040,
+        "retained_file": "objects/f63e8705826d4490df38820d193a9f0e7c7c7e2f4a5f64c3c6db39f069340e0e.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/03-llir",
+        "sha256": "88e1bc121ca082a2094d253c558f0594a96f7c4b9e707dc251d6b8b96b5dcc53",
+        "bytes": 6295,
+        "retained_file": "objects/88e1bc121ca082a2094d253c558f0594a96f7c4b9e707dc251d6b8b96b5dcc53.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/04-ptx",
+        "sha256": "87560193d73ee5c85d233507e8d7cb618351f488d791c5b582523bce1e9f8be9",
+        "bytes": 6695,
+        "retained_file": "objects/87560193d73ee5c85d233507e8d7cb618351f488d791c5b582523bce1e9f8be9.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/00-source",
+        "sha256": "8b0898eeab609b2c27362c6c2c59440dfb74c4b16feb3a24810453b988f74a56",
+        "bytes": 11576,
+        "retained_file": "objects/8b0898eeab609b2c27362c6c2c59440dfb74c4b16feb3a24810453b988f74a56.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/02-ttgir",
+        "sha256": "d57a52b0e9f80c979602e6563111fc0ef59afd87fe0c6638fef1280fee501e20",
+        "bytes": 7620,
+        "retained_file": "objects/d57a52b0e9f80c979602e6563111fc0ef59afd87fe0c6638fef1280fee501e20.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.objects/01-ttir",
+        "sha256": "d289eccf84695802414083b6f442ce92fdcc2e1ed5ee3cdb281c6f0d42879970",
+        "bytes": 6961,
+        "retained_file": "objects/d289eccf84695802414083b6f442ce92fdcc2e1ed5ee3cdb281c6f0d42879970.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1/math.host-once.json",
+      "sha256": "6954d9f6c3992c4dc8ee063bc467d9e21e81e4dded0fe23e54ac58350dd1a9fd"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 256,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s0-c1",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.json",
+    "math_sha256": "eef42a535ddc967764961abc18aea4968d94b2ad2da06283cab83c6835a81883",
+    "compiled_hash": "5f86a8fdb33c96381062f2658322fce0d8c1634905bd817153ff9738a06b1f1b",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/05-cubin",
+        "sha256": "f63e8705826d4490df38820d193a9f0e7c7c7e2f4a5f64c3c6db39f069340e0e",
+        "bytes": 11040,
+        "retained_file": "objects/f63e8705826d4490df38820d193a9f0e7c7c7e2f4a5f64c3c6db39f069340e0e.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/03-llir",
+        "sha256": "88e1bc121ca082a2094d253c558f0594a96f7c4b9e707dc251d6b8b96b5dcc53",
+        "bytes": 6295,
+        "retained_file": "objects/88e1bc121ca082a2094d253c558f0594a96f7c4b9e707dc251d6b8b96b5dcc53.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/04-ptx",
+        "sha256": "87560193d73ee5c85d233507e8d7cb618351f488d791c5b582523bce1e9f8be9",
+        "bytes": 6695,
+        "retained_file": "objects/87560193d73ee5c85d233507e8d7cb618351f488d791c5b582523bce1e9f8be9.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/00-source",
+        "sha256": "8b0898eeab609b2c27362c6c2c59440dfb74c4b16feb3a24810453b988f74a56",
+        "bytes": 11576,
+        "retained_file": "objects/8b0898eeab609b2c27362c6c2c59440dfb74c4b16feb3a24810453b988f74a56.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/02-ttgir",
+        "sha256": "d57a52b0e9f80c979602e6563111fc0ef59afd87fe0c6638fef1280fee501e20",
+        "bytes": 7620,
+        "retained_file": "objects/d57a52b0e9f80c979602e6563111fc0ef59afd87fe0c6638fef1280fee501e20.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.objects/01-ttir",
+        "sha256": "d289eccf84695802414083b6f442ce92fdcc2e1ed5ee3cdb281c6f0d42879970",
+        "bytes": 6961,
+        "retained_file": "objects/d289eccf84695802414083b6f442ce92fdcc2e1ed5ee3cdb281c6f0d42879970.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s0-c1-K7/math.host-once.json",
+      "sha256": "c94d8cf425c6e114c5dcaee7a12eaba6518460eead8dab7fc42724ab8a36db7e"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 769,
+      "threads": 256,
+      "grid": [
+        4,
+        1,
+        1
+      ],
+      "unique_writers": 769,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 769
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.json",
+    "math_sha256": "1cc0ca5695073bc41f0fd4d32bdda76695fc21d4c41835efc32e59de07618911",
+    "compiled_hash": "55aaac7ef6196c52d3777245eb4349fe64e31839fe817899f8373b0cac0870d9",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/05-cubin",
+        "sha256": "f18f74e44824cd09ccf8dff6d714b3f63960d7ee038347037ba24be853d11065",
+        "bytes": 11040,
+        "retained_file": "objects/f18f74e44824cd09ccf8dff6d714b3f63960d7ee038347037ba24be853d11065.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/03-llir",
+        "sha256": "cb7732530d7c920dca74164d19ec905ecf3067193538b5e286841a574005688b",
+        "bytes": 6296,
+        "retained_file": "objects/cb7732530d7c920dca74164d19ec905ecf3067193538b5e286841a574005688b.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/04-ptx",
+        "sha256": "653d5f3aefc87443648f1fe0594f2542abc6e157e7ff401cb32741435fea19f3",
+        "bytes": 6697,
+        "retained_file": "objects/653d5f3aefc87443648f1fe0594f2542abc6e157e7ff401cb32741435fea19f3.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/00-source",
+        "sha256": "ad9ae0bfde7cfd50a7ab6c2454e6e7c7c94f4b194dbdaa9c0bc2a6474e152228",
+        "bytes": 11588,
+        "retained_file": "objects/ad9ae0bfde7cfd50a7ab6c2454e6e7c7c94f4b194dbdaa9c0bc2a6474e152228.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/02-ttgir",
+        "sha256": "87c962887cb7703116cb96e955e257c238d5ced0526ff946a6c097744471182b",
+        "bytes": 7621,
+        "retained_file": "objects/87c962887cb7703116cb96e955e257c238d5ced0526ff946a6c097744471182b.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.objects/01-ttir",
+        "sha256": "1a9e86d674901a3909d2b0bd4eee2d5fdc22bd2dd4832baa0577da7dc9f990a5",
+        "bytes": 6962,
+        "retained_file": "objects/1a9e86d674901a3909d2b0bd4eee2d5fdc22bd2dd4832baa0577da7dc9f990a5.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0/math.host-once.json",
+      "sha256": "48c577790c9145aeeccb57fc1485c48fc2d9d3bc2dfd31b0e49edd0527e91268"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 128,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s1-c0",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.json",
+    "math_sha256": "f3d1c52c064598f273adf7713155d79b8992ad515d48661ed4add223b7bdbfdd",
+    "compiled_hash": "55aaac7ef6196c52d3777245eb4349fe64e31839fe817899f8373b0cac0870d9",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/05-cubin",
+        "sha256": "f18f74e44824cd09ccf8dff6d714b3f63960d7ee038347037ba24be853d11065",
+        "bytes": 11040,
+        "retained_file": "objects/f18f74e44824cd09ccf8dff6d714b3f63960d7ee038347037ba24be853d11065.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/03-llir",
+        "sha256": "cb7732530d7c920dca74164d19ec905ecf3067193538b5e286841a574005688b",
+        "bytes": 6296,
+        "retained_file": "objects/cb7732530d7c920dca74164d19ec905ecf3067193538b5e286841a574005688b.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/04-ptx",
+        "sha256": "653d5f3aefc87443648f1fe0594f2542abc6e157e7ff401cb32741435fea19f3",
+        "bytes": 6697,
+        "retained_file": "objects/653d5f3aefc87443648f1fe0594f2542abc6e157e7ff401cb32741435fea19f3.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/00-source",
+        "sha256": "ad9ae0bfde7cfd50a7ab6c2454e6e7c7c94f4b194dbdaa9c0bc2a6474e152228",
+        "bytes": 11588,
+        "retained_file": "objects/ad9ae0bfde7cfd50a7ab6c2454e6e7c7c94f4b194dbdaa9c0bc2a6474e152228.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/02-ttgir",
+        "sha256": "87c962887cb7703116cb96e955e257c238d5ced0526ff946a6c097744471182b",
+        "bytes": 7621,
+        "retained_file": "objects/87c962887cb7703116cb96e955e257c238d5ced0526ff946a6c097744471182b.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.objects/01-ttir",
+        "sha256": "1a9e86d674901a3909d2b0bd4eee2d5fdc22bd2dd4832baa0577da7dc9f990a5",
+        "bytes": 6962,
+        "retained_file": "objects/1a9e86d674901a3909d2b0bd4eee2d5fdc22bd2dd4832baa0577da7dc9f990a5.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c0-K7/math.host-once.json",
+      "sha256": "ef9b271b58e7ea158d7f7fe3d8c3e399cb65633769fae2e326e443a5b94f464e"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 128,
+      "grid": [
+        9,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.json",
+    "math_sha256": "5a3a1e6ee5dbbb174bd4136af54ceec42eee0e2b47f548f81bd3408fd7f88361",
+    "compiled_hash": "b5ff636b0f0411791458a084a77bc4382ac854863e1b2a2e39b5770a4a8b46b9",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/05-cubin",
+        "sha256": "625acf9d3969efa48ca55dfa1d9babf0fc75af9e3577df164cfde3fa5b70fa52",
+        "bytes": 11040,
+        "retained_file": "objects/625acf9d3969efa48ca55dfa1d9babf0fc75af9e3577df164cfde3fa5b70fa52.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/03-llir",
+        "sha256": "eae68068b3f8b6f63fb392d92fb82e8ecce31ba15d7644802b4037a3aea7447d",
+        "bytes": 6296,
+        "retained_file": "objects/eae68068b3f8b6f63fb392d92fb82e8ecce31ba15d7644802b4037a3aea7447d.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/04-ptx",
+        "sha256": "b3242c023de8385daa7a60b02d1b7b9c3458416d438c106ac78ae851b2b2fc09",
+        "bytes": 6697,
+        "retained_file": "objects/b3242c023de8385daa7a60b02d1b7b9c3458416d438c106ac78ae851b2b2fc09.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/00-source",
+        "sha256": "85767e60cfc9bdbbc6b9ca1e4c28e11ef2cedfb0e86b16c7779e57906b5bea23",
+        "bytes": 11588,
+        "retained_file": "objects/85767e60cfc9bdbbc6b9ca1e4c28e11ef2cedfb0e86b16c7779e57906b5bea23.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/02-ttgir",
+        "sha256": "1b9cd74d50e0745d316b85a5f1a76d04d39fd0ee5e3f0ea6ad8b0599e0f336b4",
+        "bytes": 7621,
+        "retained_file": "objects/1b9cd74d50e0745d316b85a5f1a76d04d39fd0ee5e3f0ea6ad8b0599e0f336b4.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.objects/01-ttir",
+        "sha256": "fbb765877e31e7358590317029dfa4fada9c436d0a1c981216618fc1dc2b787d",
+        "bytes": 6962,
+        "retained_file": "objects/fbb765877e31e7358590317029dfa4fada9c436d0a1c981216618fc1dc2b787d.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1/math.host-once.json",
+      "sha256": "60975b8be9b4b29f7bfb14237fef4b295cc03e2f81a9ab4d3788112d73933e1c"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 256,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q02-s1-c1",
+    "kind": "ordinary-runtime_K",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.json",
+    "math_sha256": "32b209ce0a475b82b42b7d51e381f47eadeb1122487c9e7de8585a0dcdf8a449",
+    "compiled_hash": "b5ff636b0f0411791458a084a77bc4382ac854863e1b2a2e39b5770a4a8b46b9",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/05-cubin",
+        "sha256": "625acf9d3969efa48ca55dfa1d9babf0fc75af9e3577df164cfde3fa5b70fa52",
+        "bytes": 11040,
+        "retained_file": "objects/625acf9d3969efa48ca55dfa1d9babf0fc75af9e3577df164cfde3fa5b70fa52.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/03-llir",
+        "sha256": "eae68068b3f8b6f63fb392d92fb82e8ecce31ba15d7644802b4037a3aea7447d",
+        "bytes": 6296,
+        "retained_file": "objects/eae68068b3f8b6f63fb392d92fb82e8ecce31ba15d7644802b4037a3aea7447d.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/04-ptx",
+        "sha256": "b3242c023de8385daa7a60b02d1b7b9c3458416d438c106ac78ae851b2b2fc09",
+        "bytes": 6697,
+        "retained_file": "objects/b3242c023de8385daa7a60b02d1b7b9c3458416d438c106ac78ae851b2b2fc09.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/00-source",
+        "sha256": "85767e60cfc9bdbbc6b9ca1e4c28e11ef2cedfb0e86b16c7779e57906b5bea23",
+        "bytes": 11588,
+        "retained_file": "objects/85767e60cfc9bdbbc6b9ca1e4c28e11ef2cedfb0e86b16c7779e57906b5bea23.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/02-ttgir",
+        "sha256": "1b9cd74d50e0745d316b85a5f1a76d04d39fd0ee5e3f0ea6ad8b0599e0f336b4",
+        "bytes": 7621,
+        "retained_file": "objects/1b9cd74d50e0745d316b85a5f1a76d04d39fd0ee5e3f0ea6ad8b0599e0f336b4.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.objects/01-ttir",
+        "sha256": "fbb765877e31e7358590317029dfa4fada9c436d0a1c981216618fc1dc2b787d",
+        "bytes": 6962,
+        "retained_file": "objects/fbb765877e31e7358590317029dfa4fada9c436d0a1c981216618fc1dc2b787d.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q02-s1-c1-K7/math.host-once.json",
+      "sha256": "32d4a90125e8641cacbe8e46f8646b5011cef6c50c659f2cb56fa2310c31d3b3"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1031,
+      "threads": 256,
+      "grid": [
+        5,
+        1,
+        1
+      ],
+      "unique_writers": 1031,
+      "stores": [
+        {
+          "instruction": 48,
+          "source_line": 102,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 1031
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q03-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.json",
+    "math_sha256": "2b8e9a0af3bcc803b5b6cd53e66f7307ffe9108d10942d4022e9a1bf0267b7e8",
+    "compiled_hash": "5dcac12c7c0208baf2c9126e080e8a0b7b8e4502264058022c6c7d8767fa4049",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/05-cubin",
+        "sha256": "2b036d21ca6e2a8a8772dda600479c138ee46cbd83b4fb7b55a8620346006b36",
+        "bytes": 17120,
+        "retained_file": "objects/2b036d21ca6e2a8a8772dda600479c138ee46cbd83b4fb7b55a8620346006b36.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/03-llir",
+        "sha256": "c6f3b35c981c02d424584c2c608f43856b065613267991883950716b85ecdc5d",
+        "bytes": 15318,
+        "retained_file": "objects/c6f3b35c981c02d424584c2c608f43856b065613267991883950716b85ecdc5d.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/04-ptx",
+        "sha256": "d5b9b0c878fd2aa731aca94780bf21a6b018863f6bf5b2dd51623b7ed2995f26",
+        "bytes": 21308,
+        "retained_file": "objects/d5b9b0c878fd2aa731aca94780bf21a6b018863f6bf5b2dd51623b7ed2995f26.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/00-source",
+        "sha256": "fe1640ef27a0ecac54ad3e5e87000647b686dd09a6cb796ba6f2b85939e71864",
+        "bytes": 12120,
+        "retained_file": "objects/fe1640ef27a0ecac54ad3e5e87000647b686dd09a6cb796ba6f2b85939e71864.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/02-ttgir",
+        "sha256": "03d97ee3467fc31c271e7bd33f36a594e3e565179589dbf663e78e5f17225b60",
+        "bytes": 8291,
+        "retained_file": "objects/03d97ee3467fc31c271e7bd33f36a594e3e565179589dbf663e78e5f17225b60.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.objects/01-ttir",
+        "sha256": "d0918b897f0501a462c42234efb3f051ad2b1290aa9a5fefaa9d0a4d555014ad",
+        "bytes": 7810,
+        "retained_file": "objects/d0918b897f0501a462c42234efb3f051ad2b1290aa9a5fefaa9d0a4d555014ad.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c0/math.host-once.json",
+      "sha256": "7e7a5c0446a29b757bc16a72508d24a9fc0a7de038b6300c78af94a635657732"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 17,
+      "threads": 128,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "unique_writers": 17,
+      "stores": [
+        {
+          "instruction": 128,
+          "source_line": 298,
+          "opcode": "st.global.b32",
+          "predicate": "%p6",
+          "writes": 17
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q03-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.json",
+    "math_sha256": "eb81c3e1b3819ed0c1644aa86ca4b576151fefaa6d26ca994caed676d4b9c0a9",
+    "compiled_hash": "a537c706c0b475a048f964635a140ac2980ac7545d89cf49755c2e2034465fd8",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/05-cubin",
+        "sha256": "b48a742e98617dcdca9754cb6d77e4eb95d0dccd70efb3ed6d46528e39e4ceda",
+        "bytes": 17056,
+        "retained_file": "objects/b48a742e98617dcdca9754cb6d77e4eb95d0dccd70efb3ed6d46528e39e4ceda.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/03-llir",
+        "sha256": "78f938e20179781d968e3f913c806ea027324d46c9cae4e2b6a76ae4adf100f9",
+        "bytes": 14978,
+        "retained_file": "objects/78f938e20179781d968e3f913c806ea027324d46c9cae4e2b6a76ae4adf100f9.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/04-ptx",
+        "sha256": "84775d352b9e1d3ffe2f2a6364a34bc0c252740b1c3a5b5205b3b93d1ab47dfb",
+        "bytes": 21124,
+        "retained_file": "objects/84775d352b9e1d3ffe2f2a6364a34bc0c252740b1c3a5b5205b3b93d1ab47dfb.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/00-source",
+        "sha256": "fe1640ef27a0ecac54ad3e5e87000647b686dd09a6cb796ba6f2b85939e71864",
+        "bytes": 12120,
+        "retained_file": "objects/fe1640ef27a0ecac54ad3e5e87000647b686dd09a6cb796ba6f2b85939e71864.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/02-ttgir",
+        "sha256": "ba5fe1af55a7b924e88fb9d666040bfc9076c761c2eda96a1bebe07bf04d4221",
+        "bytes": 8291,
+        "retained_file": "objects/ba5fe1af55a7b924e88fb9d666040bfc9076c761c2eda96a1bebe07bf04d4221.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.objects/01-ttir",
+        "sha256": "d0918b897f0501a462c42234efb3f051ad2b1290aa9a5fefaa9d0a4d555014ad",
+        "bytes": 7810,
+        "retained_file": "objects/d0918b897f0501a462c42234efb3f051ad2b1290aa9a5fefaa9d0a4d555014ad.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s0-c1/math.host-once.json",
+      "sha256": "784671e41cd076143c6ad83074eedd39426c51d14c476db1f89e307a466db28b"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 17,
+      "threads": 256,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "unique_writers": 17,
+      "stores": [
+        {
+          "instruction": 120,
+          "source_line": 288,
+          "opcode": "st.global.b32",
+          "predicate": "%p5",
+          "writes": 17
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q03-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.json",
+    "math_sha256": "a527e7fa462954041b36adbbb7f828bd57da436216dca03993ae34b2604bf065",
+    "compiled_hash": "4a7691c4167d5d2b3bf6ce27155229a144420f1df696206e923b032dd49b3e93",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/05-cubin",
+        "sha256": "ab5fd2a195b10a267963ea80545f5f50c6a93992cadcd558436788b90ee370db",
+        "bytes": 18368,
+        "retained_file": "objects/ab5fd2a195b10a267963ea80545f5f50c6a93992cadcd558436788b90ee370db.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/03-llir",
+        "sha256": "e3c64c6ac78de2ef18aea9a69f181c79d5a6d2fd0bcd106b73dbddede920b07f",
+        "bytes": 17341,
+        "retained_file": "objects/e3c64c6ac78de2ef18aea9a69f181c79d5a6d2fd0bcd106b73dbddede920b07f.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/04-ptx",
+        "sha256": "6502baa4921d4fa9206f3926ac216d224b0a788b918a872443d2da9b0e562f2e",
+        "bytes": 22341,
+        "retained_file": "objects/6502baa4921d4fa9206f3926ac216d224b0a788b918a872443d2da9b0e562f2e.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/00-source",
+        "sha256": "578113b9bd6b9c277cfcef46e4555e63f894b3477b83ae7310758baee001dbed",
+        "bytes": 12120,
+        "retained_file": "objects/578113b9bd6b9c277cfcef46e4555e63f894b3477b83ae7310758baee001dbed.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/02-ttgir",
+        "sha256": "64a104b5a94ff25cc79de118156f43a47b21eae49f3bbcbb640de7af9877cfa3",
+        "bytes": 8291,
+        "retained_file": "objects/64a104b5a94ff25cc79de118156f43a47b21eae49f3bbcbb640de7af9877cfa3.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.objects/01-ttir",
+        "sha256": "f09f83cb5706d10c9871f3c8b084c75074235cfc4b82b07fb99a058822669bb9",
+        "bytes": 7810,
+        "retained_file": "objects/f09f83cb5706d10c9871f3c8b084c75074235cfc4b82b07fb99a058822669bb9.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c0/math.host-once.json",
+      "sha256": "5c0443c63eaf854e1ba5b264dc867f6850595c840c582b5a8971383bbe117a4e"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 19,
+      "threads": 128,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "unique_writers": 19,
+      "stores": [
+        {
+          "instruction": 156,
+          "source_line": 334,
+          "opcode": "st.global.b32",
+          "predicate": "%p7",
+          "writes": 19
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q03-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.json",
+    "math_sha256": "5ec8b58a88c25c5adff9aabaf5135c9175ae1f45fb1fcfcd878c83ac0b199299",
+    "compiled_hash": "53016a4ae9d4e5d84c7506c5dcf1e098b96b34ca64c2b67ad059eb05993d055c",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/05-cubin",
+        "sha256": "2ce3211cc7bfc90066ad38eb70e9eb6a3a502d223dd5312ad09c420ac4e95dd6",
+        "bytes": 17560,
+        "retained_file": "objects/2ce3211cc7bfc90066ad38eb70e9eb6a3a502d223dd5312ad09c420ac4e95dd6.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/03-llir",
+        "sha256": "2659a9cc7e161df5cf02bdcd1a2f21effdd03f9fadf57270913c8de4466879d3",
+        "bytes": 15985,
+        "retained_file": "objects/2659a9cc7e161df5cf02bdcd1a2f21effdd03f9fadf57270913c8de4466879d3.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/04-ptx",
+        "sha256": "e3f865fc62c432db78f47a5de0fac21b5826c3c40ced5edd4bb37bb87e39b765",
+        "bytes": 22128,
+        "retained_file": "objects/e3f865fc62c432db78f47a5de0fac21b5826c3c40ced5edd4bb37bb87e39b765.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/00-source",
+        "sha256": "578113b9bd6b9c277cfcef46e4555e63f894b3477b83ae7310758baee001dbed",
+        "bytes": 12120,
+        "retained_file": "objects/578113b9bd6b9c277cfcef46e4555e63f894b3477b83ae7310758baee001dbed.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/02-ttgir",
+        "sha256": "c8b826225c2fc5279f74d8ca13825a63ac695b694b5a4447ac33eaa24b9aa091",
+        "bytes": 8291,
+        "retained_file": "objects/c8b826225c2fc5279f74d8ca13825a63ac695b694b5a4447ac33eaa24b9aa091.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.objects/01-ttir",
+        "sha256": "f09f83cb5706d10c9871f3c8b084c75074235cfc4b82b07fb99a058822669bb9",
+        "bytes": 7810,
+        "retained_file": "objects/f09f83cb5706d10c9871f3c8b084c75074235cfc4b82b07fb99a058822669bb9.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q03-s1-c1/math.host-once.json",
+      "sha256": "2098614463112ddf5d36c27c3b8305b62781bfd632b6b0f091c93857ef4d0783"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 19,
+      "threads": 256,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "unique_writers": 19,
+      "stores": [
+        {
+          "instruction": 133,
+          "source_line": 315,
+          "opcode": "st.global.b32",
+          "predicate": "%p6",
+          "writes": 19
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q04-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.json",
+    "math_sha256": "e9cfde9d6ca1d6c40b7c40299a114431f4a13fc413892861229a357432769ef1",
+    "compiled_hash": "fb4053da4411525ef0e1ad62695ae75c1855ee09625c84bb9fdabbccfde66973",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/05-cubin",
+        "sha256": "77d62548433e5e8549f1fa9672c861fa88e080bdc01a5a6c45225c8a5ac56494",
+        "bytes": 15256,
+        "retained_file": "objects/77d62548433e5e8549f1fa9672c861fa88e080bdc01a5a6c45225c8a5ac56494.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/03-llir",
+        "sha256": "fe56173bb324bf2627ece001f1b84ba9fe3e1dd5c7ff210b88b9a4fca6311121",
+        "bytes": 13991,
+        "retained_file": "objects/fe56173bb324bf2627ece001f1b84ba9fe3e1dd5c7ff210b88b9a4fca6311121.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/04-ptx",
+        "sha256": "d559e08d186b534480359788d8794b10c268c07e4cfe31e5e7b75085213c5626",
+        "bytes": 14452,
+        "retained_file": "objects/d559e08d186b534480359788d8794b10c268c07e4cfe31e5e7b75085213c5626.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/00-source",
+        "sha256": "3b4bb18c5db9632c76da875ef2c6d926753a1ff378b184ef5f5b019e345ef8f1",
+        "bytes": 12654,
+        "retained_file": "objects/3b4bb18c5db9632c76da875ef2c6d926753a1ff378b184ef5f5b019e345ef8f1.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/02-ttgir",
+        "sha256": "fb6ca7c38b66be063adbccb0cb91a3f49308af8dd78c9d09bb0261db6d7fb04c",
+        "bytes": 7092,
+        "retained_file": "objects/fb6ca7c38b66be063adbccb0cb91a3f49308af8dd78c9d09bb0261db6d7fb04c.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.objects/01-ttir",
+        "sha256": "d811a6bdca6680edb976c611808d73a988a06cab42d66b6df4676d425776b5c7",
+        "bytes": 6621,
+        "retained_file": "objects/d811a6bdca6680edb976c611808d73a988a06cab42d66b6df4676d425776b5c7.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c0/math.host-once.json",
+      "sha256": "90b2c5a43844d78261eb50def3d637eb44b96a2fe05cab17b1aee3d551957cd5"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 17,
+      "threads": 128,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "unique_writers": 17,
+      "stores": [
+        {
+          "instruction": 87,
+          "source_line": 175,
+          "opcode": "st.global.b32",
+          "predicate": "%p6",
+          "writes": 17
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q04-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.json",
+    "math_sha256": "e9178b1faa5957402766bc01a59c607d4370c1adf57885e251a5191bd875e8bd",
+    "compiled_hash": "62de55c4b2efcde9823abd3475b4947bac1b470e87903a5d2a76a5914aa2590f",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/05-cubin",
+        "sha256": "5d2379a899acbd74407e87a6690756b9f5a181f157745841b10f3d48d4eaf4b3",
+        "bytes": 14552,
+        "retained_file": "objects/5d2379a899acbd74407e87a6690756b9f5a181f157745841b10f3d48d4eaf4b3.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/03-llir",
+        "sha256": "b4011942a3c4c14549452efd0622443df9cd3f885c3a2d918a761c323d096d53",
+        "bytes": 11752,
+        "retained_file": "objects/b4011942a3c4c14549452efd0622443df9cd3f885c3a2d918a761c323d096d53.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/04-ptx",
+        "sha256": "dc3392516bf5248035799fa4175a5abe958cb65eadc3f1f927d1e8ff4381fef9",
+        "bytes": 14063,
+        "retained_file": "objects/dc3392516bf5248035799fa4175a5abe958cb65eadc3f1f927d1e8ff4381fef9.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/00-source",
+        "sha256": "3b4bb18c5db9632c76da875ef2c6d926753a1ff378b184ef5f5b019e345ef8f1",
+        "bytes": 12654,
+        "retained_file": "objects/3b4bb18c5db9632c76da875ef2c6d926753a1ff378b184ef5f5b019e345ef8f1.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/02-ttgir",
+        "sha256": "21f0213ec61cb7ec6f6f0e6e830ee0b7696b3b8131b4d3f2e53bc086f25f515d",
+        "bytes": 7092,
+        "retained_file": "objects/21f0213ec61cb7ec6f6f0e6e830ee0b7696b3b8131b4d3f2e53bc086f25f515d.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.objects/01-ttir",
+        "sha256": "d811a6bdca6680edb976c611808d73a988a06cab42d66b6df4676d425776b5c7",
+        "bytes": 6621,
+        "retained_file": "objects/d811a6bdca6680edb976c611808d73a988a06cab42d66b6df4676d425776b5c7.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s0-c1/math.host-once.json",
+      "sha256": "1d2628867425e7f9edfb0cf9541c3155982c5e0f891f7a01cfbfea5717dcaf21"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 17,
+      "threads": 256,
+      "grid": [
+        17,
+        1,
+        1
+      ],
+      "unique_writers": 17,
+      "stores": [
+        {
+          "instruction": 74,
+          "source_line": 160,
+          "opcode": "st.global.b32",
+          "predicate": "%p5",
+          "writes": 17
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q04-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.json",
+    "math_sha256": "82b5c9e51a8aea308d3221ce141a4b7ca807d353002fa5e2bb9dd7bb67a3f18f",
+    "compiled_hash": "e17b9f639e2c7c1abccbd7607e3770fb614bf79951ff9941c8490ba4c074c51a",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/05-cubin",
+        "sha256": "4497a999dba9f370c361843f2d9264c2978acb146ccde4f1bdf7bc27bc315aa7",
+        "bytes": 16440,
+        "retained_file": "objects/4497a999dba9f370c361843f2d9264c2978acb146ccde4f1bdf7bc27bc315aa7.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/03-llir",
+        "sha256": "97d6e217082c8e391c8249d4cf2575f279ed24b877482117c4fbb7ef69f36f4c",
+        "bytes": 17544,
+        "retained_file": "objects/97d6e217082c8e391c8249d4cf2575f279ed24b877482117c4fbb7ef69f36f4c.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/04-ptx",
+        "sha256": "3d14be081b1f846995696dcd285ff9429d1e17f09adde710a7d7d2985d317ea7",
+        "bytes": 15476,
+        "retained_file": "objects/3d14be081b1f846995696dcd285ff9429d1e17f09adde710a7d7d2985d317ea7.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/00-source",
+        "sha256": "53a97920ab489f734e378c5f49e2582a143ac95e75a99b47841e118fbb660e1c",
+        "bytes": 12654,
+        "retained_file": "objects/53a97920ab489f734e378c5f49e2582a143ac95e75a99b47841e118fbb660e1c.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/02-ttgir",
+        "sha256": "2eec199be8f0706df063d163e305a61877ea54dcecbb1d8fa350c96926bda512",
+        "bytes": 7092,
+        "retained_file": "objects/2eec199be8f0706df063d163e305a61877ea54dcecbb1d8fa350c96926bda512.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.objects/01-ttir",
+        "sha256": "734420bbf25742bd97c40e1e4ea38630ccbdbf63d22274d43d489b9576fbe25d",
+        "bytes": 6621,
+        "retained_file": "objects/734420bbf25742bd97c40e1e4ea38630ccbdbf63d22274d43d489b9576fbe25d.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c0/math.host-once.json",
+      "sha256": "a629833eb614135d7232e8372f29879e8d0b6121a4a9b3fd265c4dcc6448a9b4"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 19,
+      "threads": 128,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "unique_writers": 19,
+      "stores": [
+        {
+          "instruction": 113,
+          "source_line": 210,
+          "opcode": "st.global.b32",
+          "predicate": "%p7",
+          "writes": 19
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q04-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.json",
+    "math_sha256": "4d0d0107dc4f0c51737eaf991db065dcdce59faf5d939431191d655fc51c5f32",
+    "compiled_hash": "c942e731ea2361af19e396c9010e9c3e0338a25caac2862619a135473fb2e0c8",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/05-cubin",
+        "sha256": "1775e29f77e2f454ca6d142acfea6f6258d792c43acdac73ad62a3b3f8d70b7b",
+        "bytes": 15408,
+        "retained_file": "objects/1775e29f77e2f454ca6d142acfea6f6258d792c43acdac73ad62a3b3f8d70b7b.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/03-llir",
+        "sha256": "ac34b96d46cd53351350766649253a48461c18f4ec278fe4baa43ab79843703b",
+        "bytes": 14205,
+        "retained_file": "objects/ac34b96d46cd53351350766649253a48461c18f4ec278fe4baa43ab79843703b.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/04-ptx",
+        "sha256": "1d5613088987ab856740c900d26a11fee9041a7e95f03c32423b48c982320485",
+        "bytes": 14708,
+        "retained_file": "objects/1d5613088987ab856740c900d26a11fee9041a7e95f03c32423b48c982320485.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/00-source",
+        "sha256": "53a97920ab489f734e378c5f49e2582a143ac95e75a99b47841e118fbb660e1c",
+        "bytes": 12654,
+        "retained_file": "objects/53a97920ab489f734e378c5f49e2582a143ac95e75a99b47841e118fbb660e1c.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/02-ttgir",
+        "sha256": "dfd1314d4bc603b6e08132501c8377f0ffda1bc97d474ddf61613210f0188673",
+        "bytes": 7092,
+        "retained_file": "objects/dfd1314d4bc603b6e08132501c8377f0ffda1bc97d474ddf61613210f0188673.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.objects/01-ttir",
+        "sha256": "734420bbf25742bd97c40e1e4ea38630ccbdbf63d22274d43d489b9576fbe25d",
+        "bytes": 6621,
+        "retained_file": "objects/734420bbf25742bd97c40e1e4ea38630ccbdbf63d22274d43d489b9576fbe25d.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q04-s1-c1/math.host-once.json",
+      "sha256": "9f22c76e78c908f1316e6d95f74316ad5b296e55f3101029df1e90846805313a"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 19,
+      "threads": 256,
+      "grid": [
+        19,
+        1,
+        1
+      ],
+      "unique_writers": 19,
+      "stores": [
+        {
+          "instruction": 88,
+          "source_line": 180,
+          "opcode": "st.global.b32",
+          "predicate": "%p6",
+          "writes": 19
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q05-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.json",
+    "math_sha256": "0f43366f9cf9baf415d1cdee39ee526c35a4c899cbf21d05beac98fb422575f0",
+    "compiled_hash": "c0aa49dfe5b6e3441d7b50b3c4bba40ca2714fb2849a08c2dee0ba857fcc548f",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/05-cubin",
+        "sha256": "319ea1bbd7c4b978f9b5252579522f99bdc26964d971fb878a93eea1b4e0fd7b",
+        "bytes": 40200,
+        "retained_file": "objects/319ea1bbd7c4b978f9b5252579522f99bdc26964d971fb878a93eea1b4e0fd7b.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/03-llir",
+        "sha256": "8acf0bdec9702d814b873751915e131a0d85f7634932dfc8e738372047ec733b",
+        "bytes": 32942,
+        "retained_file": "objects/8acf0bdec9702d814b873751915e131a0d85f7634932dfc8e738372047ec733b.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/04-ptx",
+        "sha256": "8f71922dcf0f3162726097f308366961c7cd2d4a077d5337f2af9104091f82f8",
+        "bytes": 29820,
+        "retained_file": "objects/8f71922dcf0f3162726097f308366961c7cd2d4a077d5337f2af9104091f82f8.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/00-source",
+        "sha256": "541c30b1ad29be8df7d287836b6d3d7ebd954dc3cea19103afddfd4f0ff8c000",
+        "bytes": 31160,
+        "retained_file": "objects/541c30b1ad29be8df7d287836b6d3d7ebd954dc3cea19103afddfd4f0ff8c000.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/02-ttgir",
+        "sha256": "904d63945e2a1382979e6c481058ca4d8d89591466298830bfb435a63d443a08",
+        "bytes": 23889,
+        "retained_file": "objects/904d63945e2a1382979e6c481058ca4d8d89591466298830bfb435a63d443a08.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.objects/01-ttir",
+        "sha256": "aab604b8c9443d76707a43053105a1f54312d2e3bb049522ee4e97e276d84f5c",
+        "bytes": 15857,
+        "retained_file": "objects/aab604b8c9443d76707a43053105a1f54312d2e3bb049522ee4e97e276d84f5c.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c0/math.host-once.json",
+      "sha256": "88ee4cd7dbdf96de3c4026b468f8c8538c8fdadcc7cf8378428a43d41c9f460c"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 4096,
+      "threads": 128,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "unique_writers": 4096,
+      "stores": [
+        {
+          "instruction": 326,
+          "source_line": 547,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p8",
+          "writes": 4096
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q05-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.json",
+    "math_sha256": "490b78d9de8d5aaa9b3b9f82ded637bc30db7fffdb1386537165a513c678f496",
+    "compiled_hash": "e7d1ba64fcc46e3e670542e6e184adc2689d9d812883459e5a8ddbdb27872e92",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/05-cubin",
+        "sha256": "ec0073761c3f6fe44ba5445f94b3db85463608bd4fe828d9b85381c06488b648",
+        "bytes": 31480,
+        "retained_file": "objects/ec0073761c3f6fe44ba5445f94b3db85463608bd4fe828d9b85381c06488b648.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/03-llir",
+        "sha256": "960f4ca4e41cd4bf3d7a761d64a06c66ac9fac94eb5732895f5ba79bf3935536",
+        "bytes": 27203,
+        "retained_file": "objects/960f4ca4e41cd4bf3d7a761d64a06c66ac9fac94eb5732895f5ba79bf3935536.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/04-ptx",
+        "sha256": "e716d298bbb1b342221ffa5cf89fe00f35dc1703bc341cda7591635b62e315de",
+        "bytes": 24902,
+        "retained_file": "objects/e716d298bbb1b342221ffa5cf89fe00f35dc1703bc341cda7591635b62e315de.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/00-source",
+        "sha256": "7abc2594076c6d4824fc64645bcdb4c99c1771d43494b3d6c1e0c95784bc4b90",
+        "bytes": 31160,
+        "retained_file": "objects/7abc2594076c6d4824fc64645bcdb4c99c1771d43494b3d6c1e0c95784bc4b90.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/02-ttgir",
+        "sha256": "65bb01170c9d2a2c56f40a5faeed8948a0de8064366267b9561c60b0cee97f42",
+        "bytes": 25263,
+        "retained_file": "objects/65bb01170c9d2a2c56f40a5faeed8948a0de8064366267b9561c60b0cee97f42.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.objects/01-ttir",
+        "sha256": "dee15c12e34299d90b2e83d1c63334f7288eeb589b5ef7e5976c7bfa9f4c2e4e",
+        "bytes": 15070,
+        "retained_file": "objects/dee15c12e34299d90b2e83d1c63334f7288eeb589b5ef7e5976c7bfa9f4c2e4e.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s0-c1/math.host-once.json",
+      "sha256": "868533657b6533bde16c5b9bc06445462d52d7c045468aca1539dc127263b0aa"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 4096,
+      "threads": 256,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "unique_writers": 4096,
+      "stores": [
+        {
+          "instruction": 273,
+          "source_line": 436,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p10",
+          "writes": 4096
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q05-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.json",
+    "math_sha256": "8db115041a800f0e8d86121811e462179472ccdd779abd17aa17ba0f58778bb5",
+    "compiled_hash": "32f634b8fea5a891c190e5440c353ef889ed67408e64358220105841c9a339fd",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/05-cubin",
+        "sha256": "e9a3adca515d4e6e2ff4d856436e8bd699eb669d1b5d322ae4da3ad245808d7c",
+        "bytes": 31352,
+        "retained_file": "objects/e9a3adca515d4e6e2ff4d856436e8bd699eb669d1b5d322ae4da3ad245808d7c.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/03-llir",
+        "sha256": "912a0c5acc65b4da7a2e80c202f497ac4685429a2415608408f2783dcd0c21a4",
+        "bytes": 34087,
+        "retained_file": "objects/912a0c5acc65b4da7a2e80c202f497ac4685429a2415608408f2783dcd0c21a4.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/04-ptx",
+        "sha256": "81a27b1489839a9aea58a94f76a535ac5ba7e1d46005bc03b6601ab708924552",
+        "bytes": 29669,
+        "retained_file": "objects/81a27b1489839a9aea58a94f76a535ac5ba7e1d46005bc03b6601ab708924552.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/00-source",
+        "sha256": "ffc2ea6cf930b0d29035860808843c490acad5a14e0e775d1d2d79ada2dbe9f6",
+        "bytes": 31170,
+        "retained_file": "objects/ffc2ea6cf930b0d29035860808843c490acad5a14e0e775d1d2d79ada2dbe9f6.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/02-ttgir",
+        "sha256": "1d39bc82c8ac31a2e2be3092844a49db4d684f5f1c023631eb8d6865d4221a8e",
+        "bytes": 18342,
+        "retained_file": "objects/1d39bc82c8ac31a2e2be3092844a49db4d684f5f1c023631eb8d6865d4221a8e.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.objects/01-ttir",
+        "sha256": "d47a7fba81d3f2bcb0651787d313be3273736810f8af38b9d1f6c4935b7e4048",
+        "bytes": 15938,
+        "retained_file": "objects/d47a7fba81d3f2bcb0651787d313be3273736810f8af38b9d1f6c4935b7e4048.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c0/math.host-once.json",
+      "sha256": "d1b8f044027f425636682b946e8503f2946f54bdbd6725b098cbae8d6ed819f5"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 5037,
+      "threads": 128,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "unique_writers": 5037,
+      "stores": [
+        {
+          "instruction": 364,
+          "source_line": 571,
+          "opcode": "st.global.b32",
+          "predicate": "%p22",
+          "writes": 1380
+        },
+        {
+          "instruction": 365,
+          "source_line": 574,
+          "opcode": "st.global.b32",
+          "predicate": "%p23",
+          "writes": 1380
+        },
+        {
+          "instruction": 366,
+          "source_line": 577,
+          "opcode": "st.global.b32",
+          "predicate": "%p24",
+          "writes": 1173
+        },
+        {
+          "instruction": 367,
+          "source_line": 580,
+          "opcode": "st.global.b32",
+          "predicate": "%p25",
+          "writes": 1104
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q05-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.json",
+    "math_sha256": "f0e3004c6c8193f14c678678ac6ffb061cf9c7e05e05c010b194babb9814ab23",
+    "compiled_hash": "c023311129e8dee4c216104878e4891016650ead2a2f5193adc7478ed828b963",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/05-cubin",
+        "sha256": "7cf47ec05a535995fac35e0da936da1ae34dbb46d6bc685b4ffa0ae2662b5b0b",
+        "bytes": 29192,
+        "retained_file": "objects/7cf47ec05a535995fac35e0da936da1ae34dbb46d6bc685b4ffa0ae2662b5b0b.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/03-llir",
+        "sha256": "26ee9cc591a675b0bf9bff4ae2e412888e90dd02a541c0c278c1e3cdc301cc49",
+        "bytes": 30663,
+        "retained_file": "objects/26ee9cc591a675b0bf9bff4ae2e412888e90dd02a541c0c278c1e3cdc301cc49.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/04-ptx",
+        "sha256": "623a0e33d5054e6ba98eaf1caa88ab5e6f53b9152050de4d5f3862e1de57b625",
+        "bytes": 27845,
+        "retained_file": "objects/623a0e33d5054e6ba98eaf1caa88ab5e6f53b9152050de4d5f3862e1de57b625.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/00-source",
+        "sha256": "de528e0a91d93f260a0cbad28c6b0020b42e703ad8fd5a84a56883a85962b227",
+        "bytes": 31170,
+        "retained_file": "objects/de528e0a91d93f260a0cbad28c6b0020b42e703ad8fd5a84a56883a85962b227.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/02-ttgir",
+        "sha256": "a907fbb1270f9c1ef2c6237848c7c19aaf215e87f9d2a29e3db6df55e2f1a3d2",
+        "bytes": 17571,
+        "retained_file": "objects/a907fbb1270f9c1ef2c6237848c7c19aaf215e87f9d2a29e3db6df55e2f1a3d2.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.objects/01-ttir",
+        "sha256": "8378789034d5c5ce17311c00aa39e0734464fdd0eda61b29a31a9c8cf632e9cd",
+        "bytes": 15144,
+        "retained_file": "objects/8378789034d5c5ce17311c00aa39e0734464fdd0eda61b29a31a9c8cf632e9cd.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q05-s1-c1/math.host-once.json",
+      "sha256": "2d314496376f4ecd51c264c926a0efb9ea6718e4dd301786b31ca3ee34da0842"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 5037,
+      "threads": 256,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "unique_writers": 5037,
+      "stores": [
+        {
+          "instruction": 322,
+          "source_line": 516,
+          "opcode": "st.global.b32",
+          "predicate": "%p18",
+          "writes": 1656
+        },
+        {
+          "instruction": 323,
+          "source_line": 519,
+          "opcode": "st.global.b32",
+          "predicate": "%p19",
+          "writes": 1173
+        },
+        {
+          "instruction": 324,
+          "source_line": 522,
+          "opcode": "st.global.b32",
+          "predicate": "%p20",
+          "writes": 1104
+        },
+        {
+          "instruction": 325,
+          "source_line": 525,
+          "opcode": "st.global.b32",
+          "predicate": "%p21",
+          "writes": 1104
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q06-s0-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.json",
+    "math_sha256": "04072a03ab222eec75fdff4de2bb48d3cd875ff1aa74f77e285919af1c68d0a1",
+    "compiled_hash": "c918a3d0c64da1fcd58c05b2e23cd84d4c8297afa678742c73ef0ccf25cb1a34",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/05-cubin",
+        "sha256": "f3a09b0ca8da7a0cad32b34b385ad8c5a3b72032cb5287e728489be0e4a47aa7",
+        "bytes": 24160,
+        "retained_file": "objects/f3a09b0ca8da7a0cad32b34b385ad8c5a3b72032cb5287e728489be0e4a47aa7.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/03-llir",
+        "sha256": "f08f26dcd614218af6b9640187d390db69e9c857bef11ebdab6be717b8bbff97",
+        "bytes": 28545,
+        "retained_file": "objects/f08f26dcd614218af6b9640187d390db69e9c857bef11ebdab6be717b8bbff97.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/04-ptx",
+        "sha256": "958fb9081e3de86bcb2a1b67f3955ef5cdac397da3d9fe161c78cb21f7fd77a5",
+        "bytes": 15594,
+        "retained_file": "objects/958fb9081e3de86bcb2a1b67f3955ef5cdac397da3d9fe161c78cb21f7fd77a5.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/00-source",
+        "sha256": "19f9e2eac1355b43c7dd9220d83f14709bf3f9a7bff4841291978c4b95bfdb89",
+        "bytes": 28614,
+        "retained_file": "objects/19f9e2eac1355b43c7dd9220d83f14709bf3f9a7bff4841291978c4b95bfdb89.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/02-ttgir",
+        "sha256": "e53bfd4ea497063b5ede9b47737c69a3391259201454b2f8a5ed0917867ed65c",
+        "bytes": 24851,
+        "retained_file": "objects/e53bfd4ea497063b5ede9b47737c69a3391259201454b2f8a5ed0917867ed65c.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.objects/01-ttir",
+        "sha256": "5c58f5f52a3ec74c62aa64cb1b45eabbb4aa32bca065cb0b5d451b4e309eaf0e",
+        "bytes": 14206,
+        "retained_file": "objects/5c58f5f52a3ec74c62aa64cb1b45eabbb4aa32bca065cb0b5d451b4e309eaf0e.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c0/math.host-once.json",
+      "sha256": "58490ac6f3d977a0a32f3ad4b57b6158802fb9b332f607112d2928c13e6b84ba"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 4096,
+      "threads": 128,
+      "grid": [
+        4,
+        2,
+        1
+      ],
+      "unique_writers": 4096,
+      "stores": [
+        {
+          "instruction": 214,
+          "source_line": 327,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p4",
+          "writes": 4096
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q06-s0-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.json",
+    "math_sha256": "de7b7a1ebbf82101a4bf9c042e481f4835d858d5f90d3214e87d7217bf2c1cad",
+    "compiled_hash": "ff52a819731a0a966a288b43a27f3e656023bdc0cde59cfcb87c4c6e61dc6d14",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/05-cubin",
+        "sha256": "e9b5a7481a6ceb677f561df4dd0e904bba44a249bdc8039d7aa9b4f10756ddce",
+        "bytes": 26280,
+        "retained_file": "objects/e9b5a7481a6ceb677f561df4dd0e904bba44a249bdc8039d7aa9b4f10756ddce.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/03-llir",
+        "sha256": "3a6f32dd86887a160eb47329f674115da10ff56dde2492067bb5d8e7ebdb5443",
+        "bytes": 31738,
+        "retained_file": "objects/3a6f32dd86887a160eb47329f674115da10ff56dde2492067bb5d8e7ebdb5443.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/04-ptx",
+        "sha256": "6cdd43750199020b3e580f188fe38b815ba870f58a28b41c6db6d0861d738881",
+        "bytes": 17718,
+        "retained_file": "objects/6cdd43750199020b3e580f188fe38b815ba870f58a28b41c6db6d0861d738881.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/00-source",
+        "sha256": "afc8abd196be6a68cfa48529d0c55a760912b917b703548ee1ae86a348f4db5f",
+        "bytes": 28614,
+        "retained_file": "objects/afc8abd196be6a68cfa48529d0c55a760912b917b703548ee1ae86a348f4db5f.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/02-ttgir",
+        "sha256": "ccbcb7280535d0ae9d895f5e0fe3b9e6d6176c2686e638e44046ffc2bdb0adf2",
+        "bytes": 28018,
+        "retained_file": "objects/ccbcb7280535d0ae9d895f5e0fe3b9e6d6176c2686e638e44046ffc2bdb0adf2.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.objects/01-ttir",
+        "sha256": "42dd00fd71f91ac6d57136ec080b46b431ad4c08c683806f184efb7d419432d5",
+        "bytes": 13728,
+        "retained_file": "objects/42dd00fd71f91ac6d57136ec080b46b431ad4c08c683806f184efb7d419432d5.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s0-c1/math.host-once.json",
+      "sha256": "4ba1745eb61f3328dc2dca58429cf0e6814a58b562783a7f7e111c908f6e5676"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 4096,
+      "threads": 256,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "unique_writers": 4096,
+      "stores": [
+        {
+          "instruction": 252,
+          "source_line": 384,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p6",
+          "writes": 4096
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q06-s1-c0",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.json",
+    "math_sha256": "89e1e5931565a5f6f0981b108bd24a98310008d7b6deacac3f4d20e27b21d353",
+    "compiled_hash": "9c47306decea4ab16ac2c556c48e0d0ded68a56b86de6edbeff7f849ec21bcaa",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/05-cubin",
+        "sha256": "6e27a7651fb57a26eed1c68706e874392630e13a9fd81c2ae1e181e8c2bb7ef2",
+        "bytes": 26416,
+        "retained_file": "objects/6e27a7651fb57a26eed1c68706e874392630e13a9fd81c2ae1e181e8c2bb7ef2.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/03-llir",
+        "sha256": "ada180a0bd6093c497d723f7f9b0d55fe9bfefd123fab082492b2af9d1c27dd3",
+        "bytes": 30375,
+        "retained_file": "objects/ada180a0bd6093c497d723f7f9b0d55fe9bfefd123fab082492b2af9d1c27dd3.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/04-ptx",
+        "sha256": "1f41b66b3d83e895e3452893928833627aa17ca56b4df9a8823595b610afea58",
+        "bytes": 16643,
+        "retained_file": "objects/1f41b66b3d83e895e3452893928833627aa17ca56b4df9a8823595b610afea58.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/00-source",
+        "sha256": "30442a8ee7decf1d021aa8d5d1765a889d0a574ffe80a932677dcd080eb010e1",
+        "bytes": 28624,
+        "retained_file": "objects/30442a8ee7decf1d021aa8d5d1765a889d0a574ffe80a932677dcd080eb010e1.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/02-ttgir",
+        "sha256": "885e4dafdac5ededfdfb6650af0a348e39d2ebd6f36365ac4806f5214a7a6759",
+        "bytes": 17568,
+        "retained_file": "objects/885e4dafdac5ededfdfb6650af0a348e39d2ebd6f36365ac4806f5214a7a6759.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.objects/01-ttir",
+        "sha256": "d94d9d807f2e9d2f25b18fefb82778ae0c4af115ebd1082d782757bd00b6b446",
+        "bytes": 14288,
+        "retained_file": "objects/d94d9d807f2e9d2f25b18fefb82778ae0c4af115ebd1082d782757bd00b6b446.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c0/math.host-once.json",
+      "sha256": "8e1f2c91043fc6ba2f5f014a48e2441665908784b87fbc6960f898369bc531ca"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 5037,
+      "threads": 128,
+      "grid": [
+        5,
+        3,
+        1
+      ],
+      "unique_writers": 5037,
+      "stores": [
+        {
+          "instruction": 288,
+          "source_line": 412,
+          "opcode": "st.global.b32",
+          "predicate": "%p20",
+          "writes": 1380
+        },
+        {
+          "instruction": 289,
+          "source_line": 415,
+          "opcode": "st.global.b32",
+          "predicate": "%p21",
+          "writes": 1380
+        },
+        {
+          "instruction": 290,
+          "source_line": 418,
+          "opcode": "st.global.b32",
+          "predicate": "%p22",
+          "writes": 1173
+        },
+        {
+          "instruction": 291,
+          "source_line": 421,
+          "opcode": "st.global.b32",
+          "predicate": "%p23",
+          "writes": 1104
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q06-s1-c1",
+    "kind": "ordinary-primary",
+    "math_file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.json",
+    "math_sha256": "0da91ade03f3f1bdd1ce3800063ecf997cdba636a299d437a7682a471eb173d4",
+    "compiled_hash": "82ae9ccea5560ad2d50ab5c532b50766e9d3aed7a0d14e0f7da964d19079d9cf",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/05-cubin",
+        "sha256": "fce18bb7930ad780b77224705812a02fec8587fc5229dffc9b25398f71851066",
+        "bytes": 33112,
+        "retained_file": "objects/fce18bb7930ad780b77224705812a02fec8587fc5229dffc9b25398f71851066.cubin"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/03-llir",
+        "sha256": "244735ba49d848dba8b2df327afeacdb93d94e947967e22d5b76a5a238b9e9c5",
+        "bytes": 26268,
+        "retained_file": "objects/244735ba49d848dba8b2df327afeacdb93d94e947967e22d5b76a5a238b9e9c5.llir"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/04-ptx",
+        "sha256": "f1479370a6d8a7f4848900073bdfaeb2309cb98f5b42bf08c2bf9d92a738a9ef",
+        "bytes": 15195,
+        "retained_file": "objects/f1479370a6d8a7f4848900073bdfaeb2309cb98f5b42bf08c2bf9d92a738a9ef.ptx"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/00-source",
+        "sha256": "66cc7b00980fdbc3d00edfe0bfc123f39470378c15c2223396fcbec5ec50c4c4",
+        "bytes": 28624,
+        "retained_file": "objects/66cc7b00980fdbc3d00edfe0bfc123f39470378c15c2223396fcbec5ec50c4c4.source"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/02-ttgir",
+        "sha256": "7ec9f23e77dba8f476c2d2e605e5229c4b93d2b3706d4eb48eaa7efb70bd101d",
+        "bytes": 16796,
+        "retained_file": "objects/7ec9f23e77dba8f476c2d2e605e5229c4b93d2b3706d4eb48eaa7efb70bd101d.ttgir"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.objects/01-ttir",
+        "sha256": "7f32ccd3eee3546c5ce1004509c1364f878cfa7a6d35aeb3f454a5da1d1777e6",
+        "bytes": 13800,
+        "retained_file": "objects/7f32ccd3eee3546c5ce1004509c1364f878cfa7a6d35aeb3f454a5da1d1777e6.ttir"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r052-private/runs/ordinary-v2/q06-s1-c1/math.host-once.json",
+      "sha256": "a4eb158444ca4a321516eb96867b8b0cab119d87a895214ca179dc489b162dc6"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 5037,
+      "threads": 256,
+      "grid": [
+        3,
+        3,
+        1
+      ],
+      "unique_writers": 5037,
+      "stores": [
+        {
+          "instruction": 255,
+          "source_line": 362,
+          "opcode": "st.global.b32",
+          "predicate": "%p16",
+          "writes": 1656
+        },
+        {
+          "instruction": 256,
+          "source_line": 365,
+          "opcode": "st.global.b32",
+          "predicate": "%p17",
+          "writes": 1173
+        },
+        {
+          "instruction": 257,
+          "source_line": 368,
+          "opcode": "st.global.b32",
+          "predicate": "%p18",
+          "writes": 1104
+        },
+        {
+          "instruction": 258,
+          "source_line": 371,
+          "opcode": "st.global.b32",
+          "predicate": "%p19",
+          "writes": 1104
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q07-s0-c0",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.json",
+    "math_sha256": "7ac6b0f0061854c9a9429242d2180751ba973a6e3e49cf148490ea59f2e2bc71",
+    "compiled_hash": "311991c50c3a72a1fe63b5a316ec803af9dfa9192b405d8e9bd1b3f919dd6199",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/05-cubin",
+        "sha256": "469b09974586d55629149d11bbed75416bab05bbed057cdc837ebe7e796dc49e"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/03-llir",
+        "sha256": "55928b18e15a62b4b48ec912401fae055a58267553d66f974702bce13c9f05b9"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/04-ptx",
+        "sha256": "3f562454beb088dc3d7013e1329567f84450e9ff10385f2227c42653f0dfb4d7"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/00-source",
+        "sha256": "26e186317ec29760b6921507c402e1539abc8fc5134a7125fbb7eba3d127e635"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/02-ttgir",
+        "sha256": "8a1baf9a06a9bbf85fa2ddc9d1e839d57612508623450bb95598f41c357843f5"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.objects/01-ttir",
+        "sha256": "47978ab7827f1fdd7222df7a7e46d90b7fb823be404cf088ea20764b17b0d8cd"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c0/math.host-once.json",
+      "sha256": "f65cc0129b2335e9eea7d487f4e06aa15a984d154c0620aa952eb87c5af73bfd"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 3072,
+      "threads": 128,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "unique_writers": 3072,
+      "stores": [
+        {
+          "instruction": 478,
+          "source_line": 866,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p8",
+          "writes": 3072
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q07-s0-c1",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.json",
+    "math_sha256": "73daad12952917a7af9e7467e6454363ad6fad9beee0bf4a74c1ca7ba655d93b",
+    "compiled_hash": "34b79389216982524d5ca218f7942a300834139f6637f03606408ce79d605924",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/05-cubin",
+        "sha256": "cab9347035a8e1cbb5bdb7f05b54273040b3c8e85af19ef447496f818283f247"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/03-llir",
+        "sha256": "faae79458521a82f224167dcef39cccfb524a0c09f2af2b1ce53592ec8e26524"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/04-ptx",
+        "sha256": "838333afeb6476f17f267016fae2ecd34c83f2eca0dc58b76ba720e290d6ad44"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/00-source",
+        "sha256": "a12c60038b578322bfbea7c519c2a11c1460f18db5e7806f4c2c90ff0ca977b7"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/02-ttgir",
+        "sha256": "78e7ad9828573af49158215ce1bae32563ce658e394d0e6497b21678f122349d"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.objects/01-ttir",
+        "sha256": "7d8b2da79db31c4ad55f107b2d158642697f867a1e3206a03a984642274e6af7"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s0-c1/math.host-once.json",
+      "sha256": "b14bf479bf756adaf5dc483e94f226264eba9f17c0d8b82ac62fecafdcc3900d"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 3072,
+      "threads": 256,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "unique_writers": 3072,
+      "stores": [
+        {
+          "instruction": 356,
+          "source_line": 601,
+          "opcode": "st.global.v4.b32",
+          "predicate": "%p10",
+          "writes": 3072
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q07-s1-c0",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.json",
+    "math_sha256": "c4780c34f17291a27b6b63364084a2cfdb55f4c61b9f2e949c814fd540a01060",
+    "compiled_hash": "f522f0366c5b3d6ce4b78efd6caf90855ca93ca9c9ae13e4c93660902af601ac",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/05-cubin",
+        "sha256": "1ad335fe0d2b90196da32ed4b3323faa567b1b98cff1f6f77dd799ee2ea5601e"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/03-llir",
+        "sha256": "b4aaf91ba5b96a99f512ce857ecb3865d33e6ab01641188033113ff19450cdfe"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/04-ptx",
+        "sha256": "0c08df26c9b07d67f2e960c2cf0dbe81450205c0a9d413ef17511c90434a4c86"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/00-source",
+        "sha256": "77574465c624c378a19d54ca24ed0cf3281135958143f728b47932c7c6fd7220"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/02-ttgir",
+        "sha256": "f05dd2ef081c7636aefb082d8ed206afab07c725f66351a12302596abc70f7c6"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.objects/01-ttir",
+        "sha256": "56e65ceb08d7775088fca95915ab0afc27843be215c756055eec22e8ea1f4049"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c0/math.host-once.json",
+      "sha256": "1ddeff2c0852f231dd760589bb6181f9afbb8cde48bab2b7e5829e410c02021d"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 3657,
+      "threads": 128,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "unique_writers": 3657,
+      "stores": [
+        {
+          "instruction": 451,
+          "source_line": 751,
+          "opcode": "st.global.b32",
+          "predicate": "%p22",
+          "writes": 1104
+        },
+        {
+          "instruction": 452,
+          "source_line": 754,
+          "opcode": "st.global.b32",
+          "predicate": "%p23",
+          "writes": 897
+        },
+        {
+          "instruction": 453,
+          "source_line": 757,
+          "opcode": "st.global.b32",
+          "predicate": "%p24",
+          "writes": 828
+        },
+        {
+          "instruction": 454,
+          "source_line": 760,
+          "opcode": "st.global.b32",
+          "predicate": "%p25",
+          "writes": 828
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q07-s1-c1",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.json",
+    "math_sha256": "1a5a31dc92fb6197c2264962ffb977722428e1887ef8512c08a981caa4971030",
+    "compiled_hash": "0d56d9cb1d1cc0ad2efe9bbe7eb58a66b1a804028990b7e7be9a9ce4f658a010",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/05-cubin",
+        "sha256": "52255589415d3fb10b41e5cb996284b67ad630eda13b36aa6906db0a42e1c963"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/03-llir",
+        "sha256": "3d8ba1bad5d428d2eaa9e5763d5afde46af900c15f6055b557203ff3369c09e7"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/04-ptx",
+        "sha256": "ffe1a67b621bec3cbeaf586b826181ae1d1acded6a1b21a01e288bbd72dd7d03"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/00-source",
+        "sha256": "5e76f442d42993f8c742eff9d737bb4d7dd055659f6d339ef1d94dad33618993"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/02-ttgir",
+        "sha256": "457e1420ba387eddb7566325950da63b95443643e5349ebfab9bc5d0958a14d3"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.objects/01-ttir",
+        "sha256": "5647ea3f366ede376468e4c6023c6168bc6a085fd35178880fa8e97751836e2c"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q07-s1-c1/math.host-once.json",
+      "sha256": "8811422000b16b99beaed150602e64099d145daea865adca9f9b88dec7f438bf"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 3657,
+      "threads": 256,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "unique_writers": 3657,
+      "stores": [
+        {
+          "instruction": 419,
+          "source_line": 716,
+          "opcode": "st.global.b32",
+          "predicate": "%p18",
+          "writes": 1104
+        },
+        {
+          "instruction": 420,
+          "source_line": 719,
+          "opcode": "st.global.b32",
+          "predicate": "%p19",
+          "writes": 1104
+        },
+        {
+          "instruction": 421,
+          "source_line": 722,
+          "opcode": "st.global.b32",
+          "predicate": "%p20",
+          "writes": 897
+        },
+        {
+          "instruction": 422,
+          "source_line": 725,
+          "opcode": "st.global.b32",
+          "predicate": "%p21",
+          "writes": 552
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q08-s0-c0",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.json",
+    "math_sha256": "5341e0d5b027f18a10cd9acedcd3c37686ef2e324205f2e7cf025e581440eeee",
+    "compiled_hash": "8c5ab9710892dbf1dccfd57a0c9bcde0fa25ae91240e111ab244c63e4b95870c",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/05-cubin",
+        "sha256": "9b1e8935caed20cf1e5eae448a1b9c567417f290cf8754dc5c23fbc64acc7b19"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/03-llir",
+        "sha256": "67d5c321dc09ec37f685147722947dfce2d222f7147f2a3d5ea6d6d94c5ba90b"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/04-ptx",
+        "sha256": "fb22f51c356c47247652e0dd88f2f55bd4a46e0a54fffc8f91048d12b2f5d0a1"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/00-source",
+        "sha256": "209a6874a8cb48de52b6ecb126d1cde85d6330c01ec604c838b660081d849dfa"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/02-ttgir",
+        "sha256": "6740eb896b39ec23ef1329e58735f3f2756178fe18c917b5577c48e2bdd2cd03"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.objects/01-ttir",
+        "sha256": "bb67e9dfbe27b9f2a4438ab15dab900303691ac2057b3f2c71ecc4c86cb8728e"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c0/math.host-once.json",
+      "sha256": "1f798a9f513b719992f43084b6082f6c6dbdc588b6a577267c64daafef6001c1"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 768,
+      "threads": 128,
+      "grid": [
+        3,
+        2,
+        1
+      ],
+      "unique_writers": 768,
+      "stores": [
+        {
+          "instruction": 329,
+          "source_line": 590,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 768
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q08-s0-c1",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.json",
+    "math_sha256": "986a536236ac3a02141647bd9e125c5391a3f10610c60ba8e29dbde64fcc17de",
+    "compiled_hash": "e7a10daef6d518e7a60fb5da9d22ca76adbf694077c08da583e9506665c6ca96",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/05-cubin",
+        "sha256": "eefa77c4111f11c45ec27d4e4b87c2d96c1b448e2a499c7e58e26d4482240037"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/03-llir",
+        "sha256": "f8f675adedbd6c6ff644cfc26168628b524693d8d4c5f1aaf37876e42ce74596"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/04-ptx",
+        "sha256": "de21069022d769b06639903279b651c730f23b879a3c7fb72da5fe06eebc1916"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/00-source",
+        "sha256": "847cd26ad4ae8ef32de4f0af52a979b069ee2fc5750b2274f014c668b6b25b0f"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/02-ttgir",
+        "sha256": "5afe7c1da0045ed8951c366077398a19910f500869b859228da65ed852bf5bfd"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.objects/01-ttir",
+        "sha256": "796c622ff34bd0744ee53b87d187bb4dc942155fe891b0a1eee2d6a2f6698ff8"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s0-c1/math.host-once.json",
+      "sha256": "ef4658f7c9ca3fef0c7af4610e8999134a851a11c98cf909e2a1ca81cc823287"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 768,
+      "threads": 256,
+      "grid": [
+        2,
+        2,
+        1
+      ],
+      "unique_writers": 768,
+      "stores": [
+        {
+          "instruction": 625,
+          "source_line": 1221,
+          "opcode": "st.global.b32",
+          "predicate": "%p4",
+          "writes": 768
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q08-s1-c0",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.json",
+    "math_sha256": "e2e8b9a85e34b7d31998cab38fa2472942b9f2edd3771072a47c8f3967fc76d2",
+    "compiled_hash": "bbfe35b60bfabfc18fe1d49797ee29b5d300cb235698dd66b1de7cf1cb2c1ffe",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/05-cubin",
+        "sha256": "147e2273a0b93800c3bc874046153bb88058bd6ee5086292b722a77998e063be"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/03-llir",
+        "sha256": "4b744d1b36c1d9214a94b402ff25d90d699ad28cb928f6430adda3a8598cd8e8"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/04-ptx",
+        "sha256": "ee6432f8ee1dde28cfb79d9ebc6a2ee5e350bbbd0ad44e765f527da7367eae01"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/00-source",
+        "sha256": "5be89d2cc91229cc883eeac348addd0f2a4c202618b9ff177e30176364340837"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/02-ttgir",
+        "sha256": "fec985605fa2fc13f0dc0b08c82965e9a7cd4d62d230efa038390e753de04cd9"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.objects/01-ttir",
+        "sha256": "14b1e1ff8fefd4290088020fbacf9eb95dcbc6e5b88376ec6166b5a563f82122"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c0/math.host-once.json",
+      "sha256": "de70a3ba64565ff828d1bba9afc36a6bc3cd73fb3cecb3ad6775f0f7f6098922"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1073,
+      "threads": 128,
+      "grid": [
+        4,
+        3,
+        1
+      ],
+      "unique_writers": 1073,
+      "stores": [
+        {
+          "instruction": 308,
+          "source_line": 470,
+          "opcode": "st.global.b32",
+          "predicate": "%p11",
+          "writes": 1073
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  },
+  {
+    "status": "pass",
+    "id": "q08-s1-c1",
+    "kind": "ordinary-supplement",
+    "math_file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.json",
+    "math_sha256": "7bcea14ebabec7ff1f2d9d791b0060d19ae70bcba12bf6e52004881af473cf7f",
+    "compiled_hash": "0f35054cdeb0ac987d9c4cb3f99442a69c6f1c39ec34452a35e9786e4e3f93d2",
+    "artifacts": [
+      {
+        "kind": "cubin",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/05-cubin",
+        "sha256": "a7234644d4421427fcf588eeabbe8211f2653b23b52e154bc5b49008c8456bed"
+      },
+      {
+        "kind": "llir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/03-llir",
+        "sha256": "d880389f926a29028fdd0854d6aa8b2d96648e26dcd05b2b0f7929324d41cc9a"
+      },
+      {
+        "kind": "ptx",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/04-ptx",
+        "sha256": "cacb9e4412f68cda5bce3e83ea497edf1bc1da8b2a14f4ea37661b039077bdf8"
+      },
+      {
+        "kind": "source",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/00-source",
+        "sha256": "30c5e1430ca687105c028e1ba317bc1f1825593200a90d5c669c1a65a6774dff"
+      },
+      {
+        "kind": "ttgir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/02-ttgir",
+        "sha256": "0fef44060f6792ccd5e5b632e4b04a1f5dbedef87c0ee89d8e94e63f34fc2aef"
+      },
+      {
+        "kind": "ttir",
+        "path": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.objects/01-ttir",
+        "sha256": "97268457c9530d36e5fcc46e53b4ed0f85cbee8df750ac7b71e30bed51355206"
+      }
+    ],
+    "host_once": {
+      "file": "/workspace/chijin-timeline-r056-supplement-nvidia-v1/runs/ordinary-v1/q08-s1-c1/math.host-once.json",
+      "sha256": "4f8c1459ffe0884a925cda4eaf19d0e98da69d7c75d7e0cb858e872ad48714bc"
+    },
+    "partition": {
+      "status": "ptx_physical_state_writer_partition_checked",
+      "elements": 1073,
+      "threads": 256,
+      "grid": [
+        2,
+        3,
+        1
+      ],
+      "unique_writers": 1073,
+      "stores": [
+        {
+          "instruction": 537,
+          "source_line": 834,
+          "opcode": "st.global.b32",
+          "predicate": "%p15",
+          "writes": 1073
+        }
+      ],
+      "native_sass_semantics_verified": false,
+      "device_executed": false
+    }
+  }
+]

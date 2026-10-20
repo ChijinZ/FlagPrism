@@ -1,0 +1,100 @@
+{
+  "scope": "NVIDIA_original_independent_math_State_writer_lowering",
+  "code_commit": "93fc2a091fcf0df051db8be4b3530d208d8dde1b",
+  "product_runtime_changed": false,
+  "source_loaded_qualification": true,
+  "whole_goal_complete": false,
+  "archives": {
+    "nvidia": {
+      "path": "artifacts/timeline/run-078/preflight/nvidia-receipts-v1.tgz",
+      "sha256": "8cfead6fa990d0d3260226282d7890369bc0b6526db003775f33d7b883c02973",
+      "regular_members": 241
+    },
+    "enflame": {
+      "path": "artifacts/timeline/run-078/preflight/enflame-receipts-v1.tgz",
+      "sha256": "a3bb6c8ffc3a0551453d48df7005ba4c31914ebb92512f0f8e44e54610845258",
+      "regular_members": 164
+    },
+    "ascend": {
+      "path": "artifacts/timeline/run-078/preflight/ascend-receipts-v1.tgz",
+      "sha256": "13cd4c8da86a28ede075f7ce553c7b36894943178b6ef4480205af55c9d16e58",
+      "regular_members": 128
+    }
+  },
+  "backends": {
+    "nvidia": {
+      "ordinary_inventory": {
+        "status": "original_ordinary_math_and_compiler_objects_bound_not_writer_qualified",
+        "backend": "nvidia",
+        "reports": 32,
+        "unique_objects": 136,
+        "artifact_kinds": [
+          "cubin",
+          "llir",
+          "ptx",
+          "source",
+          "ttgir",
+          "ttir"
+        ],
+        "device_executed": false,
+        "application_replayed": false
+      },
+      "state_writer_qualified": true
+    },
+    "enflame": {
+      "ordinary_inventory": {
+        "status": "original_ordinary_math_and_compiler_objects_bound_not_writer_qualified",
+        "backend": "enflame",
+        "reports": 32,
+        "unique_objects": 132,
+        "artifact_kinds": [
+          "fatbin",
+          "gcuir",
+          "llir",
+          "source",
+          "ttgir",
+          "ttir"
+        ],
+        "device_executed": false,
+        "application_replayed": false
+      },
+      "state_writer_qualified": false
+    },
+    "ascend": {
+      "ordinary_inventory": {
+        "status": "original_ordinary_math_and_compiler_objects_bound_not_writer_qualified",
+        "backend": "ascend",
+        "reports": 32,
+        "unique_objects": 120,
+        "artifact_kinds": [
+          "bcmlir",
+          "mlirbc",
+          "npubin",
+          "source",
+          "ttadapter",
+          "ttir"
+        ],
+        "device_executed": false,
+        "application_replayed": false
+      },
+      "state_writer_qualified": false
+    }
+  },
+  "nvidia": {
+    "status": "registered_retained_nvidia_state_partitions",
+    "ordinary_registered": 40,
+    "ordinary_checked": 40,
+    "ordinary_passed": 40,
+    "profile_registered": 118,
+    "profile_checked": 118,
+    "profile_passed": 118,
+    "distinct_partitions": 72,
+    "failures": [],
+    "checker_sha256": "eabb1173d46d7545432ba4e644f80b37c1068ab975fb17b6395ba3eccd04eec3",
+    "source_loaded_qualification_tool": true,
+    "product_runtime_changed": false,
+    "device_executed": false,
+    "application_replayed": false
+  },
+  "executed_source_byte_equal_to_git_candidate": true
+}
