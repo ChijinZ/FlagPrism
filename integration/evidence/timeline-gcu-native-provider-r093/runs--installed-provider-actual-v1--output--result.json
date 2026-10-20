@@ -1,0 +1,97 @@
+{
+  "status": "normally_installed_native_provider_actual_passed",
+  "reinspection": [
+    {
+      "capture": "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline/captures/invocation-b62efc6fae914b0485a3fd8a1a6cdb16.json",
+      "capture_sha256": "ef003113276cbc65997bb5e54f12554d81c584a71204bb7ca70ee702f85b6648",
+      "fatbin_sha256": "298ab8ec5eed6d0d5961882683e0284f2996f8f29500c2ad4c3b511100f58a68",
+      "producer_identity_sha256": "df8885bfe537cae850d535480143a1ac0ff4e92569e478fafe2dc28f66440cbb",
+      "analyzer_identity_sha256": "caee0ca8012c97cfcd1b7b99051ccbbff51d3bdfa62e5174bd07f6cc67ef1fa0",
+      "points": 25,
+      "reader_checked": 8,
+      "relative_fields_checked": 2,
+      "original_unchanged": true,
+      "decoder_receipt": {
+        "argv": [
+          "/opt/tops/llvm11/bin/llvm-objdump",
+          "-d",
+          "--triple=dtu",
+          "--mcpu=gcu300",
+          "--demangle",
+          "--line-numbers",
+          "/tmp/chijin-timeline-r093-gcu/runs/installed-provider-actual-v1/tmp/flagprism-gcu-native-locations-_bc51ltx/analysis/input.elf"
+        ],
+        "tool_sha256": "e37efecc349022f96c6a0fdaee12fa2019be01c8225d63999f8ea7fafce22c50",
+        "elf_sha256": "7d56f25f70633d7f0d813a78e8ded073b884a4356d940a4cb48c710794f00500",
+        "pid": 588979,
+        "pgid": 588979,
+        "startticks": 1029915719,
+        "state": "terminal",
+        "returncode": 0
+      }
+    },
+    {
+      "capture": "/tmp/chijin-timeline-r069-gcu/runs/native-device-v1/output/profile/timeline/captures/invocation-e1f036e3a98444e0941c5b17d1f836c3.json",
+      "capture_sha256": "3c7a6282434a1241a4922f4a3b090130900773270d712ebd065643bc4fd538d0",
+      "fatbin_sha256": "7bd7645abd1aae051c51edd3c1788aef958b7eff95753854ea63f5c25c5dfb4d",
+      "producer_identity_sha256": "df8885bfe537cae850d535480143a1ac0ff4e92569e478fafe2dc28f66440cbb",
+      "analyzer_identity_sha256": "caee0ca8012c97cfcd1b7b99051ccbbff51d3bdfa62e5174bd07f6cc67ef1fa0",
+      "points": 38,
+      "reader_checked": 18,
+      "relative_fields_checked": 0,
+      "original_unchanged": true,
+      "decoder_receipt": {
+        "argv": [
+          "/opt/tops/llvm11/bin/llvm-objdump",
+          "-d",
+          "--triple=dtu",
+          "--mcpu=gcu300",
+          "--demangle",
+          "--line-numbers",
+          "/tmp/chijin-timeline-r093-gcu/runs/installed-provider-actual-v1/tmp/flagprism-gcu-native-locations-m3yujkhm/analysis/input.elf"
+        ],
+        "tool_sha256": "e37efecc349022f96c6a0fdaee12fa2019be01c8225d63999f8ea7fafce22c50",
+        "elf_sha256": "5860432eef0a3004e35740a68b17b10bd9f33d49bf3ab7a30f8cb11be72131f6",
+        "pid": 588981,
+        "pgid": 588981,
+        "startticks": 1029915771,
+        "state": "terminal",
+        "returncode": 0
+      }
+    }
+  ],
+  "public_math": {
+    "status": "GCU_native_location_two_math_public_capture_passed",
+    "ordinary_math_calls": 2,
+    "profiled_math_calls": 2,
+    "math": true,
+    "input_unchanged": true,
+    "guards": true,
+    "host_once": true,
+    "captures": [
+      {
+        "capture_file": "captures/invocation-de7207defb0f47d194936770dfa41b9d.json",
+        "binary_id": "8a3a613dd944df77aeeaf4d9a09d090f200f21216cbc12a3cc8cab9fdf5d82ce",
+        "sites": 13,
+        "native_location_points": 48,
+        "native_missing_phase_sites": 3,
+        "events": 22,
+        "observers": 2,
+        "native_scope_output_sha256": "4ab78d3e2c56b5375dc399ff369295457d1dc235c7e5245de2688e289b9aa8b6",
+        "final_sdk_ir_sha256": "22de4b70a97c51699b2acd3542276a55468cb311d3ef793d3c74dee828a5e2d8"
+      },
+      {
+        "capture_file": "captures/invocation-0bbee0139b2e44e0a9dc2789510fb9ee.json",
+        "binary_id": "284438abdd4fdf21756c51d48946ed3119027465784fb031ff17d7ea7079228e",
+        "sites": 13,
+        "native_location_points": 62,
+        "native_missing_phase_sites": 2,
+        "events": 20,
+        "observers": 2,
+        "native_scope_output_sha256": "7bf02a7075fcc224b21ff91998c37cd10a767578bedc39e7eebb796ff6895538",
+        "final_sdk_ir_sha256": "6a5f2b7501b1f2401514605dc42a2ebde50d48ece0bff5ac16c96ef93cb87728"
+      }
+    ],
+    "final_machine_boundary_qualified": false
+  }
+}

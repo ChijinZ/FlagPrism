@@ -1,0 +1,191 @@
+{
+  "status": "GCU_native_provider_normally_installed",
+  "backend": "enflame",
+  "source_commit": "4fc741f66144b6c2617545b8868b6ac3ae6cf0a1",
+  "source": "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source",
+  "python": "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+  "native": "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/native",
+  "installed_members": 502,
+  "wheel": "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl",
+  "wheel_sha256": "79b9c3499da162264712241cca659d3f1c34c0b6ff0f34624e82bc331292dfc7",
+  "unchanged_compiler": "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+  "reused_recorder": "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/native/flagtree/debugger/_bin/gcu-timeline",
+  "steps": [
+    {
+      "name": "git-init",
+      "argv": [
+        "git",
+        "init",
+        "-q"
+      ],
+      "pid": 588649,
+      "startticks": 1029904059,
+      "returncode": 0
+    },
+    {
+      "name": "git-parent",
+      "argv": [
+        "git",
+        "fetch",
+        "--update-shallow",
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/FlagTree",
+        "HEAD"
+      ],
+      "pid": 588650,
+      "startticks": 1029904059,
+      "returncode": 0
+    },
+    {
+      "name": "git-identity",
+      "argv": [
+        "git",
+        "reset",
+        "--mixed",
+        "FETCH_HEAD"
+      ],
+      "pid": 588848,
+      "startticks": 1029904116,
+      "returncode": 0
+    },
+    {
+      "name": "current-parent-patch",
+      "argv": [
+        "git",
+        "apply",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/integration/patches/enflame/flagtree-source.patch"
+      ],
+      "pid": 588864,
+      "startticks": 1029904149,
+      "returncode": 0
+    },
+    {
+      "name": "assemble",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-I",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/integration/patches/enflame/build_automatic_wheel.py",
+        "--flagtree",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/FlagTree",
+        "--component",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source",
+        "--native-python",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/native",
+        "--core-library",
+        "/tmp/chijin-timeline-r051-source-build-v1/work/build/libtriton.so",
+        "--output",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/wheel",
+        "--backend-build",
+        "/tmp/chijin-timeline-r051-source-build-v1/work/build"
+      ],
+      "pid": 588865,
+      "startticks": 1029904155,
+      "returncode": 0
+    },
+    {
+      "name": "venv",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-m",
+        "venv",
+        "--without-pip",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv"
+      ],
+      "pid": 588954,
+      "startticks": 1029908259,
+      "returncode": 0
+    },
+    {
+      "name": "install",
+      "argv": [
+        "/tmp/chijin-timeline-r087-gcu/runs/normal-install-v1/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pip",
+        "--python",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "install",
+        "--no-index",
+        "--no-deps",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/wheel/dist/flagtree-0.7.0+enflame.gitadd842f2-cp312-cp312-linux_x86_64.whl"
+      ],
+      "pid": 588955,
+      "startticks": 1029908265,
+      "returncode": 0
+    },
+    {
+      "name": "guard-binding-feature",
+      "argv": [
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; m=runtime_binding(); v=getattr(m,'GCU_TIMELINE_ALLOCATION_GUARD_VERSION',None); print(v); raise SystemExit(0 if v==1 else 1)"
+      ],
+      "pid": 588959,
+      "startticks": 1029909095,
+      "returncode": 0
+    },
+    {
+      "name": "installed-import",
+      "argv": [
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger.native import runtime_binding; import flagtree.profiler; print(runtime_binding().__file__); print(flagtree.profiler.__file__)"
+      ],
+      "pid": 588960,
+      "startticks": 1029909111,
+      "returncode": 0
+    },
+    {
+      "name": "installed-observer-imports",
+      "argv": [
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "-I",
+        "-c",
+        "from flagtree.debugger import gcu_native_control, gcu_native_values, gcu_native_image, gcu_native_analysis, gcu_timeline; print(gcu_timeline.packaged_tool()); print(gcu_native_analysis.__file__); raise SystemExit(0 if gcu_timeline.tool_identity()['version']==3 else 1)"
+      ],
+      "pid": 588961,
+      "startticks": 1029909128,
+      "returncode": 0
+    },
+    {
+      "name": "installed-provider-tests-normal",
+      "argv": [
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "-I",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_values.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_image.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_analysis.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_location_binding.py",
+        "--basetemp",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/pytest-normal"
+      ],
+      "pid": 588962,
+      "startticks": 1029909235,
+      "returncode": 0
+    },
+    {
+      "name": "installed-provider-tests-optimized",
+      "argv": [
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/venv/bin/python",
+        "-I",
+        "-O",
+        "-m",
+        "pytest",
+        "-q",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_values.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_image.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_analysis.py",
+        "/tmp/chijin-timeline-r093-gcu/normal-install-input-v3/source/Debugger/test/test_gcu_native_location_binding.py",
+        "--basetemp",
+        "/tmp/chijin-timeline-r093-gcu/runs/normal-install-v3/output/pytest-optimized"
+      ],
+      "pid": 588963,
+      "startticks": 1029909281,
+      "returncode": 0
+    }
+  ]
+}

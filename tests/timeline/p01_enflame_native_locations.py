@@ -151,8 +151,15 @@ def main():
                 for e in batch['events']),
             'No positive actual internal duration')
         compiler = capture['metadata']['compiler_metadata']
-        need(compiler['debug_execution_tool_identity']['version'] == 2,
+        need(compiler['debug_execution_tool_identity']['version'] == 3,
              'Stale compiler/tool identity')
+        analysis = compiler['debug_execution_native_analysis']
+        need(analysis['status'] == 'finite_native_diagnostics',
+             'Normal compilation did not run native diagnostics')
+        need(
+            analysis['source_region_qualified'] is False
+            and analysis['reader_valueflow_qualified'] is False,
+            'Native diagnostics granted unrelated timing rights')
         need(compiler['debug_execution_native_marker_version'] == 1,
              'Missing native clock markers')
         snapshot = capture['metadata']['compiled_snapshot']

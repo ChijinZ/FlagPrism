@@ -144,3 +144,30 @@ from flagtree.profiler.bundle_metadata import load_bundle_json
 
 report = load_bundle_json('/tmp/my-timeline', 'report/report.json')
 ```
+
+For GCU300 captures, normal compilation also retains finite native reader and
+record-field diagnostics in compiler metadata under
+`debug_execution_native_analysis`. Each point includes its own unsupported
+reason. These diagnostics do not qualify source-region duration, external
+entries, or hardware busy time. Their analysis budget is cooperative between
+checks, rather than a hard deadline for the whole compilation.
+
+To inspect an existing GCU300 capture using the installed analyzer, without
+replaying the application or rewriting the original capture:
+
+```python
+import base64
+from flagtree.profiler.timeline_capture_store import load_capture
+from flagtree.debugger.gcu_timeline import inspect_native_execution
+
+capture = load_capture(timeline_root, capture_file)
+metadata = capture['metadata']
+binary = base64.b64decode(
+    metadata['compiled_snapshot']['binary_base64'], validate=True)
+supplement = inspect_native_execution(binary, metadata['compiler_metadata'])
+```
+
+The capture must retain its original native image binding. Missing or different
+fatbin/ELF hashes or target are rejected before inspection. The returned
+supplement separates the original producer identity from the current analyzer
+identity; it does not upgrade the original capture's qualifications.
