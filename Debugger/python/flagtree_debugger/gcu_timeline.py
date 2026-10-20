@@ -249,7 +249,8 @@ def _native_file_stage(data, metadata, mode, root):
         raise ValueError('GCU native inspection input exceeds its budget')
     native = mode == '--native-locations'
     source = root / ('input.elf' if native else 'input.mlir')
-    output = root / ('output.json' if native else 'output.mlir')
+    output = root / ('output.json' if mode in (
+        '--native-locations', '--execution-structure') else 'output.mlir')
     source.write_bytes(data)
     command = [str(packaged_tool()), mode, str(source), str(output)]
     with (root / 'stdout').open('wb') as out, (root /
@@ -273,10 +274,14 @@ def _native_file_stage(data, metadata, mode, root):
             (root / 'launch.json').write_text(json.dumps(receipt, indent=2))
             result = child.wait(timeout=30)
         except BaseException:
-            child.kill()
-            child.wait()
-            receipt.update(state='failed_or_timed_out',
-                           returncode=child.returncode)
+            if child.poll() is None:
+                child.kill()
+            state = 'failed_or_timed_out'
+            try:
+                child.wait(timeout=3)
+            except subprocess.TimeoutExpired:
+                state = 'termination_pending'
+            receipt.update(state=state, returncode=child.returncode)
             (root / 'terminal.json').write_text(json.dumps(receipt, indent=2))
             raise
     receipt.update(state='terminal', returncode=result)
@@ -311,6 +316,45 @@ def preserve_native_locations(text, metadata):
                     debug_execution_native_scope_output_sha256=hashlib.sha256(
                         scoped).hexdigest())
     return scoped.decode()
+
+
+def bind_execution_structure(text, metadata):
+    """Index the actual SDK-verified LLVM input before its binary is generated.
+
+    This typed index supplies CFG/SSA references for lowering-family rules;
+    merely constructing it grants no native timing or source-region rights.
+    """
+    if metadata.get('debug_execution_version') != 1:
+        return
+    if not isinstance(text, str):
+        raise ValueError(
+            'GCU execution structure requires serialized LLVM MLIR')
+    data = text.encode()
+    digest = hashlib.sha256(data).hexdigest()
+    if digest != metadata.get('debug_execution_native_ir_sha256'):
+        raise ValueError(
+            'GCU execution structure differs from final SDK input')
+    root = Path(tempfile.mkdtemp(prefix='flagprism-gcu-llvm-structure-'))
+    output, receipt = _native_file_stage(data, metadata,
+                                         '--execution-structure', root)
+    report = json.loads(output)
+    if (type(report) is not dict
+            or type(report.get('schema_version')) is not int
+            or report.get('schema_version') != 1
+            or report.get('status') != 'typed_sdk_llvm_structure_indexed'
+            or report.get('source_region_qualified') is not False
+            or report.get('native_schedule_qualified') is not False):
+        raise ValueError(
+            'Invalid GCU execution structure index; retained at ' + str(root))
+    metadata['debug_execution_llvm_structure'] = dict(
+        schema_version=1,
+        llvm_ir_sha256=digest,
+        output_sha256=hashlib.sha256(output).hexdigest(),
+        manifest_sha256=hashlib.sha256(
+            json.dumps(metadata['debug_execution_manifest'],
+                       sort_keys=True).encode()).hexdigest(),
+        report=report,
+        receipt=receipt)
 
 
 def _gcu300_bundle_image(binary):
@@ -419,6 +463,21 @@ def bind_native_clock_locations(binary, metadata):
             metadata['debug_execution_manifest'],
             expected=metadata['debug_execution_tool_identity'],
             root=root / 'analysis')
+        structure = metadata.get('debug_execution_llvm_structure')
+        if structure is not None:
+            manifest_digest = hashlib.sha256(
+                json.dumps(metadata['debug_execution_manifest'],
+                           sort_keys=True).encode()).hexdigest()
+            if (type(structure) is not dict or structure.get('llvm_ir_sha256')
+                    != metadata.get('debug_execution_native_ir_sha256')
+                    or structure.get('manifest_sha256') != manifest_digest):
+                raise ValueError(
+                    'GCU execution structure input binding differs')
+            metadata['debug_execution_llvm_structure'] = dict(
+                structure,
+                fatbin_sha256=hashlib.sha256(binary).hexdigest(),
+                elf_sha256=hashlib.sha256(elf).hexdigest(),
+                target=target)
     except Exception as error:
         raise RuntimeError('GCU native location binding failed; retained at ' +
                            str(root)) from error

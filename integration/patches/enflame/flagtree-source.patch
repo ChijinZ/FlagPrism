@@ -68,7 +68,7 @@ index db4c5ff..dfed6b6 100644
          passes.append('--ensure-debug-info-scope-on-llvm-func')
      if toolkit.get_bool_env("MLIR_ENABLE_TIMING"):
          passes.append('--mlir-timing')
-@@ -343,7 +385,17 @@
+@@ -343,7 +385,19 @@
      #    paths = [path for (name, path) in options.extern_libs]
      #    llvm.link_extern_libs(llvm_mod, paths)
  
@@ -83,11 +83,13 @@ index db4c5ff..dfed6b6 100644
 +        # SDK can validate them; do not use its output without this verifier.
 +        lowered = toolkit.gcu_compiler_opt(scoped, '--mlir-print-debuginfo')
 +        metadata['debug_execution_native_ir_sha256'] = hashlib.sha256(lowered.encode()).hexdigest()
++        from flagtree.debugger.gcu_timeline import bind_execution_structure
++        bind_execution_structure(lowered, metadata)
 +    return lowered
  
  
  # FlagPrism: the GCU300 SDK may optimize scalar L2 summary sqrt(x*x)
-@@ -432,6 +484,10 @@
+@@ -432,6 +486,10 @@
                  _compile_with_debugger_fabs(mod, options, tmpdir, compile_args)
                  metadata['debug_math_compat'] = 'scalar_fabs'
              with open(bin, "rb") as f:

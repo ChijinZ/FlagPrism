@@ -39,6 +39,7 @@ int main(int argc, char **argv) {
     return output.has_error() ? 1 : 0;
   }
   if (argc == 4 && (llvm::StringRef(argv[1]) == "--debug-scopes" ||
+                    llvm::StringRef(argv[1]) == "--execution-structure" ||
                     llvm::StringRef(argv[1]) == "--native-locations")) {
     auto input = llvm::MemoryBuffer::getFile(argv[2]);
     if (!input) {
@@ -47,6 +48,9 @@ int main(int argc, char **argv) {
     }
     auto result = llvm::StringRef(argv[1]) == "--debug-scopes"
                       ? mlir::flagtree::debugger::addGcuNativeDebugScopes(
+                            (*input)->getBuffer())
+                  : llvm::StringRef(argv[1]) == "--execution-structure"
+                      ? mlir::flagtree::debugger::indexGcuExecutionStructure(
                             (*input)->getBuffer())
                       : mlir::flagtree::debugger::mapGcuNativeLocations(
                             (*input)->getBuffer());

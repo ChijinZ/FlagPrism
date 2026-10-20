@@ -17,6 +17,10 @@ llvm::Expected<std::string> addGcuNativeDebugScopes(llvm::StringRef input);
 // Standard DWARF rows for generated markers; no instruction/valueflow rights.
 llvm::Expected<std::string> mapGcuNativeLocations(llvm::StringRef input);
 
+// Typed final SDK-input CFG/SSA for finite lowering-family applicability.
+// This is an index of this input, not an independent native schedule proof.
+llvm::Expected<std::string> indexGcuExecutionStructure(llvm::StringRef input);
+
 // Check the actual before/after GCU IR, including SSA/CFG preservation and the
 // permitted observer memory effects. This is not a final native timing proof.
 llvm::Expected<std::string>
