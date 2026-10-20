@@ -56,3 +56,48 @@ DWARF reader 可复用现有 LLVM Object/DWARF 依赖，输出有界的 DIE、se
 debug value 也不是保活/阻止优化的执行屏障；本路线应接受 unavailable，而不是为追求 coverage 添加 volatile store、额外时钟或强制 O0。新 CPU ELF 仅用于能力判断；即使 executable bytes 相同，仍不能把新增 DWARF 直接嫁接成旧 loaded capture 的完整证书。后续产品若产出新对象，继续按原身份/加载范围绑定，不在本轮要求新的设备回放。
 
 **有限结论：没有观察到根本不可能的接口障碍；有两个明确的现实现前提要改——Full variable emission 与允许仅 debug-op 扩展的安全跨-context 桥。** 当前未证的是实际 SDK 正常优化后的 location coverage/target frame-register 描述和字段对应，不是要求新的源独占耗时、完整 ISA、精确 issue order 或 hardware busy 证明。本路线可减少现有值流缺口的实现负担，不能单靠 DWARF 关闭 source-region 次序、loop、ordinary pipeline 或 whole-goal。
+
+## 三份实际 CPU probe 的最终收束
+
+本节更新此前“未读完整 DWARF”和原型建议的进度。已只读核验 `gcu-debug-values-details-v2.json` 的完整 v1 DWARF/allocated-section 表（SHA256 `8460f7b3e751a728b741e9edc5af839c427ac3ac5524c73163c48f28817d0646`），v2 poll 与 failure 的头部诊断，以及 `probe_gcu_debug_values_v3.py`、v3 poll 和 `gcu-debug-values-details-v4.json` 的完整 v3 DWARF/section 表（SHA256 `15f73d04584f2d8af8b022933c6b33288c7f8cc1f71584071a098407c42ab97e`）。没有执行新探针、设备或 SDK，也不建议本轮追加探针。
+
+### v1：部分真实位置可用，i64 ticks 的表达式不足
+
+通过 `DW_AT_abstract_origin` 对应变量名称及 location-list offset，原输出确实给出：
+
+| 角色 | 实际 DWARF 位置 | 半开 PC 范围 |
+| --- | --- | --- |
+| site | `DW_OP_reg15` | `[0xaaa0,0xabd0)` |
+| begin low | `DW_OP_reg23` | `[0xaaa0,0xabd0)` |
+| begin high | `DW_OP_breg2 + 172`（`0xac`） | `[0xaaa0,0xabd0)` |
+| begin identity | `DW_OP_breg2 + 140`（`0x8c`） | `[0xaaa0,0xabd0)` |
+| end identity | `DW_OP_reg5` | `[0xab10,0xab20)` |
+| i64 end ticks | `breg9+0; constu 16383; and; lit0; or; stack_value` | `[0xab10,0xabd0)` |
+
+两个 `breg2` 表达式没有 `stack_value`，描述的是相应地址上的 i32 变量位置，不是把地址数值当字段值。这些具体 spill 候选与原 native `0xac9a: ld.w r23,[sp,0xac]`、`0xaf5a: ld.w r14,[sp,0x8c]` 及后续 word5/18 stores 相吻合；begin identity 应以 **`0x8c`** 为准，不能沿用 `0xbc` 的人工猜测。正式位置 reader 仍应固定实际目标的 DWARF register2 与 native `sp` 的对应；本例也显示“零 `fbreg` 计数”并不代表没有 stack location。
+
+**i64 ticks 不能接受为完整 clock 值。** 原 native 的 `r9` 是高字，完整返回值需要低字以及高字左移 32 后拼接。实际 debug expression 只有 `(r9 & 0x3fff) | 0`，既没有 low 来源，也没有 `shl 32` 或等价 pieces，虽 DIE 类型为 8-byte unsigned，也不足以表达完整 ticks。这是该 SDK debug salvage 的具体可靠性风险；不能因变量名和 `DW_AT_location` 存在就接受。它不证明原 recorder 的 runtime 数值有错：原 executable bytes 相同，已核 native reader/record 值流是另一个证据链。
+
+四个 begin/site 范围都在 record body 另入口 `0xabd0` 处终止，end identity 更早终止；原字段 stores 在其后。不得将这些范围外推到 stores，也不得据它排除 `0x9720` 入口或覆盖完整记录路径。
+
+v1 allocated-section 比较的修正版把 `SHT_NOBITS`（type8）的 `.bss` 只按 logical metadata 比较，不再哈希不属于该 section 的 file slice；这一修正正确。修正表中旧新 11 个 allocated sections 的地址、type、flags、size 及所有有 file contents 的 SHA 均一致；`.bss` 地址 142,512、size 1,572,352，SHA 为 null。先前 NOBITS 错误切片得到的 all-alloc false 应废弃。这个结果加强了 v1 是 debug-only CPU 变体的身份依据，仍不是给旧 capture 嫁接新 DWARF 的完整产品资格。
+
+### v2：直接给 i32 trunc 结果加描述，实际 SDK codegen 失败
+
+实际 poll 的 diagnostic runner terminal 为 0，耗时 0.966444326 s；**它不代表编译通过**。结果明确 `SDK_parser_accepted=true`、`SDK_codegen_accepted=false`，真实步骤 parse 0 / codegen 1。failure 头部是 `LLVM ERROR: unsupported opcode found in DIExpression`，发生在 `gcu-compiler-llvm-spirv` 的 `SPIRV::LLVMToSPIRVPass`。本次没有把后续私有 linked IR dump 全量输出或写入报告。
+
+这份变体新增 `%311/%313` 的 end low/high i32 描述，实际未走通；因此此前“可改为 i32 两字描述”的建议只能保留为已试失败的具体路径，不能继续当作 SDK 已支持的补救。现有诊断没有指出具体是哪一个 DIExpression opcode，不推测其原因，也不泛化成所有 i32 debug value 都不支持。
+
+### v3：动态字段角色可导出部分位置，但改变代码且 join coverage 仍不完整
+
+已读 v3 selector/runner（SHA256 `0865f65b90fe2ac4ff6efd1158fe234374570cc5efe3e7a4bba76bae9080e960`）。它只用于这个原件：从实际 `%77` ring GEP、常量字段 offset 和 magic 找十组完整 32-word records，在四种 begin/site stores 前加入同一 role 变量的 40 次描述，不添加 end-trunc 描述。它没有成为通用产品 parser，不能据本诊断 selector 直接宣称任意 record 都能自动识别。
+
+v3 terminal 0，耗时 1.116693145 s，真实 SDK parse/codegen/readelf 均 0；四个变量名称、四个 location attributes、28 个 register expressions 被导出。新 ELF SHA256 `ab8e465985e403f642d1ca31f712b69dd31cc6fb23f8c756b5a71a2890358a22`。原 IR producer/数学没有改写，但 **executable bytes 不同**：`.text` 从 138,896 增至 139,072 bytes（+176），SHA 也改变；后续分配地址与 relocation 等表随之变化，`.bss` 从 142,512 移到 142,688。不能把“只加 debug 信息”当作 native allocation/布局必然不变，也不能把该对象的 PC/location 嫁接到旧 loaded ELF。
+
+完整 v3 DWARF 确实产生多个常量、寄存器及 `breg2` 区段，比只给单个 join 加六变量更丰富。但共同区段的四个角色仍仅在 `[0xabe0,0xabf0)` 有描述：begin low 为 r23，begin high 为 `breg2+176`，begin identity 为 `breg2+144`，site 为 r15。地址及 stack offsets 已属于新对象，不能套原 `0xabd0`、`sp+0xac/0x8c`；这些短范围也尚未提供后续所有 stores 的完备覆盖。40 次 debug 描述不等于 40 个已核的最终字段写入。
+
+### 最终有限结论与最少下一步
+
+三份原件足以界定当前路线：**SDK 能导出部分真实 begin/site 的 compiler-owned 位置，包括 stack 地址；但 i64 salvage 不完整、这组 trunc debug 触发 SPIRV 编译失败、动态 role-use 描述改变代码且共享 join 后仍有 coverage gap。** 因而它尚不是可直接替代现有 finite native 路径证据的产品捷径；这也不是对全部 debug-value 路线的否定。
+
+本轮到此停止能力探针。保留已发现的 begin/site 位置作为有界 spill/寄存器候选，用原 IR 的真实 phi/store 来源与已有小范围 native/CFG 证据核对；end 继续使用已通过的 finite inline reader/relative-tail 路线。无法覆盖的入口、区段和值仍 unknown，而不是再让 metadata 计数授予资格。本报告不要求 SDK 修复、更多 ISA、更多数学或新设备矩阵；`debug_value_provenance_qualified`、source/loop、normal-installed 与 whole-goal 资格均保持 false。
