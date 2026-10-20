@@ -17,3 +17,5 @@ Recovered archives, with every indexed member size/SHA256 checked:
 - matching normal install/public/inspection: 216 files, `5bded893677bf0e629a868fcf51baafe31bff073cdf33470c7bf70d59a6acbab`.
 
 Full raw, actor LLVM, private graphs and binaries remain in root/server artifacts. This folder contains small identity/terminal/result records. Final whole-goal review and outstanding Ascend automatic region/loop integration plus GCU native composition are not certified by this milestone.
+
+The continuing independent compiler reviewer rechecked all 216 indexed files, the matching normal installation, frozen public policy/plan and original/adapted MMA/raw association. The finite selection omission is closed; all-path source/native and whole-goal qualifications are still open. See `review/compiler-selection.md`.
