@@ -40,3 +40,28 @@ Remaining original goal work: integrate automatic finite final source/loop
 checks into normal capture/offline paths for GCU/Ascend, connect actual required
 capture coverage, and obtain independent delta closure. This helper alone does
 not satisfy those gates.
+
+
+## Follow-on ELF binding component (V5)
+
+`gcu_native_image.bind_instructions` now supplies the previously test-only
+ELF/disassembly binding as an internal product component. It checks bounded
+ELF sections, ordered/non-overlapping instruction bytes, descriptor/symbol code
+extents and all nonzero executable-byte coverage. SDK routines elsewhere in the
+same executable section remain byte-bound, separately counted, and excluded
+from the returned kernel body. This is byte binding of trusted SDK disassembly,
+not an independent ISA decoder or source/reader qualification.
+
+V5 terminal0 /2.869233883s: 60 normal and60 optimized tests passed; two unchanged
+actual loaded objects match the independently retained byte-audit instruction
+lists. The record-block outcomes stay1/23. Formatter/AST checks passed; returned
+source hashes match this commit. Source-image fixtures are synthetic corruption
+checks; the two loaded objects are the actual positive evidence.
+
+V3 initially rejected linked SDK code outside the kernel symbol, which actually
+exists in both real images. V4 corrected the scope and added its positive
+fixture. V5 additionally bounds aggregate symbol-table traversal. Their original
+terminal/results remain in workspace archive SHA256
+`30cb01526b039771e15d1c111338b849c3055986fe8287e56455ad3b83c0a7c8`.
+No normal install, new compiler/native build, device execution, public provider
+integration or source-loop qualification is claimed for these internal helpers.
