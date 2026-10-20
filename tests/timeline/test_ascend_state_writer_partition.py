@@ -206,3 +206,12 @@ def test_constructed_gm_constant_expression_rejected():
     )
     with pytest.raises(ValueError, match='pointer'):
         run(text)
+
+
+@pytest.mark.parametrize('replacement',
+                         ['i64 0, i64 2, i64 1', 'i64 0, i64 1, i64 0'])
+def test_source_descriptor_contract(replacement):
+    text = sample().replace('i64 0, i64 1, i64 1, ptr addrspace(1)',
+                            replacement + ', ptr addrspace(1)', 1)
+    with pytest.raises(ValueError, match='source transfer'):
+        run(text)

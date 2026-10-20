@@ -467,6 +467,25 @@ def analyze(function_ir, *, state_parameter, grid_parameters, grid, subblocks,
                     all(0 <= n <= (1 << 20) for n in sizes)
                     and all(0 < n <= (1 << 30) for n in strides),
                     'Unverified State transfer extent/stride')
+                source_sizes = [
+                    integer(arguments[3 + i], index) for i in range(dims)
+                ]
+                source_strides = [
+                    integer(arguments[3 + dims + i], index)
+                    for i in range(dims)
+                ]
+                source_offset_bits, _ = _value(arguments[2])
+                source_offset = _signed(integer(arguments[2], index),
+                                        source_offset_bits)
+                _need(
+                    source_sizes == sizes
+                    and all(0 < n <= (1 << 30) for n in source_strides),
+                    'Unverified source transfer extent/stride')
+                source_address = re.fullmatch(
+                    r'ptr addrspace\(6\) inttoptr \(i64 (\d+) to ptr addrspace\(6\)\)',
+                    arguments[1])
+                source_byte_address = int(
+                    source_address[1]) if source_address else None
                 extent = sizes[0] * (sizes[1] if dims == 2 else 1)
                 _need(
                     extent <= (1 << 20)
@@ -487,7 +506,11 @@ def analyze(function_ir, *, state_parameter, grid_parameters, grid, subblocks,
                          instruction=index,
                          element_offset=offset,
                          sizes=sizes,
-                         strides=strides))
+                         strides=strides,
+                         source_offset=source_offset,
+                         source_sizes=source_sizes,
+                         source_strides=source_strides,
+                         source_byte_address=source_byte_address))
             solved_actors += 1
     return dict(actor_instances=solved_actors,
                 write_instances=instances,
