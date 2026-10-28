@@ -15,6 +15,8 @@ import subprocess
 import time
 import uuid
 
+from .timeline_nvidia_late_raw import late_raw_byte_budget
+
 
 class LateCompileError(RuntimeError):
     pass
@@ -198,7 +200,7 @@ class LateLLVMTransform:
             stride = actors * (6 + 4 * capacity) * 8
             if plan.get('segment_words') != stride // 8:
                 raise LateCompileError('Native physical layout differs')
-            if 2 * stride > 8 * 1024 * 1024:
+            if 2 * stride > late_raw_byte_budget(plan):
                 raise LateCompileError('Compact allocation exceeds raw budget')
             sites = plan.get('sites')
             if not isinstance(sites, list) or not 1 <= len(sites) <= 4096:

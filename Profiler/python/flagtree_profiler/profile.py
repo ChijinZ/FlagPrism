@@ -1484,6 +1484,17 @@ def _timeline_site_budget(detail, value):
     return value
 
 
+def _timeline_record_budget(detail, value):
+    """Validate an explicit native record limit before runtime discovery."""
+    if value is None:
+        return None
+    if detail != 'timeline':
+        raise ValueError('timeline_record_capacity requires detail="timeline"')
+    if type(value) is not int or not 1 <= value <= 4096:
+        raise ValueError('timeline_record_capacity must be an integer in 1..4096')
+    return value
+
+
 def start(
     name: Optional[str] = None,
     *,
@@ -1496,6 +1507,7 @@ def start(
     observation_request=None,
     detail=None,
     timeline_max_sites=None,
+    timeline_record_capacity=None,
 ):
     """
     Start profiling with the given name and backend.
@@ -1541,6 +1553,12 @@ def start(
             (1..128) for detail="timeline"; default 8. Required asynchronous
             mechanism sites are additionally retained. Reducing density changes
             coverage and does not qualify instruction placement or overhead.
+        timeline_record_capacity (int, optional): Native records per observed
+            context (1..4096) for detail="timeline". Defaults retain each
+            backend's existing bounded policy. Larger explicit requests remain
+            subject to actual geometry and session byte limits; the producer
+            reports its physical layout and never repairs overflow by dropping
+            loss information. Native record layouts differ across backends.
         observation_request (ObservationRequest or dict, optional): Explicit
             semantic/instance/site/capacity selection. Requires
             hook="instrumentation" and a supported backend lowering; unsupported
@@ -1558,6 +1576,7 @@ def start(
     if detail not in (None, "auto", "timeline"):
         raise ValueError("detail must be None, 'auto', or 'timeline'")
     timeline_sites = _timeline_site_budget(detail, timeline_max_sites)
+    timeline_capacity = _timeline_record_budget(detail, timeline_record_capacity)
     timeline = detail == 'timeline'
     timeline_collector = None
     if ((timeline and _active_sessions) or any(
@@ -1584,7 +1603,8 @@ def start(
                 program_policy='runtime_first_last',
                 automatic=True,
                 max_sites=timeline_sites,
-                max_events_per_instance=2048)
+                max_events_per_instance=(2048 if timeline_capacity is None
+                                         else timeline_capacity))
         elif _is_enflame_backend(backend):
             from .timeline_enflame import EnflameTimelineCollector
             from .observations import ObservationRequest
@@ -1594,7 +1614,8 @@ def start(
                 program_policy='runtime_first_last',
                 automatic=True,
                 max_sites=timeline_sites,
-                max_events_per_instance=4096)
+                max_events_per_instance=(512 if timeline_capacity is None
+                                         else timeline_capacity))
         else:
             raise ValueError('Timeline is not yet implemented on this backend')
         hook = 'instrumentation'
@@ -1620,6 +1641,8 @@ def start(
                              max_sites=timeline_sites,
                              output_selection={'programs': None})
                         if timeline else None)
+    if timeline_capacity is not None:
+        observation_plan['record_capacity'] = timeline_capacity
     if observation_request is not None:
         from .observations import ObservationRequest
         if isinstance(observation_request, dict):

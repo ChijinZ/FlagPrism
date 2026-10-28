@@ -123,3 +123,26 @@ def test_cli_density_rejected_before_backend_discovery(monkeypatch):
     with pytest.raises(ValueError, match='timeline_max_sites'):
         cli.run_profiling(
             SimpleNamespace(detail='timeline', timeline_max_sites=0), [])
+
+
+@pytest.mark.parametrize('value', [True, False, 0, -1, 4097, 1.5, '1022'])
+def test_timeline_record_capacity_rejected_before_runtime_discovery(monkeypatch, value):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+
+    def no_runtime(*args, **kwargs):
+        raise RuntimeError('invalid record request reached runtime discovery')
+
+    monkeypatch.setattr(profile, '_automatic_backend', no_runtime)
+    with pytest.raises(ValueError, match='timeline_record_capacity'):
+        profile.start('not-created', detail='timeline',
+                      timeline_record_capacity=value)
+
+
+@pytest.mark.parametrize('detail', [None, 'auto'])
+def test_timeline_record_capacity_cannot_change_other_modes(monkeypatch, detail):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    with pytest.raises(ValueError, match='requires detail'):
+        profile.start('not-created', detail=detail,
+                      timeline_record_capacity=1022)

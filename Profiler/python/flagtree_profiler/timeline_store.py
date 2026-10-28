@@ -15,6 +15,8 @@ import stat
 import tempfile
 import time
 
+from .timeline_events import canonical_document_byte_budget
+
 
 def json_bytes(value):
     return (json.dumps(value,
@@ -139,7 +141,9 @@ def persist(directory, relative, payload, *, replace=False):
             os.unlink(temporary)
 
 
-def _receipt(directory, relative, *, byte_budget=64 * 1024 * 1024):
+def _receipt(directory, relative, *, byte_budget=None):
+    if byte_budget is None:
+        byte_budget = 4 * canonical_document_byte_budget()
     payload = read_artifact(directory, relative, limit=1024 * 1024)
     data = json.loads(payload)
     if (type(data) is not dict or type(data.get('schema_version')) is not int
@@ -191,7 +195,7 @@ def committed_exports(directory):
     paths = sorted(root.glob('derived/counter-ns/*/complete.json'))
     if len(paths) > 128:
         raise ValueError('Too many retained timeline derivative revisions')
-    remaining, exports = 64 * 1024 * 1024, []
+    remaining, exports = 4 * canonical_document_byte_budget(), []
     for path in paths:
         data = _receipt(root,
                         str(path.relative_to(root)),
@@ -383,7 +387,7 @@ def publish_revision(directory, inputs, files, exports):
         return [dict(row, revalidation_file=name) for row in old['exports']]
     if sum(row['bytes']
            for row in previous) + sum(row['bytes']
-                                      for row in rows) > 16 * 1024 * 1024:
+                                      for row in rows) > canonical_document_byte_budget():
         raise ValueError(
             'Retained timeline traces exceed the session byte budget')
     # Bound all retained derivative files, including an interrupted writer's
@@ -403,7 +407,7 @@ def publish_revision(directory, inputs, files, exports):
     retained += sum(
         len(raw) for name, raw in additions.items()
         if not bundle_path(directory, name).exists())
-    if retained > 64 * 1024 * 1024:
+    if retained > 4 * canonical_document_byte_budget():
         raise ValueError('Retained timeline derivatives exceed byte budget')
     for name, raw in payloads.items():
         persist(directory, name, raw)

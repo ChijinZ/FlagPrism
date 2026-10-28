@@ -4,6 +4,7 @@ from dataclasses import asdict
 from pathlib import Path
 
 from . import timeline_perfetto, timeline_dependencies, timeline_store, timeline_shared
+from .timeline_events import canonical_document_byte_budget
 from .timeline_dependencies import derive_dependency_view, validate_dependency_view
 from .timeline_shared import derive_shared_counter_view
 from .timeline_views import document_sha256
@@ -13,7 +14,9 @@ def encode_dependency_trace(view,
                             canonical,
                             *,
                             proof,
-                            max_bytes=16 * 1024 * 1024):
+                            max_bytes=None):
+    if max_bytes is None:
+        max_bytes = canonical_document_byte_budget()
     view = validate_dependency_view(view, canonical, proof)
     counter = derive_shared_counter_view(canonical, proof.clock)
     leaves = [
@@ -48,7 +51,7 @@ def write_dependency_exports(directory, canonical, proofs):
         payload = encode_dependency_trace(view,
                                           canonical,
                                           proof=proof,
-                                          max_bytes=16 * 1024 * 1024 - total)
+                                          max_bytes=canonical_document_byte_budget() - total)
         total += len(payload)
         view_file, trace_file = 'views/' + domain + '.json', 'traces/' + domain + '.pftrace'
         files[view_file] = timeline_store.json_bytes(view)

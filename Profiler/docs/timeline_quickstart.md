@@ -108,6 +108,14 @@ show actual measurements and these interpretation limits.
 - Unknown observer slots and incomplete observed writers are different states.
   Inspect the retained completeness, loss and overflow fields before interpreting
   a trace as covering the requested execution.
+- For a longer selected stream, set `timeline_record_capacity=1022` in
+  `profiler.start(..., detail="timeline", timeline_record_capacity=1022)`.
+  This sets a native record limit per observed context, with backend-specific
+  record layouts. It changes collection capacity, not the kernel computation
+  or interpretation rules. Actual geometry must still fit the bounded session:
+  an oversized explicit request fails rather than silently shrinking. Omit the
+  argument to retain the existing automatic policy. Keep the initial overflowed
+  capture and use a new output directory for a larger-capacity capture.
 - A full record buffer remains visibly incomplete. It is not repaired by
   dropping the loss flag or filling missing intervals from whole-kernel time.
 - No dependency view can mean that this kernel has no modeled native async
@@ -170,3 +178,17 @@ The capture must retain its original native image binding. Missing or different
 fatbin/ELF hashes or target are rejected before inspection. The returned
 supplement separates the original producer identity from the current analyzer
 identity; it does not upgrade the original capture's qualifications.
+
+For an explicit NVIDIA record capacity, raw allocation follows the actual
+observed threads and selected programs: `programs * threads * (6 + 4 * capacity) * 8`
+bytes, plus a 128-byte allocation guard. The default automatic 8 MiB admission
+limit is unchanged. Explicit capacity admits the corresponding bounded layout
+(up to 4096 records and 1024 threads); it does not preallocate the maximum or
+remove overflow checks. Retained trace-export size limits are separate from raw
+record capacity.
+
+If a complete capture exceeds the canonical JSON document default (16 MiB),
+set `FLAGTREE_PROFILER_TIMELINE_DOCUMENT_MB=32` or `64` before profiling.
+This raises the host canonical-document and trace-payload budgets (maximum
+64 MiB each), with a derivative-tree ceiling of four times that value. It does
+not change record counts, completeness, clocks or semantic checks.

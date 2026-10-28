@@ -36,13 +36,20 @@ class LateTimelineHook(InstrumentationHook):
         self._late_transform = LateLLVMTransform(
             tool,
             self._late_base.with_suffix('.late-compiles'),
-            max_sites=observation_plan['max_sites'])
+            max_sites=observation_plan['max_sites'],
+            capacity=observation_plan.get('record_capacity'))
         super().__init__(mode_obj, observation_plan=observation_plan)
 
     def _init_timeline(self):
+        capacity = self._late_transform.capacity
+        # Geometry is validated at compile/admission. This is an admission
+        # ceiling, not a preallocation; only actual selected programs allocate.
+        budget = (8 * 1024 * 1024 if capacity is None else
+                  2 * 1024 * (6 + 4 * capacity) * 8 + 128)
         self._init_timeline_state(LateCudaTimelineTransport(),
                                   guard_bytes=128,
-                                  max_cumulative_raw_bytes=8 * 1024 * 1024)
+                                  max_cumulative_raw_bytes=budget,
+                                  max_pending_bytes=budget)
         self.allocator = TimelineAllocator(self)
 
     def _timeline_fingerprint(self):

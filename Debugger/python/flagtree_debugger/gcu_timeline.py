@@ -110,11 +110,12 @@ def prepare_ttir(module, metadata, request, binding):
         binding.get_debug_tracked_op_table_json(module))
     metadata['debug_kernel_id'] = binding.get_debug_kernel_id(module)
     hidden = binding.prepare_late_observation_abi(module)
-    # A bounded on-chip ring replaces mid-kernel publication. The user-requested
-    # maximum is an upper bound; loss is reported if the selected stream fills.
-    capacity = min(request['max_events_per_instance'], 512)
-    if capacity < 1:
-        raise ValueError('GCU execution capacity must be positive')
+    # A bounded on-chip ring replaces mid-kernel publication. Public automatic
+    # capture keeps its 512-record default; explicit capacity is propagated to
+    # the existing native producer and checked against its 4096-record bound.
+    capacity = request['max_events_per_instance']
+    if not 1 <= capacity <= 4096:
+        raise ValueError('GCU execution capacity must be in 1..4096')
     metadata.update(debug_launch_hidden_arg=True,
                     debug_protocol_version=2,
                     debug_record_level=1,

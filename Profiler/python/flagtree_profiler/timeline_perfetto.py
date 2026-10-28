@@ -94,13 +94,15 @@ def encode_counter_trace(view,
                          canonical,
                          *,
                          proof,
-                         max_bytes=16 * 1024 * 1024):
+                         max_bytes=None):
     """Encode one observer; no clocks are aligned and no flows are invented.
 
     Same-site overlapping intervals occupy independent lanes, preserving every
     endpoint without violating Perfetto's begin/end stack. Raw append order is
     untouched; this is a separate chronological export projection.
     """
+    if max_bytes is None:
+        max_bytes = timeline_events.canonical_document_byte_budget()
     view = validate_counter_view(view, canonical, proof)
     return _encode_counter_views([view], max_bytes=max_bytes)
 
@@ -449,7 +451,7 @@ def write_counter_exports(directory, prefix, views, canonical, *, proofs):
         data = encode_counter_trace(view,
                                     canonical,
                                     proof=by_observer[observer],
-                                    max_bytes=16 * 1024 * 1024 - total)
+                                    max_bytes=timeline_events.canonical_document_byte_budget() - total)
         total += len(data)
         files[view_file] = timeline_store.json_bytes(view)
         files[trace_file] = data
@@ -565,8 +567,10 @@ def encode_shared_counter_trace(view,
                                 canonical,
                                 *,
                                 proof,
-                                max_bytes=16 * 1024 * 1024):
+                                max_bytes=None):
     from .timeline_shared import validate_shared_counter_view
+    if max_bytes is None:
+        max_bytes = timeline_events.canonical_document_byte_budget()
     view = validate_shared_counter_view(view, canonical, proof)
     leaves = [
         dict(view,
@@ -607,7 +611,7 @@ def write_shared_counter_exports(directory, canonical, proofs):
         payload = encode_shared_counter_trace(view,
                                               canonical,
                                               proof=proof,
-                                              max_bytes=16 * 1024 * 1024 -
+                                              max_bytes=timeline_events.canonical_document_byte_budget() -
                                               total)
         total += len(payload)
         view_file = 'views/' + proof.domain_id + '.json'

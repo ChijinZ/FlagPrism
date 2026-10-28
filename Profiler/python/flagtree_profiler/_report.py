@@ -1188,6 +1188,7 @@ def linked_html(title, links, description=''):
 
 def write_timeline_page(output):
     """Link actual Perfetto exports without embedding all compiler metadata."""
+    from .timeline_events import canonical_document_byte_budget
     from .timeline_store import bundle_path, read_artifact
     output = Path(output)
     root = output / 'timeline'
@@ -1205,7 +1206,7 @@ def write_timeline_page(output):
                     continue
                 path = bundle_path(root, relative)
                 if not path.is_file() or path.stat(
-                ).st_size > 16 * 1024 * 1024:
+                ).st_size > canonical_document_byte_budget():
                     raise ValueError(
                         'Missing or oversized Perfetto trace link')
                 seen.add(relative)

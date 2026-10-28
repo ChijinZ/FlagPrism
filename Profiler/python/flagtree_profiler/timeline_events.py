@@ -7,6 +7,7 @@ Raw tick fields remain integers; a certified ns view must be derived separately.
 import copy
 import hashlib
 import json
+import os
 
 SCHEMA_VERSION = 1
 SUPPORTED_SCHEMA_VERSIONS = (1, 2)
@@ -66,6 +67,14 @@ def _refs(value, table):
 def _attributes(value):
     if type(value) is not dict or any(type(k) is not str or '.' not in k for k in value):
         raise ValueError('Descriptive backend attributes require explicit namespaces')
+
+
+def canonical_document_byte_budget():
+    """User-selected JSON budget within the artifact reader's 64 MiB bound."""
+    value = os.environ.get('FLAGTREE_PROFILER_TIMELINE_DOCUMENT_MB', '16')
+    if value not in ('16', '32', '64'):
+        raise ValueError('FLAGTREE_PROFILER_TIMELINE_DOCUMENT_MB must be 16, 32, or 64')
+    return int(value) * 1024 * 1024
 
 
 def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
@@ -308,6 +317,6 @@ def validate_raw_batch(batch, *, max_records=65536, max_events=32768):
     # JSON validates finite, bounded description values without serializing any
     # device resource. No arbitrary class is retained in an accepted batch.
     payload = json.dumps(batch, allow_nan=False).encode()
-    if len(payload) > 16 * 1024 * 1024:
-        raise ValueError('Canonical raw document exceeds its 16 MiB budget')
+    if len(payload) > canonical_document_byte_budget():
+        raise ValueError('Canonical raw document exceeds its configured byte budget')
     return copy.deepcopy(batch)

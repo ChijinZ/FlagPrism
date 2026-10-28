@@ -18,6 +18,15 @@ def _int(value, label, low, high):
     return value
 
 
+def late_raw_byte_budget(manifest):
+    """Bound explicit record geometry; keep automatic admission at 8 MiB."""
+    if manifest.get('capacity_policy') != 'explicit-record-count':
+        return 8 * 1024 * 1024
+    actors = _int(manifest.get('actors'), 'actor count', 1, 1024)
+    capacity = _int(manifest.get('capacity_per_program'), 'capacity', 1, 4096)
+    return 2 * actors * (6 + 4 * capacity) * 8
+
+
 def decode_late_raw(manifest, raw, *, slots):
     """Decode exact header/record spans in program/logical-word/actor order.
 
@@ -37,7 +46,7 @@ def decode_late_raw(manifest, raw, *, slots):
     stride = actors * (6 + 4 * capacity)
     if manifest.get('segment_words') != stride:
         raise LateRawError('Manifest stride differs from record layout')
-    if type(raw) is not bytes or len(raw) > 8 * 1024 * 1024:
+    if type(raw) is not bytes or len(raw) > late_raw_byte_budget(manifest):
         raise LateRawError('Raw bytes exceed bounded capture budget')
     if type(slots) not in (tuple, list) or len(slots) > 2:
         raise LateRawError('Expected compact first/last slot mapping')

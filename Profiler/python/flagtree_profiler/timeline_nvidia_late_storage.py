@@ -1,5 +1,6 @@
 """Native late-record layout admission using common compact program arithmetic."""
 from .timeline_storage import plan_selected_program_storage
+from .timeline_nvidia_late_raw import late_raw_byte_budget
 from .timeline_cuda_runtime import CudaTimelineTransport
 
 
@@ -15,7 +16,7 @@ def plan_late_storage(plan,
                       scratch_size,
                       alignment,
                       num_ctas,
-                      max_raw_bytes=8 * 1024 * 1024):
+                      max_raw_bytes=None):
     if (not isinstance(plan, dict)
             or type(plan.get('schema_version')) is not int
             or type(plan.get('profile_argument_abi')) is not int
@@ -48,6 +49,8 @@ def plan_late_storage(plan,
             or plan.get('segment_words') != stride // 8 or alignment != 8):
         raise ValueError(
             'Launch stride/alignment differs from native late layout')
+    if max_raw_bytes is None:
+        max_raw_bytes = late_raw_byte_budget(plan)
     return plan_selected_program_storage(plan,
                                          grid=grid,
                                          scratch_size=stride,
