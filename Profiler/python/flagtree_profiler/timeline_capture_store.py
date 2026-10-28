@@ -6,6 +6,7 @@ ordinary user dictionaries are not interpreted as reference markers.
 """
 import copy
 import json
+import os
 from pathlib import Path
 import re
 import zlib
@@ -18,6 +19,13 @@ MAX_REFERENCES = 256
 MAX_DEPTH = 64
 THRESHOLD = 4096
 VERSION_KEY = 'flagprism_capture_storage'
+
+
+def _max_references():
+    value = os.environ.get('FLAGTREE_PROFILER_TIMELINE_OBJECT_LIMIT', '256')
+    if value not in ('256', '512', '1024', '2048', '4096'):
+        raise ValueError('FLAGTREE_PROFILER_TIMELINE_OBJECT_LIMIT must be 256, 512, 1024, 2048, or 4096')
+    return int(value)
 
 
 def _need(condition, message):
@@ -77,7 +85,7 @@ def persist_capture(directory, relative, capture):
                     dict(row, path=[key, *row['path']]) for row in refs)
         else:
             small = value
-        _need(len(references) <= MAX_REFERENCES, 'Too many capture references')
+        _need(len(references) <= _max_references(), 'Too many capture references')
         payload = json_bytes(_envelope(small, references))
         if depth and len(payload) >= THRESHOLD:
             _need(
@@ -90,7 +98,7 @@ def persist_capture(directory, relative, capture):
                 _need(decoded_object_bytes <= LIMIT,
                       'Capture object read budget exceeded')
                 objects[name] = packed
-            _need(len(objects) <= MAX_REFERENCES, 'Too many capture objects')
+            _need(len(objects) <= _max_references(), 'Too many capture objects')
             return None, [
                 dict(path=[],
                      file=name,
@@ -145,7 +153,7 @@ def load_capture(directory, relative, *, retain=None):
             and envelope[VERSION_KEY] == 1, 'Unknown capture storage envelope')
         refs = envelope['references']
         _need(
-            type(refs) is list and len(refs) <= MAX_REFERENCES,
+            type(refs) is list and len(refs) <= _max_references(),
             'Invalid capture reference list')
         value = copy.deepcopy(envelope['value'])
         _check_depth(value)
@@ -184,7 +192,7 @@ def load_capture(directory, relative, *, retain=None):
             _need(digest not in active, 'Cyclic capture references')
             if key not in cache:
                 seen.add(digest)
-                _need(len(seen) <= MAX_REFERENCES, 'Too many capture objects')
+                _need(len(seen) <= _max_references(), 'Too many capture objects')
                 packed = read_artifact(directory,
                                        row['file'],
                                        limit=row['bytes'])

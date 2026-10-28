@@ -252,3 +252,20 @@ def test_offline_original_includes_objects_in_authoritative_input_closure(
     for relative, identity in inputs.items():
         payload = (tmp_path / relative).read_bytes()
         assert identity == dict(sha256=sha256(payload), bytes=len(payload))
+
+
+def test_explicit_object_capacity_keeps_large_capture_lossless(tmp_path, monkeypatch):
+    value = {'many': [{'payload': str(i) + ('x' * 4200)} for i in range(300)]}
+    with pytest.raises(ValueError, match='Too many capture objects'):
+        store.persist_capture(tmp_path, 'capture.json', value)
+    assert not (tmp_path / 'capture.json').exists()
+    monkeypatch.setenv('FLAGTREE_PROFILER_TIMELINE_OBJECT_LIMIT', '4096')
+    store.persist_capture(tmp_path, 'capture.json', value)
+    assert store.load_capture(tmp_path, 'capture.json') == value
+
+
+@pytest.mark.parametrize('value', ['0', '-1', '4097', 'unbounded'])
+def test_object_capacity_rejects_unbounded_values(monkeypatch, value):
+    monkeypatch.setenv('FLAGTREE_PROFILER_TIMELINE_OBJECT_LIMIT', value)
+    with pytest.raises(ValueError):
+        store._max_references()

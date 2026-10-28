@@ -192,3 +192,8 @@ set `FLAGTREE_PROFILER_TIMELINE_DOCUMENT_MB=32` or `64` before profiling.
 This raises the host canonical-document and trace-payload budgets (maximum
 64 MiB each), with a derivative-tree ceiling of four times that value. It does
 not change record counts, completeness, clocks or semantic checks.
+
+For captures with many distinct compiler-metadata objects, set
+`FLAGTREE_PROFILER_TIMELINE_OBJECT_LIMIT=4096` (choices: 256 default, 512,
+1024, 2048, 4096). The writer and reader use the same bound; content hashes,
+maximum depth, decoded-byte limits, and lossless round trips remain checked.
