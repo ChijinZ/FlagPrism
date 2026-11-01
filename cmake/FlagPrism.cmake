@@ -20,9 +20,11 @@ option(TRITON_BUILD_FLAGPRISM
        "Build the bundled FlagPrism debugger and profiler"
        ${_flagprism_default})
 
-set(_flagprism_supported_backends all nvidia ascend mthreads tianshu enflame)
+set(_flagprism_supported_backends all nvidia ascend mthreads tianshu enflame metax)
 set(_flagprism_backend_default "all")
-if(FLAGTREE_BACKEND STREQUAL "enflame")
+if(FLAGTREE_BACKEND STREQUAL "metax" OR FLAGTREE_BACKEND STREQUAL "maca")
+  set(_flagprism_backend_default "metax")
+elseif(FLAGTREE_BACKEND STREQUAL "enflame")
   set(_flagprism_backend_default "enflame")
 elseif(FLAGTREE_BACKEND STREQUAL "ascend")
   set(_flagprism_backend_default "ascend")
@@ -36,17 +38,20 @@ elseif(FLAGTREE_BACKEND STREQUAL "mthreads" OR
 endif()
 if(NOT FLAGPRISM_BACKEND)
   set(FLAGPRISM_BACKEND "${_flagprism_backend_default}" CACHE STRING
-      "FlagPrism vendor backend to compile (all, nvidia, ascend, mthreads, tianshu, or enflame)" FORCE)
+      "FlagPrism vendor backend to compile (all, nvidia, ascend, mthreads, tianshu, enflame, or metax)" FORCE)
 endif()
 string(TOLOWER "${FLAGPRISM_BACKEND}" FLAGPRISM_BACKEND)
+if(FLAGPRISM_BACKEND STREQUAL "maca")
+  set(FLAGPRISM_BACKEND "metax" CACHE STRING "FlagPrism backend" FORCE)
+endif()
 if(FLAGPRISM_BACKEND STREQUAL "cuda")
   set(FLAGPRISM_BACKEND "nvidia" CACHE STRING "FlagPrism backend" FORCE)
 endif()
-set_property(CACHE FLAGPRISM_BACKEND PROPERTY STRINGS all nvidia ascend mthreads tianshu enflame)
+set_property(CACHE FLAGPRISM_BACKEND PROPERTY STRINGS all nvidia ascend mthreads tianshu enflame metax)
 if(NOT FLAGPRISM_BACKEND IN_LIST _flagprism_supported_backends)
   message(FATAL_ERROR
     "Unsupported FLAGPRISM_BACKEND='${FLAGPRISM_BACKEND}'. "
-    "Choose all, nvidia, ascend, mthreads, tianshu, or enflame.")
+    "Choose all, nvidia, ascend, mthreads, tianshu, enflame, or metax.")
 endif()
 set(FLAGPRISM_BUILD_VENDOR_LOWERING OFF)
 if(FLAGPRISM_BACKEND STREQUAL "all" OR FLAGPRISM_BACKEND STREQUAL "nvidia")
@@ -54,7 +59,33 @@ if(FLAGPRISM_BACKEND STREQUAL "all" OR FLAGPRISM_BACKEND STREQUAL "nvidia")
 endif()
 message(STATUS "FlagPrism vendor backend: ${FLAGPRISM_BACKEND}")
 
+# FlagPrism：all builds include MetaX when its optional SDK is available.
+if(FLAGPRISM_BACKEND STREQUAL "all" OR FLAGPRISM_BACKEND STREQUAL "metax")
+  find_path(FLAGPRISM_MACA_INCLUDE_DIR mcpti/mcpti.h
+    HINTS "$ENV{MACA_PATH}/include" /opt/maca/include)
+  find_library(FLAGPRISM_MCPTI_LIBRARY mcpti
+    HINTS "$ENV{MACA_PATH}/lib" /opt/maca/lib)
+  find_library(FLAGPRISM_MACA_RUNTIME mcruntime
+    HINTS "$ENV{MACA_PATH}/lib" /opt/maca/lib)
+  if(FLAGPRISM_MACA_INCLUDE_DIR AND FLAGPRISM_MCPTI_LIBRARY AND FLAGPRISM_MACA_RUNTIME)
+    set(FLAGPRISM_HAS_METAX ON)
+  endif()
+endif()
+# FlagPrism end
+
 function(flagprism_apply_backend_compile_definitions target)
+  # FlagPrism：availability is independent of vendor-only build selection.
+  if(FLAGPRISM_HAS_METAX)
+    target_compile_definitions(${target} PRIVATE FLAGPRISM_HAS_METAX=1)
+    target_include_directories(${target} PRIVATE "${FLAGPRISM_MACA_INCLUDE_DIR}")
+    target_link_libraries(${target} PRIVATE "${FLAGPRISM_MACA_RUNTIME}")
+  endif()
+  # FlagPrism end
+  # FlagPrism：isolate MACA builds from unrelated vendor SDKs.
+  if(FLAGPRISM_BACKEND STREQUAL "metax")
+    target_compile_definitions(${target} PRIVATE FLAGPRISM_BACKEND_METAX=1)
+  endif()
+  # FlagPrism end
   if(FLAGPRISM_BACKEND STREQUAL "enflame")
     target_compile_definitions(${target} PRIVATE FLAGPRISM_BACKEND_ENFLAME=1)
   elseif(FLAGPRISM_BACKEND STREQUAL "mthreads")
@@ -70,7 +101,9 @@ function(flagprism_apply_backend_compile_definitions target)
 endfunction()
 
 function(flagprism_enable_debugger_runtime target)
-  if(FLAGPRISM_BACKEND STREQUAL "nvidia")
+  if(FLAGPRISM_BACKEND STREQUAL "metax")
+    flagtree_debugger_enable_maca(${target})
+  elseif(FLAGPRISM_BACKEND STREQUAL "nvidia")
     # NVIDIA uses the existing dynamically dispatched generic runtime.
     return()
   elseif(FLAGPRISM_BACKEND STREQUAL "enflame")
@@ -82,6 +115,11 @@ function(flagprism_enable_debugger_runtime target)
   elseif(FLAGPRISM_BACKEND STREQUAL "ascend")
     flagtree_debugger_enable_cann(${target})
   else()
+    # FlagPrism：do not require MACA on machines without the SDK.
+    if(FLAGPRISM_HAS_METAX)
+      flagtree_debugger_enable_maca(${target})
+    endif()
+    # FlagPrism end
     flagtree_debugger_enable_cann(${target})
     flagtree_debugger_enable_corex(${target})
     flagtree_debugger_enable_musa(${target})
@@ -164,3 +202,21 @@ macro(flagprism_add_components)
     flagprism_add_profiler_components()
   endif()
 endmacro()
+
+# FlagPrism：CLI tools must find external-checkout registration headers without
+# assuming the checkout lives under FlagTree/third_party/FlagPrism.
+function(flagprism_configure_cli_headers)
+  set(_header_root "${CMAKE_BINARY_DIR}/flagprism_cli_headers")
+  set(_registration "FlagPrism/Profiler/Dialect/include/Integration/Registration.h")
+  configure_file("${FLAGPRISM_SOURCE_DIR}/Profiler/Dialect/include/Integration/Registration.h"
+                 "${_header_root}/${_registration}" COPYONLY)
+  foreach(_target triton-opt triton-reduce triton-lsp triton-tensor-layout)
+    if(TARGET ${_target})
+      target_include_directories(${_target} PRIVATE "${_header_root}")
+    endif()
+  endforeach()
+endfunction()
+if(TRITON_BUILD_FLAGPRISM)
+  cmake_language(DEFER DIRECTORY "${PROJECT_SOURCE_DIR}" CALL flagprism_configure_cli_headers)
+endif()
+# FlagPrism end

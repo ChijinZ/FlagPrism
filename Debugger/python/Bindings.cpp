@@ -149,6 +149,10 @@ BackendKind parseBackendKind(std::string_view backendName) {
   if (lowered == "enflame" || lowered == "gcu" || lowered == "tops") {
     return BackendKind::ENFLAME;
   }
+  // FlagPrism：accept both the vendor and Triton target names.
+  if (lowered == "metax" || lowered == "maca")
+    return BackendKind::METAX;
+  // FlagPrism end
   return BackendKind::UNKNOWN;
 }
 

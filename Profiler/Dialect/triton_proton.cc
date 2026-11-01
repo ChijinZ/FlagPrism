@@ -1,12 +1,15 @@
 #include "Analysis/AutomaticScopes.h"
 #include "Analysis/ScopeIdAllocation.h"
 #include "Conversion/ProtonGPUToLLVM/Passes.h"
-#if !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
+// FlagPrism：MACA does not compile CUDA or AMD device-counter lowering.
+#if !defined(FLAGPRISM_BACKEND_METAX) &&                                       \
+    !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
     !defined(FLAGPRISM_BACKEND_TIANSHU) &&                                     \
     !defined(FLAGPRISM_BACKEND_ASCEND) && !defined(FLAGPRISM_BACKEND_MTHREADS)
 #include "Conversion/ProtonGPUToLLVM/ProtonAMDGPUToLLVM/Passes.h"
 #include "Conversion/ProtonGPUToLLVM/ProtonNvidiaGPUToLLVM/Passes.h"
 #endif
+// FlagPrism end
 #include "Conversion/ProtonToProtonGPU/Passes.h"
 #include "Dialect/Proton/IR/Dialect.h"
 #include "Dialect/ProtonGPU/IR/Dialect.h"
@@ -389,7 +392,9 @@ void init_triton_proton(py::module &&m) {
               profileScratchSize, profileScratchAlignment, clkExt));
         });
 
-#if !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
+// FlagPrism：MACA does not compile CUDA or AMD device-counter lowering.
+#if !defined(FLAGPRISM_BACKEND_METAX) &&                                       \
+    !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
     !defined(FLAGPRISM_BACKEND_TIANSHU) &&                                     \
     !defined(FLAGPRISM_BACKEND_ASCEND) && !defined(FLAGPRISM_BACKEND_MTHREADS)
   ADD_PASS_WRAPPER_0("add_convert_proton_nvidia_gpu_to_llvm",
@@ -398,16 +403,20 @@ void init_triton_proton(py::module &&m) {
                      proton::gpu::createConvertProtonAMDGPUToLLVMPass,
                      const std::string &);
 #endif
+  // FlagPrism end
   ADD_PASS_WRAPPER_0("add_allocate_proton_shared_memory",
                      proton::gpu::createAllocateProtonSharedMemoryPass);
   ADD_PASS_WRAPPER_0("add_allocate_proton_global_scratch_buffer",
                      proton::gpu::createAllocateProtonGlobalScratchBufferPass);
   ADD_PASS_WRAPPER_0("add_schedule_buffer_store",
                      proton::gpu::createScheduleBufferStorePass);
-#if !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
+// FlagPrism：MACA does not compile CUDA or AMD device-counter lowering.
+#if !defined(FLAGPRISM_BACKEND_METAX) &&                                       \
+    !defined(FLAGPRISM_BACKEND_ENFLAME) &&                                     \
     !defined(FLAGPRISM_BACKEND_TIANSHU) &&                                     \
     !defined(FLAGPRISM_BACKEND_ASCEND) && !defined(FLAGPRISM_BACKEND_MTHREADS)
   ADD_PASS_WRAPPER_0("add_sched_barriers",
                      proton::gpu::createAddSchedBarriersPass);
 #endif
+  // FlagPrism end
 }

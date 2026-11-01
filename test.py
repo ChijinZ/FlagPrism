@@ -290,6 +290,10 @@ def worker(args):
                 "ascend": "cann",
                 "npu": "cann",
                 "cann": "cann",
+                # FlagPrism：run the same acceptance suite on MACA.
+                "maca": "metax",
+                "metax": "metax",
+                # FlagPrism end
                 "mthreads": "mthreads",
                 "musa": "mthreads",
                 "tianshu": "tianshu",

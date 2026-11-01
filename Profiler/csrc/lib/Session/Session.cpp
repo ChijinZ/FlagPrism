@@ -535,7 +535,7 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
       scopeId = Scope::getNewScopeId();
       auto opName = syntheticTimelineEvent ? event.opName
                                            : makeUniqueRuntimeOpName(event);
-      if (!syntheticTimelineEvent) {
+      if (!syntheticTimelineEvent && !metaxRuntimeOnly) {
         treeData->addOp(scopeId, opName);
       }
       if (timelineData) {
@@ -562,6 +562,7 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
       }
       treeData->addMetrics(scopeId, vendorMetrics);
     }
+    // FlagPrism end
     if (timelineData) {
       if (!mergeOpSummaryIntoExistingScope) {
         timelineData->addMetric(scopeId, metric);
@@ -731,6 +732,10 @@ void Session::finalize(const std::string &outputFormat) {
     }
 
     auto vendorArtifact = importer->import(metadata, vendorPlan);
+    // FlagPrism：report actual counter availability after hardware collection.
+    if (metadata.backend == "metax")
+      metadata.vendorMetricsEnabled = vendorArtifact.enabledMetrics;
+    // FlagPrism end
     appendUnique(metadata.degradeReasons, vendorArtifact.degradeReasons);
     auto overlayCount = overlayVendorRuntimeMetrics(
         data.get(), timelineData.get(), vendorArtifact, metadata.device.type);
@@ -742,7 +747,11 @@ void Session::finalize(const std::string &outputFormat) {
         countAssociationsBySource(vendorArtifact, "runtime_base_fallback");
     auto nativeBaseCount = countAssociationsBySources(
         vendorArtifact,
-        {"aclprof_op_summary", "aclprof_task_time", "topspti_activity"});
+        // FlagPrism：count MCPTI device intervals as native runtime
+        // associations.
+        {"aclprof_op_summary", "aclprof_task_time", "topspti_activity",
+         "mcpti_activity"} // FlagPrism end
+    );
     metadata.config["vendor_runtime_metric_overlays"] =
         std::to_string(overlayCount);
     metadata.config["vendor_association_collected"] =
