@@ -1,0 +1,39 @@
+--- a/third_party/metax/backend/compiler.py
++++ b/third_party/metax/backend/compiler.py
+@@ -173,6 +173,8 @@
+ 
+ 
+ class MACABackend(BaseBackend):
++    optimized_llvm_transform_version = 1
++    instrumentation = None
+ 
+     @staticmethod
+     def supports_target(target: GPUTarget):
+@@ -389,6 +391,12 @@
+             assert maca_path, "Not found MACA_PATH"
+             llir = metax.link_extern_libs(llir, paths, maca_path)
+         metadata["name"] = maca_get_kernel_name(llir)
++        transform = getattr(MACABackend.instrumentation,
++                            "transform_optimized_llvm", None)
++        if transform is not None:
++            llir = transform(llir, metadata)
++            if not isinstance(llir, str) or not llir.strip():
++                raise RuntimeError("Optimized LLVM transform must return nonempty text")
+         return llir
+ 
+     @staticmethod
+--- a/third_party/metax/backend/driver.py
++++ b/third_party/metax/backend/driver.py
+@@ -499,6 +499,12 @@
+         #                                    _allocation._profile_allocator)
+         # self.launch(gridX, gridY, gridZ, stream, function, global_scratch, profile_scratch, *args)
+         def launch(hidden_args=()):
++            validator = getattr(_allocation._profile_allocator.get(), "validate_launch", None)
++            if validator is not None:
++                validator(function=function, grid=(gridX, gridY, gridZ),
++                          scratch_size=self.profile_scratch_size,
++                          alignment=self.profile_scratch_align,
++                          num_ctas=self.num_ctas, stream=stream)
+             global_scratch = allocate_scratch(self.global_scratch_size, self.global_scratch_align,
+                                               _allocation._allocator)
+             profile_scratch = allocate_scratch(self.profile_scratch_size, self.profile_scratch_align,
