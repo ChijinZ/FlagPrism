@@ -9,3 +9,5 @@ Verification: 11 native producer/preservation tests, 3 byte-decoder/allocation t
 A complete staged Python package is available at `/root/chijin-journey-capacity-20261106/output/python`; use it through `PYTHONPATH` with the existing venv Python. Four Python modules and the two rebuilt native artifacts were replaced only in this staging copy. The receipt records their SHA256 values. No device kernel was launched during this work.
 
 Ascend already supports 16384 end-to-end in `Profiler/llvm/AscendTimeline.h`, `Profiler/llvm/AscendLateObserver.cpp`, `Profiler/python/flagtree_profiler/ascend_compiler.py`, the debugger compiler adapter, the storage planner, and the decoder. It requires the public API update, not a new native ABI.
+
+Real-kernel follow-up: GCU DSA with capacity 16384 exhausted compiler-reported local memory (required 1572480 bytes, available 1572352 bytes). The producer uses a local ring in addition to global output slots; the API ceiling does not guarantee a particular kernel fits the device. The same capture succeeded at 8192 according to the root experiment task. Hardware limits were not changed.

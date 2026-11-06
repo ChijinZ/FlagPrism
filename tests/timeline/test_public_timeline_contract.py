@@ -169,7 +169,7 @@ def test_ascend_extended_capacity_reaches_the_native_request(monkeypatch):
     from flagtree.profiler import observations, timeline_ascend
     monkeypatch.setattr(profile, 'is_command_line', lambda: False)
     monkeypatch.setattr(profile, '_automatic_backend', lambda _: 'cann')
-    monkeypatch.setattr(timeline_ascend, 'AscendTimelineCollector', lambda: None)
+    monkeypatch.setattr(timeline_ascend, 'AscendTimelineCollector', lambda **kwargs: None)
     original = observations.ObservationRequest
 
     def verify_request(**kwargs):

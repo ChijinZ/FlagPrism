@@ -1602,7 +1602,8 @@ def start(
         elif _is_cann_backend(backend):
             from .timeline_ascend import AscendTimelineCollector
             from .observations import ObservationRequest
-            timeline_collector = AscendTimelineCollector()
+            timeline_collector = AscendTimelineCollector(
+                record_capacity=timeline_capacity)
             observation_request = ObservationRequest(
                 programs=None,
                 program_policy='runtime_first_last',

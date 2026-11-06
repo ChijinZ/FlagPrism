@@ -137,10 +137,32 @@ class AscendTimelineTransport:
         owner['resource'] = None
 
 
+def ascend_pending_byte_budget(record_capacity=None):
+    """Keep the default admission window when explicitly enlarging each ring.
+
+    A maximum-size launch owns two programs, three actor slots per program,
+    and allocation guards. Scaling their physical size preserves the number of
+    pending full-size launches admitted by the original 8 MiB policy. This is
+    an admission ceiling, not eager allocation; owner-count limits still apply.
+    """
+    default_budget = 8 * 1024 * 1024
+    if record_capacity is None:
+        return default_budget
+    if type(record_capacity) is not int or not 1 <= record_capacity <= 16384:
+        raise ValueError('Ascend timeline pair capacity must be 1..16384')
+    default_physical = 2 * 3 * (64 + 64 * 2048) + 128
+    physical = 2 * 3 * (64 + 64 * record_capacity) + 128
+    return max(default_budget,
+               (default_budget * physical + default_physical - 1)
+               // default_physical)
+
+
 class AscendTimelineCollector(TimelineInstrumentationMixin):
 
-    def __init__(self):
-        self._init_timeline_state(AscendTimelineTransport(), guard_bytes=128)
+    def __init__(self, record_capacity=None):
+        self._init_timeline_state(
+            AscendTimelineTransport(), guard_bytes=128,
+            max_pending_bytes=ascend_pending_byte_budget(record_capacity))
 
     def activate(self):
         from flagtree.debugger import register_launch_prepare_hook
