@@ -148,12 +148,12 @@ def test_timeline_record_capacity_cannot_change_other_modes(monkeypatch, detail)
                       timeline_record_capacity=1022)
 
 
-@pytest.mark.parametrize('backend', ['instrumentation', 'cann'])
-def test_extended_timeline_capacity_is_enflame_only(monkeypatch, backend):
+@pytest.mark.parametrize('backend', ['instrumentation'])
+def test_extended_timeline_capacity_rejects_unverified_backend(monkeypatch, backend):
     profile = importlib.import_module('flagtree.profiler.profile')
     monkeypatch.setattr(profile, 'is_command_line', lambda: False)
     monkeypatch.setattr(profile, '_automatic_backend', lambda _: backend)
-    with pytest.raises(ValueError, match='requires the Enflame backend'):
+    with pytest.raises(ValueError, match='requires Enflame or Ascend'):
         profile.start('not-created', detail='timeline',
                       timeline_record_capacity=16384)
 
@@ -162,3 +162,23 @@ def test_extended_timeline_capacity_keeps_the_unspecified_default():
     profile = importlib.import_module('flagtree.profiler.profile')
     assert profile._timeline_record_budget('timeline', None) is None
     assert profile._timeline_record_budget('timeline', 16384) == 16384
+
+
+def test_ascend_extended_capacity_reaches_the_native_request(monkeypatch):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    from flagtree.profiler import observations, timeline_ascend
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    monkeypatch.setattr(profile, '_automatic_backend', lambda _: 'cann')
+    monkeypatch.setattr(timeline_ascend, 'AscendTimelineCollector', lambda: None)
+    original = observations.ObservationRequest
+
+    def verify_request(**kwargs):
+        request = original(**kwargs)
+        assert request.max_events_per_instance == 16384
+        assert request.program_policy == 'runtime_first_last'
+        raise RuntimeError('accepted bounded Ascend request')
+
+    monkeypatch.setattr(observations, 'ObservationRequest', verify_request)
+    with pytest.raises(RuntimeError, match='accepted bounded Ascend request'):
+        profile.start('not-created', detail='timeline',
+                      timeline_record_capacity=16384)

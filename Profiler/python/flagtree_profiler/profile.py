@@ -1554,7 +1554,7 @@ def start(
             mechanism sites are additionally retained. Reducing density changes
             coverage and does not qualify instruction placement or overhead.
         timeline_record_capacity (int, optional): Native records per observed
-            context for detail="timeline" (1..16384 on Enflame; 1..4096
+            context for detail="timeline" (1..16384 on Enflame/Ascend; 1..4096
             on other backends). Defaults retain each
             backend's existing bounded policy. Larger explicit requests remain
             subject to actual geometry and session byte limits; the producer
@@ -1593,9 +1593,9 @@ def start(
             raise ValueError('Timeline requires the instrumentation hook')
         backend = _automatic_backend(backend)
         if (timeline_capacity is not None and timeline_capacity > 4096
-                and not _is_enflame_backend(backend)):
+                and not (_is_enflame_backend(backend) or _is_cann_backend(backend))):
             raise ValueError(
-                'timeline_record_capacity above 4096 requires the Enflame backend')
+                'timeline_record_capacity above 4096 requires Enflame or Ascend')
         if backend == 'instrumentation':
             from .mode import Default
             mode = Default(buffer_size=32768)
