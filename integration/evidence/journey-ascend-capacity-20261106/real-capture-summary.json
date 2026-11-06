@@ -1,0 +1,222 @@
+{
+  "terminal": {
+    "status": "passed"
+  },
+  "correctness": {
+    "baseline-correctness.json": {
+      "output_max_abs": 1.1509284377098083e-05,
+      "lse_max_abs": 6.198883056640625e-05
+    },
+    "candidate-correctness.json": {
+      "output_max_abs": 1.0745599865913391e-05,
+      "lse_max_abs": 6.67572021484375e-05
+    },
+    "baseline-profile-correctness.json": {
+      "output_max_abs": 1.1509284377098083e-05,
+      "lse_max_abs": 6.198883056640625e-05
+    },
+    "candidate-profile-correctness.json": {
+      "output_max_abs": 1.0745599865913391e-05,
+      "lse_max_abs": 6.67572021484375e-05
+    }
+  },
+  "indexes": {
+    "profile-baseline/timeline/index.json": {
+      "schema_version": 1,
+      "status": "partial_clock_unverified",
+      "captures": [
+        {
+          "invocation_id": "invocation-aa159adc0bcb41cb968e1f59b2f680a6",
+          "capture_id": "timeline-2934a7c555c54b41ba14f39db0121de9",
+          "binary_id": "274eb32c315266afbc7115c55b928f69636e22e5014205dd04e1636606490111",
+          "capture_file": "captures/invocation-aa159adc0bcb41cb968e1f59b2f680a6.json",
+          "capture_status": "raw_complete"
+        }
+      ],
+      "clock_status": "unverified",
+      "failures": [],
+      "pending_decode": [],
+      "retained_owners": [],
+      "retained_owner_states": {},
+      "notes": [
+        "Raw ticks are not certified ns or a shared epoch.",
+        "Logical async facts are not verified time arrows.",
+        "Public collection alone does not satisfy full timeline acceptance."
+      ]
+    },
+    "profile-candidate/timeline/index.json": {
+      "schema_version": 1,
+      "status": "partial_clock_unverified",
+      "captures": [
+        {
+          "invocation_id": "invocation-b291c4d698f5495381b7ce32218f0822",
+          "capture_id": "timeline-f776437095fa4cf7a84f42f8590570d2",
+          "binary_id": "17902278872cbb66283380c2040c2139aff081bd556c79f7b0afcb5c219f7917",
+          "capture_file": "captures/invocation-b291c4d698f5495381b7ce32218f0822.json",
+          "capture_status": "raw_complete"
+        },
+        {
+          "invocation_id": "invocation-e65b6ae67daf4aadb8f6bb16859dc77b",
+          "capture_id": "timeline-f776437095fa4cf7a84f42f8590570d2",
+          "binary_id": "4500d29cb1ea63717bc9b69e6150f7097d9d7ad5b7a34d58e2cea49763deab7e",
+          "capture_file": "captures/invocation-e65b6ae67daf4aadb8f6bb16859dc77b.json",
+          "capture_status": "raw_complete"
+        }
+      ],
+      "clock_status": "unverified",
+      "failures": [],
+      "pending_decode": [],
+      "retained_owners": [],
+      "retained_owner_states": {},
+      "notes": [
+        "Raw ticks are not certified ns or a shared epoch.",
+        "Logical async facts are not verified time arrows.",
+        "Public collection alone does not satisfy full timeline acceptance."
+      ]
+    }
+  },
+  "canonical": [
+    {
+      "file": "profile-baseline/timeline/captures/invocation-aa159adc0bcb41cb968e1f59b2f680a6.events.json",
+      "complete": true,
+      "events": 24184,
+      "records": 48368,
+      "observers": [
+        {
+          "id": "observer-311b969201d53ed263e3b1cfe699d442c8bd0c075a4e1ad2569cbd59264dc80e",
+          "attempted_records": 4120,
+          "retained_records": 4120,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-12595a3bf3f27cdbdac21bdf6a4518973f2490fe94f7596b73414de1b05c0eec",
+          "attempted_records": 10032,
+          "retained_records": 10032,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-decbf162a20caa2ed3b2d3d5fdb17ad2442f16951bd5f6ac684c27eddfbe0b0d",
+          "attempted_records": 10032,
+          "retained_records": 10032,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-a5fc17c0eee3abe5d7947a901e44905979711b0ed5e825d7310b0fa1271997cf",
+          "attempted_records": 4120,
+          "retained_records": 4120,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-82f5312c7748b7752e767da26800522b45e4a04d83b96b9474c0a72912f08758",
+          "attempted_records": 10032,
+          "retained_records": 10032,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-cf3c06e83d0b86d642356851d17ea6e004a47023a290625839945f4ab3250a41",
+          "attempted_records": 10032,
+          "retained_records": 10032,
+          "dropped_records": 0
+        }
+      ]
+    },
+    {
+      "file": "profile-candidate/timeline/captures/invocation-e65b6ae67daf4aadb8f6bb16859dc77b.events.json",
+      "complete": true,
+      "events": 66,
+      "records": 132,
+      "observers": [
+        {
+          "id": "observer-5108574795dff97aae770689b0338151b1c5ea86802753f81b36199bd49ade66",
+          "attempted_records": 66,
+          "retained_records": 66,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-a879881aa16b79879bff4ce38d85e5a8abe259bd3b0c5a707cf9a585b4c31169",
+          "attempted_records": 66,
+          "retained_records": 66,
+          "dropped_records": 0
+        }
+      ]
+    },
+    {
+      "file": "profile-candidate/timeline/captures/invocation-b291c4d698f5495381b7ce32218f0822.events.json",
+      "complete": true,
+      "events": 3128,
+      "records": 6256,
+      "observers": [
+        {
+          "id": "observer-077bc05ac1556c14e5e2771ba637b5cbb21b201a969b9ea27b4b9cc80efe99e3",
+          "attempted_records": 536,
+          "retained_records": 536,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-1520c001bcffbc8e7ce2ba17abedbe306b9973b7d95524c0a8abebb4fa58cc82",
+          "attempted_records": 1296,
+          "retained_records": 1296,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-401c294a80f8e852579cdd8edda85eb466e6b73fe9ae957fe3e7668c62db08bd",
+          "attempted_records": 1296,
+          "retained_records": 1296,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-7450f63e15bb8b496c82bca6ed01ec181b63b224a9872f0990bc2cc1b613d2a0",
+          "attempted_records": 536,
+          "retained_records": 536,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-ea6870f404a1424539fe9f579b962e96955a6143b2770c46930ca20dfc7d722f",
+          "attempted_records": 1296,
+          "retained_records": 1296,
+          "dropped_records": 0
+        },
+        {
+          "id": "observer-26ce085b57f9963046faf72541497e007360a5839b5f3f54f3533d6febccf3e3",
+          "attempted_records": 1296,
+          "retained_records": 1296,
+          "dropped_records": 0
+        }
+      ]
+    }
+  ],
+  "local_archive_receipt": {
+    "sha256": "e75491c52ad8d6f6423d44838e8dab047e575b1ba23a5147afc4bfd07f8025a9",
+    "bytes": 105509655
+  },
+  "local_primary_event_files": [
+    {
+      "path": "profile-baseline/timeline/captures/invocation-aa159adc0bcb41cb968e1f59b2f680a6.events.json",
+      "sha256": "2cd137b014e07495bcd4e24fc05f281bacb964e2f5e851840ddb4bf035341550"
+    },
+    {
+      "path": "profile-candidate/timeline/captures/invocation-e65b6ae67daf4aadb8f6bb16859dc77b.events.json",
+      "sha256": "1455ecabab7d8505f8c2e25ef6f8ea552dd86a6373bad801c2540d89c26da724"
+    },
+    {
+      "path": "profile-candidate/timeline/captures/invocation-b291c4d698f5495381b7ce32218f0822.events.json",
+      "sha256": "4e4d56daf481e4e19294fe808c100b0a0a37addcb57b89af080930f289e82db9"
+    }
+  ],
+  "counter_exports": {
+    "profile-baseline/timeline/captures/invocation-aa159adc0bcb41cb968e1f59b2f680a6.json": {
+      "reason": "Perfetto trace exceeds byte budget; originals remain intact",
+      "status": "unavailable"
+    },
+    "profile-candidate/timeline/captures/invocation-e65b6ae67daf4aadb8f6bb16859dc77b.json": {
+      "read_precision_status": "unverified",
+      "status": "counter_unit_only",
+      "time_arrows_verified": false
+    },
+    "profile-candidate/timeline/captures/invocation-b291c4d698f5495381b7ce32218f0822.json": {
+      "read_precision_status": "unverified",
+      "status": "counter_unit_only",
+      "time_arrows_verified": false
+    }
+  }
+}

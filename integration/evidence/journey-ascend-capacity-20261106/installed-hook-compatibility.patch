@@ -1,0 +1,17 @@
+--- hooks/timeline.py
++++ hooks/timeline.py
+@@ -129,11 +129,13 @@
+                              transport,
+                              *,
+                              guard_bytes=0,
+-                             max_cumulative_raw_bytes=None):
++                             max_cumulative_raw_bytes=None,
++                             max_pending_bytes=8 * 1024 * 1024):
+         from ..timeline_runtime import TimelineOwnerPool
+         self.timeline_pool = TimelineOwnerPool(
+             transport,
+             guard_bytes=guard_bytes,
++            max_pending_bytes=max_pending_bytes,
+             max_cumulative_raw_bytes=max_cumulative_raw_bytes)
+         self._timeline_current = ContextVar('timeline_current_owner',
+                                             default=None)
