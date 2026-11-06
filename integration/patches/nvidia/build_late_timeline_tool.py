@@ -21,6 +21,7 @@ def main():
     p.add_argument('--llvm-root', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--source', type=Path)
+    p.add_argument('--executable-name', choices=['late-timeline','metax-timeline'], default='late-timeline')
     p.add_argument('--compiler', default='g++')
     p.add_argument('--deadline-module', type=Path)
     a = p.parse_args()
@@ -51,7 +52,7 @@ def main():
                            check=True)
     (a.output / 'llvm-config.stdout').write_bytes(flags.stdout)
     (a.output / 'llvm-config.stderr').write_bytes(flags.stderr)
-    executable = a.output / 'late-timeline'
+    executable = a.output / a.executable_name
     command = [
         compiler, '-O1', '-g0',
         str(source), '-o',

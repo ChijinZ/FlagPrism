@@ -1494,7 +1494,7 @@ def _automatic_backend(backend=None):
     backend = backend or _select_backend()
     if backend in {"cupti", "instrumentation"}:
         return "instrumentation"
-    if _is_cann_backend(backend) or _is_enflame_backend(backend):
+    if _is_cann_backend(backend) or _is_enflame_backend(backend) or _is_metax_backend(backend):
         return backend
     raise ValueError(
         f"Automatic fine-grained profiling is unavailable for {backend!r}")
@@ -1632,6 +1632,8 @@ def start(
 
     if detail not in (None, "auto", "timeline"):
         raise ValueError("detail must be None, 'auto', or 'timeline'")
+    if detail == 'auto' and _is_metax_backend(backend or _select_backend()):
+        detail = 'timeline'
     timeline_sites = _timeline_site_budget(detail, timeline_max_sites)
     timeline_capacity = _timeline_record_budget(detail, timeline_record_capacity)
     timeline = detail == 'timeline'
@@ -1655,6 +1657,8 @@ def start(
         if backend == 'instrumentation':
             from .mode import Default
             mode = Default(buffer_size=32768)
+        elif _is_metax_backend(backend):
+            pass
         elif _is_cann_backend(backend):
             from .timeline_ascend import AscendTimelineCollector
             from .observations import ObservationRequest
@@ -1752,6 +1756,9 @@ def start(
         hook == "instrumentation"
         and not (_is_cann_backend(backend) or _is_tianshu_backend(backend)
                  or _is_enflame_backend(backend) or _is_metax_backend(backend)))
+    if timeline and _is_metax_backend(backend):
+        use_instrumentation_hook = False
+        use_native_instrumentation_hook = True
     if use_instrumentation_hook and (_is_cann_backend(backend)
                                      or _is_enflame_backend(backend)):
         from flagtree.debugger.graph_guard import require_eager
@@ -1875,8 +1882,11 @@ def start(
             HookManager.register(LaunchHook(), session)
         if use_native_instrumentation_hook:
             if timeline:
-                from .hooks.timeline_late import LateTimelineHook
-                native_hook = LateTimelineHook(
+                if _is_metax_backend(backend):
+                    from .hooks.timeline_metax import MetaxTimelineHook as TimelineHook
+                else:
+                    from .hooks.timeline_late import LateTimelineHook as TimelineHook
+                native_hook = TimelineHook(
                     mode, observation_plan=observation_plan, staging_base=name)
             else:
                 native_hook = InstrumentationHook(

@@ -1,0 +1,866 @@
+// Isolated late-recording experiment. Not a default backend or qualified ABI.
+#include "llvm/ADT/MapVector.h"
+#include "llvm/ADT/STLExtras.h"
+#include "llvm/ADT/SmallPtrSet.h"
+#include "llvm/ADT/SmallVector.h"
+#include "llvm/ADT/StringSet.h"
+#include "llvm/Analysis/AssumptionCache.h"
+#include "llvm/IR/Attributes.h"
+#include "llvm/IR/CallingConv.h"
+#include "llvm/IR/DebugInfoMetadata.h"
+#include "llvm/IR/Dominators.h"
+#include "llvm/IR/IRBuilder.h"
+#include "llvm/IR/InlineAsm.h"
+#include "llvm/IR/Instructions.h"
+#include "llvm/IR/LLVMContext.h"
+#include "llvm/IR/Module.h"
+#include "llvm/IR/Verifier.h"
+#include "llvm/IRReader/IRReader.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/FormatVariadic.h"
+#include "llvm/Support/JSON.h"
+#include "llvm/Support/SourceMgr.h"
+#include "llvm/Support/MemoryBuffer.h"
+#include "llvm/Support/raw_ostream.h"
+#include "llvm/Transforms/Utils/BasicBlockUtils.h"
+#include "llvm/Transforms/Utils/PromoteMemToReg.h"
+#include <system_error>
+using namespace llvm;
+static cl::opt<std::string> Input(cl::Positional, cl::Required);
+static cl::opt<std::string> Output("output", cl::Required);
+static cl::opt<std::string> Manifest("manifest", cl::Required);
+static cl::opt<int> ScratchArg("scratch-arg", cl::init(-1));
+static cl::opt<unsigned> ProfileABI("flagtree-profile-abi", cl::init(0));
+static cl::opt<unsigned> LogicalBudget("max-sites", cl::init(8));
+static cl::opt<bool> BatchRecords("batch-records", cl::init(false));
+static cl::opt<unsigned> RecordCapacity("capacity", cl::init(512));
+static cl::opt<bool> AutoCapacity("auto-capacity", cl::init(false));
+static cl::opt<unsigned> ObserverActors("actors", cl::init(1));
+static cl::opt<bool> GroupMatrix("group-matrix", cl::init(false));
+static cl::opt<bool> CompactPrograms("compact-programs", cl::init(false));
+struct Site {
+  Instruction *call;
+  Instruction *last;
+  unsigned id;
+  std::string kind;
+  bool interval;
+  Value *payload;
+  unsigned members;
+  uint64_t storeBytes;
+  SmallVector<Instruction *> origins;
+};
+struct Stamp {
+  unsigned site;
+  Value *begin;
+  Value *end;
+  Value *payload;
+};
+static bool hasDataUse(Value *value, unsigned budget = 256) {
+  SmallVector<Value *> work{value};
+  SmallPtrSet<Value *, 32> seen;
+  while (!work.empty() && budget--) {
+    Value *current = work.pop_back_val();
+    if (!seen.insert(current).second)
+      continue;
+    for (User *user : current->users()) {
+      auto *instruction = dyn_cast<Instruction>(user);
+      if (!instruction)
+        continue;
+      if (auto *store = dyn_cast<StoreInst>(instruction)) {
+        if (store->getValueOperand() == current)
+          return true;
+        continue;
+      }
+      if (isa<GetElementPtrInst, ICmpInst, BranchInst>(instruction) ||
+          instruction->getType()->isPointerTy())
+        continue;
+      if (auto *select = dyn_cast<SelectInst>(instruction)) {
+        if (select->getCondition() == current)
+          continue;
+      }
+      if (auto *call = dyn_cast<CallBase>(instruction)) {
+        if (auto *callee = call->getCalledFunction())
+          if (callee->getName().contains("barrier") ||
+              callee->getName().contains("cp.async") ||
+              callee->getName().starts_with("llvm.assume"))
+            continue;
+        return true;
+      }
+      if (!instruction->getType()->isVoidTy())
+        work.push_back(instruction);
+    }
+  }
+  return false;
+}
+static std::string classify(Instruction &instruction) {
+  if (auto *store = dyn_cast<StoreInst>(&instruction)) {
+    if (store->getPointerAddressSpace() == 3)
+      return "shared_store_after";
+    if (store->getPointerAddressSpace() == 1)
+      return "global_store_issue_bracket";
+    return {};
+  }
+  if (auto *load = dyn_cast<LoadInst>(&instruction)) {
+    if (load->getPointerAddressSpace() == 3)
+      return "shared_load_native_bracket";
+    if (load->getPointerAddressSpace() == 1)
+      return "global_load_issue_bracket";
+    return {};
+  }
+  if (isa<BinaryOperator>(instruction) &&
+      (instruction.getType()->isFPOrFPVectorTy() || hasDataUse(&instruction)))
+    return "compute_issue_bracket";
+  if (auto *atomic = dyn_cast<AtomicRMWInst>(&instruction))
+    return atomic->getPointerAddressSpace() == 1
+               ? "global_atomic_issue_bracket"
+               : "opaque_native_issue_bracket";
+  if (auto *atomic = dyn_cast<AtomicCmpXchgInst>(&instruction))
+    return atomic->getPointerAddressSpace() == 1
+               ? "global_atomic_issue_bracket"
+               : "opaque_native_issue_bracket";
+  auto *operation = dyn_cast<CallBase>(&instruction);
+  if (!operation)
+    return {};
+  CallBase &call = *operation;
+  if (auto *function = call.getCalledFunction()) {
+    StringRef name = function->getName();
+    if (name.starts_with("llvm.mxc.thread.") || name.starts_with("llvm.mxc.block.") || name.starts_with("llvm.mxc.grid.") || name == "llvm.readcyclecounter") return {};
+    if (name.starts_with("llvm.mxc.ldg.")) return "global_load_issue_bracket";
+    if (name.starts_with("llvm.mxc.stg.")) return "global_store_issue_bracket";
+    if (name.contains("mma")) return "matrix_issue_bracket";
+    if (name == "llvm.mxc.barrier") return "metax_barrier_issue_bracket";
+    if (name == "llvm.nvvm.cp.async.commit.group")
+      return "commit_after";
+    if (name == "llvm.nvvm.cp.async.wait.group")
+      return "wait_bracket";
+    if (name == "llvm.nvvm.barrier.cta.sync.aligned.all")
+      return "cta_barrier_after";
+    if (name == "llvm.nvvm.bar.warp.sync")
+      return "warp_sync_issue_bracket";
+    if (name.starts_with("llvm.nvvm.ldmatrix.")) {
+      if (name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.b16.p3" ||
+          name == "llvm.nvvm.ldmatrix.sync.aligned.m8n8.x4.trans.b16.p3")
+        return "shared_load_issue_bracket";
+      return "opaque_native_issue_bracket";
+    }
+    if (name.starts_with("llvm.nvvm.read.ptx.sreg.") ||
+        name.starts_with("llvm.assume") || name.starts_with("llvm.lifetime.") ||
+        name.starts_with("llvm.dbg."))
+      return {};
+    if (!function->isIntrinsic() || call.mayReadOrWriteMemory() ||
+        call.mayHaveSideEffects())
+      return "opaque_native_issue_bracket";
+    if (call.getType()->isFPOrFPVectorTy() ||
+        name.starts_with("llvm.nvvm.shfl.") ||
+        (call.getType()->isIntegerTy() && hasDataUse(&call)))
+      return "compute_issue_bracket";
+    if (!function->isIntrinsic())
+      return "opaque_native_issue_bracket";
+  }
+  if (auto *assembly = dyn_cast<InlineAsm>(call.getCalledOperand())) {
+    StringRef text = assembly->getAsmString();
+    if (text == "cp.async.cg.shared.global [ $0 + 0 ], [ $1 + 0 ], 0x10, $2;" ||
+        text == "cp.async.ca.shared.global [ $0 + 0 ], [ $1 + 0 ], 0x10, $2;")
+      return "copy_submit_after";
+    if (text.starts_with("mma.sync.") && text.count(';') == 1)
+      return "matrix_issue_bracket";
+    if (text.contains(".shared") || text.contains("cp.async"))
+      return "opaque_native_issue_bracket";
+    if (text.contains("ld.global"))
+      return "global_load_issue_bracket";
+    if (text.contains("st.global"))
+      return "global_store_issue_bracket";
+    if (text.contains("atom.global") || text.contains("red.global"))
+      return "global_atomic_issue_bracket";
+    return "opaque_native_issue_bracket";
+  }
+  return {};
+}
+static Value *reg(IRBuilder<> &b, Module &m, StringRef name) {
+  StringRef suffix = name.consume_front("llvm.nvvm.read.ptx.sreg.") ? name : StringRef();
+  if (suffix == "tid.y" || suffix == "tid.z") return b.getInt32(0);
+  if (suffix == "ntid.y" || suffix == "ntid.z") return b.getInt32(1);
+  if (suffix == "tid.x") return b.CreateCall(m.getOrInsertFunction("llvm.mxc.thread.id.x", FunctionType::get(b.getInt32Ty(), false)));
+  if (suffix.starts_with("ctaid.")) return b.CreateCall(m.getOrInsertFunction("llvm.mxc.block.id." + suffix.drop_front(6).str(), FunctionType::get(b.getInt32Ty(), false)));
+  unsigned dim = suffix.ends_with("x") ? 0 : suffix.ends_with("y") ? 1 : 2;
+  Value *packet = b.CreateCall(m.getOrInsertFunction("llvm.mxc.dispatch.ptr", FunctionType::get(PointerType::get(b.getContext(),4), false)));
+  Value *blockAt = b.CreateGEP(b.getInt8Ty(), packet, b.getInt64(4 + dim * 2));
+  Value *block = b.CreateZExt(b.CreateLoad(b.getInt16Ty(), blockAt), b.getInt32Ty());
+  if (suffix.starts_with("ntid.")) return block;
+  if (!suffix.starts_with("nctaid.")) llvm_unreachable("Unsupported register");
+  Value *extentAt = b.CreateGEP(b.getInt8Ty(), packet, b.getInt64(12 + dim * 4));
+  Value *extent = b.CreateLoad(b.getInt32Ty(), extentAt);
+  return b.CreateUDiv(b.CreateAdd(extent,b.CreateSub(block,b.getInt32(1))),block);
+}
+// Preserve scalar bits across an opaque tied-register compiler dependency.
+// This is not a hardware barrier or a final-machine ordering certificate.
+static Value *computeInputFence(IRBuilder<> &b, Value *value, Value *begin) {
+  Type *type = value->getType();
+  if (auto *vector = dyn_cast<FixedVectorType>(type)) {
+    Value *result = PoisonValue::get(type);
+    for (unsigned i = 0; i < vector->getNumElements(); ++i)
+      result = b.CreateInsertElement(
+          result, computeInputFence(b, b.CreateExtractElement(value, i), begin),
+          i);
+    return result;
+  }
+  if (!type->isIntegerTy() && !type->isFloatingPointTy())
+    return value;
+  unsigned bits = type->getScalarSizeInBits();
+  if (!bits || bits > 64)
+    return value;
+  Value *input = type->isIntegerTy() ? value : b.CreateBitCast(value, b.getIntNTy(bits));
+  if (bits == 64) {
+    Value *lo = computeInputFence(b,b.CreateTrunc(input,b.getInt32Ty()),begin);
+    Value *hi = computeInputFence(b,b.CreateTrunc(b.CreateLShr(input,b.getInt64(32)),b.getInt32Ty()),begin);
+    Value *joined = b.CreateOr(b.CreateZExt(lo,b.getInt64Ty()),b.CreateShl(b.CreateZExt(hi,b.getInt64Ty()),b.getInt64(32)));
+    return type->isIntegerTy() ? joined : b.CreateBitCast(joined,type);
+  }
+  input = b.CreateZExtOrTrunc(input,b.getInt32Ty());
+  auto *signature = FunctionType::get(b.getInt32Ty(),{b.getInt32Ty(),b.getInt32Ty(),b.getInt32Ty()},false);
+  auto *assembly = InlineAsm::get(signature,"","=r,0,r,r,~{memory}",true);
+  Value *result = b.CreateCall(signature,assembly,{input,b.CreateTrunc(begin,b.getInt32Ty()),b.CreateTrunc(b.CreateLShr(begin,b.getInt64(32)),b.getInt32Ty())});
+  result=b.CreateTruncOrBitCast(result,b.getIntNTy(bits));
+  return type->isIntegerTy() ? result : b.CreateBitCast(result,type);
+}
+
+static void appendComputeOutputs(IRBuilder<> &b, Value *value,
+                                 SmallVectorImpl<Value *> &outputs) {
+  Type *type = value->getType();
+  if (auto *vector = dyn_cast<FixedVectorType>(type)) {
+    for (unsigned i = 0; i < vector->getNumElements(); ++i)
+      appendComputeOutputs(b, b.CreateExtractElement(value, i), outputs);
+  } else if ((type->isIntegerTy() || type->isFloatingPointTy()) &&
+             type->getScalarSizeInBits() <= 64) {
+    unsigned bits = type->getScalarSizeInBits();
+    Value *input =
+        type->isIntegerTy() ? value : b.CreateBitCast(value, b.getIntNTy(bits));
+    outputs.push_back(
+        b.CreateZExtOrTrunc(input, b.getIntNTy(bits <= 16   ? 16
+                                               : bits <= 32 ? 32
+                                                            : 64)));
+  }
+}
+
+static Value *clock(IRBuilder<> &b, unsigned site, StringRef phase,
+                    ArrayRef<Value *> dependencies = {}) {
+  for (Value *dependency : dependencies) {
+    unsigned bits=dependency->getType()->getIntegerBitWidth();
+    for(unsigned shift=0;shift<bits;shift+=32) {
+      Value *word=dependency;
+      if(shift)word=b.CreateLShr(word,b.getIntN(bits,shift));
+      word=b.CreateZExtOrTrunc(word,b.getInt32Ty());
+      auto *signature=FunctionType::get(b.getVoidTy(),{b.getInt32Ty()},false);
+      b.CreateCall(InlineAsm::get(signature,"","r,~{memory}",true),{word});
+    }
+  }
+  auto *m = b.GetInsertBlock()->getModule();
+  return b.CreateCall(m->getOrInsertFunction("llvm.readcyclecounter", FunctionType::get(b.getInt64Ty(), false)));
+}
+
+int main(int argc, char **argv) {
+  cl::ParseCommandLineOptions(argc, argv);
+  LLVMContext context;
+  SMDiagnostic diagnostic;
+  auto input = MemoryBuffer::getFile(Input);
+  if (!input) { errs() << "Cannot read MetaX LLVM input\n"; return 1; }
+  std::string text = (*input)->getBuffer().str();
+  size_t cc = 0;
+  while ((cc = text.find("metaxgpu_kernel", cc)) != std::string::npos) {
+    text.replace(cc, 15, "ptx_kernel"); cc += 10;
+  }
+  auto module = parseIR(MemoryBufferRef(text, Input), diagnostic, context);
+  if (!module) {
+    diagnostic.print(argv[0], errs());
+    return 1;
+  }
+  if (module->getTargetTriple().str() != "mxc-metax-macahca") {
+    errs() << "Expected actual MetaX LLVM target\n"; return 2;
+  }
+  SmallVector<Function *> kernels;
+  for (auto &function : *module)
+    if (!function.isDeclaration() &&
+        function.getCallingConv() == CallingConv::PTX_Kernel)
+      kernels.push_back(&function);
+  if (kernels.size() != 1) {
+    errs() << "Expected one ordinary MetaX kernel\n";
+    return 2;
+  }
+  Function &function = *kernels.front();
+  if (RecordCapacity < 1 || RecordCapacity > 4096 || LogicalBudget < 1 ||
+      LogicalBudget > 128) {
+    errs() << "Invalid bounded capture capacity/selection\n";
+    return 2;
+  }
+  StringRef groupText = function.getFnAttribute("metaxgpu-flat-work-group-size").getValueAsString();
+  auto upper = groupText.rsplit(',').second.trim();
+  std::string geometry = upper.str() + ",1,1";
+  StringRef blockText(geometry);
+  SmallVector<StringRef> parts;
+  blockText.split(parts, ',');
+  uint64_t block[3] = {1, 1, 1};
+  if (parts.empty() || parts.size() > 3) {
+    errs() << "Missing actual block dimensions\n";
+    return 2;
+  }
+  for (unsigned i = 0; i < parts.size(); ++i)
+    if (parts[i].trim().getAsInteger(10, block[i]) || !block[i] ||
+        block[i] > 1024) {
+      errs() << "Invalid actual block dimensions\n";
+      return 2;
+    }
+  uint64_t blockActors = block[0] * block[1] * block[2];
+  if (!blockActors || blockActors > 1024) {
+    errs() << "Invalid actual block size\n";
+    return 2;
+  }
+  bool requiresFullFootprint = false;
+  for (auto &basicBlock : function)
+    for (auto &instruction : basicBlock) {
+      std::string kind = classify(instruction);
+      requiresFullFootprint |=
+          kind == "copy_submit_after" || kind == "matrix_issue_bracket";
+    }
+  const uint64_t Actors = ObserverActors ? ObserverActors.getValue()
+                          : requiresFullFootprint
+                              ? blockActors
+                              : std::min<uint64_t>(4, blockActors);
+  if (!Actors || Actors > blockActors) {
+    errs() << "Observer selection exceeds actual block\n";
+    return 2;
+  }
+  const uint64_t HeaderWords = 6;
+  // A complete CTA records every participating thread for dependency facts.
+  // Round the physical pair allowance down to a power of two, then reserve
+  // guards. Headers must not make a nominal 4 MiB pair slightly exceed 4 MiB
+  // and reject a second invocation within the unchanged 8 MiB session budget.
+  const uint64_t FootprintTarget = std::max<uint64_t>(
+      2 * 1024 * 1024, 2 * Actors * (HeaderWords + 4 * 512) * 8);
+  uint64_t FullPhysicalBudget = 2 * 1024 * 1024;
+  while (FullPhysicalBudget < 8 * 1024 * 1024 &&
+         2 * FullPhysicalBudget <= FootprintTarget)
+    FullPhysicalBudget *= 2;
+  const uint64_t CompleteFootprintBytes = FullPhysicalBudget - 128;
+  const uint64_t CaptureBudgetBytes =
+      requiresFullFootprint
+          ? CompleteFootprintBytes
+          : std::min<uint64_t>(8 * 1024 * 1024 - 128,
+                               2 * Actors * (HeaderWords + 4 * 4096) * 8);
+  uint64_t Capacity = RecordCapacity;
+  if (AutoCapacity) {
+    const uint64_t wordsPerActor = CaptureBudgetBytes / (2 * Actors * 8);
+    if (!CompactPrograms || wordsPerActor < HeaderWords + 4) {
+      errs() << "Automatic record budget cannot hold the selected actors\n";
+      return 2;
+    }
+    Capacity = std::min<uint64_t>(Capacity, (wordsPerActor - HeaderWords) / 4);
+  }
+  const uint64_t SegmentWords = Actors * (HeaderWords + Capacity * 4);
+  int scratchIndex = ScratchArg;
+  if (scratchIndex < 0) {
+    if (ProfileABI != 1 || function.arg_size() < 2) {
+      errs() << "Reserved profile-argument ABI is not declared\n";
+      return 2;
+    }
+    scratchIndex = function.arg_size() - 1;
+  }
+  if (static_cast<unsigned>(scratchIndex) >= function.arg_size()) {
+    errs() << "Scratch argument outside actual signature\n";
+    return 2;
+  }
+  Argument *scratch = function.getArg(scratchIndex);
+  if (!scratch->use_empty()) {
+    errs()
+        << "Ordinary reserved scratch must be unused before instrumentation\n";
+    return 2;
+  }
+  auto *pointer = dyn_cast<PointerType>(scratch->getType());
+  if (!pointer || pointer->getAddressSpace() != 1) {
+    errs() << "Scratch argument must be actual global pointer\n";
+    return 2;
+  }
+  // The caller must validate this reserved ABI argument. Never infer it by
+  // name.
+  scratch->removeAttr(Attribute::ReadNone);
+  scratch->removeAttr(Attribute::ReadOnly);
+  SmallVector<Site> sites;
+  json::Array inventory;
+  for (auto &block : function)
+    for (auto &instruction : block) {
+      Instruction *call = &instruction;
+      std::string kind = classify(*call);
+      if (kind.empty())
+        continue;
+      if (kind == "unsupported_ldmatrix_geometry") {
+        errs() << "Unmodeled native ldmatrix geometry\n";
+        return 2;
+      }
+      unsigned id = sites.size() + 1;
+      Value *payload = nullptr;
+      uint64_t storeBytes = 0;
+      if (auto *store = dyn_cast<StoreInst>(call)) {
+        payload = store->getPointerOperand();
+        auto bytes = module->getDataLayout().getTypeStoreSize(
+            store->getValueOperand()->getType());
+        if (bytes.isScalable() || bytes.getFixedValue() > 256) {
+          errs() << "Unsupported actual shared store width\n";
+          return 2;
+        }
+        storeBytes = bytes.getFixedValue();
+      } else if (auto *load = dyn_cast<LoadInst>(call)) {
+        payload = load->getPointerOperand();
+        auto bytes = module->getDataLayout().getTypeStoreSize(load->getType());
+        if (bytes.isScalable() || bytes.getFixedValue() > 256) {
+          errs() << "Unsupported actual shared load width\n";
+          return 2;
+        }
+        storeBytes = bytes.getFixedValue();
+      } else if (kind == "copy_submit_after" ||
+                 kind == "shared_load_issue_bracket" ||
+                 kind == "wait_bracket" || kind == "cta_barrier_after" ||
+                 kind == "warp_sync_issue_bracket")
+        payload = cast<CallBase>(call)->getArgOperand(0);
+      bool interval = kind != "commit_after" && kind != "copy_submit_after" &&
+                      kind != "cta_barrier_after" &&
+                      kind != "shared_store_after";
+      if (!sites.empty() &&
+          ((GroupMatrix && kind == "matrix_issue_bracket") ||
+           (kind == "compute_issue_bracket" &&
+            sites.back().last->getNextNode() == call)) &&
+          sites.back().kind == kind &&
+          sites.back().call->getParent() == call->getParent()) {
+        sites.back().last = call;
+        ++sites.back().members;
+        sites.back().origins.push_back(call);
+        continue;
+      }
+      sites.push_back(
+          {call, call, id, kind, interval, payload, 1, storeBytes, {call}});
+    }
+  if (sites.empty()) {
+    for (auto &block : function)
+      if (auto *ret = dyn_cast<ReturnInst>(block.getTerminator()))
+        sites.push_back({ret,
+                         ret,
+                         static_cast<unsigned>(sites.size() + 1),
+                         "control_checkpoint",
+                         false,
+                         nullptr,
+                         1,
+                         0,
+                         {ret}});
+  }
+  StringSet<> optionalKeys;
+  SmallVector<std::string> keys;
+  auto optional = [](const Site &site) {
+    return StringRef(site.kind).starts_with("global_") ||
+           site.kind == "compute_issue_bracket" ||
+           site.kind == "opaque_native_issue_bracket";
+  };
+  auto sourceKey = [](const Site &site) {
+    std::string key = site.kind;
+    if (auto loc = site.call->getDebugLoc())
+      key += ":" + loc->getFilename().str() + ":" +
+             std::to_string(loc.getLine()) + ":" + std::to_string(loc.getCol());
+    return key;
+  };
+  for (const Site &site : sites)
+    if (optional(site)) {
+      std::string key = sourceKey(site);
+      if (optionalKeys.insert(key).second)
+        keys.push_back(key);
+    }
+  StringSet<> chosen;
+  unsigned keep = std::min<unsigned>(LogicalBudget, keys.size());
+  for (unsigned i = 0; i < keep; ++i)
+    chosen.insert(keys[keep == 1 ? 0
+                                 : static_cast<size_t>(i) * (keys.size() - 1) /
+                                       (keep - 1)]);
+  SmallVector<Site> selected;
+  json::Array unselected;
+  for (const Site &site : sites) {
+    if (!optional(site) || chosen.contains(sourceKey(site)))
+      selected.push_back(site);
+    else
+      unselected.push_back(json::Object{{"site_id", site.id},
+                                        {"kind", site.kind},
+                                        {"reason", "logical_site_budget"}});
+  }
+  sites = std::move(selected);
+  // Keep user navigation in the manifest before assigning separate final-code
+  // origin locations. Apply them only after inserting the recorder so clock
+  // and logger instructions do not inherit an original operation's marker.
+  SmallVector<std::pair<Instruction *, DebugLoc>> nativeOrigins;
+  unsigned nextOrigin = 1;
+  auto *originFile =
+      DIFile::get(context, "__flagprism_native_origin_v1__", ".");
+  for (const Site &site : sites) {
+    const Instruction &instruction = *site.call;
+    unsigned id = site.id;
+    const std::string &kind = site.kind;
+    bool interval = site.interval;
+    json::Object row{{"site_id", id},
+                     {"kind", kind},
+                     {"record_semantics", interval
+                                              ? "observer_issue_bracket"
+                                              : "observer_checkpoint_after"}};
+    if (auto location = instruction.getDebugLoc()) {
+      row["line"] = location.getLine();
+      row["column"] = location.getCol();
+      row["file"] = location->getFilename();
+      row["directory"] = location->getDirectory();
+    }
+    row["member_count"] = site.members;
+    json::Array members;
+    for (Instruction *member : site.origins) {
+      json::Object origin;
+      if (auto location = member->getDebugLoc()) {
+        origin["line"] = location.getLine();
+        origin["column"] = location.getCol();
+        origin["file"] = location->getFilename();
+        origin["directory"] = location->getDirectory();
+      }
+      if (auto *call = dyn_cast<CallBase>(member)) {
+        if (auto *function = call->getCalledFunction())
+          origin["native_operation"] = function->getName();
+        else if (auto *assembly = dyn_cast<InlineAsm>(call->getCalledOperand()))
+          origin["native_operation"] = assembly->getAsmString();
+      } else
+        origin["native_operation"] = member->getOpcodeName();
+      if (auto location = member->getDebugLoc()) {
+        if (nextOrigin > 65535) {
+          errs() << "Native source-origin location budget exceeded\n";
+          return 3;
+        }
+        auto *scope = DILexicalBlockFile::get(context, location->getScope(),
+                                              originFile, 0);
+        auto *marked = DILocation::get(context, nextOrigin, 1, scope,
+                                       location->getInlinedAt());
+        origin["native_origin_marker"] =
+            json::Object{{"version", 1},
+                         {"file", "__flagprism_native_origin_v1__"},
+                         {"line", nextOrigin},
+                         {"column", 1},
+                         {"status", "compiler_location_assigned"}};
+        nativeOrigins.push_back({member, DebugLoc(marked)});
+        ++nextOrigin;
+      } else {
+        origin["native_origin_marker"] = json::Object{
+            {"version", 1}, {"status", "unavailable_no_debug_scope"}};
+      }
+      members.push_back(std::move(origin));
+    }
+    row["members"] = std::move(members);
+    if (kind == "copy_submit_after") {
+      row["payload_encoding"] =
+          Actors == 1 ? "absolute_shared_address_u64"
+                      : "absolute_shared_address_u32_source_valid_bytes_u32";
+      row["destination_bytes"] = 16;
+    }
+    if (kind == "shared_store_after" || kind == "shared_load_native_bracket") {
+      row["payload_encoding"] = "absolute_shared_address_u32_access_bytes_u32";
+      row["access_bytes"] = site.storeBytes;
+      row["destination_bytes"] = site.storeBytes;
+    }
+    inventory.push_back(std::move(row));
+  }
+  if (sites.empty() || sites.size() > 4096) {
+    errs() << "No supported sites or selection budget exceeded\n";
+    return 2;
+  }
+  Instruction *entry = &*function.getEntryBlock().getFirstInsertionPt();
+  IRBuilder<> init(entry);
+  auto *lost =
+      init.CreateAlloca(init.getInt1Ty(), nullptr, "flagprism.late.lost");
+  init.CreateStore(init.getFalse(), lost);
+  auto *ordinal =
+      init.CreateAlloca(init.getInt64Ty(), nullptr, "flagprism.late.ordinal");
+  init.CreateStore(init.getInt64(0), ordinal);
+  Value *tx = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.x");
+  Value *ty = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.y");
+  Value *tz = reg(init, *module, "llvm.nvvm.read.ptx.sreg.tid.z");
+  Value *ntx = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ntid.x");
+  Value *nty = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ntid.y");
+  Value *actorIndex = init.CreateZExt(
+      init.CreateAdd(
+          tx, init.CreateMul(ntx, init.CreateAdd(ty, init.CreateMul(nty, tz)))),
+      init.getInt64Ty());
+  Value *actor = init.CreateICmpULT(actorIndex, init.getInt64(Actors));
+  Value *x = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.x"),
+        *y = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.y"),
+        *z = reg(init, *module, "llvm.nvvm.read.ptx.sreg.ctaid.z");
+  Value *nx = reg(init, *module, "llvm.nvvm.read.ptx.sreg.nctaid.x"),
+        *ny = reg(init, *module, "llvm.nvvm.read.ptx.sreg.nctaid.y");
+  Value *program = init.CreateAdd(
+      init.CreateZExt(x, init.getInt64Ty()),
+      init.CreateMul(
+          init.CreateZExt(nx, init.getInt64Ty()),
+          init.CreateAdd(
+              init.CreateZExt(y, init.getInt64Ty()),
+              init.CreateMul(init.CreateZExt(ny, init.getInt64Ty()),
+                             init.CreateZExt(z, init.getInt64Ty())))));
+  auto *sharedSymbol = module->getNamedGlobal("global_smem");
+  if ((!sharedSymbol || sharedSymbol->getAddressSpace() != 3) &&
+      llvm::any_of(sites, [](const Site &site) {
+        return StringRef(site.kind).starts_with("shared_") ||
+               site.kind == "copy_submit_after";
+      })) {
+    errs() << "Missing actual compiler dynamic-shared symbol\n";
+    return 2;
+  }
+  Value *sharedBase = sharedSymbol
+                          ? init.CreatePtrToInt(sharedSymbol, init.getInt64Ty())
+                          : init.getInt64(0);
+  Value *physicalProgram = init.CreateZExt(program, init.getInt64Ty());
+  Value *programSelected = init.getTrue();
+  if (CompactPrograms) {
+    Value *nz = reg(init, *module, "llvm.nvvm.read.ptx.sreg.nctaid.z");
+    Value *total =
+        init.CreateMul(init.CreateZExt(nx, init.getInt64Ty()),
+                       init.CreateMul(init.CreateZExt(ny, init.getInt64Ty()),
+                                      init.CreateZExt(nz, init.getInt64Ty())));
+    programSelected = init.CreateOr(
+        init.CreateICmpEQ(physicalProgram, init.getInt64(0)),
+        init.CreateICmpEQ(physicalProgram,
+                          init.CreateSub(total, init.getInt64(1))));
+    physicalProgram =
+        init.CreateSelect(init.CreateICmpEQ(physicalProgram, init.getInt64(0)),
+                          init.getInt64(0), init.getInt64(1));
+    actor = init.CreateAnd(actor, programSelected);
+  }
+  Value *base = init.CreateMul(physicalProgram, init.getInt64(SegmentWords));
+  auto address = [&](IRBuilder<> &b, Value *offset) {
+    return b.CreateGEP(
+        b.getInt64Ty(), scratch,
+        b.CreateAdd(base, b.CreateAdd(b.CreateMul(offset, b.getInt64(Actors)),
+                                      actorIndex)));
+  };
+  MapVector<BasicBlock *, SmallVector<Stamp>> batches;
+  for (Site &site : sites) {
+    IRBuilder<> before(site.call);
+    Value *begin = site.interval ? clock(before, site.id, "entry") : nullptr;
+    SmallPtrSet<Instruction *, 32> computeMembers;
+    if (site.kind == "compute_issue_bracket") {
+      for (Instruction *member : site.origins)
+        computeMembers.insert(member);
+      for (Instruction *member : site.origins) {
+        unsigned limit = isa<CallBase>(member)
+                             ? cast<CallBase>(member)->arg_size()
+                             : member->getNumOperands();
+        for (unsigned i = 0; i < limit; ++i) {
+          Value *input = member->getOperand(i);
+          if (isa<Constant>(input) ||
+              computeMembers.contains(dyn_cast<Instruction>(input)))
+            continue;
+          member->setOperand(i, computeInputFence(before, input, begin));
+        }
+      }
+    }
+    Instruction *next = site.kind == "control_checkpoint"
+                            ? site.last
+                            : site.last->getNextNode();
+    if (!next) {
+      errs() << "Unsupported terminator call\n";
+      return 3;
+    }
+    IRBuilder<> after(next);
+    SmallVector<Value *> computeOutputs;
+    for (Instruction *member : site.origins) {
+      if (computeMembers.contains(member) &&
+          llvm::any_of(member->users(), [&](User *user) {
+            return !computeMembers.contains(dyn_cast<Instruction>(user));
+          }))
+        appendComputeOutputs(after, member, computeOutputs);
+    }
+    Value *end = clock(after, site.id, "exit", computeOutputs);
+    if (!begin)
+      begin = end;
+    Value *payload = after.getInt64(0);
+    if (site.payload) {
+      if (site.payload->getType()->isPointerTy())
+        payload = after.CreatePtrToInt(site.payload, after.getInt64Ty());
+      else if (site.payload->getType()->isIntegerTy())
+        payload = after.CreateZExtOrTrunc(site.payload, after.getInt64Ty());
+      else {
+        errs() << "Unsupported actual site payload\n";
+        return 3;
+      }
+    }
+    if (Actors != 1 && site.kind == "copy_submit_after") {
+      auto *copy = cast<CallBase>(site.call);
+      auto *assembly = dyn_cast<InlineAsm>(copy->getCalledOperand());
+      if (!assembly || copy->arg_size() != 3 ||
+          !copy->getArgOperand(2)->getType()->isIntegerTy(32) ||
+          !StringRef(assembly->getAsmString()).contains(", 0x10, $2;")) {
+        errs() << "Unsupported actual copy size/payload form\n";
+        return 3;
+      }
+      payload = after.CreateOr(
+          after.CreateAnd(payload, after.getInt64(0xffffffff)),
+          after.CreateShl(
+              after.CreateZExt(copy->getArgOperand(2), after.getInt64Ty()),
+              after.getInt64(32)));
+    }
+    if (site.kind == "shared_store_after" ||
+        site.kind == "shared_load_native_bracket")
+      payload =
+          after.CreateOr(after.CreateAnd(payload, after.getInt64(0xffffffff)),
+                         after.getInt64(site.storeBytes << 32));
+    if (BatchRecords) {
+      batches[site.call->getParent()].push_back({site.id, begin, end, payload});
+      continue;
+    }
+    Value *count = after.CreateLoad(after.getInt64Ty(), ordinal);
+    Value *selected = after.CreateAnd(
+        actor, after.CreateICmpULT(count, after.getInt64(Capacity)));
+    Value *isOverflow = after.CreateAnd(
+        actor, after.CreateICmpUGE(count, after.getInt64(Capacity)));
+    Instruction *thenTerm = SplitBlockAndInsertIfThen(selected, next, false);
+    IRBuilder<> log(thenTerm);
+    Value *offset = log.CreateAdd(log.getInt64(HeaderWords),
+                                  log.CreateMul(count, log.getInt64(4)));
+    Value *words[] = {log.getInt64(site.id), begin, end, payload};
+    for (unsigned i = 0; i < 4; ++i)
+      log.CreateStore(words[i],
+                      address(log, log.CreateAdd(offset, log.getInt64(i))))
+          ->setAlignment(Align(8));
+    log.CreateStore(log.CreateAdd(count, log.getInt64(1)), ordinal);
+    // Saturation is explicit and never overwrites earlier records.
+    Instruction *overflowTerm =
+        SplitBlockAndInsertIfThen(isOverflow, next, false);
+    IRBuilder<> overflow(overflowTerm);
+    overflow.CreateStore(overflow.getInt64(1),
+                         address(overflow, overflow.getInt64(1)));
+  }
+  // Reads stay at the native operations. Publishing at the original block end
+  // avoids a control transition and global stores between every pair of ops.
+  // Loss stops later batches; published counts never include unwritten holes.
+  for (auto &batch : batches) {
+    Instruction *terminator = batch.first->getTerminator();
+    IRBuilder<> b(terminator);
+    Value *count = b.CreateLoad(b.getInt64Ty(), ordinal);
+    Value *enabled =
+        b.CreateAnd(actor, b.CreateNot(b.CreateLoad(b.getInt1Ty(), lost)));
+    Value *fits = b.CreateAnd(
+        b.getInt1(batch.second.size() <= Capacity),
+        b.CreateICmpULE(count, b.getInt64(Capacity >= batch.second.size()
+                                              ? Capacity - batch.second.size()
+                                              : 0)));
+    Value *selected = b.CreateAnd(enabled, fits);
+    Value *overflowed = b.CreateAnd(enabled, b.CreateNot(fits));
+    Instruction *thenTerm =
+        SplitBlockAndInsertIfThen(selected, terminator, false);
+    IRBuilder<> log(thenTerm);
+    unsigned index = 0;
+    for (const Stamp &stamp : batch.second) {
+      Value *offset =
+          log.CreateAdd(log.getInt64(HeaderWords),
+                        log.CreateMul(log.CreateAdd(count, log.getInt64(index)),
+                                      log.getInt64(4)));
+      Value *words[] = {log.getInt64(stamp.site), stamp.begin, stamp.end,
+                        stamp.payload};
+      for (unsigned i = 0; i < 4; ++i)
+        log.CreateStore(words[i],
+                        address(log, log.CreateAdd(offset, log.getInt64(i))))
+            ->setAlignment(Align(8));
+      ++index;
+    }
+    log.CreateStore(log.CreateAdd(count, log.getInt64(index)), ordinal);
+    Instruction *overflowTerm =
+        SplitBlockAndInsertIfThen(overflowed, terminator, false);
+    IRBuilder<> overflow(overflowTerm);
+    overflow.CreateStore(overflow.getTrue(), lost);
+    overflow.CreateStore(overflow.getInt64(1),
+                         address(overflow, overflow.getInt64(1)));
+  }
+  SmallVector<ReturnInst *> returns;
+  for (auto &block : function)
+    if (auto *ret = dyn_cast<ReturnInst>(block.getTerminator()))
+      returns.push_back(ret);
+  for (auto *ret : returns) {
+    auto *term = SplitBlockAndInsertIfThen(actor, ret, false);
+    IRBuilder<> b(term);
+    b.CreateStore(b.CreateLoad(b.getInt64Ty(), ordinal),
+                  address(b, b.getInt64(0)));
+    b.CreateStore(b.getInt64(0x46504c34), address(b, b.getInt64(2)));
+    b.CreateStore(b.CreateZExt(program, b.getInt64Ty()),
+                  address(b, b.getInt64(3)));
+    b.CreateStore(sharedBase, address(b, b.getInt64(4)));
+    b.CreateStore(actorIndex, address(b, b.getInt64(5)));
+  }
+  DominatorTree dominators(function);
+  SmallVector<AllocaInst *> allocas{ordinal, lost};
+  PromoteMemToReg(allocas, dominators);
+  for (auto &[instruction, location] : nativeOrigins)
+    instruction->setDebugLoc(location);
+  if (verifyModule(*module, &errs()))
+    return 4;
+  std::error_code error;
+  raw_fd_ostream output(Output, error);
+  if (error) {
+    errs() << error.message();
+    return 5;
+  }
+  std::string nativeText;
+  raw_string_ostream nativeStream(nativeText);
+  module->print(nativeStream, nullptr);
+  size_t restore = 0;
+  while ((restore = nativeText.find("ptx_kernel", restore)) != std::string::npos) {
+    nativeText.replace(restore, 10, "metaxgpu_kernel"); restore += 15;
+  }
+  size_t attr = 0;
+  while ((attr = nativeText.find("captures(none)", attr)) != std::string::npos) {
+    nativeText.replace(attr, 14, "nocapture"); attr += 9;
+  }
+  output << nativeText;
+  output.close();
+  if (output.has_error()) {
+    errs() << "Failed writing complete LLVM output\n";
+    return 5;
+  }
+  raw_fd_ostream manifest(Manifest, error);
+  if (error) {
+    errs() << error.message();
+    return 5;
+  }
+  manifest << formatv(
+      "{0:2}\n",
+      json::Value(json::Object{
+          {"schema_version", 1},
+          {"record_layout_version", 1},
+          {"prototype_only", false},
+          {"recorder_backend", "metax"},
+          {"batch_records", BatchRecords.getValue()},
+          {"scratch_arg", scratchIndex},
+          {"profile_argument_abi", ProfileABI.getValue()},
+          {"block_dimensions", json::Array{block[0], block[1], block[2]}},
+          {"max_sites", LogicalBudget.getValue()},
+          {"unselected_sites", std::move(unselected)},
+          {"capacity_per_program", Capacity},
+          {"capacity_policy",
+           AutoCapacity ? "bounded-actor-bytes-v4" : "explicit-record-count"},
+          {"automatic_pair_budget_bytes",
+           AutoCapacity ? CaptureBudgetBytes : 0},
+          {"requires_full_footprint", requiresFullFootprint},
+          {"header_words", HeaderWords},
+          {"actors", Actors},
+          {"observer_selection",
+           "one_actual_thread_per_program"},
+          {"dependency_footprint_complete", Actors == blockActors},
+          {"group_matrix", GroupMatrix.getValue()},
+          {"compute_operand_fence_version", 1},
+          {"native_origin_marker_version", 1},
+          {"compact_programs", CompactPrograms.getValue()},
+          {"word_layout", "program/logical_word/actor"},
+          {"segment_words", SegmentWords},
+          {"observer", "actual flattened CTA thread per program"},
+          {"sites", std::move(inventory)},
+          {"source_cost_qualified", false},
+          {"epoch_qualified", false}}));
+  manifest.close();
+  if (manifest.has_error()) {
+    errs() << "Failed writing complete manifest\n";
+    return 5;
+  }
+  return 0;
+}

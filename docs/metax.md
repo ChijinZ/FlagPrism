@@ -274,3 +274,81 @@ fails. Actual hardware results and their tested source revisions must be read
 from the run's `manifest.json` and `summary.json`; a runtime transfer pass alone
 does not establish that compiler instrumentation works.
 <!-- FlagPrism end -->
+
+## Automatic fine-grained feedback and local counter timelines
+
+The detailed profiler supports user Triton kernels on the MACA target through
+`profiler.start(output, detail="timeline")`. It selects native LLVM operations
+and instruments them before the vendor's final code generation. Source files,
+LLVM, executable identity, raw record bytes and per-invocation ownership are
+retained. No operator-specific adapter or source annotations are required.
+
+`detail="auto"` currently selects the same bounded feedback service on MetaX.
+It observes the first and last logical programs and one actual recording
+thread per program. It does **not** report all-grid source census counts.
+`timeline_max_sites` controls optional logical site density;
+`timeline_record_capacity` controls the bounded native ring (1–4096 records
+per observed program). Capacity loss is explicit in canonical data and the
+viewer; incomplete observations are never promoted to complete results.
+
+The generated `*.counter-ticks.pftrace` files open in Perfetto. Each file has one
+observer and a relative **raw-counter-tick display coordinate**. Track names
+explicitly say `NOT ns`; annotations retain original ticks and declare that
+physical nanosecond conversion and cross-observer alignment are unverified.
+The trace is useful for local event order and counter differences. It grants
+no cross-program overlap, engine-busy duration, or source-region cost claim.
+
+### Current server installation
+
+Inside `chijin-flagprism-metax`, first load the vendor environment, then activate
+the isolated detailed package:
+
+```bash
+source /workspace/env.sh
+source /root/chijin-metax-detailed-20261106/release/activate.sh
+/opt/conda/bin/python3 your_kernel.py
+```
+
+Example inside `your_kernel.py` after constructing device inputs:
+
+```python
+from flagtree import profiler
+session = profiler.start("my-kernel-profile", detail="timeline",
+                         timeline_record_capacity=512)
+try:
+    my_kernel[grid](input, output, ...)  # ordinary user kernel
+finally:
+    profiler.finalize(session)
+```
+
+Open a file under `my-kernel-profile/timeline/captures/` ending in
+`.counter-ticks.pftrace` in Perfetto. The adjacent `.events.json` includes source
+references, actual program coordinates, occurrence order and completeness.
+
+### Reproduce the isolated package
+
+The native base uses the matching FlagTree build's generated headers and MACA
+SDK; its exact compile/link recipe and receipts are retained under
+`integration/evidence/metax-native-build-20261106/`. The parent compiler/runtime
+integration patch is `integration/patches/metax/optimized-llvm.patch`. The current
+server's installed files were patched with SHA guards and backed up; an
+unrelated existing installation is never overwritten by the package assembler.
+
+Given that matching native base and a checkout of this source, run inside Docker:
+
+```bash
+/opt/conda/bin/python3 integration/patches/metax/install_detailed_overlay.py \
+  --base-python /root/chijin-metax-detailed-20261106/base/output/python \
+  --llvm-root /root/.triton/llvm/llvm-ubuntu-x64 \
+  --output /root/chijin-metax-detailed-20261106/release
+```
+
+Choose a fresh output directory on subsequent builds. The assembler records
+native-library and recorder SHA256 values, builds the recorder with the explicit
+LLVM SDK, copies the Python adapter and writes `activate.sh`. The existing Torch,
+FlagTree and other backend packages remain installed in place.
+
+The MetaX transport uses MACA device allocation, pinned host readback and events
+on the actual launch stream. Every operation binds and restores the owner's
+device. It does not rely on NVIDIA allocator/event behavior or a device-wide
+synchronization to repair ownership.
