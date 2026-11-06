@@ -306,7 +306,7 @@ the isolated detailed package:
 ```bash
 source /workspace/env.sh
 source /root/chijin-metax-detailed-20261106/release/activate.sh
-/opt/conda/bin/python3 your_kernel.py
+/opt/conda/bin/python3 /root/chijin-metax-detailed-20261106/timeline-source/Profiler/examples/metax_timeline.py --output /tmp/my-metax-profile
 ```
 
 Example inside `your_kernel.py` after constructing device inputs:

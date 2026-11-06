@@ -1,4 +1,4 @@
-// Isolated late-recording experiment. Not a default backend or qualified ABI.
+// MetaX automatic compiler-level recorder. Clock and native boundaries remain unqualified.
 #include "llvm/ADT/MapVector.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/SmallPtrSet.h"
@@ -127,7 +127,7 @@ static std::string classify(Instruction &instruction) {
     if (name.starts_with("llvm.mxc.thread.") || name.starts_with("llvm.mxc.block.") || name.starts_with("llvm.mxc.grid.") || name == "llvm.readcyclecounter") return {};
     if (name.starts_with("llvm.mxc.ldg.")) return "global_load_issue_bracket";
     if (name.starts_with("llvm.mxc.stg.")) return "global_store_issue_bracket";
-    if (name.contains("mma")) return "matrix_issue_bracket";
+    if (name.starts_with("llvm.mxc.mma.") || name.starts_with("llvm.mxc.wmma.") || name.starts_with("llvm.mxc.mfma.")) return "matrix_issue_bracket";
     if (name == "llvm.mxc.barrier") return "metax_barrier_issue_bracket";
     if (name == "llvm.nvvm.cp.async.commit.group")
       return "commit_after";
