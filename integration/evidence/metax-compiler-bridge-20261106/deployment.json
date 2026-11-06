@@ -1,6 +1,6 @@
 {
   "returncode": 0,
-  "stdout": "{\"file\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/compiler.py\", \"sha256\": \"34c469ea28891d32eceeb5fc5a3c35418cdbfd5356a2115d645962915b4721ed\", \"backup\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/compiler.py.before-detailed-20261106\"}\n{\"file\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py\", \"sha256\": \"2119cc5732a4f0f92cebc124e7391d7d451566994d145413a6a9fe1c55e32b12\", \"backup\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py.before-detailed-20261106\"}\n",
+  "stdout": "{\"file\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/compiler.py\", \"sha256\": \"34c469ea28891d32eceeb5fc5a3c35418cdbfd5356a2115d645962915b4721ed\", \"backup\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/compiler.py.before-detailed-20261106\"}\n{\"file\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py\", \"sha256\": \"2119cc5732a4f0f92cebc124e7391d7d451566994d145413a6a9fe1c55e32b12\", \"backup\": \"/opt/conda/lib/python3.12/site-packages/triton/backends/metax/driver.py.before-detailed-20261106\"}\n{\"file\": \"/opt/conda/lib/python3.12/site-packages/triton/runtime/jit.py\", \"sha256\": \"6fae93b83e356580d236adaaacf3af08d8898cf54cdaf9143bf724d5acb579fb\", \"backup\": \"/opt/conda/lib/python3.12/site-packages/triton/runtime/jit.py.before-detailed-20261106\"}\n",
   "stderr": "",
   "sources": {
     "compiler.py": {
@@ -10,6 +10,10 @@
     "driver.py": {
       "before": "1855c9108fb360374cf36fae50651d8f1e19e1b086a7ee1460d5e55ea6757f60",
       "after": "2119cc5732a4f0f92cebc124e7391d7d451566994d145413a6a9fe1c55e32b12"
+    },
+    "jit.py": {
+      "before": "534ba2b2ff626bfc582c6c892e2c86c637666616a89e6eb7305be140e82b2402",
+      "after": "6fae93b83e356580d236adaaacf3af08d8898cf54cdaf9143bf724d5acb579fb"
     }
   }
 }

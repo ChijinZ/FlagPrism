@@ -40,6 +40,14 @@ def check(root):
     try:convert('input',{},NS(extern_libs=[]),0)
     except RuntimeError:pass
     else:raise AssertionError('Invalid callback output accepted')
-    print('5 checks passed: admission geometry/order/rejection, callback metadata, ordinary path, invalid transform')
+    tree=ast.parse((root/'jit.py').read_text())
+    statement=next(n for n in ast.walk(tree) if isinstance(n,ast.Expr) and isinstance(n.value,ast.Call) and isinstance(n.value.func,ast.Attribute) and n.value.func.attr=='setdefault' and n.value.args and isinstance(n.value.args[0],ast.Constant) and n.value.args[0].value=='instrumentation_mode')
+    code=compile(ast.Module(body=[statement],type_ignores=[]),'jit.py','exec')
+    explicit={'instrumentation_mode':'capture-binary-key'}
+    exec(code,{'kwargs':explicit,'knobs':NS(compilation=NS(instrumentation_mode=''))})
+    assert explicit['instrumentation_mode']=='capture-binary-key'
+    ordinary={};exec(code,{'kwargs':ordinary,'knobs':NS(compilation=NS(instrumentation_mode='default-mode'))})
+    assert ordinary['instrumentation_mode']=='default-mode'
+    print('7 checks passed: admission geometry/order/rejection, callback metadata, ordinary path, invalid transform, explicit cache key and default cache key')
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('source',type=Path);check(p.parse_args().source)

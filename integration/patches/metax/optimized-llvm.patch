@@ -37,3 +37,14 @@
              global_scratch = allocate_scratch(self.global_scratch_size, self.global_scratch_align,
                                                _allocation._allocator)
              profile_scratch = allocate_scratch(self.profile_scratch_size, self.profile_scratch_align,
+--- a/python/triton/runtime/jit.py
++++ b/python/triton/runtime/jit.py
+@@ -738,7 +738,7 @@
+ 
+     def run(self, *args, grid, warmup, **kwargs):
+         kwargs["debug"] = kwargs.get("debug", self.debug) or knobs.runtime.debug
+-        kwargs["instrumentation_mode"] = knobs.compilation.instrumentation_mode
++        kwargs.setdefault("instrumentation_mode", knobs.compilation.instrumentation_mode)
+         # FlagPrism: options must affect specialization and cache keys.
+         _flagprism.apply_compile_options(kwargs)
+ 
