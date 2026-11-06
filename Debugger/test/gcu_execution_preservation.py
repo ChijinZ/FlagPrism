@@ -78,6 +78,23 @@ class Preservation(unittest.TestCase):
         self.assertIn(reason, result.stderr.decode())
         self.assertFalse((self.root / 'certificate.json').exists())
 
+    def test_extended_capacity_remains_bounded_and_reproducible(self):
+        for capacity in (4096, 8875, 16384):
+            with self.subTest(capacity=capacity):
+                after = self.root / f'capacity-{capacity}.mlir'
+                plan = self.root / f'capacity-{capacity}.json'
+                result = self.run_tool(self.before, after, plan, '1', str(capacity))
+                self.assertEqual(result.returncode, 0, result.stderr.decode())
+                manifest = json.loads(plan.read_text())
+                self.assertEqual(manifest['capacity'], capacity)
+                self.assertEqual(manifest['slot_bytes'], 32 + 128 * capacity)
+                self.assertTrue(manifest['user_program_preservation']['original_program_preserved'])
+        result = self.run_tool(self.before, self.root / 'too-large.mlir',
+                               self.root / 'too-large.json', '1', '16385')
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('capacity', result.stderr.decode())
+        self.assertFalse((self.root / 'too-large.mlir').exists())
+
     def test_real_rewrite_carries_certificate(self):
         proof = json.loads(self.plan.read_text())['user_program_preservation']
         self.assertTrue(proof['original_program_preserved'])

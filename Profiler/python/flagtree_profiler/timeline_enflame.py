@@ -54,7 +54,7 @@ def plan_enflame_storage(plan, *, grid, scratch_size, alignment, num_ctas,
     if execution:
         manifest = metadata.get("debug_execution_manifest")
         _need(
-            type(manifest) is dict and capacity <= 4096
+            type(manifest) is dict and capacity <= 16384
             and manifest.get("capacity") == capacity
             and manifest.get("record_size") == 128
             and manifest.get("slot_bytes") == stride,

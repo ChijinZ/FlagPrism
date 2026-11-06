@@ -117,7 +117,7 @@ def decode_execution_capture(raw, *, compiler_metadata, identity, association,
         in ('gcu_ptr2int_i64_v1', 'legacy_index_width_unverified'),
         'Unknown native buffer address encoding')
     capacity = _integer(manifest.get('capacity'), 'execution capacity', 1,
-                        4096)
+                        16384)
     stride = 32 + capacity * 128
     _need(
         manifest.get('record_size') == 128

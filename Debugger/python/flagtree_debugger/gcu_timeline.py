@@ -112,10 +112,10 @@ def prepare_ttir(module, metadata, request, binding):
     hidden = binding.prepare_late_observation_abi(module)
     # A bounded on-chip ring replaces mid-kernel publication. Public automatic
     # capture keeps its 512-record default; explicit capacity is propagated to
-    # the existing native producer and checked against its 4096-record bound.
+    # the existing native producer and checked against its 16384-record bound.
     capacity = request['max_events_per_instance']
-    if not 1 <= capacity <= 4096:
-        raise ValueError('GCU execution capacity must be in 1..4096')
+    if not 1 <= capacity <= 16384:
+        raise ValueError('GCU execution capacity must be in 1..16384')
     metadata.update(debug_launch_hidden_arg=True,
                     debug_protocol_version=2,
                     debug_record_level=1,

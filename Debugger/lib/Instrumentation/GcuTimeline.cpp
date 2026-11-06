@@ -536,7 +536,7 @@ rewriteGcuExecutionTimeline(StringRef input, uint32_t hiddenArgument,
                             uint32_t capacity, uint32_t maxRegions) {
   if (!maxRegions || maxRegions > 128)
     return error("GCU source-region budget must be in [1,128]");
-  if (input.size() > 16 * 1024 * 1024 || !capacity || capacity > 4096)
+  if (input.size() > 16 * 1024 * 1024 || !capacity || capacity > 16384)
     return error("GCU execution input/capacity exceeds its budget");
   DialectRegistry registry;
   registry.insert<arith::ArithDialect, func::FuncDialect, gpu::GPUDialect,

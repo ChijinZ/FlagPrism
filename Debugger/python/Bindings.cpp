@@ -727,7 +727,7 @@ public:
               runtimeMetadata.recordLayout ||
           getUInt32Or(metadata, "debug_execution_version", 0) != 1 ||
           getUInt32Or(metadata, "debug_record_size", 0) != 128 || !capacity ||
-          capacity > 4096 ||
+          capacity > 16384 ||
           getUInt32Or(metadata, "debug_dynamic_storage_version", 0) != 3 ||
           getUInt32Or(metadata, "debug_dynamic_publisher_version", 0) != 3 ||
           getUInt32Or(metadata, "debug_dynamic_slot_bytes", 0) !=

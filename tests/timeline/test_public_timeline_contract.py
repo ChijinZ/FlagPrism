@@ -125,7 +125,7 @@ def test_cli_density_rejected_before_backend_discovery(monkeypatch):
             SimpleNamespace(detail='timeline', timeline_max_sites=0), [])
 
 
-@pytest.mark.parametrize('value', [True, False, 0, -1, 4097, 1.5, '1022'])
+@pytest.mark.parametrize('value', [True, False, 0, -1, 16385, 1.5, '1022'])
 def test_timeline_record_capacity_rejected_before_runtime_discovery(monkeypatch, value):
     profile = importlib.import_module('flagtree.profiler.profile')
     monkeypatch.setattr(profile, 'is_command_line', lambda: False)
@@ -146,3 +146,19 @@ def test_timeline_record_capacity_cannot_change_other_modes(monkeypatch, detail)
     with pytest.raises(ValueError, match='requires detail'):
         profile.start('not-created', detail=detail,
                       timeline_record_capacity=1022)
+
+
+@pytest.mark.parametrize('backend', ['instrumentation', 'cann'])
+def test_extended_timeline_capacity_is_enflame_only(monkeypatch, backend):
+    profile = importlib.import_module('flagtree.profiler.profile')
+    monkeypatch.setattr(profile, 'is_command_line', lambda: False)
+    monkeypatch.setattr(profile, '_automatic_backend', lambda _: backend)
+    with pytest.raises(ValueError, match='requires the Enflame backend'):
+        profile.start('not-created', detail='timeline',
+                      timeline_record_capacity=16384)
+
+
+def test_extended_timeline_capacity_keeps_the_unspecified_default():
+    profile = importlib.import_module('flagtree.profiler.profile')
+    assert profile._timeline_record_budget('timeline', None) is None
+    assert profile._timeline_record_budget('timeline', 16384) == 16384
