@@ -42,6 +42,14 @@ public:
   // skeleton.
   virtual Profiler *getRuntimeProfiler() const = 0;
 
+  // Configure a collector before acquiring native capture resources. Other
+  // adapters retain their existing behavior through this no-op default.
+  virtual void configureRuntimeProfiler(const std::string &profilerPath,
+                                        const VendorProfilePlan &plan) const {
+    (void)profilerPath;
+    (void)plan;
+  }
+
   virtual std::unique_ptr<VendorMetricsImporter> createImporter() const = 0;
 };
 

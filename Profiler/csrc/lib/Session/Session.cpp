@@ -488,6 +488,8 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
          std::get<std::string>(kind->second) != "kernel"))
       continue;
     auto event = association.runtimeEvent;
+    const bool metaxRuntimeOnly = association.source.rfind("mcpti_", 0) == 0 &&
+                                  association.source != "mcpti_activity";
     // Normalized collectors must never gain synthetic timing from the legacy
     // overlay. Unknown identity stays in the original artifact for export.
     if (kind != association.metrics.end()) {
@@ -556,7 +558,7 @@ size_t overlayVendorRuntimeMetrics(Data *treeData, Data *timelineData,
     if (mergeOpSummaryIntoExistingScope) {
       preserveLaunchTimingForMergedOpSummary(association, vendorMetrics);
     }
-    if (!syntheticTimelineEvent) {
+    if (!syntheticTimelineEvent && !metaxRuntimeOnly) {
       if (!mergeOpSummaryIntoExistingScope) {
         treeData->addMetric(scopeId, metric);
       }
@@ -870,6 +872,7 @@ std::unique_ptr<Session> SessionManager::makeSession(
           " currently emits tree base data; requested data=" + dataName +
           " was ignored.");
     }
+    vendorAdapter->configureRuntimeProfiler(profilerPath, vendorPlan);
     auto *profiler = vendorAdapter->getRuntimeProfiler();
     if (!profiler) {
       throw std::runtime_error("Vendor backend has no runtime profiler: " +

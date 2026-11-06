@@ -85,6 +85,8 @@ struct RuntimeTraceEventKey {
   uint64_t streamId{0};
   uint64_t startTimeNs{0};
   uint64_t endTimeNs{0};
+  // Optional collector-owned properties; empty for existing event producers.
+  std::map<std::string, MetricValueType> vendorMetrics{};
 };
 
 struct VendorMetricRequest {
