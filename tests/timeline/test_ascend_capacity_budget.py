@@ -1,7 +1,9 @@
 """Capacity-aware admission tests; no device execution or timing claims."""
 import unittest
+from unittest.mock import patch
 
-from flagtree.profiler.timeline_ascend import ascend_pending_byte_budget
+from flagtree.profiler.timeline_ascend import (AscendTimelineCollector,
+                                               ascend_pending_byte_budget)
 from flagtree.profiler.timeline_runtime import TimelineOwnerPool
 
 
@@ -24,6 +26,13 @@ class AscendCapacityBudget(unittest.TestCase):
         for capacity in (True, 0, 16385, 2.5):
             with self.assertRaises(ValueError):
                 ascend_pending_byte_budget(capacity)
+
+    def test_collector_applies_the_requested_admission_budget(self):
+        with patch('flagtree.profiler.timeline_ascend.AscendTimelineTransport'):
+            default = AscendTimelineCollector()
+            extended = AscendTimelineCollector(record_capacity=16384)
+        self.assertEqual(default.timeline_pool.max_pending_bytes, 8 * 1024**2)
+        self.assertEqual(extended.timeline_pool.max_pending_bytes, 67070660)
 
     def test_same_number_of_full_size_launches_are_admitted(self):
         # A split kernel and its merge are independent pending owners. The old
